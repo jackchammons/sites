@@ -662,9 +662,14 @@
       "friction": [],
       "lastVerified": null,
       "tier": "bench",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null
+      "locations": [
+        {
+          "neighborhood": "White Center",
+          "address": "9622-A 16th Ave SW, Seattle, WA 98106"
+        }
+      ],
+      "locationsVerified": "2026-08-22",
+      "locationsSource": "https://proletariatpizza.com"
     },
     {
       "id": "ballard-pizza-co",
@@ -833,7 +838,7 @@
       "styleGroup": "By the slice",
       "signature": "The cheapest honest slice on Pike/Pine",
       "blurb": "No ambition beyond feeding Capitol Hill quickly and cheaply, executed without cynicism. The value benchmark every other slice in the city is measured against.",
-      "url": null,
+      "url": "https://www.hot-mamaspizza.com",
       "opened": null,
       "pillars": {
         "crust": 7,
@@ -849,9 +854,14 @@
       ],
       "lastVerified": null,
       "tier": "bench",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null
+      "locations": [
+        {
+          "neighborhood": "Capitol Hill",
+          "address": "700 E Pine St, Seattle, WA 98122"
+        }
+      ],
+      "locationsVerified": "2026-08-22",
+      "locationsSource": "https://www.hot-mamaspizza.com/location.html"
     },
     {
       "id": "humble-pie",
@@ -861,7 +871,7 @@
       "styleGroup": "Wood-fired",
       "signature": "Wood-fired pies eaten at picnic tables beside the garden they came from",
       "blurb": "A walled garden, a wood oven and a menu that leans on what is growing outside. More an argument about how to eat pizza than a competitor on crust alone.",
-      "url": null,
+      "url": "https://humblepieseattle.com",
       "opened": null,
       "pillars": {
         "crust": 8.2,
@@ -878,9 +888,14 @@
       ],
       "lastVerified": null,
       "tier": "bench",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null
+      "locations": [
+        {
+          "neighborhood": "Central District",
+          "address": "525 Rainier Ave S, Seattle, WA 98144"
+        }
+      ],
+      "locationsVerified": "2026-08-22",
+      "locationsSource": "https://humblepieseattle.com/find-us/"
     },
     {
       "id": "pizzeria-gabbiano",

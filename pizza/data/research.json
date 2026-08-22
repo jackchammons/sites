@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-22T15:00:00Z",
+  "updated": "2026-08-22T18:00:00Z",
   "news": [
     {
       "title": "Acclaimed Stevie's Famous Pizza Celebrates Grand Opening on Phinney Ridge August 2",
@@ -10,10 +10,10 @@
       "mentions": []
     },
     {
-      "title": "Urban Family Brewing to open Seattle waterfront restaurant",
-      "url": "https://www.myballard.com/2026/07/31/urban-family-brewing-to-open-seattle-waterfront-restaurant/",
-      "source": "My Ballard",
-      "published": "2026-07-31T00:00:00Z",
+      "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
+      "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
+      "source": "Seattle magazine",
+      "published": "2026-08-07T00:00:00Z",
       "kind": "opening",
       "mentions": []
     }
@@ -22,56 +22,63 @@
     {
       "name": "Stevie's Famous",
       "neighborhood": "Phinney Ridge",
-      "style": "Naturally leavened New York-style",
-      "note": "Burien-founded chain's largest location yet just opened in the former Zeek's space, its first expansion north of downtown.",
+      "style": "New York-style",
+      "note": "Opened its third and largest Seattle location on Phinney Ridge, in the former Zeek's Pizza space, on August 2, 2026.",
       "source": "https://phinneywood.com/2026/07/stevies-famous-pizza-celebrates-grand-opening-on-phinney-ridge/"
-    },
-    {
-      "name": "Abecedary",
-      "neighborhood": "Hillman City",
-      "style": "New Haven-style",
-      "note": "Cult pop-up from a former Microsoft engineer drawing early buzz ahead of a planned 2027 brick-and-mortar.",
-      "source": "https://www.seattletimes.com/life/food-drink/up-and-coming-seattle-pizza-baker-will-pop-up-saturday-in-hillman-city/"
     },
     {
       "name": "Sinner's Pizza",
       "neighborhood": "University District",
       "style": "New York-style",
-      "note": "New pizzeria that took over the former Supreme Pizzeria & Bar space on University Way.",
+      "note": "New slice shop that took over the former Supreme Pizzeria & Bar space on University Way NE.",
       "source": "https://whatnow.com/seattle/restaurants/new-pizza-spot-sinners-pizza-to-open-in-seattles-university-district/"
     },
     {
-      "name": "Urban Family Brewing Co. (Waterfront)",
-      "neighborhood": "Downtown waterfront",
-      "style": "Grandma-style pan pizza",
-      "note": "New waterfront taproom near Pike Place from Frankie's Pizza & Pasta alums, serving square grandma-style pies alongside beer.",
-      "source": "https://www.myballard.com/2026/07/31/urban-family-brewing-to-open-seattle-waterfront-restaurant/"
+      "name": "Roma Roma",
+      "neighborhood": "Capitol Hill",
+      "style": "Wood-fired",
+      "note": "Chef Forrest Brunton's pizzeria is drawing fresh attention for a sourdough-waffle-cone gelato program and a high-profile collaboration pop-up with Pizza by Ruffin.",
+      "source": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/"
+    },
+    {
+      "name": "My Friend Derek's",
+      "neighborhood": "Tangletown",
+      "style": "Detroit-style",
+      "note": "Cult-favorite Detroit-style pop-up that turned into a permanent brick-and-mortar restaurant in the former MKT space.",
+      "source": "https://myfrienddereks.com/"
     }
   ],
   "locations": [
     {
-      "id": "ballard-pizza-co",
-      "homepage": "https://ballardpizzacompany.com",
-      "source": "https://ballardpizzacompany.com/restaurants",
+      "id": "proletariat-pizza",
+      "homepage": "https://proletariatpizza.com",
+      "source": "https://proletariatpizza.com",
       "sites": [
         {
-          "neighborhood": "Ballard",
-          "address": "5205 Ballard Ave NW, Seattle, WA 98107"
-        },
-        {
-          "neighborhood": "Woodinville",
-          "address": "17401 133rd Ave NE, Woodinville, WA 98072"
+          "neighborhood": "White Center",
+          "address": "9622-A 16th Ave SW, Seattle, WA 98106"
         }
       ]
     },
     {
-      "id": "talaricos",
-      "homepage": "https://www.talaricospizza.com/",
-      "source": "https://www.talaricospizza.com/",
+      "id": "hot-mamas-pizza",
+      "homepage": "https://www.hot-mamaspizza.com",
+      "source": "https://www.hot-mamaspizza.com/location.html",
       "sites": [
         {
-          "neighborhood": "West Seattle",
-          "address": "4718 California Ave SW, Seattle, WA 98116"
+          "neighborhood": "Capitol Hill",
+          "address": "700 E Pine St, Seattle, WA 98122"
+        }
+      ]
+    },
+    {
+      "id": "humble-pie",
+      "homepage": "https://humblepieseattle.com",
+      "source": "https://humblepieseattle.com/find-us/",
+      "sites": [
+        {
+          "neighborhood": "Central District",
+          "address": "525 Rainier Ave S, Seattle, WA 98144"
         }
       ]
     }
