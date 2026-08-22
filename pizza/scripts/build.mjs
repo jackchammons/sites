@@ -9,6 +9,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { rank, splitTiers, DEFAULT_WEIGHTS, FRICTION_COSTS, FRICTION_LABELS, FRICTION_CAP, isoWeek, isoWeekKey } from '../src/slice.js';
 import { boardHtml, benchHtml, PILLAR_META, esc } from '../src/render.js';
+import { locationLabel } from '../src/locations.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // Output dir is overridable so the multi-site build can place this site at
@@ -157,7 +158,7 @@ const bracketCard = ({ group, list }) => {
             <span class="bracket-medal">#${w.rank}</span>
             <div>
               <strong>${esc(w.name)}</strong>
-              <div class="bracket-sub">${esc(w.neighborhood)} · ${w.score.toFixed(1)} SLICE</div>
+              <div class="bracket-sub">${esc(locationLabel(w))} · ${w.score.toFixed(1)} SLICE</div>
             </div>
           </div>
           ${rest.length ? `<ul class="bracket-rest">${rest.map(r =>
@@ -303,7 +304,7 @@ const html = `<!doctype html>
       <div class="big">🍕</div>
       <div>
         <h3>Slice of the Week · ${esc(spotlight.name)}</h3>
-        <p><b>#${spotlight.rank}, ${spotlight.score.toFixed(1)} SLICE.</b> ${esc(spotlight.signature)} — ${esc(spotlight.neighborhood)}.
+        <p><b>#${spotlight.rank}, ${spotlight.score.toFixed(1)} SLICE.</b> ${esc(spotlight.signature)} — ${esc(locationLabel(spotlight))}.
         Rotates every Monday by ISO week number, so it is a fair rotation and not a favourite.</p>
       </div>
     </div>
@@ -448,7 +449,10 @@ C = ${dataset.cityMeanRating.toFixed(2)}  (Seattle mean)</pre>
 fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(dist, { recursive: true });
 fs.writeFileSync(path.join(dist, 'index.html'), html);
-for (const f of ['slice.js', 'render.js', 'app.js']) {
+// Every module app.js can reach at runtime, including render.js's own imports.
+// Missing one is a 404 in the browser and a dead re-ranker, which the static
+// build itself would not notice -- verify.mjs checks for it below.
+for (const f of ['slice.js', 'render.js', 'locations.js', 'app.js']) {
   fs.copyFileSync(path.join(root, 'src', f), path.join(dist, f));
 }
 fs.writeFileSync(path.join(dist, '.nojekyll'), '');
@@ -458,7 +462,8 @@ fs.writeFileSync(path.join(dist, 'rankings.json'), JSON.stringify({
   algorithm: 'SLICE',
   weights: DEFAULT_WEIGHTS,
   rankings: [...ranked, ...benched].map(r => ({
-    rank: r.rank, id: r.id, name: r.name, neighborhood: r.neighborhood,
+    rank: r.rank, id: r.id, name: r.name, neighborhood: locationLabel(r),
+    locations: r.locations ?? [], locationsVerified: r.locationsVerified ?? null,
     style: r.style, styleGroup: r.styleGroup, tier: r.tier || 'top',
     noCrowdFigures: !!r.consensusDetail.unrated,
     score: r.score, previousRank: r.previousRank ?? null,

@@ -19,6 +19,27 @@ for (const f of ['index.html', 'app.js', 'slice.js', 'render.js', 'rankings.json
 }
 if (fails.length) { report(); }
 
+/* Follow every relative import from the shipped modules and confirm it landed.
+ * The static build cannot notice a missing one -- it renders server-side and is
+ * perfectly happy -- but the browser 404s and the re-ranker dies silently. The
+ * copy list in build.mjs is hand-maintained, so this walks what the code
+ * actually imports rather than trusting that list to stay in step. */
+const seenMod = new Set();
+const walkImports = file => {
+  if (seenMod.has(file)) return;
+  seenMod.add(file);
+  const full = path.join(dist, file);
+  if (!fs.existsSync(full)) return;
+  const src = fs.readFileSync(full, 'utf8');
+  for (const m of src.matchAll(/(?:^|\n)\s*(?:import|export)[^'"\n]*from\s+['"](\.[^'"]+)['"]/g)) {
+    const dep = path.posix.normalize(path.posix.join(path.posix.dirname(file), m[1]));
+    check(fs.existsSync(path.join(dist, dep)),
+          `dist/${file} imports "${m[1]}" but dist/${dep} was not emitted — the browser will 404`);
+    walkImports(dep);
+  }
+};
+walkImports('app.js');
+
 const html = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');
 check(html.length > 20000, `index.html suspiciously small (${html.length} bytes)`);
 check(/<title>[^<]+<\/title>/.test(html), 'missing <title>');

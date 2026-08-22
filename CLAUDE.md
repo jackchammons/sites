@@ -110,6 +110,21 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   an explicit token, because the Claude action revokes the one `checkout` persisted.
   The daily site update still does not depend on the agent — `fetch-buzz.mjs` in
   `publish.yml` is keyless and is what keeps the buzz section current on its own.
+- **Locations are verified data; `neighborhood` is not.** `locations[]` on each restaurant
+  is written only by `apply-research.mjs`, from an agent pass that read the pizzeria's own
+  locations page, and carries a street address per branch. `neighborhood` is the original
+  editorial string and stays as the fallback until a real set lands. Three entries stored
+  placeholders there ("Multiple locations", "Citywide"), flagged with
+  `neighborhoodIsPlaceholder` so `next-locations.mjs` puts them first and the page shows
+  "Several locations" instead of pretending they are neighborhoods. Never render
+  `r.neighborhood` directly — use `locationLabel(r)` from `src/locations.js`, which is what
+  both the static build and the in-browser re-ranker call.
+- **Addresses are the one factual field an agent may write.** They are published by the
+  business itself on a page that serves to anyone, so they are checkable — unlike crowd
+  ratings (403, frozen) and pillar scores (editorial, no script writes them). The validator
+  rejects an address that does not start with a street number, is outside Washington or the
+  Seattle metro, or repeats a branch. The agent verifies five per run, worst first, so all
+  25 are covered in five days and the budget stays bounded.
 - **If any site's build fails, the whole run fails and nothing deploys.** This is
   deliberate: the previous deploy stays live instead of publishing a half-built site.
 - **Enabling Pages cannot be automated.** A workflow's `GITHUB_TOKEN` is refused on the

@@ -33,7 +33,10 @@
       ],
       "lastVerified": "2026-08-01",
       "tier": "top",
-      "styleGroup": "Chicago pan"
+      "styleGroup": "Chicago pan",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "delancey",
@@ -62,7 +65,10 @@
       ],
       "lastVerified": "2026-08-01",
       "tier": "top",
-      "styleGroup": "Wood-fired"
+      "styleGroup": "Wood-fired",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "cornelly",
@@ -90,7 +96,10 @@
       ],
       "lastVerified": "2026-08-01",
       "tier": "top",
-      "styleGroup": "Wood-fired"
+      "styleGroup": "Wood-fired",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "moto-pizza",
@@ -121,7 +130,10 @@
       ],
       "lastVerified": "2026-08-01",
       "tier": "top",
-      "styleGroup": "Detroit pan"
+      "styleGroup": "Detroit pan",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "serious-pie",
@@ -149,7 +161,10 @@
       ],
       "lastVerified": "2026-08-01",
       "tier": "top",
-      "styleGroup": "Thin crust"
+      "styleGroup": "Thin crust",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "dinos-tomato-pie",
@@ -177,7 +192,10 @@
       ],
       "lastVerified": "2026-08-01",
       "tier": "top",
-      "styleGroup": "Tavern square"
+      "styleGroup": "Tavern square",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "lupo",
@@ -206,7 +224,10 @@
       ],
       "lastVerified": "2026-08-01",
       "tier": "top",
-      "styleGroup": "Wood-fired"
+      "styleGroup": "Wood-fired",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "independent-pizzeria",
@@ -235,7 +256,10 @@
       ],
       "lastVerified": "2026-08-01",
       "tier": "top",
-      "styleGroup": "Wood-fired"
+      "styleGroup": "Wood-fired",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "tutta-bella",
@@ -261,7 +285,11 @@
       "friction": [],
       "lastVerified": "2026-08-01",
       "tier": "top",
-      "styleGroup": "Neapolitan"
+      "styleGroup": "Neapolitan",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "neighborhoodIsPlaceholder": true
     },
     {
       "id": "pagliacci",
@@ -287,7 +315,11 @@
       "friction": [],
       "lastVerified": "2026-08-01",
       "tier": "top",
-      "styleGroup": "By the slice"
+      "styleGroup": "By the slice",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "neighborhoodIsPlaceholder": true
     },
     {
       "id": "breezy-town-pizza",
@@ -313,7 +345,10 @@
         "sells-out"
       ],
       "lastVerified": null,
-      "tier": "bench"
+      "tier": "bench",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "via-tribunali",
@@ -336,7 +371,10 @@
       "priceIndex": 3,
       "friction": [],
       "lastVerified": null,
-      "tier": "bench"
+      "tier": "bench",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "big-marios",
@@ -361,7 +399,10 @@
         "late-night-only-peak"
       ],
       "lastVerified": null,
-      "tier": "bench"
+      "tier": "bench",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "flying-squirrel",
@@ -384,7 +425,10 @@
       "priceIndex": 2,
       "friction": [],
       "lastVerified": null,
-      "tier": "bench"
+      "tier": "bench",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "proletariat-pizza",
@@ -407,7 +451,10 @@
       "priceIndex": 1,
       "friction": [],
       "lastVerified": null,
-      "tier": "bench"
+      "tier": "bench",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "ballard-pizza-co",
@@ -430,7 +477,10 @@
       "priceIndex": 2,
       "friction": [],
       "lastVerified": null,
-      "tier": "bench"
+      "tier": "bench",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "zeeks-pizza",
@@ -453,7 +503,11 @@
       "priceIndex": 2,
       "friction": [],
       "lastVerified": null,
-      "tier": "bench"
+      "tier": "bench",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "neighborhoodIsPlaceholder": true
     },
     {
       "id": "talaricos",
@@ -478,7 +532,10 @@
         "late-night-only-peak"
       ],
       "lastVerified": null,
-      "tier": "bench"
+      "tier": "bench",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "hot-mamas-pizza",
@@ -503,7 +560,10 @@
         "late-night-only-peak"
       ],
       "lastVerified": null,
-      "tier": "bench"
+      "tier": "bench",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "humble-pie",
@@ -529,7 +589,10 @@
         "seasonal"
       ],
       "lastVerified": null,
-      "tier": "bench"
+      "tier": "bench",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "pizzeria-gabbiano",
@@ -554,7 +617,10 @@
         "limited-hours"
       ],
       "lastVerified": null,
-      "tier": "bench"
+      "tier": "bench",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "post-alley-pizza",
@@ -577,7 +643,10 @@
       "priceIndex": 2,
       "friction": [],
       "lastVerified": null,
-      "tier": "bench"
+      "tier": "bench",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "pegasus-pizza",
@@ -600,7 +669,10 @@
       "priceIndex": 2,
       "friction": [],
       "lastVerified": null,
-      "tier": "bench"
+      "tier": "bench",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "slice-box",
@@ -625,7 +697,10 @@
         "limited-hours"
       ],
       "lastVerified": null,
-      "tier": "bench"
+      "tier": "bench",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     },
     {
       "id": "roccos",
@@ -650,7 +725,10 @@
         "late-night-only-peak"
       ],
       "lastVerified": null,
-      "tier": "bench"
+      "tier": "bench",
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null
     }
   ]
 }

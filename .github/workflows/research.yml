@@ -146,6 +146,23 @@ jobs:
             echo "sum=absent" >> "$GITHUB_OUTPUT"
           fi
 
+      # A short explicit worklist beats letting the agent read a 25-entry file
+      # with long blurbs and decide for itself -- that costs turns and context on
+      # a decision a sort makes better, and turns are what this job keeps running
+      # out of. Five per run covers all 25 in five days, then re-verifies the
+      # stalest. Placeholders ("Multiple locations", "Citywide") sort first,
+      # since those are actively wrong on the page rather than merely unverified.
+      - name: Pick the locations to verify
+        id: worklist
+        if: steps.gate.outputs.enabled == 'true'
+        run: |
+          {
+            echo 'list<<WORKLIST_EOF'
+            node pizza/scripts/next-locations.mjs 5
+            echo 'WORKLIST_EOF'
+          } >> "$GITHUB_OUTPUT"
+          node pizza/scripts/next-locations.mjs 5
+
       - name: Research and refresh pizza data
         id: agent
         if: steps.gate.outputs.enabled == 'true'
@@ -156,12 +173,42 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           claude_args: |
-            --max-turns 80
+            --max-turns 120
             --model claude-sonnet-5
             --allowedTools "WebSearch,WebFetch,Read,Write,Glob,Grep,TodoWrite"
           prompt: |
+            Two jobs, both written to pizza/data/research.json. The locations
+            job matters more; do it first.
+
+            === JOB 1: verify where these pizzerias actually are ===
+
+            The site shows a neighborhood for every entry. Some are wrong, some
+            are stale, and three are not neighborhoods at all -- they say
+            "Multiple locations" or "Citywide" because whoever wrote them did not
+            check. Several of these pizzerias have more than one branch and the
+            site shows only one.
+
+            Verify these, and only these:
+
+            ${{ steps.worklist.outputs.list }}
+
+            For each one, open the pizzeria's OWN website -- its locations,
+            visit or contact page -- and read off every Seattle-area branch it
+            currently operates. If the worklist says the site is unknown, search
+            for the official site first; do not use a directory, an aggregator,
+            a delivery app or a review site as the source, because those go stale
+            and list closed branches. If you cannot find an official page for
+            one, omit that entry entirely rather than guessing -- a wrong address
+            is worse than a missing one.
+
+            Report every branch, not just the flagship, and only branches that
+            are open now. Locations outside the Seattle metro (a Portland or
+            Spokane outpost, say) do not belong.
+
+            === JOB 2: news ===
+
             Find Seattle pizzeria news from the last 30 days that is not already
-            covered, and write it to pizza/data/research.json.
+            covered.
 
             Read pizza/data/buzz.json first to see what the automated feed sweep
             already found, so you do not repeat it. Then search for what it
@@ -179,7 +226,11 @@ jobs:
                       "mentions":[]}],
              "candidates":[{"name":"<pizzeria>","neighborhood":"<area>",
                             "style":"<style>","note":"<one sentence on why>",
-                            "source":"<https URL>"}]}
+                            "source":"<https URL>"}],
+             "locations":[{"id":"<the exact id from the worklist>",
+                           "source":"<https URL of the pizzeria's own locations page>",
+                           "sites":[{"neighborhood":"<Seattle neighborhood or suburb>",
+                                     "address":"<full street address incl. city, WA and ZIP>"}]}]}
 
             candidates are Seattle pizzerias worth adding to the ranking later --
             recent openings, or places getting real critical attention. Leave the
@@ -201,17 +252,30 @@ jobs:
               business-wire or real-estate items.
             - At most 12 news and 8 candidates. Omissions are free; fabrications
               are not.
+            - locations: `id` must be copied exactly from the worklist above.
+              `source` must be the pizzeria's own https page. Every site needs
+              both a neighborhood and a full street address starting with the
+              street number and naming the city, WA and the ZIP -- "Capitol Hill"
+              or "Seattle, WA" alone is rejected, and so is an address outside
+              the Seattle metro or the same branch listed twice. Omit a pizzeria
+              you could not verify; do not send an entry with an empty sites
+              array.
 
-            Work within a budget: make at most 15 web searches in total. When
-            you reach that, write the file with whatever you have and stop. A
-            short honest file is a good result; there is no requirement to fill
-            the caps, and a day with little Seattle pizza news should produce a
-            short file.
+            Work within a budget: at most 12 web searches for the news half,
+            plus one page fetch per pizzeria in the locations worklist. When you
+            reach that, write the file with whatever you have and stop. A short
+            honest file is a good result; there is no requirement to fill the
+            caps, and a day with little Seattle pizza news should produce a short
+            news list. The locations half is the more valuable of the two -- do
+            it even if the news half comes back empty.
 
             Do not attempt crowd ratings, star scores or review counts. Those
             sources block automated reads and there is no API path; the stored
-            figures are frozen by design. Write only pizza/data/research.json,
-            never touch pillar scores, and run nothing.
+            figures are frozen by design. Addresses are different and are your
+            job: the business publishes them itself, so they can be checked.
+
+            Write only pizza/data/research.json, never touch pillar scores or
+            restaurants.json, and run nothing.
 
       # This step, not the agent step, decides whether the run failed. An
       # overrun turn ceiling leaves outcome == failure on a pass that already

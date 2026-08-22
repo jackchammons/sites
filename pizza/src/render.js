@@ -1,5 +1,6 @@
 /* Card rendering shared by the static build and the in-browser re-ranker. */
 import { FRICTION_LABELS } from './slice.js';
+import { locationLabel, locationList } from './locations.js';
 
 export const PILLAR_META = {
   crust:           { label: 'Crust Integrity',  color: 'var(--crust)' },
@@ -8,6 +9,17 @@ export const PILLAR_META = {
   distinctiveness: { label: 'Distinctiveness',  color: '#a06fd0' },
   value:           { label: 'Value Density',    color: 'var(--basil)' }
 };
+
+
+/* Every neighborhood for a multi-site pizzeria, printed under the meta line.
+ * A single-location place already reads correctly in the meta line itself, so
+ * this stays out of its way. */
+function locationsHtml(r) {
+  const sites = locationList(r);
+  if (!sites || sites.length < 2) return '';
+  return `<div class="locs" title="Verified ${esc(r.locationsVerified)} from ${esc(r.locationsSource ?? 'the pizzeria')}">`
+    + `<span class="locs-label">Locations</span> ${sites.map(esc).join(' <em>·</em> ')}</div>`;
+}
 
 export const esc = s => String(s).replace(/[&<>"']/g, c =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -69,7 +81,8 @@ export function cardHtml(r) {
           <div class="title-row">
             <h3>${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.name)}</a>` : esc(r.name)}</h3>
           </div>
-          <div class="meta">${esc(r.neighborhood)} <em>·</em> ${esc(r.style)} <em>·</em> est. ${r.opened}</div>
+          <div class="meta">${esc(locationLabel(r))} <em>·</em> ${esc(r.style)} <em>·</em> est. ${r.opened}</div>
+          ${locationsHtml(r)}
           <p class="sig">“${esc(r.signature)}”</p>
           <p class="blurb">${esc(r.blurb)}</p>
         </div>
@@ -119,7 +132,7 @@ export function benchRowHtml(r) {
         <li class="bench-row${r.reportedClosed ? ' closed' : r.contender ? ' contender' : ''}">
           <span class="bench-rank">${r.rank}</span>
           <span class="bench-name">${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.name)}</a>` : esc(r.name)}</span>
-          <span class="bench-meta">${esc(r.neighborhood)} · ${esc(r.style)}</span>
+          <span class="bench-meta">${esc(locationLabel(r))} · ${esc(r.style)}</span>
           <span class="bench-score">${r.score.toFixed(1)}</span>
           <span class="bench-flag">${r.reportedClosed ? 'reported closed' : r.contender ? 'promotion range' : `${(r.score - cutoffOf(r)).toFixed(1)} off the cut`}</span>
         </li>`;

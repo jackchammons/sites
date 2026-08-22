@@ -10,6 +10,7 @@
  *   news       stories the feed sweep missed
  *   candidates pizzerias worth considering for the bench
  *   closures   places reported closed (relegation signals)
+ *   locations  verified branches, read off the pizzeria's own site
  *
  * There is deliberately no ratings section: the sources that hold crowd
  * figures block automated reads, and no API key path is in use.
@@ -32,7 +33,7 @@ const dataset = JSON.parse(fs.readFileSync(path.join(root, 'data/restaurants.jso
 const byId = new Map(dataset.restaurants.map(r => [r.id, r]));
 
 const KINDS = new Set(['opening', 'closing', 'ranking', 'mention']);
-const CAPS = { news: 20, candidates: 15, closures: 10 };
+const CAPS = { news: 20, candidates: 15, closures: 10, locations: 12 };
 const MAX_AGE_DAYS = 180;
 
 const fails = [];
@@ -47,7 +48,8 @@ if (!doc || typeof doc !== 'object' || Array.isArray(doc)) {
 
 /* `items` was the original field name; keep reading it so older files still work. */
 const news = doc.news ?? doc.items ?? [];
-const sections = { news, candidates: doc.candidates ?? [], closures: doc.closures ?? [] };
+const sections = { news, candidates: doc.candidates ?? [], closures: doc.closures ?? [],
+                   locations: doc.locations ?? [] };
 if (Array.isArray(doc.ratings) && doc.ratings.length) {
   fails.push('ratings are no longer accepted: crowd figures are frozen, see CLAUDE.md');
 }
@@ -97,6 +99,49 @@ sections.closures.forEach((it, i) => {
   if (typeof it?.note !== 'string' || it.note.trim().length < 10) bad('closures', i, 'note missing or too short');
   checkUrl('closures', i, it?.source, 'source');
   if (it?.date) checkDate('closures', i, it.date, 'date');
+});
+
+/* ---- locations ----
+ * Addresses are the one factual field an agent may write into the dataset,
+ * because the business publishes them itself on a page that serves to anyone.
+ * That makes them checkable, which crowd ratings (403) and pillar scores
+ * (editorial) are not. These checks exist to catch a plausible invention: a
+ * street address that is not one, a branch in another metro, the same branch
+ * listed twice.
+ */
+const METRO = /\b(seattle|bellevue|redmond|kirkland|renton|burien|shoreline|tukwila|edmonds|lynnwood|bothell|issaquah|sammamish|kent|des moines|white center|mercer island|woodinville|everett|tacoma)\b/i;
+
+sections.locations.forEach((it, i) => {
+  if (!byId.has(it?.id)) bad('locations', i, `unknown restaurant id "${it?.id}"`);
+  checkUrl('locations', i, it?.source, 'source');
+
+  const sites = it?.sites;
+  if (!Array.isArray(sites) || !sites.length) {
+    bad('locations', i, 'sites must be a non-empty array');
+    return;
+  }
+  if (sites.length > 40) bad('locations', i, `${sites.length} sites is implausible`);
+
+  const seenSites = new Set();
+  sites.forEach((st, j) => {
+    const where = `sites[${j}]`;
+    if (typeof st?.neighborhood !== 'string' || !st.neighborhood.trim()) {
+      bad('locations', i, `${where}: neighborhood missing`);
+    }
+    const addr = st?.address;
+    if (typeof addr !== 'string' || !addr.trim()) {
+      bad('locations', i, `${where}: address missing`);
+      return;
+    }
+    // A street address starts with a number and names a street. This rejects
+    // "Capitol Hill" or "Seattle, WA" dressed up as an address.
+    if (!/^\s*\d/.test(addr)) bad('locations', i, `${where}: address does not start with a street number: "${addr}"`);
+    if (!/\bWA\b|\bWashington\b/i.test(addr)) bad('locations', i, `${where}: address is not in Washington: "${addr}"`);
+    if (!METRO.test(addr)) bad('locations', i, `${where}: not a Seattle-metro city: "${addr}"`);
+    const key = addr.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+    if (seenSites.has(key)) bad('locations', i, `${where}: duplicate address "${addr}"`);
+    seenSites.add(key);
+  });
 });
 
 report();
