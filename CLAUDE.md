@@ -52,7 +52,7 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
 | Slug | Dir | Stack | Notes |
 |---|---|---|---|
 | `pizza` | `pizza/` | Node, no deps | `src/slice.js` is the ranking algorithm, imported by both the build and the browser — one implementation, don't fork it. `verify.mjs` gates the deploy. |
-| `odyssey-seats` | `odyssey-seats/` | Python, Playwright + Pillow | Scrapes siff.net. Writes `report.html`, promoted to `index.html`. Needs `pip install playwright pillow` + `playwright install chromium`. |
+| `odyssey-seats` | `odyssey-seats/` | Python, Playwright + Pillow | Scrapes SIFF's **dedicated 70mm page** (`MAIN_URL`), so every showtime found is 70mm and there is no date filter to maintain. Writes `report.html`, promoted to `index.html`. Needs `pip install playwright pillow` + `playwright install chromium`. |
 
 ## Things that will bite you
 
@@ -69,6 +69,9 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
 - **One custom domain per repo.** A `CNAME` applies to the whole Pages site, not per
   subdirectory. See README for the workaround.
 - **Don't commit `dist/`** — it's generated and gitignored.
+- SIFF lists this film on two pages, digital and 70mm. If the seat-map site goes empty,
+  check `MAIN_URL` still resolves before assuming the engagement ended — the pages were
+  split once already and the old code silently matched nothing for weeks.
 - Weekly data snapshots (`*/data/history.json`) are keyed by ISO week, so the daily
   workflow overwrites the current week rather than appending. Don't switch that back to
   date keys — and it keeps working if the cron changes again.

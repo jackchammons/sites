@@ -44,17 +44,13 @@ OUT = os.environ.get("OUT_DIR", "seat_maps")
 
 os.makedirs(OUT, exist_ok=True)
 
-MAIN_URL = "https://www.siff.net/cinema/in-theaters/the-odyssey"
-
-VALID_70MM_DATES = [
-    "July 16", "July 17", "July 18", "July 19", "July 20",
-    "July 21", "July 22", "July 23", "July 24", "July 25",
-    "July 26", "July 31", "August 1", "August 2",
-]
-
-ENGAGEMENT_NOTE = ("70mm engagement: July 16&ndash;26 &amp; July 31&ndash;"
-                   "August 2, 2026 &middot; DCP screenings July 27&ndash;30 "
-                   "&amp; August 3&ndash;13")
+# SIFF splits this film across two listings: a digital/DCP page and a dedicated
+# 70mm page. We scrape the 70mm page, so every showtime on it is by definition a
+# 70mm screening -- there is no date window to maintain. (The old code pointed at
+# the combined page and filtered by a hardcoded July date list, which silently
+# stopped matching once the pages were split.)
+MAIN_URL = "https://www.siff.net/cinema/in-theaters/the-odyssey-(70mm)"
+DIGITAL_URL = "https://www.siff.net/cinema/in-theaters/the-odyssey"
 
 LIMIT = None      # e.g. 4 to smoke-test
 WORKERS = 4       # parallel Playwright sessions (each fully independent)
@@ -579,7 +575,6 @@ def _summary(results):
 
 def extract_70mm_showtimes():
     print("Step 1: Discovering 70mm showtimes on siff.net ...")
-    valid = {_parse_month_day(d) for d in VALID_70MM_DATES}
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -599,7 +594,7 @@ def extract_70mm_showtimes():
             dt, md = None, _parse_month_day(e.get("date"))
             dlabel = _label(md) if md else None
             tlabel = e.get("time")
-        if md and md in valid:
+        if md:
             pct = None
             if isinstance(sc, dict):
                 pct = sc.get("PublicAllocationSoldOutPercentage",
@@ -613,8 +608,8 @@ def extract_70mm_showtimes():
                     "screening": t.get("screening")} for t in targets],
                   f, indent=2, default=str)
 
-    print(f"  {len(entries)} showtime buttons on page; {len(targets)} in "
-          f"the 70mm windows.")
+    print(f"  {len(entries)} showtime buttons on the 70mm page; "
+          f"{len(targets)} with a usable date.")
     if not targets:
         return []
     if LIMIT:
@@ -781,6 +776,29 @@ def _card(r):
             f'{pill}</div>{body}</div>')
 
 
+def _engagement_note(results):
+    """Describe the run from the screenings actually found, so the header stays
+    true without anyone editing a date list."""
+    # epoch_ms, not _dt: results are round-tripped through results.json for
+    # --report-only, and a datetime would not survive that.
+    stamps = sorted(r["epoch_ms"] for r in results if r.get("epoch_ms"))
+    dts = [datetime.fromtimestamp(ms / 1000, tz=PACIFIC) for ms in stamps]
+    if not dts:
+        return "No 70mm screenings currently listed."
+    first, last = dts[0], dts[-1]
+    if (first.month, first.day) == (last.month, last.day):
+        span = f"{first:%B %-d, %Y}"
+    elif first.year == last.year:
+        span = (f"{first:%B %-d}&ndash;{last:%-d}, {first.year}"
+                if first.month == last.month
+                else f"{first:%B %-d}&ndash;{last:%B %-d}, {first.year}")
+    else:
+        span = f"{first:%B %-d, %Y}&ndash;{last:%B %-d, %Y}"
+    n = len(dts)
+    return (f"70mm engagement: {span} &middot; {n} screening"
+            f"{'' if n == 1 else 's'} listed")
+
+
 def build_html_report(results, out_path=None):
     if out_path is None:
         out_path = f"{OUT}/report.html"
@@ -813,7 +831,7 @@ def build_html_report(results, out_path=None):
   <p class="sub">{html_mod.escape(meta.get("venue") or "")}
      &middot; {html_mod.escape(meta.get("venue_address") or "")}
      {f"&middot; {cap} seats" if cap else ""}</p>
-  <p class="sub">{ENGAGEMENT_NOTE}</p>
+  <p class="sub">{_engagement_note(results)}</p>
   <p class="explain">Each panel below is a capture of the live
      reserved-seating chart for one 70mm screening, taken directly from
      SIFF's Elevent ticketing widget on {gen}. {n_maps} seat map(s)
