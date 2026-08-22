@@ -34,9 +34,14 @@
       "lastVerified": "2026-08-01",
       "tier": "top",
       "styleGroup": "Chicago pan",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null
+      "locations": [
+        {
+          "neighborhood": "Phinney Ridge",
+          "address": "5918 Phinney Ave N, Seattle, WA 98103"
+        }
+      ],
+      "locationsVerified": "2026-08-22",
+      "locationsSource": "https://windycitypie.com"
     },
     {
       "id": "delancey",
@@ -66,9 +71,14 @@
       "lastVerified": "2026-08-01",
       "tier": "top",
       "styleGroup": "Wood-fired",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null
+      "locations": [
+        {
+          "neighborhood": "Ballard",
+          "address": "1415 NW 70th Street, Seattle, WA 98117"
+        }
+      ],
+      "locationsVerified": "2026-08-22",
+      "locationsSource": "https://www.delanceyseattle.com/"
     },
     {
       "id": "cornelly",
@@ -80,7 +90,7 @@
       "url": "https://www.cornellyseattle.com",
       "opened": 2021,
       "pillars": {
-        "crust": 9.0,
+        "crust": 9,
         "toppings": 9.6,
         "distinctiveness": 9.2,
         "value": 7.8
@@ -112,9 +122,9 @@
       "opened": 2021,
       "pillars": {
         "crust": 9.3,
-        "toppings": 9.0,
+        "toppings": 9,
         "distinctiveness": 9.4,
-        "value": 7.0
+        "value": 7
       },
       "crowd": {
         "rating": 4.7,
@@ -178,7 +188,7 @@
       "pillars": {
         "crust": 8.6,
         "toppings": 8.2,
-        "distinctiveness": 9.0,
+        "distinctiveness": 9,
         "value": 8.6
       },
       "crowd": {
@@ -208,9 +218,9 @@
       "opened": 2021,
       "pillars": {
         "crust": 9.1,
-        "toppings": 9.0,
+        "toppings": 9,
         "distinctiveness": 8.4,
-        "value": 8.0
+        "value": 8
       },
       "crowd": {
         "rating": 4.6,
@@ -241,8 +251,8 @@
       "pillars": {
         "crust": 8.8,
         "toppings": 8.5,
-        "distinctiveness": 8.0,
-        "value": 8.0
+        "distinctiveness": 8,
+        "value": 8
       },
       "crowd": {
         "rating": 4.4,
@@ -273,7 +283,7 @@
       "pillars": {
         "crust": 8.4,
         "toppings": 8.3,
-        "distinctiveness": 7.0,
+        "distinctiveness": 7,
         "value": 8.4
       },
       "crowd": {
@@ -286,10 +296,30 @@
       "lastVerified": "2026-08-01",
       "tier": "top",
       "styleGroup": "Neapolitan",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null,
-      "neighborhoodIsPlaceholder": true
+      "locations": [
+        {
+          "neighborhood": "Denny Triangle",
+          "address": "1100 Virginia Street, Seattle, WA 98101"
+        },
+        {
+          "neighborhood": "Columbia City",
+          "address": "4918 Rainier Avenue South, Seattle, WA 98118"
+        },
+        {
+          "neighborhood": "Wallingford",
+          "address": "4411 Stone Way North, Seattle, WA 98103"
+        },
+        {
+          "neighborhood": "Bellevue",
+          "address": "15600 NE 8th St., Suite J1, Bellevue, WA 98008"
+        },
+        {
+          "neighborhood": "Issaquah",
+          "address": "715 Northwest Gilman Boulevard, Issaquah, WA 98027"
+        }
+      ],
+      "locationsVerified": "2026-08-22",
+      "locationsSource": "https://www.tuttabella.com/overview"
     },
     {
       "id": "pagliacci",
@@ -316,10 +346,106 @@
       "lastVerified": "2026-08-01",
       "tier": "top",
       "styleGroup": "By the slice",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null,
-      "neighborhoodIsPlaceholder": true
+      "locations": [
+        {
+          "neighborhood": "Ballard",
+          "address": "851 NW 85th Street, Seattle, WA 98117"
+        },
+        {
+          "neighborhood": "Ballard",
+          "address": "3058 NW 54th Street, Seattle, WA 98107"
+        },
+        {
+          "neighborhood": "Capitol Hill",
+          "address": "2400 10th Avenue E, Seattle, WA 98102"
+        },
+        {
+          "neighborhood": "Capitol Hill",
+          "address": "415 E. Pike Street, Seattle, WA 98122"
+        },
+        {
+          "neighborhood": "Columbia City",
+          "address": "4901 Rainier Avenue S, Seattle, WA 98118"
+        },
+        {
+          "neighborhood": "Edmonds",
+          "address": "10200 Edmonds Way, Edmonds, WA 98020"
+        },
+        {
+          "neighborhood": "Fremont",
+          "address": "4003 Stone Way N, Seattle, WA 98103"
+        },
+        {
+          "neighborhood": "Lake City",
+          "address": "8024 15th Avenue NE, Seattle, WA 98115"
+        },
+        {
+          "neighborhood": "Madison Valley",
+          "address": "3015 E Madison Street, Seattle, WA 98112"
+        },
+        {
+          "neighborhood": "Magnolia",
+          "address": "1614 W Dravus Street, Seattle, WA 98119"
+        },
+        {
+          "neighborhood": "North Seattle",
+          "address": "315 N 145th Street, Seattle, WA 98133"
+        },
+        {
+          "neighborhood": "Queen Anne",
+          "address": "719 Aurora Avenue N, Seattle, WA 98109"
+        },
+        {
+          "neighborhood": "Sand Point",
+          "address": "6224 Sand Point Way NE, Seattle, WA 98115"
+        },
+        {
+          "neighborhood": "Shoreline",
+          "address": "20059 Ballinger Way NE, Shoreline, WA 98155"
+        },
+        {
+          "neighborhood": "West Seattle",
+          "address": "4449 California Avenue SW, Seattle, WA 98116"
+        },
+        {
+          "neighborhood": "Bellevue",
+          "address": "15238 NE Bel-Red Road, Bellevue, WA 98007"
+        },
+        {
+          "neighborhood": "Bellevue",
+          "address": "15210 SE 37th Street, Bellevue, WA 98006"
+        },
+        {
+          "neighborhood": "Bellevue",
+          "address": "10600 Main St, Bellevue, WA 98004"
+        },
+        {
+          "neighborhood": "Kenmore",
+          "address": "6504 NE Bothell Way, Kenmore, WA 98028"
+        },
+        {
+          "neighborhood": "Kirkland",
+          "address": "13005 NE 70th Place, Kirkland, WA 98033"
+        },
+        {
+          "neighborhood": "Kirkland",
+          "address": "11640 98th Avenue NE, Kirkland, WA 98034"
+        },
+        {
+          "neighborhood": "Mercer Island",
+          "address": "3077 78th Avenue SE, Mercer Island, WA 98040"
+        },
+        {
+          "neighborhood": "Redmond",
+          "address": "16311 Redmond Way, Redmond, WA 98052"
+        },
+        {
+          "neighborhood": "Sammamish",
+          "address": "22830 NE 8th Street, Sammamish, WA 98074"
+        }
+      ],
+      "locationsVerified": "2026-08-22",
+      "locationsSource": "https://www.pagliacci.com/locations"
     },
     {
       "id": "breezy-town-pizza",
@@ -338,7 +464,7 @@
         "value": 8.4
       },
       "crowd": null,
-      "criticScore": 9.0,
+      "criticScore": 9,
       "priceIndex": 3,
       "friction": [
         "limited-hours",
@@ -390,7 +516,7 @@
         "crust": 8.2,
         "toppings": 7.8,
         "distinctiveness": 7.2,
-        "value": 9.0
+        "value": 9
       },
       "crowd": null,
       "criticScore": 7.9,
@@ -415,13 +541,13 @@
       "url": null,
       "opened": null,
       "pillars": {
-        "crust": 8.0,
+        "crust": 8,
         "toppings": 8.6,
-        "distinctiveness": 8.0,
+        "distinctiveness": 8,
         "value": 8.2
       },
       "crowd": null,
-      "criticScore": 8.0,
+      "criticScore": 8,
       "priceIndex": 2,
       "friction": [],
       "lastVerified": null,
@@ -443,8 +569,8 @@
       "pillars": {
         "crust": 7.8,
         "toppings": 7.6,
-        "distinctiveness": 7.0,
-        "value": 9.0
+        "distinctiveness": 7,
+        "value": 9
       },
       "crowd": null,
       "criticScore": 7.6,
@@ -467,7 +593,7 @@
       "url": null,
       "opened": null,
       "pillars": {
-        "crust": 8.0,
+        "crust": 8,
         "toppings": 8.2,
         "distinctiveness": 6.8,
         "value": 8.4
@@ -494,7 +620,7 @@
       "opened": null,
       "pillars": {
         "crust": 7.2,
-        "toppings": 8.0,
+        "toppings": 8,
         "distinctiveness": 7.6,
         "value": 8.2
       },
@@ -504,10 +630,74 @@
       "friction": [],
       "lastVerified": null,
       "tier": "bench",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null,
-      "neighborhoodIsPlaceholder": true
+      "locations": [
+        {
+          "neighborhood": "Greenlake",
+          "address": "7900 E Greenlake Drive N, Seattle, WA 98103"
+        },
+        {
+          "neighborhood": "Kirkland",
+          "address": "124 Park Lane, Kirkland, WA 98033"
+        },
+        {
+          "neighborhood": "White Center",
+          "address": "9809 16th Ave SW, Seattle, WA 98106"
+        },
+        {
+          "neighborhood": "Sammamish",
+          "address": "22610 SE 4th St, Suite 404, Sammamish, WA 98074"
+        },
+        {
+          "neighborhood": "Redmond",
+          "address": "16015 Cleveland St, Suite 100, Redmond, WA 98052"
+        },
+        {
+          "neighborhood": "Queen Anne",
+          "address": "1915 Queen Anne Ave. N, Seattle, WA 98109"
+        },
+        {
+          "neighborhood": "Mountlake Terrace",
+          "address": "24015 Van Ry Blvd, Mountlake Terrace, WA 98043"
+        },
+        {
+          "neighborhood": "Mill Creek",
+          "address": "15021 Main Street, Mill Creek, WA 98012"
+        },
+        {
+          "neighborhood": "Duvall",
+          "address": "15630 Main Street, Duvall, WA 98019"
+        },
+        {
+          "neighborhood": "Bothell",
+          "address": "1715 228th St SE, Bothell, WA 98021"
+        },
+        {
+          "neighborhood": "Ravenna",
+          "address": "2108 NE 65th St, Seattle, WA 98115"
+        },
+        {
+          "neighborhood": "Issaquah",
+          "address": "2525 NE Park Dr, Issaquah, WA 98029"
+        },
+        {
+          "neighborhood": "Bellevue",
+          "address": "10201 NE 10th St, Bellevue, WA 98004"
+        },
+        {
+          "neighborhood": "Belltown",
+          "address": "419 Denny Way, Seattle, WA 98109"
+        },
+        {
+          "neighborhood": "West Seattle",
+          "address": "6459 California Ave SW, Seattle, WA 98136"
+        },
+        {
+          "neighborhood": "Capitol Hill",
+          "address": "1830 E Mercer St, Seattle, WA 98112"
+        }
+      ],
+      "locationsVerified": "2026-08-22",
+      "locationsSource": "https://zeekspizza.com/locations/"
     },
     {
       "id": "talaricos",
@@ -548,7 +738,7 @@
       "url": null,
       "opened": null,
       "pillars": {
-        "crust": 7.0,
+        "crust": 7,
         "toppings": 6.8,
         "distinctiveness": 6.6,
         "value": 9.6
@@ -579,7 +769,7 @@
         "crust": 8.2,
         "toppings": 8.8,
         "distinctiveness": 8.6,
-        "value": 8.0
+        "value": 8
       },
       "crowd": null,
       "criticScore": 8.2,
@@ -608,7 +798,7 @@
         "crust": 8.4,
         "toppings": 8.4,
         "distinctiveness": 8.8,
-        "value": 8.0
+        "value": 8
       },
       "crowd": null,
       "criticScore": 8.2,
@@ -661,7 +851,7 @@
       "pillars": {
         "crust": 7.4,
         "toppings": 7.4,
-        "distinctiveness": 7.0,
+        "distinctiveness": 7,
         "value": 7.8
       },
       "crowd": null,
@@ -688,7 +878,7 @@
         "crust": 7.8,
         "toppings": 8.4,
         "distinctiveness": 8.8,
-        "value": 8.0
+        "value": 8
       },
       "crowd": null,
       "criticScore": 7.8,
@@ -715,7 +905,7 @@
       "pillars": {
         "crust": 7.6,
         "toppings": 7.6,
-        "distinctiveness": 7.0,
+        "distinctiveness": 7,
         "value": 8.4
       },
       "crowd": null,
