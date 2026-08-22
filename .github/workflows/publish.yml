@@ -53,6 +53,17 @@ jobs:
           pip install playwright pillow
           playwright install --with-deps chromium
 
+      # Data refresh runs before the build and only writes into */data/.
+      # Both steps are fail-soft: no network, no API key, or a bad response
+      # leaves the existing data in place and the build still publishes.
+      - name: Refresh Seattle pizza buzz
+        run: node pizza/scripts/fetch-buzz.mjs
+
+      - name: Refresh crowd ratings
+        env:
+          YELP_API_KEY: ${{ secrets.YELP_API_KEY }}
+        run: node pizza/scripts/fetch-ratings.mjs
+
       # Builds each site into dist/<slug>/, runs its verifier, promotes its
       # entry page, then renders the landing page. If any site fails, the run
       # fails and nothing is deployed -- the previous deploy stays live rather
@@ -60,17 +71,20 @@ jobs:
       - name: Build all sites
         run: node scripts/build-all.mjs
 
-      - name: Record weekly snapshots
+      # Persist refreshed data so tomorrow's run can diff against it -- that is
+      # what makes the buzz list accumulate and the ▲/▼ markers meaningful.
+      - name: Commit refreshed data
         if: github.ref == 'refs/heads/main'
         run: |
-          if [ -n "$(git status --porcelain '*/data/history.json')" ]; then
+          PATHS="pizza/data/history.json pizza/data/buzz.json pizza/data/restaurants.json"
+          if [ -n "$(git status --porcelain -- $PATHS)" ]; then
             git config user.name  "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add '*/data/history.json'
-            git commit -m "chore: weekly site snapshots $(date -u +%Y-%m-%d)"
+            git add -- $PATHS
+            git commit -m "chore(data): daily refresh $(date -u +%Y-%m-%d)"
             git push
           else
-            echo "No snapshot movement to record."
+            echo "No data changes to record."
           fi
 
       - uses: actions/configure-pages@v5

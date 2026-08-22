@@ -24,6 +24,11 @@ const history = fs.existsSync(historyPath)
   ? JSON.parse(fs.readFileSync(historyPath, 'utf8'))
   : { snapshots: [] };
 
+const buzzPath = path.join(root, 'data/buzz.json');
+const buzz = fs.existsSync(buzzPath)
+  ? JSON.parse(fs.readFileSync(buzzPath, 'utf8'))
+  : { updated: null, items: [] };
+
 const now = new Date();
 const weekKey = isoWeekKey(now);
 
@@ -53,6 +58,66 @@ const PILLAR_COPY = {
 const fmtDate = d => d.toLocaleDateString('en-US', {
   timeZone: 'America/Los_Angeles', year: 'numeric', month: 'long', day: 'numeric'
 });
+
+/* ---- The Buzz ---- */
+const KIND_LABEL = { opening: 'Opening', closing: 'Closing', ranking: 'List', mention: 'Mention' };
+const byId = Object.fromEntries(dataset.restaurants.map(r => [r.id, r.name]));
+
+const buzzDate = iso => new Date(iso).toLocaleDateString('en-US', {
+  timeZone: 'America/Los_Angeles', month: 'short', day: 'numeric', year: 'numeric'
+});
+
+const buzzItem = b => `
+        <li class="buzz-item">
+          <span class="buzz-kind k-${esc(b.kind || 'mention')}">${esc(KIND_LABEL[b.kind] || 'Mention')}</span>
+          <div class="buzz-body">
+            <a href="${esc(b.url)}" target="_blank" rel="noopener nofollow">${esc(b.title)}</a>
+            <div class="buzz-meta">
+              <span>${esc(b.source)}</span><span>${esc(buzzDate(b.published))}</span>
+              ${(b.mentions || []).map(id =>
+                `<span class="buzz-ranked">↑ ${esc(byId[id] || id)}</span>`).join('')}
+            </div>
+          </div>
+        </li>`;
+
+const places = buzz.items.filter(b => b.kind === 'opening' || b.kind === 'closing');
+const rest = buzz.items.filter(b => b.kind !== 'opening' && b.kind !== 'closing');
+const buzzSources = [...new Set(buzz.items.map(b => b.source))].length;
+
+const buzzSection = buzz.items.length ? `
+<section class="section">
+  <div class="wrap">
+    <div class="eyebrow">The buzz</div>
+    <h2 style="font-family:var(--serif);font-size:clamp(28px,4vw,40px)">What Seattle is writing about</h2>
+    <p class="lede" style="margin-top:14px">
+      The ranking moves slowly and deliberately. This does not. Every day the build sweeps public
+      news feeds for Seattle pizza coverage — openings, closings, reviews and lists — and collects
+      what it finds here, linked to the source. It is assembled automatically, so read the
+      headline and judge for yourself.
+    </p>
+    <div class="stamp" style="margin-top:18px">
+      <span>${buzz.items.length} <b>stories</b></span>
+      <span>${buzzSources} <b>outlets</b></span>
+      ${buzz.updated ? `<span>Swept <b>${esc(buzzDate(buzz.updated))}</b></span>` : ''}
+    </div>
+
+    ${places.length ? `
+    <h3 class="buzz-head">Openings &amp; closings</h3>
+    <ul class="buzz-list">${places.map(buzzItem).join('')}</ul>` : ''}
+
+    ${rest.length ? `
+    <h3 class="buzz-head">Also being written about</h3>
+    <ul class="buzz-list">${rest.map(buzzItem).join('')}</ul>` : ''}
+
+    <p class="note" style="max-width:70ch">
+      Sourced from Google News and Eater Seattle. A story is kept only if it reads as local and
+      about pizza; national-chain, crime and business-wire items are filtered out. Nothing here
+      affects the SLICE score — coverage is not the same as quality, and the ranking stays
+      deliberately slow.
+    </p>
+  </div>
+</section>
+` : '';
 
 const frictionRows = Object.entries(FRICTION_COSTS)
   .sort((a, b) => b[1] - a[1])
@@ -163,6 +228,7 @@ ${boardHtml(ranked)}
   </div>
 </section>
 
+${buzzSection}
 <section class="section">
   <div class="wrap">
     <div class="eyebrow">Methodology</div>

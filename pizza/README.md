@@ -38,6 +38,7 @@ Ties break on Consensus Signal, then Crust Integrity, then alphabetically.
 ```
 pizza/                    # published at /pizza/
   data/restaurants.json   the dataset — edit this to change the rankings
+  data/buzz.json          news sweep, refreshed daily (see below)
   data/history.json       weekly snapshots, drives the ▲/▼ movement markers
   src/slice.js            the algorithm (runs in Node AND in the browser)
   src/render.js           card rendering, shared by the build and the re-ranker
@@ -45,6 +46,8 @@ pizza/                    # published at /pizza/
   src/styles.css
   scripts/build.mjs       renders dist/
   scripts/verify.mjs      post-build sanity checks
+  scripts/fetch-buzz.mjs  refreshes data/buzz.json from public news feeds
+  scripts/fetch-ratings.mjs  refreshes crowd ratings from Yelp (needs a key)
 ```
 
 `src/slice.js` is dependency-free ES module JavaScript with no Node or DOM APIs, so the static
@@ -82,3 +85,27 @@ opinions, not measurements, which is why the page lets you overrule their weight
 figures are rounded aggregates observed across major review platforms at the dataset version
 shown, not a live API feed. To change the rankings, edit `data/restaurants.json` and bump
 `lastVerified`.
+
+## Where the data comes from
+
+Two refresh steps run before the daily build. Both only write into `data/`, and both are
+fail-soft — no network, no API key, or a bad response leaves existing data in place and
+the site still publishes.
+
+**`fetch-buzz.mjs`** — keyless. Sweeps Google News RSS and Eater Seattle for Seattle pizza
+coverage, filters for stories that are both local and actually about pizza (national
+chains, crime, business-wire and other-city stories are dropped), classifies each as an
+opening, closing, list or mention, and merges into `data/buzz.json` deduped on title with
+a 120-day window. Reddit was considered and rejected: it now returns 403 to anonymous
+reads.
+
+**`fetch-ratings.mjs`** — needs `YELP_API_KEY` as a repository secret. Without it the step
+is a clean no-op, which is the current state. With it, each restaurant's `crowd.rating`,
+`crowd.reviews` and `lastVerified` are refreshed from Yelp Fusion. Guard rails: a result
+must clear a name-similarity threshold, a rating cannot move more than 0.4 in one run, and
+review counts cannot halve — any of those and the entry is left alone and logged. A wrong
+match is worse than stale data.
+
+**Pillar scores are never written by a script.** They are editorial judgments applied by
+one rubric, which is what the page claims, and automating them would make that claim
+false. Only the crowd figures refresh automatically.
