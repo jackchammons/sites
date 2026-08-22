@@ -60,6 +60,32 @@ jobs:
             echo "No CLAUDE_CODE_OAUTH_TOKEN or ANTHROPIC_API_KEY — skipping the research pass."
           fi
 
+      # The action hides the SDK's output, so an auth or billing failure surfaces
+      # only as is_error:true with no cost and no model usage. This probe turns
+      # that into the actual API error before three minutes of retries.
+      - name: Preflight credential check
+        if: steps.gate.outputs.enabled == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          if [ -n "$ANTHROPIC_API_KEY" ]; then
+            AUTH_HEADER="x-api-key: $ANTHROPIC_API_KEY"
+            EXTRA=()
+          else
+            AUTH_HEADER="Authorization: Bearer $CLAUDE_CODE_OAUTH_TOKEN"
+            EXTRA=(-H "anthropic-beta: oauth-2025-04-20")
+          fi
+          code=$(curl -sS -o /tmp/probe.json -w '%{http_code}'             https://api.anthropic.com/v1/messages             -H "$AUTH_HEADER"             -H "anthropic-version: 2023-06-01"             -H "content-type: application/json"             "${EXTRA[@]}"             -d '{"model":"claude-opus-5","max_tokens":64,"messages":[{"role":"user","content":"reply with OK"}]}' || echo 000)
+          echo "Preflight HTTP $code (auth: ${{ steps.gate.outputs.auth }})"
+          if [ "$code" != "200" ]; then
+            TYPE=$(python3 -c "import json;print(json.load(open('/tmp/probe.json')).get('error',{}).get('type','?'))" 2>/dev/null || echo '?')
+            MSG=$(python3 -c "import json;print(json.load(open('/tmp/probe.json')).get('error',{}).get('message','?'))" 2>/dev/null || echo '?')
+            echo "::error::Credential rejected — HTTP $code, $TYPE: $MSG"
+            exit 1
+          fi
+          echo "Credential is valid and claude-opus-5 is reachable."
+
       # --max-turns is a cost control, not a style choice: an unbounded agentic
       # loop is what drains a monthly credit pool.
       - name: Research and refresh pizza data
