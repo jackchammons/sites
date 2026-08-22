@@ -256,8 +256,9 @@ jobs:
               `source` must be the pizzeria's own https page. Every site needs
               both a neighborhood and a full street address starting with the
               street number and naming the city, WA and the ZIP -- "Capitol Hill"
-              or "Seattle, WA" alone is rejected, and so is an address outside
-              the Seattle metro or the same branch listed twice. Omit a pizzeria
+              or "Seattle, WA" alone is rejected. The ZIP must be a Puget Sound
+              one (980xx-983xx), so a Portland or Spokane outpost is rejected,
+              and so is the same branch listed twice. Omit a pizzeria
               you could not verify; do not send an entry with an empty sites
               array.
 

@@ -109,7 +109,24 @@ sections.closures.forEach((it, i) => {
  * street address that is not one, a branch in another metro, the same branch
  * listed twice.
  */
-const METRO = /\b(seattle|bellevue|redmond|kirkland|renton|burien|shoreline|tukwila|edmonds|lynnwood|bothell|issaquah|sammamish|kent|des moines|white center|mercer island|woodinville|everett|tacoma)\b/i;
+/* Region check by ZIP, not by city name. The first version listed cities and
+ * rejected a real Zeeks branch in Mill Creek on its first live run -- a chain
+ * opens somewhere the list has never heard of and the gate calls the truth a
+ * lie. ZIP prefixes are objective and need no maintenance as the field changes:
+ *
+ *   980xx  King and Snohomish suburbs (Bellevue, Kent, Mill Creek)
+ *   981xx  Seattle proper
+ *   982xx  Everett and north
+ *   983xx  Kitsap and the Olympic Peninsula
+ *   984xx  Pierce County (Tacoma)
+ *   985xx  Thurston County (Olympia)
+ *
+ * That is wider than "Seattle metro" strictly means, and deliberately so: this
+ * check exists to catch a fabricated address or an out-of-region outpost --
+ * Spokane 992xx, Vancouver WA 986xx, Portland OR -- not to adjudicate which
+ * suburbs count. A chain reporting its real Tacoma branch is telling the truth,
+ * and a validator that calls that a lie is the more expensive failure. */
+const PUGET_SOUND_ZIP = /\b98[0-5]\d{2}\b/;
 
 sections.locations.forEach((it, i) => {
   if (!byId.has(it?.id)) bad('locations', i, `unknown restaurant id "${it?.id}"`);
@@ -137,7 +154,7 @@ sections.locations.forEach((it, i) => {
     // "Capitol Hill" or "Seattle, WA" dressed up as an address.
     if (!/^\s*\d/.test(addr)) bad('locations', i, `${where}: address does not start with a street number: "${addr}"`);
     if (!/\bWA\b|\bWashington\b/i.test(addr)) bad('locations', i, `${where}: address is not in Washington: "${addr}"`);
-    if (!METRO.test(addr)) bad('locations', i, `${where}: not a Seattle-metro city: "${addr}"`);
+    if (!PUGET_SOUND_ZIP.test(addr)) bad('locations', i, `${where}: no Puget Sound ZIP (980xx-983xx): "${addr}"`);
     const key = addr.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
     if (seenSites.has(key)) bad('locations', i, `${where}: duplicate address "${addr}"`);
     seenSites.add(key);
