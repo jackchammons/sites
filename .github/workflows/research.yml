@@ -111,6 +111,12 @@ jobs:
         if: steps.gate.outputs.enabled == 'true'
         uses: anthropics/claude-code-action@v1
         with:
+          # DIAGNOSTIC: five runs have ended on the turn ceiling and the action
+          # hides the SDK transcript, so every fix so far has been a guess. This
+          # exposes what the agent is actually spending turns on. Turn it back
+          # off once the failure mode is understood -- it prints the full
+          # conversation into public workflow logs.
+          show_full_output: true
           # Whichever secret exists; the empty one is ignored by the action.
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
