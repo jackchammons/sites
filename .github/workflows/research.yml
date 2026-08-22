@@ -95,15 +95,30 @@ jobs:
               ;;
           esac
 
-      # Cost notes, from a real run rather than an estimate. The first working
-      # run spent $1.24 and still ran out of turns at 12, on claude-opus-5.
-      # Daily, that is roughly $37/month against a Pro pool of $20.
-      #  - Sonnet 5 does search-and-extract work at a fraction of that cost;
-      #    this task is reading pages and writing JSON, not reasoning hard.
-      #  - 28 turns because four research sections genuinely need them, and
-      #    running out of turns wastes everything spent getting there.
-      #  - The extra tools stop the agent burning turns on denials: the first
-      #    run logged 2 permission denials against a four-tool allowlist.
+      # A short explicit worklist, instead of the agent reading a 25-entry file
+      # and deciding for itself. Fewer turns, far less context.
+      - name: Pick what needs verifying
+        id: worklist
+        if: steps.gate.outputs.enabled == 'true'
+        run: |
+          {
+            echo 'list<<WORKLIST_EOF'
+            node pizza/scripts/next-to-verify.mjs 5
+            echo 'WORKLIST_EOF'
+          } >> "$GITHUB_OUTPUT"
+          echo "Worklist:"; node pizza/scripts/next-to-verify.mjs 5
+
+      # Scope, learned the hard way. Two runs asked for four research sections
+      # in one pass and both died on the turn ceiling -- at 12 turns for $1.24,
+      # then at 28 turns for $2.23. Switching Opus 5 to Sonnet 5 did not reduce
+      # the cost, because turns are the driver: every extra turn re-sends the
+      # accumulated context. Raising the ceiling just buys a more expensive
+      # failure.
+      #
+      # So the agent now does one bounded job: look up crowd figures for the
+      # five entries the worklist names. News is already covered for free by
+      # the RSS sweep in publish.yml, and candidates and closures can come back
+      # once this loop is proven.
       - name: Research and refresh pizza data
         if: steps.gate.outputs.enabled == 'true'
         uses: anthropics/claude-code-action@v1
@@ -112,62 +127,42 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           claude_args: |
-            --max-turns 28
+            --max-turns 20
             --model claude-sonnet-5
             --allowedTools "WebSearch,WebFetch,Read,Write,Glob,Grep,TodoWrite"
           prompt: |
-            You are refreshing the data behind the Seattle Pizza Index.
+            Look up current crowd ratings for these five Seattle pizzerias and
+            write them to pizza/data/research.json. Nothing else.
 
-            First read pizza/data/restaurants.json (the ranked field, 25 entries
-            across two tiers) and pizza/data/buzz.json (news already collected by
-            the keyless feed sweep). Then research and write ONE file,
-            pizza/data/research.json, with four sections:
+            ${{ steps.worklist.outputs.list }}
 
-            {"updated":"<ISO8601>",
-             "news":       [{"title","url","source","published","kind","mentions"}],
-             "ratings":    [{"id","rating","reviews","source"}],
-             "candidates": [{"name","neighborhood","style","note","source"}],
-             "closures":   [{"id","note","source","date"}]}
+            For each one, search for its Yelp or Google listing, open it, and
+            read off the average rating and the total review count. Work
+            through them one at a time and keep moving; do not over-research a
+            single entry.
 
-            news - Seattle pizzeria stories from the last 30 days NOT already in
-              buzz.json. kind is opening|closing|ranking|mention. mentions lists
-              restaurant ids the story names, if any.
+            Then write pizza/data/research.json exactly like this:
 
-            ratings - current crowd figures for entries in restaurants.json.
-              PRIORITISE the entries whose "crowd" is null: they are marked
-              provisional on the site and cannot enter the top ten until their
-              figures are verified. rating is the 1-5 average, reviews the
-              integer count, source the https page you read it from.
+            {"updated":"<ISO8601 now>",
+             "ratings":[{"id":"<the id from the list above>",
+                         "rating":<number 1-5>,
+                         "reviews":<integer>,
+                         "source":"<https URL of the page you read>"}]}
 
-            candidates - Seattle pizzerias NOT in restaurants.json that deserve
-              consideration: recent openings, places getting real critical
-              attention. note is one sentence on why.
+            Rules, enforced by pizza/scripts/verify-research.mjs, which rejects
+            the entire file if any entry breaks them:
+            - source must be a real https URL you actually opened. Never invent
+              a URL, a rating or a review count. If you cannot find a listing
+              for one of them, leave that entry out entirely.
+            - ids must be exactly as given above.
+            - For an entry that already has figures, a rating may not move more
+              than 0.5 and the review count may not halve. If what you find
+              breaks that, you have matched the wrong business - omit it.
+            - Omissions are free. Fabrications are not. Four solid entries beat
+              five with one guess.
 
-            closures - entries in restaurants.json reported permanently closed.
-              This relegates them out of the ranking, so be certain and cite a
-              specific report.
-
-            Rules, all enforced by pizza/scripts/verify-research.mjs, which
-            rejects the whole file if any entry breaks them:
-            - Every entry needs a real https URL you actually visited. Never
-              invent a URL, headline, date or rating. If you cannot verify
-              something, leave it out - omissions are free, fabrications are not.
-            - Dates must be real, within 180 days, and not in the future.
-            - ids must already exist in restaurants.json, except in candidates
-              where the place must NOT already be ranked.
-            - A rating may not move more than 0.5 from the stored value and a
-              review count may not halve. If the real figure breaks that you
-              have almost certainly matched the wrong business - omit it.
-            - Caps: 20 news, 8 ratings, 15 candidates, 10 closures. The ratings
-              cap is deliberately small: verify a handful properly each run
-              rather than rushing all of them. Pick the provisional entries you
-              have not covered recently.
-
-            Write only pizza/data/research.json. Do not modify any other file -
-            in particular do not touch restaurants.json; a separate script
-            applies your ratings under its own guard rails. Never write or
-            adjust pillar scores: those are editorial and not yours to set.
-            If you find nothing, write the four sections as empty arrays.
+            Write only pizza/data/research.json. Do not modify any other file,
+            and never touch pillar scores - those are editorial.
 
       - name: Validate the agent's output
         if: steps.gate.outputs.enabled == 'true'
