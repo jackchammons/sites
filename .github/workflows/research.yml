@@ -95,8 +95,15 @@ jobs:
               ;;
           esac
 
-      # --max-turns is a cost control, not a style choice: an unbounded agentic
-      # loop is what drains a monthly credit pool.
+      # Cost notes, from a real run rather than an estimate. The first working
+      # run spent $1.24 and still ran out of turns at 12, on claude-opus-5.
+      # Daily, that is roughly $37/month against a Pro pool of $20.
+      #  - Sonnet 5 does search-and-extract work at a fraction of that cost;
+      #    this task is reading pages and writing JSON, not reasoning hard.
+      #  - 28 turns because four research sections genuinely need them, and
+      #    running out of turns wastes everything spent getting there.
+      #  - The extra tools stop the agent burning turns on denials: the first
+      #    run logged 2 permission denials against a four-tool allowlist.
       - name: Research and refresh pizza data
         if: steps.gate.outputs.enabled == 'true'
         uses: anthropics/claude-code-action@v1
@@ -105,9 +112,9 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           claude_args: |
-            --max-turns 12
-            --model claude-opus-5
-            --allowedTools "WebSearch,WebFetch,Read,Write"
+            --max-turns 28
+            --model claude-sonnet-5
+            --allowedTools "WebSearch,WebFetch,Read,Write,Glob,Grep,TodoWrite"
           prompt: |
             You are refreshing the data behind the Seattle Pizza Index.
 
@@ -151,7 +158,10 @@ jobs:
             - A rating may not move more than 0.5 from the stored value and a
               review count may not halve. If the real figure breaks that you
               have almost certainly matched the wrong business - omit it.
-            - Caps: 20 news, 30 ratings, 15 candidates, 10 closures.
+            - Caps: 20 news, 8 ratings, 15 candidates, 10 closures. The ratings
+              cap is deliberately small: verify a handful properly each run
+              rather than rushing all of them. Pick the provisional entries you
+              have not covered recently.
 
             Write only pizza/data/research.json. Do not modify any other file -
             in particular do not touch restaurants.json; a separate script

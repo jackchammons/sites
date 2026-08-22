@@ -30,7 +30,7 @@ const dataset = JSON.parse(fs.readFileSync(path.join(root, 'data/restaurants.jso
 const byId = new Map(dataset.restaurants.map(r => [r.id, r]));
 
 const KINDS = new Set(['opening', 'closing', 'ranking', 'mention']);
-const CAPS = { news: 20, ratings: 30, candidates: 15, closures: 10 };
+const CAPS = { news: 20, ratings: 8, candidates: 15, closures: 10 };
 const MAX_AGE_DAYS = 180;
 const MAX_RATING_DRIFT = 0.5;   // a real aggregate does not lurch overnight
 
