@@ -48,6 +48,7 @@ pizza/                    # published at /pizza/
   scripts/verify.mjs      post-build sanity checks
   scripts/fetch-buzz.mjs  refreshes data/buzz.json from public news feeds
   scripts/fetch-ratings.mjs  refreshes crowd ratings from Yelp (needs a key)
+  scripts/verify-research.mjs validates the research agent's output before it is committed
 ```
 
 `src/slice.js` is dependency-free ES module JavaScript with no Node or DOM APIs, so the static
@@ -105,6 +106,18 @@ is a clean no-op, which is the current state. With it, each restaurant's `crowd.
 must clear a name-similarity threshold, a rating cannot move more than 0.4 in one run, and
 review counts cannot halve — any of those and the entry is left alone and logged. A wrong
 match is worse than stale data.
+
+**`research.yml` + `verify-research.mjs`** — needs `CLAUDE_CODE_OAUTH_TOKEN`, generated with
+`claude setup-token`. A separate daily workflow runs the Claude Code Action to find openings
+and closings the feeds missed, writing `data/research.json`, which the build merges into the
+buzz list. It writes its own file rather than `buzz.json`, so a bad run cannot damage the
+keyless pipeline, and `verify-research.mjs` rejects the output — bad URL, non-https link,
+future or stale date, invented `kind`, unknown restaurant id, duplicate — before anything is
+committed. Researched entries still link to a real source, and the page says so.
+
+Note on billing: that token draws on the subscription's programmatic credit pool. Do **not**
+also set `ANTHROPIC_API_KEY` here — it wins the credential chain and bills API credits
+instead, which is a documented way to run up a surprise bill.
 
 **Pillar scores are never written by a script.** They are editorial judgments applied by
 one rubric, which is what the page claims, and automating them would make that claim

@@ -57,8 +57,17 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
 ## Things that will bite you
 
 - **A Pages deploy replaces the entire site.** Never add a second workflow that calls
-  `deploy-pages` — it would delete the other sites' output. One workflow builds and
-  deploys everything, on the fastest cadence any site needs.
+  `deploy-pages` — it would delete the other sites' output. `publish.yml` is the only
+  workflow allowed to deploy. `research.yml` exists alongside it and only commits data;
+  its commit triggers `publish.yml` through that workflow's push trigger.
+- **Agents stay out of the deploy path.** `research.yml` runs the Claude Code Action to
+  write `pizza/data/research.json`, gated behind `CLAUDE_CODE_OAUTH_TOKEN` and validated by
+  `pizza/scripts/verify-research.mjs` before anything is committed. It writes its own file
+  rather than `buzz.json` so it cannot damage the keyless feed pipeline, and the build
+  merges it inside a try/catch. If it hangs or fails, the site still publishes.
+- **Do not set `ANTHROPIC_API_KEY` in this repo.** It takes precedence over
+  `CLAUDE_CODE_OAUTH_TOKEN` in the credential chain, so setting both silently bills metered
+  API credits while subscription headroom goes unused.
 - **If any site's build fails, the whole run fails and nothing deploys.** This is
   deliberate: the previous deploy stays live instead of publishing a half-built site.
 - **Enabling Pages cannot be automated.** A workflow's `GITHUB_TOKEN` is refused on the

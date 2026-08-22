@@ -29,6 +29,25 @@ const buzz = fs.existsSync(buzzPath)
   ? JSON.parse(fs.readFileSync(buzzPath, 'utf8'))
   : { updated: null, items: [] };
 
+/* Items the research agent found that the feeds missed. Purely additive, and
+ * wrapped in try/catch so a malformed file can never take the site down --
+ * verify-research.mjs is the real gate, this is the belt to its braces. */
+const researchPath = path.join(root, 'data/research.json');
+if (fs.existsSync(researchPath)) {
+  try {
+    const research = JSON.parse(fs.readFileSync(researchPath, 'utf8'));
+    const known = new Set(buzz.items.map(b => String(b.url).toLowerCase()));
+    const extra = (research.items || [])
+      .filter(r => r && r.url && !known.has(String(r.url).toLowerCase()))
+      .map(r => ({ ...r, via: 'research' }));
+    buzz.items = [...buzz.items, ...extra]
+      .sort((a, b) => Date.parse(b.published) - Date.parse(a.published));
+    if (extra.length) console.log(`  + ${extra.length} researched item(s)`);
+  } catch (e) {
+    console.warn(`  ! ignoring data/research.json: ${e.message}`);
+  }
+}
+
 const now = new Date();
 const weekKey = isoWeekKey(now);
 
@@ -111,9 +130,10 @@ const buzzSection = buzz.items.length ? `
 
     <p class="note" style="max-width:70ch">
       Sourced from Google News and Eater Seattle. A story is kept only if it reads as local and
-      about pizza; national-chain, crime and business-wire items are filtered out. Nothing here
-      affects the SLICE score — coverage is not the same as quality, and the ranking stays
-      deliberately slow.
+      about pizza; national-chain, crime and business-wire items are filtered out.${buzz.items.some(b => b.via === 'research') ? `
+      Some entries are found by a research pass rather than the feed sweep — every one still
+      links to its original source, so you can check it.` : ''} Nothing here affects the SLICE
+      score — coverage is not the same as quality, and the ranking stays deliberately slow.
     </p>
   </div>
 </section>
