@@ -320,9 +320,14 @@
       "lastVerified": "2026-08-01",
       "tier": "top",
       "styleGroup": "Wood-fired",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null
+      "locations": [
+        {
+          "neighborhood": "Madison Park",
+          "address": "4235 E Madison St, Seattle, WA 98112"
+        }
+      ],
+      "locationsVerified": "2026-08-22",
+      "locationsSource": "https://theindiepizzeria.com/"
     },
     {
       "id": "tutta-bella",
@@ -537,7 +542,7 @@
       "styleGroup": "Neapolitan",
       "signature": "Wood-fired Neapolitan from imported ovens, unchanged for two decades",
       "blurb": "One of the city's original Neapolitan rooms, dark and wood-fired and stubbornly consistent. Where Tutta Bella made the style legible to Seattle, Via Tribunali kept it moody and Italian.",
-      "url": null,
+      "url": "https://www.viatribunali.com/",
       "opened": null,
       "pillars": {
         "crust": 8.6,
@@ -551,9 +556,18 @@
       "friction": [],
       "lastVerified": null,
       "tier": "bench",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null
+      "locations": [
+        {
+          "neighborhood": "Capitol Hill",
+          "address": "913 E Pike St, Seattle, WA 98122"
+        },
+        {
+          "neighborhood": "Queen Anne",
+          "address": "317 West Galer St, Seattle, WA 98119"
+        }
+      ],
+      "locationsVerified": "2026-08-22",
+      "locationsSource": "https://www.viatribunali.com/"
     },
     {
       "id": "big-marios",
@@ -563,7 +577,7 @@
       "styleGroup": "By the slice",
       "signature": "A foldable 18-inch pepperoni slice at one in the morning",
       "blurb": "The default Capitol Hill late-night slice, and a genuinely good New York pie rather than a merely convenient one. Thin, foldable, greasy in the correct way.",
-      "url": null,
+      "url": "https://bigmariosnewyorkpizza.com/",
       "opened": null,
       "pillars": {
         "crust": 8.2,
@@ -579,9 +593,26 @@
       ],
       "lastVerified": null,
       "tier": "bench",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null
+      "locations": [
+        {
+          "neighborhood": "Capitol Hill",
+          "address": "1009 E Pike St, Seattle, WA 98122"
+        },
+        {
+          "neighborhood": "Queen Anne",
+          "address": "815 5th Ave N, Seattle, WA 98109"
+        },
+        {
+          "neighborhood": "Fremont",
+          "address": "4350 Leary Way NW, Seattle, WA 98107"
+        },
+        {
+          "neighborhood": "White Center",
+          "address": "9635 16th Ave SW, Seattle, WA 98106"
+        }
+      ],
+      "locationsVerified": "2026-08-22",
+      "locationsSource": "https://bigmariosnewyorkpizza.com/"
     },
     {
       "id": "flying-squirrel",

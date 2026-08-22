@@ -1,123 +1,93 @@
 {
-  "updated": "2026-08-22T13:00:00Z",
+  "updated": "2026-08-22T15:00:00.000Z",
   "news": [
     {
       "title": "Urban Family Brewing to open Seattle waterfront restaurant",
       "url": "https://www.myballard.com/2026/07/31/urban-family-brewing-to-open-seattle-waterfront-restaurant/",
       "source": "My Ballard",
-      "published": "2026-07-31T00:00:00Z",
+      "published": "2026-07-31T07:00:00.000Z",
       "kind": "opening",
       "mentions": []
     },
     {
-      "title": "Acclaimed Stevie's Famous Pizza Celebrates Grand Opening on Phinney Ridge August 2",
-      "url": "https://phinneywood.com/2026/07/stevies-famous-pizza-celebrates-grand-opening-on-phinney-ridge/",
-      "source": "PhinneyWood",
-      "published": "2026-07-28T00:00:00Z",
-      "kind": "opening",
-      "mentions": []
-    },
-    {
-      "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
-      "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
+      "title": "Opening Night: Stevie's Famous Comes to North Seattle",
+      "url": "https://seattlemag.com/food-drink/opening-night-stevies-famous-comes-to-north-seattle",
       "source": "Seattle magazine",
-      "published": "2026-08-07T00:00:00Z",
-      "kind": "mention",
+      "published": "2026-08-19T07:00:00.000Z",
+      "kind": "opening",
       "mentions": []
     }
   ],
   "candidates": [
     {
+      "name": "Stevie's Famous",
+      "neighborhood": "Phinney Ridge",
+      "style": "New York-style (sourdough)",
+      "note": "Burien-founded pizzeria's first full-size Seattle location, in the former Zeek's space, on the strength of a 2024 Best Pizza reader-poll win.",
+      "source": "https://seattlemag.com/food-drink/opening-night-stevies-famous-comes-to-north-seattle"
+    },
+    {
+      "name": "Urban Family Waterfront",
+      "neighborhood": "Downtown waterfront",
+      "style": "Grandma-style square pizza",
+      "note": "Ballard brewery's new waterfront outpost near Ivar's centers its food program on grandma-style pan pizza and focaccia sandwiches.",
+      "source": "https://www.myballard.com/2026/07/31/urban-family-brewing-to-open-seattle-waterfront-restaurant/"
+    },
+    {
       "name": "Abecedary",
       "neighborhood": "Hillman City",
       "style": "New Haven-style",
-      "note": "Buzzed-about pop-up ahead of a full 2027 opening, from a baker who has generated real press with limited cheese-and-basil pies before serving a permanent menu.",
+      "note": "Anticipated pizzeria and brewery from a Harvest Vine/Dahlia Lounge alum, still over a year from opening but already drawing crowds at pop-up previews.",
       "source": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/"
-    },
-    {
-      "name": "Urban Family Brewing (Waterfront)",
-      "neighborhood": "Downtown Waterfront",
-      "style": "Grandma-style",
-      "note": "Ballard brewery's new waterfront outpost built around a dedicated grandma-style square pizza program, opening across from Ivar's.",
-      "source": "https://www.myballard.com/2026/07/31/urban-family-brewing-to-open-seattle-waterfront-restaurant/"
     }
   ],
   "locations": [
     {
-      "id": "cornelly",
-      "source": "https://www.cornellyseattle.com",
+      "id": "independent-pizzeria",
+      "homepage": "https://theindiepizzeria.com/",
+      "source": "https://theindiepizzeria.com/",
+      "sites": [
+        {
+          "neighborhood": "Madison Park",
+          "address": "4235 E Madison St, Seattle, WA 98112"
+        }
+      ]
+    },
+    {
+      "id": "via-tribunali",
+      "homepage": "https://www.viatribunali.com/",
+      "source": "https://www.viatribunali.com/",
       "sites": [
         {
           "neighborhood": "Capitol Hill",
-          "address": "601 Summit Ave E, Seattle, WA 98102"
+          "address": "913 E Pike St, Seattle, WA 98122"
         },
         {
           "neighborhood": "Queen Anne",
-          "address": "2121 Queen Anne Ave N, Seattle, WA 98119"
+          "address": "317 West Galer St, Seattle, WA 98119"
         }
       ]
     },
     {
-      "id": "moto-pizza",
-      "source": "https://motopizza.com",
-      "sites": [
-        {
-          "neighborhood": "Belltown",
-          "address": "3131 Western Ave #301, Seattle, WA 98121"
-        },
-        {
-          "neighborhood": "Pioneer Square",
-          "address": "512 2nd Ave, Suite 100, Seattle, WA 98104"
-        },
-        {
-          "neighborhood": "West Seattle",
-          "address": "4526 42nd Ave SW, Seattle, WA 98116"
-        },
-        {
-          "neighborhood": "Edmonds",
-          "address": "414 Main St, Edmonds, WA 98020"
-        },
-        {
-          "neighborhood": "Bellevue",
-          "address": "1020 Bellevue Square, Bellevue, WA 98004"
-        }
-      ]
-    },
-    {
-      "id": "serious-pie",
-      "source": "https://www.seriouspieseattle.com/",
-      "sites": [
-        {
-          "neighborhood": "Downtown",
-          "address": "316 Virginia St, Seattle, WA 98101"
-        },
-        {
-          "neighborhood": "Ballard",
-          "address": "5118 14th Ave NW, Seattle, WA 98107"
-        },
-        {
-          "neighborhood": "Totem Lake",
-          "address": "12540 120th Ave NE #122, Kirkland, WA 98034"
-        }
-      ]
-    },
-    {
-      "id": "dinos-tomato-pie",
-      "source": "https://www.dinostomatopie.com",
+      "id": "big-marios",
+      "homepage": "https://bigmariosnewyorkpizza.com/",
+      "source": "https://bigmariosnewyorkpizza.com/",
       "sites": [
         {
           "neighborhood": "Capitol Hill",
-          "address": "1524 E Olive Way, Seattle, WA 98122"
-        }
-      ]
-    },
-    {
-      "id": "lupo",
-      "source": "https://www.lupofremont.com/about",
-      "sites": [
+          "address": "1009 E Pike St, Seattle, WA 98122"
+        },
+        {
+          "neighborhood": "Queen Anne",
+          "address": "815 5th Ave N, Seattle, WA 98109"
+        },
         {
           "neighborhood": "Fremont",
-          "address": "4303 Fremont Ave N, Seattle, WA 98103"
+          "address": "4350 Leary Way NW, Seattle, WA 98107"
+        },
+        {
+          "neighborhood": "White Center",
+          "address": "9635 16th Ave SW, Seattle, WA 98106"
         }
       ]
     }
