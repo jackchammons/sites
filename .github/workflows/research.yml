@@ -248,8 +248,22 @@ jobs:
         if: steps.gate.outputs.enabled == 'true'
         run: node pizza/scripts/apply-research.mjs
 
+      # Pushes with an explicit token rather than the credential checkout
+      # persists. The Claude action mints its own GitHub App token and revokes
+      # it in its cleanup, inside the agent step, which leaves the persisted
+      # header pointing at a dead token by the time this step runs -- the push
+      # came back "Invalid username or token" on an otherwise clean pass.
+      # publish.yml gets away with a bare `git push` only because it never runs
+      # the action. GITHUB_TOKEN is job-scoped and outlives the app token.
+      #
+      # Rebase before pushing: publish.yml commits to main on its own schedule
+      # and the two can overlap. --autostash is not needed, the tree is clean
+      # after the commit, but a rejected push should retry rather than fail a
+      # run that did real work.
       - name: Commit research
         if: steps.gate.outputs.enabled == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           PATHS="pizza/data/research.json pizza/data/restaurants.json"
           if [ -n "$(git status --porcelain -- $PATHS)" ]; then
@@ -257,7 +271,28 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add -- $PATHS
             git commit -m "chore(data): research pass $(date -u +%Y-%m-%d)"
-            git push
+            REMOTE="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+            pushed=no
+            for attempt in 1 2 3; do
+              [ "$attempt" = 1 ] || sleep $(( attempt * 5 ))
+              if ! git fetch "$REMOTE" main; then
+                echo "fetch failed on attempt $attempt"; continue
+              fi
+              if ! git rebase FETCH_HEAD; then
+                git rebase --abort || true
+                echo "rebase onto main failed on attempt $attempt"; continue
+              fi
+              if git push "$REMOTE" HEAD:main; then
+                pushed=yes
+                echo "pushed on attempt $attempt"
+                break
+              fi
+              echo "push rejected on attempt $attempt"
+            done
+            if [ "$pushed" != yes ]; then
+              echo "::error::Could not push the research commit after 3 attempts."
+              exit 1
+            fi
           else
             echo "No new research to record."
           fi
