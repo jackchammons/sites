@@ -15,26 +15,49 @@
  * are checkable. Ratings sit behind a 403 and pillar scores are editorial.
  */
 
-/* The label shown under a name. One site reads as its neighborhood; several
- * read as the flagship plus a count, since "Ballard, Capitol Hill, Georgetown,
- * Fremont, U District" does not fit a card and does not help anyone. */
-export function locationLabel(r) {
-  const sites = r.locations ?? [];
-  if (sites.length === 1) return sites[0].neighborhood;
-  if (sites.length > 1) {
-    const first = sites[0].neighborhood;
-    return `${first} + ${sites.length - 1} more`;
+/* Distinct neighborhoods, in the order the pizzeria lists them. Branches are not
+ * neighborhoods: Pagliacci runs 24 shops across 19 areas, three of them in
+ * Bellevue and two in Ballard, so counting sites would print "Ballard" twice and
+ * overstate how spread out it is. */
+export function locationAreas(r) {
+  const seen = new Set();
+  const areas = [];
+  for (const s of r.locations ?? []) {
+    const key = s.neighborhood.trim().toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    areas.push(s.neighborhood.trim());
   }
+  return areas;
+}
+
+/* The label under a name. Names one or two real areas before falling back to a
+ * count, because a bare "24 locations" is only as useful as the "Citywide" it
+ * replaced -- and "Ballard + 23 more" is worse still, since it implies Ballard
+ * is the flagship when it is simply first on their list. */
+export function locationLabel(r) {
+  const areas = locationAreas(r);
+  if (areas.length === 1) return areas[0];
+  if (areas.length === 2) return `${areas[0]} and ${areas[1]}`;
+  if (areas.length > 2) return `${areas[0]}, ${areas[1]} + ${areas.length - 2} more`;
   // Nothing verified yet. A placeholder is not a place, so say what it means.
   if (r.neighborhoodIsPlaceholder) return 'Several locations';
   return r.neighborhood;
 }
 
-/* Long form for the card body: every neighborhood, in order, flagship first. */
+/* Long form for the card body: every distinct neighborhood, in listed order. */
 export function locationList(r) {
-  const sites = r.locations ?? [];
-  if (!sites.length) return null;
-  return sites.map(s => s.neighborhood);
+  const areas = locationAreas(r);
+  return areas.length ? areas : null;
+}
+
+/* "19 neighborhoods · 24 locations", or just the count when they agree. */
+export function locationCount(r) {
+  const sites = (r.locations ?? []).length;
+  const areas = locationAreas(r).length;
+  if (!sites) return null;
+  if (sites === areas) return `${sites} location${sites === 1 ? '' : 's'}`;
+  return `${areas} neighborhoods · ${sites} locations`;
 }
 
 /* True when this entry has been confirmed against the pizzeria's own site. */

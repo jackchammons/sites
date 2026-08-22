@@ -1,6 +1,6 @@
 /* Card rendering shared by the static build and the in-browser re-ranker. */
 import { FRICTION_LABELS } from './slice.js';
-import { locationLabel, locationList } from './locations.js';
+import { locationLabel, locationList, locationCount } from './locations.js';
 
 export const PILLAR_META = {
   crust:           { label: 'Crust Integrity',  color: 'var(--crust)' },
@@ -18,7 +18,7 @@ function locationsHtml(r) {
   const sites = locationList(r);
   if (!sites || sites.length < 2) return '';
   return `<div class="locs" title="Verified ${esc(r.locationsVerified)} from ${esc(r.locationsSource ?? 'the pizzeria')}">`
-    + `<span class="locs-label">Locations</span> ${sites.map(esc).join(' <em>·</em> ')}</div>`;
+    + `<span class="locs-label">${esc(locationCount(r))}</span> ${sites.map(esc).join(' <em>·</em> ')}</div>`;
 }
 
 export const esc = s => String(s).replace(/[&<>"']/g, c =>
