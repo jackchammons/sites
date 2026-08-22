@@ -1,154 +1,124 @@
 {
-  "updated": "2026-08-22T17:00:00.000Z",
+  "updated": "2026-08-22T13:00:00Z",
   "news": [
     {
       "title": "Urban Family Brewing to open Seattle waterfront restaurant",
       "url": "https://www.myballard.com/2026/07/31/urban-family-brewing-to-open-seattle-waterfront-restaurant/",
       "source": "My Ballard",
-      "published": "2026-07-31T00:00:00.000Z",
+      "published": "2026-07-31T00:00:00Z",
       "kind": "opening",
       "mentions": []
     },
     {
       "title": "Acclaimed Stevie's Famous Pizza Celebrates Grand Opening on Phinney Ridge August 2",
       "url": "https://phinneywood.com/2026/07/stevies-famous-pizza-celebrates-grand-opening-on-phinney-ridge/",
-      "source": "The PhinneyWood Blog",
-      "published": "2026-07-28T00:00:00.000Z",
+      "source": "PhinneyWood",
+      "published": "2026-07-28T00:00:00Z",
       "kind": "opening",
-      "mentions": [
-        "windy-city-pie"
-      ]
+      "mentions": []
     },
     {
       "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
       "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
       "source": "Seattle magazine",
-      "published": "2026-08-07T00:00:00.000Z",
+      "published": "2026-08-07T00:00:00Z",
       "kind": "mention",
       "mentions": []
     }
   ],
   "candidates": [
     {
-      "name": "Stevie's Famous (Phinney Ridge)",
-      "neighborhood": "Phinney Ridge",
-      "style": "New York-style",
-      "note": "Acclaimed pizzeria's third Seattle-area location opened August 2, 2026 in the former Zeek's building on Phinney Ave N, directly across from Windy City Pie.",
-      "source": "https://phinneywood.com/2026/07/stevies-famous-pizza-celebrates-grand-opening-on-phinney-ridge/"
+      "name": "Abecedary",
+      "neighborhood": "Hillman City",
+      "style": "New Haven-style",
+      "note": "Buzzed-about pop-up ahead of a full 2027 opening, from a baker who has generated real press with limited cheese-and-basil pies before serving a permanent menu.",
+      "source": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/"
     },
     {
       "name": "Urban Family Brewing (Waterfront)",
       "neighborhood": "Downtown Waterfront",
-      "style": "Grandma-style square pizza",
-      "note": "Ballard brewery's new waterfront outpost puts grandma-style pizza and focaccia sandwiches front and center on a 4,000-square-foot patio.",
+      "style": "Grandma-style",
+      "note": "Ballard brewery's new waterfront outpost built around a dedicated grandma-style square pizza program, opening across from Ivar's.",
       "source": "https://www.myballard.com/2026/07/31/urban-family-brewing-to-open-seattle-waterfront-restaurant/"
-    },
-    {
-      "name": "Abecedary",
-      "neighborhood": "Hillman City",
-      "style": "New Haven-style",
-      "note": "Not open until 2027, but pizzaiolo Seth Eisner's preview pop-ups are already drawing real press attention.",
-      "source": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/"
-    },
-    {
-      "name": "Sinner's Pizza",
-      "neighborhood": "University District",
-      "style": "Late-night pizza by the slice",
-      "note": "Opened April 2026 on the Ave with late-night hours; drew over 1,000 transactions on opening day and has since been reviewed by The Infatuation.",
-      "source": "https://www.dailyuw.com/article/sinners-pizza-opens-on-the-ave-with-late-night-hours-opening-day-sees-over-1-000-transactions-20260416"
     }
   ],
   "locations": [
     {
-      "id": "tutta-bella",
-      "source": "https://www.tuttabella.com/overview",
+      "id": "cornelly",
+      "source": "https://www.cornellyseattle.com",
       "sites": [
         {
-          "neighborhood": "Denny Triangle",
-          "address": "1100 Virginia Street, Seattle, WA 98101"
+          "neighborhood": "Capitol Hill",
+          "address": "601 Summit Ave E, Seattle, WA 98102"
         },
         {
-          "neighborhood": "Columbia City",
-          "address": "4918 Rainier Avenue South, Seattle, WA 98118"
-        },
-        {
-          "neighborhood": "Wallingford",
-          "address": "4411 Stone Way North, Seattle, WA 98103"
-        },
-        {
-          "neighborhood": "Bellevue",
-          "address": "15600 NE 8th St., Suite J1, Bellevue, WA 98008"
-        },
-        {
-          "neighborhood": "Issaquah",
-          "address": "715 Northwest Gilman Boulevard, Issaquah, WA 98027"
+          "neighborhood": "Queen Anne",
+          "address": "2121 Queen Anne Ave N, Seattle, WA 98119"
         }
       ]
     },
     {
-      "id": "pagliacci",
-      "source": "https://www.pagliacci.com/locations",
+      "id": "moto-pizza",
+      "source": "https://motopizza.com",
       "sites": [
-        { "neighborhood": "Ballard", "address": "851 NW 85th Street, Seattle, WA 98117" },
-        { "neighborhood": "Ballard", "address": "3058 NW 54th Street, Seattle, WA 98107" },
-        { "neighborhood": "Capitol Hill", "address": "2400 10th Avenue E, Seattle, WA 98102" },
-        { "neighborhood": "Capitol Hill", "address": "415 E. Pike Street, Seattle, WA 98122" },
-        { "neighborhood": "Columbia City", "address": "4901 Rainier Avenue S, Seattle, WA 98118" },
-        { "neighborhood": "Edmonds", "address": "10200 Edmonds Way, Edmonds, WA 98020" },
-        { "neighborhood": "Fremont", "address": "4003 Stone Way N, Seattle, WA 98103" },
-        { "neighborhood": "Lake City", "address": "8024 15th Avenue NE, Seattle, WA 98115" },
-        { "neighborhood": "Madison Valley", "address": "3015 E Madison Street, Seattle, WA 98112" },
-        { "neighborhood": "Magnolia", "address": "1614 W Dravus Street, Seattle, WA 98119" },
-        { "neighborhood": "North Seattle", "address": "315 N 145th Street, Seattle, WA 98133" },
-        { "neighborhood": "Queen Anne", "address": "719 Aurora Avenue N, Seattle, WA 98109" },
-        { "neighborhood": "Sand Point", "address": "6224 Sand Point Way NE, Seattle, WA 98115" },
-        { "neighborhood": "Shoreline", "address": "20059 Ballinger Way NE, Shoreline, WA 98155" },
-        { "neighborhood": "West Seattle", "address": "4449 California Avenue SW, Seattle, WA 98116" },
-        { "neighborhood": "Bellevue", "address": "15238 NE Bel-Red Road, Bellevue, WA 98007" },
-        { "neighborhood": "Bellevue", "address": "15210 SE 37th Street, Bellevue, WA 98006" },
-        { "neighborhood": "Bellevue", "address": "10600 Main St, Bellevue, WA 98004" },
-        { "neighborhood": "Kenmore", "address": "6504 NE Bothell Way, Kenmore, WA 98028" },
-        { "neighborhood": "Kirkland", "address": "13005 NE 70th Place, Kirkland, WA 98033" },
-        { "neighborhood": "Kirkland", "address": "11640 98th Avenue NE, Kirkland, WA 98034" },
-        { "neighborhood": "Mercer Island", "address": "3077 78th Avenue SE, Mercer Island, WA 98040" },
-        { "neighborhood": "Redmond", "address": "16311 Redmond Way, Redmond, WA 98052" },
-        { "neighborhood": "Sammamish", "address": "22830 NE 8th Street, Sammamish, WA 98074" }
+        {
+          "neighborhood": "Belltown",
+          "address": "3131 Western Ave #301, Seattle, WA 98121"
+        },
+        {
+          "neighborhood": "Pioneer Square",
+          "address": "512 2nd Ave, Suite 100, Seattle, WA 98104"
+        },
+        {
+          "neighborhood": "West Seattle",
+          "address": "4526 42nd Ave SW, Seattle, WA 98116"
+        },
+        {
+          "neighborhood": "Edmonds",
+          "address": "414 Main St, Edmonds, WA 98020"
+        },
+        {
+          "neighborhood": "Bellevue",
+          "address": "1020 Bellevue Square, Bellevue, WA 98004"
+        }
       ]
     },
     {
-      "id": "zeeks-pizza",
-      "source": "https://zeekspizza.com/locations/",
+      "id": "serious-pie",
+      "source": "https://www.seriouspieseattle.com/",
       "sites": [
-        { "neighborhood": "Greenlake", "address": "7900 E Greenlake Drive N, Seattle, WA 98103" },
-        { "neighborhood": "Kirkland", "address": "124 Park Lane, Kirkland, WA 98033" },
-        { "neighborhood": "White Center", "address": "9809 16th Ave SW, Seattle, WA 98106" },
-        { "neighborhood": "Sammamish", "address": "22610 SE 4th St, Suite 404, Sammamish, WA 98074" },
-        { "neighborhood": "Redmond", "address": "16015 Cleveland St, Suite 100, Redmond, WA 98052" },
-        { "neighborhood": "Queen Anne", "address": "1915 Queen Anne Ave. N, Seattle, WA 98109" },
-        { "neighborhood": "Mountlake Terrace", "address": "24015 Van Ry Blvd, Mountlake Terrace, WA 98043" },
-        { "neighborhood": "Mill Creek", "address": "15021 Main Street, Mill Creek, WA 98012" },
-        { "neighborhood": "Duvall", "address": "15630 Main Street, Duvall, WA 98019" },
-        { "neighborhood": "Bothell", "address": "1715 228th St SE, Bothell, WA 98021" },
-        { "neighborhood": "Ravenna", "address": "2108 NE 65th St, Seattle, WA 98115" },
-        { "neighborhood": "Issaquah", "address": "2525 NE Park Dr, Issaquah, WA 98029" },
-        { "neighborhood": "Bellevue", "address": "10201 NE 10th St, Bellevue, WA 98004" },
-        { "neighborhood": "Belltown", "address": "419 Denny Way, Seattle, WA 98109" },
-        { "neighborhood": "West Seattle", "address": "6459 California Ave SW, Seattle, WA 98136" },
-        { "neighborhood": "Capitol Hill", "address": "1830 E Mercer St, Seattle, WA 98112" }
+        {
+          "neighborhood": "Downtown",
+          "address": "316 Virginia St, Seattle, WA 98101"
+        },
+        {
+          "neighborhood": "Ballard",
+          "address": "5118 14th Ave NW, Seattle, WA 98107"
+        },
+        {
+          "neighborhood": "Totem Lake",
+          "address": "12540 120th Ave NE #122, Kirkland, WA 98034"
+        }
       ]
     },
     {
-      "id": "windy-city-pie",
-      "source": "https://windycitypie.com",
+      "id": "dinos-tomato-pie",
+      "source": "https://www.dinostomatopie.com",
       "sites": [
-        { "neighborhood": "Phinney Ridge", "address": "5918 Phinney Ave N, Seattle, WA 98103" }
+        {
+          "neighborhood": "Capitol Hill",
+          "address": "1524 E Olive Way, Seattle, WA 98122"
+        }
       ]
     },
     {
-      "id": "delancey",
-      "source": "https://www.delanceyseattle.com/",
+      "id": "lupo",
+      "source": "https://www.lupofremont.com/about",
       "sites": [
-        { "neighborhood": "Ballard", "address": "1415 NW 70th Street, Seattle, WA 98117" }
+        {
+          "neighborhood": "Fremont",
+          "address": "4303 Fremont Ave N, Seattle, WA 98103"
+        }
       ]
     }
   ]

@@ -107,9 +107,18 @@
       "lastVerified": "2026-08-01",
       "tier": "top",
       "styleGroup": "Wood-fired",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null
+      "locations": [
+        {
+          "neighborhood": "Capitol Hill",
+          "address": "601 Summit Ave E, Seattle, WA 98102"
+        },
+        {
+          "neighborhood": "Queen Anne",
+          "address": "2121 Queen Anne Ave N, Seattle, WA 98119"
+        }
+      ],
+      "locationsVerified": "2026-08-22",
+      "locationsSource": "https://www.cornellyseattle.com"
     },
     {
       "id": "moto-pizza",
@@ -141,9 +150,30 @@
       "lastVerified": "2026-08-01",
       "tier": "top",
       "styleGroup": "Detroit pan",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null
+      "locations": [
+        {
+          "neighborhood": "Belltown",
+          "address": "3131 Western Ave #301, Seattle, WA 98121"
+        },
+        {
+          "neighborhood": "Pioneer Square",
+          "address": "512 2nd Ave, Suite 100, Seattle, WA 98104"
+        },
+        {
+          "neighborhood": "West Seattle",
+          "address": "4526 42nd Ave SW, Seattle, WA 98116"
+        },
+        {
+          "neighborhood": "Edmonds",
+          "address": "414 Main St, Edmonds, WA 98020"
+        },
+        {
+          "neighborhood": "Bellevue",
+          "address": "1020 Bellevue Square, Bellevue, WA 98004"
+        }
+      ],
+      "locationsVerified": "2026-08-22",
+      "locationsSource": "https://motopizza.com"
     },
     {
       "id": "serious-pie",
@@ -172,9 +202,22 @@
       "lastVerified": "2026-08-01",
       "tier": "top",
       "styleGroup": "Thin crust",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null
+      "locations": [
+        {
+          "neighborhood": "Downtown",
+          "address": "316 Virginia St, Seattle, WA 98101"
+        },
+        {
+          "neighborhood": "Ballard",
+          "address": "5118 14th Ave NW, Seattle, WA 98107"
+        },
+        {
+          "neighborhood": "Totem Lake",
+          "address": "12540 120th Ave NE #122, Kirkland, WA 98034"
+        }
+      ],
+      "locationsVerified": "2026-08-22",
+      "locationsSource": "https://www.seriouspieseattle.com/"
     },
     {
       "id": "dinos-tomato-pie",
@@ -203,9 +246,14 @@
       "lastVerified": "2026-08-01",
       "tier": "top",
       "styleGroup": "Tavern square",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null
+      "locations": [
+        {
+          "neighborhood": "Capitol Hill",
+          "address": "1524 E Olive Way, Seattle, WA 98122"
+        }
+      ],
+      "locationsVerified": "2026-08-22",
+      "locationsSource": "https://www.dinostomatopie.com"
     },
     {
       "id": "lupo",
@@ -235,9 +283,14 @@
       "lastVerified": "2026-08-01",
       "tier": "top",
       "styleGroup": "Wood-fired",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null
+      "locations": [
+        {
+          "neighborhood": "Fremont",
+          "address": "4303 Fremont Ave N, Seattle, WA 98103"
+        }
+      ],
+      "locationsVerified": "2026-08-22",
+      "locationsSource": "https://www.lupofremont.com/about"
     },
     {
       "id": "independent-pizzeria",
