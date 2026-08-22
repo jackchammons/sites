@@ -36,9 +36,21 @@ const researchPath = path.join(root, 'data/research.json');
 if (fs.existsSync(researchPath)) {
   try {
     const research = JSON.parse(fs.readFileSync(researchPath, 'utf8'));
-    const known = new Set(buzz.items.map(b => String(b.url).toLowerCase()));
-    const extra = (research.items || [])
-      .filter(r => r && r.url && !known.has(String(r.url).toLowerCase()))
+    // `news` is the field the agent writes and the validator checks; `items`
+    // was the original name, kept so an older file still merges. Reading only
+    // `items` silently dropped every researched story for a while -- the
+    // candidates half kept working, which is what hid it.
+    const found = research.news ?? research.items ?? [];
+    // Dedup on title as well as URL. The feed sweep stores Google News
+    // redirect URLs while the agent links the publisher directly, so the same
+    // story never collides on URL alone.
+    const norm = t => String(t).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+    const knownUrls   = new Set(buzz.items.map(b => String(b.url).toLowerCase()));
+    const knownTitles = new Set(buzz.items.map(b => norm(b.title)));
+    const extra = found
+      .filter(r => r && r.url && r.title
+                && !knownUrls.has(String(r.url).toLowerCase())
+                && !knownTitles.has(norm(r.title)))
       .map(r => ({ ...r, via: 'research' }));
     buzz.items = [...buzz.items, ...extra]
       .sort((a, b) => Date.parse(b.published) - Date.parse(a.published));
