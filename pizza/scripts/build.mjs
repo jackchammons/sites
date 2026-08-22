@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { rank, DEFAULT_WEIGHTS, FRICTION_COSTS, FRICTION_LABELS, FRICTION_CAP, isoWeek, isoWeekKey } from '../src/slice.js';
-import { boardHtml, PILLAR_META, esc } from '../src/render.js';
+import { boardHtml, benchHtml, PILLAR_META, esc } from '../src/render.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // Output dir is overridable so the multi-site build can place this site at
@@ -57,9 +57,17 @@ const weekKey = isoWeekKey(now);
 const previous = [...history.snapshots].reverse().find(s => s.weekKey !== weekKey);
 const baseline = previous ? previous.ranks : {};
 
-const ranked = rank(dataset, { now }).map(r => ({
+const ranked = rank(dataset, { now, tier: 'top' }).map(r => ({
   ...r,
   previousRank: baseline[r.id] ?? null
+}));
+
+/* The bench is ranked on the same algorithm but as its own ladder, continuing
+ * the numbering. Anything scoring above the tenth-place cutoff is a promotion
+ * candidate the moment its crowd figures are verified. */
+const cutoff = ranked[ranked.length - 1]?.score ?? 0;
+const benched = rank(dataset, { now, tier: 'bench' }).map(r => ({
+  ...r, rank: r.rank + ranked.length, contender: r.score > cutoff
 }));
 
 /* Deterministic weekly spotlight: rotates through the field by ISO week. */
@@ -77,6 +85,79 @@ const PILLAR_COPY = {
 const fmtDate = d => d.toLocaleDateString('en-US', {
   timeZone: 'America/Los_Angeles', year: 'numeric', month: 'long', day: 'numeric'
 });
+
+/* ---- The Bench ---- */
+const contenders = benched.filter(r => r.contender);
+
+const benchSection = benched.length ? `
+<section class="section">
+  <div class="wrap">
+    <div class="eyebrow">The bench</div>
+    <h2 class="sec-h">Ranks ${ranked.length + 1}&ndash;${ranked.length + benched.length}</h2>
+    <p class="lede" style="margin-top:14px">
+      A top ten with nothing beneath it is a list, not a ranking. These ${benched.length} are scored by the
+      same algorithm and ordered on the same ladder &mdash; but with one honest caveat: none of them has
+      verified crowd figures yet, so their Consensus Signal rests on the critical read alone. That makes
+      every score here <b>provisional</b>, which is why they sit below the line regardless of the number.
+      ${contenders.length ? `<b>${contenders.length}</b> currently score above ${cutoff.toFixed(1)} &mdash; the tenth-place cutoff &mdash; and would enter the top ten the moment their ratings are confirmed.` : ''}
+    </p>
+    <ul class="bench-list" id="bench-list">${benchHtml(benched)}</ul>
+    <p class="note">Promotion is not automatic. A bench entry enters the top ten when its crowd figures are
+    verified and its score still clears the cutoff; relegation follows a closure or a sustained fall.</p>
+  </div>
+</section>
+` : '';
+
+/* ---- Style brackets ---- */
+const all = [...ranked, ...benched];
+const byStyle = new Map();
+for (const r of all) {
+  if (!byStyle.has(r.styleGroup)) byStyle.set(r.styleGroup, []);
+  byStyle.get(r.styleGroup).push(r);
+}
+const brackets = [...byStyle.entries()]
+  .map(([group, list]) => ({ group, list: list.sort((a, b) => b.score - a.score) }))
+  .sort((a, b) => b.list[0].score - a.list[0].score);
+
+const bracketCard = ({ group, list }) => {
+  const w = list[0];
+  const rest = list.slice(1, 3);
+  return `
+        <div class="bracket">
+          <div class="bracket-head">
+            <h3>${esc(group)}</h3>
+            <span>${list.length === 1 ? 'unopposed' : `${list.length} contenders`}</span>
+          </div>
+          <div class="bracket-win">
+            <span class="bracket-medal">#${w.rank}</span>
+            <div>
+              <strong>${esc(w.name)}</strong>
+              <div class="bracket-sub">${esc(w.neighborhood)} · ${w.score.toFixed(1)} SLICE${w.tier === 'bench' ? ' · provisional' : ''}</div>
+            </div>
+          </div>
+          ${rest.length ? `<ul class="bracket-rest">${rest.map(r =>
+            `<li><span>${esc(r.name)}</span><span>${r.score.toFixed(1)}</span></li>`).join('')}</ul>` : ''}
+        </div>`;
+};
+
+const bracketSection = `
+<section class="section">
+  <div class="wrap">
+    <div class="eyebrow">Style brackets</div>
+    <h2 class="sec-h">Best of each kind</h2>
+    <p class="lede" style="margin-top:14px">
+      One ranking flattens things that are not really competing. A Chicago deep pan and a Neapolitan
+      margherita are answering different questions, and a single score cannot honestly separate them.
+      So here is the same field split by what each place is actually trying to be &mdash; which is also
+      the question most people arrive with: not <em>what is best</em>, but <em>what is best of the kind
+      I want tonight</em>.
+    </p>
+    <div class="brackets">${brackets.map(bracketCard).join('')}</div>
+    <p class="note">A bracket with one entrant is not a weak field &mdash; it means nobody else in Seattle is
+    seriously attempting that style, which is exactly what the Distinctiveness pillar rewards.</p>
+  </div>
+</section>
+`;
 
 /* ---- The Buzz ---- */
 const KIND_LABEL = { opening: 'Opening', closing: 'Closing', ranking: 'List', mention: 'Mention' };
@@ -107,7 +188,7 @@ const buzzSection = buzz.items.length ? `
 <section class="section">
   <div class="wrap">
     <div class="eyebrow">The buzz</div>
-    <h2 style="font-family:var(--serif);font-size:clamp(28px,4vw,40px)">What Seattle is writing about</h2>
+    <h2 class="sec-h">What Seattle is writing about</h2>
     <p class="lede" style="margin-top:14px">
       The ranking moves slowly and deliberately. This does not. Every day the build sweeps public
       news feeds for Seattle pizza coverage — openings, closings, reviews and lists — and collects
@@ -207,7 +288,7 @@ const html = `<!doctype html>
 <section class="section">
   <div class="wrap">
     <div class="eyebrow">The algorithm</div>
-    <h2 style="font-family:var(--serif);font-size:clamp(28px,4vw,40px)">Five pillars, one honest penalty</h2>
+    <h2 class="sec-h">Five pillars, one honest penalty</h2>
     <p class="lede" style="margin-top:14px">
       Most "best of" lists are a ranked opinion with the ranking hidden. This one publishes the weights.
       Each pillar is scored 0–10, multiplied by its weight, and summed to a base out of 100. Then reality
@@ -226,7 +307,7 @@ const html = `<!doctype html>
 <section class="section">
   <div class="wrap">
     <div class="eyebrow">The ranking</div>
-    <h2 style="font-family:var(--serif);font-size:clamp(28px,4vw,40px)">Seattle's top 10, right now</h2>
+    <h2 class="sec-h">Seattle's top 10, right now</h2>
     <p class="lede" style="margin:14px 0 26px" id="board-note">Published ranking, rebuilt daily.</p>
 
     <div class="controls" id="controls" hidden>
@@ -248,11 +329,13 @@ ${boardHtml(ranked)}
   </div>
 </section>
 
+${benchSection}
+${bracketSection}
 ${buzzSection}
 <section class="section">
   <div class="wrap">
     <div class="eyebrow">Methodology</div>
-    <h2 style="font-family:var(--serif);font-size:clamp(28px,4vw,40px)">How the numbers are made</h2>
+    <h2 class="sec-h">How the numbers are made</h2>
 
     <div class="grid2">
       <div class="mcard">
@@ -343,10 +426,16 @@ fs.writeFileSync(path.join(dist, 'rankings.json'), JSON.stringify({
   week,
   algorithm: 'SLICE',
   weights: DEFAULT_WEIGHTS,
-  rankings: ranked.map(r => ({
+  rankings: [...ranked, ...benched].map(r => ({
     rank: r.rank, id: r.id, name: r.name, neighborhood: r.neighborhood,
-    style: r.style, score: r.score, previousRank: r.previousRank,
+    style: r.style, styleGroup: r.styleGroup, tier: r.tier || 'top',
+    provisional: !!r.consensusDetail.unrated,
+    score: r.score, previousRank: r.previousRank ?? null,
     pillars: r.pillars, penalty: r.penaltyApplied
+  })),
+  brackets: brackets.map(b => ({
+    group: b.group, contenders: b.list.length,
+    winner: { id: b.list[0].id, name: b.list[0].name, score: b.list[0].score }
   }))
 }, null, 2));
 

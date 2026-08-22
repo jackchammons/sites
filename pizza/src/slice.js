@@ -75,13 +75,22 @@ export function ratingToPillar(adjusted) {
   return clamp(((adjusted - RATING_FLOOR) / (RATING_CEIL - RATING_FLOOR)) * 10, 0, 10);
 }
 
-/* Consensus Signal: 55% de-noised crowd, 45% critical consensus. */
+/* Consensus Signal: 55% de-noised crowd, 45% critical consensus.
+ *
+ * Bench entries carry no crowd figures until someone verifies them. Rather than
+ * invent a rating, the signal falls back to the critical read alone and reports
+ * zero confidence, so the page can say plainly that the number is provisional. */
 export function consensusPillar(r, cityMean, priorWeight) {
+  if (!r.crowd) {
+    return { adjusted: null, crowd10: null, unrated: true,
+             value: clamp(r.criticScore, 0, 10) };
+  }
   const adjusted = shrinkRating(r.crowd.rating, r.crowd.reviews, cityMean, priorWeight);
   const crowd10 = ratingToPillar(adjusted);
   return {
     adjusted,
     crowd10,
+    unrated: false,
     value: clamp(0.55 * crowd10 + 0.45 * r.criticScore, 0, 10)
   };
 }
@@ -161,7 +170,7 @@ export function scoreOne(r, opts) {
     frictionDetail: fric,
     penaltyApplied: penalty,
     stalenessDecay: decay,
-    confidence: confidence(r.crowd.reviews, priorWeight),
+    confidence: r.crowd ? confidence(r.crowd.reviews, priorWeight) : 0,
     base: round(base),
     score: round(score)
   };
@@ -173,7 +182,10 @@ const round = n => Math.round(n * 10) / 10;
 export function rank(dataset, opts = {}) {
   const cityMean = dataset.cityMeanRating;
   const priorWeight = dataset.priorWeight;
-  const scored = dataset.restaurants.map(r =>
+  const pool = opts.tier
+    ? dataset.restaurants.filter(r => (r.tier || 'top') === opts.tier)
+    : dataset.restaurants;
+  const scored = pool.map(r =>
     scoreOne(r, { cityMean, priorWeight, ...opts })
   );
   scored.sort((a, b) =>

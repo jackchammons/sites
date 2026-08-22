@@ -94,10 +94,12 @@ export function cardHtml(r) {
             </tbody>
           </table>
           <p class="note">
-            Consensus Signal is built from a raw ${r.crowd.rating.toFixed(1)}★ across ~${r.crowd.reviews.toLocaleString('en-US')} reviews.
+            ${r.crowd ? `Consensus Signal is built from a raw ${r.crowd.rating.toFixed(1)}★ across ~${r.crowd.reviews.toLocaleString('en-US')} reviews.
             Bayesian shrinkage pulls that to <b>${r.consensusDetail.adjusted.toFixed(3)}★</b>
             (${pct(r.confidence)}% weight on the crowd, ${100 - pct(r.confidence)}% on the city mean),
-            which maps to ${n1(r.consensusDetail.crowd10)}/10 and is then blended 55/45 with a critical read of ${n1(r.criticScore)}/10.
+            which maps to ${n1(r.consensusDetail.crowd10)}/10 and is then blended 55/45 with a critical read of ${n1(r.criticScore)}/10.`
+            : `No verified crowd figures yet, so Consensus Signal rests on the critical read of
+            ${n1(r.criticScore)}/10 alone and this score is <b>provisional</b>.`}
           </p>
         </div>
       </details>
@@ -106,4 +108,20 @@ export function cardHtml(r) {
 
 export function boardHtml(ranked) {
   return ranked.map(cardHtml).join('\n');
+}
+
+/* Bench rows. Compact by design: fifteen full cards would bury the top ten. */
+export function benchRowHtml(r) {
+  return `
+        <li class="bench-row${r.contender ? ' contender' : ''}">
+          <span class="bench-rank">${r.rank}</span>
+          <span class="bench-name">${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.name)}</a>` : esc(r.name)}</span>
+          <span class="bench-meta">${esc(r.neighborhood)} · ${esc(r.style)}</span>
+          <span class="bench-score">${r.score.toFixed(1)}</span>
+          <span class="bench-flag">${r.contender ? 'promotion range' : 'provisional'}</span>
+        </li>`;
+}
+
+export function benchHtml(benched) {
+  return benched.map(benchRowHtml).join('\n');
 }
