@@ -1,20 +1,59 @@
-/* In-browser re-ranker: move the sliders, the leaderboard re-sorts live. */
+/* In-browser re-ranker: change how much you care about a factor and the
+ * leaderboard re-sorts live.
+ *
+ * The control is a multiplier, not a raw weight. Each factor sits at one of five
+ * steps -- 0, 0.5, 1, 1.5, 2 -- applied to the weight this site publishes for
+ * it, and rank() renormalises the five to 100% afterwards. So the number shown
+ * on the right of each row is the share that factor actually gets, which moves
+ * when any other factor moves. Raw-percentage sliders made that relationship
+ * invisible: dragging one to 40% silently shrank every other.
+ */
 import { rank, splitTiers, DEFAULT_WEIGHTS } from './slice.js';
-import { boardHtml, benchHtml, PILLAR_META } from './render.js';
+import { boardHtml, benchHtml } from './render.js';
 
+const KEYS = Object.keys(DEFAULT_WEIGHTS);
 const DATA = window.__PIZZA__;
 const BUILT_AT = new Date(DATA.builtAt);
 const board = document.getElementById('board');
-const weights = { ...DEFAULT_WEIGHTS };
+
+const care = Object.fromEntries(KEYS.map(k => [k, 1]));
+const weightsNow = () =>
+  Object.fromEntries(KEYS.map(k => [k, DEFAULT_WEIGHTS[k] * care[k]]));
 
 const opts = () => ({
-  weights,
+  weights: weightsNow(),
   now: BUILT_AT,
   applyFriction: document.getElementById('opt-friction').checked,
   applyFreshness: document.getElementById('opt-freshness').checked
 });
 
+const dirty = () =>
+  KEYS.some(k => care[k] !== 1) ||
+  !document.getElementById('opt-friction').checked ||
+  !document.getElementById('opt-freshness').checked;
+
+/* Every factor at 0 leaves nothing to rank on. Rather than divide by zero or
+ * silently fall back to the published weights, the panel says so and the board
+ * keeps the last usable ranking. */
+const allZero = () => KEYS.every(k => care[k] === 0);
+
+function syncLabels() {
+  const w = weightsNow();
+  const total = Object.values(w).reduce((a, b) => a + b, 0);
+  for (const k of KEYS) {
+    document.getElementById(`v-${k}`).textContent =
+      total ? Math.round((w[k] / total) * 100) + '%' : '—';
+  }
+}
+
 function render() {
+  syncLabels();
+  const note = document.getElementById('board-note');
+  if (allZero()) {
+    note.textContent = 'Every factor is set to 0%, so there is nothing to rank on. Turn one back up.';
+    return;
+  }
+
   const { top, bench: benched, cutoff } = splitTiers(rank(DATA.dataset, opts()), 10);
   const ranked = top.map(r => ({ ...r, previousRank: DATA.baseline[r.id] ?? null }));
 
@@ -22,6 +61,7 @@ function render() {
   // promotion range depends on where you put the tenth-place cutoff.
   const bench = document.getElementById('bench-list');
   if (bench) bench.innerHTML = benchHtml(benched, cutoff);
+
   const open = new Set([...board.querySelectorAll('details.math[open]')]
     .map(d => d.closest('.card').dataset.id));
   board.innerHTML = boardHtml(ranked);
@@ -29,46 +69,32 @@ function render() {
     const d = board.querySelector(`.card[data-id="${CSS.escape(id)}"] details.math`);
     if (d) d.open = true;
   });
-  document.getElementById('board-note').textContent = dirty()
-    ? 'Your weights — “from #n” compares against the published ranking.'
-    : 'Published ranking, rebuilt daily.';
+
+  note.textContent = dirty()
+    ? 'Your ranking. The “from #n” markers compare against this site’s published order.'
+    : 'This site’s published ranking, rebuilt daily.';
 }
 
-const dirty = () =>
-  Object.keys(DEFAULT_WEIGHTS).some(k => weights[k] !== DEFAULT_WEIGHTS[k]) ||
-  !document.getElementById('opt-friction').checked ||
-  !document.getElementById('opt-freshness').checked;
-
-function syncLabels() {
-  const total = Object.values(weights).reduce((a, b) => a + b, 0) || 1;
-  for (const k of Object.keys(DEFAULT_WEIGHTS)) {
-    document.getElementById(`v-${k}`).textContent =
-      Math.round((weights[k] / total) * 100) + '%';
+for (const k of KEYS) {
+  for (const input of document.querySelectorAll(`input[name="care-${k}"]`)) {
+    input.addEventListener('change', () => {
+      care[k] = Number(input.value);
+      render();
+    });
   }
-}
-
-for (const k of Object.keys(DEFAULT_WEIGHTS)) {
-  const el = document.getElementById(`w-${k}`);
-  el.addEventListener('input', () => {
-    weights[k] = Number(el.value);
-    syncLabels();
-    render();
-  });
 }
 for (const id of ['opt-friction', 'opt-freshness']) {
   document.getElementById(id).addEventListener('change', render);
 }
 document.getElementById('reset').addEventListener('click', () => {
-  Object.assign(weights, DEFAULT_WEIGHTS);
-  for (const k of Object.keys(DEFAULT_WEIGHTS)) {
-    document.getElementById(`w-${k}`).value = DEFAULT_WEIGHTS[k];
+  for (const k of KEYS) {
+    care[k] = 1;
+    document.getElementById(`care-${k}-1`).checked = true;
   }
   document.getElementById('opt-friction').checked = true;
   document.getElementById('opt-freshness').checked = true;
-  syncLabels();
   render();
 });
 
 document.getElementById('controls').hidden = false;
-syncLabels();
 render();

@@ -126,13 +126,52 @@ h1, h2, h3 { line-height: 1.15; margin: 0; letter-spacing: -0.02em; }
 }
 .controls-head strong { font-size: 14px; }
 .controls-head span { font-size: 12.5px; color: var(--ink-3); }
-.sliders { display: grid; gap: 9px 22px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
-.slider label {
-  display: flex; justify-content: space-between; font-size: 12px;
-  font-family: var(--mono); color: var(--ink-2); margin-bottom: 5px;
+.controls-head span { max-width: 78ch; line-height: 1.55; }
+
+/* One row per factor: icon, name and description, the share it currently gets,
+   then the five-step control. Wide enough for two columns on a desktop, one on
+   a phone -- the steps need horizontal room to stay tappable. */
+.sliders { display: grid; gap: 14px 26px; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); }
+
+.factor-head { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+.factor-icon { font-size: 19px; line-height: 1; flex: none; }
+.factor-name { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.factor-name b { font-size: 12.5px; font-family: var(--mono); color: var(--ink-2); }
+.factor-desc { font-size: 11.5px; color: var(--ink-3); }
+.factor-val {
+  margin-left: auto; flex: none; font-family: var(--mono);
+  font-size: 12.5px; color: var(--tomato-2); font-variant-numeric: tabular-nums;
 }
-.slider label b { color: var(--tomato-2); }
-input[type=range] { width: 100%; accent-color: var(--tomato); height: 20px; }
+
+/* Segmented control. Radios stay in the DOM for keyboard and screen readers and
+   are hidden visually; the labels are the buttons. */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+fieldset.steps {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  border: 1px solid var(--line); border-radius: 9px; padding: 0; margin: 0;
+  overflow: hidden; background: var(--bg);
+}
+fieldset.steps label {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 1px; padding: 6px 2px; cursor: pointer; text-align: center;
+  border-left: 1px solid var(--line); transition: background .12s ease, color .12s ease;
+}
+fieldset.steps label:first-of-type { border-left: 0; }
+fieldset.steps label b {
+  font-family: var(--mono); font-size: 11.5px; color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+fieldset.steps label span { font-size: 9.5px; color: var(--ink-3); letter-spacing: .01em; }
+fieldset.steps label:hover { background: color-mix(in srgb, var(--tomato) 9%, transparent); }
+fieldset.steps input:checked + label { background: var(--tomato); }
+fieldset.steps input:checked + label b,
+fieldset.steps input:checked + label span { color: #fff; }
+fieldset.steps input:focus-visible + label {
+  outline: 2px solid var(--tomato-2); outline-offset: -2px;
+}
 .ctl-row { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; margin-top: 11px; }
 .toggle { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--ink-2); cursor: pointer; }
 .toggle input { accent-color: var(--tomato); width: 15px; height: 15px; }
@@ -373,4 +412,73 @@ footer p { max-width: 72ch; }
 @media (max-width: 720px) {
   .cand-list li { grid-template-columns: 1fr; gap: 5px; }
   .cand-list a { text-align: left; }
+}
+
+/* ---- The pipeline flow chart ---- */
+/* Built in CSS rather than an image so it reflows on a phone, respects the
+   reader's font size, and stays readable to a screen reader as the ordered list
+   it actually is. The connector is a pseudo-element on each step, so adding or
+   removing a stage never leaves a dangling arrow. */
+.flow { list-style: none; margin: 26px 0 0; padding: 0; max-width: 60ch; }
+.flow-step, .flow-gate {
+  position: relative; border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 13px 16px; background: var(--card);
+}
+.flow-step + .flow-step, .flow-step + .flow-gate, .flow-gate + .flow-step { margin-top: 30px; }
+/* The arrow between stages. */
+.flow-step + .flow-step::before,
+.flow-step + .flow-gate::before,
+.flow-gate + .flow-step::before {
+  content: ""; position: absolute; left: 28px; top: -30px;
+  width: 2px; height: 30px; background: var(--line);
+}
+.flow-step + .flow-step::after,
+.flow-step + .flow-gate::after,
+.flow-gate + .flow-step::after {
+  content: ""; position: absolute; left: 24px; top: -11px;
+  border: 5px solid transparent; border-top-color: var(--line);
+}
+/* Validation is a gate, not a stage: it can stop the flow, so it reads differently. */
+.flow-gate { border-style: dashed; border-color: var(--tomato); background: transparent; }
+.flow-gate > b::before { content: "⚠ "; color: var(--tomato-2); }
+.flow-step > b, .flow-gate > b { display: block; font-size: 14px; margin-bottom: 3px; }
+.flow-step > p, .flow-gate > p { margin: 0; font-size: 12.5px; color: var(--ink-2); line-height: 1.6; }
+.flow-when {
+  display: inline-block; font-family: var(--mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: .07em; color: var(--ink-3); margin-bottom: 4px;
+}
+.flow-last { border-color: var(--basil); }
+
+.movers-h { font-size: 15px; margin: 34px 0 4px; }
+.movers {
+  display: grid; gap: 12px; margin-top: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+.mover {
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 13px 15px; background: var(--card);
+}
+.mover-icon { font-size: 17px; line-height: 1; }
+.mover > b { display: block; font-size: 13.5px; margin: 5px 0 2px; }
+.mover-when {
+  display: inline-block; font-family: var(--mono); font-size: 9.5px;
+  text-transform: uppercase; letter-spacing: .07em; color: var(--tomato-2); margin-bottom: 6px;
+}
+.mover > p { margin: 0; font-size: 12px; color: var(--ink-2); line-height: 1.6; }
+
+@media (max-width: 560px) {
+  .flow-step + .flow-step::before,
+  .flow-step + .flow-gate::before,
+  .flow-gate + .flow-step::before { left: 20px; }
+  .flow-step + .flow-step::after,
+  .flow-step + .flow-gate::after,
+  .flow-gate + .flow-step::after { left: 16px; }
+}
+
+/* The control panel is sticky so the board stays re-sortable while you scroll
+   it. With five factors that panel is now taller than a phone screen, and a
+   sticky element taller than the viewport pins its top and hides the board it
+   is meant to be re-sorting. Below the breakpoint it scrolls with the page. */
+@media (max-width: 760px) {
+  .controls { position: static; backdrop-filter: none; background: var(--card); }
 }

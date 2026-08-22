@@ -3,12 +3,27 @@ import { FRICTION_LABELS } from './slice.js';
 import { locationLabel, locationList, locationCount } from './locations.js';
 
 export const PILLAR_META = {
-  crust:           { label: 'Crust Integrity',  color: 'var(--crust)' },
-  toppings:        { label: 'Topping Craft',    color: 'var(--tomato)' },
-  consensus:       { label: 'Critical Read',    color: '#5b8dd6' },
-  distinctiveness: { label: 'Distinctiveness',  color: '#a06fd0' },
-  value:           { label: 'Value Density',    color: 'var(--basil)' }
+  crust:           { label: 'Crust Integrity',  color: 'var(--crust)',  icon: '🥖',
+                     short: 'Dough, fermentation and bake' },
+  toppings:        { label: 'Topping Craft',    color: 'var(--tomato)', icon: '🍅',
+                     short: 'Sourcing, balance and restraint' },
+  consensus:       { label: 'Critical Read',    color: '#5b8dd6',       icon: '📰',
+                     short: 'What reviewers say about the pie' },
+  distinctiveness: { label: 'Distinctiveness',  color: '#a06fd0',       icon: '✨',
+                     short: 'Whether it owns a lane in this city' },
+  value:           { label: 'Value Density',    color: 'var(--basil)',  icon: '💵',
+                     short: 'Satisfaction per dollar spent' }
 };
+
+/* The five positions of the weight control. 100% is the published weight for
+ * that factor; the others scale it before everything renormalises to 100. */
+export const CARE_STEPS = [
+  { mult: 0,   pct: '0%',   word: "Don't care" },
+  { mult: 0.5, pct: '50%',  word: 'A little'   },
+  { mult: 1,   pct: '100%', word: 'Standard'   },
+  { mult: 1.5, pct: '150%', word: 'A lot'      },
+  { mult: 2,   pct: '200%', word: 'Above all'  }
+];
 
 
 /* Every neighborhood for a multi-site pizzeria, printed under the meta line.
@@ -112,8 +127,9 @@ export function cardHtml(r) {
             ${r.crowd.rating.toFixed(1)}★ across ~${r.crowd.reviews.toLocaleString('en-US')} reviews,
             which Bayesian shrinkage pulls to <b>${r.consensusDetail.adjusted.toFixed(3)}★</b>
             (${pct(r.confidence)}% weight on the crowd, ${100 - pct(r.confidence)}% on the city mean).
-            Those figures are frozen at ${esc(r.lastVerified || 'the dataset date')} and cannot be refreshed.`
-            : ` No crowd figures were ever recorded for this entry, which no longer affects its score.`}
+            Observed ${esc(r.lastVerified || 'at the dataset date')}.`
+            : ` No crowd rating is shown for this entry. It makes no difference to the score, which
+            uses the critical read for every entry alike.`}
           </p>
         </div>
       </details>

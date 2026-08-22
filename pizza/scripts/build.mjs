@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { rank, splitTiers, DEFAULT_WEIGHTS, FRICTION_COSTS, FRICTION_LABELS, FRICTION_CAP, isoWeek, isoWeekKey } from '../src/slice.js';
-import { boardHtml, benchHtml, PILLAR_META, esc } from '../src/render.js';
+import { boardHtml, benchHtml, PILLAR_META, esc, CARE_STEPS } from '../src/render.js';
 import { locationLabel } from '../src/locations.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -122,8 +122,8 @@ const benchSection = benched.length ? `
     <p class="lede" style="margin-top:14px">
       A top ten with nothing beneath it is a list, not a ranking. These ${benched.length} are scored by the
       same algorithm, on the same ladder, measured exactly the same way as the ten above them &mdash; they
-      simply score lower. Nothing is held back here for want of data: every entry in the index competes on
-      score alone, and the line between the top ten and the bench moves whenever the scores do.
+      simply score lower. The line between the top ten and the bench is a score, not a decision, and it
+      moves whenever the scores do.
     </p>
     <ul class="bench-list" id="bench-list">${benchHtml(benched, cutoff)}</ul>
     ${candidateBlock}
@@ -252,12 +252,22 @@ const frictionRows = Object.entries(FRICTION_COSTS)
   .join('');
 
 const sliders = Object.keys(DEFAULT_WEIGHTS).map(k => `
-        <div class="slider">
-          <label for="w-${k}">
-            <span><span class="swatch" style="background:${PILLAR_META[k].color}"></span>${PILLAR_META[k].label}</span>
-            <b id="v-${k}">${DEFAULT_WEIGHTS[k]}%</b>
-          </label>
-          <input type="range" id="w-${k}" min="0" max="50" step="1" value="${DEFAULT_WEIGHTS[k]}" aria-label="${PILLAR_META[k].label} weight">
+        <div class="factor">
+          <div class="factor-head">
+            <span class="factor-icon" aria-hidden="true">${PILLAR_META[k].icon}</span>
+            <span class="factor-name">
+              <b><span class="swatch" style="background:${PILLAR_META[k].color}"></span>${PILLAR_META[k].label}</b>
+              <span class="factor-desc">${PILLAR_META[k].short}</span>
+            </span>
+            <span class="factor-val" id="v-${k}">${DEFAULT_WEIGHTS[k]}%</span>
+          </div>
+          <fieldset class="steps">
+            <legend class="sr-only">How much you care about ${PILLAR_META[k].label}</legend>
+            ${CARE_STEPS.map(st => `
+            <input type="radio" name="care-${k}" id="care-${k}-${st.mult}" value="${st.mult}"
+                   class="sr-only"${st.mult === 1 ? ' checked' : ''}>
+            <label for="care-${k}-${st.mult}"><b>${st.pct}</b><span>${st.word}</span></label>`).join('')}
+          </fieldset>
         </div>`).join('');
 
 const pillarCards = Object.keys(DEFAULT_WEIGHTS).map(k => `
@@ -272,10 +282,10 @@ const html = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Seattle Pizza Index — Top 10, ranked by the SLICE Score</title>
-<meta name="description" content="The ten best pizzerias in Seattle, ranked by the SLICE Score: a transparent five-pillar algorithm with Bayesian-adjusted ratings and a friction penalty. Rebuilt daily. Move the sliders and re-rank it yourself.">
+<title>The Seattle Pizza Index — the top 10, ranked by the SLICE Score</title>
+<meta name="description" content="Seattle's top ten pizzerias, ranked by the SLICE Score: an open five-factor algorithm with a friction penalty and freshness decay, rebuilt daily. The whole calculation is published, and you can change how much each factor counts.">
 <meta property="og:title" content="The Seattle Pizza Index">
-<meta property="og:description" content="Seattle's top 10 pizzerias, ranked by a transparent algorithm you can re-weight yourself.">
+<meta property="og:description" content="Seattle's top ten pizzerias, ranked by an open algorithm you can re-weight yourself. Rebuilt daily.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍕</text></svg>">
 <style>${read('src/styles.css')}</style>
@@ -287,16 +297,21 @@ const html = `<!doctype html>
     <div class="eyebrow">Seattle, WA · rebuilt daily</div>
     <h1>The Seattle<br><em>Pizza Index</em></h1>
     <p class="lede">
-      Ten pizzerias, one algorithm, no hand-waving. Every restaurant below is scored out of 100 by the
-      <b>SLICE Score</b> — five weighted pillars, a crowd rating corrected for sample size, and a penalty
-      for how hard the pie is to actually get into your hands. The whole formula is on this page, and you
-      can re-weight it yourself.
+      This is <b>this site's ranking</b> — not a poll, not a survey, and not an average of other
+      people's lists. Every pizzeria in the field is scored out of 100 by the <b>SLICE Score</b>, an
+      algorithm defined in full on this page, and the ten that score highest are published as the top
+      ten. Nothing is placed by hand.
+    </p>
+    <p class="lede" style="margin-top:12px">
+      The formula, the weights, the inputs and the code that runs them are all here. If you weigh
+      things differently, say so in the controls and the order changes in front of you.
     </p>
     <div class="stamp">
       <span>Updated <b>${fmtDate(now)}</b></span>
       <span>ISO week <b>${week}</b></span>
       <span>Dataset <b>v${esc(dataset.dataVersion)}</b></span>
-      <span>Field <b>${ranked.length} pizzerias</b></span>
+      <span>Field <b>${scoredAll.length} pizzerias</b></span>
+      <span>Published <b>top ${ranked.length}</b></span>
       <span>Snapshots on record <b>${history.snapshots.length + 1}</b></span>
     </div>
 
@@ -305,7 +320,7 @@ const html = `<!doctype html>
       <div>
         <h3>Slice of the Week · ${esc(spotlight.name)}</h3>
         <p><b>#${spotlight.rank}, ${spotlight.score.toFixed(1)} SLICE.</b> ${esc(spotlight.signature)} — ${esc(locationLabel(spotlight))}.
-        Rotates every Monday by ISO week number, so it is a fair rotation and not a favourite.</p>
+        Rotates every Monday by ISO week number, so every entry gets its turn.</p>
       </div>
     </div>
   </div>
@@ -314,12 +329,19 @@ const html = `<!doctype html>
 <section class="section">
   <div class="wrap">
     <div class="eyebrow">The algorithm</div>
-    <h2 class="sec-h">Five pillars, one honest penalty</h2>
+    <h2 class="sec-h">How a SLICE Score is built</h2>
     <p class="lede" style="margin-top:14px">
-      Most "best of" lists are a ranked opinion with the ranking hidden. This one publishes the weights.
-      Each pillar is scored 0–10, multiplied by its weight, and summed to a base out of 100. Then reality
-      intervenes: a <b>friction penalty</b> for preorder-only drops, hour-long waits and doors that are
-      open twenty hours a week, because a pie you cannot get is worth less than one you can.
+      Most "best of" lists are a ranked opinion with the ranking hidden. This one publishes the whole
+      calculation. Every pizzeria is rated 0–10 on five factors. Each rating is divided by 10 to give a
+      fraction, multiplied by that factor's weight, and the five are summed — so a perfect score on
+      every factor is exactly 100 points.
+    </p>
+    <p class="lede" style="margin-top:12px">
+      Two adjustments then come off the top. A <b>friction penalty</b> subtracts up to
+      ${FRICTION_CAP.toFixed(1)} points for preorder-only drops, hour-long queues and twenty-hour
+      opening weeks, because a pie you cannot get is worth less than one you can. <b>Freshness decay</b>
+      shaves a fraction of a percent for every week since an entry was last checked, so stale
+      information drifts down rather than sitting at the top on reputation.
     </p>
 
     <div class="pillars">${pillarCards}</div>
@@ -333,19 +355,27 @@ const html = `<!doctype html>
 <section class="section">
   <div class="wrap">
     <div class="eyebrow">The ranking</div>
-    <h2 class="sec-h">Seattle's top 10, right now</h2>
-    <p class="lede" style="margin:14px 0 26px" id="board-note">Published ranking, rebuilt daily.</p>
+    <h2 class="sec-h">The top 10, by SLICE Score</h2>
+    <p class="lede" style="margin:14px 0 8px">
+      The ten highest SLICE Scores in a field of ${scoredAll.length}. Every entry is measured the same
+      way; these are simply the ten that come out on top today. Open <em>Show the arithmetic</em> on any
+      card to see exactly how its score was built.
+    </p>
+    <p class="lede" style="margin:0 0 26px" id="board-note">This site's published ranking, rebuilt daily.</p>
 
     <div class="controls" id="controls" hidden>
       <div class="controls-head">
-        <strong>Disagree? Re-rank it.</strong>
-        <span>Drag a weight and the leaderboard re-sorts instantly. Weights normalise to 100%.</span>
+        <strong>How much do you care about each factor?</strong>
+        <span>The ranking above uses the weights this site publishes. Change any factor and the
+        leaderboard re-sorts instantly. 100% keeps that factor's published weight, 0% ignores it
+        entirely, 200% doubles it &mdash; and whatever you pick, the five are rescaled to add up to
+        100% again, so the percentage on the right is the share it actually gets.</span>
       </div>
       <div class="sliders">${sliders}</div>
       <div class="ctl-row">
         <label class="toggle"><input type="checkbox" id="opt-friction" checked> Apply friction penalty</label>
         <label class="toggle"><input type="checkbox" id="opt-freshness" checked> Apply freshness decay</label>
-        <button class="reset" id="reset" type="button">Reset to published weights</button>
+        <button class="reset" id="reset" type="button">Back to the published ranking</button>
       </div>
     </div>
 
@@ -360,21 +390,118 @@ ${bracketSection}
 ${buzzSection}
 <section class="section">
   <div class="wrap">
+    <div class="eyebrow">Over time</div>
+    <h2 class="sec-h">How the ranking moves</h2>
+    <p class="lede" style="margin-top:14px">
+      The board is rebuilt from scratch every day. Nothing about the order is stored &mdash; the ranking
+      is recomputed from the data each morning, so a change to any input shows up in the next build
+      without anyone editing a list.
+    </p>
+
+    <ol class="flow">
+      <li class="flow-step">
+        <span class="flow-when">12:47 UTC &middot; daily</span>
+        <b>Research pass</b>
+        <p>An agent opens each pizzeria's own site to confirm its branches and addresses, five entries
+        per run, worst-first. It also looks for openings, closings and reviews the news sweep missed.</p>
+      </li>
+      <li class="flow-gate">
+        <b>Validation</b>
+        <p>Everything the agent returns is checked before anything is written: real https sources,
+        addresses that are addresses, Puget Sound only, no duplicates. One bad entry rejects the whole
+        file and the day's dataset is left untouched.</p>
+      </li>
+      <li class="flow-step">
+        <span class="flow-when">13:17 UTC &middot; daily</span>
+        <b>Rebuild</b>
+        <p>News feeds are swept, validated research is merged into the dataset, and every entry in the
+        field is scored from scratch: five factors, friction penalty, freshness decay.</p>
+      </li>
+      <li class="flow-step">
+        <b>Sort and split</b>
+        <p>The field is sorted by score. The top ten are published as the ranking, the rest become the
+        bench. A pizzeria reported closed is held off the top ten whatever it scores.</p>
+      </li>
+      <li class="flow-step">
+        <span class="flow-when">once per ISO week</span>
+        <b>Snapshot</b>
+        <p>The week's order is recorded. The ▲ ▼ markers on each card compare today against the last
+        snapshot from an earlier week, so a mid-week rebuild never flattens them to "no change".</p>
+      </li>
+      <li class="flow-step flow-last">
+        <b>Deploy</b>
+        <p>The whole site is rebuilt and published. If any part of the build fails, nothing deploys and
+        yesterday's site stays up.</p>
+      </li>
+    </ol>
+
+    <h3 class="movers-h">What actually moves an entry</h3>
+    <div class="movers">
+      <div class="mover">
+        <span class="mover-icon" aria-hidden="true">⏳</span>
+        <b>Freshness decay</b>
+        <span class="mover-when">Continuous</span>
+        <p>The only input that changes with no news at all. An entry loses 0.2% of its score per week
+        since it was last checked, up to 6%. Two entries a point apart will cross in about a year if one
+        is being kept current and the other is not.</p>
+      </div>
+      <div class="mover">
+        <span class="mover-icon" aria-hidden="true">🚪</span>
+        <b>A reported closure</b>
+        <span class="mover-when">Immediate</span>
+        <p>The fastest mover on the board. A closure found by the research pass holds an entry off the
+        top ten from the very next build, regardless of score, and the entry below it moves up.</p>
+      </div>
+      <div class="mover">
+        <span class="mover-icon" aria-hidden="true">🔁</span>
+        <b>Friction changing</b>
+        <span class="mover-when">When it changes</span>
+        <p>Dropping preorder-only service or opening more days removes a penalty worth up to
+        ${FRICTION_CAP.toFixed(1)} points &mdash; enough to move several places, never enough to
+        manufacture a number one.</p>
+      </div>
+      <div class="mover">
+        <span class="mover-icon" aria-hidden="true">✍️</span>
+        <b>A factor being re-rated</b>
+        <span class="mover-when">Rare, deliberate</span>
+        <p>The five ratings are editorial and change only when the judgment does. This is the slowest
+        and largest lever, which is the intended order of things: the ranking should move because the
+        pizza did.</p>
+      </div>
+      <div class="mover">
+        <span class="mover-icon" aria-hidden="true">➕</span>
+        <b>A new entry</b>
+        <span class="mover-when">When one is added</span>
+        <p>New pizzerias arrive on the bench and climb on score alone. Candidates turned up by the
+        research pass sit under the bench until they have been visited and rated.</p>
+      </div>
+      <div class="mover">
+        <span class="mover-icon" aria-hidden="true">🎛️</span>
+        <b>You, changing the weights</b>
+        <span class="mover-when">Instantly, for you</span>
+        <p>The controls above re-sort the board in your browser only. Nothing you do here is saved or
+        sent anywhere, and the published ranking is unaffected.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
     <div class="eyebrow">Methodology</div>
     <h2 class="sec-h">How the numbers are made</h2>
 
     <div class="grid2">
       <div class="mcard">
-        <h3>Why crowd ratings are not scored</h3>
-        <p>They used to be, for 55% of this pillar. They are not any more, and the reason is worth
-        stating: the sites that hold them refuse automated reads, so the figures here are frozen at one
-        observation date and can never be refreshed. Scoring on them would permanently advantage the ten
-        entries that happen to have them, and permanently hold back the fifteen that do not, on the
-        strength of numbers nobody can update. Measuring all 25 the same way is worth more than the
-        extra signal.</p>
-        <p>The stored figures are still shown as dated context on each card, and the de-noising that was
-        applied to them still runs for display. A 4.9★ from 80 diners is a rumour; a 4.7★ from 4,000 is
-        evidence, and the shrinkage says so:</p>
+        <h3>Why star ratings do not count</h3>
+        <p>Crowd ratings — the star averages on review platforms — are shown on the cards that have
+        them, but they are not part of any score. The platforms that hold those numbers refuse
+        automated reads, so a figure collected once can never be refreshed, and only some entries have
+        one at all. Scoring on them would rank part of the field on numbers nobody can update and the
+        rest on nothing. Every entry is measured the same way instead.</p>
+        <p>Where a rating is shown, it is de-noised first, because sample size matters: a 4.9★ from 80
+        diners is a rumour, a 4.7★ from 4,000 is evidence. The correction pulls small samples toward
+        the city average in proportion to how small they are:</p>
         <pre>adjusted = (v / (v + m)) · R
          + (m / (v + m)) · C
 
@@ -382,8 +509,8 @@ v = review count
 m = ${dataset.priorWeight}   (prior weight)
 R = raw rating
 C = ${dataset.cityMeanRating.toFixed(2)}  (Seattle mean)</pre>
-        <p>A newcomer's rating gets pulled hardest toward the mean, which is the point. But the result
-        is a footnote now, not an input.</p>
+        <p>A rating from a handful of diners lands close to the city mean; one from thousands barely
+        moves. The result is context for the reader, not an input to the score.</p>
       </div>
 
       <div class="mcard">
@@ -399,10 +526,12 @@ C = ${dataset.cityMeanRating.toFixed(2)}  (Seattle mean)</pre>
 
       <div class="mcard">
         <h3>Freshness decay</h3>
-        <p>Each entry carries a <span class="inline-code">lastVerified</span> date. Scores decay by
-        <b>0.2% per week</b> since that date, capped at <b>6%</b>. Stale data quietly drifts down instead of
-        sitting at the top forever, and the daily rebuild has something real to recompute.</p>
-        <p>Toggle it off in the controls above to see the undecayed field.</p>
+        <p>Every entry records the date it was last checked. Its score is reduced by <b>0.2% for each
+        week</b> since then, to a maximum of <b>6%</b>. An entry nobody has looked at in a year is
+        carrying a year-old judgment, and this says so in the score rather than in a footnote.</p>
+        <p>It is the one part of the score that changes on its own, with no new information: an entry
+        left alone slides slowly down the board. Toggle it off in the controls above to see the field
+        undecayed.</p>
       </div>
 
       <div class="mcard">
@@ -411,10 +540,13 @@ C = ${dataset.cityMeanRating.toFixed(2)}  (Seattle mean)</pre>
           <li>Ties break on Consensus Signal, then Crust Integrity, then alphabetically.</li>
           <li>The <b>▲ / ▼</b> markers compare against the previous weekly snapshot stored in
               <span class="inline-code">pizza/data/history.json</span>.</li>
-          <li>Pillar scores are editorial judgments applied by one rubric to every restaurant. They are
-              opinions — but they are <em>declared</em> opinions, and you can overrule their weights above.</li>
+          <li>The five factor ratings are editorial judgments, applied by one rubric to every
+              restaurant. They are opinions — declared ones, with the weights published and yours to
+              overrule above.</li>
+          <li>Locations carry a street address read from each pizzeria's own site, with the date it was
+              checked. Anything not yet checked shows its unverified neighborhood.</li>
           <li>Crowd figures are rounded aggregates observed across major review platforms at the dataset
-              version shown, not a live API feed.</li>
+              version shown, not a live feed.</li>
         </ul>
       </div>
     </div>
@@ -423,15 +555,18 @@ C = ${dataset.cityMeanRating.toFixed(2)}  (Seattle mean)</pre>
 
 <footer>
   <div class="wrap">
-    <p><b>The Seattle Pizza Index.</b> Built from <span class="inline-code">pizza/data/restaurants.json</span>
-    by <span class="inline-code">pizza/scripts/build.mjs</span>, scored by
-    <span class="inline-code">pizza/src/slice.js</span>, and redeployed automatically by GitHub Actions
-    daily at 13:17 UTC (6:17am Pacific). The ranking itself moves weekly: the spotlight and the
-    ▲/▼ markers are keyed to the ISO week.</p>
+    <p><b>The Seattle Pizza Index.</b> A static site: the ranking is computed at build time by
+    <span class="inline-code">slice.js</span> from a JSON dataset, rendered to HTML, and served as
+    files. The same scoring module runs again in your browser, which is how the controls above re-sort
+    the board without a request to anything. No analytics, no cookies, no tracking, and nothing you
+    change here leaves your device.</p>
+    <p style="margin-top:10px">Rebuilt and redeployed daily at 13:17 UTC (6:17am Pacific) by GitHub
+    Actions. The spotlight and the ▲ ▼ markers are keyed to the ISO week, so they turn over weekly
+    while the scores underneath are recomputed every day.</p>
     <p style="margin-top:10px">Dataset v${esc(dataset.dataVersion)} · built ${now.toISOString()} ·
     ${esc(dataset.notes)}</p>
-    <p style="margin-top:10px">Disagree with the rankings? Good — that is what the sliders are for. Disagree
-    with the data? Open a pull request against the dataset.</p>
+    <p style="margin-top:10px">Disagree with the ranking? That is what the controls are for. Think the
+    data is wrong? The dataset is public and takes pull requests.</p>
   </div>
 </footer>
 

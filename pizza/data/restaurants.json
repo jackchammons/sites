@@ -3,7 +3,7 @@
   "dataVersion": "2026.08",
   "cityMeanRating": 4.3,
   "priorWeight": 500,
-  "notes": "Crowd ratings are rounded aggregates observed across major review platforms. Pillar scores (0-10) are editorial judgments applied uniformly by the rubric in METHODOLOGY.md. Bench entries carry no crowd figures until they are verified, so their Consensus Signal rests on the critical read alone.",
+  "notes": "Factor ratings (0-10) are editorial judgments applied uniformly to every entry by one rubric. Critical Read is scored from the critical consensus alone, identically for all entries. Crowd star ratings are rounded aggregates observed on review platforms at the dataset version shown; they are displayed as context and are not scored. Locations marked verified were read from the pizzeria's own site on the date recorded.",
   "restaurants": [
     {
       "id": "windy-city-pie",
@@ -83,7 +83,7 @@
     {
       "id": "cornelly",
       "name": "Cornelly",
-      "neighborhood": "Central District",
+      "neighborhood": "Capitol Hill",
       "style": "Wood-fired, vegetable-forward",
       "signature": "Seasonal produce treated as the main event, not a garnish",
       "blurb": "The Delancey brain trust pointed at the farmers market. Pizza is the backbone but the kitchen behaves like a full restaurant — charred brassicas, whipped ricotta, whatever the week gave them. It is the most convincing case in the city that a pizzeria can also be a serious vegetable restaurant.",
