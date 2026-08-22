@@ -131,6 +131,8 @@ const PUGET_SOUND_ZIP = /\b98[0-5]\d{2}\b/;
 sections.locations.forEach((it, i) => {
   if (!byId.has(it?.id)) bad('locations', i, `unknown restaurant id "${it?.id}"`);
   checkUrl('locations', i, it?.source, 'source');
+  // Optional: omitted when a pizzeria genuinely has no site of its own.
+  if (it?.homepage != null) checkUrl('locations', i, it.homepage, 'homepage');
 
   const sites = it?.sites;
   if (!Array.isArray(sites) || !sites.length) {

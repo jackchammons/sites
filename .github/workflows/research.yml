@@ -149,7 +149,7 @@ jobs:
       # A short explicit worklist beats letting the agent read a 25-entry file
       # with long blurbs and decide for itself -- that costs turns and context on
       # a decision a sort makes better, and turns are what this job keeps running
-      # out of. Five per run covers all 25 in five days, then re-verifies the
+      # out of. Eight per run covers all 25 in three days, then re-verifies the
       # stalest. Placeholders ("Multiple locations", "Citywide") sort first,
       # since those are actively wrong on the page rather than merely unverified.
       - name: Pick the locations to verify
@@ -158,10 +158,10 @@ jobs:
         run: |
           {
             echo 'list<<WORKLIST_EOF'
-            node pizza/scripts/next-locations.mjs 5
+            node pizza/scripts/next-locations.mjs 8
             echo 'WORKLIST_EOF'
           } >> "$GITHUB_OUTPUT"
-          node pizza/scripts/next-locations.mjs 5
+          node pizza/scripts/next-locations.mjs 8
 
       - name: Research and refresh pizza data
         id: agent
@@ -201,6 +201,14 @@ jobs:
             one, omit that entry entirely rather than guessing -- a wrong address
             is worse than a missing one.
 
+            Report the homepage too. The site links every pizzeria it lists, and
+            most of the ones on this worklist have no link yet. Give the official
+            site you actually opened. Never guess a domain from the name: several
+            plausible-looking ones are wrong, and at least one has lapsed and now
+            serves an unrelated gambling site. If the business genuinely has no
+            website of its own, omit homepage and leave the rest of the entry --
+            no link is much better than a bad one.
+
             Report every branch, not just the flagship, and only branches that
             are open now. Locations outside the Seattle metro (a Portland or
             Spokane outpost, say) do not belong.
@@ -228,7 +236,8 @@ jobs:
                             "style":"<style>","note":"<one sentence on why>",
                             "source":"<https URL>"}],
              "locations":[{"id":"<the exact id from the worklist>",
-                           "source":"<https URL of the pizzeria's own locations page>",
+                           "homepage":"<https URL of the pizzeria's official site>",
+                           "source":"<https URL of its locations/visit page>",
                            "sites":[{"neighborhood":"<Seattle neighborhood or suburb>",
                                      "address":"<full street address incl. city, WA and ZIP>"}]}]}
 
@@ -253,7 +262,8 @@ jobs:
             - At most 12 news and 8 candidates. Omissions are free; fabrications
               are not.
             - locations: `id` must be copied exactly from the worklist above.
-              `source` must be the pizzeria's own https page. Every site needs
+              `source`, and `homepage` when you include it, must be the
+              pizzeria's own https pages. Every site needs
               both a neighborhood and a full street address starting with the
               street number and naming the city, WA and the ZIP -- "Capitol Hill"
               or "Seattle, WA" alone is rejected. The ZIP must be a Puget Sound
@@ -263,7 +273,7 @@ jobs:
               array.
 
             Work within a budget: at most 12 web searches for the news half,
-            plus one page fetch per pizzeria in the locations worklist. When you
+            plus one or two page fetches per pizzeria in the locations worklist. When you
             reach that, write the file with whatever you have and stop. A short
             honest file is a good result; there is no requirement to fill the
             caps, and a day with little Seattle pizza news should produce a short

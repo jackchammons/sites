@@ -113,10 +113,10 @@ h1, h2, h3 { line-height: 1.15; margin: 0; letter-spacing: -0.02em; }
 .formula b { color: var(--tomato-2); }
 
 /* ---------- controls ---------- */
+/* Sits at the top of the rankings and stays there. It was sticky, which put a
+   panel taller than some viewports over the board it exists to re-sort. */
 .controls {
-  position: sticky; top: 0; z-index: 20;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: blur(12px);
+  background: var(--card);
   border: 1px solid var(--line); border-radius: var(--radius);
   padding: 14px 18px; margin-bottom: 26px;
 }
@@ -473,12 +473,4 @@ footer p { max-width: 72ch; }
   .flow-step + .flow-step::after,
   .flow-step + .flow-gate::after,
   .flow-gate + .flow-step::after { left: 16px; }
-}
-
-/* The control panel is sticky so the board stays re-sortable while you scroll
-   it. With five factors that panel is now taller than a phone screen, and a
-   sticky element taller than the viewport pins its top and hides the board it
-   is meant to be re-sorting. Below the breakpoint it scrolls with the page. */
-@media (max-width: 760px) {
-  .controls { position: static; backdrop-filter: none; background: var(--card); }
 }

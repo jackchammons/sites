@@ -53,6 +53,16 @@ for (const it of research.locations ?? []) {
   r.locationsVerified = it.verified ?? today;
   r.locationsSource = it.source;
   delete r.neighborhoodIsPlaceholder;
+
+  /* Every entry on the page should be a link, and verifying locations already
+   * required finding the official site -- so the link comes free. Only filled
+   * in when absent: a hand-set url is a deliberate choice (a Tom Douglas
+   * restaurant page rather than the group homepage, say) and outranks the
+   * origin guessed from a locations URL. */
+  if (!r.url) {
+    try { r.url = it.homepage ?? new URL(it.source).origin; }
+    catch { /* validated upstream; a bad URL here just means no link */ }
+  }
   located++;
   const changed = before !== JSON.stringify(sites);
   console.log(`  @ ${r.name}: ${sites.length} location(s)${changed ? '' : ' (unchanged)'} — ${sites.map(s => s.neighborhood).join(', ')}`);
