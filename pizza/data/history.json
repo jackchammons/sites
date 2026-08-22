@@ -5,8 +5,8 @@
       "date": "2026-08-22",
       "week": 34,
       "ranks": {
-        "windy-city-pie": 1,
-        "cornelly": 2,
+        "cornelly": 1,
+        "windy-city-pie": 2,
         "delancey": 3,
         "lupo": 4,
         "dinos-tomato-pie": 5,
@@ -17,8 +17,8 @@
         "pagliacci": 10
       },
       "scores": {
-        "windy-city-pie": 84.1,
         "cornelly": 84,
+        "windy-city-pie": 84,
         "delancey": 82.9,
         "lupo": 81.2,
         "dinos-tomato-pie": 80.4,
