@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-22T03:34:45.414Z",
+  "updated": "2026-08-22T04:21:56.390Z",
   "sources": 4,
   "items": [
     {
@@ -64,7 +64,9 @@
       "source": "West Seattle Blog...",
       "published": "2026-06-08T07:00:00.000Z",
       "kind": "mention",
-      "mentions": []
+      "mentions": [
+        "pegasus-pizza"
+      ]
     },
     {
       "title": "Legacy in the Making: Head Chefs Gabriel Castro and Isidro Ocampo acquire West Seattle’s Pegasus Pizza",
@@ -72,7 +74,9 @@
       "source": "Westside Seattle",
       "published": "2026-06-08T07:00:00.000Z",
       "kind": "mention",
-      "mentions": []
+      "mentions": [
+        "pegasus-pizza"
+      ]
     },
     {
       "title": "Aslan opens in Seward Park with pizza, brews and soccer mania",
@@ -149,7 +153,7 @@
     {
       "title": "Forget New York and Chicago — Puget Sound's 'Pizza Triangle' is serving up some of the best pies on the planet",
       "url": "https://news.google.com/rss/articles/CBMi3AFBVV95cUxQXzV1Y0dZbkMyTy1zc1NpdzZQbHhRV25JWUlhbVpja2hWTHpPTlVPZF8tdVZTeFVKQXFZYVpsUnJ4R0dhcktiMjgxN3JwcWZEQV9weEFEQkNSaFBsMjBqZWMxTm1nQW50djZIR2NScEZDS1pQcWcwbHl3cXNUaXNsdVgzdnBHVEhRNVVLUzRsSExOYVRBeXRubnE3REg1ZHhJaS1tUjZkd2NyaVp5Y29IMmNxUzE3dDZ3MllfVHVsY2JZUWs5OEFVNG5VcVJDWnFBZm1rSlRUTjhkeWxO?oc=5",
-      "source": "king5.com",
+      "source": "KING5.com",
       "published": "2026-04-30T07:00:00.000Z",
       "kind": "ranking",
       "mentions": []
