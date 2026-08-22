@@ -71,17 +71,22 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
 - **Never let a script write pillar scores.** The page claims they are editorial judgments
   applied by one rubric; generating them would make that claim false. Crowd figures are the
   only part of the dataset automation may touch.
-- **The agent cannot fetch crowd ratings, and this is not fixable.** Yelp returns 403 to
-  automated fetching (business pages and search), and Google's results carry no rating in the
-  HTML. Three runs burned their entire turn budget thrashing against that — 12, 28 and 30
-  turns — before this was diagnosed. Ratings belong to `fetch-ratings.mjs` and the Yelp API.
-  The agent does editorial research (openings, closings, reviews), where the sources serve
-  their content to anyone. Do not point it back at ratings.
+- **Crowd ratings are frozen, permanently, by decision.** Yelp returns 403 to automated
+  fetching (business pages and search) and Google's results carry no rating in the HTML, so
+  they cannot be scraped; and a Yelp API key was considered and ruled out, so there is no
+  API path either. `fetch-ratings.mjs` has been deleted. The figures in `restaurants.json`
+  are a dated observation and will not refresh. Do not reintroduce a ratings pipeline —
+  three runs burned their whole turn budget rediscovering the 403.
 - **Set exactly one research credential.** `research.yml` accepts either
   `CLAUDE_CODE_OAUTH_TOKEN` (subscription pool, from `claude setup-token`) or
   `ANTHROPIC_API_KEY` (metered API credits). If both are set the API key wins the credential
   chain, so you pay per token while the subscription allowance goes unused — the gate step
   emits a workflow warning when it sees both.
+- **The research agent has never completed a run.** Five attempts, every task shape, all
+  ended on the turn ceiling: 12, 28, 30, 30. The daily site update does not depend on it —
+  `fetch-buzz.mjs` in `publish.yml` is keyless, reliable, and is what actually keeps the
+  buzz section current. Before tuning it again, turn on `show_full_output` and find out what
+  it is actually spending turns on; four blind tunes produced nothing.
 - **If any site's build fails, the whole run fails and nothing deploys.** This is
   deliberate: the previous deploy stays live instead of publishing a half-built site.
 - **Enabling Pages cannot be automated.** A workflow's `GITHUB_TOKEN` is refused on the

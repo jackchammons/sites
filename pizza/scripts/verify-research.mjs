@@ -8,9 +8,11 @@
  *
  * Four sections, all optional:
  *   news       stories the feed sweep missed
- *   ratings    refreshed crowd figures, each with a source URL
  *   candidates pizzerias worth considering for the bench
  *   closures   places reported closed (relegation signals)
+ *
+ * There is deliberately no ratings section: the sources that hold crowd
+ * figures block automated reads, and no API key path is in use.
  *
  * A missing file is fine and exits 0: no research run yet, or no token.
  */
@@ -30,9 +32,8 @@ const dataset = JSON.parse(fs.readFileSync(path.join(root, 'data/restaurants.jso
 const byId = new Map(dataset.restaurants.map(r => [r.id, r]));
 
 const KINDS = new Set(['opening', 'closing', 'ranking', 'mention']);
-const CAPS = { news: 20, ratings: 8, candidates: 15, closures: 10 };
+const CAPS = { news: 20, candidates: 15, closures: 10 };
 const MAX_AGE_DAYS = 180;
-const MAX_RATING_DRIFT = 0.5;   // a real aggregate does not lurch overnight
 
 const fails = [];
 const bad = (sec, i, msg) => fails.push(`${sec}[${i}]: ${msg}`);
@@ -46,7 +47,10 @@ if (!doc || typeof doc !== 'object' || Array.isArray(doc)) {
 
 /* `items` was the original field name; keep reading it so older files still work. */
 const news = doc.news ?? doc.items ?? [];
-const sections = { news, ratings: doc.ratings ?? [], candidates: doc.candidates ?? [], closures: doc.closures ?? [] };
+const sections = { news, candidates: doc.candidates ?? [], closures: doc.closures ?? [] };
+if (Array.isArray(doc.ratings) && doc.ratings.length) {
+  fails.push('ratings are no longer accepted: crowd figures are frozen, see CLAUDE.md');
+}
 
 for (const [name, arr] of Object.entries(sections)) {
   if (!Array.isArray(arr)) { fails.push(`${name} must be an array`); continue; }
@@ -78,24 +82,6 @@ news.forEach((it, i) => {
   const key = String(it?.url || it?.title).toLowerCase();
   if (seen.has(key)) bad('news', i, 'duplicate of an earlier item');
   seen.add(key);
-});
-
-sections.ratings.forEach((it, i) => {
-  const r = byId.get(it?.id);
-  if (!r) { bad('ratings', i, `unknown restaurant id "${it?.id}"`); return; }
-  checkUrl('ratings', i, it?.source, 'source');
-  if (typeof it.rating !== 'number' || it.rating < 1 || it.rating > 5)
-    bad('ratings', i, `rating must be 1–5, got ${it.rating}`);
-  if (!Number.isInteger(it.reviews) || it.reviews < 1)
-    bad('ratings', i, `reviews must be a positive integer, got ${it.reviews}`);
-  // Guard rails: a wrong match is worse than stale data.
-  if (r.crowd && typeof it.rating === 'number') {
-    const drift = Math.abs(it.rating - r.crowd.rating);
-    if (drift > MAX_RATING_DRIFT)
-      bad('ratings', i, `${r.name}: rating moves ${r.crowd.rating} → ${it.rating} (>${MAX_RATING_DRIFT})`);
-    if (Number.isInteger(it.reviews) && it.reviews < r.crowd.reviews * 0.5)
-      bad('ratings', i, `${r.name}: review count halves ${r.crowd.reviews} → ${it.reviews}`);
-  }
 });
 
 sections.candidates.forEach((it, i) => {

@@ -54,15 +54,10 @@ jobs:
           playwright install --with-deps chromium
 
       # Data refresh runs before the build and only writes into */data/.
-      # Both steps are fail-soft: no network, no API key, or a bad response
-      # leaves the existing data in place and the build still publishes.
+      # Fail-soft: no network or a bad response leaves the existing data in
+      # place and the build still publishes.
       - name: Refresh Seattle pizza buzz
         run: node pizza/scripts/fetch-buzz.mjs
-
-      - name: Refresh crowd ratings
-        env:
-          YELP_API_KEY: ${{ secrets.YELP_API_KEY }}
-        run: node pizza/scripts/fetch-ratings.mjs
 
       # Builds each site into dist/<slug>/, runs its verifier, promotes its
       # entry page, then renders the landing page. If any site fails, the run

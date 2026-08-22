@@ -99,9 +99,9 @@ jobs:
       # to automated fetching -- business pages and search alike -- and Google's
       # results carry no rating in the HTML. Three runs burned their whole turn
       # budget thrashing against that: 12, 28 and 30 turns, never converging.
-      # That is a property of the sources, not something a prompt can fix.
-      # Ratings belong to fetch-ratings.mjs and the Yelp API, which is dormant
-      # until YELP_API_KEY exists.
+      # That is a property of the sources, not something a prompt can fix, and
+      # there is no API path either: a Yelp key was considered and ruled out.
+      # Crowd ratings are therefore frozen at the values in restaurants.json.
       #
       # What the agent IS good at is editorial research: openings, closings and
       # reviews live on news sites that serve their content to anyone. The
@@ -156,9 +156,10 @@ jobs:
               are not. Stop when you have covered the ground, not when you hit
               the caps.
 
-            Do not attempt crowd ratings, star scores or review counts - a
-            separate script handles those through an API. Write only
-            pizza/data/research.json, and never touch pillar scores.
+            Do not attempt crowd ratings, star scores or review counts. Those
+            sources block automated reads and there is no API path; the stored
+            figures are frozen by design. Write only pizza/data/research.json,
+            and never touch pillar scores.
 
       - name: Validate the agent's output
         if: steps.gate.outputs.enabled == 'true'

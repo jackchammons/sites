@@ -101,12 +101,10 @@ opening, closing, list or mention, and merges into `data/buzz.json` deduped on t
 a 120-day window. Reddit was considered and rejected: it now returns 403 to anonymous
 reads.
 
-**`fetch-ratings.mjs`** — needs `YELP_API_KEY` as a repository secret. Without it the step
-is a clean no-op, which is the current state. With it, each restaurant's `crowd.rating`,
-`crowd.reviews` and `lastVerified` are refreshed from Yelp Fusion. Guard rails: a result
-must clear a name-similarity threshold, a rating cannot move more than 0.4 in one run, and
-review counts cannot halve — any of those and the entry is left alone and logged. A wrong
-match is worse than stale data.
+**Crowd ratings are frozen.** The figures in `restaurants.json` were observed at the dataset
+version shown and will not refresh: Yelp returns 403 to automated fetching, Google's results
+carry no rating in the HTML, and a Yelp API key was ruled out. `fetch-ratings.mjs` has been
+removed rather than left dormant, so nothing implies a refresh that is not coming.
 
 **`research.yml`** — needs one credential: `CLAUDE_CODE_OAUTH_TOKEN` (subscription pool,
 generated with `claude setup-token`) or `ANTHROPIC_API_KEY` (metered API credits). Set one,
@@ -117,7 +115,6 @@ cannot, writing one file, `data/research.json`, with four sections:
 | Section | What it does |
 |---|---|
 | `news` | Stories the RSS sweep missed; merged into the buzz list |
-| `ratings` | Crowd figures — **written by `fetch-ratings.mjs` via the Yelp API, not by the agent** (Yelp 403s automated fetching) |
 | `candidates` | Unranked Seattle pizzerias worth considering, shown under the bench |
 | `closures` | Relegation signals; flags the entry and drops it out of the top ten |
 
