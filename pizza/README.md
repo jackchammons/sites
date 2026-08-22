@@ -117,7 +117,7 @@ cannot, writing one file, `data/research.json`, with four sections:
 | Section | What it does |
 |---|---|
 | `news` | Stories the RSS sweep missed; merged into the buzz list |
-| `ratings` | Crowd figures with a source URL — **this is what promotes bench entries** |
+| `ratings` | Crowd figures — **written by `fetch-ratings.mjs` via the Yelp API, not by the agent** (Yelp 403s automated fetching) |
 | `candidates` | Unranked Seattle pizzerias worth considering, shown under the bench |
 | `closures` | Relegation signals; flags the entry and drops it out of the top ten |
 

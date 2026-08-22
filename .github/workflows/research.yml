@@ -95,35 +95,18 @@ jobs:
               ;;
           esac
 
-      # A short explicit worklist, instead of the agent reading a 25-entry file
-      # and deciding for itself. Fewer turns, far less context.
-      - name: Pick what needs verifying
-        id: worklist
-        if: steps.gate.outputs.enabled == 'true'
-        run: |
-          {
-            echo 'list<<WORKLIST_EOF'
-            node pizza/scripts/next-to-verify.mjs 5
-            echo 'WORKLIST_EOF'
-          } >> "$GITHUB_OUTPUT"
-          echo "Worklist:"; node pizza/scripts/next-to-verify.mjs 5
-
-      # Scope, learned the hard way. Two runs asked for four research sections
-      # in one pass and both died on the turn ceiling -- at 12 turns for $1.24,
-      # then at 28 turns for $2.23. Switching Opus 5 to Sonnet 5 did not reduce
-      # the cost, because turns are the driver: every extra turn re-sends the
-      # accumulated context. Raising the ceiling just buys a more expensive
-      # failure.
+      # Crowd ratings are NOT the agent's job, and cannot be. Yelp returns 403
+      # to automated fetching -- business pages and search alike -- and Google's
+      # results carry no rating in the HTML. Three runs burned their whole turn
+      # budget thrashing against that: 12, 28 and 30 turns, never converging.
+      # That is a property of the sources, not something a prompt can fix.
+      # Ratings belong to fetch-ratings.mjs and the Yelp API, which is dormant
+      # until YELP_API_KEY exists.
       #
-      # So the agent now does one bounded job: look up crowd figures for the
-      # five entries the worklist names. News is already covered for free by
-      # the RSS sweep in publish.yml, and candidates and closures can come back
-      # once this loop is proven.
-      #
-      # max-turns is a ceiling, not a target: it costs only what is actually
-      # used. With the task bounded, a generous ceiling is free insurance
-      # against crashing out mid-run and wasting everything spent getting
-      # there. Five lookups should land near 15 turns.
+      # What the agent IS good at is editorial research: openings, closings and
+      # reviews live on news sites that serve their content to anyone. The
+      # broader early runs were finding real stories before they ran out of
+      # turns, so that is what it does now.
       - name: Research and refresh pizza data
         if: steps.gate.outputs.enabled == 'true'
         uses: anthropics/claude-code-action@v1
@@ -136,38 +119,46 @@ jobs:
             --model claude-sonnet-5
             --allowedTools "WebSearch,WebFetch,Read,Write,Glob,Grep,TodoWrite"
           prompt: |
-            Look up current crowd ratings for these five Seattle pizzerias and
-            write them to pizza/data/research.json. Nothing else.
+            Find Seattle pizzeria news from the last 30 days that is not already
+            covered, and write it to pizza/data/research.json.
 
-            ${{ steps.worklist.outputs.list }}
+            Read pizza/data/buzz.json first to see what the automated feed sweep
+            already found, so you do not repeat it. Then search for what it
+            missed: new pizzerias opening, pizzerias closing, and notable
+            reviews or rankings of Seattle-area pizzerias.
 
-            For each one, search for its Yelp or Google listing, open it, and
-            read off the average rating and the total review count. Work
-            through them one at a time and keep moving; do not over-research a
-            single entry.
-
-            Then write pizza/data/research.json exactly like this:
+            Write pizza/data/research.json:
 
             {"updated":"<ISO8601 now>",
-             "ratings":[{"id":"<the id from the list above>",
-                         "rating":<number 1-5>,
-                         "reviews":<integer>,
-                         "source":"<https URL of the page you read>"}]}
+             "news":[{"title":"<headline as published>",
+                      "url":"<https link to the article>",
+                      "source":"<publication name>",
+                      "published":"<ISO8601 publication date>",
+                      "kind":"opening|closing|ranking|mention",
+                      "mentions":[]}],
+             "candidates":[{"name":"<pizzeria>","neighborhood":"<area>",
+                            "style":"<style>","note":"<one sentence on why>",
+                            "source":"<https URL>"}]}
+
+            candidates are Seattle pizzerias worth adding to the ranking later --
+            recent openings, or places getting real critical attention. Leave the
+            array empty if you find none.
 
             Rules, enforced by pizza/scripts/verify-research.mjs, which rejects
-            the entire file if any entry breaks them:
-            - source must be a real https URL you actually opened. Never invent
-              a URL, a rating or a review count. If you cannot find a listing
-              for one of them, leave that entry out entirely.
-            - ids must be exactly as given above.
-            - For an entry that already has figures, a rating may not move more
-              than 0.5 and the review count may not halve. If what you find
-              breaks that, you have matched the wrong business - omit it.
-            - Omissions are free. Fabrications are not. Four solid entries beat
-              five with one guess.
+            the whole file if any entry breaks them:
+            - Every entry needs a real https URL you actually opened. Never
+              invent a URL, a headline or a date.
+            - published must be a real date within the last 180 days, not future.
+            - kind must be exactly one of the four values above.
+            - Seattle metro only. No national chains, no crime stories, no
+              business-wire or real-estate items.
+            - At most 12 news and 8 candidates. Omissions are free; fabrications
+              are not. Stop when you have covered the ground, not when you hit
+              the caps.
 
-            Write only pizza/data/research.json. Do not modify any other file,
-            and never touch pillar scores - those are editorial.
+            Do not attempt crowd ratings, star scores or review counts - a
+            separate script handles those through an API. Write only
+            pizza/data/research.json, and never touch pillar scores.
 
       - name: Validate the agent's output
         if: steps.gate.outputs.enabled == 'true'

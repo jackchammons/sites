@@ -71,6 +71,12 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
 - **Never let a script write pillar scores.** The page claims they are editorial judgments
   applied by one rubric; generating them would make that claim false. Crowd figures are the
   only part of the dataset automation may touch.
+- **The agent cannot fetch crowd ratings, and this is not fixable.** Yelp returns 403 to
+  automated fetching (business pages and search), and Google's results carry no rating in the
+  HTML. Three runs burned their entire turn budget thrashing against that — 12, 28 and 30
+  turns — before this was diagnosed. Ratings belong to `fetch-ratings.mjs` and the Yelp API.
+  The agent does editorial research (openings, closings, reviews), where the sources serve
+  their content to anyone. Do not point it back at ratings.
 - **Set exactly one research credential.** `research.yml` accepts either
   `CLAUDE_CODE_OAUTH_TOKEN` (subscription pool, from `claude setup-token`) or
   `ANTHROPIC_API_KEY` (metered API credits). If both are set the API key wins the credential
