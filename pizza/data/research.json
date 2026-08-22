@@ -1,19 +1,19 @@
 {
-  "updated": "2026-08-22T15:00:00.000Z",
+  "updated": "2026-08-22T15:00:00Z",
   "news": [
     {
-      "title": "Urban Family Brewing to open Seattle waterfront restaurant",
-      "url": "https://www.myballard.com/2026/07/31/urban-family-brewing-to-open-seattle-waterfront-restaurant/",
-      "source": "My Ballard",
-      "published": "2026-07-31T07:00:00.000Z",
+      "title": "Acclaimed Stevie's Famous Pizza Celebrates Grand Opening on Phinney Ridge August 2",
+      "url": "https://phinneywood.com/2026/07/stevies-famous-pizza-celebrates-grand-opening-on-phinney-ridge/",
+      "source": "PhinneyWood",
+      "published": "2026-07-28T00:00:00Z",
       "kind": "opening",
       "mentions": []
     },
     {
-      "title": "Opening Night: Stevie's Famous Comes to North Seattle",
-      "url": "https://seattlemag.com/food-drink/opening-night-stevies-famous-comes-to-north-seattle",
-      "source": "Seattle magazine",
-      "published": "2026-08-19T07:00:00.000Z",
+      "title": "Urban Family Brewing to open Seattle waterfront restaurant",
+      "url": "https://www.myballard.com/2026/07/31/urban-family-brewing-to-open-seattle-waterfront-restaurant/",
+      "source": "My Ballard",
+      "published": "2026-07-31T00:00:00Z",
       "kind": "opening",
       "mentions": []
     }
@@ -22,72 +22,56 @@
     {
       "name": "Stevie's Famous",
       "neighborhood": "Phinney Ridge",
-      "style": "New York-style (sourdough)",
-      "note": "Burien-founded pizzeria's first full-size Seattle location, in the former Zeek's space, on the strength of a 2024 Best Pizza reader-poll win.",
-      "source": "https://seattlemag.com/food-drink/opening-night-stevies-famous-comes-to-north-seattle"
-    },
-    {
-      "name": "Urban Family Waterfront",
-      "neighborhood": "Downtown waterfront",
-      "style": "Grandma-style square pizza",
-      "note": "Ballard brewery's new waterfront outpost near Ivar's centers its food program on grandma-style pan pizza and focaccia sandwiches.",
-      "source": "https://www.myballard.com/2026/07/31/urban-family-brewing-to-open-seattle-waterfront-restaurant/"
+      "style": "Naturally leavened New York-style",
+      "note": "Burien-founded chain's largest location yet just opened in the former Zeek's space, its first expansion north of downtown.",
+      "source": "https://phinneywood.com/2026/07/stevies-famous-pizza-celebrates-grand-opening-on-phinney-ridge/"
     },
     {
       "name": "Abecedary",
       "neighborhood": "Hillman City",
       "style": "New Haven-style",
-      "note": "Anticipated pizzeria and brewery from a Harvest Vine/Dahlia Lounge alum, still over a year from opening but already drawing crowds at pop-up previews.",
-      "source": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/"
+      "note": "Cult pop-up from a former Microsoft engineer drawing early buzz ahead of a planned 2027 brick-and-mortar.",
+      "source": "https://www.seattletimes.com/life/food-drink/up-and-coming-seattle-pizza-baker-will-pop-up-saturday-in-hillman-city/"
+    },
+    {
+      "name": "Sinner's Pizza",
+      "neighborhood": "University District",
+      "style": "New York-style",
+      "note": "New pizzeria that took over the former Supreme Pizzeria & Bar space on University Way.",
+      "source": "https://whatnow.com/seattle/restaurants/new-pizza-spot-sinners-pizza-to-open-in-seattles-university-district/"
+    },
+    {
+      "name": "Urban Family Brewing Co. (Waterfront)",
+      "neighborhood": "Downtown waterfront",
+      "style": "Grandma-style pan pizza",
+      "note": "New waterfront taproom near Pike Place from Frankie's Pizza & Pasta alums, serving square grandma-style pies alongside beer.",
+      "source": "https://www.myballard.com/2026/07/31/urban-family-brewing-to-open-seattle-waterfront-restaurant/"
     }
   ],
   "locations": [
     {
-      "id": "independent-pizzeria",
-      "homepage": "https://theindiepizzeria.com/",
-      "source": "https://theindiepizzeria.com/",
+      "id": "ballard-pizza-co",
+      "homepage": "https://ballardpizzacompany.com",
+      "source": "https://ballardpizzacompany.com/restaurants",
       "sites": [
         {
-          "neighborhood": "Madison Park",
-          "address": "4235 E Madison St, Seattle, WA 98112"
+          "neighborhood": "Ballard",
+          "address": "5205 Ballard Ave NW, Seattle, WA 98107"
+        },
+        {
+          "neighborhood": "Woodinville",
+          "address": "17401 133rd Ave NE, Woodinville, WA 98072"
         }
       ]
     },
     {
-      "id": "via-tribunali",
-      "homepage": "https://www.viatribunali.com/",
-      "source": "https://www.viatribunali.com/",
+      "id": "talaricos",
+      "homepage": "https://www.talaricospizza.com/",
+      "source": "https://www.talaricospizza.com/",
       "sites": [
         {
-          "neighborhood": "Capitol Hill",
-          "address": "913 E Pike St, Seattle, WA 98122"
-        },
-        {
-          "neighborhood": "Queen Anne",
-          "address": "317 West Galer St, Seattle, WA 98119"
-        }
-      ]
-    },
-    {
-      "id": "big-marios",
-      "homepage": "https://bigmariosnewyorkpizza.com/",
-      "source": "https://bigmariosnewyorkpizza.com/",
-      "sites": [
-        {
-          "neighborhood": "Capitol Hill",
-          "address": "1009 E Pike St, Seattle, WA 98122"
-        },
-        {
-          "neighborhood": "Queen Anne",
-          "address": "815 5th Ave N, Seattle, WA 98109"
-        },
-        {
-          "neighborhood": "Fremont",
-          "address": "4350 Leary Way NW, Seattle, WA 98107"
-        },
-        {
-          "neighborhood": "White Center",
-          "address": "9635 16th Ave SW, Seattle, WA 98106"
+          "neighborhood": "West Seattle",
+          "address": "4718 California Ave SW, Seattle, WA 98116"
         }
       ]
     }

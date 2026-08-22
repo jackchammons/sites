@@ -688,9 +688,18 @@
       "friction": [],
       "lastVerified": null,
       "tier": "bench",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null
+      "locations": [
+        {
+          "neighborhood": "Ballard",
+          "address": "5205 Ballard Ave NW, Seattle, WA 98107"
+        },
+        {
+          "neighborhood": "Woodinville",
+          "address": "17401 133rd Ave NE, Woodinville, WA 98072"
+        }
+      ],
+      "locationsVerified": "2026-08-22",
+      "locationsSource": "https://ballardpizzacompany.com/restaurants"
     },
     {
       "id": "zeeks-pizza",
@@ -791,7 +800,7 @@
       "styleGroup": "By the slice",
       "signature": "A slice the size of a dinner plate, sold by the single",
       "blurb": "West Seattle's answer to the late-night question, famous for slices that genuinely require two hands. The spectacle is the point, but the pie underneath holds up.",
-      "url": null,
+      "url": "https://www.talaricospizza.com/",
       "opened": null,
       "pillars": {
         "crust": 7.6,
@@ -807,9 +816,14 @@
       ],
       "lastVerified": null,
       "tier": "bench",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null
+      "locations": [
+        {
+          "neighborhood": "West Seattle",
+          "address": "4718 California Ave SW, Seattle, WA 98116"
+        }
+      ],
+      "locationsVerified": "2026-08-22",
+      "locationsSource": "https://www.talaricospizza.com/"
     },
     {
       "id": "hot-mamas-pizza",
