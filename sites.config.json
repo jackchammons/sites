@@ -10,10 +10,26 @@
       "emoji": "🍕",
       "tagline": "Seattle's top 10 pizzerias, ranked by the SLICE Score — a transparent five-pillar algorithm with Bayesian-adjusted ratings and a friction penalty. Move the sliders and re-rank it yourself.",
       "dir": "pizza",
-      "build": "scripts/build.mjs",
-      "verify": "scripts/verify.mjs",
-      "cadence": "Rebuilt every Monday",
+      "build": ["node", "scripts/build.mjs"],
+      "verify": ["node", "scripts/verify.mjs"],
+      "cadence": "Rebuilt weekly",
       "accent": "#e14434"
+    },
+    {
+      "slug": "odyssey-seats",
+      "name": "Odyssey 70mm Seat Maps",
+      "emoji": "🎞️",
+      "tagline": "Seat availability for The Odyssey in 70mm at SIFF Cinema Downtown — captured seat maps, percent-sold trend, and sold-out tracking across the engagement.",
+      "dir": "odyssey-seats",
+      "build": ["python", "siff_seatmaps_v5.py"],
+      "indexFrom": "report.html",
+      "emptyIndex": {
+        "title": "Odyssey 70mm Seat Maps",
+        "heading": "No 70mm screenings currently listed",
+        "body": "The last scheduled capture found nothing to report. This page refreshes automatically when screenings go back on sale."
+      },
+      "cadence": "Refreshed every 3 hours",
+      "accent": "#5b8dd6"
     }
   ]
 }

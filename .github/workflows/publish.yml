@@ -1,17 +1,19 @@
 name: Publish sites
 
-# Builds every site registered in sites.config.json and publishes dist/ to
-# GitHub Pages.
-#  - weekly on Mondays at 13:00 UTC (06:00 Pacific), for sites that refresh
-#  - on any push to main that touches site sources or this workflow
-#  - on demand from the Actions tab
+# Builds every site in sites.config.json and deploys dist/ to GitHub Pages.
+#
+# One workflow deploys everything on purpose: a Pages deployment replaces the
+# whole site, so separate per-site workflows would delete each other's output.
+# The cron therefore runs at the fastest cadence any single site needs.
 on:
   schedule:
-    - cron: '0 13 * * 1'
+    - cron: '17 */3 * * *'   # every 3 hours, offset from :00 (GitHub delays
+                             # jobs scheduled exactly on the hour)
   push:
     branches: [main]
     paths:
       - 'pizza/**'
+      - 'odyssey-seats/**'
       - 'scripts/**'
       - 'sites.config.json'
       - '.github/workflows/publish.yml'
@@ -25,6 +27,7 @@ jobs:
   build:
     name: Build sites
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     permissions:
       contents: write   # to commit weekly ranking snapshots
       pages: write
@@ -35,8 +38,25 @@ jobs:
         with:
           node-version: '24'
 
-      # Builds each site into dist/<slug>/, runs its verifier, then renders
-      # the landing page. Fails the run if any site fails to build or verify.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}
+
+      - name: Install Python dependencies
+        run: |
+          pip install playwright pillow
+          playwright install --with-deps chromium
+
+      # Builds each site into dist/<slug>/, runs its verifier, promotes its
+      # entry page, then renders the landing page. If any site fails, the run
+      # fails and nothing is deployed -- the previous deploy stays live rather
+      # than a half-built site going out.
       - name: Build all sites
         run: node scripts/build-all.mjs
 

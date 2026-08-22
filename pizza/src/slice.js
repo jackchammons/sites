@@ -192,3 +192,14 @@ export function isoWeek(date) {
   const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
   return Math.ceil(((d - yearStart) / 864e5 + 1) / 7);
 }
+
+/* "2026-W34" - stable key for one ISO week, used to keep weekly snapshots
+ * weekly no matter how often the publish workflow happens to run. */
+export function isoWeekKey(date) {
+  const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  const year = d.getUTCFullYear();
+  const yearStart = new Date(Date.UTC(year, 0, 1));
+  const wk = Math.ceil(((d - yearStart) / 864e5 + 1) / 7);
+  return `${year}-W${String(wk).padStart(2, '0')}`;
+}

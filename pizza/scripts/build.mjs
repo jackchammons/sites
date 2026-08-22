@@ -7,7 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { rank, DEFAULT_WEIGHTS, FRICTION_COSTS, FRICTION_LABELS, FRICTION_CAP, isoWeek } from '../src/slice.js';
+import { rank, DEFAULT_WEIGHTS, FRICTION_COSTS, FRICTION_LABELS, FRICTION_CAP, isoWeek, isoWeekKey } from '../src/slice.js';
 import { boardHtml, PILLAR_META, esc } from '../src/render.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -25,7 +25,12 @@ const history = fs.existsSync(historyPath)
   : { snapshots: [] };
 
 const now = new Date();
-const previous = history.snapshots.at(-1);
+const weekKey = isoWeekKey(now);
+
+// Movement markers compare against the most recent snapshot from an EARLIER
+// week, so re-running the publish workflow mid-week never flattens the ▲/▼
+// markers to "no change".
+const previous = [...history.snapshots].reverse().find(s => s.weekKey !== weekKey);
 const baseline = previous ? previous.ranks : {};
 
 const ranked = rank(dataset, { now }).map(r => ({
@@ -258,15 +263,25 @@ fs.writeFileSync(path.join(dist, 'rankings.json'), JSON.stringify({
   }))
 }, null, 2));
 
-/* ---- record this week's standings ---- */
-const stamp = now.toISOString().slice(0, 10);
-const ranks = Object.fromEntries(ranked.map(r => [r.id, r.rank]));
-const snapshot = { date: stamp, week, ranks, scores: Object.fromEntries(ranked.map(r => [r.id, r.score])) };
-if (!previous || JSON.stringify(previous.ranks) !== JSON.stringify(ranks) || previous.date !== stamp) {
-  if (previous && previous.date === stamp) history.snapshots.pop();
-  history.snapshots.push(snapshot);
-  history.snapshots = history.snapshots.slice(-52);
-  fs.writeFileSync(historyPath, JSON.stringify(history, null, 2) + '\n');
+/* ---- record this week's standings ----
+ * One snapshot per ISO week. A rerun inside the same week overwrites that
+ * week's entry rather than appending, so history stays weekly (52 = a year)
+ * even though the workflow itself runs every few hours. */
+const snapshot = {
+  weekKey,
+  date: now.toISOString().slice(0, 10),
+  week,
+  ranks: Object.fromEntries(ranked.map(r => [r.id, r.rank])),
+  scores: Object.fromEntries(ranked.map(r => [r.id, r.score]))
+};
+const last = history.snapshots.at(-1);
+if (last && last.weekKey === weekKey) history.snapshots.pop();
+history.snapshots.push(snapshot);
+history.snapshots = history.snapshots.slice(-52);
+
+const serialised = JSON.stringify(history, null, 2) + '\n';
+if (!fs.existsSync(historyPath) || fs.readFileSync(historyPath, 'utf8') !== serialised) {
+  fs.writeFileSync(historyPath, serialised);
 }
 
 console.log(`Built ${ranked.length} entries -> ${path.relative(process.cwd(), dist) || dist}/  (ISO week ${week})`);

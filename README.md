@@ -7,14 +7,16 @@ is published at `/<slug>/`. One workflow builds them all and deploys once.
 
 | Site | URL | Source | Cadence |
 |---|---|---|---|
-| The Seattle Pizza Index | [`/pizza/`](https://jackchammons.github.io/sites/pizza/) | [`pizza/`](pizza/) | Rebuilt Mondays |
+| The Seattle Pizza Index | [`/pizza/`](https://jackchammons.github.io/sites/pizza/) | [`pizza/`](pizza/) | Weekly |
+| Odyssey 70mm Seat Maps | [`/odyssey-seats/`](https://jackchammons.github.io/sites/odyssey-seats/) | [`odyssey-seats/`](odyssey-seats/) | Every 3 hours |
 
 ## Layout
 
 ```
 sites.config.json        the registry — what gets built and how it appears on the landing page
 scripts/build-all.mjs    builds each site into dist/<slug>/, then renders dist/index.html
-pizza/                   a site: its own data, algorithm, styles, build and verify scripts
+pizza/                   Node site: data, ranking algorithm, styles, build + verify
+odyssey-seats/           Python site: Playwright scraper that emits an HTML report
 .github/workflows/       publish.yml — build, verify, deploy
 ```
 
@@ -25,11 +27,14 @@ node scripts/build-all.mjs    # every site -> dist/
 npx serve dist                # or any static server
 ```
 
+The Python site needs `pip install playwright pillow` and `playwright install chromium`.
+
 A single site can still be built on its own, which is useful while working on one:
 
 ```bash
-node pizza/scripts/build.mjs     # writes dist/
+node pizza/scripts/build.mjs                              # writes dist/
 node pizza/scripts/verify.mjs
+OUT_DIR=/tmp/out python3 odyssey-seats/siff_seatmaps_v5.py --report-only
 ```
 
 Sites read `OUT_DIR` to decide where to write, defaulting to `dist/`. The orchestrator
@@ -40,7 +45,9 @@ sets it to `dist/<slug>/`; a standalone run ignores it. No dependencies, no lock
 1. Create a top-level directory with a build script that writes a complete static
    site (including `index.html`) into `OUT_DIR`, falling back to `dist/`.
 2. Optionally add a verify script that checks that output — `build-all` runs it and
-   fails the deploy if it exits non-zero.
+   fails the deploy if it exits non-zero. Two optional config fields help if the build
+   doesn't emit `index.html` directly: `indexFrom` promotes a differently-named file,
+   and `emptyIndex` renders a placeholder when a run legitimately produces nothing.
 3. Register it in `sites.config.json`:
 
 ```json
@@ -50,8 +57,8 @@ sets it to `dist/<slug>/`; a standalone run ignores it. No dependencies, no lock
   "emoji": "📊",
   "tagline": "One sentence for the landing page.",
   "dir": "example",
-  "build": "scripts/build.mjs",
-  "verify": "scripts/verify.mjs",
+  "build": ["node", "scripts/build.mjs"],
+  "verify": ["node", "scripts/verify.mjs"],
   "cadence": "Rebuilt Mondays",
   "accent": "#e14434"
 }
@@ -64,12 +71,30 @@ Use relative asset paths (`./app.js`) inside a site so it works under its subpat
 
 ## Deployment
 
-`.github/workflows/publish.yml` runs on a weekly cron (Mondays 13:00 UTC), on pushes
-to `main` touching site sources, and on manual dispatch. It builds every site, runs
-each verifier as a gate, commits any weekly data snapshots back to the repo, and
-publishes `dist/` to Pages.
+`.github/workflows/publish.yml` runs every 3 hours, on pushes to `main` touching site
+sources, and on manual dispatch. It builds every site, runs each verifier as a gate,
+commits any weekly data snapshots back to the repo, and publishes `dist/` to Pages.
+
+One workflow deploys everything deliberately: **a Pages deployment replaces the whole
+site**, so a second workflow calling `deploy-pages` would delete the other sites' output.
+The cron therefore runs at the fastest cadence any single site needs. For the same
+reason, if one site's build fails the entire run fails and nothing deploys — the previous
+deploy stays live rather than publishing a half-built site.
 
 Pages must be enabled once per repository (Settings → Pages → Source). The workflow's
 `GITHUB_TOKEN` cannot create a Pages site itself — that is a platform restriction, not
 a configuration gap — but once the site exists, `configure-pages` manages the build
 type from then on.
+
+## Custom domains
+
+GitHub Pages allows **one custom domain per repository**. The `CNAME` applies to the
+whole Pages site, so individual subdirectories cannot each have their own domain.
+
+- `sites.example.com` → serves this repo, with sites at `sites.example.com/pizza/`
+  (the `/sites/` path segment disappears — a custom domain maps to the Pages root).
+- Per-site domains would require one repo per site, each with Pages enabled and its own
+  `CNAME` — reintroducing the manual setup this repo exists to avoid.
+- To keep one repo *and* get per-site domains, put a proxy in front (Cloudflare Workers,
+  Netlify, Vercel) that rewrites `pizza.example.com/*` to
+  `jackchammons.github.io/sites/pizza/*`.

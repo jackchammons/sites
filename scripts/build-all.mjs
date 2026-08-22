@@ -31,19 +31,56 @@ for (const site of config.sites) {
   const siteRoot = path.join(root, site.dir);
   const out = path.join(dist, site.slug);
   const env = { ...process.env, OUT_DIR: out };
+  const run = cmd => execFileSync(cmd[0], cmd.slice(1), {
+    stdio: 'inherit', env, cwd: siteRoot
+  });
 
   console.log(`\n=== ${site.name} (/${site.slug}/) ===`);
-  execFileSync('node', [path.join(siteRoot, site.build)], { stdio: 'inherit', env });
-  if (site.verify) {
-    execFileSync('node', [path.join(siteRoot, site.verify)], { stdio: 'inherit', env });
-  }
+  fs.mkdirSync(out, { recursive: true });
+  run(site.build);
+  if (site.verify) run(site.verify);
 
+  // A site may emit its entry page under another name (the seat-map report,
+  // for instance). Promote it, or fall back to a placeholder so a run that
+  // legitimately found nothing still publishes a readable page.
   const index = path.join(out, 'index.html');
+  if (!fs.existsSync(index) && site.indexFrom) {
+    const from = path.join(out, site.indexFrom);
+    if (fs.existsSync(from)) {
+      fs.copyFileSync(from, index);
+      console.log(`  ${site.indexFrom} -> index.html`);
+    }
+  }
+  if (!fs.existsSync(index) && site.emptyIndex) {
+    fs.writeFileSync(index, placeholder(site));
+    console.log('  no output found, wrote placeholder index.html');
+  }
   if (!fs.existsSync(index)) {
     console.error(`\n${site.slug}: build produced no index.html at ${index}`);
     process.exit(1);
   }
   built.push({ ...site, bytes: fs.statSync(index).size });
+}
+
+function placeholder(site) {
+  const e = site.emptyIndex;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(e.title)}</title>
+<style>
+:root{color-scheme:light dark;--bg:#14100e;--ink:#f6efe8;--ink-2:#c8b8ac}
+@media(prefers-color-scheme:light){:root{--bg:#fbf6ef;--ink:#23180f;--ink-2:#5d4c3e}}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);
+color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:32px}
+main{max-width:46ch;text-align:center}
+h1{font-size:24px;margin:0 0 12px;font-weight:600;letter-spacing:-.01em}
+p{color:var(--ink-2);margin:0 0 24px;line-height:1.6}
+a{color:inherit;font-size:14px;opacity:.7}
+</style></head><body><main>
+<h1>${esc(e.heading)}</h1>
+<p>${esc(e.body)}</p>
+<a href="../">← all sites</a>
+</main></body></html>`;
 }
 
 /* ---- landing page ---- */
