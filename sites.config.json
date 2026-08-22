@@ -40,6 +40,23 @@
       },
       "cadence": "Refreshed daily",
       "accent": "#5b8dd6"
+    },
+    {
+      "slug": "clock",
+      "name": "Now",
+      "emoji": "🕰️",
+      "tagline": "A live clock: the time and date rendered large, with the ISO timestamp, Unix epoch, week number, progress through the day and year, and a rack of world clocks.",
+      "dir": "clock",
+      "build": [
+        "node",
+        "scripts/build.mjs"
+      ],
+      "verify": [
+        "node",
+        "scripts/verify.mjs"
+      ],
+      "cadence": "Live in your browser",
+      "accent": "#d9a441"
     }
   ]
 }

@@ -1,0 +1,23 @@
+{
+  "title": "Now",
+  "tagline": "The date and time, rendered large.",
+  "note": "Everything on this page is computed in your browser from your device clock and your time zone. Nothing is fetched, stored or sent anywhere.",
+  "zones": [
+    { "city": "Honolulu",      "region": "Hawaii",        "tz": "Pacific/Honolulu" },
+    { "city": "Seattle",       "region": "Washington",    "tz": "America/Los_Angeles" },
+    { "city": "Denver",        "region": "Colorado",      "tz": "America/Denver" },
+    { "city": "Chicago",       "region": "Illinois",      "tz": "America/Chicago" },
+    { "city": "New York",      "region": "New York",      "tz": "America/New_York" },
+    { "city": "São Paulo",     "region": "Brazil",        "tz": "America/Sao_Paulo" },
+    { "city": "UTC",           "region": "Coordinated",   "tz": "UTC" },
+    { "city": "London",        "region": "England",       "tz": "Europe/London" },
+    { "city": "Berlin",        "region": "Germany",       "tz": "Europe/Berlin" },
+    { "city": "Lagos",         "region": "Nigeria",       "tz": "Africa/Lagos" },
+    { "city": "Dubai",         "region": "UAE",           "tz": "Asia/Dubai" },
+    { "city": "Mumbai",        "region": "India",         "tz": "Asia/Kolkata" },
+    { "city": "Shanghai",      "region": "China",         "tz": "Asia/Shanghai" },
+    { "city": "Tokyo",         "region": "Japan",         "tz": "Asia/Tokyo" },
+    { "city": "Sydney",        "region": "Australia",     "tz": "Australia/Sydney" },
+    { "city": "Auckland",      "region": "New Zealand",   "tz": "Pacific/Auckland" }
+  ]
+}

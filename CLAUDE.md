@@ -53,6 +53,7 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
 |---|---|---|---|
 | `pizza` | `pizza/` | Node, no deps | `src/slice.js` is the ranking algorithm, imported by both the build and the browser — one implementation, don't fork it. `verify.mjs` gates the deploy. `fetch-buzz.mjs` (keyless) and `fetch-ratings.mjs` (needs `YELP_API_KEY`) refresh `data/` before the build; both fail soft. Pillar scores are editorial — never write them from a script. |
 | `odyssey-seats` | `odyssey-seats/` | Python, Playwright + Pillow | Scrapes SIFF's **dedicated 70mm page** (`MAIN_URL`), so every showtime found is 70mm and there is no date filter to maintain. Writes `report.html`, promoted to `index.html`. Needs `pip install playwright pillow` + `playwright install chromium`. |
+| `clock` | `clock/` | Node, no deps | Nothing time-dependent is rendered at build time — a baked-in figure would be wrong by however long ago the deploy ran. `build.mjs` emits a shell of ID'd slots and `src/app.js` fills every one from the viewer's device clock and Intl zone data. `verify.mjs` checks that each `$('...')` lookup in the script matches an `id` in the markup, since a typo there breaks only the browser. |
 
 ## Things that will bite you
 

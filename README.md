@@ -10,6 +10,7 @@ page indexes them with a client-side search (`/` to focus, Enter to open the fir
 |---|---|---|---|
 | The Seattle Pizza Index | [`/pizza/`](https://sites.jackhammons.com/pizza/) | [`pizza/`](pizza/) | Daily (ranked weekly) |
 | Odyssey 70mm Seat Maps | [`/odyssey-seats/`](https://sites.jackhammons.com/odyssey-seats/) | [`odyssey-seats/`](odyssey-seats/) | Daily |
+| Now | [`/clock/`](https://sites.jackhammons.com/clock/) | [`clock/`](clock/) | Live in the browser |
 
 ## Layout
 
@@ -19,6 +20,7 @@ scripts/build-all.mjs    builds each site into dist/<slug>/, then renders dist/i
 scripts/new-site.mjs     scaffolds a new Node site and registers it
 pizza/                   Node site: data, ranking algorithm, styles, build + verify
 odyssey-seats/           Python site: Playwright scraper that emits an HTML report
+clock/                   Node site: a live clock — the shell is built, the figures are the browser's
 .github/workflows/       publish.yml — build, verify, deploy
 ```
 
