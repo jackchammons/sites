@@ -6,7 +6,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const dist = path.join(root, '..', 'dist');
+const dist = process.env.OUT_DIR
+  ? path.resolve(process.env.OUT_DIR)
+  : path.join(root, '..', 'dist');
 const dataset = JSON.parse(fs.readFileSync(path.join(root, 'data/restaurants.json'), 'utf8'));
 
 const fails = [];

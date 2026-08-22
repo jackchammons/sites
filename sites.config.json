@@ -1,0 +1,19 @@
+{
+  "owner": "jackchammons",
+  "baseUrl": "https://jackchammons.github.io/sites",
+  "title": "jackchammons / sites",
+  "tagline": "Static sites, each built from data by a script and redeployed on a schedule.",
+  "sites": [
+    {
+      "slug": "pizza",
+      "name": "The Seattle Pizza Index",
+      "emoji": "🍕",
+      "tagline": "Seattle's top 10 pizzerias, ranked by the SLICE Score — a transparent five-pillar algorithm with Bayesian-adjusted ratings and a friction penalty. Move the sliders and re-rank it yourself.",
+      "dir": "pizza",
+      "build": "scripts/build.mjs",
+      "verify": "scripts/verify.mjs",
+      "cadence": "Rebuilt every Monday",
+      "accent": "#e14434"
+    }
+  ]
+}

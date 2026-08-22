@@ -1,0 +1,74 @@
+name: Publish sites
+
+# Builds every site registered in sites.config.json and publishes dist/ to
+# GitHub Pages.
+#  - weekly on Mondays at 13:00 UTC (06:00 Pacific), for sites that refresh
+#  - on any push to main that touches site sources or this workflow
+#  - on demand from the Actions tab
+on:
+  schedule:
+    - cron: '0 13 * * 1'
+  push:
+    branches: [main]
+    paths:
+      - 'pizza/**'
+      - 'scripts/**'
+      - 'sites.config.json'
+      - '.github/workflows/publish.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build sites
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # to commit weekly ranking snapshots
+      pages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      # Builds each site into dist/<slug>/, runs its verifier, then renders
+      # the landing page. Fails the run if any site fails to build or verify.
+      - name: Build all sites
+        run: node scripts/build-all.mjs
+
+      - name: Record weekly snapshots
+        if: github.ref == 'refs/heads/main'
+        run: |
+          if [ -n "$(git status --porcelain '*/data/history.json')" ]; then
+            git config user.name  "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add '*/data/history.json'
+            git commit -m "chore: weekly site snapshots $(date -u +%Y-%m-%d)"
+            git push
+          else
+            echo "No snapshot movement to record."
+          fi
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    name: Deploy to Pages
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

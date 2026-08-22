@@ -11,7 +11,11 @@ import { rank, DEFAULT_WEIGHTS, FRICTION_COSTS, FRICTION_LABELS, FRICTION_CAP, i
 import { boardHtml, PILLAR_META, esc } from '../src/render.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const dist = path.join(root, '..', 'dist');
+// Output dir is overridable so the multi-site build can place this site at
+// dist/<slug>/ while a standalone run still writes to dist/.
+const dist = process.env.OUT_DIR
+  ? path.resolve(process.env.OUT_DIR)
+  : path.join(root, '..', 'dist');
 const read = p => fs.readFileSync(path.join(root, p), 'utf8');
 
 const dataset = JSON.parse(read('data/restaurants.json'));
@@ -265,7 +269,7 @@ if (!previous || JSON.stringify(previous.ranks) !== JSON.stringify(ranks) || pre
   fs.writeFileSync(historyPath, JSON.stringify(history, null, 2) + '\n');
 }
 
-console.log(`Built ${ranked.length} entries -> dist/  (ISO week ${week})`);
+console.log(`Built ${ranked.length} entries -> ${path.relative(process.cwd(), dist) || dist}/  (ISO week ${week})`);
 for (const r of ranked) {
   const mv = r.previousRank == null ? 'new' : r.previousRank === r.rank ? '  -' :
     (r.previousRank > r.rank ? `+${r.previousRank - r.rank}` : `${r.previousRank - r.rank}`);

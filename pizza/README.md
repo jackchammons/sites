@@ -35,7 +35,7 @@ Ties break on Consensus Signal, then Crust Integrity, then alphabetically.
 ## Layout
 
 ```
-pizza/
+pizza/                    # published at /pizza/
   data/restaurants.json   the dataset — edit this to change the rankings
   data/history.json       weekly snapshots, drives the ▲/▼ movement markers
   src/slice.js            the algorithm (runs in Node AND in the browser)
@@ -53,7 +53,8 @@ implementation of the algorithm, not two.
 ## Working on it
 
 ```bash
-node pizza/scripts/build.mjs     # writes dist/
+node scripts/build-all.mjs       # all sites -> dist/ (this one at dist/pizza/)
+node pizza/scripts/build.mjs     # or just this site -> dist/
 node pizza/scripts/verify.mjs    # checks the output
 npx serve dist                   # or any static server
 ```
@@ -62,7 +63,9 @@ No dependencies, no build tooling, no lockfile.
 
 ## Deployment
 
-`.github/workflows/pizza-index.yml` builds, verifies and publishes `dist/` to GitHub Pages on:
+This site is published as part of the [`sites`](../README.md) repo at
+**https://jackchammons.github.io/sites/pizza/**, built by `scripts/build-all.mjs` and
+deployed by `.github/workflows/publish.yml` on:
 
 - a weekly cron — Mondays at 13:00 UTC (06:00 Pacific)
 - any push to `main` touching `pizza/**`
@@ -70,8 +73,6 @@ No dependencies, no build tooling, no lockfile.
 
 On scheduled runs the workflow also commits the week's standings to `data/history.json`, which
 is what the ▲/▼ markers compare against the following week.
-
-**One-time setup:** Settings → Pages → Source → *GitHub Actions*.
 
 ## On the data
 
