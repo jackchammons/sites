@@ -92,11 +92,24 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   `ANTHROPIC_API_KEY` (metered API credits). If both are set the API key wins the credential
   chain, so you pay per token while the subscription allowance goes unused — the gate step
   emits a workflow warning when it sees both.
-- **The research agent has never completed a run.** Five attempts, every task shape, all
-  ended on the turn ceiling: 12, 28, 30, 30. The daily site update does not depend on it —
-  `fetch-buzz.mjs` in `publish.yml` is keyless, reliable, and is what actually keeps the
-  buzz section current. Before tuning it again, turn on `show_full_output` and find out what
-  it is actually spending turns on; four blind tunes produced nothing.
+- **The research agent works; here is what it took.** Six runs failed on the turn ceiling
+  (12, 28, 30, 30, 45, 55) and four blind tunes fixed none of them. `show_full_output`
+  found it in one run: the prompt named `verify-research.mjs`, so the agent tried to run
+  it, had no `Bash` tool, was denied four times and stopped to ask a human for approval in
+  an unattended job. **Never mention a script the agent cannot run.** Three things keep it
+  green now — the prompt says to run nothing and that a later step validates; a 15-search
+  budget bounds the turns, which otherwise scaled with how much news existed that day; and
+  the agent step is `continue-on-error` with the *next* step deciding the run, so an
+  overrun cannot discard a file that was already written. A clean pass is ~3 minutes and
+  about $1.20 of plan allowance.
+- **Two things the first green run then exposed**, both worth knowing before touching this
+  path. `build.mjs` read `research.items` while the agent writes `research.news`, so every
+  researched story was validated, committed and silently dropped — the candidates half kept
+  working, which is what hid it. And a research commit does **not** trigger `publish.yml`:
+  a push made with `GITHUB_TOKEN` never fires another workflow. That commit step also needs
+  an explicit token, because the Claude action revokes the one `checkout` persisted.
+  The daily site update still does not depend on the agent — `fetch-buzz.mjs` in
+  `publish.yml` is keyless and is what keeps the buzz section current on its own.
 - **If any site's build fails, the whole run fails and nothing deploys.** This is
   deliberate: the previous deploy stays live instead of publishing a half-built site.
 - **Enabling Pages cannot be automated.** A workflow's `GITHUB_TOKEN` is refused on the
