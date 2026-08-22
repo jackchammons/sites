@@ -1,0 +1,52 @@
+{
+  "updated": "2026-08-22T00:00:00.000Z",
+  "news": [
+    {
+      "title": "Acclaimed Stevie's Famous Pizza Celebrates Grand Opening on Phinney Ridge",
+      "url": "https://phinneywood.com/2026/07/stevies-famous-pizza-celebrates-grand-opening-on-phinney-ridge/",
+      "source": "The PhinneyWood Blog",
+      "published": "2026-07-28T00:00:00.000Z",
+      "kind": "opening",
+      "mentions": []
+    },
+    {
+      "title": "Urban Family Brewing opening Seattle waterfront restaurant this summer",
+      "url": "https://www.myballard.com/2026/07/31/urban-family-brewing-to-open-seattle-waterfront-restaurant/",
+      "source": "My Ballard",
+      "published": "2026-07-31T00:00:00.000Z",
+      "kind": "opening",
+      "mentions": []
+    },
+    {
+      "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
+      "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
+      "source": "Seattle magazine",
+      "published": "2026-08-07T00:00:00.000Z",
+      "kind": "mention",
+      "mentions": []
+    }
+  ],
+  "candidates": [
+    {
+      "name": "Stevie's Famous",
+      "neighborhood": "Phinney Ridge",
+      "style": "Naturally leavened New York-style",
+      "note": "Third location (first north of downtown, and its largest) opened Aug 2, 2026 with strong regional press; not yet in the dataset.",
+      "source": "https://phinneywood.com/2026/07/stevies-famous-pizza-celebrates-grand-opening-on-phinney-ridge/"
+    },
+    {
+      "name": "Urban Family Brewing (Waterfront)",
+      "neighborhood": "Downtown waterfront",
+      "style": "Grandma-style square pizza",
+      "note": "Ballard brewery's new waterfront outpost, opening late Aug/early Sept 2026, built around grandma-style pizza rather than beer alone.",
+      "source": "https://www.myballard.com/2026/07/31/urban-family-brewing-to-open-seattle-waterfront-restaurant/"
+    },
+    {
+      "name": "Abecedary",
+      "neighborhood": "Hillman City",
+      "style": "New Haven-style",
+      "note": "Pizzaiolo Seth Eisner's forthcoming New Haven-style pizzeria/brewery gave a sneak-peek pop-up at the Hillman City Block Party ahead of its planned 2027 opening.",
+      "source": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/"
+    }
+  ]
+}
