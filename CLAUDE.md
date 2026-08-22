@@ -60,11 +60,17 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   `deploy-pages` — it would delete the other sites' output. `publish.yml` is the only
   workflow allowed to deploy. `research.yml` exists alongside it and only commits data;
   its commit triggers `publish.yml` through that workflow's push trigger.
-- **Agents stay out of the deploy path.** `research.yml` runs the Claude Code Action to
-  write `pizza/data/research.json`, gated behind `CLAUDE_CODE_OAUTH_TOKEN` and validated by
-  `pizza/scripts/verify-research.mjs` before anything is committed. It writes its own file
-  rather than `buzz.json` so it cannot damage the keyless feed pipeline, and the build
-  merges it inside a try/catch. If it hangs or fails, the site still publishes.
+- **Agents stay out of the deploy path.** `research.yml` runs the Claude Code Action to write
+  `pizza/data/research.json` (news, ratings, candidates, closures), gated behind
+  `CLAUDE_CODE_OAUTH_TOKEN`. `verify-research.mjs` validates it and `apply-research.mjs` then
+  writes crowd figures and closure flags into `restaurants.json` — the agent never edits that
+  file itself. If it hangs or fails, the site still publishes.
+- **The top ten is computed, not stored.** `splitTiers()` publishes the ten highest-scoring
+  entries that have verified crowd figures and no reported closure; everything else is bench.
+  Don't reintroduce a hardcoded top-ten list — promotion and relegation depend on this.
+- **Never let a script write pillar scores.** The page claims they are editorial judgments
+  applied by one rubric; generating them would make that claim false. Crowd figures are the
+  only part of the dataset automation may touch.
 - **Do not set `ANTHROPIC_API_KEY` in this repo.** It takes precedence over
   `CLAUDE_CODE_OAUTH_TOKEN` in the credential chain, so setting both silently bills metered
   API credits while subscription headroom goes unused.

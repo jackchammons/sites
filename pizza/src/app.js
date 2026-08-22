@@ -1,5 +1,5 @@
 /* In-browser re-ranker: move the sliders, the leaderboard re-sorts live. */
-import { rank, DEFAULT_WEIGHTS } from './slice.js';
+import { rank, splitTiers, DEFAULT_WEIGHTS } from './slice.js';
 import { boardHtml, benchHtml, PILLAR_META } from './render.js';
 
 const DATA = window.__PIZZA__;
@@ -15,20 +15,13 @@ const opts = () => ({
 });
 
 function render() {
-  const ranked = rank(DATA.dataset, { ...opts(), tier: 'top' }).map(r => ({
-    ...r,
-    previousRank: DATA.baseline[r.id] ?? null
-  }));
+  const { top, bench: benched } = splitTiers(rank(DATA.dataset, opts()), 10);
+  const ranked = top.map(r => ({ ...r, previousRank: DATA.baseline[r.id] ?? null }));
 
   // The bench re-ranks with the same weights: whether an entry sits in
   // promotion range depends on where you put the tenth-place cutoff.
   const bench = document.getElementById('bench-list');
-  if (bench) {
-    const cutoff = ranked[ranked.length - 1]?.score ?? 0;
-    const benched = rank(DATA.dataset, { ...opts(), tier: 'bench' })
-      .map(r => ({ ...r, rank: r.rank + ranked.length, contender: r.score > cutoff }));
-    bench.innerHTML = benchHtml(benched);
-  }
+  if (bench) bench.innerHTML = benchHtml(benched);
   const open = new Set([...board.querySelectorAll('details.math[open]')]
     .map(d => d.closest('.card').dataset.id));
   board.innerHTML = boardHtml(ranked);

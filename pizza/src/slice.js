@@ -215,3 +215,34 @@ export function isoWeekKey(date) {
   const wk = Math.ceil(((d - yearStart) / 864e5 + 1) / 7);
   return `${year}-W${String(wk).padStart(2, '0')}`;
 }
+
+/* Split a scored field into the published top N and the bench.
+ *
+ * Promotion is earned, not assigned. Anything with verified crowd figures
+ * competes for the top on score alone, so a bench entry rises the moment its
+ * ratings are confirmed and it outscores the cutoff -- and falls back the same
+ * way. Two things keep an entry off the top regardless of score: unverified
+ * crowd figures (the number is provisional, so it has not proven anything) and
+ * a reported closure (relegation).
+ */
+export function splitTiers(scored, topN = 10) {
+  const eligible = [];
+  const held = [];
+  for (const r of scored) {
+    if (r.consensusDetail?.unrated || r.reportedClosed) held.push(r);
+    else eligible.push(r);
+  }
+  const byScore = (a, b) => b.score - a.score || a.name.localeCompare(b.name);
+  eligible.sort(byScore);
+
+  const top = eligible.slice(0, topN).map((r, i) => ({ ...r, rank: i + 1 }));
+  const cutoff = top.length ? top[top.length - 1].score : 0;
+  const bench = [...eligible.slice(topN), ...held]
+    .sort(byScore)
+    .map((r, i) => ({
+      ...r,
+      rank: top.length + i + 1,
+      contender: r.score > cutoff && !r.reportedClosed
+    }));
+  return { top, bench, cutoff };
+}

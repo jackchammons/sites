@@ -54,7 +54,7 @@ jobs:
 
       # --max-turns is a cost control, not a style choice: an unbounded agentic
       # loop is what drains a monthly credit pool.
-      - name: Research recent Seattle pizza news
+      - name: Research and refresh pizza data
         if: steps.gate.outputs.enabled == 'true'
         uses: anthropics/claude-code-action@v1
         with:
@@ -64,48 +64,74 @@ jobs:
             --model claude-opus-5
             --allowedTools "WebSearch,WebFetch,Read,Write"
           prompt: |
-            Find Seattle pizzeria news from the last 30 days that is NOT already
-            in pizza/data/buzz.json — specifically openings, closings, and
-            notable reviews of Seattle-area pizzerias.
+            You are refreshing the data behind the Seattle Pizza Index.
 
-            Read pizza/data/buzz.json first to see what is already covered and to
-            follow its item shape. Then write pizza/data/research.json:
+            First read pizza/data/restaurants.json (the ranked field, 25 entries
+            across two tiers) and pizza/data/buzz.json (news already collected by
+            the keyless feed sweep). Then research and write ONE file,
+            pizza/data/research.json, with four sections:
 
-            {"updated":"<ISO8601>","items":[{
-              "title":"<headline as published>",
-              "url":"<https link to the original article>",
-              "source":"<publication name>",
-              "published":"<ISO8601 date of publication>",
-              "kind":"opening|closing|ranking|mention",
-              "mentions":["<restaurant id from data/restaurants.json, if named>"]
-            }]}
+            {"updated":"<ISO8601>",
+             "news":       [{"title","url","source","published","kind","mentions"}],
+             "ratings":    [{"id","rating","reviews","source"}],
+             "candidates": [{"name","neighborhood","style","note","source"}],
+             "closures":   [{"id","note","source","date"}]}
 
-            Rules, all enforced by pizza/scripts/verify-research.mjs:
-            - Every item needs a real https URL you actually found. Never invent
-              a URL, a headline, or a date. If you are unsure a link is real,
-              leave the item out.
-            - published must be a real publication date within the last 180 days
-              and not in the future.
-            - kind must be exactly one of the four values above.
-            - mentions may only contain ids that exist in data/restaurants.json.
-            - At most 20 items. Fewer good ones is better than padding.
-            - Seattle metro only. No national chains, no crime stories, no
-              business-wire or real-estate items.
+            news - Seattle pizzeria stories from the last 30 days NOT already in
+              buzz.json. kind is opening|closing|ranking|mention. mentions lists
+              restaurant ids the story names, if any.
 
-            Write only pizza/data/research.json. Do not modify any other file.
-            If you find nothing new, write {"updated":"<ISO8601>","items":[]}.
+            ratings - current crowd figures for entries in restaurants.json.
+              PRIORITISE the entries whose "crowd" is null: they are marked
+              provisional on the site and cannot enter the top ten until their
+              figures are verified. rating is the 1-5 average, reviews the
+              integer count, source the https page you read it from.
+
+            candidates - Seattle pizzerias NOT in restaurants.json that deserve
+              consideration: recent openings, places getting real critical
+              attention. note is one sentence on why.
+
+            closures - entries in restaurants.json reported permanently closed.
+              This relegates them out of the ranking, so be certain and cite a
+              specific report.
+
+            Rules, all enforced by pizza/scripts/verify-research.mjs, which
+            rejects the whole file if any entry breaks them:
+            - Every entry needs a real https URL you actually visited. Never
+              invent a URL, headline, date or rating. If you cannot verify
+              something, leave it out - omissions are free, fabrications are not.
+            - Dates must be real, within 180 days, and not in the future.
+            - ids must already exist in restaurants.json, except in candidates
+              where the place must NOT already be ranked.
+            - A rating may not move more than 0.5 from the stored value and a
+              review count may not halve. If the real figure breaks that you
+              have almost certainly matched the wrong business - omit it.
+            - Caps: 20 news, 30 ratings, 15 candidates, 10 closures.
+
+            Write only pizza/data/research.json. Do not modify any other file -
+            in particular do not touch restaurants.json; a separate script
+            applies your ratings under its own guard rails. Never write or
+            adjust pillar scores: those are editorial and not yours to set.
+            If you find nothing, write the four sections as empty arrays.
 
       - name: Validate the agent's output
         if: steps.gate.outputs.enabled == 'true'
         run: node pizza/scripts/verify-research.mjs
 
+      # Only runs once validation passes, so nothing unchecked reaches the
+      # dataset. Touches crowd figures and closure flags only.
+      - name: Apply researched ratings and closures
+        if: steps.gate.outputs.enabled == 'true'
+        run: node pizza/scripts/apply-research.mjs
+
       - name: Commit research
         if: steps.gate.outputs.enabled == 'true'
         run: |
-          if [ -n "$(git status --porcelain -- pizza/data/research.json)" ]; then
+          PATHS="pizza/data/research.json pizza/data/restaurants.json"
+          if [ -n "$(git status --porcelain -- $PATHS)" ]; then
             git config user.name  "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add -- pizza/data/research.json
+            git add -- $PATHS
             git commit -m "chore(data): research pass $(date -u +%Y-%m-%d)"
             git push
           else

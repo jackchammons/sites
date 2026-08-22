@@ -48,7 +48,8 @@ pizza/                    # published at /pizza/
   scripts/verify.mjs      post-build sanity checks
   scripts/fetch-buzz.mjs  refreshes data/buzz.json from public news feeds
   scripts/fetch-ratings.mjs  refreshes crowd ratings from Yelp (needs a key)
-  scripts/verify-research.mjs validates the research agent's output before it is committed
+  scripts/verify-research.mjs validates the research agent's output before it is used
+  scripts/apply-research.mjs  applies validated ratings and closures to the dataset
 ```
 
 `src/slice.js` is dependency-free ES module JavaScript with no Node or DOM APIs, so the static
@@ -107,17 +108,39 @@ must clear a name-similarity threshold, a rating cannot move more than 0.4 in on
 review counts cannot halve — any of those and the entry is left alone and logged. A wrong
 match is worse than stale data.
 
-**`research.yml` + `verify-research.mjs`** — needs `CLAUDE_CODE_OAUTH_TOKEN`, generated with
-`claude setup-token`. A separate daily workflow runs the Claude Code Action to find openings
-and closings the feeds missed, writing `data/research.json`, which the build merges into the
-buzz list. It writes its own file rather than `buzz.json`, so a bad run cannot damage the
-keyless pipeline, and `verify-research.mjs` rejects the output — bad URL, non-https link,
-future or stale date, invented `kind`, unknown restaurant id, duplicate — before anything is
-committed. Researched entries still link to a real source, and the page says so.
+**`research.yml`** — needs `CLAUDE_CODE_OAUTH_TOKEN`, generated with `claude setup-token`. A
+separate daily workflow runs the Claude Code Action to refresh everything the keyless feeds
+cannot, writing one file, `data/research.json`, with four sections:
+
+| Section | What it does |
+|---|---|
+| `news` | Stories the RSS sweep missed; merged into the buzz list |
+| `ratings` | Crowd figures with a source URL — **this is what promotes bench entries** |
+| `candidates` | Unranked Seattle pizzerias worth considering, shown under the bench |
+| `closures` | Relegation signals; flags the entry and drops it out of the top ten |
+
+The agent writes only that file. `verify-research.mjs` then rejects the whole thing if any
+entry is malformed — invented or non-https URL, future or stale date, invented `kind`,
+unknown id, a rating moving more than 0.5, a review count halving, a duplicate. Only after it
+passes does `apply-research.mjs` write crowd figures and closure flags into
+`restaurants.json`. The agent never edits that file itself.
 
 Note on billing: that token draws on the subscription's programmatic credit pool. Do **not**
 also set `ANTHROPIC_API_KEY` here — it wins the credential chain and bills API credits
 instead, which is a documented way to run up a surprise bill.
+
+## Promotion and relegation
+
+The top ten is not a fixed list. Every entry with verified crowd figures competes on score
+alone; the ten highest are published and the rest form the bench. Two things hold an entry
+off the top regardless of score:
+
+- **Unverified crowd figures.** A provisional score rests on the critical read alone, so it
+  has not proven anything yet. Verifying it is exactly what the research pass does.
+- **A reported closure.** Relegation is immediate.
+
+That makes the research pass consequential rather than decorative: confirming Breezy Town's
+ratings moves it from bench #11 to the top ten, and pushes whoever sits at the cutoff out.
 
 **Pillar scores are never written by a script.** They are editorial judgments applied by
 one rubric, which is what the page claims, and automating them would make that claim

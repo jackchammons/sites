@@ -347,3 +347,22 @@ footer p { max-width: 72ch; }
   .bench-meta { grid-column: 2 / -1; }
   .bench-flag { grid-column: 2 / -1; text-align: left; }
 }
+.bench-row.closed { opacity: .55; }
+.bench-row.closed .bench-name { text-decoration: line-through; }
+.bench-row.closed .bench-flag { color: var(--tomato-2); }
+.cand-list { list-style: none; margin: 0 0 8px; padding: 0; }
+.cand-list li {
+  display: grid; grid-template-columns: minmax(120px, 1fr) 1.1fr 2fr 54px;
+  gap: 14px; align-items: baseline; padding: 11px 0;
+  border-bottom: 1px solid var(--line-soft); font-size: 14px;
+}
+.cand-list li:last-child { border-bottom: none; }
+.cand-list strong { font-family: var(--serif); font-size: 17px; font-weight: 700; }
+.cand-meta { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); }
+.cand-note { color: var(--ink-2); font-size: 13.5px; }
+.cand-list a { font-family: var(--mono); font-size: 11px; color: var(--ink-3); text-align: right; }
+.cand-list a:hover { color: var(--tomato-2); }
+@media (max-width: 720px) {
+  .cand-list li { grid-template-columns: 1fr; gap: 5px; }
+  .cand-list a { text-align: left; }
+}

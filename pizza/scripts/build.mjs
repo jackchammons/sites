@@ -7,7 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { rank, DEFAULT_WEIGHTS, FRICTION_COSTS, FRICTION_LABELS, FRICTION_CAP, isoWeek, isoWeekKey } from '../src/slice.js';
+import { rank, splitTiers, DEFAULT_WEIGHTS, FRICTION_COSTS, FRICTION_LABELS, FRICTION_CAP, isoWeek, isoWeekKey } from '../src/slice.js';
 import { boardHtml, benchHtml, PILLAR_META, esc } from '../src/render.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -57,18 +57,10 @@ const weekKey = isoWeekKey(now);
 const previous = [...history.snapshots].reverse().find(s => s.weekKey !== weekKey);
 const baseline = previous ? previous.ranks : {};
 
-const ranked = rank(dataset, { now, tier: 'top' }).map(r => ({
-  ...r,
-  previousRank: baseline[r.id] ?? null
-}));
-
-/* The bench is ranked on the same algorithm but as its own ladder, continuing
- * the numbering. Anything scoring above the tenth-place cutoff is a promotion
- * candidate the moment its crowd figures are verified. */
-const cutoff = ranked[ranked.length - 1]?.score ?? 0;
-const benched = rank(dataset, { now, tier: 'bench' }).map(r => ({
-  ...r, rank: r.rank + ranked.length, contender: r.score > cutoff
-}));
+const scoredAll = rank(dataset, { now });
+const { top, bench: benchedRaw, cutoff } = splitTiers(scoredAll, 10);
+const ranked = top.map(r => ({ ...r, previousRank: baseline[r.id] ?? null }));
+const benched = benchedRaw.map(r => ({ ...r, previousRank: baseline[r.id] ?? null }));
 
 /* Deterministic weekly spotlight: rotates through the field by ISO week. */
 const week = isoWeek(now);
@@ -87,6 +79,26 @@ const fmtDate = d => d.toLocaleDateString('en-US', {
 });
 
 /* ---- The Bench ---- */
+/* Places the research pass turned up that are not in the dataset yet. */
+const candidates = (() => {
+  const f = path.join(root, 'data/research.json');
+  if (!fs.existsSync(f)) return [];
+  try { return JSON.parse(fs.readFileSync(f, 'utf8')).candidates ?? []; }
+  catch { return []; }
+})();
+
+const candidateBlock = candidates.length ? `
+    <h3 class="buzz-head">Under consideration</h3>
+    <p class="note" style="margin:0 0 12px">Turned up by the daily research pass. Not scored yet &mdash; they
+    need a visit and verified figures before they can join the bench.</p>
+    <ul class="cand-list">${candidates.map(c => `
+      <li>
+        <strong>${esc(c.name)}</strong>
+        <span class="cand-meta">${esc(c.neighborhood)}${c.style ? ` · ${esc(c.style)}` : ''}</span>
+        <span class="cand-note">${esc(c.note)}</span>
+        <a href="${esc(c.source)}" target="_blank" rel="noopener nofollow">source</a>
+      </li>`).join('')}</ul>` : '';
+
 const contenders = benched.filter(r => r.contender);
 
 const benchSection = benched.length ? `
@@ -102,8 +114,10 @@ const benchSection = benched.length ? `
       ${contenders.length ? `<b>${contenders.length}</b> currently score above ${cutoff.toFixed(1)} &mdash; the tenth-place cutoff &mdash; and would enter the top ten the moment their ratings are confirmed.` : ''}
     </p>
     <ul class="bench-list" id="bench-list">${benchHtml(benched)}</ul>
-    <p class="note">Promotion is not automatic. A bench entry enters the top ten when its crowd figures are
-    verified and its score still clears the cutoff; relegation follows a closure or a sustained fall.</p>
+    ${candidateBlock}
+    <p class="note">Promotion is earned on score, not assigned: a bench entry joins the top ten the moment its
+    crowd figures are verified and it still clears the cutoff, and drops back the same way. A reported closure
+    relegates immediately.</p>
   </div>
 </section>
 ` : '';
