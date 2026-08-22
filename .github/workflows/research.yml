@@ -95,6 +95,17 @@ jobs:
               ;;
           esac
 
+      # What actually broke the first six runs, found by turning on
+      # show_full_output: the prompt named verify-research.mjs, so the agent
+      # tried to run it, had no Bash tool, was denied four times, and then
+      # stopped to ask a human for approval in an unattended job. Its own result
+      # was is_error:false / stop_reason:end_turn -- it had already done the
+      # work and written the file -- but the action failed the run for
+      # exceeding the turn limit. Never mention a script the agent cannot run.
+      #
+      # 50 turns because a real pass takes about 40: sixteen web searches plus
+      # fetches and the write.
+      #
       # Crowd ratings are NOT the agent's job, and cannot be. Yelp returns 403
       # to automated fetching -- business pages and search alike -- and Google's
       # results carry no rating in the HTML. Three runs burned their whole turn
@@ -111,17 +122,11 @@ jobs:
         if: steps.gate.outputs.enabled == 'true'
         uses: anthropics/claude-code-action@v1
         with:
-          # DIAGNOSTIC: five runs have ended on the turn ceiling and the action
-          # hides the SDK transcript, so every fix so far has been a guess. This
-          # exposes what the agent is actually spending turns on. Turn it back
-          # off once the failure mode is understood -- it prints the full
-          # conversation into public workflow logs.
-          show_full_output: true
           # Whichever secret exists; the empty one is ignored by the action.
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           claude_args: |
-            --max-turns 30
+            --max-turns 50
             --model claude-sonnet-5
             --allowedTools "WebSearch,WebFetch,Read,Write,Glob,Grep,TodoWrite"
           prompt: |
@@ -150,8 +155,14 @@ jobs:
             recent openings, or places getting real critical attention. Leave the
             array empty if you find none.
 
-            Rules, enforced by pizza/scripts/verify-research.mjs, which rejects
-            the whole file if any entry breaks them:
+            IMPORTANT: do not run any shell command, script or validator. You
+            have no Bash tool, and asking for approval stalls this job -- nobody
+            is watching it. Write the file and stop. A later step in this
+            workflow validates it automatically and rejects it if anything is
+            wrong, so your job is to write it carefully, not to check it.
+
+            Rules the automatic validation applies, which reject the whole file
+            if any entry breaks them:
             - Every entry needs a real https URL you actually opened. Never
               invent a URL, a headline or a date.
             - published must be a real date within the last 180 days, not future.
@@ -165,7 +176,7 @@ jobs:
             Do not attempt crowd ratings, star scores or review counts. Those
             sources block automated reads and there is no API path; the stored
             figures are frozen by design. Write only pizza/data/research.json,
-            and never touch pillar scores.
+            never touch pillar scores, and run nothing.
 
       - name: Validate the agent's output
         if: steps.gate.outputs.enabled == 'true'
