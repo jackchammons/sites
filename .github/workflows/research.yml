@@ -78,13 +78,22 @@ jobs:
           fi
           code=$(curl -sS -o /tmp/probe.json -w '%{http_code}'             https://api.anthropic.com/v1/messages             -H "$AUTH_HEADER"             -H "anthropic-version: 2023-06-01"             -H "content-type: application/json"             "${EXTRA[@]}"             -d '{"model":"claude-opus-5","max_tokens":64,"messages":[{"role":"user","content":"reply with OK"}]}' || echo 000)
           echo "Preflight HTTP $code (auth: ${{ steps.gate.outputs.auth }})"
-          if [ "$code" != "200" ]; then
-            TYPE=$(python3 -c "import json;print(json.load(open('/tmp/probe.json')).get('error',{}).get('type','?'))" 2>/dev/null || echo '?')
-            MSG=$(python3 -c "import json;print(json.load(open('/tmp/probe.json')).get('error',{}).get('message','?'))" 2>/dev/null || echo '?')
-            echo "::error::Credential rejected — HTTP $code, $TYPE: $MSG"
-            exit 1
-          fi
-          echo "Credential is valid and claude-opus-5 is reachable."
+          TYPE=$(python3 -c "import json;print(json.load(open('/tmp/probe.json')).get('error',{}).get('type','?'))" 2>/dev/null || echo '?')
+          MSG=$(python3 -c "import json;print(json.load(open('/tmp/probe.json')).get('error',{}).get('message','?'))" 2>/dev/null || echo '?')
+          case "$code" in
+            200)
+              echo "Credential is valid and claude-opus-5 is reachable." ;;
+            401|403)
+              # Definitively bad: wrong secret, revoked key, no access to the model.
+              echo "::error::Credential rejected — HTTP $code, $TYPE: $MSG"
+              exit 1 ;;
+            *)
+              # 429 and 5xx mean the credential authenticated and something
+              # transient got in the way. The agent has its own retries, so a
+              # probe that fails here must not fail the run.
+              echo "::warning::Preflight did not get a clean 200 (HTTP $code, $TYPE: $MSG). The credential is not rejected, so continuing — the agent will retry."
+              ;;
+          esac
 
       # --max-turns is a cost control, not a style choice: an unbounded agentic
       # loop is what drains a monthly credit pool.
