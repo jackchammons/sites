@@ -908,7 +908,12 @@
       "tier": "bench",
       "locations": [],
       "locationsVerified": null,
-      "locationsSource": null
+      "locationsSource": null,
+      "reportedClosed": {
+        "note": "Closed in 2016; the Pioneer Square space became Il Corvo Pasta Studio.",
+        "source": "https://en.wikipedia.org/wiki/Pizzeria_Gabbiano",
+        "date": "2016-12-31"
+      }
     },
     {
       "id": "post-alley-pizza",
@@ -998,7 +1003,7 @@
       "styleGroup": "By the slice",
       "signature": "A slice and a beer at closing time in Belltown",
       "blurb": "Belltown's late-night anchor, doing volume without the pie collapsing into an afterthought. The bar is the draw; the pizza is why you stay.",
-      "url": null,
+      "url": "https://www.roccosseattle.com",
       "opened": null,
       "pillars": {
         "crust": 7.6,
