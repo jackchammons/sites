@@ -32,7 +32,12 @@ jobs:
   research:
     name: Research
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # 15 minutes was enough when the pass only looked for news. It now also
+    # verifies locations, and a job timeout is unrecoverable in a way a turn
+    # ceiling is not: it kills the runner mid-step, so the file the agent had
+    # already written is lost along with everything downstream of it. Headroom
+    # here costs nothing on a normal run -- the job ends when the work does.
+    timeout-minutes: 25
     # Skips cleanly when the secret is absent, which is the current state.
     if: ${{ github.repository_owner == 'jackchammons' }}
     permissions:
@@ -149,19 +154,29 @@ jobs:
       # A short explicit worklist beats letting the agent read a 25-entry file
       # with long blurbs and decide for itself -- that costs turns and context on
       # a decision a sort makes better, and turns are what this job keeps running
-      # out of. Eight per run covers all 25 in three days, then re-verifies the
-      # stalest. Placeholders ("Multiple locations", "Citywide") sort first,
-      # since those are actively wrong on the page rather than merely unverified.
+      # out of. Five per run, which is what the timings support:
+      #
+      #   5 entries, site URL already known   ~5 min   (runs 15 and 16)
+      #   8 entries, site URL unknown         >15 min  (run 17, killed by the
+      #                                                 job timeout, work lost)
+      #
+      # An entry whose website is not on file costs about twice one whose is,
+      # because the agent has to search for the official site before it can read
+      # anything off it -- and the entries still queued are exactly those. Eight
+      # was set from the cheap case and overran on the expensive one.
+      #
+      # Placeholders ("Multiple locations", "Citywide") sort first, since those
+      # are actively wrong on the page rather than merely unverified.
       - name: Pick the locations to verify
         id: worklist
         if: steps.gate.outputs.enabled == 'true'
         run: |
           {
             echo 'list<<WORKLIST_EOF'
-            node pizza/scripts/next-locations.mjs 8
+            node pizza/scripts/next-locations.mjs 5
             echo 'WORKLIST_EOF'
           } >> "$GITHUB_OUTPUT"
-          node pizza/scripts/next-locations.mjs 8
+          node pizza/scripts/next-locations.mjs 5
 
       - name: Research and refresh pizza data
         id: agent
