@@ -19,7 +19,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataset = JSON.parse(fs.readFileSync(path.join(root, 'data/restaurants.json'), 'utf8'));
 const buzzPath = path.join(root, 'data/buzz.json');
 
-const UA = 'Mozilla/5.0 (compatible; SeattlePizzaIndex/1.0; +https://jackchammons.github.io/sites/pizza/)';
+const UA = 'Mozilla/5.0 (compatible; SeattlePizzaIndex/1.0; +https://sites.jackhammons.com/pizza/)';
 const KEEP_DAYS = 120;
 const MAX_ITEMS = 60;
 

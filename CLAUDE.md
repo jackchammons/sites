@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Static sites published together at **https://jackchammons.github.io/sites/**.
+Static sites published together at **https://sites.jackhammons.com/**.
 Each site lives in a top-level directory and is served at `/<slug>/`.
 
 ## Adding a site (start here)

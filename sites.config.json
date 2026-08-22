@@ -1,6 +1,7 @@
 {
   "owner": "jackchammons",
-  "baseUrl": "https://jackchammons.github.io/sites",
+  "customDomain": "sites.jackhammons.com",
+  "baseUrl": "https://sites.jackhammons.com",
   "title": "jackchammons / sites",
   "tagline": "Static sites, each built from data by a script and redeployed on a schedule.",
   "sites": [
@@ -10,8 +11,14 @@
       "emoji": "🍕",
       "tagline": "Seattle's top 10 pizzerias, ranked by the SLICE Score — a transparent five-pillar algorithm with Bayesian-adjusted ratings and a friction penalty. Move the sliders and re-rank it yourself.",
       "dir": "pizza",
-      "build": ["node", "scripts/build.mjs"],
-      "verify": ["node", "scripts/verify.mjs"],
+      "build": [
+        "node",
+        "scripts/build.mjs"
+      ],
+      "verify": [
+        "node",
+        "scripts/verify.mjs"
+      ],
       "cadence": "Rebuilt daily",
       "accent": "#e14434"
     },
@@ -21,7 +28,10 @@
       "emoji": "🎞️",
       "tagline": "Seat availability for The Odyssey in 70mm at SIFF Cinema Downtown — captured seat maps, percent-sold trend, and sold-out tracking across the engagement.",
       "dir": "odyssey-seats",
-      "build": ["python", "siff_seatmaps_v5.py"],
+      "build": [
+        "python",
+        "siff_seatmaps_v5.py"
+      ],
       "indexFrom": "report.html",
       "emptyIndex": {
         "title": "Odyssey 70mm Seat Maps",

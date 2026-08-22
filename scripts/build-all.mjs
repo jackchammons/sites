@@ -270,6 +270,14 @@ code{font-family:var(--mono);font-size:12px;background:var(--panel-2);
 fs.writeFileSync(path.join(dist, 'index.html'), html);
 fs.writeFileSync(path.join(dist, '.nojekyll'), '');
 
+// A Pages deploy from Actions can clear the custom domain unless the artifact
+// carries a CNAME file, so it is generated from the registry rather than left
+// to the repository setting.
+if (config.customDomain) {
+  fs.writeFileSync(path.join(dist, 'CNAME'), config.customDomain + '\n');
+  console.log(`  CNAME -> ${config.customDomain}`);
+}
+
 console.log(`\n=== landing page ===`);
 console.log(`Built ${built.length} site(s) -> dist/`);
 for (const s of built) console.log(`  /${s.slug}/  ${s.name}  (${s.bytes.toLocaleString('en-US')} bytes)`);

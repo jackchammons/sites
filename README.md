@@ -1,6 +1,6 @@
 # sites
 
-Static sites published to GitHub Pages at **https://jackchammons.github.io/sites/**
+Static sites published to GitHub Pages at **https://sites.jackhammons.com/**
 
 Each site lives in its own top-level directory, owns its data and build script, and
 is published at `/<slug>/`. One workflow builds them all and deploys once. The landing
@@ -8,8 +8,8 @@ page indexes them with a client-side search (`/` to focus, Enter to open the fir
 
 | Site | URL | Source | Cadence |
 |---|---|---|---|
-| The Seattle Pizza Index | [`/pizza/`](https://jackchammons.github.io/sites/pizza/) | [`pizza/`](pizza/) | Daily (ranked weekly) |
-| Odyssey 70mm Seat Maps | [`/odyssey-seats/`](https://jackchammons.github.io/sites/odyssey-seats/) | [`odyssey-seats/`](odyssey-seats/) | Daily |
+| The Seattle Pizza Index | [`/pizza/`](https://sites.jackhammons.com/pizza/) | [`pizza/`](pizza/) | Daily (ranked weekly) |
+| Odyssey 70mm Seat Maps | [`/odyssey-seats/`](https://sites.jackhammons.com/odyssey-seats/) | [`odyssey-seats/`](odyssey-seats/) | Daily |
 
 ## Layout
 
@@ -111,4 +111,4 @@ whole Pages site, so individual subdirectories cannot each have their own domain
   `CNAME` — reintroducing the manual setup this repo exists to avoid.
 - To keep one repo *and* get per-site domains, put a proxy in front (Cloudflare Workers,
   Netlify, Vercel) that rewrites `pizza.example.com/*` to
-  `jackchammons.github.io/sites/pizza/*`.
+  `sites.jackhammons.com/pizza/*`.

@@ -69,7 +69,7 @@ No dependencies, no build tooling, no lockfile.
 ## Deployment
 
 This site is published as part of the [`sites`](../README.md) repo at
-**https://jackchammons.github.io/sites/pizza/**, built by `scripts/build-all.mjs` and
+**https://sites.jackhammons.com/pizza/**, built by `scripts/build-all.mjs` and
 deployed by `.github/workflows/publish.yml` on:
 
 - a daily cron — 13:17 UTC (06:17 Pacific)

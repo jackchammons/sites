@@ -3,7 +3,7 @@
 Captures the live reserved-seating chart for every 70mm screening of *The Odyssey* at
 SIFF Cinema Downtown, and builds a report with a percent-sold trend and a card grid of
 seat maps. Published at
-**https://jackchammons.github.io/sites/odyssey-seats/**
+**https://sites.jackhammons.com/odyssey-seats/**
 
 ```bash
 pip install playwright pillow && playwright install chromium
