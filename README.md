@@ -3,7 +3,8 @@
 Static sites published to GitHub Pages at **https://jackchammons.github.io/sites/**
 
 Each site lives in its own top-level directory, owns its data and build script, and
-is published at `/<slug>/`. One workflow builds them all and deploys once.
+is published at `/<slug>/`. One workflow builds them all and deploys once. The landing
+page indexes them with a client-side search (`/` to focus, Enter to open the first hit).
 
 | Site | URL | Source | Cadence |
 |---|---|---|---|
@@ -15,6 +16,7 @@ is published at `/<slug>/`. One workflow builds them all and deploys once.
 ```
 sites.config.json        the registry — what gets built and how it appears on the landing page
 scripts/build-all.mjs    builds each site into dist/<slug>/, then renders dist/index.html
+scripts/new-site.mjs     scaffolds a new Node site and registers it
 pizza/                   Node site: data, ranking algorithm, styles, build + verify
 odyssey-seats/           Python site: Playwright scraper that emits an HTML report
 .github/workflows/       publish.yml — build, verify, deploy
@@ -41,6 +43,18 @@ Sites read `OUT_DIR` to decide where to write, defaulting to `dist/`. The orches
 sets it to `dist/<slug>/`; a standalone run ignores it. No dependencies, no lockfile.
 
 ## Adding a site
+
+For a Node site, scaffold it:
+
+```bash
+node scripts/new-site.mjs rain-log "Seattle Rain Log" "Days it actually rained." "🌧️"
+```
+
+That creates the directory, a working build and verify honouring `OUT_DIR`, and the
+registry entry — it builds and deploys immediately, so you can confirm the pipeline
+before writing real content.
+
+To add one by hand (any language):
 
 1. Create a top-level directory with a build script that writes a complete static
    site (including `index.html`) into `OUT_DIR`, falling back to `dist/`.

@@ -85,8 +85,12 @@ a{color:inherit;font-size:14px;opacity:.7}
 
 /* ---- landing page ---- */
 const now = new Date();
-const cards = built.map(s => `
-      <a class="card" href="./${esc(s.slug)}/" style="--accent:${esc(s.accent || '#e14434')}">
+const cards = built.map(s => {
+  // Everything a visitor might reasonably type, lowercased once at build time.
+  const haystack = [s.name, s.tagline, s.slug, s.cadence, s.dir]
+    .filter(Boolean).join(' ').toLowerCase();
+  return `
+      <a class="card" href="./${esc(s.slug)}/" data-search="${esc(haystack)}" style="--accent:${esc(s.accent || '#e14434')}">
         <div class="emoji">${esc(s.emoji || '•')}</div>
         <div class="body">
           <h2>${esc(s.name)}</h2>
@@ -97,7 +101,8 @@ const cards = built.map(s => `
           </div>
         </div>
         <div class="arrow" aria-hidden="true">→</div>
-      </a>`).join('');
+      </a>`;
+}).join('');
 
 const html = `<!doctype html>
 <html lang="en">
@@ -132,7 +137,25 @@ h1{font-family:var(--serif);font-size:clamp(34px,6vw,58px);
    margin:0 0 16px;letter-spacing:-.02em;line-height:1.1}
 header p{color:var(--ink-2);font-size:17px;margin:0;max-width:58ch}
 main{flex:1;padding-bottom:60px}
+.search{position:relative;display:flex;align-items:center;margin:0 0 20px}
+.search-icon{position:absolute;left:16px;width:17px;height:17px;fill:none;
+  stroke:var(--ink-3);stroke-width:2;stroke-linecap:round;pointer-events:none}
+#q{width:100%;padding:13px 46px 13px 44px;font:inherit;font-size:15px;
+  color:var(--ink);background:var(--panel);border:1px solid var(--line);
+  border-radius:12px;outline:none;transition:border-color .15s,background .15s}
+#q::placeholder{color:var(--ink-3)}
+#q:focus{border-color:var(--ink-3);background:var(--panel-2)}
+#q::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
+#hint{position:absolute;right:14px;font-family:var(--mono);font-size:11px;
+  color:var(--ink-3);border:1px solid var(--line);border-radius:5px;
+  padding:2px 7px;pointer-events:none;transition:opacity .15s}
+.search.typing #hint{opacity:0}
 .grid{display:flex;flex-direction:column;gap:14px}
+.card[hidden]{display:none}
+.empty{color:var(--ink-2);font-size:14.5px;text-align:center;padding:34px 0 10px;margin:0}
+.empty b{color:var(--ink)}
+.count{font-family:var(--mono);font-size:11px;color:var(--ink-3);
+  margin:18px 0 0;text-align:center;letter-spacing:.04em}
 .card{display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:center;
       padding:24px;background:var(--panel);border:1px solid var(--line);
       border-radius:14px;text-decoration:none;color:inherit;
@@ -166,8 +189,17 @@ code{font-family:var(--mono);font-size:12px;background:var(--panel-2);
 </div></header>
 
 <main><div class="wrap">
-  <div class="grid">${cards}
+  <div class="search" id="search" hidden>
+    <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+    <input id="q" type="search" autocomplete="off" spellcheck="false"
+           placeholder="Search sites…" aria-label="Search sites"
+           aria-describedby="count">
+    <kbd id="hint">/</kbd>
   </div>
+  <div class="grid" id="grid">${cards}
+  </div>
+  <p class="empty" id="empty" hidden>No sites match <b id="emptyq"></b>.</p>
+  <p class="count" id="count" aria-live="polite"></p>
 </div></main>
 
 <footer><div class="wrap">
@@ -177,6 +209,60 @@ code{font-family:var(--mono);font-size:12px;background:var(--panel-2);
     Add a site by dropping its directory in and registering it in <code>sites.config.json</code>.
   </p>
 </div></footer>
+
+<script>
+(function () {
+  var search = document.getElementById('search');
+  var q = document.getElementById('q');
+  var grid = document.getElementById('grid');
+  var empty = document.getElementById('empty');
+  var emptyq = document.getElementById('emptyq');
+  var count = document.getElementById('count');
+  var cards = [].slice.call(grid.querySelectorAll('.card'));
+  var total = cards.length;
+
+  search.hidden = false;   // only offer search once we know JS can serve it
+
+  function apply() {
+    var term = q.value.trim().toLowerCase();
+    search.classList.toggle('typing', term !== '');
+    var shown = 0;
+    cards.forEach(function (card) {
+      var hit = term === '' || card.dataset.search.indexOf(term) !== -1;
+      card.hidden = !hit;
+      if (hit) shown++;
+    });
+    empty.hidden = shown !== 0;
+    emptyq.textContent = q.value.trim();
+    count.textContent = term === ''
+      ? total + (total === 1 ? ' site' : ' sites')
+      : shown + ' of ' + total + ' sites';
+  }
+
+  q.addEventListener('input', apply);
+
+  q.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      if (q.value === '') { q.blur(); } else { q.value = ''; apply(); }
+    }
+    if (e.key === 'Enter') {
+      var first = cards.filter(function (c) { return !c.hidden; })[0];
+      if (first) window.location.href = first.getAttribute('href');
+    }
+  });
+
+  // "/" focuses search from anywhere, the way most doc sites behave.
+  document.addEventListener('keydown', function (e) {
+    if (e.key === '/' && document.activeElement !== q) {
+      e.preventDefault();
+      q.focus();
+      q.select();
+    }
+  });
+
+  apply();
+})();
+</script>
 </body>
 </html>
 `;

@@ -3,6 +3,21 @@
 Static sites published together at **https://jackchammons.github.io/sites/**.
 Each site lives in a top-level directory and is served at `/<slug>/`.
 
+## Adding a site (start here)
+
+```bash
+node scripts/new-site.mjs <slug> "Name" "One-sentence tagline" [emoji]
+node scripts/build-all.mjs
+```
+
+The scaffolder creates `<slug>/` with a build and verify that already honour the
+`OUT_DIR` contract, seeds `data/data.json`, and registers the site. What it generates
+builds and deploys as-is — run `build-all` once to confirm the pipeline before writing
+real content, then replace the data and the rendering in `<slug>/scripts/build.mjs`.
+
+A site that isn't Node (see `odyssey-seats/`, which is Python) needs its own directory
+and a `build` command in the registry; the scaffolder only covers the Node case.
+
 ## Build
 
 ```bash
@@ -11,7 +26,8 @@ node scripts/build-all.mjs    # all sites -> dist/
 
 `sites.config.json` is the registry. For each entry, `build-all.mjs` runs the site's
 `build` command with **`cwd` = the site's directory** and **`OUT_DIR` = `dist/<slug>/`**,
-then its `verify` command, then renders the landing page at `dist/index.html`.
+then its `verify` command, then renders the landing page at `dist/index.html` — which
+includes a client-side search over each site's name, tagline, slug and cadence.
 
 A single site can be built alone while iterating:
 
