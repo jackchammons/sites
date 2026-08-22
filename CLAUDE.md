@@ -58,8 +58,13 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
 
 - **A Pages deploy replaces the entire site.** Never add a second workflow that calls
   `deploy-pages` — it would delete the other sites' output. `publish.yml` is the only
-  workflow allowed to deploy. `research.yml` exists alongside it and only commits data;
-  its commit triggers `publish.yml` through that workflow's push trigger.
+  workflow allowed to deploy. `research.yml` exists alongside it and only commits data.
+  Its commit does **not** trigger `publish.yml`: a push made with `GITHUB_TOKEN` never
+  fires another workflow, which is GitHub's anti-recursion rule and not something a
+  `paths:` filter can work around. The cadence is what connects them -- `research.yml`
+  runs at 12:47 UTC and `publish.yml`'s cron at 13:17 UTC, half an hour later, checking
+  out whatever research just committed. Keep that ordering if you change either cron;
+  to see a research commit on the site sooner, dispatch `publish.yml` by hand.
 - **Agents stay out of the deploy path.** `research.yml` runs the Claude Code Action to write
   `pizza/data/research.json` (news, ratings, candidates, closures), gated behind
   `CLAUDE_CODE_OAUTH_TOKEN`. `verify-research.mjs` validates it and `apply-research.mjs` then

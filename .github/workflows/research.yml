@@ -8,8 +8,10 @@ name: Research pizza buzz
 #    still publishes on its own schedule
 #  - this workflow never calls deploy-pages. A Pages deploy replaces the whole
 #    site, so publish.yml remains the only workflow allowed to deploy.
-# Its commit to main triggers publish.yml through that workflow's push trigger,
-# so a successful research run reaches the site without deploying anything here.
+# Its commit to main does NOT trigger publish.yml -- a push made with GITHUB_TOKEN
+# never fires another workflow. The crons are what connect them: this runs at
+# 12:47 UTC and publish.yml's cron at 13:17 UTC picks the commit up half an hour
+# later. Keep that ordering if you change either schedule.
 #
 # Dormant until a credential exists. Either works:
 #   CLAUDE_CODE_OAUTH_TOKEN  bills the subscription's programmatic credit pool
