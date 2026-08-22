@@ -71,9 +71,11 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
 - **Never let a script write pillar scores.** The page claims they are editorial judgments
   applied by one rubric; generating them would make that claim false. Crowd figures are the
   only part of the dataset automation may touch.
-- **Do not set `ANTHROPIC_API_KEY` in this repo.** It takes precedence over
-  `CLAUDE_CODE_OAUTH_TOKEN` in the credential chain, so setting both silently bills metered
-  API credits while subscription headroom goes unused.
+- **Set exactly one research credential.** `research.yml` accepts either
+  `CLAUDE_CODE_OAUTH_TOKEN` (subscription pool, from `claude setup-token`) or
+  `ANTHROPIC_API_KEY` (metered API credits). If both are set the API key wins the credential
+  chain, so you pay per token while the subscription allowance goes unused — the gate step
+  emits a workflow warning when it sees both.
 - **If any site's build fails, the whole run fails and nothing deploys.** This is
   deliberate: the previous deploy stays live instead of publishing a half-built site.
 - **Enabling Pages cannot be automated.** A workflow's `GITHUB_TOKEN` is refused on the

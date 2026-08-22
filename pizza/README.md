@@ -108,7 +108,9 @@ must clear a name-similarity threshold, a rating cannot move more than 0.4 in on
 review counts cannot halve — any of those and the entry is left alone and logged. A wrong
 match is worse than stale data.
 
-**`research.yml`** — needs `CLAUDE_CODE_OAUTH_TOKEN`, generated with `claude setup-token`. A
+**`research.yml`** — needs one credential: `CLAUDE_CODE_OAUTH_TOKEN` (subscription pool,
+generated with `claude setup-token`) or `ANTHROPIC_API_KEY` (metered API credits). Set one,
+not both. A
 separate daily workflow runs the Claude Code Action to refresh everything the keyless feeds
 cannot, writing one file, `data/research.json`, with four sections:
 
