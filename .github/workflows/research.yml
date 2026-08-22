@@ -103,8 +103,20 @@ jobs:
       # work and written the file -- but the action failed the run for
       # exceeding the turn limit. Never mention a script the agent cannot run.
       #
-      # 50 turns because a real pass takes about 40: sixteen web searches plus
-      # fetches and the write.
+      # Turn budget, measured rather than guessed. The fixed prompt produced a
+      # clean pass -- is_error false, one denial instead of four -- but it took
+      # 55 turns against a ceiling of 50, and the action fails the step for
+      # overrunning even when the agent reports success. So: 80 turns, which is
+      # headroom over both observed passes (45 and 55), and a search budget in
+      # the prompt so the count stays bounded rather than scaling with how much
+      # news happens to exist that day. max-turns is a ceiling, not a target --
+      # a run costs the turns it actually uses.
+      #
+      # continue-on-error below is the other half. An overrun is a bookkeeping
+      # failure, not a research failure: the file is already written. Letting
+      # the step fail soft and having the next step judge the artefact means a
+      # complete pass still lands. That step, not this one, is what turns the
+      # run red -- a missing or stale file still fails the job.
       #
       # Crowd ratings are NOT the agent's job, and cannot be. Yelp returns 403
       # to automated fetching -- business pages and search alike -- and Google's
@@ -118,15 +130,31 @@ jobs:
       # reviews live on news sites that serve their content to anyone. The
       # broader early runs were finding real stories before they ran out of
       # turns, so that is what it does now.
-      - name: Research and refresh pizza data
+      # Fingerprint taken before the agent runs so the check afterwards can tell
+      # a real write from an untouched leftover. research.json is committed
+      # after a good run -- the build reads it for The Buzz -- so on later runs
+      # it is already present at checkout and mere existence proves nothing.
+      - name: Fingerprint the previous research file
+        id: before
         if: steps.gate.outputs.enabled == 'true'
+        run: |
+          if [ -f pizza/data/research.json ]; then
+            echo "sum=$(sha256sum pizza/data/research.json | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+          else
+            echo "sum=absent" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Research and refresh pizza data
+        id: agent
+        if: steps.gate.outputs.enabled == 'true'
+        continue-on-error: true
         uses: anthropics/claude-code-action@v1
         with:
           # Whichever secret exists; the empty one is ignored by the action.
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           claude_args: |
-            --max-turns 50
+            --max-turns 80
             --model claude-sonnet-5
             --allowedTools "WebSearch,WebFetch,Read,Write,Glob,Grep,TodoWrite"
           prompt: |
@@ -170,13 +198,45 @@ jobs:
             - Seattle metro only. No national chains, no crime stories, no
               business-wire or real-estate items.
             - At most 12 news and 8 candidates. Omissions are free; fabrications
-              are not. Stop when you have covered the ground, not when you hit
-              the caps.
+              are not.
+
+            Work within a budget: make at most 15 web searches in total. When
+            you reach that, write the file with whatever you have and stop. A
+            short honest file is a good result; there is no requirement to fill
+            the caps, and a day with little Seattle pizza news should produce a
+            short file.
 
             Do not attempt crowd ratings, star scores or review counts. Those
             sources block automated reads and there is no API path; the stored
             figures are frozen by design. Write only pizza/data/research.json,
             never touch pillar scores, and run nothing.
+
+      # This step, not the agent step, decides whether the run failed. An
+      # overrun turn ceiling leaves outcome == failure on a pass that already
+      # wrote its file, and that should not lose the work. An agent that wrote
+      # nothing should still turn the job red -- and would not otherwise, since
+      # verify-research.mjs treats a missing file as "no research run yet" and
+      # exits 0, which is correct for the dormant case but a false green here.
+      - name: Check the agent actually wrote something
+        if: steps.gate.outputs.enabled == 'true'
+        run: |
+          if [ ! -f pizza/data/research.json ]; then
+            echo "::error::The agent wrote no pizza/data/research.json." \
+                 "Agent step outcome: ${{ steps.agent.outcome }}."
+            exit 1
+          fi
+          now=$(sha256sum pizza/data/research.json | cut -d' ' -f1)
+          if [ "$now" = "${{ steps.before.outputs.sum }}" ]; then
+            echo "::error::pizza/data/research.json is byte-identical to the" \
+                 "checked-out copy, so this run wrote nothing." \
+                 "Agent step outcome: ${{ steps.agent.outcome }}."
+            exit 1
+          fi
+          if [ "${{ steps.agent.outcome }}" != "success" ]; then
+            echo "::warning::The agent step reported failure but left a fresh" \
+                 "research.json. Usually the turn ceiling, hit after the write." \
+                 "Validating the file on its merits."
+          fi
 
       - name: Validate the agent's output
         if: steps.gate.outputs.enabled == 'true'
