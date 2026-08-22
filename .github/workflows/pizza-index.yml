@@ -25,12 +25,13 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write   # to commit the weekly ranking snapshot
+      pages: write      # so configure-pages can enable Pages on first run
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Build the site
         run: node pizza/scripts/build.mjs
@@ -52,6 +53,10 @@ jobs:
           fi
 
       - uses: actions/configure-pages@v5
+        with:
+          # Turn Pages on automatically the first time this runs, so the site
+          # needs no manual toggle in repository settings.
+          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
