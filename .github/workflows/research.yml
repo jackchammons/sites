@@ -119,6 +119,11 @@ jobs:
       # five entries the worklist names. News is already covered for free by
       # the RSS sweep in publish.yml, and candidates and closures can come back
       # once this loop is proven.
+      #
+      # max-turns is a ceiling, not a target: it costs only what is actually
+      # used. With the task bounded, a generous ceiling is free insurance
+      # against crashing out mid-run and wasting everything spent getting
+      # there. Five lookups should land near 15 turns.
       - name: Research and refresh pizza data
         if: steps.gate.outputs.enabled == 'true'
         uses: anthropics/claude-code-action@v1
@@ -127,7 +132,7 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           claude_args: |
-            --max-turns 20
+            --max-turns 30
             --model claude-sonnet-5
             --allowedTools "WebSearch,WebFetch,Read,Write,Glob,Grep,TodoWrite"
           prompt: |
