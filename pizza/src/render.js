@@ -4,7 +4,7 @@ import { FRICTION_LABELS } from './slice.js';
 export const PILLAR_META = {
   crust:           { label: 'Crust Integrity',  color: 'var(--crust)' },
   toppings:        { label: 'Topping Craft',    color: 'var(--tomato)' },
-  consensus:       { label: 'Consensus Signal', color: '#5b8dd6' },
+  consensus:       { label: 'Critical Read',    color: '#5b8dd6' },
   distinctiveness: { label: 'Distinctiveness',  color: '#a06fd0' },
   value:           { label: 'Value Density',    color: 'var(--basil)' }
 };
@@ -94,12 +94,13 @@ export function cardHtml(r) {
             </tbody>
           </table>
           <p class="note">
-            ${r.crowd ? `Consensus Signal is built from a raw ${r.crowd.rating.toFixed(1)}★ across ~${r.crowd.reviews.toLocaleString('en-US')} reviews.
-            Bayesian shrinkage pulls that to <b>${r.consensusDetail.adjusted.toFixed(3)}★</b>
-            (${pct(r.confidence)}% weight on the crowd, ${100 - pct(r.confidence)}% on the city mean),
-            which maps to ${n1(r.consensusDetail.crowd10)}/10 and is then blended 55/45 with a critical read of ${n1(r.criticScore)}/10.`
-            : `No verified crowd figures yet, so Consensus Signal rests on the critical read of
-            ${n1(r.criticScore)}/10 alone and this score is <b>provisional</b>.`}
+            Critical Read is a straight ${n1(r.criticScore)}/10 — the same measurement for every
+            entry.${r.crowd ? ` For context only, and <b>not part of the score</b>: a raw
+            ${r.crowd.rating.toFixed(1)}★ across ~${r.crowd.reviews.toLocaleString('en-US')} reviews,
+            which Bayesian shrinkage pulls to <b>${r.consensusDetail.adjusted.toFixed(3)}★</b>
+            (${pct(r.confidence)}% weight on the crowd, ${100 - pct(r.confidence)}% on the city mean).
+            Those figures are frozen at ${esc(r.lastVerified || 'the dataset date')} and cannot be refreshed.`
+            : ` No crowd figures were ever recorded for this entry, which no longer affects its score.`}
           </p>
         </div>
       </details>
@@ -111,6 +112,8 @@ export function boardHtml(ranked) {
 }
 
 /* Bench rows. Compact by design: fifteen full cards would bury the top ten. */
+const cutoffOf = r => r.__cutoff ?? r.score;
+
 export function benchRowHtml(r) {
   return `
         <li class="bench-row${r.reportedClosed ? ' closed' : r.contender ? ' contender' : ''}">
@@ -118,10 +121,10 @@ export function benchRowHtml(r) {
           <span class="bench-name">${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.name)}</a>` : esc(r.name)}</span>
           <span class="bench-meta">${esc(r.neighborhood)} · ${esc(r.style)}</span>
           <span class="bench-score">${r.score.toFixed(1)}</span>
-          <span class="bench-flag">${r.reportedClosed ? 'reported closed' : r.contender ? 'promotion range' : 'provisional'}</span>
+          <span class="bench-flag">${r.reportedClosed ? 'reported closed' : r.contender ? 'promotion range' : `${(r.score - cutoffOf(r)).toFixed(1)} off the cut`}</span>
         </li>`;
 }
 
-export function benchHtml(benched) {
-  return benched.map(benchRowHtml).join('\n');
+export function benchHtml(benched, cutoff) {
+  return benched.map(r => benchRowHtml({ ...r, __cutoff: cutoff })).join('\n');
 }

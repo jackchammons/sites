@@ -69,7 +69,7 @@ const spotlight = ranked[week % ranked.length];
 const PILLAR_COPY = {
   crust:           'Fermentation, hydration, structure and bake. The single thing a pizzeria cannot fake.',
   toppings:        'Sourcing and restraint. Points for what is left off as much as what goes on.',
-  consensus:       'Critical reads blended with a crowd rating that has been de-noised for sample size.',
+  consensus:       'The critical consensus on the pie itself, applied identically to every entry.',
   distinctiveness: 'Does it own a lane in this city, or is it a competent copy of someone else?',
   value:           'Satisfaction per dollar, folded together with the raw price tier.'
 };
@@ -108,16 +108,15 @@ const benchSection = benched.length ? `
     <h2 class="sec-h">Ranks ${ranked.length + 1}&ndash;${ranked.length + benched.length}</h2>
     <p class="lede" style="margin-top:14px">
       A top ten with nothing beneath it is a list, not a ranking. These ${benched.length} are scored by the
-      same algorithm and ordered on the same ladder &mdash; but with one honest caveat: none of them has
-      verified crowd figures yet, so their Consensus Signal rests on the critical read alone. That makes
-      every score here <b>provisional</b>, which is why they sit below the line regardless of the number.
-      ${contenders.length ? `<b>${contenders.length}</b> currently score above ${cutoff.toFixed(1)} &mdash; the tenth-place cutoff &mdash; and would enter the top ten the moment their ratings are confirmed.` : ''}
+      same algorithm, on the same ladder, measured exactly the same way as the ten above them &mdash; they
+      simply score lower. Nothing is held back here for want of data: every entry in the index competes on
+      score alone, and the line between the top ten and the bench moves whenever the scores do.
     </p>
-    <ul class="bench-list" id="bench-list">${benchHtml(benched)}</ul>
+    <ul class="bench-list" id="bench-list">${benchHtml(benched, cutoff)}</ul>
     ${candidateBlock}
-    <p class="note">Promotion is earned on score, not assigned: a bench entry joins the top ten the moment its
-    crowd figures are verified and it still clears the cutoff, and drops back the same way. A reported closure
-    relegates immediately.</p>
+    <p class="note">Promotion is earned on score, not assigned: a bench entry joins the top ten as soon as it
+    outscores the entry at the cutoff, and drops back the same way. A reported closure relegates immediately,
+    whatever the score.</p>
   </div>
 </section>
 ` : '';
@@ -146,7 +145,7 @@ const bracketCard = ({ group, list }) => {
             <span class="bracket-medal">#${w.rank}</span>
             <div>
               <strong>${esc(w.name)}</strong>
-              <div class="bracket-sub">${esc(w.neighborhood)} · ${w.score.toFixed(1)} SLICE${w.tier === 'bench' ? ' · provisional' : ''}</div>
+              <div class="bracket-sub">${esc(w.neighborhood)} · ${w.score.toFixed(1)} SLICE</div>
             </div>
           </div>
           ${rest.length ? `<ul class="bracket-rest">${rest.map(r =>
@@ -353,9 +352,16 @@ ${buzzSection}
 
     <div class="grid2">
       <div class="mcard">
-        <h3>De-noising the crowd</h3>
-        <p>A 4.9★ from 80 diners is a rumour. A 4.7★ from 4,000 is evidence. Every crowd rating is pulled
-        toward the city mean in proportion to how little data stands behind it:</p>
+        <h3>Why crowd ratings are not scored</h3>
+        <p>They used to be, for 55% of this pillar. They are not any more, and the reason is worth
+        stating: the sites that hold them refuse automated reads, so the figures here are frozen at one
+        observation date and can never be refreshed. Scoring on them would permanently advantage the ten
+        entries that happen to have them, and permanently hold back the fifteen that do not, on the
+        strength of numbers nobody can update. Measuring all 25 the same way is worth more than the
+        extra signal.</p>
+        <p>The stored figures are still shown as dated context on each card, and the de-noising that was
+        applied to them still runs for display. A 4.9★ from 80 diners is a rumour; a 4.7★ from 4,000 is
+        evidence, and the shrinkage says so:</p>
         <pre>adjusted = (v / (v + m)) · R
          + (m / (v + m)) · C
 
@@ -363,9 +369,8 @@ v = review count
 m = ${dataset.priorWeight}   (prior weight)
 R = raw rating
 C = ${dataset.cityMeanRating.toFixed(2)}  (Seattle mean)</pre>
-        <p>The result is remapped from the ${dataset ? '3.5–5.0' : ''} band that restaurant ratings actually
-        occupy onto a 0–10 scale, then blended <b>55/45</b> with a critical read. A newcomer needs volume
-        before its rating carries full weight.</p>
+        <p>A newcomer's rating gets pulled hardest toward the mean, which is the point. But the result
+        is a footnote now, not an input.</p>
       </div>
 
       <div class="mcard">
@@ -443,7 +448,7 @@ fs.writeFileSync(path.join(dist, 'rankings.json'), JSON.stringify({
   rankings: [...ranked, ...benched].map(r => ({
     rank: r.rank, id: r.id, name: r.name, neighborhood: r.neighborhood,
     style: r.style, styleGroup: r.styleGroup, tier: r.tier || 'top',
-    provisional: !!r.consensusDetail.unrated,
+    noCrowdFigures: !!r.consensusDetail.unrated,
     score: r.score, previousRank: r.previousRank ?? null,
     pillars: r.pillars, penalty: r.penaltyApplied
   })),

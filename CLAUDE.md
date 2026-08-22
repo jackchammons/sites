@@ -66,8 +66,13 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   writes crowd figures and closure flags into `restaurants.json` — the agent never edits that
   file itself. If it hangs or fails, the site still publishes.
 - **The top ten is computed, not stored.** `splitTiers()` publishes the ten highest-scoring
-  entries that have verified crowd figures and no reported closure; everything else is bench.
-  Don't reintroduce a hardcoded top-ten list — promotion and relegation depend on this.
+  entries; a reported closure is the only thing that holds one back. The `tier` field in
+  restaurants.json is a seed, not the published split. Don't reintroduce a hardcoded top ten.
+- **Consensus is critic-only, deliberately.** Crowd ratings were 55% of that pillar and no
+  longer count. They are frozen at one observation date and unrefreshable, so scoring on them
+  permanently advantaged the ten entries that had them and barred the fifteen that did not.
+  All 25 are now measured identically. The shrinkage still runs, but only to render a dated
+  context figure beside the score — don't wire it back into the total.
 - **Never let a script write pillar scores.** The page claims they are editorial judgments
   applied by one rubric; generating them would make that claim false. Crowd figures are the
   only part of the dataset automation may touch.

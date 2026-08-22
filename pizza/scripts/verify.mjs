@@ -50,15 +50,17 @@ api.rankings.forEach((r, i) => {
   check(r.rank === i + 1, `rank ${r.rank} out of sequence at index ${i}`);
   check(Number.isFinite(r.score) && r.score > 0 && r.score <= 100,
     `${r.name}: score ${r.score} out of range`);
-  // Scores descend within a tier, but the bench is a separate ladder — a
-  // provisional entry may legitimately outscore the tenth-place cutoff.
+  // One ladder now: every entry is measured the same way and competes on score,
+  // so the whole list must descend. A reported closure is the only exception —
+  // it is held below the top ten whatever it scores.
   const prev = api.rankings[i - 1];
-  if (prev && prev.tier === r.tier) {
+  if (prev && !r.reportedClosed && !prev.reportedClosed) {
     check(r.score <= prev.score,
-      `${r.name}: score ${r.score} exceeds ${prev.name} in the same tier`);
+      `${r.name}: score ${r.score} exceeds ${prev.name} above it`);
   }
 });
-check(api.rankings.filter(r => r.tier === 'top').length === top.length, 'top tier count mismatch');
+// tier in the dataset is only a seed; the published split is computed by score.
+check(api.rankings.filter(r => r.rank <= 10).length === 10, 'expected 10 published entries');
 check(api.brackets.length > 0, 'rankings.json has no brackets');
 
 report();

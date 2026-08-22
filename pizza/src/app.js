@@ -15,13 +15,13 @@ const opts = () => ({
 });
 
 function render() {
-  const { top, bench: benched } = splitTiers(rank(DATA.dataset, opts()), 10);
+  const { top, bench: benched, cutoff } = splitTiers(rank(DATA.dataset, opts()), 10);
   const ranked = top.map(r => ({ ...r, previousRank: DATA.baseline[r.id] ?? null }));
 
   // The bench re-ranks with the same weights: whether an entry sits in
   // promotion range depends on where you put the tenth-place cutoff.
   const bench = document.getElementById('bench-list');
-  if (bench) bench.innerHTML = benchHtml(benched);
+  if (bench) bench.innerHTML = benchHtml(benched, cutoff);
   const open = new Set([...board.querySelectorAll('details.math[open]')]
     .map(d => d.closest('.card').dataset.id));
   board.innerHTML = boardHtml(ranked);

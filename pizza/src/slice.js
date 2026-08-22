@@ -13,7 +13,7 @@
 export const DEFAULT_WEIGHTS = {
   crust: 26,          // Crust Integrity   - fermentation, structure, bake
   toppings: 18,       // Topping Craft     - sourcing, restraint, balance
-  consensus: 22,      // Consensus Signal  - critics + de-noised crowd rating
+  consensus: 22,      // Critical Read     - the critical consensus on the pie
   distinctiveness: 18,// Distinctiveness   - does it own a lane in this city
   value: 16           // Value Density     - satisfaction per dollar
 };
@@ -75,24 +75,26 @@ export function ratingToPillar(adjusted) {
   return clamp(((adjusted - RATING_FLOOR) / (RATING_CEIL - RATING_FLOOR)) * 10, 0, 10);
 }
 
-/* Consensus Signal: 55% de-noised crowd, 45% critical consensus.
+/* Critical Read: the critic score, for every entry, on its own.
  *
- * Bench entries carry no crowd figures until someone verifies them. Rather than
- * invent a rating, the signal falls back to the critical read alone and reports
- * zero confidence, so the page can say plainly that the number is provisional. */
+ * Crowd ratings used to make up 55% of this pillar, de-noised by Bayesian
+ * shrinkage. They no longer count toward the score. The sources that hold them
+ * block automated reads and no API path is in use, so the stored figures are
+ * frozen at one observation date and can never be refreshed. Scoring on them
+ * would permanently advantage the ten entries that happen to have them and
+ * permanently bar the fifteen that do not, on the strength of data nobody can
+ * update. Measuring all 25 the same way is worth more than the extra signal.
+ *
+ * The shrinkage still runs for entries that have crowd figures, but only to
+ * produce a number the page displays as dated context beside the score. */
 export function consensusPillar(r, cityMean, priorWeight) {
-  if (!r.crowd) {
-    return { adjusted: null, crowd10: null, unrated: true,
-             value: clamp(r.criticScore, 0, 10) };
-  }
-  const adjusted = shrinkRating(r.crowd.rating, r.crowd.reviews, cityMean, priorWeight);
-  const crowd10 = ratingToPillar(adjusted);
-  return {
-    adjusted,
-    crowd10,
-    unrated: false,
-    value: clamp(0.55 * crowd10 + 0.45 * r.criticScore, 0, 10)
-  };
+  const ctx = r.crowd
+    ? (() => {
+        const adjusted = shrinkRating(r.crowd.rating, r.crowd.reviews, cityMean, priorWeight);
+        return { adjusted, crowd10: ratingToPillar(adjusted) };
+      })()
+    : { adjusted: null, crowd10: null };
+  return { ...ctx, unrated: !r.crowd, value: clamp(r.criticScore, 0, 10) };
 }
 
 /*
@@ -218,18 +220,18 @@ export function isoWeekKey(date) {
 
 /* Split a scored field into the published top N and the bench.
  *
- * Promotion is earned, not assigned. Anything with verified crowd figures
- * competes for the top on score alone, so a bench entry rises the moment its
- * ratings are confirmed and it outscores the cutoff -- and falls back the same
- * way. Two things keep an entry off the top regardless of score: unverified
- * crowd figures (the number is provisional, so it has not proven anything) and
- * a reported closure (relegation).
+ * Promotion is earned, not assigned: every entry competes on score alone, and
+ * rises or falls as the score does. A reported closure is the only thing that
+ * holds an entry off the top regardless of score.
  */
 export function splitTiers(scored, topN = 10) {
   const eligible = [];
   const held = [];
   for (const r of scored) {
-    if (r.consensusDetail?.unrated || r.reportedClosed) held.push(r);
+    // Only a reported closure holds an entry off the top now. Crowd figures are
+    // frozen, so gating promotion on verifying them would bar fifteen entries
+    // forever on a condition that can never be met.
+    if (r.reportedClosed) held.push(r);
     else eligible.push(r);
   }
   const byScore = (a, b) => b.score - a.score || a.name.localeCompare(b.name);
