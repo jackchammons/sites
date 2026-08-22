@@ -7,8 +7,8 @@ name: Publish sites
 # The cron therefore runs at the fastest cadence any single site needs.
 on:
   schedule:
-    - cron: '17 */3 * * *'   # every 3 hours, offset from :00 (GitHub delays
-                             # jobs scheduled exactly on the hour)
+    - cron: '17 13 * * *'    # daily at 13:17 UTC (06:17 Pacific), offset from
+                             # :00 (GitHub delays jobs scheduled on the hour)
   push:
     branches: [main]
     paths:

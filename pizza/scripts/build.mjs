@@ -81,7 +81,7 @@ const html = `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Seattle Pizza Index — Top 10, ranked by the SLICE Score</title>
-<meta name="description" content="The ten best pizzerias in Seattle, ranked by the SLICE Score: a transparent five-pillar algorithm with Bayesian-adjusted ratings and a friction penalty. Rebuilt every week. Move the sliders and re-rank it yourself.">
+<meta name="description" content="The ten best pizzerias in Seattle, ranked by the SLICE Score: a transparent five-pillar algorithm with Bayesian-adjusted ratings and a friction penalty. Rebuilt daily. Move the sliders and re-rank it yourself.">
 <meta property="og:title" content="The Seattle Pizza Index">
 <meta property="og:description" content="Seattle's top 10 pizzerias, ranked by a transparent algorithm you can re-weight yourself.">
 <meta property="og:type" content="website">
@@ -92,7 +92,7 @@ const html = `<!doctype html>
 
 <header class="hero">
   <div class="wrap">
-    <div class="eyebrow">Seattle, WA · rebuilt every Monday</div>
+    <div class="eyebrow">Seattle, WA · rebuilt daily</div>
     <h1>The Seattle<br><em>Pizza Index</em></h1>
     <p class="lede">
       Ten pizzerias, one algorithm, no hand-waving. Every restaurant below is scored out of 100 by the
@@ -142,7 +142,7 @@ const html = `<!doctype html>
   <div class="wrap">
     <div class="eyebrow">The ranking</div>
     <h2 style="font-family:var(--serif);font-size:clamp(28px,4vw,40px)">Seattle's top 10, right now</h2>
-    <p class="lede" style="margin:14px 0 26px" id="board-note">Published ranking, rebuilt every Monday.</p>
+    <p class="lede" style="margin:14px 0 26px" id="board-note">Published ranking, rebuilt daily.</p>
 
     <div class="controls" id="controls" hidden>
       <div class="controls-head">
@@ -200,7 +200,7 @@ C = ${dataset.cityMeanRating.toFixed(2)}  (Seattle mean)</pre>
         <h3>Freshness decay</h3>
         <p>Each entry carries a <span class="inline-code">lastVerified</span> date. Scores decay by
         <b>0.2% per week</b> since that date, capped at <b>6%</b>. Stale data quietly drifts down instead of
-        sitting at the top forever, and the weekly rebuild has something real to recompute.</p>
+        sitting at the top forever, and the daily rebuild has something real to recompute.</p>
         <p>Toggle it off in the controls above to see the undecayed field.</p>
       </div>
 
@@ -224,8 +224,9 @@ C = ${dataset.cityMeanRating.toFixed(2)}  (Seattle mean)</pre>
   <div class="wrap">
     <p><b>The Seattle Pizza Index.</b> Built from <span class="inline-code">pizza/data/restaurants.json</span>
     by <span class="inline-code">pizza/scripts/build.mjs</span>, scored by
-    <span class="inline-code">pizza/src/slice.js</span>, and redeployed automatically by GitHub Actions every
-    Monday at 13:00 UTC (6am Pacific).</p>
+    <span class="inline-code">pizza/src/slice.js</span>, and redeployed automatically by GitHub Actions
+    daily at 13:17 UTC (6:17am Pacific). The ranking itself moves weekly: the spotlight and the
+    ▲/▼ markers are keyed to the ISO week.</p>
     <p style="margin-top:10px">Dataset v${esc(dataset.dataVersion)} · built ${now.toISOString()} ·
     ${esc(dataset.notes)}</p>
     <p style="margin-top:10px">Disagree with the rankings? Good — that is what the sliders are for. Disagree

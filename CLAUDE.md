@@ -53,6 +53,6 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
 - **One custom domain per repo.** A `CNAME` applies to the whole Pages site, not per
   subdirectory. See README for the workaround.
 - **Don't commit `dist/`** — it's generated and gitignored.
-- Weekly data snapshots (`*/data/history.json`) are keyed by ISO week, so the 3-hourly
+- Weekly data snapshots (`*/data/history.json`) are keyed by ISO week, so the daily
   workflow overwrites the current week rather than appending. Don't switch that back to
-  date keys.
+  date keys — and it keeps working if the cron changes again.

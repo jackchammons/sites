@@ -28,7 +28,7 @@ function render() {
   });
   document.getElementById('board-note').textContent = dirty()
     ? 'Your weights — “from #n” compares against the published ranking.'
-    : 'Published ranking, rebuilt every Monday.';
+    : 'Published ranking, rebuilt daily.';
 }
 
 const dirty = () =>

@@ -7,8 +7,8 @@ is published at `/<slug>/`. One workflow builds them all and deploys once.
 
 | Site | URL | Source | Cadence |
 |---|---|---|---|
-| The Seattle Pizza Index | [`/pizza/`](https://jackchammons.github.io/sites/pizza/) | [`pizza/`](pizza/) | Weekly |
-| Odyssey 70mm Seat Maps | [`/odyssey-seats/`](https://jackchammons.github.io/sites/odyssey-seats/) | [`odyssey-seats/`](odyssey-seats/) | Every 3 hours |
+| The Seattle Pizza Index | [`/pizza/`](https://jackchammons.github.io/sites/pizza/) | [`pizza/`](pizza/) | Daily (ranked weekly) |
+| Odyssey 70mm Seat Maps | [`/odyssey-seats/`](https://jackchammons.github.io/sites/odyssey-seats/) | [`odyssey-seats/`](odyssey-seats/) | Daily |
 
 ## Layout
 
@@ -71,7 +71,7 @@ Use relative asset paths (`./app.js`) inside a site so it works under its subpat
 
 ## Deployment
 
-`.github/workflows/publish.yml` runs every 3 hours, on pushes to `main` touching site
+`.github/workflows/publish.yml` runs daily at 13:17 UTC, on pushes to `main` touching site
 sources, and on manual dispatch. It builds every site, runs each verifier as a gate,
 commits any weekly data snapshots back to the repo, and publishes `dist/` to Pages.
 

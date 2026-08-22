@@ -2,7 +2,8 @@
 
 A static site ranking Seattle's ten best pizzerias by the **SLICE Score** — a transparent,
 reproducible 0–100 algorithm published on the page itself. Rebuilt and redeployed by GitHub
-Actions every Monday.
+Actions daily; the ranking itself moves weekly, since the spotlight and the ▲/▼ markers are
+keyed to the ISO week.
 
 ## The algorithm
 
@@ -67,7 +68,7 @@ This site is published as part of the [`sites`](../README.md) repo at
 **https://jackchammons.github.io/sites/pizza/**, built by `scripts/build-all.mjs` and
 deployed by `.github/workflows/publish.yml` on:
 
-- a weekly cron — Mondays at 13:00 UTC (06:00 Pacific)
+- a daily cron — 13:17 UTC (06:17 Pacific)
 - any push to `main` touching `pizza/**`
 - manual dispatch from the Actions tab
 

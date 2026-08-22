@@ -12,7 +12,7 @@
       "dir": "pizza",
       "build": ["node", "scripts/build.mjs"],
       "verify": ["node", "scripts/verify.mjs"],
-      "cadence": "Rebuilt weekly",
+      "cadence": "Rebuilt daily",
       "accent": "#e14434"
     },
     {
@@ -28,7 +28,7 @@
         "heading": "No 70mm screenings currently listed",
         "body": "The last scheduled capture found nothing to report. This page refreshes automatically when screenings go back on sale."
       },
-      "cadence": "Refreshed every 3 hours",
+      "cadence": "Refreshed daily",
       "accent": "#5b8dd6"
     }
   ]

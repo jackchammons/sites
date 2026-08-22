@@ -105,7 +105,7 @@ export function frictionPenalty(tags = []) {
  * Freshness. Data that has not been re-verified slowly loses a little of its
  * score, capped at 6%. It never rewrites the leaderboard on its own, but it
  * does mean a listing nobody has looked at in a year quietly drifts down --
- * and it gives the weekly rebuild something real to recompute.
+ * and it gives the daily rebuild something real to recompute.
  */
 export function stalenessDecay(lastVerified, now) {
   if (!lastVerified) return MAX_STALENESS_DECAY;
