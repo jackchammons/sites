@@ -14,6 +14,7 @@ on:
     paths:
       - 'pizza/**'
       - 'odyssey-seats/**'
+      - 'clock/**'
       - 'scripts/**'
       - 'sites.config.json'
       - '.github/workflows/publish.yml'

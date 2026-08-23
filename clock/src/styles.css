@@ -1,0 +1,135 @@
+/* Now — a live clock. Shares the palette used across sites.jackhammons.com,
+   with amber standing in for the usual accent red. */
+:root{
+  color-scheme:light dark;
+  --bg:#14100e;--panel:#221c19;--panel-2:#2a2320;--line:#3a302b;
+  --ink:#f6efe8;--ink-2:#c8b8ac;--ink-3:#948276;
+  --accent:#d9a441;--accent-soft:rgba(217,164,65,.16);
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme:light){
+  :root{--bg:#fbf6ef;--panel:#fffdfa;--panel-2:#f7f1e8;--line:#e2d5c4;
+        --ink:#23180f;--ink-2:#5d4c3e;--ink-3:#8b7767;
+        --accent:#a9701a;--accent-soft:rgba(169,112,26,.12)}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+     line-height:1.6;-webkit-font-smoothing:antialiased;
+     display:flex;flex-direction:column;min-height:100vh}
+.wrap{width:min(920px,92vw);margin:0 auto}
+a{color:inherit}
+h2{font-family:var(--serif);font-size:20px;margin:0;letter-spacing:-.01em;font-weight:600}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;
+         text-transform:uppercase;color:var(--ink-3)}
+
+/* ---- hero ---- */
+header{padding:56px 0 34px}
+.hero{display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:center}
+.dial{width:132px;height:132px;flex:none}
+.dial .face{fill:var(--panel);stroke:var(--line);stroke-width:1.5}
+.dial .tick{stroke:var(--ink-3);stroke-width:.8;stroke-linecap:round;opacity:.75}
+.dial .tick.major{stroke:var(--ink-2);stroke-width:2.2;opacity:1}
+.dial .hand{stroke:var(--ink);stroke-linecap:round;transform-origin:50px 50px}
+.dial .hour{stroke-width:4.5}
+.dial .minute{stroke-width:3}
+.dial .second{stroke:var(--accent);stroke-width:1.4}
+.dial .pin{fill:var(--accent)}
+
+.time{font-family:var(--mono);font-weight:600;
+      font-size:clamp(44px,11.5vw,104px);line-height:.95;margin:0;
+      letter-spacing:-.045em;font-variant-numeric:tabular-nums;
+      display:flex;align-items:baseline;gap:.12em;flex-wrap:wrap}
+.time .sec{color:var(--ink-3);font-size:.42em;letter-spacing:-.02em}
+.time .suffix{color:var(--accent);font-size:.26em;letter-spacing:.14em;
+              text-transform:uppercase;font-weight:500}
+.date{font-family:var(--serif);font-size:clamp(19px,3.4vw,27px);
+      margin:10px 0 0;color:var(--ink);letter-spacing:-.01em}
+.zone{margin:6px 0 0;color:var(--ink-3);font-family:var(--mono);font-size:12px;
+      letter-spacing:.05em}
+
+/* ---- controls ---- */
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 0}
+.controls button{font:inherit;font-family:var(--mono);font-size:11.5px;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);
+  background:var(--panel);border:1px solid var(--line);border-radius:999px;
+  padding:6px 14px;cursor:pointer;transition:color .15s,border-color .15s,background .15s}
+.controls button:hover{color:var(--ink);border-color:var(--ink-3)}
+.controls button[aria-pressed="true"]{color:var(--accent);border-color:var(--accent);
+  background:var(--accent-soft)}
+.controls button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+main{flex:1;padding-bottom:56px}
+section{margin-top:34px}
+.head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+      margin-bottom:14px}
+.head .eyebrow{white-space:nowrap}
+
+/* ---- facts ---- */
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.fact{background:var(--panel);padding:15px 18px}
+.fact dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);margin:0 0 5px}
+.fact dd{margin:0;font-family:var(--mono);font-size:15px;color:var(--ink);
+  font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.fact dd.tight{font-size:12.5px;letter-spacing:-.01em}   /* the ISO string, kept on one line */
+.fact dd small{display:block;font-size:11.5px;color:var(--ink-3);margin-top:3px;
+  letter-spacing:.02em}
+
+/* ---- progress ---- */
+.bars{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.bar+.bar{margin-top:16px}
+.bar-top{display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:7px}
+.bar-top b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums;
+  letter-spacing:.02em}
+.track{height:7px;border-radius:999px;background:var(--panel-2);
+  border:1px solid var(--line);overflow:hidden}
+.fill{height:100%;width:0;background:var(--accent);border-radius:999px;
+  transition:width .45s cubic-bezier(.4,0,.2,1)}
+.bar .rest{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:6px}
+
+/* ---- world clocks ---- */
+.zones{display:grid;grid-template-columns:repeat(auto-fill,minmax(152px,1fr));gap:12px;
+  list-style:none;padding:0;margin:0}
+.zones li{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:14px 16px;display:grid;gap:2px}
+.zones li.here{border-color:var(--accent);background:var(--accent-soft)}
+.zc{display:flex;align-items:center;gap:7px;font-size:14.5px;letter-spacing:-.005em}
+.zc .dot{width:8px;height:8px;border-radius:50%;flex:none;
+  background:var(--ink-3);box-shadow:0 0 0 3px var(--panel-2)}
+.zc .dot.day{background:var(--accent)}
+.zc .dot.dusk{background:var(--ink-2)}
+.zc .dot.night{background:transparent;border:1.5px solid var(--ink-3)}
+.zt{font-family:var(--mono);font-size:21px;font-variant-numeric:tabular-nums;
+  letter-spacing:-.03em;color:var(--ink)}
+.zt .zsuffix{font-size:11px;color:var(--ink-3);letter-spacing:.08em;margin-left:4px}
+.zmeta{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--ink-3);
+  display:flex;gap:8px;flex-wrap:wrap}
+.zmeta .off{color:var(--ink-2)}
+
+/* Before the script runs there is nothing trustworthy to show, so the live
+   regions stay blank rather than flashing a build-time value that is wrong by
+   however long ago the site was published. */
+.pending{visibility:hidden}
+
+footer{border-top:1px solid var(--line);padding:26px 0 40px;color:var(--ink-3);font-size:12.5px}
+footer p{margin:0 0 8px}
+footer p:last-child{margin:0}
+code{font-family:var(--mono);font-size:12px;background:var(--panel-2);
+  border:1px solid var(--line);border-radius:5px;padding:1px 6px}
+
+.noscript{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:12px;padding:16px 18px;margin-top:24px;color:var(--ink-2);font-size:14.5px}
+
+@media (max-width:620px){
+  header{padding:40px 0 26px}
+  .hero{grid-template-columns:1fr;gap:20px}
+  .dial{width:104px;height:104px}
+  .facts{grid-template-columns:1fr 1fr}
+}
+@media (max-width:400px){ .facts{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important} }
