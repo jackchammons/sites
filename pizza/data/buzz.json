@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-22T13:44:40.197Z",
+  "updated": "2026-08-23T08:49:53.990Z",
   "sources": 4,
   "items": [
     {
@@ -48,6 +48,14 @@
       "source": "West Seattle Blog...",
       "published": "2026-06-25T07:00:00.000Z",
       "kind": "mention",
+      "mentions": []
+    },
+    {
+      "title": "Much-anticipated pizzeria sets North Seattle opening date",
+      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNNFFUa2pGTkxzSURpX0NiakZ3U3gyMXZpYW9Da1lKVHB1VnBBVFNjN2NWTGhSMTdXSnoyT1ZZSnNncm91a3d2ZWxLS01jUXBPaUFtOXlsX3l0WUFJSUxPRWpxbkNCd29MbVFhUm9uV2N6ZEhUb2VGd1ZtQ0E2TnIzOEh6UzlLRy1IbS1SWk0tYTNuVGJhR2ZjcW0tdkV5ME80OWtyWFNzcUk?oc=5",
+      "source": "The Seattle Times",
+      "published": "2026-06-24T07:00:00.000Z",
+      "kind": "opening",
       "mentions": []
     },
     {
