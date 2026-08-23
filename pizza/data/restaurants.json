@@ -938,7 +938,7 @@
       "styleGroup": "By the slice",
       "signature": "A counter slice in the middle of the market crowds",
       "blurb": "Geography is half the appeal, but the pie is better than a tourist corridor requires. A reliable slice in the one part of town where that is hardest to find.",
-      "url": null,
+      "url": "https://www.postalley.pizza/",
       "opened": null,
       "pillars": {
         "crust": 7.4,
@@ -952,9 +952,14 @@
       "friction": [],
       "lastVerified": null,
       "tier": "bench",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null
+      "locations": [
+        {
+          "neighborhood": "Downtown",
+          "address": "1123 Post Avenue, Seattle, WA 98101"
+        }
+      ],
+      "locationsVerified": "2026-08-23",
+      "locationsSource": "https://www.postalley.pizza/"
     },
     {
       "id": "pegasus-pizza",
@@ -964,7 +969,7 @@
       "styleGroup": "Neighborhood",
       "signature": "Pizza with a view of the water and forty years of regulars",
       "blurb": "An Alki institution where the setting and the sunset do real work. Recently changed hands, which makes its next year worth watching closely.",
-      "url": null,
+      "url": "https://pegasuspizzaseattle.com/",
       "opened": null,
       "pillars": {
         "crust": 7.4,
@@ -978,9 +983,14 @@
       "friction": [],
       "lastVerified": null,
       "tier": "bench",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null
+      "locations": [
+        {
+          "neighborhood": "West Seattle Junction",
+          "address": "4520 California Ave SW, Seattle, WA 98116"
+        }
+      ],
+      "locationsVerified": "2026-08-23",
+      "locationsSource": "https://pegasuspizzaseattle.com/"
     },
     {
       "id": "slice-box",
