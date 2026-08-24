@@ -1,6 +1,14 @@
 {
-  "updated": "2026-08-23T12:00:00Z",
+  "updated": "2026-08-24T12:00:00Z",
   "news": [
+    {
+      "title": "Acclaimed Stevie's Famous Pizza Celebrates Grand Opening on Phinney Ridge August 2",
+      "url": "https://phinneywood.com/2026/07/stevies-famous-pizza-celebrates-grand-opening-on-phinney-ridge/",
+      "source": "The PhinneyWood Blog",
+      "published": "2026-07-28T00:00:00Z",
+      "kind": "opening",
+      "mentions": []
+    },
     {
       "title": "Urban Family Brewing opening Seattle waterfront restaurant this summer",
       "url": "https://www.myballard.com/2026/07/31/urban-family-brewing-to-open-seattle-waterfront-restaurant/",
@@ -8,37 +16,62 @@
       "published": "2026-07-31T00:00:00Z",
       "kind": "opening",
       "mentions": []
+    },
+    {
+      "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
+      "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
+      "source": "Seattle magazine",
+      "published": "2026-08-07T00:00:00Z",
+      "kind": "mention",
+      "mentions": []
     }
   ],
   "candidates": [
     {
-      "name": "Urban Family Brewing (waterfront)",
-      "neighborhood": "Downtown waterfront",
-      "style": "Grandma-style",
-      "note": "Ballard brewery's new waterfront spot at 1022 Alaskan Way, across from Ivar's, adds Grandma-style square pizzas and focaccia sandwiches; opening late August or early September 2026.",
-      "source": "https://www.myballard.com/2026/07/31/urban-family-brewing-to-open-seattle-waterfront-restaurant/"
+      "name": "My Friend Derek's",
+      "neighborhood": "Tangletown",
+      "style": "Wood-fired thin-crust",
+      "note": "A home-oven pop-up that built a cult following handing extra pies to customers waiting in their cars has grown into a permanent Tangletown restaurant, drawing praise from The Infatuation.",
+      "source": "https://myfrienddereks.com/about"
+    },
+    {
+      "name": "Abecedary",
+      "neighborhood": "Hillman City",
+      "style": "New Haven-style",
+      "note": "A former Microsoft employee's New Haven-style pizzeria and brewery, previewed at the Hillman City Block Party ahead of a full 2027 opening, has already drawn Seattle Times and Business Journals coverage.",
+      "source": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/"
     }
   ],
   "locations": [
     {
-      "id": "post-alley-pizza",
-      "homepage": "https://www.postalley.pizza/",
-      "source": "https://www.postalley.pizza/",
+      "id": "breezy-town-pizza",
+      "source": "https://windycitypie.com",
       "sites": [
         {
-          "neighborhood": "Downtown",
-          "address": "1123 Post Avenue, Seattle, WA 98101"
+          "neighborhood": "Phinney Ridge",
+          "address": "5918 Phinney Ave N, Seattle, WA 98103"
         }
       ]
     },
     {
-      "id": "pegasus-pizza",
-      "homepage": "https://pegasuspizzaseattle.com/",
-      "source": "https://pegasuspizzaseattle.com/",
+      "id": "slice-box",
+      "homepage": "https://www.sliceboxpizza.com",
+      "source": "https://www.sliceboxpizza.com/location/slice-box-pizza-1727-1st-ave-s/",
       "sites": [
         {
-          "neighborhood": "West Seattle Junction",
-          "address": "4520 California Ave SW, Seattle, WA 98116"
+          "neighborhood": "SoDo",
+          "address": "1727 1st Ave S, Seattle, WA 98134"
+        }
+      ]
+    },
+    {
+      "id": "roccos",
+      "homepage": "https://www.roccosseattle.com",
+      "source": "https://www.roccosseattle.com",
+      "sites": [
+        {
+          "neighborhood": "Belltown",
+          "address": "2312 2nd Ave, Seattle, WA 98121"
         }
       ]
     }

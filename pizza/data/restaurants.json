@@ -513,7 +513,7 @@
       "styleGroup": "Chicago pan",
       "signature": "A sourdough deep-dish served out of the back of a dive bar",
       "blurb": "Windy City Pie's sibling, operating inside the Clock-Out Lounge. Same engineered pan bake, same caramelised cheese edge, but with a sourdough base and a room where a punk show might be starting. The most promising promotion candidate on the bench.",
-      "url": null,
+      "url": "https://windycitypie.com",
       "opened": null,
       "pillars": {
         "crust": 9.2,
@@ -530,9 +530,14 @@
       ],
       "lastVerified": null,
       "tier": "bench",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null
+      "locations": [
+        {
+          "neighborhood": "Phinney Ridge",
+          "address": "5918 Phinney Ave N, Seattle, WA 98103"
+        }
+      ],
+      "locationsVerified": "2026-08-24",
+      "locationsSource": "https://windycitypie.com"
     },
     {
       "id": "via-tribunali",
@@ -1016,9 +1021,14 @@
       ],
       "lastVerified": null,
       "tier": "bench",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null
+      "locations": [
+        {
+          "neighborhood": "SoDo",
+          "address": "1727 1st Ave S, Seattle, WA 98134"
+        }
+      ],
+      "locationsVerified": "2026-08-24",
+      "locationsSource": "https://www.sliceboxpizza.com/location/slice-box-pizza-1727-1st-ave-s/"
     },
     {
       "id": "roccos",
@@ -1044,9 +1054,14 @@
       ],
       "lastVerified": null,
       "tier": "bench",
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null
+      "locations": [
+        {
+          "neighborhood": "Belltown",
+          "address": "2312 2nd Ave, Seattle, WA 98121"
+        }
+      ],
+      "locationsVerified": "2026-08-24",
+      "locationsSource": "https://www.roccosseattle.com"
     }
   ]
 }
