@@ -24,12 +24,31 @@ clock/                   Node site: a live clock — the shell is built, the fig
 .github/workflows/       publish.yml — build, verify, deploy
 ```
 
+## Publishing
+
+Only `main` deploys. `.github/workflows/publish.yml` builds every site and uploads
+`dist/` to Pages on a push to `main`, on a daily cron at 13:17 UTC, and on manual
+dispatch — so work on a branch is not live until it is merged.
+
+```bash
+git push origin main
+curl -s -o /dev/null -w '%{http_code}\n' https://sites.jackhammons.com/<slug>/   # 200 when live
+```
+
+The whole set is rebuilt on every deploy, and if any site's build fails nothing is
+published — the previous deploy stays live rather than a half-built site going out.
+
 ## Building
 
 ```bash
-node scripts/build-all.mjs    # every site -> dist/
-npx serve dist                # or any static server
+node scripts/build-all.mjs                    # every site -> dist/
+node scripts/build-all.mjs --only pizza       # just one, while iterating
+node scripts/build-all.mjs --skip odyssey-seats   # everything but the Python site
+npx serve dist                                # or any static server
 ```
+
+`--only` and `--skip` are for local work only and are refused when `CI` is set: a Pages
+deploy replaces the whole site, so publishing a partial `dist/` would delete the rest.
 
 The Python site needs `pip install playwright pillow` and `playwright install chromium`.
 
@@ -49,12 +68,15 @@ sets it to `dist/<slug>/`; a standalone run ignores it. No dependencies, no lock
 For a Node site, scaffold it:
 
 ```bash
-node scripts/new-site.mjs rain-log "Seattle Rain Log" "Days it actually rained." "🌧️"
+node scripts/new-site.mjs rain-log "Seattle Rain Log" "Days it actually rained." "🌧️" \
+  --accent=#5b8dd6 --cadence="Rebuilt daily"
 ```
 
-That creates the directory, a working build and verify honouring `OUT_DIR`, and the
-registry entry — it builds and deploys immediately, so you can confirm the pipeline
-before writing real content.
+That creates the directory, a working build and verify honouring `OUT_DIR`, and every
+registration the site needs: the `sites.config.json` entry, the `paths:` filter in
+`publish.yml` that decides whether a push to that directory redeploys, the table above
+and the one in `CLAUDE.md`. It builds and deploys immediately, so you can confirm the
+pipeline before writing real content.
 
 To add one by hand (any language):
 

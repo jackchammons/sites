@@ -13,9 +13,26 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const [slug, name, tagline, emoji = '📄'] = process.argv.slice(2);
+const argv = process.argv.slice(2);
+// --accent and --cadence are the two registry fields worth setting up front;
+// everything else about the entry is derived from the positional arguments.
+const flag = name => {
+  const i = argv.findIndex(a => a === `--${name}` || a.startsWith(`--${name}=`));
+  if (i === -1) return null;
+  const [a] = argv.splice(i, 1);
+  return a.includes('=') ? a.slice(a.indexOf('=') + 1) : argv.splice(i, 1)[0];
+};
+const accent = flag('accent') || '#e14434';
+const cadence = flag('cadence') || 'Rebuilt daily';
+
+const [slug, name, tagline, emoji = '📄'] = argv;
 if (!slug || !name || !tagline) {
-  console.error('usage: node scripts/new-site.mjs <slug> "Name" "Tagline" [emoji]');
+  console.error('usage: node scripts/new-site.mjs <slug> "Name" "Tagline" [emoji]'
+    + ' [--accent=#rrggbb] [--cadence="Rebuilt daily"]');
+  process.exit(1);
+}
+if (!/^#[0-9a-fA-F]{6}$/.test(accent)) {
+  console.error(`invalid --accent "${accent}" — use #rrggbb`);
   process.exit(1);
 }
 if (!/^[a-z0-9][a-z0-9-]*$/.test(slug)) {
@@ -153,10 +170,73 @@ config.sites.push({
   slug, name, emoji, tagline, dir: slug,
   build: ['node', 'scripts/build.mjs'],
   verify: ['node', 'scripts/verify.mjs'],
-  cadence: 'Rebuilt daily',
-  accent: '#e14434'
+  cadence,
+  accent
 });
 fs.writeFileSync(configPath, JSON.stringify(config, null, 2) + '\n');
+
+/* Registering a site touches four files, and the registry is only one of them.
+ * The other three are patched here rather than left as a checklist: the one
+ * that matters most is invisible when you forget it -- publish.yml filters
+ * pushes by path, so a site missing from that list simply never redeploys,
+ * with no error anywhere to say so.
+ *
+ * Each patch is anchored on a pattern that may drift as the docs are edited,
+ * so a miss warns and names what to add by hand instead of aborting a scaffold
+ * that has already written files. */
+const patches = [];
+const patch = (file, describe, fn) => {
+  const full = path.join(root, file);
+  try {
+    const before = fs.readFileSync(full, 'utf8');
+    const after = fn(before);
+    if (after === null) { patches.push(`  ! ${file}: ${describe}`); return; }
+    if (after === before) { patches.push(`  = ${file} already lists ${slug}`); return; }
+    fs.writeFileSync(full, after);
+    patches.push(`  + ${file}`);
+  } catch (e) {
+    patches.push(`  ! ${file}: ${e.message} — ${describe}`);
+  }
+};
+
+// The deploy filter. Anchored on the last site directory already listed.
+patch('.github/workflows/publish.yml', `add "- '${slug}/**'" to the push paths`, src => {
+  if (src.includes(`'${slug}/**'`)) return src;
+  // Anchored on the site directories already registered, so the new entry
+  // joins them rather than landing after 'scripts/**'.
+  const dirs = config.sites.filter(x => x.slug !== slug).map(x => x.dir);
+  const entries = [...src.matchAll(/^ *- '([a-z0-9-]+)\/\*\*'$/gm)]
+    .filter(m => dirs.includes(m[1]));
+  if (!entries.length) return null;
+  const last = entries[entries.length - 1];
+  const at = last.index + last[0].length;
+  return src.slice(0, at) + `\n${last[0].replace(/- '.*/, `- '${slug}/**'`)}` + src.slice(at);
+});
+
+// The README site table.
+patch('README.md', `add a row for ${slug} to the site table`, src => {
+  if (src.includes(`](${slug}/)`)) return src;
+  const rows = [...src.matchAll(/^\|.*\|\s*\[`\/[a-z0-9-]+\/`\].*\|$/gm)];
+  if (!rows.length) return null;
+  const last = rows[rows.length - 1];
+  const base = (config.baseUrl || '').replace(/\/$/, '');
+  const row = `| ${name} | [\`/${slug}/\`](${base}/${slug}/) | [\`${slug}/\`](${slug}/) | ${cadence} |`;
+  const at = last.index + last[0].length;
+  return src.slice(0, at) + '\n' + row + src.slice(at);
+});
+
+// The CLAUDE.md site table -- the notes column is where a future session looks
+// first, so it gets a prompt rather than being left blank.
+patch('CLAUDE.md', `add a row for ${slug} to the Sites table`, src => {
+  if (src.includes(`| \`${slug}\` |`)) return src;
+  const rows = [...src.matchAll(/^\| `[a-z0-9-]+` \| `[a-z0-9-]+\/` \|.*\|$/gm)];
+  if (!rows.length) return null;
+  const last = rows[rows.length - 1];
+  const row = `| \`${slug}\` | \`${slug}/\` | Node, no deps | _Replace this note: what would a future`
+    + ` session need to know before editing ${slug}/ ?_ |`;
+  const at = last.index + last[0].length;
+  return src.slice(0, at) + '\n' + row + src.slice(at);
+});
 
 console.log(`Scaffolded ${slug}/ and registered it.
 
@@ -164,6 +244,13 @@ console.log(`Scaffolded ${slug}/ and registered it.
   ${slug}/scripts/build.mjs     rendering  (writes to OUT_DIR)
   ${slug}/scripts/verify.mjs    deploy gate
 
+Registered in:
+  + sites.config.json
+${patches.join('\n')}
+
 Next:
-  node scripts/build-all.mjs    # builds everything, including ${slug} -> /${slug}/
+  node scripts/build-all.mjs --only ${slug}   # build just this one while iterating
+  node scripts/build-all.mjs                 # then the whole set, as the deploy runs it
+
+Nothing is published until this reaches main: the branch build deploys nothing.
 `);
