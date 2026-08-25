@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-24T12:00:00Z",
+  "updated": "2026-08-25T00:00:00Z",
   "news": [
     {
       "title": "Acclaimed Stevie's Famous Pizza Celebrates Grand Opening on Phinney Ridge August 2",
@@ -10,19 +10,11 @@
       "mentions": []
     },
     {
-      "title": "Urban Family Brewing opening Seattle waterfront restaurant this summer",
+      "title": "Urban Family Brewing to open Seattle waterfront restaurant",
       "url": "https://www.myballard.com/2026/07/31/urban-family-brewing-to-open-seattle-waterfront-restaurant/",
       "source": "My Ballard",
       "published": "2026-07-31T00:00:00Z",
       "kind": "opening",
-      "mentions": []
-    },
-    {
-      "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
-      "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
-      "source": "Seattle magazine",
-      "published": "2026-08-07T00:00:00Z",
-      "kind": "mention",
       "mentions": []
     }
   ],
@@ -31,20 +23,21 @@
       "name": "My Friend Derek's",
       "neighborhood": "Tangletown",
       "style": "Wood-fired thin-crust",
-      "note": "A home-oven pop-up that built a cult following handing extra pies to customers waiting in their cars has grown into a permanent Tangletown restaurant, drawing praise from The Infatuation.",
+      "note": "A home-oven pop-up that sold out most nights has grown into a permanent Tangletown storefront, still built around the same wood-fired thin crust.",
       "source": "https://myfrienddereks.com/about"
     },
     {
       "name": "Abecedary",
       "neighborhood": "Hillman City",
       "style": "New Haven-style",
-      "note": "A former Microsoft employee's New Haven-style pizzeria and brewery, previewed at the Hillman City Block Party ahead of a full 2027 opening, has already drawn Seattle Times and Business Journals coverage.",
+      "note": "Pizzaiolo Seth Eisner gave Seattle a cheese-and-basil sneak preview at the Hillman City Block Party; the full New Haven-style pizzeria and brewery isn't slated to open until 2027.",
       "source": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/"
     }
   ],
   "locations": [
     {
-      "id": "breezy-town-pizza",
+      "id": "windy-city-pie",
+      "homepage": "https://windycitypie.com",
       "source": "https://windycitypie.com",
       "sites": [
         {
@@ -54,24 +47,28 @@
       ]
     },
     {
-      "id": "slice-box",
-      "homepage": "https://www.sliceboxpizza.com",
-      "source": "https://www.sliceboxpizza.com/location/slice-box-pizza-1727-1st-ave-s/",
+      "id": "delancey",
+      "homepage": "https://www.delanceyseattle.com",
+      "source": "https://www.delanceyseattle.com",
       "sites": [
         {
-          "neighborhood": "SoDo",
-          "address": "1727 1st Ave S, Seattle, WA 98134"
+          "neighborhood": "Ballard",
+          "address": "1415 NW 70th Street, Seattle, WA 98117"
         }
       ]
     },
     {
-      "id": "roccos",
-      "homepage": "https://www.roccosseattle.com",
-      "source": "https://www.roccosseattle.com",
+      "id": "cornelly",
+      "homepage": "https://www.cornellyseattle.com",
+      "source": "https://www.cornellyseattle.com",
       "sites": [
         {
-          "neighborhood": "Belltown",
-          "address": "2312 2nd Ave, Seattle, WA 98121"
+          "neighborhood": "Capitol Hill",
+          "address": "601 Summit Ave E, Seattle, WA 98102"
+        },
+        {
+          "neighborhood": "Queen Anne",
+          "address": "2121 Queen Anne Ave N, Seattle, WA 98109"
         }
       ]
     }

@@ -40,7 +40,7 @@
           "address": "5918 Phinney Ave N, Seattle, WA 98103"
         }
       ],
-      "locationsVerified": "2026-08-22",
+      "locationsVerified": "2026-08-25",
       "locationsSource": "https://windycitypie.com"
     },
     {
@@ -77,8 +77,8 @@
           "address": "1415 NW 70th Street, Seattle, WA 98117"
         }
       ],
-      "locationsVerified": "2026-08-22",
-      "locationsSource": "https://www.delanceyseattle.com/"
+      "locationsVerified": "2026-08-25",
+      "locationsSource": "https://www.delanceyseattle.com"
     },
     {
       "id": "cornelly",
@@ -114,10 +114,10 @@
         },
         {
           "neighborhood": "Queen Anne",
-          "address": "2121 Queen Anne Ave N, Seattle, WA 98119"
+          "address": "2121 Queen Anne Ave N, Seattle, WA 98109"
         }
       ],
-      "locationsVerified": "2026-08-22",
+      "locationsVerified": "2026-08-25",
       "locationsSource": "https://www.cornellyseattle.com"
     },
     {
