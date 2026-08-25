@@ -20,6 +20,51 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
 const config = JSON.parse(fs.readFileSync(path.join(root, 'sites.config.json'), 'utf8'));
 
+/* --only / --skip narrow the run while working on one site. Useful because a
+ * site whose toolchain is missing locally (odyssey-seats needs Playwright and
+ * Pillow) otherwise fails the whole run and blocks iteration on every other
+ * site.
+ *
+ * Refused under CI on purpose: a Pages deployment replaces the entire site, so
+ * uploading a subset of dist/ would delete the sites left out. The deploy must
+ * always build everything. */
+const listFlag = name => {
+  const i = process.argv.findIndex(a => a === `--${name}` || a.startsWith(`--${name}=`));
+  if (i === -1) return null;
+  const raw = process.argv[i].includes('=')
+    ? process.argv[i].slice(process.argv[i].indexOf('=') + 1)
+    : process.argv[i + 1];
+  if (!raw) { console.error(`--${name} needs a comma-separated list of slugs`); process.exit(1); }
+  return raw.split(',').map(s => s.trim()).filter(Boolean);
+};
+const only = listFlag('only');
+const skip = listFlag('skip');
+
+if ((only || skip) && process.env.CI) {
+  console.error('--only/--skip are for local iteration and cannot be used in CI:\n'
+    + 'a Pages deploy replaces the whole site, so a partial dist/ would delete the rest.');
+  process.exit(1);
+}
+
+const known = new Set(config.sites.map(s => s.slug));
+for (const slug of [...(only || []), ...(skip || [])]) {
+  if (!known.has(slug)) {
+    console.error(`unknown slug "${slug}" — registered sites: ${[...known].join(', ')}`);
+    process.exit(1);
+  }
+}
+
+const selected = config.sites.filter(s =>
+  (!only || only.includes(s.slug)) && (!skip || !skip.includes(s.slug)));
+if (!selected.length) { console.error('nothing left to build'); process.exit(1); }
+
+const partial = selected.length !== config.sites.length;
+if (partial) {
+  const left = config.sites.filter(s => !selected.includes(s)).map(s => s.slug);
+  console.log(`PARTIAL BUILD — skipping ${left.join(', ')}.`);
+  console.log('dist/ will be incomplete and must not be deployed.\n');
+}
+
 const esc = s => String(s).replace(/[&<>"']/g, c =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -27,7 +72,7 @@ fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(dist, { recursive: true });
 
 const built = [];
-for (const site of config.sites) {
+for (const site of selected) {
   const siteRoot = path.join(root, site.dir);
   const out = path.join(dist, site.slug);
   const env = { ...process.env, OUT_DIR: out };
@@ -279,5 +324,6 @@ if (config.customDomain) {
 }
 
 console.log(`\n=== landing page ===`);
+if (partial) console.log('  (partial — this landing page lists only the sites that were built)');
 console.log(`Built ${built.length} site(s) -> dist/`);
 for (const s of built) console.log(`  /${s.slug}/  ${s.name}  (${s.bytes.toLocaleString('en-US')} bytes)`);

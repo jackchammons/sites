@@ -6,14 +6,21 @@ Each site lives in a top-level directory and is served at `/<slug>/`.
 ## Adding a site (start here)
 
 ```bash
-node scripts/new-site.mjs <slug> "Name" "One-sentence tagline" [emoji]
-node scripts/build-all.mjs
+node scripts/new-site.mjs <slug> "Name" "One-sentence tagline" [emoji] \
+  [--accent=#rrggbb] [--cadence="Rebuilt daily"]
+node scripts/build-all.mjs --only <slug>
 ```
 
 The scaffolder creates `<slug>/` with a build and verify that already honour the
 `OUT_DIR` contract, seeds `data/data.json`, and registers the site. What it generates
 builds and deploys as-is — run `build-all` once to confirm the pipeline before writing
 real content, then replace the data and the rendering in `<slug>/scripts/build.mjs`.
+
+Registering a site touches four files and the scaffolder patches all of them:
+`sites.config.json`, the `paths:` filter in `publish.yml`, the README table and the
+Sites table below. The doc tables are anchored on patterns that drift as they are
+edited, so a patch that misses warns and names what to add by hand — read its output
+rather than assuming silence means success.
 
 A site that isn't Node (see `odyssey-seats/`, which is Python) needs its own directory
 and a `build` command in the registry; the scaffolder only covers the Node case.
@@ -29,12 +36,59 @@ node scripts/build-all.mjs    # all sites -> dist/
 then its `verify` command, then renders the landing page at `dist/index.html` — which
 includes a client-side search over each site's name, tagline, slug and cadence.
 
+`--only <slug>` and `--skip <slug>` narrow the run while iterating — `--skip
+odyssey-seats` is how you build anything at all on a machine without Playwright and
+Pillow, since one site's failure fails the whole run. Both are refused when `CI` is set:
+a Pages deploy replaces the entire site, so uploading a partial `dist/` would delete the
+sites left out.
+
 A single site can be built alone while iterating:
 
 ```bash
 node pizza/scripts/build.mjs                              # -> dist/
 OUT_DIR=/tmp/out python3 odyssey-seats/siff_seatmaps_v5.py --report-only
 ```
+
+## Publishing
+
+**Only `main` deploys.** `publish.yml` builds and uploads to Pages on a push to `main`
+(filtered by `paths:`), on its 13:17 UTC cron, and on manual dispatch. Work pushed to a
+branch publishes nothing, and nothing reports that: a change that looks finished but is
+invisible on the domain is almost always still sitting on a branch. Say what is merged,
+not what is written.
+
+```bash
+git checkout main && git merge <branch> && git push origin main   # this is what deploys
+curl -s -o /dev/null -w '%{http_code}\n' https://sites.jackhammons.com/<slug>/
+```
+
+Pages serves the new build about a minute after the run goes green — poll for the 200
+rather than reporting a merge as a deploy. Two things worth knowing before you push:
+the run rebuilds **every** site, so a site you cannot build locally can still fail the
+deploy for the one you changed; and `paths:` lists each site directory by name, so a
+slug missing from that list never redeploys, silently.
+
+## Checking a site in a browser
+
+These pages are finished by the browser, so a build that verifies clean can still be
+visibly broken. Look at the page. Chromium and Playwright are installed
+(`PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers` — never run `playwright install`).
+
+```bash
+node scripts/build-all.mjs --only <slug>
+cd dist && python3 -m http.server 8099 &      # serve it: file:// hides subpath bugs
+```
+
+Drive it with `require('/opt/node22/lib/node_modules/playwright')` against
+`http://localhost:8099/<slug>/`, and vary the context: `colorScheme` (both palettes are
+defined), `locale`, `timezoneId`. That is not thoroughness for its own sake — it is how
+the clock's `Intl` crash on an `en-US@posix` locale tag was found, which no build check
+would have caught.
+
+The browser cannot reach the public internet from here. Outbound HTTPS goes through the
+agent proxy and Chromium is not configured for it, so `page.goto` on a live URL fails
+with `ERR_CONNECTION_RESET` while `curl` on the same URL returns 200. To check what is
+actually deployed, `curl` the files down and serve them locally.
 
 ## The OUT_DIR contract
 
@@ -57,6 +111,9 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
 
 ## Things that will bite you
 
+- **Pushing to a branch publishes nothing.** Only `main` deploys — see Publishing above.
+  Verify with a `curl` against the live URL before calling a site shipped: `clock/` was
+  built, verified and pushed to a branch, and reported as done while the domain 404'd.
 - **A Pages deploy replaces the entire site.** Never add a second workflow that calls
   `deploy-pages` — it would delete the other sites' output. `publish.yml` is the only
   workflow allowed to deploy. `research.yml` exists alongside it and only commits data.
