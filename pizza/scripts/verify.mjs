@@ -44,20 +44,23 @@ const html = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');
 check(html.length > 20000, `index.html suspiciously small (${html.length} bytes)`);
 check(/<title>[^<]+<\/title>/.test(html), 'missing <title>');
 
-// Only the top tier gets full cards; the bench renders as compact rows.
-const top = dataset.restaurants.filter(r => (r.tier || 'top') === 'top');
-const benchEntries = dataset.restaurants.filter(r => r.tier === 'bench');
+// The published split is computed, not stored: top 10 full cards, every other
+// rated entry a compact row. Unrated entries (status "opening", discoveries)
+// appear elsewhere on the page but never as ranked cards or rows.
+const rated = dataset.restaurants.filter(r => r.pillars);
+const topCount = Math.min(10, rated.length);
 
 const cards = (html.match(/<article class="card/g) || []).length;
-check(cards === top.length, `expected ${top.length} cards, found ${cards}`);
+check(cards === topCount, `expected ${topCount} cards, found ${cards}`);
 
-if (benchEntries.length) {
+if (rated.length > topCount) {
   const rows = (html.match(/<li class="bench-row/g) || []).length;
-  check(rows === benchEntries.length, `expected ${benchEntries.length} bench rows, found ${rows}`);
+  check(rows === rated.length - topCount,
+    `expected ${rated.length - topCount} bench rows, found ${rows}`);
   check(/class="brackets"/.test(html), 'style brackets section missing');
 }
 
-// Every restaurant, both tiers, must appear somewhere on the page.
+// Every entry in the dataset must appear somewhere on the page.
 for (const r of dataset.restaurants) {
   check(html.includes(r.name.replace(/'/g, '&#39;')) || html.includes(r.name),
     `"${r.name}" missing from the page`);
@@ -65,7 +68,8 @@ for (const r of dataset.restaurants) {
 check(!/undefined|NaN|\[object Object\]/.test(html), 'page contains undefined/NaN/[object Object]');
 
 const api = JSON.parse(fs.readFileSync(path.join(dist, 'rankings.json'), 'utf8'));
-check(api.rankings.length === dataset.restaurants.length, 'rankings.json length mismatch');
+check(api.rankings.length === rated.length,
+  `rankings.json length mismatch (${api.rankings.length} vs ${rated.length} rated)`);
 
 api.rankings.forEach((r, i) => {
   check(r.rank === i + 1, `rank ${r.rank} out of sequence at index ${i}`);
@@ -75,7 +79,7 @@ api.rankings.forEach((r, i) => {
   // so the whole list must descend. A reported closure is the only exception —
   // it is held below the top ten whatever it scores.
   const prev = api.rankings[i - 1];
-  if (prev && !r.reportedClosed && !prev.reportedClosed) {
+  if (prev && r.status !== 'closed' && prev.status !== 'closed') {
     check(r.score <= prev.score,
       `${r.name}: score ${r.score} exceeds ${prev.name} above it`);
   }

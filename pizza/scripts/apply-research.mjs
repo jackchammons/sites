@@ -34,7 +34,10 @@ let updated = 0;
 for (const it of research.closures ?? []) {
   const r = byId.get(it.id);
   if (!r) continue;
-  r.reportedClosed = { note: it.note, source: it.source, date: it.date ?? today };
+  r.status = 'closed';
+  r.statusNote = it.note;
+  r.statusSource = it.source;
+  r.statusDate = it.date ?? today;
   console.log(`  ! ${r.name}: reported closed — ${it.note.slice(0, 60)}`);
 }
 

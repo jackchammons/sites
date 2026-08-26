@@ -184,9 +184,9 @@ const round = n => Math.round(n * 10) / 10;
 export function rank(dataset, opts = {}) {
   const cityMean = dataset.cityMeanRating;
   const priorWeight = dataset.priorWeight;
-  const pool = opts.tier
-    ? dataset.restaurants.filter(r => (r.tier || 'top') === opts.tier)
-    : dataset.restaurants;
+  // Only rated entries compete. The dataset also carries unrated directory
+  // entries (openings, discoveries) that have no factor ratings yet.
+  const pool = dataset.restaurants.filter(r => r.pillars);
   const scored = pool.map(r =>
     scoreOne(r, { cityMean, priorWeight, ...opts })
   );
@@ -228,10 +228,8 @@ export function splitTiers(scored, topN = 10) {
   const eligible = [];
   const held = [];
   for (const r of scored) {
-    // Only a reported closure holds an entry off the top now. Crowd figures are
-    // frozen, so gating promotion on verifying them would bar fifteen entries
-    // forever on a condition that can never be met.
-    if (r.reportedClosed) held.push(r);
+    // Anything not currently open is held off the top regardless of score.
+    if (r.status && r.status !== 'open') held.push(r);
     else eligible.push(r);
   }
   const byScore = (a, b) => b.score - a.score || a.name.localeCompare(b.name);
@@ -244,7 +242,7 @@ export function splitTiers(scored, topN = 10) {
     .map((r, i) => ({
       ...r,
       rank: top.length + i + 1,
-      contender: r.score > cutoff && !r.reportedClosed
+      contender: r.score > cutoff && (!r.status || r.status === 'open')
     }));
   return { top, bench, cutoff };
 }

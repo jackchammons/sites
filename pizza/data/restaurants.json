@@ -41,7 +41,28 @@
         }
       ],
       "locationsVerified": "2026-08-25",
-      "locationsSource": "https://windycitypie.com"
+      "locationsSource": "https://windycitypie.com",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {
+        "preorder-recommended": true,
+        "sells-out": true,
+        "limited-hours": true
+      },
+      "factors": {
+        "craft": {
+          "value": 9.3,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 9.7,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "delancey",
@@ -78,7 +99,27 @@
         }
       ],
       "locationsVerified": "2026-08-25",
-      "locationsSource": "https://www.delanceyseattle.com"
+      "locationsSource": "https://www.delanceyseattle.com",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {
+        "long-waits": true,
+        "no-reservations": true
+      },
+      "factors": {
+        "craft": {
+          "value": 9.6,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 8.6,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "cornelly",
@@ -118,7 +159,26 @@
         }
       ],
       "locationsVerified": "2026-08-25",
-      "locationsSource": "https://www.cornellyseattle.com"
+      "locationsSource": "https://www.cornellyseattle.com",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {
+        "limited-hours": true
+      },
+      "factors": {
+        "craft": {
+          "value": 9.2,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 9.2,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "moto-pizza",
@@ -173,7 +233,29 @@
         }
       ],
       "locationsVerified": "2026-08-22",
-      "locationsSource": "https://motopizza.com"
+      "locationsSource": "https://motopizza.com",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {
+        "preorder-only": true,
+        "sells-out": true,
+        "long-waits": true,
+        "limited-hours": true
+      },
+      "factors": {
+        "craft": {
+          "value": 9.2,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 9.4,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "serious-pie",
@@ -217,7 +299,26 @@
         }
       ],
       "locationsVerified": "2026-08-22",
-      "locationsSource": "https://www.seriouspieseattle.com/"
+      "locationsSource": "https://www.seriouspieseattle.com/",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {
+        "long-waits": true
+      },
+      "factors": {
+        "craft": {
+          "value": 8.9,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 7.8,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "dinos-tomato-pie",
@@ -253,7 +354,26 @@
         }
       ],
       "locationsVerified": "2026-08-22",
-      "locationsSource": "https://www.dinostomatopie.com"
+      "locationsSource": "https://www.dinostomatopie.com",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {
+        "late-night-only-peak": true
+      },
+      "factors": {
+        "craft": {
+          "value": 8.4,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 9,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "lupo",
@@ -290,7 +410,27 @@
         }
       ],
       "locationsVerified": "2026-08-22",
-      "locationsSource": "https://www.lupofremont.com/about"
+      "locationsSource": "https://www.lupofremont.com/about",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {
+        "small-room": true,
+        "limited-hours": true
+      },
+      "factors": {
+        "craft": {
+          "value": 9.1,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 8.4,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "independent-pizzeria",
@@ -327,7 +467,27 @@
         }
       ],
       "locationsVerified": "2026-08-22",
-      "locationsSource": "https://theindiepizzeria.com/"
+      "locationsSource": "https://theindiepizzeria.com/",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {
+        "tiny-room": true,
+        "limited-hours": true
+      },
+      "factors": {
+        "craft": {
+          "value": 8.7,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 8,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "tutta-bella",
@@ -377,7 +537,24 @@
         }
       ],
       "locationsVerified": "2026-08-22",
-      "locationsSource": "https://www.tuttabella.com/overview"
+      "locationsSource": "https://www.tuttabella.com/overview",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {},
+      "factors": {
+        "craft": {
+          "value": 8.4,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 7,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "pagliacci",
@@ -503,7 +680,24 @@
         }
       ],
       "locationsVerified": "2026-08-22",
-      "locationsSource": "https://www.pagliacci.com/locations"
+      "locationsSource": "https://www.pagliacci.com/locations",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {},
+      "factors": {
+        "craft": {
+          "value": 7.7,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 6.8,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "breezy-town-pizza",
@@ -537,7 +731,27 @@
         }
       ],
       "locationsVerified": "2026-08-24",
-      "locationsSource": "https://windycitypie.com"
+      "locationsSource": "https://windycitypie.com",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {
+        "limited-hours": true,
+        "sells-out": true
+      },
+      "factors": {
+        "craft": {
+          "value": 9,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 9.3,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "via-tribunali",
@@ -572,7 +786,24 @@
         }
       ],
       "locationsVerified": "2026-08-22",
-      "locationsSource": "https://www.viatribunali.com/"
+      "locationsSource": "https://www.viatribunali.com/",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {},
+      "factors": {
+        "craft": {
+          "value": 8.5,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 7.4,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "big-marios",
@@ -617,7 +848,26 @@
         }
       ],
       "locationsVerified": "2026-08-22",
-      "locationsSource": "https://bigmariosnewyorkpizza.com/"
+      "locationsSource": "https://bigmariosnewyorkpizza.com/",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {
+        "late-night-only-peak": true
+      },
+      "factors": {
+        "craft": {
+          "value": 8,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 7.2,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "flying-squirrel",
@@ -643,7 +893,24 @@
       "tier": "bench",
       "locations": [],
       "locationsVerified": null,
-      "locationsSource": null
+      "locationsSource": null,
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {},
+      "factors": {
+        "craft": {
+          "value": 8.2,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 8,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "proletariat-pizza",
@@ -674,7 +941,24 @@
         }
       ],
       "locationsVerified": "2026-08-22",
-      "locationsSource": "https://proletariatpizza.com"
+      "locationsSource": "https://proletariatpizza.com",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {},
+      "factors": {
+        "craft": {
+          "value": 7.7,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 7,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "ballard-pizza-co",
@@ -709,7 +993,24 @@
         }
       ],
       "locationsVerified": "2026-08-22",
-      "locationsSource": "https://ballardpizzacompany.com/restaurants"
+      "locationsSource": "https://ballardpizzacompany.com/restaurants",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {},
+      "factors": {
+        "craft": {
+          "value": 8.1,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 6.8,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "zeeks-pizza",
@@ -800,7 +1101,24 @@
         }
       ],
       "locationsVerified": "2026-08-22",
-      "locationsSource": "https://zeekspizza.com/locations/"
+      "locationsSource": "https://zeekspizza.com/locations/",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {},
+      "factors": {
+        "craft": {
+          "value": 7.5,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 7.6,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "talaricos",
@@ -833,7 +1151,26 @@
         }
       ],
       "locationsVerified": "2026-08-22",
-      "locationsSource": "https://www.talaricospizza.com/"
+      "locationsSource": "https://www.talaricospizza.com/",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {
+        "late-night-only-peak": true
+      },
+      "factors": {
+        "craft": {
+          "value": 7.5,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 8.2,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "hot-mamas-pizza",
@@ -866,7 +1203,26 @@
         }
       ],
       "locationsVerified": "2026-08-22",
-      "locationsSource": "https://www.hot-mamaspizza.com/location.html"
+      "locationsSource": "https://www.hot-mamaspizza.com/location.html",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {
+        "late-night-only-peak": true
+      },
+      "factors": {
+        "craft": {
+          "value": 6.9,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 6.6,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "humble-pie",
@@ -900,7 +1256,27 @@
         }
       ],
       "locationsVerified": "2026-08-22",
-      "locationsSource": "https://humblepieseattle.com/find-us/"
+      "locationsSource": "https://humblepieseattle.com/find-us/",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {
+        "limited-hours": true,
+        "seasonal": true
+      },
+      "factors": {
+        "craft": {
+          "value": 8.4,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 8.6,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "pizzeria-gabbiano",
@@ -929,11 +1305,26 @@
       "locations": [],
       "locationsVerified": null,
       "locationsSource": null,
-      "reportedClosed": {
-        "note": "Closed in 2016; the Pioneer Square space became Il Corvo Pasta Studio.",
-        "source": "https://en.wikipedia.org/wiki/Pizzeria_Gabbiano",
-        "date": "2016-12-31"
-      }
+      "status": "closed",
+      "statusSource": "https://en.wikipedia.org/wiki/Pizzeria_Gabbiano",
+      "statusDate": "2016-12-31",
+      "statusNote": "Closed in 2016; the Pioneer Square space became Il Corvo Pasta Studio.",
+      "attributes": {
+        "limited-hours": true
+      },
+      "factors": {
+        "craft": {
+          "value": 8.4,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 8.8,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "post-alley-pizza",
@@ -964,7 +1355,24 @@
         }
       ],
       "locationsVerified": "2026-08-23",
-      "locationsSource": "https://www.postalley.pizza/"
+      "locationsSource": "https://www.postalley.pizza/",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {},
+      "factors": {
+        "craft": {
+          "value": 7.3,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 6.4,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "pegasus-pizza",
@@ -995,7 +1403,24 @@
         }
       ],
       "locationsVerified": "2026-08-23",
-      "locationsSource": "https://pegasuspizzaseattle.com/"
+      "locationsSource": "https://pegasuspizzaseattle.com/",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {},
+      "factors": {
+        "craft": {
+          "value": 7.4,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 7,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "slice-box",
@@ -1028,7 +1453,26 @@
         }
       ],
       "locationsVerified": "2026-08-24",
-      "locationsSource": "https://www.sliceboxpizza.com/location/slice-box-pizza-1727-1st-ave-s/"
+      "locationsSource": "https://www.sliceboxpizza.com/location/slice-box-pizza-1727-1st-ave-s/",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {
+        "limited-hours": true
+      },
+      "factors": {
+        "craft": {
+          "value": 8,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 8.8,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
     },
     {
       "id": "roccos",
@@ -1061,7 +1505,58 @@
         }
       ],
       "locationsVerified": "2026-08-24",
-      "locationsSource": "https://www.roccosseattle.com"
+      "locationsSource": "https://www.roccosseattle.com",
+      "status": "open",
+      "statusSource": null,
+      "statusDate": null,
+      "attributes": {
+        "late-night-only-peak": true
+      },
+      "factors": {
+        "craft": {
+          "value": 7.6,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "distinctiveness": {
+          "value": 7,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        }
+      },
+      "mentions": []
+    },
+    {
+      "id": "my-friend-dereks",
+      "name": "My Friend Derek's",
+      "neighborhood": "Tangletown",
+      "style": "Wood-fired thin-crust",
+      "blurb": "A home-oven pop-up that sold out most nights has grown into a permanent Tangletown storefront, still built around the same wood-fired thin crust.",
+      "url": null,
+      "status": "opening",
+      "statusSource": "https://myfrienddereks.com/about",
+      "statusDate": "2026-08-25",
+      "attributes": {},
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "abecedary",
+      "name": "Abecedary",
+      "neighborhood": "Hillman City",
+      "style": "New Haven-style",
+      "blurb": "Pizzaiolo Seth Eisner gave Seattle a cheese-and-basil sneak preview at the Hillman City Block Party; the full New Haven-style pizzeria and brewery isn't slated to open until 2027.",
+      "url": null,
+      "status": "opening",
+      "statusSource": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
+      "statusDate": "2026-08-25",
+      "attributes": {},
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }

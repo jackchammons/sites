@@ -1,0 +1,13 @@
+{
+  "_comment": "Registry of entry attributes. label renders as a chip; frictionCost (points, subtracted, capped in slice.js) marks the ones that make the pizza harder to actually get. New attributes discovered by the daily research pass are added here by apply-research.mjs, so the build can always render whatever flag an entry carries.",
+  "preorder-only":        { "label": "Preorder only",        "frictionCost": 2.5 },
+  "preorder-recommended": { "label": "Preorder recommended", "frictionCost": 1.0 },
+  "sells-out":            { "label": "Sells out",            "frictionCost": 1.5 },
+  "long-waits":           { "label": "Long waits",           "frictionCost": 1.2 },
+  "no-reservations":      { "label": "No reservations",      "frictionCost": 0.6 },
+  "limited-hours":        { "label": "Limited hours",        "frictionCost": 0.8 },
+  "tiny-room":            { "label": "Tiny room",            "frictionCost": 0.7 },
+  "small-room":           { "label": "Small room",           "frictionCost": 0.7 },
+  "late-night-only-peak": { "label": "Peaks late night",     "frictionCost": 0.4 },
+  "seasonal":             { "label": "Seasonal",             "frictionCost": 0.5 }
+}

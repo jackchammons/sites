@@ -22,7 +22,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const { restaurants } = JSON.parse(fs.readFileSync(path.join(root, 'data/restaurants.json'), 'utf8'));
 const count = Number(process.argv[2] || 5);
 
-for (const r of locationWorklist(restaurants).slice(0, count)) {
+const openField = restaurants.filter(r => r.status !== 'closed');
+for (const r of locationWorklist(openField).slice(0, count)) {
   const state = r.neighborhoodIsPlaceholder
     ? `PLACEHOLDER, stored as "${r.neighborhood}" — find every branch`
     : (r.locations ?? []).length

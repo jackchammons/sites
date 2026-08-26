@@ -145,12 +145,12 @@ const cutoffOf = r => r.__cutoff ?? r.score;
 
 export function benchRowHtml(r) {
   return `
-        <li class="bench-row${r.reportedClosed ? ' closed' : r.contender ? ' contender' : ''}">
+        <li class="bench-row${r.status === 'closed' ? ' closed' : r.contender ? ' contender' : ''}">
           <span class="bench-rank">${r.rank}</span>
           <span class="bench-name">${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.name)}</a>` : esc(r.name)}</span>
           <span class="bench-meta">${esc(locationLabel(r))} · ${esc(r.style)}</span>
           <span class="bench-score">${r.score.toFixed(1)}</span>
-          <span class="bench-flag">${r.reportedClosed ? 'reported closed' : r.contender ? 'promotion range' : `${(r.score - cutoffOf(r)).toFixed(1)} off the cut`}</span>
+          <span class="bench-flag">${r.status === 'closed' ? 'reported closed' : r.contender ? 'promotion range' : `${(r.score - cutoffOf(r)).toFixed(1)} off the cut`}</span>
         </li>`;
 }
 
