@@ -1469,7 +1469,15 @@
       "locations": [],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
+          "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
+          "source": "Seattle magazine",
+          "date": "2026-08-07T00:00:00Z",
+          "kind": "mention"
+        }
+      ],
       "statusChecked": "2026-08-26"
     },
     {
@@ -1492,7 +1500,15 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [
+        {
+          "url": "https://seattlemag.com/food-drink/opening-night-stevies-famous-comes-to-north-seattle",
+          "title": "Opening Night: Stevie's Famous Comes to North Seattle",
+          "source": "Seattle magazine",
+          "date": "2026-08-19T00:00:00Z",
+          "kind": "opening"
+        }
+      ]
     },
     {
       "id": "sinners-pizza",
@@ -1536,7 +1552,29 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [
+        {
+          "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
+          "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
+          "source": "Seattle magazine",
+          "date": "2026-08-07T00:00:00Z",
+          "kind": "mention"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPZWlRV0xFZ1NNRS1BSnNkQ3Fkd1BTNlM1SEx5M0FFNjNPYno2TkkwZzExZG5ZQXJ0SE92ZzExRDFfTlBzMzlwUmtPelF1c1Znc3pqNlV2aExMdllWQVg1a3dxNmxzWFE3eldxRXJxUmFfbHEwTDFaV0lKSW1LdjMtTi1CVXI1YlFJMG1JY281ME1zZw?oc=5",
+          "title": "Restaurant Roundup: Pizza Pals and Paella on the Patio",
+          "source": "Seattle magazine",
+          "date": "2026-08-21T11:01:51.000Z",
+          "kind": "mention"
+        },
+        {
+          "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE90UzNXbjhXemFyVF9OMC1aMFB1RGRENmhlNVY1bGdwVFJSbTY3bzlvUXZwUjVzUVVpYTJ5R1NWWnd5RUxZRUY4MDRBUjFwY0YzOGEta01qZXd1RGFlV29jWTZwVGJkRFU?oc=5",
+          "title": "Roma Roma makes for a nice hang with pretty good pizza - Review - Seattle",
+          "source": "The Infatuation",
+          "date": "2026-05-12T07:00:00.000Z",
+          "kind": "mention"
+        }
+      ]
     }
   ]
 }

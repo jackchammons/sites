@@ -1,35 +1,63 @@
 {
-  "updated": "2026-08-26T00:00:00Z",
-  "directory": [
+  "updated": "2026-08-26T18:00:00Z",
+  "news": [
     {
-      "name": "Stevie's Famous",
-      "url": "https://www.steviesfamous.com/",
-      "neighborhood": "Phinney Ridge",
-      "style": "New York-style, sourdough crust",
-      "status": "open",
-      "note": "Burien-founded, Seattle Times reader-poll pizzeria that opened its first Seattle-proper flagship in the former Zeek's Pizza space on Phinney Ave N in July 2026.",
-      "source": "https://phinneywood.com/2025/11/former-zeeks-phinney-location-to-become-stevies-famous/",
-      "address": "6000 Phinney Ave N, Seattle, WA 98103"
+      "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
+      "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
+      "source": "Seattle magazine",
+      "published": "2026-08-07T00:00:00Z",
+      "kind": "mention",
+      "mentions": ["abecedary", "roma-roma"]
     },
     {
-      "name": "Sinners Pizza",
-      "url": "https://sinners.pizza/",
-      "neighborhood": "University District",
-      "style": "New York-style",
-      "status": "open",
-      "note": "Heaven-and-Hell-themed late-night New York-style pizza shop and bar that opened April 10, 2026 on the Ave in the former Supreme Pizzeria & Bar space.",
-      "source": "https://www.dailyuw.com/article/sinners-pizza-opens-on-the-ave-with-late-night-hours-opening-day-sees-over-1-000-transactions-20260416",
-      "address": "4529 University Way NE, Seattle, WA 98105"
+      "title": "Opening Night: Stevie's Famous Comes to North Seattle",
+      "url": "https://seattlemag.com/food-drink/opening-night-stevies-famous-comes-to-north-seattle",
+      "source": "Seattle magazine",
+      "published": "2026-08-19T00:00:00Z",
+      "kind": "opening",
+      "mentions": ["stevies-famous"]
+    }
+  ],
+  "mentions": [
+    {
+      "id": "abecedary",
+      "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
+      "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
+      "source": "Seattle magazine",
+      "date": "2026-08-07T00:00:00Z",
+      "kind": "mention"
     },
     {
-      "name": "Roma Roma",
-      "url": "https://romaroma.pizza/",
-      "neighborhood": "Capitol Hill",
-      "style": "Roman-style, pizza al taglio",
-      "status": "open",
-      "note": "Brothers Forrest and Colin Brunton's Roman-style by-the-cut pizza counter, priced by weight, that opened on 12th Ave in the former Rachel's Ginger Beer space.",
-      "source": "https://www.capitolhillseattle.com/2026/02/roman-style-with-pizza-by-the-cut-roma-roma-opens-on-capitol-hill/",
-      "address": "1610 12th Ave, Seattle, WA 98122"
+      "id": "roma-roma",
+      "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
+      "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
+      "source": "Seattle magazine",
+      "date": "2026-08-07T00:00:00Z",
+      "kind": "mention"
+    },
+    {
+      "id": "stevies-famous",
+      "title": "Opening Night: Stevie's Famous Comes to North Seattle",
+      "url": "https://seattlemag.com/food-drink/opening-night-stevies-famous-comes-to-north-seattle",
+      "source": "Seattle magazine",
+      "date": "2026-08-19T00:00:00Z",
+      "kind": "opening"
+    },
+    {
+      "id": "roma-roma",
+      "title": "Restaurant Roundup: Pizza Pals and Paella on the Patio",
+      "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPZWlRV0xFZ1NNRS1BSnNkQ3Fkd1BTNlM1SEx5M0FFNjNPYno2TkkwZzExZG5ZQXJ0SE92ZzExRDFfTlBzMzlwUmtPelF1c1Znc3pqNlV2aExMdllWQVg1a3dxNmxzWFE3eldxRXJxUmFfbHEwTDFaV0lKSW1LdjMtTi1CVXI1YlFJMG1JY281ME1zZw?oc=5",
+      "source": "Seattle magazine",
+      "date": "2026-08-21T11:01:51.000Z",
+      "kind": "mention"
+    },
+    {
+      "id": "roma-roma",
+      "title": "Roma Roma makes for a nice hang with pretty good pizza - Review - Seattle",
+      "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE90UzNXbjhXemFyVF9OMC1aMFB1RGRENmhlNVY1bGdwVFJSbTY3bzlvUXZwUjVzUVVpYTJ5R1NWWnd5RUxZRUY4MDRBUjFwY0YzOGEta01qZXd1RGFlV29jWTZwVGJkRFU?oc=5",
+      "source": "The Infatuation",
+      "date": "2026-05-12T07:00:00.000Z",
+      "kind": "mention"
     }
   ]
 }
