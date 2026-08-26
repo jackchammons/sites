@@ -60,6 +60,13 @@ jobs:
       - name: Refresh Seattle pizza buzz
         run: node pizza/scripts/fetch-buzz.mjs
 
+      # Fills lat/lon for any address that lacks them (one Nominatim request
+      # per second, cached into the dataset, so each address geocodes once,
+      # ever). Fail-soft: an address that will not geocode is skipped and the
+      # map renders without that marker.
+      - name: Geocode new addresses
+        run: node pizza/scripts/geocode.mjs || echo "::warning::geocoding skipped"
+
       # Builds each site into dist/<slug>/, runs its verifier, promotes its
       # entry page, then renders the landing page. If any site fails, the run
       # fails and nothing is deployed -- the previous deploy stays live rather

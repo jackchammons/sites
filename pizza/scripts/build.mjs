@@ -293,6 +293,9 @@ const directorySection = `
       and up live. Addresses are read from each pizzeria's own website and re-checked on a
       rotation; entries without a score have not been rated yet.
     </p>
+    <div id="map" class="dir-map" aria-label="Map of Seattle pizzerias"></div>
+    <p class="note dir-map-note">Every verified address, colored by status: open, opening soon,
+    top-ten. Zoom out for the suburban branches. Tiles &copy; OpenStreetMap contributors.</p>
     <div class="dir-scroll">
       <table class="dir-table">
         <thead><tr>
@@ -353,7 +356,8 @@ const html = `<!doctype html>
 <meta property="og:description" content="Seattle's pizzerias, tracked daily. A ranked top ten and a full directory, scored by a published method.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍕</text></svg>">
-<style>${read('src/styles.css')}</style>
+<style>${read('src/vendor/leaflet.css')}
+${read('src/styles.css')}</style>
 </head>
 <body>
 
@@ -578,6 +582,7 @@ tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75</pre>
   baseline,
   builtAt: now.toISOString()
 }).replace(/</g, '\\u003c')};</script>
+<script src="./leaflet.js"></script>
 <script type="module" src="./app.js"></script>
 </body>
 </html>
@@ -593,6 +598,7 @@ fs.writeFileSync(path.join(dist, 'index.html'), html);
 for (const f of ['slice.js', 'render.js', 'locations.js', 'app.js']) {
   fs.copyFileSync(path.join(root, 'src', f), path.join(dist, f));
 }
+fs.copyFileSync(path.join(root, 'src/vendor/leaflet.js'), path.join(dist, 'leaflet.js'));
 fs.writeFileSync(path.join(dist, '.nojekyll'), '');
 fs.writeFileSync(path.join(dist, 'rankings.json'), JSON.stringify({
   builtAt: now.toISOString(),

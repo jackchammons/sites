@@ -40,6 +40,7 @@ const walkImports = file => {
 };
 walkImports('app.js');
 
+
 const html = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');
 check(html.length > 20000, `index.html suspiciously small (${html.length} bytes)`);
 check(/<title>[^<]+<\/title>/.test(html), 'missing <title>');
@@ -73,6 +74,11 @@ for (const r of dataset.restaurants) {
     `"${r.name}" missing from the page`);
 }
 check(!/undefined|NaN|\[object Object\]/.test(html), 'page contains undefined/NaN/[object Object]');
+// Leaflet loads as a plain script tag, outside the import graph.
+check(fs.existsSync(path.join(dist, 'leaflet.js')), 'dist/leaflet.js missing');
+check(html.includes('src="./leaflet.js"'), 'page does not load leaflet.js');
+check(html.includes('id="map"'), 'directory map container missing');
+
 
 const api = JSON.parse(fs.readFileSync(path.join(dist, 'rankings.json'), 'utf8'));
 check(api.rankings.length === rated.length,

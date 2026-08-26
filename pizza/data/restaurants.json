@@ -25,7 +25,9 @@
       "locations": [
         {
           "neighborhood": "Phinney Ridge",
-          "address": "5918 Phinney Ave N, Seattle, WA 98103"
+          "address": "5918 Phinney Ave N, Seattle, WA 98103",
+          "lat": 47.67233,
+          "lon": -122.35418
         }
       ],
       "locationsVerified": "2026-08-25",
@@ -72,7 +74,9 @@
       "locations": [
         {
           "neighborhood": "Ballard",
-          "address": "1415 NW 70th Street, Seattle, WA 98117"
+          "address": "1415 NW 70th Street, Seattle, WA 98117",
+          "lat": 47.67945,
+          "lon": -122.37481
         }
       ],
       "locationsVerified": "2026-08-25",
@@ -118,11 +122,15 @@
       "locations": [
         {
           "neighborhood": "Capitol Hill",
-          "address": "601 Summit Ave E, Seattle, WA 98102"
+          "address": "601 Summit Ave E, Seattle, WA 98102",
+          "lat": 47.62447,
+          "lon": -122.32547
         },
         {
           "neighborhood": "Queen Anne",
-          "address": "2121 Queen Anne Ave N, Seattle, WA 98109"
+          "address": "2121 Queen Anne Ave N, Seattle, WA 98109",
+          "lat": 47.63784,
+          "lon": -122.35712
         }
       ],
       "locationsVerified": "2026-08-25",
@@ -167,19 +175,27 @@
       "locations": [
         {
           "neighborhood": "Belltown",
-          "address": "3131 Western Ave #301, Seattle, WA 98121"
+          "address": "3131 Western Ave #301, Seattle, WA 98121",
+          "lat": 47.61828,
+          "lon": -122.35728
         },
         {
           "neighborhood": "Pioneer Square",
-          "address": "512 2nd Ave, Suite 100, Seattle, WA 98104"
+          "address": "512 2nd Ave, Suite 100, Seattle, WA 98104",
+          "lat": 47.60214,
+          "lon": -122.33194
         },
         {
           "neighborhood": "West Seattle",
-          "address": "4526 42nd Ave SW, Seattle, WA 98116"
+          "address": "4526 42nd Ave SW, Seattle, WA 98116",
+          "lat": 47.56207,
+          "lon": -122.38509
         },
         {
           "neighborhood": "Edmonds",
-          "address": "414 Main St, Edmonds, WA 98020"
+          "address": "414 Main St, Edmonds, WA 98020",
+          "lat": 47.81067,
+          "lon": -122.37799
         },
         {
           "neighborhood": "Bellevue",
@@ -231,15 +247,21 @@
       "locations": [
         {
           "neighborhood": "Downtown",
-          "address": "316 Virginia St, Seattle, WA 98101"
+          "address": "316 Virginia St, Seattle, WA 98101",
+          "lat": 47.6129,
+          "lon": -122.34049
         },
         {
           "neighborhood": "Ballard",
-          "address": "5118 14th Ave NW, Seattle, WA 98107"
+          "address": "5118 14th Ave NW, Seattle, WA 98107",
+          "lat": 47.66629,
+          "lon": -122.37321
         },
         {
           "neighborhood": "Totem Lake",
-          "address": "12540 120th Ave NE #122, Kirkland, WA 98034"
+          "address": "12540 120th Ave NE #122, Kirkland, WA 98034",
+          "lat": 47.71264,
+          "lon": -122.17945
         }
       ],
       "locationsVerified": "2026-08-22",
@@ -284,7 +306,9 @@
       "locations": [
         {
           "neighborhood": "Capitol Hill",
-          "address": "1524 E Olive Way, Seattle, WA 98122"
+          "address": "1524 E Olive Way, Seattle, WA 98122",
+          "lat": 47.61839,
+          "lon": -122.32593
         }
       ],
       "locationsVerified": "2026-08-22",
@@ -329,7 +353,9 @@
       "locations": [
         {
           "neighborhood": "Fremont",
-          "address": "4303 Fremont Ave N, Seattle, WA 98103"
+          "address": "4303 Fremont Ave N, Seattle, WA 98103",
+          "lat": 47.65914,
+          "lon": -122.35017
         }
       ],
       "locationsVerified": "2026-08-22",
@@ -375,7 +401,9 @@
       "locations": [
         {
           "neighborhood": "Madison Park",
-          "address": "4235 E Madison St, Seattle, WA 98112"
+          "address": "4235 E Madison St, Seattle, WA 98112",
+          "lat": 47.63605,
+          "lon": -122.27733
         }
       ],
       "locationsVerified": "2026-08-22",
@@ -421,23 +449,33 @@
       "locations": [
         {
           "neighborhood": "Denny Triangle",
-          "address": "1100 Virginia Street, Seattle, WA 98101"
+          "address": "1100 Virginia Street, Seattle, WA 98101",
+          "lat": 47.61786,
+          "lon": -122.33399
         },
         {
           "neighborhood": "Columbia City",
-          "address": "4918 Rainier Avenue South, Seattle, WA 98118"
+          "address": "4918 Rainier Avenue South, Seattle, WA 98118",
+          "lat": 47.55721,
+          "lon": -122.28452
         },
         {
           "neighborhood": "Wallingford",
-          "address": "4411 Stone Way North, Seattle, WA 98103"
+          "address": "4411 Stone Way North, Seattle, WA 98103",
+          "lat": 47.66046,
+          "lon": -122.34258
         },
         {
           "neighborhood": "Bellevue",
-          "address": "15600 NE 8th St., Suite J1, Bellevue, WA 98008"
+          "address": "15600 NE 8th St., Suite J1, Bellevue, WA 98008",
+          "lat": 47.61988,
+          "lon": -122.12871
         },
         {
           "neighborhood": "Issaquah",
-          "address": "715 Northwest Gilman Boulevard, Issaquah, WA 98027"
+          "address": "715 Northwest Gilman Boulevard, Issaquah, WA 98027",
+          "lat": 47.54338,
+          "lon": -122.04784
         }
       ],
       "locationsVerified": "2026-08-22",
@@ -480,63 +518,93 @@
       "locations": [
         {
           "neighborhood": "Ballard",
-          "address": "851 NW 85th Street, Seattle, WA 98117"
+          "address": "851 NW 85th Street, Seattle, WA 98117",
+          "lat": 47.69048,
+          "lon": -122.36749
         },
         {
           "neighborhood": "Ballard",
-          "address": "3058 NW 54th Street, Seattle, WA 98107"
+          "address": "3058 NW 54th Street, Seattle, WA 98107",
+          "lat": 47.66775,
+          "lon": -122.39698
         },
         {
           "neighborhood": "Capitol Hill",
-          "address": "2400 10th Avenue E, Seattle, WA 98102"
+          "address": "2400 10th Avenue E, Seattle, WA 98102",
+          "lat": 47.64147,
+          "lon": -122.31985
         },
         {
           "neighborhood": "Capitol Hill",
-          "address": "415 E. Pike Street, Seattle, WA 98122"
+          "address": "415 E. Pike Street, Seattle, WA 98122",
+          "lat": 47.61393,
+          "lon": -122.32605
         },
         {
           "neighborhood": "Columbia City",
-          "address": "4901 Rainier Avenue S, Seattle, WA 98118"
+          "address": "4901 Rainier Avenue S, Seattle, WA 98118",
+          "lat": 47.55777,
+          "lon": -122.28519
         },
         {
           "neighborhood": "Edmonds",
-          "address": "10200 Edmonds Way, Edmonds, WA 98020"
+          "address": "10200 Edmonds Way, Edmonds, WA 98020",
+          "lat": 47.79202,
+          "lon": -122.36998
         },
         {
           "neighborhood": "Fremont",
-          "address": "4003 Stone Way N, Seattle, WA 98103"
+          "address": "4003 Stone Way N, Seattle, WA 98103",
+          "lat": 47.65551,
+          "lon": -122.34276
         },
         {
           "neighborhood": "Lake City",
-          "address": "8024 15th Avenue NE, Seattle, WA 98115"
+          "address": "8024 15th Avenue NE, Seattle, WA 98115",
+          "lat": 47.68738,
+          "lon": -122.31194
         },
         {
           "neighborhood": "Madison Valley",
-          "address": "3015 E Madison Street, Seattle, WA 98112"
+          "address": "3015 E Madison Street, Seattle, WA 98112",
+          "lat": 47.62552,
+          "lon": -122.29275
         },
         {
           "neighborhood": "Magnolia",
-          "address": "1614 W Dravus Street, Seattle, WA 98119"
+          "address": "1614 W Dravus Street, Seattle, WA 98119",
+          "lat": 47.64878,
+          "lon": -122.37848
         },
         {
           "neighborhood": "North Seattle",
-          "address": "315 N 145th Street, Seattle, WA 98133"
+          "address": "315 N 145th Street, Seattle, WA 98133",
+          "lat": 47.7339,
+          "lon": -122.35474
         },
         {
           "neighborhood": "Queen Anne",
-          "address": "719 Aurora Avenue N, Seattle, WA 98109"
+          "address": "719 Aurora Avenue N, Seattle, WA 98109",
+          "lat": 47.62607,
+          "lon": -122.34395
         },
         {
           "neighborhood": "Sand Point",
-          "address": "6224 Sand Point Way NE, Seattle, WA 98115"
+          "address": "6224 Sand Point Way NE, Seattle, WA 98115",
+          "lat": 47.67412,
+          "lon": -122.26482
         },
         {
           "neighborhood": "Shoreline",
-          "address": "20059 Ballinger Way NE, Shoreline, WA 98155"
+          "address": "20059 Ballinger Way NE, Shoreline, WA 98155",
+          "lat": 47.77528,
+          "lon": -122.31128
         },
         {
           "neighborhood": "West Seattle",
-          "address": "4449 California Avenue SW, Seattle, WA 98116"
+          "address": "4449 California Avenue SW, Seattle, WA 98116",
+          "lat": 47.56336,
+          "lon": -122.38696
         },
         {
           "neighborhood": "Bellevue",
@@ -544,35 +612,51 @@
         },
         {
           "neighborhood": "Bellevue",
-          "address": "15210 SE 37th Street, Bellevue, WA 98006"
+          "address": "15210 SE 37th Street, Bellevue, WA 98006",
+          "lat": 47.57768,
+          "lon": -122.13761
         },
         {
           "neighborhood": "Bellevue",
-          "address": "10600 Main St, Bellevue, WA 98004"
+          "address": "10600 Main St, Bellevue, WA 98004",
+          "lat": 47.61034,
+          "lon": -122.19841
         },
         {
           "neighborhood": "Kenmore",
-          "address": "6504 NE Bothell Way, Kenmore, WA 98028"
+          "address": "6504 NE Bothell Way, Kenmore, WA 98028",
+          "lat": 47.75891,
+          "lon": -122.25336
         },
         {
           "neighborhood": "Kirkland",
-          "address": "13005 NE 70th Place, Kirkland, WA 98033"
+          "address": "13005 NE 70th Place, Kirkland, WA 98033",
+          "lat": 47.667,
+          "lon": -122.16641
         },
         {
           "neighborhood": "Kirkland",
-          "address": "11640 98th Avenue NE, Kirkland, WA 98034"
+          "address": "11640 98th Avenue NE, Kirkland, WA 98034",
+          "lat": 47.7054,
+          "lon": -122.21001
         },
         {
           "neighborhood": "Mercer Island",
-          "address": "3077 78th Avenue SE, Mercer Island, WA 98040"
+          "address": "3077 78th Avenue SE, Mercer Island, WA 98040",
+          "lat": 47.582,
+          "lon": -122.23388
         },
         {
           "neighborhood": "Redmond",
-          "address": "16311 Redmond Way, Redmond, WA 98052"
+          "address": "16311 Redmond Way, Redmond, WA 98052",
+          "lat": 47.67379,
+          "lon": -122.12247
         },
         {
           "neighborhood": "Sammamish",
-          "address": "22830 NE 8th Street, Sammamish, WA 98074"
+          "address": "22830 NE 8th Street, Sammamish, WA 98074",
+          "lat": 47.61727,
+          "lon": -122.03405
         }
       ],
       "locationsVerified": "2026-08-22",
@@ -612,7 +696,9 @@
       "locations": [
         {
           "neighborhood": "Phinney Ridge",
-          "address": "5918 Phinney Ave N, Seattle, WA 98103"
+          "address": "5918 Phinney Ave N, Seattle, WA 98103",
+          "lat": 47.67233,
+          "lon": -122.35418
         }
       ],
       "locationsVerified": "2026-08-24",
@@ -655,11 +741,15 @@
       "locations": [
         {
           "neighborhood": "Capitol Hill",
-          "address": "913 E Pike St, Seattle, WA 98122"
+          "address": "913 E Pike St, Seattle, WA 98122",
+          "lat": 47.61395,
+          "lon": -122.31999
         },
         {
           "neighborhood": "Queen Anne",
-          "address": "317 West Galer St, Seattle, WA 98119"
+          "address": "317 West Galer St, Seattle, WA 98119",
+          "lat": 47.6322,
+          "lon": -122.36133
         }
       ],
       "locationsVerified": "2026-08-22",
@@ -699,19 +789,27 @@
       "locations": [
         {
           "neighborhood": "Capitol Hill",
-          "address": "1009 E Pike St, Seattle, WA 98122"
+          "address": "1009 E Pike St, Seattle, WA 98122",
+          "lat": 47.61398,
+          "lon": -122.31893
         },
         {
           "neighborhood": "Queen Anne",
-          "address": "815 5th Ave N, Seattle, WA 98109"
+          "address": "815 5th Ave N, Seattle, WA 98109",
+          "lat": 47.62681,
+          "lon": -122.34772
         },
         {
           "neighborhood": "Fremont",
-          "address": "4350 Leary Way NW, Seattle, WA 98107"
+          "address": "4350 Leary Way NW, Seattle, WA 98107",
+          "lat": 47.66013,
+          "lon": -122.36561
         },
         {
           "neighborhood": "White Center",
-          "address": "9635 16th Ave SW, Seattle, WA 98106"
+          "address": "9635 16th Ave SW, Seattle, WA 98106",
+          "lat": 47.5162,
+          "lon": -122.3554
         }
       ],
       "locationsVerified": "2026-08-22",
@@ -788,7 +886,9 @@
       "locations": [
         {
           "neighborhood": "White Center",
-          "address": "9622-A 16th Ave SW, Seattle, WA 98106"
+          "address": "9622-A 16th Ave SW, Seattle, WA 98106",
+          "lat": 47.53912,
+          "lon": -122.355
         }
       ],
       "locationsVerified": "2026-08-22",
@@ -828,11 +928,15 @@
       "locations": [
         {
           "neighborhood": "Ballard",
-          "address": "5205 Ballard Ave NW, Seattle, WA 98107"
+          "address": "5205 Ballard Ave NW, Seattle, WA 98107",
+          "lat": 47.66552,
+          "lon": -122.38258
         },
         {
           "neighborhood": "Woodinville",
-          "address": "17401 133rd Ave NE, Woodinville, WA 98072"
+          "address": "17401 133rd Ave NE, Woodinville, WA 98072",
+          "lat": 47.75323,
+          "lon": -122.16329
         }
       ],
       "locationsVerified": "2026-08-22",
@@ -876,63 +980,93 @@
         },
         {
           "neighborhood": "Kirkland",
-          "address": "124 Park Lane, Kirkland, WA 98033"
+          "address": "124 Park Lane, Kirkland, WA 98033",
+          "lat": 47.67628,
+          "lon": -122.20611
         },
         {
           "neighborhood": "White Center",
-          "address": "9809 16th Ave SW, Seattle, WA 98106"
+          "address": "9809 16th Ave SW, Seattle, WA 98106",
+          "lat": 47.51526,
+          "lon": -122.35537
         },
         {
           "neighborhood": "Sammamish",
-          "address": "22610 SE 4th St, Suite 404, Sammamish, WA 98074"
+          "address": "22610 SE 4th St, Suite 404, Sammamish, WA 98074",
+          "lat": 47.60571,
+          "lon": -122.03701
         },
         {
           "neighborhood": "Redmond",
-          "address": "16015 Cleveland St, Suite 100, Redmond, WA 98052"
+          "address": "16015 Cleveland St, Suite 100, Redmond, WA 98052",
+          "lat": 47.67439,
+          "lon": -122.12716
         },
         {
           "neighborhood": "Queen Anne",
-          "address": "1915 Queen Anne Ave. N, Seattle, WA 98109"
+          "address": "1915 Queen Anne Ave. N, Seattle, WA 98109",
+          "lat": 47.63652,
+          "lon": -122.35721
         },
         {
           "neighborhood": "Mountlake Terrace",
-          "address": "24015 Van Ry Blvd, Mountlake Terrace, WA 98043"
+          "address": "24015 Van Ry Blvd, Mountlake Terrace, WA 98043",
+          "lat": 47.78088,
+          "lon": -122.31455
         },
         {
           "neighborhood": "Mill Creek",
-          "address": "15021 Main Street, Mill Creek, WA 98012"
+          "address": "15021 Main Street, Mill Creek, WA 98012",
+          "lat": 47.86168,
+          "lon": -122.22024
         },
         {
           "neighborhood": "Duvall",
-          "address": "15630 Main Street, Duvall, WA 98019"
+          "address": "15630 Main Street, Duvall, WA 98019",
+          "lat": 47.74148,
+          "lon": -121.98574
         },
         {
           "neighborhood": "Bothell",
-          "address": "1715 228th St SE, Bothell, WA 98021"
+          "address": "1715 228th St SE, Bothell, WA 98021",
+          "lat": 47.79173,
+          "lon": -122.21173
         },
         {
           "neighborhood": "Ravenna",
-          "address": "2108 NE 65th St, Seattle, WA 98115"
+          "address": "2108 NE 65th St, Seattle, WA 98115",
+          "lat": 47.67591,
+          "lon": -122.3048
         },
         {
           "neighborhood": "Issaquah",
-          "address": "2525 NE Park Dr, Issaquah, WA 98029"
+          "address": "2525 NE Park Dr, Issaquah, WA 98029",
+          "lat": 47.54757,
+          "lon": -121.99721
         },
         {
           "neighborhood": "Bellevue",
-          "address": "10201 NE 10th St, Bellevue, WA 98004"
+          "address": "10201 NE 10th St, Bellevue, WA 98004",
+          "lat": 47.61912,
+          "lon": -122.20414
         },
         {
           "neighborhood": "Belltown",
-          "address": "419 Denny Way, Seattle, WA 98109"
+          "address": "419 Denny Way, Seattle, WA 98109",
+          "lat": 47.61841,
+          "lon": -122.3478
         },
         {
           "neighborhood": "West Seattle",
-          "address": "6459 California Ave SW, Seattle, WA 98136"
+          "address": "6459 California Ave SW, Seattle, WA 98136",
+          "lat": 47.54504,
+          "lon": -122.38742
         },
         {
           "neighborhood": "Capitol Hill",
-          "address": "1830 E Mercer St, Seattle, WA 98112"
+          "address": "1830 E Mercer St, Seattle, WA 98112",
+          "lat": 47.62457,
+          "lon": -122.30747
         }
       ],
       "locationsVerified": "2026-08-22",
@@ -972,7 +1106,9 @@
       "locations": [
         {
           "neighborhood": "West Seattle",
-          "address": "4718 California Ave SW, Seattle, WA 98116"
+          "address": "4718 California Ave SW, Seattle, WA 98116",
+          "lat": 47.56051,
+          "lon": -122.38659
         }
       ],
       "locationsVerified": "2026-08-22",
@@ -1014,7 +1150,9 @@
       "locations": [
         {
           "neighborhood": "Capitol Hill",
-          "address": "700 E Pine St, Seattle, WA 98122"
+          "address": "700 E Pine St, Seattle, WA 98122",
+          "lat": 47.61536,
+          "lon": -122.32318
         }
       ],
       "locationsVerified": "2026-08-22",
@@ -1056,7 +1194,9 @@
       "locations": [
         {
           "neighborhood": "Central District",
-          "address": "525 Rainier Ave S, Seattle, WA 98144"
+          "address": "525 Rainier Ave S, Seattle, WA 98144",
+          "lat": 47.59763,
+          "lon": -122.31315
         }
       ],
       "locationsVerified": "2026-08-22",
@@ -1137,7 +1277,9 @@
       "locations": [
         {
           "neighborhood": "Downtown",
-          "address": "1123 Post Avenue, Seattle, WA 98101"
+          "address": "1123 Post Avenue, Seattle, WA 98101",
+          "lat": 47.60572,
+          "lon": -122.33813
         }
       ],
       "locationsVerified": "2026-08-23",
@@ -1177,7 +1319,9 @@
       "locations": [
         {
           "neighborhood": "West Seattle Junction",
-          "address": "4520 California Ave SW, Seattle, WA 98116"
+          "address": "4520 California Ave SW, Seattle, WA 98116",
+          "lat": 47.56224,
+          "lon": -122.38656
         }
       ],
       "locationsVerified": "2026-08-23",
@@ -1217,7 +1361,9 @@
       "locations": [
         {
           "neighborhood": "SoDo",
-          "address": "1727 1st Ave S, Seattle, WA 98134"
+          "address": "1727 1st Ave S, Seattle, WA 98134",
+          "lat": 47.5874,
+          "lon": -122.33446
         }
       ],
       "locationsVerified": "2026-08-24",
@@ -1259,7 +1405,9 @@
       "locations": [
         {
           "neighborhood": "Belltown",
-          "address": "2312 2nd Ave, Seattle, WA 98121"
+          "address": "2312 2nd Ave, Seattle, WA 98121",
+          "lat": 47.61458,
+          "lon": -122.34595
         }
       ],
       "locationsVerified": "2026-08-24",

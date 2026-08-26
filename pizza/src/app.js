@@ -93,3 +93,57 @@ document.getElementById('reset').addEventListener('click', () => {
 
 document.getElementById('controls').hidden = false;
 render();
+
+/* ---- Directory map ----
+ * Leaflet is loaded as a plain script tag (window.L); if it failed to load, or
+ * no location has coordinates yet, the map div collapses and the directory
+ * table stands alone. Circle markers avoid Leaflet's image assets entirely.
+ */
+(function initMap() {
+  const el = document.getElementById('map');
+  if (!el || typeof window.L === 'undefined') { if (el) el.remove(); return; }
+
+  const topIds = new Set(
+    [...document.querySelectorAll('#board .card')].map(c => c.dataset.id).slice(0, 10));
+
+  const pts = [];
+  for (const r of DATA.dataset.restaurants) {
+    if (r.status === 'closed') continue;
+    for (const loc of r.locations ?? []) {
+      if (loc.lat == null || loc.lon == null) continue;
+      pts.push({ r, loc });
+    }
+  }
+  if (!pts.length) { el.remove(); return; }
+
+  const map = L.map(el, { scrollWheelZoom: false });
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  const color = ({ r }) =>
+    r.status === 'opening' ? '#4a8c46'
+    : topIds.has(r.id) ? '#c8401f'
+    : '#b08968';
+
+  const bounds = [];
+  for (const p of pts) {
+    const { r, loc } = p;
+    const m = L.circleMarker([loc.lat, loc.lon], {
+      radius: topIds.has(r.id) ? 8 : 6,
+      color: '#fff', weight: 1.5,
+      fillColor: color(p), fillOpacity: 0.92
+    }).addTo(map);
+    const name = r.url
+      ? `<a href="${r.url.replace(/"/g, '&quot;')}" target="_blank" rel="noopener">${r.name}</a>`
+      : r.name;
+    m.bindPopup(`<div class="map-pop"><b>${name}</b>` +
+      `<div class="addr">${loc.address}${r.status === 'opening' ? ' · opening soon' : ''}</div></div>`);
+    bounds.push([loc.lat, loc.lon]);
+  }
+
+  // Frame the city itself; suburban branches are a zoom-out away.
+  const seattle = bounds.filter(([la, lo]) => la > 47.48 && la < 47.75 && lo > -122.45 && lo < -122.24);
+  map.fitBounds(seattle.length >= 2 ? seattle : bounds, { padding: [24, 24] });
+})();

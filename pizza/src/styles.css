@@ -505,3 +505,14 @@ a.buzz-tag:hover { border-color: var(--tomato); color: var(--tomato-2); }
 }
 .dir-more summary::before { content: "▸ "; }
 .dir-more[open] summary::before { content: "▾ "; }
+
+/* ---- Directory map ---- */
+.dir-map {
+  height: 440px; margin-top: 22px; border: 1px solid var(--line);
+  border-radius: var(--radius); background: var(--card); z-index: 0;
+}
+.dir-map-note { margin-top: 8px; }
+.map-pop { font: 13px/1.5 system-ui, sans-serif; }
+.map-pop b a { color: inherit; }
+.map-pop .addr { font-size: 11.5px; color: #666; margin-top: 2px; }
+@media (max-width: 700px) { .dir-map { height: 320px; } }
