@@ -69,6 +69,16 @@ h1, h2, h3 { line-height: 1.15; margin: 0; letter-spacing: -0.02em; }
 }
 .hero h1 em { color: var(--tomato-2); font-style: italic; }
 .hero .lede { font-size: clamp(16px, 2vw, 19px); }
+
+/* Text left, Pie of the Week right: the hero uses the full wrap instead of
+   stacking a narrow ribbon of elements down the middle of a wide screen. */
+.hero-cols { display: grid; grid-template-columns: 1.15fr 1fr; gap: 6px 64px; align-items: center; margin-top: 6px; }
+.hero-side .spotlight { margin-top: 0; }
+.hero-main .stamp { margin-top: 20px; }
+@media (max-width: 920px) {
+  .hero-cols { grid-template-columns: 1fr; }
+  .hero-side .spotlight { margin-top: 20px; }
+}
 .stamp {
   display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px;
   font-family: var(--mono); font-size: 11.5px; color: var(--ink-3);
@@ -240,12 +250,10 @@ button.reset:hover { color: var(--ink); border-color: var(--tomato); }
 
 /* stacked contribution bar */
 .stack { display: flex; height: 9px; border-radius: 999px; overflow: hidden; background: var(--panel-2); margin: 16px 24px 0; }
+/* Segment colors come inline from PILLAR_META so the bar and the factor
+   table can never disagree -- class-keyed colors silently went gray when the
+   factors were renamed. Only the penalty hatch is styled here. */
 .stack i { display: block; height: 100%; transition: width .45s cubic-bezier(.4,0,.2,1); }
-.stack i.crust { background: var(--crust); }
-.stack i.toppings { background: var(--tomato); }
-.stack i.consensus { background: #5b8dd6; }
-.stack i.distinctiveness { background: #a06fd0; }
-.stack i.value { background: var(--basil); }
 .stack i.penalty { background: repeating-linear-gradient(45deg, var(--char), var(--char) 3px, transparent 3px, transparent 6px); }
 
 .chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 14px 24px 0; }

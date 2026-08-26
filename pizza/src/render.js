@@ -42,12 +42,13 @@ const n1 = n => n.toFixed(1);
 const pct = n => Math.round(n * 100);
 
 function deltaHtml(r) {
-  if (r.previousRank == null) return '<div class="delta flat">new entry</div>';
+  const t = 'Movement vs. last week\u2019s published ranking';
+  if (r.previousRank == null) return `<div class="delta flat" title="${t}">new this week</div>`;
   const d = r.previousRank - r.rank;
-  if (d === 0) return '<div class="delta flat">— no change</div>';
+  if (d === 0) return `<div class="delta flat" title="${t}">— steady this week</div>`;
   return d > 0
-    ? `<div class="delta up">▲ ${d} from #${r.previousRank}</div>`
-    : `<div class="delta down">▼ ${-d} from #${r.previousRank}</div>`;
+    ? `<div class="delta up" title="${t}">▲ ${d} · was #${r.previousRank} last week</div>`
+    : `<div class="delta down" title="${t}">▼ ${-d} · was #${r.previousRank} last week</div>`;
 }
 
 export function cardHtml(r) {
@@ -55,7 +56,7 @@ export function cardHtml(r) {
   const seg = v => (v / total) * 100;
 
   const stack = Object.keys(PILLAR_META)
-    .map(k => `<i class="${k}" style="width:${seg(r.contributions[k]).toFixed(2)}%" title="${PILLAR_META[k].label}: ${n1(r.contributions[k])} pts"></i>`)
+    .map(k => `<i style="width:${seg(r.contributions[k]).toFixed(2)}%;background:${PILLAR_META[k].color}" title="${PILLAR_META[k].label}: ${n1(r.contributions[k])} pts"></i>`)
     .join('') +
     (r.penaltyApplied > 0
       ? `<i class="penalty" style="width:${seg(r.penaltyApplied).toFixed(2)}%" title="Friction penalty: -${n1(r.penaltyApplied)} pts"></i>`

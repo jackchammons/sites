@@ -366,28 +366,35 @@ ${read('src/styles.css')}</style>
   <div class="wrap">
     <div class="eyebrow">Seattle, WA · updated daily</div>
     <h1>The Seattle <em>Pizza Index</em></h1>
-    <p class="lede">
-      A running record of Seattle's pizzerias: who's best, who's new, who's gone, and what the
-      city is saying about them. Each rated pizzeria gets a <b>SLICE score</b> out of 100 from
-      five weighted factors, and the ten highest make the list. The full method is further down
-      this page, and you can change the weights yourself.
-    </p>
-    <p class="lede" style="margin-top:10px;font-size:14.5px">
-      To be included, a pizzeria must have at least one location inside Seattle itself. Chains
-      that qualify are tracked with all their branches, but the suburbs are never the subject.
-    </p>
-    <div class="stamp">
-      <span>Updated <b>${fmtDate(now)}</b></span>
-      <span>On file <b>${dataset.restaurants.length} pizzerias</b></span>
-      <span>Rated <b>${scoredAll.length}</b></span>
-      <span>Week <b>${week}</b></span>
-    </div>
-    <div class="spotlight">
-      <div class="big">🍕</div>
-      <div>
-        <h3>Pie of the Week · ${nameLink(spotlight)}</h3>
-        <p><b>#${spotlight.rank}, ${spotlight.score.toFixed(1)} SLICE.</b> ${esc(spotlight.signature)} — ${esc(locationLabel(spotlight))}.
-        Rotates through the top ten each Monday.</p>
+    <div class="hero-cols">
+      <div class="hero-main">
+        <p class="lede">
+          A running record of Seattle's pizzerias: who's best, who's new, who's gone, and what
+          the city is saying about them. Each rated pizzeria gets a <b>SLICE score</b> out of
+          100 from five weighted factors, and the ten highest make the list. The full method is
+          further down this page, and you can change the weights yourself.
+        </p>
+        <p class="lede" style="margin-top:10px;font-size:14.5px">
+          To be included, a pizzeria must have at least one location inside Seattle itself.
+          Chains that qualify are tracked with all their branches, but the suburbs are never
+          the subject.
+        </p>
+        <div class="stamp">
+          <span>Updated <b>${fmtDate(now)}</b></span>
+          <span>On file <b>${dataset.restaurants.length} pizzerias</b></span>
+          <span>Rated <b>${scoredAll.length}</b></span>
+          <span>Week <b>${week}</b></span>
+        </div>
+      </div>
+      <div class="hero-side">
+        <div class="spotlight">
+          <div class="big">🍕</div>
+          <div>
+            <h3>Pie of the Week · ${nameLink(spotlight)}</h3>
+            <p><b>#${spotlight.rank}, ${spotlight.score.toFixed(1)} SLICE.</b> ${esc(spotlight.signature)} — ${esc(locationLabel(spotlight))}.
+            Rotates through the top ten each Monday.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
