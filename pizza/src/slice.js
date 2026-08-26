@@ -1,63 +1,47 @@
 /*
- * THE SLICE SCORE
- * ---------------
- * A transparent, reproducible 0-100 rating for pizzerias.
+ * THE SLICE SCORE, v2
+ * -------------------
+ * A 0-100 rating for pizzerias, computed the same way for every entry.
  *
- *   SLICE = (weighted pillar base - friction penalty) x freshness factor
+ *   SLICE = (weighted factor base - friction penalty) x freshness factor
  *
- * Every number on the site comes out of this file. It is plain ES module
- * JavaScript with no Node or DOM dependencies so the static build and the
- * browser's live "re-rank it yourself" sliders run the exact same math.
+ * Five factors. Three are computed from data the daily pipeline maintains,
+ * two are editorial ratings stored with provenance:
+ *
+ *   reputation       computed   longevity + review volume + sustained coverage
+ *   critical         computed   critic base rating + recency-weighted coverage
+ *   craft            editorial  dough, bake, toppings -- the pizza itself
+ *   distinctiveness  editorial  whether it owns a lane in this city
+ *   value            computed   quality delivered per price tier
+ *
+ * Plain ES module with no Node or DOM dependencies: the static build and the
+ * browser re-ranker run this exact file, so what the page claims is what the
+ * page does.
  */
 
 export const DEFAULT_WEIGHTS = {
-  crust: 26,          // Crust Integrity   - fermentation, structure, bake
-  toppings: 18,       // Topping Craft     - sourcing, restraint, balance
-  consensus: 22,      // Critical Read     - the critical consensus on the pie
-  distinctiveness: 18,// Distinctiveness   - does it own a lane in this city
-  value: 16           // Value Density     - satisfaction per dollar
+  reputation: 24,
+  critical: 24,
+  craft: 18,
+  distinctiveness: 18,
+  value: 16
 };
 
-export const FRICTION_COSTS = {
-  'preorder-only': 2.5,
-  'preorder-recommended': 1.0,
-  'sells-out': 1.5,
-  'long-waits': 1.2,
-  'no-reservations': 0.6,
-  'limited-hours': 0.8,
-  'tiny-room': 0.7,
-  'small-room': 0.7,
-  'late-night-only-peak': 0.4
-};
-
-export const FRICTION_LABELS = {
-  'preorder-only': 'Preorder only',
-  'preorder-recommended': 'Preorder recommended',
-  'sells-out': 'Sells out',
-  'long-waits': 'Long waits',
-  'no-reservations': 'No reservations',
-  'limited-hours': 'Limited hours',
-  'tiny-room': 'Tiny room',
-  'small-room': 'Small room',
-  'late-night-only-peak': 'Peaks late night'
-};
-
-export const FRICTION_CAP = 6.0;   // never let logistics erase the pizza
-export const RATING_FLOOR = 3.5;   // review scores below this are treated as 0
-export const RATING_CEIL = 5.0;
+export const FRICTION_CAP = 6.0;         // logistics can dent, never decide
 export const MAX_STALENESS_DECAY = 0.06; // 6% ceiling
 export const STALENESS_PER_WEEK = 0.002;
 
 const clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
+const round = n => Math.round(n * 10) / 10;
 
-/*
- * Bayesian shrinkage. A 4.9 from 80 diners is a rumour; a 4.7 from 4,000 is
- * evidence. We pull every rating toward the city mean in proportion to how
- * little data stands behind it:
+/* ---------- crowd-rating context (display only) ----------
+ * Star averages are shown where the dataset has them, never scored directly:
+ * the platforms that hold them block automated reads, so they cannot be kept
+ * current. The review COUNT does feed reputation -- how many people have
+ * bothered to rate a place is a durable fact even when the average is stale.
  *
- *   adjusted = (v / (v + m)) * R  +  (m / (v + m)) * C
- *
- * v = review count, m = prior weight, R = raw rating, C = city mean rating.
+ * Shown ratings are de-noised by Bayesian shrinkage toward the city mean:
+ *   adjusted = (v / (v + m)) * R + (m / (v + m)) * C
  */
 export function shrinkRating(rating, reviews, cityMean, priorWeight) {
   const v = Math.max(0, reviews);
@@ -70,54 +54,101 @@ export function confidence(reviews, priorWeight) {
   return v / (v + priorWeight);
 }
 
-/* Map a shrunk 5-point rating onto the 0-10 pillar scale. */
-export function ratingToPillar(adjusted) {
-  return clamp(((adjusted - RATING_FLOOR) / (RATING_CEIL - RATING_FLOOR)) * 10, 0, 10);
-}
+/* ---------- computed factors ---------- */
 
-/* Critical Read: the critic score, for every entry, on its own.
+/* Reputation: has this place earned standing over time?
  *
- * Crowd ratings used to make up 55% of this pillar, de-noised by Bayesian
- * shrinkage. They no longer count toward the score. The sources that hold them
- * block automated reads and no API path is in use, so the stored figures are
- * frozen at one observation date and can never be refreshed. Scoring on them
- * would permanently advantage the ten entries that happen to have them and
- * permanently bar the fifteen that do not, on the strength of data nobody can
- * update. Measuring all 25 the same way is worth more than the extra signal.
+ * Three components, each 0..1, combined by fixed weights and renormalised over
+ * whichever are measurable for the entry -- a pizzeria with no stored review
+ * count is scored on the components it has, not punished with a zero for data
+ * nobody collected:
  *
- * The shrinkage still runs for entries that have crowd figures, but only to
- * produce a number the page displays as dated context beside the score. */
-export function consensusPillar(r, cityMean, priorWeight) {
-  const ctx = r.crowd
-    ? (() => {
-        const adjusted = shrinkRating(r.crowd.rating, r.crowd.reviews, cityMean, priorWeight);
-        return { adjusted, crowd10: ratingToPillar(adjusted) };
-      })()
-    : { adjusted: null, crowd10: null };
-  return { ...ctx, unrated: !r.crowd, value: clamp(r.criticScore, 0, 10) };
-}
-
-/*
- * Value Density folds the editorial value read together with the raw price
- * tier, so a great cheap slice is rewarded twice and a $$$$ room has to earn
- * its keep. priceIndex 1..4 maps to 9, 7, 5, 3.
+ *   longevity  (x3)  log-curve on years open; ~15 years earns full marks.
+ *                    log1p because year 2 proves more than year 12.
+ *   volume     (x2)  review count v -> v / (v + 500). The count, not the stars.
+ *   coverage   (x1)  press mentions in the last 24 months -> /6, capped.
+ *                    Only counted once the entry has any mention history, so
+ *                    the factor stays fair while that history accumulates.
  */
-export function valuePillar(r) {
-  return clamp(0.75 * r.pillars.value + 0.25 * (11 - 2 * r.priceIndex), 0, 10);
+export function reputationFactor(r, now) {
+  const parts = [];
+  if (typeof r.opened === 'number') {
+    const years = Math.max(0, now.getUTCFullYear() - r.opened);
+    parts.push({ key: 'longevity', w: 3, x: clamp(Math.log1p(years) / Math.log1p(15), 0, 1),
+                 note: `${years} yr` });
+  }
+  if (r.crowd && typeof r.crowd.reviews === 'number') {
+    parts.push({ key: 'volume', w: 2, x: r.crowd.reviews / (r.crowd.reviews + 500),
+                 note: `${r.crowd.reviews} reviews` });
+  }
+  const mentions = r.mentions ?? [];
+  if (mentions.length) {
+    const cutoff = now.getTime() - 24 * 30.44 * 864e5;
+    const recent = mentions.filter(m => Date.parse(m.date) > cutoff).length;
+    parts.push({ key: 'coverage', w: 1, x: clamp(recent / 6, 0, 1),
+                 note: `${recent} in 24 mo` });
+  }
+  const totalW = parts.reduce((s, p) => s + p.w, 0);
+  const value = totalW ? 10 * parts.reduce((s, p) => s + p.w * p.x, 0) / totalW : 0;
+  return { value: clamp(value, 0, 10), parts };
 }
 
-export function frictionPenalty(tags = []) {
-  const items = tags.map(t => ({ tag: t, cost: FRICTION_COSTS[t] ?? 0.5 }));
+/* Critical reception: the critic base rating, refined -- never replaced -- by
+ * what has been written since. Each press mention adds by kind and fades with
+ * a 12-month half-life; the total boost is capped at +1.5 so a burst of
+ * coverage can lift a score, not fabricate one.
+ */
+export const MENTION_WEIGHT = { ranking: 1.0, mention: 0.4, opening: 0.3, closing: 0 };
+export const CRITICAL_BOOST_CAP = 1.5;
+
+export function criticalFactor(r, now) {
+  const base = clamp(r.criticScore ?? 0, 0, 10);
+  let signal = 0;
+  for (const m of r.mentions ?? []) {
+    const months = (now.getTime() - Date.parse(m.date)) / (30.44 * 864e5);
+    if (!isFinite(months) || months < 0) continue;
+    signal += (MENTION_WEIGHT[m.kind] ?? 0.3) * Math.pow(0.5, months / 12);
+  }
+  const boost = Math.min(CRITICAL_BOOST_CAP, 0.5 * signal);
+  return { value: clamp(base + boost, 0, 10), base, boost: round(boost) };
+}
+
+/* Value: quality delivered per dollar. The quality half is the mean of craft
+ * and critical reception; the price tier scales it:
+ *   $ x1.20   $$ x1.05   $$$ x0.90   $$$$ x0.75
+ * A cheap great pie outruns its quality score; an expensive one has to be
+ * better than its price to break even.
+ */
+export const PRICE_MULT = [null, 1.20, 1.05, 0.90, 0.75];
+
+export function valueFactor(quality10, priceIndex) {
+  const mult = PRICE_MULT[priceIndex] ?? 1;
+  return { value: clamp(quality10 * mult, 0, 10), quality: round(quality10), mult };
+}
+
+/* ---------- deductions ---------- */
+
+/* Friction: points for the gap between wanting the pizza and eating it, read
+ * from the entry's attributes via the registry (data/attributes.json). Only
+ * attributes with a frictionCost count; an attribute the registry has not
+ * heard of costs a conservative 0.5 rather than silently nothing. */
+export function frictionPenalty(attributes = {}, registry = {}) {
+  const all = Object.keys(attributes)
+    .filter(k => attributes[k])
+    .map(k => ({
+      tag: k,
+      label: registry[k]?.label ?? k,
+      cost: registry[k] ? (registry[k].frictionCost ?? 0) : 0.5
+    }));
+  const items = all.filter(i => i.cost > 0);
   const raw = items.reduce((s, i) => s + i.cost, 0);
-  return { items, raw, applied: Math.min(raw, FRICTION_CAP) };
+  // `all` includes zero-cost attributes so the page can render every flag an
+  // entry carries, not only the ones that cost points.
+  return { all, items, raw, applied: Math.min(raw, FRICTION_CAP) };
 }
 
-/*
- * Freshness. Data that has not been re-verified slowly loses a little of its
- * score, capped at 6%. It never rewrites the leaderboard on its own, but it
- * does mean a listing nobody has looked at in a year quietly drifts down --
- * and it gives the daily rebuild something real to recompute.
- */
+/* Freshness: 0.2% off per week since the entry was last checked, capped at 6%.
+ * Unverified data drifts down instead of coasting. */
 export function stalenessDecay(lastVerified, now) {
   if (!lastVerified) return MAX_STALENESS_DECAY;
   const weeks = (now - new Date(lastVerified + 'T00:00:00Z')) / (7 * 864e5);
@@ -125,75 +156,95 @@ export function stalenessDecay(lastVerified, now) {
   return Math.min(MAX_STALENESS_DECAY, weeks * STALENESS_PER_WEEK);
 }
 
-/* Score one restaurant, returning every intermediate value for display. */
+/* ---------- scoring ---------- */
+
+/* An entry competes once it has the two editorial ratings and a critic base.
+ * Everything else about it can be sparse; the computed factors handle gaps. */
+export function isRated(r) {
+  return Boolean(r.factors?.craft && r.factors?.distinctiveness
+    && typeof r.criticScore === 'number');
+}
+
+/* Score one entry, returning every intermediate value for display. */
 export function scoreOne(r, opts) {
   const {
     weights = DEFAULT_WEIGHTS,
+    registry = {},
     cityMean, priorWeight,
     now = new Date(),
     applyFriction = true,
     applyFreshness = true
   } = opts;
 
-  const cons = consensusPillar(r, cityMean, priorWeight);
-  const pillars = {
-    crust: r.pillars.crust,
-    toppings: r.pillars.toppings,
-    consensus: cons.value,
-    distinctiveness: r.pillars.distinctiveness,
-    value: valuePillar(r)
+  const rep = reputationFactor(r, now);
+  const crit = criticalFactor(r, now);
+  const craft10 = clamp(r.factors.craft.value, 0, 10);
+  const dist10 = clamp(r.factors.distinctiveness.value, 0, 10);
+  const val = valueFactor((craft10 + crit.value) / 2, r.priceIndex);
+
+  const factorScores = {
+    reputation: rep.value,
+    critical: crit.value,
+    craft: craft10,
+    distinctiveness: dist10,
+    value: val.value
   };
 
   const totalWeight = Object.values(weights).reduce((a, b) => a + b, 0) || 1;
   const contributions = {};
   const weightShares = {};
   let base = 0;
-  for (const key of Object.keys(pillars)) {
-    // normalise so the bars always add up to 100 even with custom weights
+  for (const key of Object.keys(factorScores)) {
+    // normalise so contributions always sum toward 100 even with custom weights
     const share = ((weights[key] ?? 0) / totalWeight) * 100;
     weightShares[key] = share;
-    const c = (pillars[key] / 10) * share;
+    const c = (factorScores[key] / 10) * share;
     contributions[key] = c;
     base += c;
   }
 
-  const fric = frictionPenalty(r.friction);
+  const fric = frictionPenalty(r.attributes, registry);
   const penalty = applyFriction ? fric.applied : 0;
   const decay = applyFreshness ? stalenessDecay(r.lastVerified, now) : 0;
   const score = Math.max(0, (base - penalty) * (1 - decay));
 
+  const crowdContext = r.crowd
+    ? {
+        adjusted: shrinkRating(r.crowd.rating, r.crowd.reviews, cityMean, priorWeight),
+        confidence: confidence(r.crowd.reviews, priorWeight)
+      }
+    : null;
+
   return {
     ...r,
-    pillars,
+    factorScores,
     contributions,
     weightShares,
-    consensusDetail: cons,
-    friction: r.friction,
+    reputationDetail: rep,
+    criticalDetail: crit,
+    valueDetail: val,
+    crowdContext,
     frictionDetail: fric,
     penaltyApplied: penalty,
     stalenessDecay: decay,
-    confidence: r.crowd ? confidence(r.crowd.reviews, priorWeight) : 0,
     base: round(base),
     score: round(score)
   };
 }
 
-const round = n => Math.round(n * 10) / 10;
-
-/* Score and sort the whole field. Ties break on consensus, then crust. */
+/* Score and sort the rated field. Ties break on critical reception, then
+ * craft, then alphabetically. */
 export function rank(dataset, opts = {}) {
   const cityMean = dataset.cityMeanRating;
   const priorWeight = dataset.priorWeight;
-  // Only rated entries compete. The dataset also carries unrated directory
-  // entries (openings, discoveries) that have no factor ratings yet.
-  const pool = dataset.restaurants.filter(r => r.pillars);
-  const scored = pool.map(r =>
-    scoreOne(r, { cityMean, priorWeight, ...opts })
-  );
+  const registry = dataset.attributeRegistry ?? {};
+  const scored = dataset.restaurants
+    .filter(isRated)
+    .map(r => scoreOne(r, { cityMean, priorWeight, registry, ...opts }));
   scored.sort((a, b) =>
     b.score - a.score ||
-    b.pillars.consensus - a.pillars.consensus ||
-    b.pillars.crust - a.pillars.crust ||
+    b.factorScores.critical - a.factorScores.critical ||
+    b.factorScores.craft - a.factorScores.craft ||
     a.name.localeCompare(b.name)
   );
   return scored.map((r, i) => ({ ...r, rank: i + 1 }));
@@ -218,17 +269,13 @@ export function isoWeekKey(date) {
   return `${year}-W${String(wk).padStart(2, '0')}`;
 }
 
-/* Split a scored field into the published top N and the bench.
- *
- * Promotion is earned, not assigned: every entry competes on score alone, and
- * rises or falls as the score does. A reported closure is the only thing that
- * holds an entry off the top regardless of score.
- */
+/* The published split: the ten highest-scoring open entries. Anything not
+ * currently open is held out regardless of score. The remainder is returned
+ * for the directory, still in score order. */
 export function splitTiers(scored, topN = 10) {
   const eligible = [];
   const held = [];
   for (const r of scored) {
-    // Anything not currently open is held off the top regardless of score.
     if (r.status && r.status !== 'open') held.push(r);
     else eligible.push(r);
   }

@@ -47,7 +47,7 @@ check(/<title>[^<]+<\/title>/.test(html), 'missing <title>');
 // The published split is computed, not stored: top 10 full cards, every other
 // rated entry a compact row. Unrated entries (status "opening", discoveries)
 // appear elsewhere on the page but never as ranked cards or rows.
-const rated = dataset.restaurants.filter(r => r.pillars);
+const rated = dataset.restaurants.filter(r => r.factors?.craft && r.factors?.distinctiveness && typeof r.criticScore === 'number');
 const topCount = Math.min(10, rated.length);
 
 const cards = (html.match(/<article class="card/g) || []).length;

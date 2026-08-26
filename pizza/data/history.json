@@ -34,28 +34,28 @@
       "date": "2026-08-26",
       "week": 35,
       "ranks": {
-        "cornelly": 1,
-        "delancey": 2,
-        "windy-city-pie": 3,
-        "dinos-tomato-pie": 4,
-        "lupo": 5,
-        "serious-pie": 6,
+        "delancey": 1,
+        "windy-city-pie": 2,
+        "dinos-tomato-pie": 3,
+        "serious-pie": 4,
+        "tutta-bella": 5,
+        "cornelly": 6,
         "independent-pizzeria": 7,
-        "breezy-town-pizza": 8,
-        "moto-pizza": 9,
-        "tutta-bella": 10
+        "pagliacci": 8,
+        "lupo": 9,
+        "moto-pizza": 10
       },
       "scores": {
-        "cornelly": 87.6,
-        "delancey": 87.3,
-        "windy-city-pie": 86.9,
-        "dinos-tomato-pie": 84.1,
-        "lupo": 84.1,
-        "serious-pie": 81.7,
-        "independent-pizzeria": 81.2,
-        "breezy-town-pizza": 80.6,
-        "moto-pizza": 79.9,
-        "tutta-bella": 79.7
+        "delancey": 89.2,
+        "windy-city-pie": 86.7,
+        "dinos-tomato-pie": 85,
+        "serious-pie": 85,
+        "tutta-bella": 83.9,
+        "cornelly": 82.8,
+        "independent-pizzeria": 81.4,
+        "pagliacci": 80,
+        "lupo": 78.5,
+        "moto-pizza": 75.1
       }
     }
   ]

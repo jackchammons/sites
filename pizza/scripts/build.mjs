@@ -7,7 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { rank, splitTiers, DEFAULT_WEIGHTS, FRICTION_COSTS, FRICTION_LABELS, FRICTION_CAP, isoWeek, isoWeekKey } from '../src/slice.js';
+import { rank, splitTiers, isRated, DEFAULT_WEIGHTS, FRICTION_CAP, isoWeek, isoWeekKey } from '../src/slice.js';
 import { boardHtml, benchHtml, PILLAR_META, esc, CARE_STEPS } from '../src/render.js';
 import { locationLabel } from '../src/locations.js';
 
@@ -20,6 +20,10 @@ const dist = process.env.OUT_DIR
 const read = p => fs.readFileSync(path.join(root, p), 'utf8');
 
 const dataset = JSON.parse(read('data/restaurants.json'));
+// The registry travels with the dataset so the browser re-ranker prices
+// friction identically to the static build.
+dataset.attributeRegistry = JSON.parse(read('data/attributes.json'));
+delete dataset.attributeRegistry._comment;
 const historyPath = path.join(root, 'data/history.json');
 const history = fs.existsSync(historyPath)
   ? JSON.parse(fs.readFileSync(historyPath, 'utf8'))
@@ -80,11 +84,11 @@ const week = isoWeek(now);
 const spotlight = ranked[week % ranked.length];
 
 const PILLAR_COPY = {
-  crust:           'Fermentation, hydration, structure and bake. The single thing a pizzeria cannot fake.',
-  toppings:        'Sourcing and restraint. Points for what is left off as much as what goes on.',
-  consensus:       'The critical consensus on the pie itself, applied identically to every entry.',
-  distinctiveness: 'Does it own a lane in this city, or is it a competent copy of someone else?',
-  value:           'Satisfaction per dollar, folded together with the raw price tier.'
+  reputation:      'Standing earned over time: years in business, how many people have reviewed it, and whether the press keeps coming back. Computed from data.',
+  critical:        'A critic base rating, lifted a bounded amount by recent coverage. New reviews and list appearances feed it daily.',
+  craft:           'The pizza itself: dough, fermentation, bake, and what goes on top. An editorial rating, applied by one rubric.',
+  distinctiveness: 'Does it own a lane in this city, or is it a competent copy of someone else? Editorial.',
+  value:           'Quality delivered per dollar: the craft and reception scores, scaled by the price tier. Computed.'
 };
 
 const fmtDate = d => d.toLocaleDateString('en-US', {
@@ -246,9 +250,10 @@ const buzzSection = buzz.items.length ? `
 </section>
 ` : '';
 
-const frictionRows = Object.entries(FRICTION_COSTS)
-  .sort((a, b) => b[1] - a[1])
-  .map(([tag, cost]) => `<tr><td>${esc(FRICTION_LABELS[tag] || tag)}</td><td class="num">−${cost.toFixed(1)}</td></tr>`)
+const frictionRows = Object.entries(dataset.attributeRegistry)
+  .filter(([, a]) => a.frictionCost > 0)
+  .sort((a, b) => b[1].frictionCost - a[1].frictionCost)
+  .map(([, a]) => `<tr><td>${esc(a.label)}</td><td class="num">−${a.frictionCost.toFixed(1)}</td></tr>`)
   .join('');
 
 const sliders = Object.keys(DEFAULT_WEIGHTS).map(k => `
@@ -537,7 +542,7 @@ C = ${dataset.cityMeanRating.toFixed(2)}  (Seattle mean)</pre>
       <div class="mcard">
         <h3>Ties, movement and honesty</h3>
         <ul class="plain">
-          <li>Ties break on Consensus Signal, then Crust Integrity, then alphabetically.</li>
+          <li>Ties break on Critical reception, then Craft, then alphabetically.</li>
           <li>The <b>▲ / ▼</b> markers compare against the previous weekly snapshot stored in
               <span class="inline-code">pizza/data/history.json</span>.</li>
           <li>The five factor ratings are editorial judgments, applied by one rubric to every
@@ -600,9 +605,9 @@ fs.writeFileSync(path.join(dist, 'rankings.json'), JSON.stringify({
     rank: r.rank, id: r.id, name: r.name, neighborhood: locationLabel(r),
     locations: r.locations ?? [], locationsVerified: r.locationsVerified ?? null,
     style: r.style, styleGroup: r.styleGroup, tier: r.tier || 'top',
-    noCrowdFigures: !!r.consensusDetail.unrated,
+    status: r.status ?? 'open',
     score: r.score, previousRank: r.previousRank ?? null,
-    pillars: r.pillars, penalty: r.penaltyApplied
+    factors: r.factorScores, penalty: r.penaltyApplied
   })),
   brackets: brackets.map(b => ({
     group: b.group, contenders: b.list.length,

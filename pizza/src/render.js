@@ -1,18 +1,17 @@
 /* Card rendering shared by the static build and the in-browser re-ranker. */
-import { FRICTION_LABELS } from './slice.js';
 import { locationLabel, locationList, locationCount } from './locations.js';
 
 export const PILLAR_META = {
-  crust:           { label: 'Crust Integrity',  color: 'var(--crust)',  icon: '🥖',
-                     short: 'Dough, fermentation and bake' },
-  toppings:        { label: 'Topping Craft',    color: 'var(--tomato)', icon: '🍅',
-                     short: 'Sourcing, balance and restraint' },
-  consensus:       { label: 'Critical Read',    color: '#5b8dd6',       icon: '📰',
-                     short: 'What reviewers say about the pie' },
-  distinctiveness: { label: 'Distinctiveness',  color: '#a06fd0',       icon: '✨',
+  reputation:      { label: 'Reputation',         color: 'var(--tomato)', icon: '🏛️',
+                     short: 'Standing earned over time' },
+  critical:        { label: 'Critical reception', color: '#5b8dd6',       icon: '📰',
+                     short: 'What critics and press say' },
+  craft:           { label: 'Craft',              color: 'var(--crust)',  icon: '🍕',
+                     short: 'The pizza itself: dough, bake, toppings' },
+  distinctiveness: { label: 'Distinctiveness',    color: '#a06fd0',       icon: '✨',
                      short: 'Whether it owns a lane in this city' },
-  value:           { label: 'Value Density',    color: 'var(--basil)',  icon: '💵',
-                     short: 'Satisfaction per dollar spent' }
+  value:           { label: 'Value',              color: 'var(--basil)',  icon: '💵',
+                     short: 'Quality delivered per dollar' }
 };
 
 /* The five positions of the weight control. 100% is the published weight for
@@ -65,16 +64,15 @@ export function cardHtml(r) {
   const chips = [
     `<span class="chip">${esc(r.style)}</span>`,
     `<span class="chip">${'$'.repeat(r.priceIndex)}</span>`,
-    `<span class="chip">${pct(r.confidence)}% data confidence</span>`,
-    ...(r.friction || []).map(f => `<span class="chip fr">${esc(FRICTION_LABELS[f] || f)}</span>`)
+    ...(r.frictionDetail.all || []).map(a => `<span class="chip fr">${esc(a.label)}</span>`)
   ].join('');
 
   const rows = Object.keys(PILLAR_META).map(k => `
         <tr>
           <td><span class="swatch" style="background:${PILLAR_META[k].color}"></span>${PILLAR_META[k].label}
-            <span class="minibar"><i style="width:${(r.pillars[k] * 10).toFixed(1)}%;background:${PILLAR_META[k].color}"></i></span>
+            <span class="minibar"><i style="width:${(r.factorScores[k] * 10).toFixed(1)}%;background:${PILLAR_META[k].color}"></i></span>
           </td>
-          <td class="num">${n1(r.pillars[k])}<span style="color:var(--ink-3)">/10</span></td>
+          <td class="num">${n1(r.factorScores[k])}<span style="color:var(--ink-3)">/10</span></td>
           <td class="num">${Math.round(r.weightShares[k])}%</td>
           <td class="num">${n1(r.contributions[k])}</td>
         </tr>`).join('');
@@ -122,14 +120,16 @@ export function cardHtml(r) {
             </tbody>
           </table>
           <p class="note">
-            Critical Read is a straight ${n1(r.criticScore)}/10 — the same measurement for every
-            entry.${r.crowd ? ` For context only, and <b>not part of the score</b>: a raw
-            ${r.crowd.rating.toFixed(1)}★ across ~${r.crowd.reviews.toLocaleString('en-US')} reviews,
-            which Bayesian shrinkage pulls to <b>${r.consensusDetail.adjusted.toFixed(3)}★</b>
-            (${pct(r.confidence)}% weight on the crowd, ${100 - pct(r.confidence)}% on the city mean).
-            Observed ${esc(r.lastVerified || 'at the dataset date')}.`
-            : ` No crowd rating is shown for this entry. It makes no difference to the score, which
-            uses the critical read for every entry alike.`}
+            Critical reception starts from a critic base of ${n1(r.criticalDetail.base)}/10${
+              r.criticalDetail.boost > 0
+                ? `, lifted ${n1(r.criticalDetail.boost)} by recent press coverage`
+                : ''}. Reputation combines ${r.reputationDetail.parts.map(p =>
+                `${p.key} (${esc(p.note)})`).join(', ') || 'no measurable inputs yet'}.
+            Value is ${n1(r.valueDetail.quality)}/10 quality &times; ${r.valueDetail.mult.toFixed(2)}
+            for the ${'$'.repeat(r.priceIndex)} tier.${r.crowd ? `
+            Star rating shown for context only, never scored: ${r.crowd.rating.toFixed(1)}★ across
+            ~${r.crowd.reviews.toLocaleString('en-US')} reviews, de-noised to
+            ${r.crowdContext.adjusted.toFixed(2)}★. Observed ${esc(r.lastVerified || 'at the dataset date')}.` : ''}
           </p>
         </div>
       </details>
