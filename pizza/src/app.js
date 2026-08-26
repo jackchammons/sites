@@ -17,6 +17,13 @@ const BUILT_AT = new Date(DATA.builtAt);
 const board = document.getElementById('board');
 
 const care = Object.fromEntries(KEYS.map(k => [k, 1]));
+
+/* The full published order, ranks 1 through the whole rated field, computed
+ * once with the default weights. Custom-weight deltas compare against this --
+ * not the weekly snapshot, which only covers the published ten -- so an entry
+ * climbing in from #14 shows where it actually came from. */
+const publishedRank = new Map(
+  rank(DATA.dataset, { now: BUILT_AT }).map(r => [r.id, r.rank]));
 const weightsNow = () =>
   Object.fromEntries(KEYS.map(k => [k, DEFAULT_WEIGHTS[k] * care[k]]));
 
@@ -54,8 +61,11 @@ function render() {
     return;
   }
 
+  const custom = dirty();
   const { top } = splitTiers(rank(DATA.dataset, opts()), 10);
-  const ranked = top.map(r => ({ ...r, previousRank: DATA.baseline[r.id] ?? null }));
+  const ranked = top.map(r => custom
+    ? { ...r, previousRank: publishedRank.get(r.id) ?? null, deltaVs: 'published' }
+    : { ...r, previousRank: DATA.baseline[r.id] ?? null });
 
   const open = new Set([...board.querySelectorAll('details.math[open]')]
     .map(d => d.closest('.card').dataset.id));
@@ -65,8 +75,9 @@ function render() {
     if (d) d.open = true;
   });
 
-  note.textContent = dirty()
-    ? 'Your weights. The “from #n” markers compare against the published order.'
+  document.querySelector('.rank-layout')?.classList.toggle('customized', custom);
+  note.textContent = custom
+    ? 'Your weights. Markers show movement from the published position.'
     : 'Published ranking.';
 }
 

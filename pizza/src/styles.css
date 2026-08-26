@@ -548,3 +548,19 @@ a.buzz-tag:hover { border-color: var(--tomato); color: var(--tomato-2); }
   /* the buzz timeline in two columns instead of a half-empty one */
   .buzz-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px; align-items: start; }
 }
+
+
+/* ---- Customized-weights state ----
+   When the reader's weights differ from the published ones, the whole board
+   changes character without a word: every card carries a tomato edge, the
+   scores render in the accent because they are now recomputed numbers, the
+   panel border matches, and the reset button becomes the prominent action. */
+.rank-layout.customized .card { border-left: 3px solid var(--tomato); }
+.rank-layout.customized .scorebox .n { color: var(--tomato-2); }
+.rank-layout.customized .controls { border-color: var(--tomato); }
+.rank-layout.customized button.reset {
+  background: var(--tomato); border-color: var(--tomato); color: #fff;
+}
+.rank-layout.customized button.reset:hover {
+  background: var(--tomato-2); border-color: var(--tomato-2);
+}

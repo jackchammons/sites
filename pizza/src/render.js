@@ -42,13 +42,21 @@ const n1 = n => n.toFixed(1);
 const pct = n => Math.round(n * 100);
 
 function deltaHtml(r) {
-  const t = 'Movement vs. last week\u2019s published ranking';
-  if (r.previousRank == null) return `<div class="delta flat" title="${t}">new this week</div>`;
+  // Two comparison modes. The published board compares against last week's
+  // snapshot; a custom-weighted board compares against the full published
+  // order, so an entry pulled in from outside the ten names its real origin.
+  const pub = r.deltaVs === 'published';
+  const t = pub ? 'Movement vs. the published ranking'
+              : 'Movement vs. last week\u2019s published ranking';
+  if (r.previousRank == null) {
+    return `<div class="delta flat" title="${t}">${pub ? 'unranked in published list' : 'new this week'}</div>`;
+  }
   const d = r.previousRank - r.rank;
-  if (d === 0) return `<div class="delta flat" title="${t}">— steady this week</div>`;
+  const from = pub ? `published #${r.previousRank}` : `was #${r.previousRank} last week`;
+  if (d === 0) return `<div class="delta flat" title="${t}">— ${pub ? 'published #' + r.previousRank : 'steady this week'}</div>`;
   return d > 0
-    ? `<div class="delta up" title="${t}">▲ ${d} · was #${r.previousRank} last week</div>`
-    : `<div class="delta down" title="${t}">▼ ${-d} · was #${r.previousRank} last week</div>`;
+    ? `<div class="delta up" title="${t}">▲ ${d} · ${from}</div>`
+    : `<div class="delta down" title="${t}">▼ ${-d} · ${from}</div>`;
 }
 
 export function cardHtml(r) {
