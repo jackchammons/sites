@@ -1471,6 +1471,72 @@
       "locationsSource": null,
       "mentions": [],
       "statusChecked": "2026-08-26"
+    },
+    {
+      "id": "stevies-famous",
+      "name": "Stevie's Famous",
+      "neighborhood": "Phinney Ridge",
+      "style": "New York-style, sourdough crust",
+      "blurb": "Burien-founded, Seattle Times reader-poll pizzeria that opened its first Seattle-proper flagship in the former Zeek's Pizza space on Phinney Ave N in July 2026.",
+      "url": "https://www.steviesfamous.com/",
+      "status": "open",
+      "statusSource": "https://phinneywood.com/2025/11/former-zeeks-phinney-location-to-become-stevies-famous/",
+      "statusDate": "2026-08-26",
+      "statusChecked": "2026-08-26",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Phinney Ridge",
+          "address": "6000 Phinney Ave N, Seattle, WA 98103"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "sinners-pizza",
+      "name": "Sinners Pizza",
+      "neighborhood": "University District",
+      "style": "New York-style",
+      "blurb": "Heaven-and-Hell-themed late-night New York-style pizza shop and bar that opened April 10, 2026 on the Ave in the former Supreme Pizzeria & Bar space.",
+      "url": "https://sinners.pizza/",
+      "status": "open",
+      "statusSource": "https://www.dailyuw.com/article/sinners-pizza-opens-on-the-ave-with-late-night-hours-opening-day-sees-over-1-000-transactions-20260416",
+      "statusDate": "2026-08-26",
+      "statusChecked": "2026-08-26",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "University District",
+          "address": "4529 University Way NE, Seattle, WA 98105"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "roma-roma",
+      "name": "Roma Roma",
+      "neighborhood": "Capitol Hill",
+      "style": "Roman-style, pizza al taglio",
+      "blurb": "Brothers Forrest and Colin Brunton's Roman-style by-the-cut pizza counter, priced by weight, that opened on 12th Ave in the former Rachel's Ginger Beer space.",
+      "url": "https://romaroma.pizza/",
+      "status": "open",
+      "statusSource": "https://www.capitolhillseattle.com/2026/02/roman-style-with-pizza-by-the-cut-roma-roma-opens-on-capitol-hill/",
+      "statusDate": "2026-08-26",
+      "statusChecked": "2026-08-26",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Capitol Hill",
+          "address": "1610 12th Ave, Seattle, WA 98122"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }
