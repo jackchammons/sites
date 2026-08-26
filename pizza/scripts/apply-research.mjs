@@ -2,8 +2,9 @@
 /*
  * Applies validated research to data/restaurants.json.
  *
- * Run only after verify-research.mjs passes. It applies closure flags and
- * verified locations. Crowd figures are frozen -- their sources block automated
+ * Run only after verify-research.mjs passes. It applies status changes,
+ * verified locations, discovered directory entries, mention records, proposed
+ * factor ratings and new attribute-registry rows. Crowd figures are frozen -- their sources block automated
  * reads and no API key path is in use -- and pillar scores are editorial, so no
  * script writes either.
  *
@@ -31,6 +32,9 @@ const byId = new Map(dataset.restaurants.map(r => [r.id, r]));
 const today = new Date().toISOString().slice(0, 10);
 let updated = 0;
 
+let changes = 0;
+
+/* closures: legacy section, still honoured. */
 for (const it of research.closures ?? []) {
   const r = byId.get(it.id);
   if (!r) continue;
@@ -38,7 +42,97 @@ for (const it of research.closures ?? []) {
   r.statusNote = it.note;
   r.statusSource = it.source;
   r.statusDate = it.date ?? today;
+  r.statusChecked = today;
+  changes++;
   console.log(`  ! ${r.name}: reported closed — ${it.note.slice(0, 60)}`);
+}
+
+/* status: liveness confirmations. A confirmation with no change still
+ * advances statusChecked, which is what rotates the audit worklist. */
+for (const it of research.status ?? []) {
+  const r = byId.get(it.id);
+  if (!r) continue;
+  const changed = r.status !== it.status;
+  if (changed) {
+    r.status = it.status;
+    r.statusNote = it.note;
+    r.statusSource = it.source;
+    r.statusDate = it.date ?? today;
+  }
+  r.statusChecked = today;
+  changes++;
+  console.log(`  ${changed ? '!' : '='} ${r.name}: ${it.status}${changed ? '' : ' (confirmed)'}`);
+}
+
+/* directory: discovered pizzerias join the dataset unrated. */
+const slug = s => s.toLowerCase().replace(/['’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+for (const it of research.directory ?? []) {
+  const id = slug(it.name);
+  if (byId.has(id)) continue;
+  const entry = {
+    id,
+    name: it.name,
+    neighborhood: it.neighborhood,
+    style: it.style ?? null,
+    blurb: it.note,
+    url: it.url ?? null,
+    status: it.status,
+    statusSource: it.source,
+    statusDate: today,
+    statusChecked: today,
+    attributes: {},
+    locations: it.address ? [{ neighborhood: it.neighborhood, address: it.address }] : [],
+    locationsVerified: null,
+    locationsSource: null,
+    mentions: []
+  };
+  dataset.restaurants.push(entry);
+  byId.set(id, entry);
+  changes++;
+  console.log(`  + ${it.name} (${id}): ${it.status}, ${it.neighborhood}`);
+}
+
+/* mentions: coverage history feeding reputation and critical reception. */
+for (const it of research.mentions ?? []) {
+  const r = byId.get(it.id);
+  if (!r) continue;
+  r.mentions = r.mentions ?? [];
+  if (r.mentions.some(m => m.url.toLowerCase() === it.url.toLowerCase())) continue;
+  r.mentions.push({ url: it.url, title: it.title, source: it.source, date: it.date, kind: it.kind });
+  r.mentions = r.mentions.slice(-50);
+  changes++;
+  console.log(`  ~ ${r.name}: mention from ${it.source}`);
+}
+
+/* factors: proposals fill gaps only (the validator enforces it; this guards
+ * against a stale file applied twice). Provenance recorded. */
+for (const it of research.factors ?? []) {
+  const r = byId.get(it.id);
+  if (!r) continue;
+  r.factors = r.factors ?? {};
+  for (const k of ['craft', 'distinctiveness']) {
+    if (it[k] == null || r.factors[k]) continue;
+    r.factors[k] = { value: it[k], setBy: 'agent', source: it.source, note: it.note, date: today };
+    changes++;
+    console.log(`  * ${r.name}: ${k} = ${it[k]} (agent, ${it.source})`);
+  }
+}
+
+/* newAttributes: registry rows plus the flags on the entries that need them. */
+const registryPath = path.join(root, 'data/attributes.json');
+if ((research.newAttributes ?? []).length) {
+  const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
+  for (const it of research.newAttributes) {
+    if (registry[it.key]) continue;
+    registry[it.key] = { label: it.label, ...(it.frictionCost != null ? { frictionCost: it.frictionCost } : {}) };
+    for (const id of it.entries) {
+      const r = byId.get(id);
+      if (r) { r.attributes = r.attributes ?? {}; r.attributes[it.key] = true; }
+    }
+    changes++;
+    console.log(`  # new attribute "${it.key}" (${it.label}) on ${it.entries.join(', ')}`);
+  }
+  fs.writeFileSync(registryPath, JSON.stringify(registry, null, 2) + '\n');
 }
 
 /* Locations replace whatever was stored rather than merging: the agent reads the
@@ -50,7 +144,17 @@ let located = 0;
 for (const it of research.locations ?? []) {
   const r = byId.get(it.id);
   if (!r) continue;
-  const sites = it.sites.map(s => ({ neighborhood: s.neighborhood.trim(), address: s.address.trim() }));
+  // Carry geocoded coordinates over for any address that has not changed;
+  // re-verifying an unchanged branch must not throw away its lat/lon.
+  const coordKey = a => a.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  const oldCoords = new Map((r.locations ?? [])
+    .filter(l => l.lat != null)
+    .map(l => [coordKey(l.address), { lat: l.lat, lon: l.lon }]));
+  const sites = it.sites.map(s => ({
+    neighborhood: s.neighborhood.trim(),
+    address: s.address.trim(),
+    ...(oldCoords.get(coordKey(s.address)) ?? {})
+  }));
   const before = JSON.stringify(r.locations ?? []);
   r.locations = sites;
   r.locationsVerified = it.verified ?? today;
@@ -71,10 +175,10 @@ for (const it of research.locations ?? []) {
   console.log(`  @ ${r.name}: ${sites.length} location(s)${changed ? '' : ' (unchanged)'} — ${sites.map(s => s.neighborhood).join(', ')}`);
 }
 
-if ((research.closures ?? []).length || located) {
+if (changes || located) {
   dataset.dataVersion = today.slice(0, 7).replace('-', '.');
   const out = JSON.stringify(dataset, null, 2) + '\n';
   if (fs.readFileSync(dataPath, 'utf8') !== out) fs.writeFileSync(dataPath, out);
 }
 
-console.log(`\napplied: ${(research.closures ?? []).length} closure(s) flagged, ${located} location set(s) verified.`);
+console.log(`\napplied: ${changes} change(s), ${located} location set(s) verified.`);

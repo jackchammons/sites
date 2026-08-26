@@ -10,7 +10,12 @@
  *   news       stories the feed sweep missed
  *   candidates pizzerias worth considering for the bench
  *   closures   places reported closed (relegation signals)
- *   locations  verified branches, read off the pizzeria's own site
+ *   locations      verified branches, read off the pizzeria's own site
+ *   directory      pizzerias not yet on file (discovery task)
+ *   status         open/closed/opening confirmations with citations
+ *   mentions       stories tied to entries on file
+ *   factors        proposed editorial ratings for unrated entries, cited
+ *   newAttributes  new registry flags (label + optional friction cost)
  *
  * There is deliberately no ratings section: the sources that hold crowd
  * figures block automated reads, and no API key path is in use.
@@ -33,7 +38,8 @@ const dataset = JSON.parse(fs.readFileSync(path.join(root, 'data/restaurants.jso
 const byId = new Map(dataset.restaurants.map(r => [r.id, r]));
 
 const KINDS = new Set(['opening', 'closing', 'ranking', 'mention']);
-const CAPS = { news: 20, candidates: 15, closures: 10, locations: 12 };
+const CAPS = { news: 20, candidates: 15, closures: 10, locations: 12,
+               directory: 10, status: 10, mentions: 30, factors: 5, newAttributes: 3 };
 const MAX_AGE_DAYS = 180;
 
 const fails = [];
@@ -49,7 +55,9 @@ if (!doc || typeof doc !== 'object' || Array.isArray(doc)) {
 /* `items` was the original field name; keep reading it so older files still work. */
 const news = doc.news ?? doc.items ?? [];
 const sections = { news, candidates: doc.candidates ?? [], closures: doc.closures ?? [],
-                   locations: doc.locations ?? [] };
+                   locations: doc.locations ?? [], directory: doc.directory ?? [],
+                   status: doc.status ?? [], mentions: doc.mentions ?? [],
+                   factors: doc.factors ?? [], newAttributes: doc.newAttributes ?? [] };
 if (Array.isArray(doc.ratings) && doc.ratings.length) {
   fails.push('ratings are no longer accepted: crowd figures are frozen, see CLAUDE.md');
 }
@@ -161,6 +169,80 @@ sections.locations.forEach((it, i) => {
     if (seenSites.has(key)) bad('locations', i, `${where}: duplicate address "${addr}"`);
     seenSites.add(key);
   });
+});
+
+/* ---- directory: discovered pizzerias ----
+ * The important failure to catch is a duplicate of something on file under a
+ * slightly different name, which would fork one pizzeria into two entries. */
+const normName = n => String(n).toLowerCase()
+  .replace(/['’]/g, '')
+  .replace(/\b(pizza company|pizza co|pizzeria|pizza|restaurant)\b/g, '')
+  .replace(/[^a-z0-9]+/g, ' ').trim();
+const knownNames = new Set(dataset.restaurants.map(r => normName(r.name)));
+
+sections.directory.forEach((it, i) => {
+  if (typeof it?.name !== 'string' || it.name.trim().length < 2) { bad('directory', i, 'name missing'); return; }
+  if (knownNames.has(normName(it.name))) bad('directory', i, `"${it.name}" is already on file`);
+  if (!['open', 'opening'].includes(it?.status)) bad('directory', i, `status must be open|opening, got "${it?.status}"`);
+  if (typeof it?.neighborhood !== 'string' || !it.neighborhood.trim()) bad('directory', i, 'neighborhood missing');
+  if (typeof it?.note !== 'string' || it.note.trim().length < 15) bad('directory', i, 'note missing or too short');
+  checkUrl('directory', i, it?.source, 'source');
+  if (it?.url != null) checkUrl('directory', i, it.url, 'url');
+  if (it?.address != null) {
+    if (!/^\s*\d/.test(it.address)) bad('directory', i, `address does not start with a street number: "${it.address}"`);
+    if (!/\b98[0-5]\d{2}\b/.test(it.address)) bad('directory', i, `no Puget Sound ZIP: "${it.address}"`);
+  }
+});
+
+/* ---- status: liveness confirmations ---- */
+sections.status.forEach((it, i) => {
+  if (!byId.has(it?.id)) bad('status', i, `unknown restaurant id "${it?.id}"`);
+  if (!['open', 'closed', 'opening'].includes(it?.status)) bad('status', i, `status must be open|closed|opening, got "${it?.status}"`);
+  if (typeof it?.note !== 'string' || it.note.trim().length < 10) bad('status', i, 'note missing or too short');
+  checkUrl('status', i, it?.source, 'source');
+  if (it?.date) checkDate('status', i, it.date, 'date');
+});
+
+/* ---- mentions: coverage tied to entries ---- */
+sections.mentions.forEach((it, i) => {
+  if (!byId.has(it?.id)) bad('mentions', i, `unknown restaurant id "${it?.id}"`);
+  if (typeof it?.title !== 'string' || it.title.trim().length < 8) bad('mentions', i, 'title missing');
+  if (typeof it?.source !== 'string' || !it.source.trim()) bad('mentions', i, 'source name missing');
+  checkUrl('mentions', i, it?.url);
+  checkDate('mentions', i, it?.date, 'date');
+  if (!KINDS.has(it?.kind)) bad('mentions', i, `kind must be one of ${[...KINDS].join('|')}, got "${it?.kind}"`);
+});
+
+/* ---- factors: proposed editorial ratings ----
+ * The agent may FILL a missing rating from cited criticism; it may never
+ * overwrite one that exists. Values are bounded and stepped so a typo cannot
+ * smuggle in a 47. */
+const validFactorValue = v => typeof v === 'number' && v >= 0 && v <= 10 && Math.round(v * 2) === v * 2;
+sections.factors.forEach((it, i) => {
+  const r = byId.get(it?.id);
+  if (!r) { bad('factors', i, `unknown restaurant id "${it?.id}"`); return; }
+  if (it?.craft == null && it?.distinctiveness == null) bad('factors', i, 'proposes neither craft nor distinctiveness');
+  for (const k of ['craft', 'distinctiveness']) {
+    if (it?.[k] == null) continue;
+    if (!validFactorValue(it[k])) bad('factors', i, `${k} must be 0-10 in 0.5 steps, got ${it[k]}`);
+    if (r.factors?.[k]) bad('factors', i, `${r.name} already has a ${k} rating; proposals only fill gaps`);
+  }
+  if (typeof it?.note !== 'string' || it.note.trim().length < 20) bad('factors', i, 'note missing or too short — say what the critics described');
+  checkUrl('factors', i, it?.source, 'source');
+});
+
+/* ---- newAttributes: registry additions ---- */
+const registryPath = path.join(root, 'data/attributes.json');
+const registry = fs.existsSync(registryPath) ? JSON.parse(fs.readFileSync(registryPath, 'utf8')) : {};
+sections.newAttributes.forEach((it, i) => {
+  if (!/^[a-z][a-z0-9-]{2,30}$/.test(it?.key ?? '')) bad('newAttributes', i, `key must be kebab-case, got "${it?.key}"`);
+  else if (registry[it.key]) bad('newAttributes', i, `"${it.key}" already exists in the registry`);
+  if (typeof it?.label !== 'string' || !it.label.trim()) bad('newAttributes', i, 'label missing');
+  if (it?.frictionCost != null && !(typeof it.frictionCost === 'number' && it.frictionCost >= 0 && it.frictionCost <= 2.5)) {
+    bad('newAttributes', i, `frictionCost must be 0-2.5, got ${it?.frictionCost}`);
+  }
+  if (!Array.isArray(it?.entries) || !it.entries.length) bad('newAttributes', i, 'entries[] must name at least one id the flag applies to');
+  else for (const id of it.entries) if (!byId.has(id)) bad('newAttributes', i, `entries names unknown id "${id}"`);
 });
 
 report();

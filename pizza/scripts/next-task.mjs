@@ -1,0 +1,152 @@
+#!/usr/bin/env node
+/*
+ * Picks the research agent's task for today and emits GITHUB_OUTPUT lines:
+ *   task=<type>
+ *   brief<<EOF ... EOF     the task-specific half of the agent prompt
+ *
+ * Four task types rotate by UTC day, so a week covers every kind of upkeep
+ * roughly twice. Passing a type as argv[2] forces it (used by manual
+ * dispatches and the discovery backfill); "auto" rotates.
+ *
+ *   discovery   find Seattle pizzerias not yet on file
+ *   locations   verify branches + website against the pizzeria's own site
+ *   liveness    confirm entries are still open, with citations
+ *   news        coverage the feed sweep missed + mention tags + factor
+ *               proposals for unrated entries
+ *
+ * The brief is task data; the fixed rules (run nothing, schema, validation)
+ * live in research.yml so no task can drop them.
+ */
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { locationWorklist } from '../src/locations.js';
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const { restaurants } = JSON.parse(fs.readFileSync(path.join(root, 'data/restaurants.json'), 'utf8'));
+
+const TYPES = ['discovery', 'locations', 'liveness', 'news'];
+const forced = (process.argv[2] || 'auto').toLowerCase();
+const task = TYPES.includes(forced)
+  ? forced
+  : TYPES[Math.floor(Date.now() / 864e5) % TYPES.length];
+
+const openField = restaurants.filter(r => r.status !== 'closed');
+
+let brief = '';
+
+if (task === 'discovery') {
+  const names = restaurants.map(r => r.name).sort().join('; ');
+  brief = `Your task: find pizzerias inside Seattle city limits that are not yet on file.
+
+Already on file (do NOT propose any of these, under any spelling):
+${names}
+
+Search the way a local editor would: recent "new pizza Seattle" and
+neighborhood-roundup coverage, Eater Seattle, The Stranger, Seattle Times,
+neighborhood blogs. Delivery-only and pop-up operations count if they are
+genuinely operating in Seattle. For each find, open its official website
+when it has one.
+
+Report each as a "directory" entry: name, url (official site, only if you
+opened it), neighborhood, style, status ("open", or "opening" if not yet
+serving), note (one sentence on what it is), source (the page you read),
+and address when published. At most 10 entries and 12 web searches. Fewer
+real finds beat a padded list; an empty directory array is a valid result
+if the city has nothing new.`;
+}
+
+if (task === 'locations') {
+  const rows = locationWorklist(openField).slice(0, 5).map(r => {
+    const state = r.neighborhoodIsPlaceholder
+      ? `PLACEHOLDER, stored as "${r.neighborhood}" — find every branch`
+      : (r.locations ?? []).length
+        ? `${r.locations.length} site(s) verified ${r.locationsVerified}`
+        : `UNVERIFIED, stored as "${r.neighborhood}"`;
+    return `- id: ${r.id} | ${r.name} | site: ${r.url ?? 'unknown, search for it'} | ${state}`;
+  }).join('\n');
+  brief = `Your task: verify where these pizzerias actually are. Verify these,
+and only these:
+
+${rows}
+
+For each one, open the pizzeria's OWN website — its locations, visit or
+contact page — and read off every branch it currently operates. If the
+worklist says the site is unknown, search for the official site first;
+never use a directory, aggregator, delivery app or review site as the
+source, and never guess a domain from the name (several plausible ones
+are wrong, and one lapsed domain now serves a gambling site). If you
+cannot find an official page, omit that entry — a wrong address is worse
+than a missing one.
+
+Report every branch that is open now, with its homepage. Branches outside
+the Puget Sound region do not belong. Write the "locations" section only.
+Budget: one or two page fetches per pizzeria plus at most 5 searches.`;
+}
+
+if (task === 'liveness') {
+  const byNeed = [...openField].sort((a, b) => {
+    // Openings change fastest; among the rest, an entry with no website is
+    // both harder to confirm and likelier to be gone, so it goes first.
+    const ord = r => r.status === 'opening' ? 0 : r.url ? 2 : 1;
+    if (ord(a) !== ord(b)) return ord(a) - ord(b);
+    return (Date.parse(a.statusChecked) || 0) - (Date.parse(b.statusChecked) || 0);
+  });
+  const rows = byNeed.slice(0, 6).map(r =>
+    `- id: ${r.id} | ${r.name} | site: ${r.url ?? 'none on file'} | currently: ${r.status}${
+      r.statusChecked ? ` (checked ${r.statusChecked})` : ' (never checked)'}`).join('\n');
+  brief = `Your task: confirm whether these pizzerias are still operating.
+Check these, and only these:
+
+${rows}
+
+For each: open its own website and search recent local coverage. Report a
+"status" record for every one you checked, whatever you find — status
+"open", "closed" or "opening", a one-sentence note, and the https source
+you actually read. Confirming an entry is still open counts and advances
+its check date. A closure claim needs real evidence: a news report, the
+pizzeria's own announcement, or its site gone plus a corroborating
+source. Review-site labels alone ("Yelp says closed") are a lead, not
+evidence — chase the lead or leave the status as it is.
+Budget: at most 12 searches and 2 fetches per entry.`;
+}
+
+if (task === 'news') {
+  const ids = restaurants.map(r => `${r.id} = ${r.name}`).join('\n');
+  const unrated = openField.filter(r => !(r.factors?.craft && r.factors?.distinctiveness))
+    .slice(0, 8)
+    .map(r => `- id: ${r.id} | ${r.name} | site: ${r.url ?? 'unknown'}`).join('\n');
+  brief = `Your task: find Seattle pizzeria news from the last 30 days that is
+not already covered, and connect coverage to the entries on file.
+
+Read pizza/data/buzz.json first to see what the automated feed sweep
+already found, so you do not repeat it. Then search for what it missed:
+openings, closings, reviews and rankings of Seattle-area pizzerias.
+Report stories in "news". For every story that is about an entry on
+file — from this id list:
+
+${ids}
+
+— also add a "mentions" record tying the story to that id.
+${unrated ? `
+These entries have no editorial ratings yet, which keeps them out of the
+ranking:
+
+${unrated}
+
+If you find at least two credible critical sources genuinely describing
+one of them (reviews or substantive coverage in real publications, not
+listicles), you may propose "factors" for it: craft and/or
+distinctiveness, 0-10 in 0.5 steps, judged from what the critics actually
+describe, citing the strongest source. Propose for at most 3 entries, and
+skip any you cannot ground in published criticism — no rating is better
+than an invented one.` : ''}
+Budget: at most 12 web searches in total. A short honest file is a good
+result on a quiet day.`;
+}
+
+const out = process.env.GITHUB_OUTPUT;
+const lines = `task=${task}\nbrief<<TASK_BRIEF_EOF\n${brief}\nTASK_BRIEF_EOF\n`;
+if (out) fs.appendFileSync(out, lines);
+else process.stdout.write(lines);
+console.error(`task: ${task}`);

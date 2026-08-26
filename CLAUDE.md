@@ -128,23 +128,41 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   `CLAUDE_CODE_OAUTH_TOKEN`. `verify-research.mjs` validates it and `apply-research.mjs` then
   writes crowd figures and closure flags into `restaurants.json` — the agent never edits that
   file itself. If it hangs or fails, the site still publishes.
+- **SLICE v2: three factors are computed, two are editorial.** Reputation (longevity ×3,
+  review volume ×2, coverage ×1, renormalised over what an entry has), critical reception
+  (critic base + recency-weighted mention boost capped at +1.5) and value ((craft+critical)/2
+  × price multiplier) derive at build time in `slice.js` — never store them. Craft and
+  distinctiveness live in `factors` with provenance (`setBy`, `source`, `date`). The
+  methodology section publishes every constant; change a formula and the page copy in
+  `build.mjs` must change with it.
 - **The top ten is computed, not stored.** `splitTiers()` publishes the ten highest-scoring
-  entries; a reported closure is the only thing that holds one back. The `tier` field in
-  restaurants.json is a seed, not the published split. Don't reintroduce a hardcoded top ten.
-- **Consensus is critic-only, deliberately.** Crowd ratings were 55% of that pillar and no
-  longer count. They are frozen at one observation date and unrefreshable, so scoring on them
-  permanently advantaged the ten entries that had them and barred the fifteen that did not.
-  All 25 are now measured identically. The shrinkage still runs, but only to render a dated
-  context figure beside the score — don't wire it back into the total.
-- **Never let a script write pillar scores.** The page claims they are editorial judgments
-  applied by one rubric; generating them would make that claim false. Crowd figures are the
-  only part of the dataset automation may touch.
-- **Crowd ratings are frozen, permanently, by decision.** Yelp returns 403 to automated
-  fetching (business pages and search) and Google's results carry no rating in the HTML, so
-  they cannot be scraped; and a Yelp API key was considered and ruled out, so there is no
-  API path either. `fetch-ratings.mjs` has been deleted. The figures in `restaurants.json`
-  are a dated observation and will not refresh. Do not reintroduce a ratings pipeline —
-  three runs burned their whole turn budget rediscovering the 403.
+  entries with `status: "open"`; anything else is held out whatever it scores. There is no
+  bench: ranks 11+ render in the directory table. `isRated()` decides who competes — craft +
+  distinctiveness + criticScore present.
+- **One database, three statuses.** `restaurants.json` holds every pizzeria on file:
+  `open`, `opening` (the radar), `closed` (struck through in the directory, held out of the
+  ranking, listed under recently-closed for six months). `attributes` is a flexible flag map;
+  its registry (`data/attributes.json`) carries label + frictionCost per key, and the agent
+  can add new keys through the validated `newAttributes` section.
+- **What the agent may write, all through verify-research.mjs → apply-research.mjs:**
+  locations (+homepage), status changes (citation required; review-site labels are a lead,
+  not evidence), new directory entries (fuzzy-name dedup blocks variants like "Zeeks Pizza
+  Co"), mentions (feed reputation and the critical boost), factor proposals (0–10 in 0.5
+  steps, FILL GAPS ONLY — the validator rejects any overwrite of an existing rating — and
+  need published criticism), and newAttributes. One bad entry rejects the whole file.
+- **The agent runs one task per day**, rotated by `next-task.mjs`: discovery, locations,
+  liveness, news. A manual dispatch can force a type via the workflow's `task` input, which
+  is also how a discovery backfill works. Briefs are code (in `next-task.mjs`); the fixed
+  rules and schema live in `research.yml` so no task can drop them.
+- **Crowd STAR ratings stay frozen; review counts are used.** Yelp 403s automated reads and
+  no API key is in use, so the stored star figures cannot refresh and are display-only. The
+  review COUNT does feed reputation — a count is durable in a way an average is not. Do not
+  reintroduce a star-rating pipeline; three runs burned their budget rediscovering the 403.
+- **Locations carry lat/lon once geocoded.** `geocode.mjs` (publish.yml) fills them via
+  Nominatim at 1 req/sec, cached forever; `apply-research.mjs` preserves coordinates for
+  unchanged addresses when a location set is re-verified. Leaflet is vendored in
+  `pizza/src/vendor/` and loads as a plain script tag — it is outside the ES import graph,
+  so verify.mjs checks it explicitly.
 - **Set exactly one research credential.** `research.yml` accepts either
   `CLAUDE_CODE_OAUTH_TOKEN` (subscription pool, from `claude setup-token`) or
   `ANTHROPIC_API_KEY` (metered API credits). If both are set the API key wins the credential
