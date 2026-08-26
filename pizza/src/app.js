@@ -9,7 +9,7 @@
  * invisible: dragging one to 40% silently shrank every other.
  */
 import { rank, splitTiers, DEFAULT_WEIGHTS } from './slice.js';
-import { boardHtml, benchHtml } from './render.js';
+import { boardHtml } from './render.js';
 
 const KEYS = Object.keys(DEFAULT_WEIGHTS);
 const DATA = window.__PIZZA__;
@@ -54,13 +54,8 @@ function render() {
     return;
   }
 
-  const { top, bench: benched, cutoff } = splitTiers(rank(DATA.dataset, opts()), 10);
+  const { top } = splitTiers(rank(DATA.dataset, opts()), 10);
   const ranked = top.map(r => ({ ...r, previousRank: DATA.baseline[r.id] ?? null }));
-
-  // The bench re-ranks with the same weights: whether an entry sits in
-  // promotion range depends on where you put the tenth-place cutoff.
-  const bench = document.getElementById('bench-list');
-  if (bench) bench.innerHTML = benchHtml(benched, cutoff);
 
   const open = new Set([...board.querySelectorAll('details.math[open]')]
     .map(d => d.closest('.card').dataset.id));
@@ -71,8 +66,8 @@ function render() {
   });
 
   note.textContent = dirty()
-    ? 'Your ranking. The “from #n” markers compare against this site’s published order.'
-    : 'This site’s published ranking, rebuilt daily.';
+    ? 'Your weights. The “from #n” markers compare against the published order.'
+    : 'Published ranking.';
 }
 
 for (const k of KEYS) {

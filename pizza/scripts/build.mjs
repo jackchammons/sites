@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /*
- * Static site build. Reads the dataset, runs the SLICE algorithm, renders
- * dist/index.html, and records this week's standings in data/history.json so
- * the next build can show week-over-week movement.
+ * Static site build. Reads the dataset, runs SLICE v2, renders dist/index.html,
+ * and records this week's standings in data/history.json so the next build can
+ * show week-over-week movement.
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { rank, splitTiers, isRated, DEFAULT_WEIGHTS, FRICTION_CAP, isoWeek, isoWeekKey } from '../src/slice.js';
-import { boardHtml, benchHtml, PILLAR_META, esc, CARE_STEPS } from '../src/render.js';
+import { boardHtml, PILLAR_META, esc, CARE_STEPS } from '../src/render.js';
 import { locationLabel } from '../src/locations.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -24,6 +24,7 @@ const dataset = JSON.parse(read('data/restaurants.json'));
 // friction identically to the static build.
 dataset.attributeRegistry = JSON.parse(read('data/attributes.json'));
 delete dataset.attributeRegistry._comment;
+
 const historyPath = path.join(root, 'data/history.json');
 const history = fs.existsSync(historyPath)
   ? JSON.parse(fs.readFileSync(historyPath, 'utf8'))
@@ -34,21 +35,17 @@ const buzz = fs.existsSync(buzzPath)
   ? JSON.parse(fs.readFileSync(buzzPath, 'utf8'))
   : { updated: null, items: [] };
 
-/* Items the research agent found that the feeds missed. Purely additive, and
+/* Stories the research agent found that the feeds missed. Additive, and
  * wrapped in try/catch so a malformed file can never take the site down --
  * verify-research.mjs is the real gate, this is the belt to its braces. */
 const researchPath = path.join(root, 'data/research.json');
 if (fs.existsSync(researchPath)) {
   try {
     const research = JSON.parse(fs.readFileSync(researchPath, 'utf8'));
-    // `news` is the field the agent writes and the validator checks; `items`
-    // was the original name, kept so an older file still merges. Reading only
-    // `items` silently dropped every researched story for a while -- the
-    // candidates half kept working, which is what hid it.
+    // `news` is the field the agent writes; `items` was the original name.
     const found = research.news ?? research.items ?? [];
-    // Dedup on title as well as URL. The feed sweep stores Google News
-    // redirect URLs while the agent links the publisher directly, so the same
-    // story never collides on URL alone.
+    // Dedup on title as well as URL: the feed sweep stores Google News redirect
+    // URLs while the agent links publishers directly.
     const norm = t => String(t).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
     const knownUrls   = new Set(buzz.items.map(b => String(b.url).toLowerCase()));
     const knownTitles = new Set(buzz.items.map(b => norm(b.title)));
@@ -69,21 +66,20 @@ const now = new Date();
 const weekKey = isoWeekKey(now);
 
 // Movement markers compare against the most recent snapshot from an EARLIER
-// week, so re-running the publish workflow mid-week never flattens the ▲/▼
-// markers to "no change".
+// week, so a mid-week rebuild never flattens the markers to "no change".
 const previous = [...history.snapshots].reverse().find(s => s.weekKey !== weekKey);
 const baseline = previous ? previous.ranks : {};
 
 const scoredAll = rank(dataset, { now });
-const { top, bench: benchedRaw, cutoff } = splitTiers(scoredAll, 10);
+const { top, bench: restRaw } = splitTiers(scoredAll, 10);
 const ranked = top.map(r => ({ ...r, previousRank: baseline[r.id] ?? null }));
-const benched = benchedRaw.map(r => ({ ...r, previousRank: baseline[r.id] ?? null }));
+const restScored = restRaw;   // ranks 11+, shown in the directory with scores
 
-/* Deterministic weekly spotlight: rotates through the field by ISO week. */
+/* Weekly spotlight: rotates through the top ten by ISO week. */
 const week = isoWeek(now);
 const spotlight = ranked[week % ranked.length];
 
-const PILLAR_COPY = {
+const FACTOR_COPY = {
   reputation:      'Standing earned over time: years in business, how many people have reviewed it, and whether the press keeps coming back. Computed from data.',
   critical:        'A critic base rating, lifted a bounded amount by recent coverage. New reviews and list appearances feed it daily.',
   craft:           'The pizza itself: dough, fermentation, bake, and what goes on top. An editorial rating, applied by one rubric.',
@@ -94,54 +90,66 @@ const PILLAR_COPY = {
 const fmtDate = d => d.toLocaleDateString('en-US', {
   timeZone: 'America/Los_Angeles', year: 'numeric', month: 'long', day: 'numeric'
 });
+const shortDate = iso => new Date(iso).toLocaleDateString('en-US', {
+  timeZone: 'America/Los_Angeles', month: 'short', day: 'numeric', year: 'numeric'
+});
 
-/* ---- The Bench ---- */
-/* Places the research pass turned up that are not in the dataset yet. */
-const candidates = (() => {
-  const f = path.join(root, 'data/research.json');
-  if (!fs.existsSync(f)) return [];
-  try { return JSON.parse(fs.readFileSync(f, 'utf8')).candidates ?? []; }
-  catch { return []; }
-})();
+/* A pizzeria name, linked when a website is on file. Used everywhere a name
+ * appears outside the ranked cards, so the rule holds across the page. */
+const nameLink = (r, cls = '') =>
+  r.url
+    ? `<a${cls ? ` class="${cls}"` : ''} href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.name)}</a>`
+    : (cls ? `<span class="${cls}">${esc(r.name)}</span>` : esc(r.name));
 
-const candidateBlock = candidates.length ? `
-    <h3 class="buzz-head">Under consideration</h3>
-    <p class="note" style="margin:0 0 12px">Turned up by the daily research pass. Not scored yet &mdash; they
-    need a visit and verified figures before they can join the bench.</p>
-    <ul class="cand-list">${candidates.map(c => `
+/* ---- Opening radar / recently closed ---- */
+const opening = dataset.restaurants.filter(r => r.status === 'opening');
+const RECENT_CLOSE_DAYS = 183;
+const closedRecently = dataset.restaurants.filter(r =>
+  r.status === 'closed' && r.statusDate &&
+  (now - new Date(r.statusDate)) < RECENT_CLOSE_DAYS * 864e5);
+
+const radarRow = r => `
       <li>
-        <strong>${esc(c.name)}</strong>
-        <span class="cand-meta">${esc(c.neighborhood)}${c.style ? ` · ${esc(c.style)}` : ''}</span>
-        <span class="cand-note">${esc(c.note)}</span>
-        <a href="${esc(c.source)}" target="_blank" rel="noopener nofollow">source</a>
-      </li>`).join('')}</ul>` : '';
+        <strong>${nameLink(r)}</strong>
+        <span class="cand-meta">${esc(r.neighborhood ?? '')}${r.style ? ` · ${esc(r.style)}` : ''}</span>
+        ${r.blurb ? `<span class="cand-note">${esc(r.blurb)}</span>` : ''}
+        ${r.statusSource ? `<a href="${esc(r.statusSource)}" target="_blank" rel="noopener nofollow">source</a>` : ''}
+      </li>`;
 
-const contenders = benched.filter(r => r.contender);
+const closedRow = r => `
+      <li>
+        <strong>${esc(r.name)}</strong>
+        <span class="cand-meta">${esc(r.neighborhood ?? '')}${r.style ? ` · ${esc(r.style)}` : ''}</span>
+        ${r.statusNote ? `<span class="cand-note">${esc(r.statusNote)}</span>` : ''}
+        ${r.statusSource ? `<a href="${esc(r.statusSource)}" target="_blank" rel="noopener nofollow">source</a>` : ''}
+      </li>`;
 
-const benchSection = benched.length ? `
+const radarSection = (opening.length || closedRecently.length) ? `
 <section class="section">
   <div class="wrap">
-    <div class="eyebrow">The bench</div>
-    <h2 class="sec-h">Ranks ${ranked.length + 1}&ndash;${ranked.length + benched.length}</h2>
+    <div class="eyebrow">The radar</div>
+    <h2 class="sec-h">Opening soon${closedRecently.length ? ' &amp; recently closed' : ''}</h2>
     <p class="lede" style="margin-top:14px">
-      A top ten with nothing beneath it is a list, not a ranking. These ${benched.length} are scored by the
-      same algorithm, on the same ladder, measured exactly the same way as the ten above them &mdash; they
-      simply score lower. The line between the top ten and the bench is a score, not a decision, and it
-      moves whenever the scores do.
+      Pizzerias on the way in${closedRecently.length ? ', and the ones Seattle just lost' : ''}.
+      The daily research pass finds these in local coverage before they have review pages;
+      each links to where it was reported. When one opens its doors it moves into the
+      directory below, and into the ranking once it has been rated.
     </p>
-    <ul class="bench-list" id="bench-list">${benchHtml(benched, cutoff)}</ul>
-    ${candidateBlock}
-    <p class="note">Promotion is earned on score, not assigned: a bench entry joins the top ten as soon as it
-    outscores the entry at the cutoff, and drops back the same way. A reported closure relegates immediately,
-    whatever the score.</p>
+    ${opening.length ? `
+    <h3 class="buzz-head">Opening soon</h3>
+    <ul class="cand-list">${opening.map(radarRow).join('')}</ul>` : ''}
+    ${closedRecently.length ? `
+    <h3 class="buzz-head">Recently closed</h3>
+    <ul class="cand-list">${closedRecently.map(closedRow).join('')}</ul>` : ''}
   </div>
 </section>
 ` : '';
 
 /* ---- Style brackets ---- */
-const all = [...ranked, ...benched];
+const allScored = [...ranked, ...restScored];
 const byStyle = new Map();
-for (const r of all) {
+for (const r of allScored) {
+  if (!r.styleGroup) continue;
   if (!byStyle.has(r.styleGroup)) byStyle.set(r.styleGroup, []);
   byStyle.get(r.styleGroup).push(r);
 }
@@ -161,57 +169,60 @@ const bracketCard = ({ group, list }) => {
           <div class="bracket-win">
             <span class="bracket-medal">#${w.rank}</span>
             <div>
-              <strong>${esc(w.name)}</strong>
+              <strong>${nameLink(w)}</strong>
               <div class="bracket-sub">${esc(locationLabel(w))} · ${w.score.toFixed(1)} SLICE</div>
             </div>
           </div>
           ${rest.length ? `<ul class="bracket-rest">${rest.map(r =>
-            `<li><span>${esc(r.name)}</span><span>${r.score.toFixed(1)}</span></li>`).join('')}</ul>` : ''}
+            `<li><span>${nameLink(r)}</span><span>${r.score.toFixed(1)}</span></li>`).join('')}</ul>` : ''}
         </div>`;
 };
 
 const bracketSection = `
 <section class="section">
   <div class="wrap">
-    <div class="eyebrow">Style brackets</div>
+    <div class="eyebrow">By style</div>
     <h2 class="sec-h">Best of each kind</h2>
     <p class="lede" style="margin-top:14px">
-      One ranking flattens things that are not really competing. A Chicago deep pan and a Neapolitan
-      margherita are answering different questions, and a single score cannot honestly separate them.
-      So here is the same field split by what each place is actually trying to be &mdash; which is also
-      the question most people arrive with: not <em>what is best</em>, but <em>what is best of the kind
-      I want tonight</em>.
+      A single list compares a Chicago deep pan to a Neapolitan margherita, which is not a fair
+      fight in either direction. This table answers the question people actually arrive with:
+      the best of the kind you want tonight.
     </p>
     <div class="brackets">${brackets.map(bracketCard).join('')}</div>
-    <p class="note">A bracket with one entrant is not a weak field &mdash; it means nobody else in Seattle is
-    seriously attempting that style, which is exactly what the Distinctiveness pillar rewards.</p>
   </div>
 </section>
 `;
 
-/* ---- The Buzz ---- */
+/* ---- The Buzz: one timeline, tagged with the pizzerias each story mentions ---- */
 const KIND_LABEL = { opening: 'Opening', closing: 'Closing', ranking: 'List', mention: 'Mention' };
-const byId = Object.fromEntries(dataset.restaurants.map(r => [r.id, r.name]));
+const entriesById = new Map(dataset.restaurants.map(r => [r.id, r]));
 
-const buzzDate = iso => new Date(iso).toLocaleDateString('en-US', {
-  timeZone: 'America/Los_Angeles', month: 'short', day: 'numeric', year: 'numeric'
-});
+/* Conservative name matching: an entry tags a story only when its full name
+ * appears in the title. The agent's explicit mentions[] ids are merged in. */
+function storyTags(item) {
+  const title = String(item.title).toLowerCase();
+  const ids = new Set(item.mentions ?? []);
+  for (const r of dataset.restaurants) {
+    if (title.includes(r.name.toLowerCase())) ids.add(r.id);
+  }
+  return [...ids].map(id => entriesById.get(id)).filter(Boolean);
+}
 
-const buzzItem = b => `
+const buzzItem = b => {
+  const tags = storyTags(b);
+  return `
         <li class="buzz-item">
           <span class="buzz-kind k-${esc(b.kind || 'mention')}">${esc(KIND_LABEL[b.kind] || 'Mention')}</span>
           <div class="buzz-body">
             <a href="${esc(b.url)}" target="_blank" rel="noopener nofollow">${esc(b.title)}</a>
             <div class="buzz-meta">
-              <span>${esc(b.source)}</span><span>${esc(buzzDate(b.published))}</span>
-              ${(b.mentions || []).map(id =>
-                `<span class="buzz-ranked">↑ ${esc(byId[id] || id)}</span>`).join('')}
+              <span>${esc(b.source)}</span><span>${esc(shortDate(b.published))}</span>
+              ${tags.map(r => nameLink(r, 'buzz-tag')).join('')}
             </div>
           </div>
         </li>`;
+};
 
-const places = buzz.items.filter(b => b.kind === 'opening' || b.kind === 'closing');
-const rest = buzz.items.filter(b => b.kind !== 'opening' && b.kind !== 'closing');
 const buzzSources = [...new Set(buzz.items.map(b => b.source))].length;
 
 const buzzSection = buzz.items.length ? `
@@ -220,45 +231,88 @@ const buzzSection = buzz.items.length ? `
     <div class="eyebrow">The buzz</div>
     <h2 class="sec-h">What Seattle is writing about</h2>
     <p class="lede" style="margin-top:14px">
-      The ranking moves slowly and deliberately. This does not. Every day the build sweeps public
-      news feeds for Seattle pizza coverage — openings, closings, reviews and lists — and collects
-      what it finds here, linked to the source. It is assembled automatically, so read the
-      headline and judge for yourself.
+      Every day the build sweeps Google News and Eater Seattle for local pizza coverage and files
+      it here, newest first. Stories that mention a pizzeria in the index are tagged with it.
+      None of this feeds the score directly; press coverage reaches the ranking only through the
+      bounded channels described in the methodology.
     </p>
     <div class="stamp" style="margin-top:18px">
       <span>${buzz.items.length} <b>stories</b></span>
       <span>${buzzSources} <b>outlets</b></span>
-      ${buzz.updated ? `<span>Swept <b>${esc(buzzDate(buzz.updated))}</b></span>` : ''}
+      ${buzz.updated ? `<span>Swept <b>${esc(shortDate(buzz.updated))}</b></span>` : ''}
     </div>
-
-    ${places.length ? `
-    <h3 class="buzz-head">Openings &amp; closings</h3>
-    <ul class="buzz-list">${places.map(buzzItem).join('')}</ul>` : ''}
-
-    ${rest.length ? `
-    <h3 class="buzz-head">Also being written about</h3>
-    <ul class="buzz-list">${rest.map(buzzItem).join('')}</ul>` : ''}
-
+    <ul class="buzz-list">${buzz.items.map(buzzItem).join('')}</ul>
     <p class="note" style="max-width:70ch">
-      Sourced from Google News and Eater Seattle. A story is kept only if it reads as local and
-      about pizza; national-chain, crime and business-wire items are filtered out.${buzz.items.some(b => b.via === 'research') ? `
-      Some entries are found by a research pass rather than the feed sweep — every one still
-      links to its original source, so you can check it.` : ''} Nothing here affects the SLICE
-      score — coverage is not the same as quality, and the ranking stays deliberately slow.
+      Assembled automatically. A story is kept when it reads as local and about pizza;
+      national-chain, crime and business-wire items are filtered out. Every item links to its
+      original source.
     </p>
   </div>
 </section>
 ` : '';
 
-const frictionRows = Object.entries(dataset.attributeRegistry)
-  .filter(([, a]) => a.frictionCost > 0)
-  .sort((a, b) => b[1].frictionCost - a[1].frictionCost)
-  .map(([, a]) => `<tr><td>${esc(a.label)}</td><td class="num">−${a.frictionCost.toFixed(1)}</td></tr>`)
-  .join('');
+/* ---- Directory ---- */
+const STATUS_LABEL = { open: 'Open', opening: 'Opening soon', closed: 'Closed' };
+const scoreById = new Map(allScored.map(r => [r.id, r]));
 
-const sliders = Object.keys(DEFAULT_WEIGHTS).map(k => `
-        <div class="factor">
-          <div class="factor-head">
+const directoryEntries = [...dataset.restaurants].sort((a, b) => {
+  const orderOf = r => r.status === 'closed' ? 2 : r.status === 'opening' ? 1 : 0;
+  if (orderOf(a) !== orderOf(b)) return orderOf(a) - orderOf(b);
+  const sa = scoreById.get(a.id)?.score ?? -1;
+  const sb = scoreById.get(b.id)?.score ?? -1;
+  return sb - sa || a.name.localeCompare(b.name);
+});
+
+const dirRow = r => {
+  const scored = scoreById.get(r.id);
+  const addr = (r.locations ?? []).map(l => l.address);
+  const attrs = Object.keys(r.attributes ?? {}).filter(k => r.attributes[k])
+    .map(k => dataset.attributeRegistry[k]?.label ?? k);
+  return `
+        <tr class="dir-row st-${esc(r.status ?? 'open')}" data-id="${esc(r.id)}">
+          <td class="dir-name">${nameLink(r)}
+            ${scored && scored.rank <= 10 ? `<span class="dir-rank">#${scored.rank}</span>` : ''}</td>
+          <td class="dir-where">${esc(locationLabel(r))}${addr.length ? `
+            <div class="dir-addr">${addr.slice(0, 3).map(esc).join('<br>')}${addr.length > 3 ? `
+            <details class="dir-more"><summary>+ ${addr.length - 3} more</summary>${addr.slice(3).map(esc).join('<br>')}</details>` : ''}</div>` : ''}</td>
+          <td class="dir-style">${esc(r.style ?? '')}</td>
+          <td class="dir-attrs">${attrs.map(a => `<span class="chip">${esc(a)}</span>`).join('')}</td>
+          <td class="num dir-score">${scored ? scored.score.toFixed(1) : '—'}</td>
+          <td class="dir-status">${esc(STATUS_LABEL[r.status] ?? 'Open')}</td>
+        </tr>`;
+};
+
+const directorySection = `
+<section class="section" id="directory">
+  <div class="wrap">
+    <div class="eyebrow">The directory</div>
+    <h2 class="sec-h">Every pizzeria on file</h2>
+    <p class="lede" style="margin-top:14px">
+      The full inventory behind the ranking: ${dataset.restaurants.length} entries, maintained by the
+      daily research pass. Rated entries carry their SLICE score, so this is also where ranks 11
+      and up live. Addresses are read from each pizzeria's own website and re-checked on a
+      rotation; entries without a score have not been rated yet.
+    </p>
+    <div class="dir-scroll">
+      <table class="dir-table">
+        <thead><tr>
+          <th>Pizzeria</th><th>Where</th><th>Style</th><th>Notes</th>
+          <th class="num">SLICE</th><th>Status</th>
+        </tr></thead>
+        <tbody>${directoryEntries.map(dirRow).join('')}</tbody>
+      </table>
+    </div>
+  </div>
+</section>
+`;
+
+/* ---- controls ---- */
+const careHeader = `
+          <div class="care-corner" aria-hidden="true"></div>
+          ${CARE_STEPS.map(st => `<div class="care-col"><b>${st.pct}</b><span>${st.word}</span></div>`).join('')}`;
+
+const careRows = Object.keys(DEFAULT_WEIGHTS).map(k => `
+          <div class="care-factor">
             <span class="factor-icon" aria-hidden="true">${PILLAR_META[k].icon}</span>
             <span class="factor-name">
               <b><span class="swatch" style="background:${PILLAR_META[k].color}"></span>${PILLAR_META[k].label}</b>
@@ -266,31 +320,37 @@ const sliders = Object.keys(DEFAULT_WEIGHTS).map(k => `
             </span>
             <span class="factor-val" id="v-${k}">${DEFAULT_WEIGHTS[k]}%</span>
           </div>
-          <fieldset class="steps">
-            <legend class="sr-only">How much you care about ${PILLAR_META[k].label}</legend>
-            ${CARE_STEPS.map(st => `
+          ${CARE_STEPS.map(st => `
+          <div class="care-cell">
             <input type="radio" name="care-${k}" id="care-${k}-${st.mult}" value="${st.mult}"
-                   class="sr-only"${st.mult === 1 ? ' checked' : ''}>
-            <label for="care-${k}-${st.mult}"><b>${st.pct}</b><span>${st.word}</span></label>`).join('')}
-          </fieldset>
-        </div>`).join('');
+                   class="sr-only"${st.mult === 1 ? ' checked' : ''}
+                   aria-label="${PILLAR_META[k].label}: ${st.pct}">
+            <label for="care-${k}-${st.mult}"></label>
+          </div>`).join('')}`).join('');
 
-const pillarCards = Object.keys(DEFAULT_WEIGHTS).map(k => `
+const factorCards = Object.keys(DEFAULT_WEIGHTS).map(k => `
         <div class="pillar">
           <div class="w">${DEFAULT_WEIGHTS[k]}<span style="font-size:15px;color:var(--ink-3)">%</span></div>
           <h3><span class="swatch" style="background:${PILLAR_META[k].color}"></span>${PILLAR_META[k].label}</h3>
-          <p>${PILLAR_COPY[k]}</p>
+          <p>${FACTOR_COPY[k]}</p>
         </div>`).join('');
 
+const frictionRows = Object.entries(dataset.attributeRegistry)
+  .filter(([, a]) => a.frictionCost > 0)
+  .sort((a, b) => b[1].frictionCost - a[1].frictionCost)
+  .map(([, a]) => `<tr><td>${esc(a.label)}</td><td class="num">−${a.frictionCost.toFixed(1)}</td></tr>`)
+  .join('');
+
+/* ---- page ---- */
 const html = `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Seattle Pizza Index — the top 10, ranked by the SLICE Score</title>
-<meta name="description" content="Seattle's top ten pizzerias, ranked by the SLICE Score: an open five-factor algorithm with a friction penalty and freshness decay, rebuilt daily. The whole calculation is published, and you can change how much each factor counts.">
+<title>The Seattle Pizza Index</title>
+<meta name="description" content="Seattle's pizzerias, tracked daily: a ranked top ten, a full directory, openings and closings, and the news. Scored by SLICE, a published five-factor method you can re-weight yourself.">
 <meta property="og:title" content="The Seattle Pizza Index">
-<meta property="og:description" content="Seattle's top ten pizzerias, ranked by an open algorithm you can re-weight yourself. Rebuilt daily.">
+<meta property="og:description" content="Seattle's pizzerias, tracked daily. A ranked top ten and a full directory, scored by a published method.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍕</text></svg>">
 <style>${read('src/styles.css')}</style>
@@ -299,33 +359,26 @@ const html = `<!doctype html>
 
 <header class="hero">
   <div class="wrap">
-    <div class="eyebrow">Seattle, WA · rebuilt daily</div>
-    <h1>The Seattle<br><em>Pizza Index</em></h1>
+    <div class="eyebrow">Seattle, WA · updated daily</div>
+    <h1>The Seattle <em>Pizza Index</em></h1>
     <p class="lede">
-      This is <b>this site's ranking</b> — not a poll, not a survey, and not an average of other
-      people's lists. Every pizzeria in the field is scored out of 100 by the <b>SLICE Score</b>, an
-      algorithm defined in full on this page, and the ten that score highest are published as the top
-      ten. Nothing is placed by hand.
-    </p>
-    <p class="lede" style="margin-top:12px">
-      The formula, the weights, the inputs and the code that runs them are all here. If you weigh
-      things differently, say so in the controls and the order changes in front of you.
+      A running record of Seattle's pizzerias: who's best, who's new, who's gone, and what the
+      city is saying about them. Each rated pizzeria gets a <b>SLICE score</b> out of 100 from
+      five weighted factors, and the ten highest make the list. The full method is further down
+      this page, and you can change the weights yourself.
     </p>
     <div class="stamp">
       <span>Updated <b>${fmtDate(now)}</b></span>
-      <span>ISO week <b>${week}</b></span>
-      <span>Dataset <b>v${esc(dataset.dataVersion)}</b></span>
-      <span>Field <b>${scoredAll.length} pizzerias</b></span>
-      <span>Published <b>top ${ranked.length}</b></span>
-      <span>Snapshots on record <b>${history.snapshots.length + 1}</b></span>
+      <span>On file <b>${dataset.restaurants.length} pizzerias</b></span>
+      <span>Rated <b>${scoredAll.length}</b></span>
+      <span>Week <b>${week}</b></span>
     </div>
-
     <div class="spotlight">
       <div class="big">🍕</div>
       <div>
-        <h3>Slice of the Week · ${esc(spotlight.name)}</h3>
+        <h3>Pie of the Week · ${nameLink(spotlight)}</h3>
         <p><b>#${spotlight.rank}, ${spotlight.score.toFixed(1)} SLICE.</b> ${esc(spotlight.signature)} — ${esc(locationLabel(spotlight))}.
-        Rotates every Monday by ISO week number, so every entry gets its turn.</p>
+        Rotates through the top ten each Monday.</p>
       </div>
     </div>
   </div>
@@ -333,245 +386,190 @@ const html = `<!doctype html>
 
 <section class="section">
   <div class="wrap">
-    <div class="eyebrow">The algorithm</div>
-    <h2 class="sec-h">How a SLICE Score is built</h2>
-    <p class="lede" style="margin-top:14px">
-      Most "best of" lists are a ranked opinion with the ranking hidden. This one publishes the whole
-      calculation. Every pizzeria is rated 0–10 on five factors. Each rating is divided by 10 to give a
-      fraction, multiplied by that factor's weight, and the five are summed — so a perfect score on
-      every factor is exactly 100 points.
-    </p>
-    <p class="lede" style="margin-top:12px">
-      Two adjustments then come off the top. A <b>friction penalty</b> subtracts up to
-      ${FRICTION_CAP.toFixed(1)} points for preorder-only drops, hour-long queues and twenty-hour
-      opening weeks, because a pie you cannot get is worth less than one you can. <b>Freshness decay</b>
-      shaves a fraction of a percent for every week since an entry was last checked, so stale
-      information drifts down rather than sitting at the top on reputation.
-    </p>
-
-    <div class="pillars">${pillarCards}</div>
-
-    <div class="formula">
-      <b>SLICE</b> = ( Σ pillar<sub>i</sub> ÷ 10 × weight<sub>i</sub> ) − min( friction, ${FRICTION_CAP.toFixed(1)} ) × ( 1 − freshness&nbsp;decay )
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="wrap">
     <div class="eyebrow">The ranking</div>
-    <h2 class="sec-h">The top 10, by SLICE Score</h2>
+    <h2 class="sec-h">The Top 10</h2>
     <p class="lede" style="margin:14px 0 8px">
-      The ten highest SLICE Scores in a field of ${scoredAll.length}. Every entry is measured the same
-      way; these are simply the ten that come out on top today. Open <em>Show the arithmetic</em> on any
-      card to see exactly how its score was built.
+      The ten highest SLICE scores among ${scoredAll.length} rated pizzerias. Recomputed every
+      morning; the ▲▼ markers show movement since last week. Open <em>Show the math</em> on any
+      card for the full calculation.
     </p>
-    <p class="lede" style="margin:0 0 26px" id="board-note">This site's published ranking, rebuilt daily.</p>
+    <p class="lede" style="margin:0 0 26px" id="board-note">Published ranking.</p>
+
+    <div class="board" id="board">
+${boardHtml(ranked)}
+    </div>
 
     <div class="controls" id="controls" hidden>
       <div class="controls-head">
         <strong>How much do you care about each factor?</strong>
-        <span>The ranking above uses the weights this site publishes. Change any factor and the
-        leaderboard re-sorts instantly. 100% keeps that factor's published weight, 0% ignores it
-        entirely, 200% doubles it &mdash; and whatever you pick, the five are rescaled to add up to
-        100% again, so the percentage on the right is the share it actually gets.</span>
+        <span>The list above uses the published weights. Set any factor from 0% (ignore it) to
+        200% (double it) and the list re-sorts in your browser. The five weights always rescale
+        to total 100%; the number beside each factor is the share it currently gets.</span>
       </div>
-      <div class="sliders">${sliders}</div>
+      <div class="care-grid">
+        ${careHeader}
+        ${careRows}
+      </div>
       <div class="ctl-row">
         <label class="toggle"><input type="checkbox" id="opt-friction" checked> Apply friction penalty</label>
         <label class="toggle"><input type="checkbox" id="opt-freshness" checked> Apply freshness decay</label>
         <button class="reset" id="reset" type="button">Back to the published ranking</button>
       </div>
     </div>
-
-    <div class="board" id="board">
-${boardHtml(ranked)}
-    </div>
   </div>
 </section>
 
-${benchSection}
 ${bracketSection}
+${radarSection}
 ${buzzSection}
-<section class="section">
-  <div class="wrap">
-    <div class="eyebrow">Over time</div>
-    <h2 class="sec-h">How the ranking moves</h2>
-    <p class="lede" style="margin-top:14px">
-      The board is rebuilt from scratch every day. Nothing about the order is stored &mdash; the ranking
-      is recomputed from the data each morning, so a change to any input shows up in the next build
-      without anyone editing a list.
-    </p>
+${directorySection}
 
-    <ol class="flow">
-      <li class="flow-step">
-        <span class="flow-when">12:47 UTC &middot; daily</span>
-        <b>Research pass</b>
-        <p>An agent opens each pizzeria's own site to confirm its branches and addresses, five entries
-        per run, worst-first. It also looks for openings, closings and reviews the news sweep missed.</p>
-      </li>
-      <li class="flow-gate">
-        <b>Validation</b>
-        <p>Everything the agent returns is checked before anything is written: real https sources,
-        addresses that are addresses, Puget Sound only, no duplicates. One bad entry rejects the whole
-        file and the day's dataset is left untouched.</p>
-      </li>
-      <li class="flow-step">
-        <span class="flow-when">13:17 UTC &middot; daily</span>
-        <b>Rebuild</b>
-        <p>News feeds are swept, validated research is merged into the dataset, and every entry in the
-        field is scored from scratch: five factors, friction penalty, freshness decay.</p>
-      </li>
-      <li class="flow-step">
-        <b>Sort and split</b>
-        <p>The field is sorted by score. The top ten are published as the ranking, the rest become the
-        bench. A pizzeria reported closed is held off the top ten whatever it scores.</p>
-      </li>
-      <li class="flow-step">
-        <span class="flow-when">once per ISO week</span>
-        <b>Snapshot</b>
-        <p>The week's order is recorded. The ▲ ▼ markers on each card compare today against the last
-        snapshot from an earlier week, so a mid-week rebuild never flattens them to "no change".</p>
-      </li>
-      <li class="flow-step flow-last">
-        <b>Deploy</b>
-        <p>The whole site is rebuilt and published. If any part of the build fails, nothing deploys and
-        yesterday's site stays up.</p>
-      </li>
-    </ol>
-
-    <h3 class="movers-h">What actually moves an entry</h3>
-    <div class="movers">
-      <div class="mover">
-        <span class="mover-icon" aria-hidden="true">⏳</span>
-        <b>Freshness decay</b>
-        <span class="mover-when">Continuous</span>
-        <p>The only input that changes with no news at all. An entry loses 0.2% of its score per week
-        since it was last checked, up to 6%. Two entries a point apart will cross in about a year if one
-        is being kept current and the other is not.</p>
-      </div>
-      <div class="mover">
-        <span class="mover-icon" aria-hidden="true">🚪</span>
-        <b>A reported closure</b>
-        <span class="mover-when">Immediate</span>
-        <p>The fastest mover on the board. A closure found by the research pass holds an entry off the
-        top ten from the very next build, regardless of score, and the entry below it moves up.</p>
-      </div>
-      <div class="mover">
-        <span class="mover-icon" aria-hidden="true">🔁</span>
-        <b>Friction changing</b>
-        <span class="mover-when">When it changes</span>
-        <p>Dropping preorder-only service or opening more days removes a penalty worth up to
-        ${FRICTION_CAP.toFixed(1)} points &mdash; enough to move several places, never enough to
-        manufacture a number one.</p>
-      </div>
-      <div class="mover">
-        <span class="mover-icon" aria-hidden="true">✍️</span>
-        <b>A factor being re-rated</b>
-        <span class="mover-when">Rare, deliberate</span>
-        <p>The five ratings are editorial and change only when the judgment does. This is the slowest
-        and largest lever, which is the intended order of things: the ranking should move because the
-        pizza did.</p>
-      </div>
-      <div class="mover">
-        <span class="mover-icon" aria-hidden="true">➕</span>
-        <b>A new entry</b>
-        <span class="mover-when">When one is added</span>
-        <p>New pizzerias arrive on the bench and climb on score alone. Candidates turned up by the
-        research pass sit under the bench until they have been visited and rated.</p>
-      </div>
-      <div class="mover">
-        <span class="mover-icon" aria-hidden="true">🎛️</span>
-        <b>You, changing the weights</b>
-        <span class="mover-when">Instantly, for you</span>
-        <p>The controls above re-sort the board in your browser only. Nothing you do here is saved or
-        sent anywhere, and the published ranking is unaffected.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="section">
+<section class="section" id="methodology">
   <div class="wrap">
     <div class="eyebrow">Methodology</div>
-    <h2 class="sec-h">How the numbers are made</h2>
+    <h2 class="sec-h">How it works</h2>
+    <p class="lede" style="margin-top:14px">
+      The whole site is computed. A JSON dataset holds the facts; a scoring module turns them
+      into the ranking; a daily pipeline keeps the facts current. Nothing on this page is placed
+      by hand, and the same scoring code runs in your browser when you change the weights.
+    </p>
 
+    <h3 class="method-h">The score</h3>
+    <p class="method-p">
+      Each factor is a 0–10 rating. Divide by 10, multiply by the factor's weight, and sum: a
+      perfect entry scores exactly 100. Friction is then subtracted and freshness decay applied.
+    </p>
+    <div class="formula">
+      <b>SLICE</b> = ( Σ factor<sub>i</sub> ÷ 10 × weight<sub>i</sub> − min( friction, ${FRICTION_CAP.toFixed(1)} ) ) × ( 1 − decay )
+    </div>
+    <div class="pillars">${factorCards}</div>
+
+    <h3 class="method-h">Where the factor values come from</h3>
     <div class="grid2">
       <div class="mcard">
-        <h3>Why star ratings do not count</h3>
-        <p>Crowd ratings — the star averages on review platforms — are shown on the cards that have
-        them, but they are not part of any score. The platforms that hold those numbers refuse
-        automated reads, so a figure collected once can never be refreshed, and only some entries have
-        one at all. Scoring on them would rank part of the field on numbers nobody can update and the
-        rest on nothing. Every entry is measured the same way instead.</p>
-        <p>Where a rating is shown, it is de-noised first, because sample size matters: a 4.9★ from 80
-        diners is a rumour, a 4.7★ from 4,000 is evidence. The correction pulls small samples toward
-        the city average in proportion to how small they are:</p>
-        <pre>adjusted = (v / (v + m)) · R
-         + (m / (v + m)) · C
+        <h3>Reputation — computed</h3>
+        <p>Three components, each 0–1, weighted 3 : 2 : 1 and renormalised over whichever an
+        entry actually has, so nobody is zeroed for data that was never collected:</p>
+        <pre>longevity = log(1+years) / log(1+15)   capped at 1
+volume    = reviews / (reviews + 500)
+coverage  = press mentions in 24 mo / 6, capped at 1
 
-v = review count
-m = ${dataset.priorWeight}   (prior weight)
-R = raw rating
-C = ${dataset.cityMeanRating.toFixed(2)}  (Seattle mean)</pre>
-        <p>A rating from a handful of diners lands close to the city mean; one from thousands barely
-        moves. The result is context for the reader, not an input to the score.</p>
+reputation = 10 × Σ(wᵢ·xᵢ) / Σ(wᵢ present)</pre>
+        <p>The log curve means year two proves more than year twelve. The review <em>count</em>
+        is used, never the star average: how many people rated a place is durable, while stored
+        averages go stale.</p>
       </div>
-
       <div class="mcard">
-        <h3>The friction penalty</h3>
-        <p>Points subtracted for the gap between wanting the pizza and eating it. Capped at
-        <span class="inline-code">−${FRICTION_CAP.toFixed(1)}</span> so logistics can dent a ranking but never
-        decide it.</p>
+        <h3>Critical reception — computed</h3>
+        <p>A critic base rating, refined by press coverage as it happens. Each story the pipeline
+        files adds a signal by kind — list appearance 1.0, mention 0.4, opening 0.3 — which fades
+        with a 12-month half-life:</p>
+        <pre>boost = min( 1.5, 0.5 × Σ kindWeight × 0.5^(months/12) )
+critical = base + boost</pre>
+        <p>The cap matters: a burst of coverage can lift a score by at most 1.5 points, so press
+        refines the rating and never replaces it.</p>
+      </div>
+      <div class="mcard">
+        <h3>Value — computed</h3>
+        <p>Quality per dollar. The quality half is the mean of craft and critical reception; the
+        price tier scales it:</p>
+        <pre>value = (craft + critical) / 2 × tier
+tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75</pre>
+        <p>A cheap great pie outruns its quality score. An expensive one has to be better than
+        its price to break even.</p>
+      </div>
+      <div class="mcard">
+        <h3>Craft &amp; Distinctiveness — editorial</h3>
+        <p>The two factors that require judgment: how good the pizza itself is, and whether the
+        place owns a lane in this city. Both are stored with provenance — who set them, from what
+        source, and when — and the research agent may propose them for new entries only from
+        cited critical coverage. The weights are published and yours to overrule.</p>
+      </div>
+    </div>
+
+    <h3 class="method-h">The deductions</h3>
+    <div class="grid2">
+      <div class="mcard">
+        <h3>Friction</h3>
+        <p>Points for the gap between wanting the pizza and eating it, read from each entry's
+        attribute flags. Capped at −${FRICTION_CAP.toFixed(1)} so logistics can dent a ranking,
+        never decide it.</p>
         <table class="calc">
           <thead><tr><th>Condition</th><th class="num">Cost</th></tr></thead>
           <tbody>${frictionRows}</tbody>
         </table>
       </div>
-
       <div class="mcard">
         <h3>Freshness decay</h3>
-        <p>Every entry records the date it was last checked. Its score is reduced by <b>0.2% for each
-        week</b> since then, to a maximum of <b>6%</b>. An entry nobody has looked at in a year is
-        carrying a year-old judgment, and this says so in the score rather than in a footnote.</p>
-        <p>It is the one part of the score that changes on its own, with no new information: an entry
-        left alone slides slowly down the board. Toggle it off in the controls above to see the field
-        undecayed.</p>
-      </div>
-
-      <div class="mcard">
-        <h3>Ties, movement and honesty</h3>
-        <ul class="plain">
-          <li>Ties break on Critical reception, then Craft, then alphabetically.</li>
-          <li>The <b>▲ / ▼</b> markers compare against the previous weekly snapshot stored in
-              <span class="inline-code">pizza/data/history.json</span>.</li>
-          <li>The five factor ratings are editorial judgments, applied by one rubric to every
-              restaurant. They are opinions — declared ones, with the weights published and yours to
-              overrule above.</li>
-          <li>Locations carry a street address read from each pizzeria's own site, with the date it was
-              checked. Anything not yet checked shows its unverified neighborhood.</li>
-          <li>Crowd figures are rounded aggregates observed across major review platforms at the dataset
-              version shown, not a live feed.</li>
-        </ul>
+        <p>Every entry records when it was last checked. Its score loses 0.2% per week since
+        then, capped at 6%. Data nobody has verified in a year says so in the score, and an
+        entry left alone slides slowly down the board until the rotation reaches it again.</p>
+        <p>Star ratings shown on cards are context, not score input. They are de-noised first —
+        small samples are pulled toward the Seattle mean of ${dataset.cityMeanRating.toFixed(2)}★
+        in proportion to how small they are (prior weight ${dataset.priorWeight}).</p>
       </div>
     </div>
+
+    <h3 class="method-h">The daily pipeline</h3>
+    <ol class="flow">
+      <li class="flow-step">
+        <span class="flow-when">12:47 UTC</span>
+        <b>Research</b>
+        <p>An agent works a rotating task list: verifying addresses and websites against each
+        pizzeria's own site, checking whether entries are still open, discovering pizzerias not
+        yet on file, and finding coverage the feed sweep missed.</p>
+      </li>
+      <li class="flow-gate">
+        <b>Validation</b>
+        <p>Everything the agent returns is checked before anything is written: https sources on
+        every claim, addresses that parse as addresses, Puget Sound ZIP codes, no duplicates,
+        factor proposals bounded and cited. One bad entry rejects the whole file.</p>
+      </li>
+      <li class="flow-step">
+        <span class="flow-when">13:17 UTC</span>
+        <b>Rebuild</b>
+        <p>Feeds are swept, validated research is merged, and every rated entry is scored from
+        scratch. The ten highest open entries become the list; everything else files into the
+        directory. Once per ISO week the standings are snapshotted, which is what the ▲▼
+        markers compare against.</p>
+      </li>
+      <li class="flow-step flow-last">
+        <b>Deploy</b>
+        <p>The site is rebuilt and published. If any step fails, nothing deploys and yesterday's
+        site stays up.</p>
+      </li>
+    </ol>
+
+    <h3 class="method-h">What moves an entry</h3>
+    <ul class="plain method-movers">
+      <li><b>A closure</b> — immediate. A cited closure removes an entry from the top ten at the
+        next build, whatever its score.</li>
+      <li><b>Press coverage</b> — fast but bounded. New stories feed critical reception through
+        the capped boost and reputation through the coverage component.</li>
+      <li><b>Freshness decay</b> — continuous. The only input that moves with no news at all.</li>
+      <li><b>Attribute changes</b> — when verified. Dropping preorder-only service returns up to
+        ${FRICTION_CAP.toFixed(1)} points of friction.</li>
+      <li><b>A re-rating</b> — rare and deliberate. Craft and distinctiveness change only when
+        the judgment does, with the change and its source recorded.</li>
+      <li><b>Your weights</b> — instant, local, and yours alone. Nothing you set here is saved
+        or sent anywhere.</li>
+    </ul>
+
+    <p class="method-p" style="margin-top:22px">
+      Ties break on critical reception, then craft, then alphabetically. The dataset, the scoring
+      module and this page's build script are public; if the data is wrong, it takes pull requests.
+    </p>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    <p><b>The Seattle Pizza Index.</b> A static site: the ranking is computed at build time by
-    <span class="inline-code">slice.js</span> from a JSON dataset, rendered to HTML, and served as
-    files. The same scoring module runs again in your browser, which is how the controls above re-sort
-    the board without a request to anything. No analytics, no cookies, no tracking, and nothing you
-    change here leaves your device.</p>
-    <p style="margin-top:10px">Rebuilt and redeployed daily at 13:17 UTC (6:17am Pacific) by GitHub
-    Actions. The spotlight and the ▲ ▼ markers are keyed to the ISO week, so they turn over weekly
-    while the scores underneath are recomputed every day.</p>
-    <p style="margin-top:10px">Dataset v${esc(dataset.dataVersion)} · built ${now.toISOString()} ·
-    ${esc(dataset.notes)}</p>
-    <p style="margin-top:10px">Disagree with the ranking? That is what the controls are for. Think the
-    data is wrong? The dataset is public and takes pull requests.</p>
+    <p><b>The Seattle Pizza Index.</b> A static site: the ranking is computed at build time from a
+    JSON dataset and served as files. The same scoring module runs in your browser, which is how
+    the weight controls re-sort the list without a request to anything. No analytics, no cookies,
+    no tracking.</p>
+    <p style="margin-top:10px">Rebuilt daily at 13:17 UTC (6:17am Pacific) by GitHub Actions.
+    Dataset v${esc(dataset.dataVersion)} · built ${now.toISOString()}</p>
   </div>
 </footer>
 
@@ -590,8 +588,8 @@ fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(dist, { recursive: true });
 fs.writeFileSync(path.join(dist, 'index.html'), html);
 // Every module app.js can reach at runtime, including render.js's own imports.
-// Missing one is a 404 in the browser and a dead re-ranker, which the static
-// build itself would not notice -- verify.mjs checks for it below.
+// Missing one is a 404 in the browser and a dead re-ranker; verify.mjs walks
+// the import graph to catch it.
 for (const f of ['slice.js', 'render.js', 'locations.js', 'app.js']) {
   fs.copyFileSync(path.join(root, 'src', f), path.join(dist, f));
 }
@@ -599,15 +597,19 @@ fs.writeFileSync(path.join(dist, '.nojekyll'), '');
 fs.writeFileSync(path.join(dist, 'rankings.json'), JSON.stringify({
   builtAt: now.toISOString(),
   week,
-  algorithm: 'SLICE',
+  algorithm: 'SLICE v2',
   weights: DEFAULT_WEIGHTS,
-  rankings: [...ranked, ...benched].map(r => ({
+  rankings: allScored.map(r => ({
     rank: r.rank, id: r.id, name: r.name, neighborhood: locationLabel(r),
     locations: r.locations ?? [], locationsVerified: r.locationsVerified ?? null,
-    style: r.style, styleGroup: r.styleGroup, tier: r.tier || 'top',
+    style: r.style, styleGroup: r.styleGroup,
     status: r.status ?? 'open',
-    score: r.score, previousRank: r.previousRank ?? null,
+    score: r.score, previousRank: baseline[r.id] ?? null,
     factors: r.factorScores, penalty: r.penaltyApplied
+  })),
+  directory: dataset.restaurants.map(r => ({
+    id: r.id, name: r.name, url: r.url ?? null, status: r.status ?? 'open',
+    neighborhood: locationLabel(r), locations: r.locations ?? []
   })),
   brackets: brackets.map(b => ({
     group: b.group, contenders: b.list.length,
@@ -616,9 +618,7 @@ fs.writeFileSync(path.join(dist, 'rankings.json'), JSON.stringify({
 }, null, 2));
 
 /* ---- record this week's standings ----
- * One snapshot per ISO week. A rerun inside the same week overwrites that
- * week's entry rather than appending, so history stays weekly (52 = a year)
- * even though the workflow itself runs every few hours. */
+ * One snapshot per ISO week; a rerun inside the same week overwrites it. */
 const snapshot = {
   weekKey,
   date: now.toISOString().slice(0, 10),

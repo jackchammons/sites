@@ -53,11 +53,18 @@ const topCount = Math.min(10, rated.length);
 const cards = (html.match(/<article class="card/g) || []).length;
 check(cards === topCount, `expected ${topCount} cards, found ${cards}`);
 
-if (rated.length > topCount) {
-  const rows = (html.match(/<li class="bench-row/g) || []).length;
-  check(rows === rated.length - topCount,
-    `expected ${rated.length - topCount} bench rows, found ${rows}`);
-  check(/class="brackets"/.test(html), 'style brackets section missing');
+check(!/bench-row|bench-list/.test(html), 'bench markup should be gone');
+check(/class="brackets"/.test(html), 'style brackets section missing');
+
+// The directory lists every entry in the dataset, whatever its status.
+const dirRows = (html.match(/<tr class="dir-row/g) || []).length;
+check(dirRows === dataset.restaurants.length,
+  `expected ${dataset.restaurants.length} directory rows, found ${dirRows}`);
+
+// Any entry with a website must be linked wherever its name appears; checking
+// the href is present catches a rendering path that dropped the link.
+for (const r of dataset.restaurants) {
+  if (r.url) check(html.includes(`href="${r.url}"`), `"${r.name}" has a url but no link on the page`);
 }
 
 // Every entry in the dataset must appear somewhere on the page.
