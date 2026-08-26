@@ -2,81 +2,33 @@
   "updated": "2026-08-26T00:00:00Z",
   "directory": [
     {
-      "name": "South Town Pie",
-      "url": "https://www.southtownpie.com/",
-      "neighborhood": "South Park",
-      "style": "New York-style, pizza bar",
+      "name": "World Pizza",
+      "url": "https://www.worldpizzaseattle.com/",
+      "neighborhood": "Chinatown-International District",
+      "style": "Vegetarian, by-the-slice and whole pies",
       "status": "open",
-      "note": "New York-style pizza bar in South Park from chef Sam Crannell (formerly of LloydMartin), with a full bar, outdoor seating and pinball machines.",
-      "source": "https://www.southtownpie.com/hourslocation",
-      "address": "8611 14th Ave S, Seattle, WA 98108"
+      "note": "All-vegetarian pizza shop that has served the Chinatown-International District since reopening at this King Street location in 2011, after starting in Belltown in the 1990s.",
+      "source": "https://www.worldpizzaseattle.com/",
+      "address": "672 S King St, Seattle, WA 98104"
     },
     {
-      "name": "Pizzeria 22",
-      "url": "https://www.pizzeria22.com/",
-      "neighborhood": "Admiral, West Seattle",
-      "style": "Wood-fired Neapolitan",
+      "name": "Sacro Bosco Pizza & Wine",
+      "url": "https://www.sacroboscopizza.com/",
+      "neighborhood": "Central District",
+      "style": "Roman-style, rectangular pies",
       "status": "open",
-      "note": "Wood-fired Neapolitan pizzeria in West Seattle's Admiral district serving Margherita D.O.C. and a weekend wood-fired brunch.",
-      "source": "https://www.pizzeria22.com/",
-      "address": "4213 SW College St, Seattle, WA 98116"
+      "note": "Pizza-and-wine service run by the Temple Pastries bakery team, known for massive crunchy-yet-airy Roman-style rectangles.",
+      "source": "https://www.theinfatuation.com/seattle/reviews/sacro-bosco",
+      "address": "2524 S Jackson St, Seattle, WA 98144"
     },
     {
-      "name": "Johnny Mo's Pizzeria",
-      "url": "https://www.johnnymos.com/",
-      "neighborhood": "Eastlake",
-      "style": "Chicago-style deep dish",
+      "name": "Oxbow",
+      "neighborhood": "Montlake",
+      "style": "Bakery counter, offbeat whole pies and slices",
       "status": "open",
-      "note": "Chicago-style deep-dish pizzeria that started in a small nook in Eastlake and also serves a Chicago-style slice.",
-      "source": "https://www.johnnymos.com/locations",
-      "address": "3272 Fuhrman Ave E, Suite 100, Seattle, WA 98102"
-    },
-    {
-      "name": "Pazzo's on Eastlake",
-      "url": "https://www.pazzosoneastlake.com/",
-      "neighborhood": "Eastlake",
-      "status": "open",
-      "note": "Neighborhood pizza-and-bar spot on Eastlake Ave E with a dining room, lounge and seasonal patio.",
-      "source": "https://www.pazzosoneastlake.com/",
-      "address": "2307 Eastlake Ave E, Seattle, WA 98102"
-    },
-    {
-      "name": "Soprano's Antico",
-      "url": "https://www.anticosopranos.com/",
-      "neighborhood": "Admiral, West Seattle",
-      "style": "House-made dough, Italian-American",
-      "status": "open",
-      "note": "Family-run pizza and pasta restaurant in the Admiral Junction making house-made dough and pasta daily.",
-      "source": "https://www.anticosopranos.com/",
-      "address": "2348 California Ave SW, Seattle, WA 98116"
-    },
-    {
-      "name": "Pizza Ritual",
-      "neighborhood": "Delridge",
-      "style": "Neapolitan, naturally leavened",
-      "status": "open",
-      "note": "Takeout-only pop-up-turned-permanent pizzeria running out of the KBM Kitchen walk-up window, serving naturally leavened Neapolitan-style pizza Friday and Saturday evenings.",
-      "source": "https://westseattleblog.com/2026/01/biznote-its-just-pizza-says-proprietor-of-pizza-ritual-settling-on-days-hours/",
-      "address": "5608 Delridge Way SW, Seattle, WA 98106"
-    },
-    {
-      "name": "Pizzeria Pulcinella",
-      "neighborhood": "Rainier Beach",
-      "style": "Wood-fired Neapolitan",
-      "status": "open",
-      "note": "Long-running wood-fired Neapolitan pizzeria on Rainier Ave S, marked by a red glowing 'Wood Fire Pizza' sign, serving margherita pies and pasta.",
-      "source": "https://www.theinfatuation.com/seattle/reviews/pizzeria-pulcinella",
-      "address": "10003 Rainier Ave S, Seattle, WA 98178"
-    },
-    {
-      "name": "Romano Pizza & Pasta",
-      "url": "https://www.romanopizzaandpasta.com/",
-      "neighborhood": "Delridge",
-      "style": "Italian-American",
-      "status": "open",
-      "note": "Long-running Delridge pizza-and-pasta shop (formerly Olympia Pizza & Pasta) also serving calzones and Greek specialties.",
-      "source": "https://www.romanopizzaandpasta.com/",
-      "address": "5605 Delridge Way SW, Seattle, WA 98106"
+      "note": "Sea Wolf-affiliated bakery and bagel shop that has also served whole pies and slices from noon to 5pm daily since opening in 2022.",
+      "source": "https://www.capitolhillseattle.com/2022/06/oxbow-now-providing-bagels-and-baked-goods-and-a-place-to-get-out-of-the-montlake-flow-on-24th-ave/",
+      "address": "2307 24th Ave E, Seattle, WA 98112"
     }
   ]
 }

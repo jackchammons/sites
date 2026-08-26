@@ -1913,6 +1913,72 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": []
+    },
+    {
+      "id": "world-pizza",
+      "name": "World Pizza",
+      "neighborhood": "Chinatown-International District",
+      "style": "Vegetarian, by-the-slice and whole pies",
+      "blurb": "All-vegetarian pizza shop that has served the Chinatown-International District since reopening at this King Street location in 2011, after starting in Belltown in the 1990s.",
+      "url": "https://www.worldpizzaseattle.com/",
+      "status": "open",
+      "statusSource": "https://www.worldpizzaseattle.com/",
+      "statusDate": "2026-08-26",
+      "statusChecked": "2026-08-26",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Chinatown-International District",
+          "address": "672 S King St, Seattle, WA 98104"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "sacro-bosco-pizza-wine",
+      "name": "Sacro Bosco Pizza & Wine",
+      "neighborhood": "Central District",
+      "style": "Roman-style, rectangular pies",
+      "blurb": "Pizza-and-wine service run by the Temple Pastries bakery team, known for massive crunchy-yet-airy Roman-style rectangles.",
+      "url": "https://www.sacroboscopizza.com/",
+      "status": "open",
+      "statusSource": "https://www.theinfatuation.com/seattle/reviews/sacro-bosco",
+      "statusDate": "2026-08-26",
+      "statusChecked": "2026-08-26",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Central District",
+          "address": "2524 S Jackson St, Seattle, WA 98144"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "oxbow",
+      "name": "Oxbow",
+      "neighborhood": "Montlake",
+      "style": "Bakery counter, offbeat whole pies and slices",
+      "blurb": "Sea Wolf-affiliated bakery and bagel shop that has also served whole pies and slices from noon to 5pm daily since opening in 2022.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://www.capitolhillseattle.com/2022/06/oxbow-now-providing-bagels-and-baked-goods-and-a-place-to-get-out-of-the-montlake-flow-on-24th-ave/",
+      "statusDate": "2026-08-26",
+      "statusChecked": "2026-08-26",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Montlake",
+          "address": "2307 24th Ave E, Seattle, WA 98112"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }
