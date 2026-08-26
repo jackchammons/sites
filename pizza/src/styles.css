@@ -44,7 +44,7 @@ body {
 a { color: var(--tomato-2); }
 h1, h2, h3 { line-height: 1.15; margin: 0; letter-spacing: -0.02em; }
 
-.wrap { width: min(1140px, 94vw); margin: 0 auto; }
+.wrap { width: min(1280px, 94vw); margin: 0 auto; }
 .section { padding: 48px 0; border-top: 1px solid var(--line-soft); }
 .eyebrow {
   font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
@@ -524,3 +524,27 @@ a.buzz-tag:hover { border-color: var(--tomato); color: var(--tomato-2); }
 .map-pop b a { color: inherit; }
 .map-pop .addr { font-size: 11.5px; color: #666; margin-top: 2px; }
 @media (max-width: 700px) { .dir-map { height: 320px; } }
+
+
+/* ---- Desktop: the ranking uses the width ----
+   Board left, weight panel as a sticky rail on the right, so the controls stay
+   in reach while scrolling the list without ever covering it. Below 1200px the
+   panel drops back under the board, full-width, exactly as on mobile. */
+@media (min-width: 1200px) {
+  .rank-layout {
+    display: grid; grid-template-columns: minmax(0, 1fr) 420px;
+    gap: 30px; align-items: start;
+  }
+  .rank-layout .controls {
+    position: sticky; top: 16px; margin-bottom: 0;
+    max-height: calc(100vh - 32px); overflow-y: auto;
+  }
+  .rank-layout .controls-head { flex-direction: column; align-items: flex-start; gap: 6px; }
+  /* compact care matrix: factor header above its five cells */
+  .rank-layout .care-grid { grid-template-columns: repeat(5, 1fr); }
+  .rank-layout .care-corner { display: none; }
+  .rank-layout .care-factor { grid-column: 1 / -1; padding-right: 0; }
+
+  /* the buzz timeline in two columns instead of a half-empty one */
+  .buzz-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px; align-items: start; }
+}

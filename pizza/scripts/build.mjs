@@ -150,6 +150,9 @@ const allScored = [...ranked, ...restScored];
 const byStyle = new Map();
 for (const r of allScored) {
   if (!r.styleGroup) continue;
+  // A closed pizzeria cannot be the best of anything tonight. It keeps its
+  // score in the directory, but the brackets are a recommendation.
+  if (r.status && r.status !== 'open') continue;
   if (!byStyle.has(r.styleGroup)) byStyle.set(r.styleGroup, []);
   byStyle.get(r.styleGroup).push(r);
 }
@@ -411,6 +414,7 @@ ${read('src/styles.css')}</style>
     </p>
     <p class="lede" style="margin:0 0 26px" id="board-note">Published ranking.</p>
 
+    <div class="rank-layout">
     <div class="board" id="board">
 ${boardHtml(ranked)}
     </div>
@@ -431,6 +435,7 @@ ${boardHtml(ranked)}
         <label class="toggle"><input type="checkbox" id="opt-freshness" checked> Apply freshness decay</label>
         <button class="reset" id="reset" type="button">Back to the published ranking</button>
       </div>
+    </div>
     </div>
   </div>
 </section>
