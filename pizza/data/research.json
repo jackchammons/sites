@@ -1,76 +1,41 @@
 {
-  "updated": "2026-08-25T00:00:00Z",
-  "news": [
+  "updated": "2026-08-26T12:00:00Z",
+  "status": [
     {
-      "title": "Acclaimed Stevie's Famous Pizza Celebrates Grand Opening on Phinney Ridge August 2",
-      "url": "https://phinneywood.com/2026/07/stevies-famous-pizza-celebrates-grand-opening-on-phinney-ridge/",
-      "source": "The PhinneyWood Blog",
-      "published": "2026-07-28T00:00:00Z",
-      "kind": "opening",
-      "mentions": []
+      "id": "my-friend-dereks",
+      "status": "open",
+      "note": "The Detroit-style pop-up converted to a permanent brick-and-mortar in Tangletown and is now operating with regular weekly hours.",
+      "source": "https://myfrienddereks.com/"
     },
     {
-      "title": "Urban Family Brewing to open Seattle waterfront restaurant",
-      "url": "https://www.myballard.com/2026/07/31/urban-family-brewing-to-open-seattle-waterfront-restaurant/",
-      "source": "My Ballard",
-      "published": "2026-07-31T00:00:00Z",
-      "kind": "opening",
-      "mentions": []
-    }
-  ],
-  "candidates": [
-    {
-      "name": "My Friend Derek's",
-      "neighborhood": "Tangletown",
-      "style": "Wood-fired thin-crust",
-      "note": "A home-oven pop-up that sold out most nights has grown into a permanent Tangletown storefront, still built around the same wood-fired thin crust.",
-      "source": "https://myfrienddereks.com/about"
-    },
-    {
-      "name": "Abecedary",
-      "neighborhood": "Hillman City",
-      "style": "New Haven-style",
-      "note": "Pizzaiolo Seth Eisner gave Seattle a cheese-and-basil sneak preview at the Hillman City Block Party; the full New Haven-style pizzeria and brewery isn't slated to open until 2027.",
+      "id": "abecedary",
+      "status": "opening",
+      "note": "Still in development for a Hillman City brick-and-mortar not expected to open until 2027; only doing occasional pop-up previews so far.",
       "source": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/"
-    }
-  ],
-  "locations": [
+    },
+    {
+      "id": "flying-squirrel",
+      "status": "closed",
+      "note": "The last remaining Flying Squirrel Pizza location, in Georgetown, closed for good on March 1, 2024 after a decade in business, with no relocation.",
+      "source": "https://www.georgetowncommunitycouncil.com/post/two-eateries-and-winery-leave-georgetown"
+    },
     {
       "id": "windy-city-pie",
-      "homepage": "https://windycitypie.com",
-      "source": "https://windycitypie.com",
-      "sites": [
-        {
-          "neighborhood": "Phinney Ridge",
-          "address": "5918 Phinney Ave N, Seattle, WA 98103"
-        }
-      ]
+      "status": "open",
+      "note": "Operating on Phinney Ave N with current regular hours listed on its own site.",
+      "source": "https://windycitypie.com/"
     },
     {
       "id": "delancey",
-      "homepage": "https://www.delanceyseattle.com",
-      "source": "https://www.delanceyseattle.com",
-      "sites": [
-        {
-          "neighborhood": "Ballard",
-          "address": "1415 NW 70th Street, Seattle, WA 98117"
-        }
-      ]
+      "status": "open",
+      "note": "Operating in Ballard with current regular hours listed on its own site.",
+      "source": "https://www.delanceyseattle.com/"
     },
     {
       "id": "cornelly",
-      "homepage": "https://www.cornellyseattle.com",
-      "source": "https://www.cornellyseattle.com",
-      "sites": [
-        {
-          "neighborhood": "Capitol Hill",
-          "address": "601 Summit Ave E, Seattle, WA 98102"
-        },
-        {
-          "neighborhood": "Queen Anne",
-          "address": "2121 Queen Anne Ave N, Seattle, WA 98109"
-        }
-      ]
+      "status": "open",
+      "note": "Operating and now with two locations, Capitol Hill and a newer, larger Queen Anne outpost.",
+      "source": "https://www.cornellyseattle.com"
     }
   ]
 }

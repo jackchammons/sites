@@ -52,7 +52,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "statusChecked": "2026-08-26"
     },
     {
       "id": "delancey",
@@ -100,7 +101,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "statusChecked": "2026-08-26"
     },
     {
       "id": "cornelly",
@@ -153,7 +155,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "statusChecked": "2026-08-26"
     },
     {
       "id": "moto-pizza",
@@ -851,9 +854,9 @@
       "locations": [],
       "locationsVerified": null,
       "locationsSource": null,
-      "status": "open",
-      "statusSource": null,
-      "statusDate": null,
+      "status": "closed",
+      "statusSource": "https://www.georgetowncommunitycouncil.com/post/two-eateries-and-winery-leave-georgetown",
+      "statusDate": "2026-08-26",
       "attributes": {},
       "factors": {
         "craft": {
@@ -867,7 +870,9 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "statusNote": "The last remaining Flying Squirrel Pizza location, in Georgetown, closed for good on March 1, 2024 after a decade in business, with no relocation.",
+      "statusChecked": "2026-08-26"
     },
     {
       "id": "proletariat-pizza",
@@ -1439,14 +1444,16 @@
       "style": "Wood-fired thin-crust",
       "blurb": "A home-oven pop-up that sold out most nights has grown into a permanent Tangletown storefront, still built around the same wood-fired thin crust.",
       "url": null,
-      "status": "opening",
-      "statusSource": "https://myfrienddereks.com/about",
-      "statusDate": "2026-08-25",
+      "status": "open",
+      "statusSource": "https://myfrienddereks.com/",
+      "statusDate": "2026-08-26",
       "attributes": {},
       "locations": [],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "statusNote": "The Detroit-style pop-up converted to a permanent brick-and-mortar in Tangletown and is now operating with regular weekly hours.",
+      "statusChecked": "2026-08-26"
     },
     {
       "id": "abecedary",
@@ -1462,7 +1469,8 @@
       "locations": [],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "statusChecked": "2026-08-26"
     }
   ]
 }
