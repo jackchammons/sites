@@ -1581,6 +1581,28 @@
           "kind": "mention"
         }
       ]
+    },
+    {
+      "id": "pizza-by-ruffin",
+      "name": "Pizza By Ruffin",
+      "neighborhood": "South Lake Union",
+      "style": "Roman pizza al taglio",
+      "blurb": "Washington's first Black-owned pizzeria, serving Roman-style pizza al taglio with globally inspired toppings such as Jamaican curry and Ethiopian doro wat out of Fairview Market Hall.",
+      "url": "https://pizzabyruffin.com",
+      "status": "open",
+      "statusSource": "https://www.discoverslu.com/location/pizza-by-ruffin/",
+      "statusDate": "2026-08-26",
+      "statusChecked": "2026-08-26",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "South Lake Union",
+          "address": "400 Fairview Ave N #107, Seattle, WA 98109"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }
