@@ -294,8 +294,9 @@ const directorySection = `
       rotation; entries without a score have not been rated yet.
     </p>
     <div id="map" class="dir-map" aria-label="Map of Seattle pizzerias"></div>
-    <p class="note dir-map-note">Every verified address, colored by status: open, opening soon,
-    top-ten. Zoom out for the suburban branches. Tiles &copy; OpenStreetMap contributors.</p>
+    <p class="note dir-map-note">Seattle locations only — red for the top ten, brown for the
+    rest of the field, green for places opening soon. Chains' branches outside the city are
+    listed in the table, not mapped. Tiles &copy; OpenStreetMap contributors.</p>
     <div class="dir-scroll">
       <table class="dir-table">
         <thead><tr>
@@ -370,6 +371,10 @@ ${read('src/styles.css')}</style>
       city is saying about them. Each rated pizzeria gets a <b>SLICE score</b> out of 100 from
       five weighted factors, and the ten highest make the list. The full method is further down
       this page, and you can change the weights yourself.
+    </p>
+    <p class="lede" style="margin-top:10px;font-size:14.5px">
+      To be included, a pizzeria must have at least one location inside Seattle itself. Chains
+      that qualify are tracked with all their branches, but the suburbs are never the subject.
     </p>
     <div class="stamp">
       <span>Updated <b>${fmtDate(now)}</b></span>

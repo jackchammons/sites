@@ -139,6 +139,10 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   entries with `status: "open"`; anything else is held out whatever it scores. There is no
   bench: ranks 11+ render in the directory table. `isRated()` decides who competes — craft +
   distinctiveness + criticScore present.
+- **Seattle is the inclusion rule.** An entry qualifies by having at least one location
+  inside Seattle city limits (the discovery brief enforces it). Suburban branches of a
+  qualifying chain are kept in `locations[]` and listed in the directory, but the map plots
+  Seattle addresses only — matched by `, Seattle, WA` in the address string.
 - **One database, three statuses.** `restaurants.json` holds every pizzeria on file:
   `open`, `opening` (the radar), `closed` (struck through in the directory, held out of the
   ranking, listed under recently-closed for six months). `attributes` is a flexible flag map;

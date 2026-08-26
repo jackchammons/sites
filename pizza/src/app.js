@@ -106,10 +106,19 @@ render();
   const topIds = new Set(
     [...document.querySelectorAll('#board .card')].map(c => c.dataset.id).slice(0, 10));
 
+  // The index is Seattle-focused: an entry qualifies by having a location
+  // inside the city, and the map plots only those. Suburban branches stay in
+  // the dataset and the directory table; each popup notes how many exist.
+  const inSeattle = loc => /,\s*Seattle,\s*WA/i.test(loc.address ?? '');
   const pts = [];
+  const suburban = new Map();
   for (const r of DATA.dataset.restaurants) {
     if (r.status === 'closed') continue;
     for (const loc of r.locations ?? []) {
+      if (!inSeattle(loc)) {
+        suburban.set(r.id, (suburban.get(r.id) ?? 0) + 1);
+        continue;
+      }
       if (loc.lat == null || loc.lon == null) continue;
       pts.push({ r, loc });
     }
@@ -138,12 +147,12 @@ render();
     const name = r.url
       ? `<a href="${r.url.replace(/"/g, '&quot;')}" target="_blank" rel="noopener">${r.name}</a>`
       : r.name;
+    const outside = suburban.get(r.id);
     m.bindPopup(`<div class="map-pop"><b>${name}</b>` +
-      `<div class="addr">${loc.address}${r.status === 'opening' ? ' · opening soon' : ''}</div></div>`);
+      `<div class="addr">${loc.address}${r.status === 'opening' ? ' · opening soon' : ''}${
+        outside ? `<br>+ ${outside} location${outside > 1 ? 's' : ''} outside Seattle (see the table)` : ''}</div></div>`);
     bounds.push([loc.lat, loc.lon]);
   }
 
-  // Frame the city itself; suburban branches are a zoom-out away.
-  const seattle = bounds.filter(([la, lo]) => la > 47.48 && la < 47.75 && lo > -122.45 && lo < -122.24);
-  map.fitBounds(seattle.length >= 2 ? seattle : bounds, { padding: [24, 24] });
+  map.fitBounds(bounds, { padding: [24, 24] });
 })();
