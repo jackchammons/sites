@@ -28,7 +28,7 @@ on:
         description: 'Task type (auto rotates by day)'
         type: choice
         default: auto
-        options: [auto, discovery, locations, liveness, news]
+        options: [auto, discovery, locations, liveness, news, rating]
 
 concurrency:
   group: research
@@ -212,6 +212,14 @@ jobs:
              "factors":[{"id":"<entry id>","craft":<0-10 in 0.5 steps>,
                          "distinctiveness":<0-10 in 0.5 steps>,
                          "note":"<what the critics describe>","source":"<https>"}],
+             "factorRatings":[{"id":"<id from the rating worklist>",
+                               "craft":<0-10 in 0.5 steps>,
+                               "distinctiveness":<0-10 in 0.5 steps>,
+                               "criticScore":<0-10>,
+                               "opened":<year or omit>,"priceIndex":<1-4 or omit>,
+                               "styleGroup":"<short label or omit>",
+                               "sources":["<https you actually read>"],
+                               "note":"<what the coverage describes>"}],
              "newAttributes":[{"key":"<kebab-case>","label":"<short label>",
                                "frictionCost":<0-2.5 or omit>,"entries":["<id>"]}]}
 
@@ -227,6 +235,10 @@ jobs:
               (980xx-985xx).
             - Factor proposals only fill gaps -- never re-rate an entry that
               already has a rating -- and need published criticism behind them.
+            - factorRatings must all be for ids from the rating worklist, carry
+              craft, distinctiveness and criticScore inside their bounds, and
+              cite 1-4 sources you actually read. Skipping an entry you could
+              not ground is correct; inventing a rating rejects the file.
             - Stay within the search budget your task sets. Omissions are free;
               fabrications are not.
 

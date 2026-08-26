@@ -15,6 +15,8 @@
  *   status         open/closed/opening confirmations with citations
  *   mentions       stories tied to entries on file
  *   factors        proposed editorial ratings for unrated entries, cited
+ *   factorRatings  full rating proposals (craft, distinctiveness, criticScore
+ *                  and optional metadata) that make an unrated entry rankable
  *   newAttributes  new registry flags (label + optional friction cost)
  *
  * There is deliberately no ratings section: the sources that hold crowd
@@ -39,7 +41,8 @@ const byId = new Map(dataset.restaurants.map(r => [r.id, r]));
 
 const KINDS = new Set(['opening', 'closing', 'ranking', 'mention']);
 const CAPS = { news: 20, candidates: 15, closures: 10, locations: 12,
-               directory: 10, status: 10, mentions: 30, factors: 5, newAttributes: 3 };
+               directory: 10, status: 10, mentions: 30, factors: 5, newAttributes: 3,
+               factorRatings: 8 };
 const MAX_AGE_DAYS = 180;
 
 const fails = [];
@@ -57,7 +60,8 @@ const news = doc.news ?? doc.items ?? [];
 const sections = { news, candidates: doc.candidates ?? [], closures: doc.closures ?? [],
                    locations: doc.locations ?? [], directory: doc.directory ?? [],
                    status: doc.status ?? [], mentions: doc.mentions ?? [],
-                   factors: doc.factors ?? [], newAttributes: doc.newAttributes ?? [] };
+                   factors: doc.factors ?? [], newAttributes: doc.newAttributes ?? [],
+                   factorRatings: doc.factorRatings ?? [] };
 if (Array.isArray(doc.ratings) && doc.ratings.length) {
   fails.push('ratings are no longer accepted: crowd figures are frozen, see CLAUDE.md');
 }
@@ -218,6 +222,45 @@ sections.mentions.forEach((it, i) => {
  * overwrite one that exists. Values are bounded and stepped so a typo cannot
  * smuggle in a 47. */
 const validFactorValue = v => typeof v === 'number' && v >= 0 && v <= 10 && Math.round(v * 2) === v * 2;
+/* factorRatings: the full proposal that makes an unrated entry rankable.
+ * Stricter than `factors` because it grants entry to the ladder: values
+ * bounded, an already-rated entry is refused outright, and every proposal
+ * carries the sources it was read from. */
+const thisYear = new Date().getUTCFullYear();
+const alreadyRated = r => Boolean(r.factors?.craft && r.factors?.distinctiveness
+  && typeof r.criticScore === 'number');
+
+sections.factorRatings.forEach((it, i) => {
+  const r = byId.get(it?.id);
+  if (!r) { bad('factorRatings', i, `unknown restaurant id "${it?.id}"`); return; }
+  if (alreadyRated(r)) { bad('factorRatings', i, `${r.name} is already rated; ratings are never overwritten`); return; }
+  for (const k of ['craft', 'distinctiveness']) {
+    if (!validFactorValue(it?.[k])) bad('factorRatings', i, `${k} must be 0-10 in 0.5 steps, got ${it?.[k]}`);
+  }
+  if (typeof it?.criticScore !== 'number' || it.criticScore < 0 || it.criticScore > 10) {
+    bad('factorRatings', i, `criticScore must be a number 0-10, got ${it?.criticScore}`);
+  }
+  if (it?.opened != null && (typeof it.opened !== 'number' || it.opened < 1900 || it.opened > thisYear)) {
+    bad('factorRatings', i, `opened must be a year 1900-${thisYear}, got ${it.opened}`);
+  }
+  if (it?.priceIndex != null && ![1, 2, 3, 4].includes(it.priceIndex)) {
+    bad('factorRatings', i, `priceIndex must be 1-4, got ${it.priceIndex}`);
+  }
+  if (it?.styleGroup != null && (typeof it.styleGroup !== 'string'
+      || it.styleGroup.trim().length < 3 || it.styleGroup.trim().length > 24)) {
+    bad('factorRatings', i, `styleGroup must be a short label, got "${it.styleGroup}"`);
+  }
+  const srcs = it?.sources;
+  if (!Array.isArray(srcs) || srcs.length < 1 || srcs.length > 4) {
+    bad('factorRatings', i, 'sources must be 1-4 https URLs actually read');
+  } else {
+    srcs.forEach((u, j) => checkUrl('factorRatings', i, u, `sources[${j}]`));
+  }
+  if (typeof it?.note !== 'string' || it.note.trim().length < 20) {
+    bad('factorRatings', i, 'note missing or too short — say what the coverage describes');
+  }
+});
+
 sections.factors.forEach((it, i) => {
   const r = byId.get(it?.id);
   if (!r) { bad('factors', i, `unknown restaurant id "${it?.id}"`); return; }

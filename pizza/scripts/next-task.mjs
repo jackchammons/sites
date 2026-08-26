@@ -13,6 +13,8 @@
  *   liveness    confirm entries are still open, with citations
  *   news        coverage the feed sweep missed + mention tags + factor
  *               proposals for unrated entries
+ *   rating      rate unrated entries from their critical coverage, so
+ *               discoveries can join the ranking
  *
  * The brief is task data; the fixed rules (run nothing, schema, validation)
  * live in research.yml so no task can drop them.
@@ -21,11 +23,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { locationWorklist } from '../src/locations.js';
+import { isRated } from '../src/slice.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const { restaurants } = JSON.parse(fs.readFileSync(path.join(root, 'data/restaurants.json'), 'utf8'));
 
-const TYPES = ['discovery', 'locations', 'liveness', 'news'];
+const TYPES = ['discovery', 'locations', 'liveness', 'news', 'rating'];
 const forced = (process.argv[2] || 'auto').toLowerCase();
 const task = TYPES.includes(forced)
   ? forced
@@ -136,6 +139,48 @@ pizzeria's own announcement, or its site gone plus a corroborating
 source. Review-site labels alone ("Yelp says closed") are a lead, not
 evidence — chase the lead or leave the status as it is.
 Budget: at most 12 searches and 2 fetches per entry.`;
+}
+
+if (task === 'rating') {
+  // Mentions-first: entries with cited coverage on file are the ones a rating
+  // can actually be grounded in, and Roma Roma arrives with three.
+  // Only places actually open: a pizzeria that has not opened its doors has
+  // no pies for anyone to have written about, and cannot rank anyway.
+  const unrated = openField
+    .filter(r => r.status !== 'opening' && !isRated(r))
+    .sort((a, b) => (b.mentions?.length ?? 0) - (a.mentions?.length ?? 0))
+    .slice(0, 6);
+  const styleGroups = [...new Set(restaurants.map(r => r.styleGroup).filter(Boolean))].sort();
+  brief = `Your task: rate pizzerias that are in the directory but not yet in
+the ranking, so they can compete. Rate these, and only these:
+
+${unrated.map(r => `- id: ${r.id} | ${r.name} | ${r.neighborhood ?? '?'} | site: ${r.url ?? 'unknown'}${r.mentions?.length ? ` | ${r.mentions.length} cited mention(s) on file` : ''}`).join('\n')}
+
+For each one, read what has actually been published about it -- reviews,
+neighborhood-blog writeups, substantive roundup entries in real outlets --
+plus its own website and menu. Then propose a "factorRatings" entry
+grounded in that coverage:
+
+- craft: how good the pizza itself is by what critics and diners-in-print
+  describe (dough, bake, toppings), 0-10 in 0.5 steps. A solid neighborhood
+  slice shop is a 6, not a 9; reserve 8+ for places coverage treats as
+  destinations.
+- distinctiveness: does it own a lane in this city, 0-10 in 0.5 steps.
+- criticScore: your read of its overall critical standing, 0-10.
+- opened: the year it opened, when a source states it.
+- priceIndex: 1 (cheap slices) to 4 (expensive), from its own menu.
+- styleGroup: pick from the existing vocabulary when one fits --
+  ${styleGroups.join('; ')} -- or coin a short new one only when nothing does.
+- sources: 1-4 https URLs you actually read, strongest first.
+- note: one or two sentences on what the coverage says, which is what the
+  site will show as the rating's provenance.
+
+Skip any entry you cannot ground in at least one credible published
+source about that specific place -- no rating is far better than an
+invented one, and a skipped entry is a correct outcome. Never propose for
+an entry not in the list above.
+
+Budget: about 3 searches per entry, 18 total. Write the file and stop.`;
 }
 
 if (task === 'news') {

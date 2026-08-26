@@ -118,6 +118,30 @@ for (const it of research.factors ?? []) {
   }
 }
 
+/* factorRatings: the proposal that makes an unrated entry rankable. Applied
+ * only to entries still missing a rating -- editorial and prior agent ratings
+ * are never overwritten -- with provenance on every factor and lastVerified
+ * set to today, since the entry was just researched. */
+let ratedNow = 0;
+for (const it of research.factorRatings ?? []) {
+  const r = byId.get(it.id);
+  if (!r) continue;
+  if (r.factors?.craft && r.factors?.distinctiveness && typeof r.criticScore === 'number') continue;
+  const src = (it.sources ?? [])[0];
+  r.factors = r.factors ?? {};
+  for (const k of ['craft', 'distinctiveness']) {
+    if (!r.factors[k]) r.factors[k] = { value: it[k], setBy: 'agent', source: src, note: it.note, date: today };
+  }
+  r.criticScore = it.criticScore;
+  if (it.opened != null && r.opened == null) r.opened = it.opened;
+  if (it.priceIndex != null && r.priceIndex == null) r.priceIndex = it.priceIndex;
+  if (it.styleGroup && !r.styleGroup) r.styleGroup = it.styleGroup.trim();
+  r.lastVerified = today;
+  ratedNow++;
+  changes++;
+  console.log(`  # ${r.name}: rated — craft ${it.craft}, distinctiveness ${it.distinctiveness}, critic ${it.criticScore} (${src})`);
+}
+
 /* newAttributes: registry rows plus the flags on the entries that need them. */
 const registryPath = path.join(root, 'data/attributes.json');
 if ((research.newAttributes ?? []).length) {
@@ -181,4 +205,4 @@ if (changes || located) {
   if (fs.readFileSync(dataPath, 'utf8') !== out) fs.writeFileSync(dataPath, out);
 }
 
-console.log(`\napplied: ${changes} change(s), ${located} location set(s) verified.`);
+console.log(`\napplied: ${changes} change(s), ${located} location set(s) verified. ${ratedNow} newly rated.`);

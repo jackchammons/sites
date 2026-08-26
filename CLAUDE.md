@@ -139,6 +139,12 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   entries with `status: "open"`; anything else is held out whatever it scores. There is no
   bench: ranks 11+ render in the directory table. `isRated()` decides who competes — craft +
   distinctiveness + criticScore present.
+- **The rating task is how discoveries join the ranking.** `factorRatings` proposals carry
+  craft, distinctiveness AND criticScore (all three are required by `isRated()` — the older
+  `factors` path writes only the first two and can never make an entry rankable), plus
+  opened/priceIndex/styleGroup when derivable, with 1–4 read sources. The validator refuses
+  proposals for already-rated entries; ratings are never overwritten by the agent. An unrated
+  entry with no findable critical coverage is a deliberate terminal state, not a bug.
 - **Seattle is the inclusion rule.** An entry qualifies by having at least one location
   inside Seattle city limits (the discovery brief enforces it). Suburban branches of a
   qualifying chain are kept in `locations[]` and listed in the directory, but the map plots
