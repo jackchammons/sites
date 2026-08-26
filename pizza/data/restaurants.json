@@ -1979,6 +1979,50 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": []
+    },
+    {
+      "id": "dantini-pizza",
+      "name": "Dantini Pizza",
+      "neighborhood": "Interbay",
+      "style": "New York-style thin-crust and Grandma pan pizza",
+      "blurb": "A dedicated pizza kitchen in Interbay serving 16-inch New York-style pies and rectangular Grandma-style pan pizzas.",
+      "url": "https://www.dantinipizza.com/",
+      "status": "open",
+      "statusSource": "https://www.theinfatuation.com/seattle/reviews/dantini-pizza",
+      "statusDate": "2026-08-26",
+      "statusChecked": "2026-08-26",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Interbay",
+          "address": "1417 Elliott Ave W, Seattle, WA 98119"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "a-pizza-mart-first-hill",
+      "name": "A Pizza Mart (First Hill)",
+      "neighborhood": "First Hill",
+      "style": "New York-style, by the slice",
+      "blurb": "Independent Seattle slice shop on Seneca Street serving First Hill, part of the locally owned A Pizza Mart mini-chain.",
+      "url": "https://www.apizzamartfirsthill.com/",
+      "status": "open",
+      "statusSource": "https://www.apizzamartfirsthill.com/",
+      "statusDate": "2026-08-26",
+      "statusChecked": "2026-08-26",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "First Hill",
+          "address": "800 Seneca St, Seattle, WA 98101"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }

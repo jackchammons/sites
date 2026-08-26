@@ -1,34 +1,25 @@
 {
-  "updated": "2026-08-26T00:00:00Z",
+  "updated": "2026-08-26T18:00:00Z",
   "directory": [
     {
-      "name": "World Pizza",
-      "url": "https://www.worldpizzaseattle.com/",
-      "neighborhood": "Chinatown-International District",
-      "style": "Vegetarian, by-the-slice and whole pies",
+      "name": "Dantini Pizza",
+      "url": "https://www.dantinipizza.com/",
+      "neighborhood": "Interbay",
+      "style": "New York-style thin-crust and Grandma pan pizza",
       "status": "open",
-      "note": "All-vegetarian pizza shop that has served the Chinatown-International District since reopening at this King Street location in 2011, after starting in Belltown in the 1990s.",
-      "source": "https://www.worldpizzaseattle.com/",
-      "address": "672 S King St, Seattle, WA 98104"
+      "note": "A dedicated pizza kitchen in Interbay serving 16-inch New York-style pies and rectangular Grandma-style pan pizzas.",
+      "source": "https://www.theinfatuation.com/seattle/reviews/dantini-pizza",
+      "address": "1417 Elliott Ave W, Seattle, WA 98119"
     },
     {
-      "name": "Sacro Bosco Pizza & Wine",
-      "url": "https://www.sacroboscopizza.com/",
-      "neighborhood": "Central District",
-      "style": "Roman-style, rectangular pies",
+      "name": "A Pizza Mart (First Hill)",
+      "url": "https://www.apizzamartfirsthill.com/",
+      "neighborhood": "First Hill",
+      "style": "New York-style, by the slice",
       "status": "open",
-      "note": "Pizza-and-wine service run by the Temple Pastries bakery team, known for massive crunchy-yet-airy Roman-style rectangles.",
-      "source": "https://www.theinfatuation.com/seattle/reviews/sacro-bosco",
-      "address": "2524 S Jackson St, Seattle, WA 98144"
-    },
-    {
-      "name": "Oxbow",
-      "neighborhood": "Montlake",
-      "style": "Bakery counter, offbeat whole pies and slices",
-      "status": "open",
-      "note": "Sea Wolf-affiliated bakery and bagel shop that has also served whole pies and slices from noon to 5pm daily since opening in 2022.",
-      "source": "https://www.capitolhillseattle.com/2022/06/oxbow-now-providing-bagels-and-baked-goods-and-a-place-to-get-out-of-the-montlake-flow-on-24th-ave/",
-      "address": "2307 24th Ave E, Seattle, WA 98112"
+      "note": "Independent Seattle slice shop on Seneca Street serving First Hill, part of the locally owned A Pizza Mart mini-chain.",
+      "source": "https://www.apizzamartfirsthill.com/",
+      "address": "800 Seneca St, Seattle, WA 98101"
     }
   ]
 }
