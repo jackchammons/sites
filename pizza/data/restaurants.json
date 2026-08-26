@@ -1495,7 +1495,9 @@
       "locations": [
         {
           "neighborhood": "Phinney Ridge",
-          "address": "6000 Phinney Ave N, Seattle, WA 98103"
+          "address": "6000 Phinney Ave N, Seattle, WA 98103",
+          "lat": 47.67261,
+          "lon": -122.35408
         }
       ],
       "locationsVerified": null,
@@ -1525,7 +1527,9 @@
       "locations": [
         {
           "neighborhood": "University District",
-          "address": "4529 University Way NE, Seattle, WA 98105"
+          "address": "4529 University Way NE, Seattle, WA 98105",
+          "lat": 47.66217,
+          "lon": -122.31346
         }
       ],
       "locationsVerified": null,
@@ -1547,7 +1551,9 @@
       "locations": [
         {
           "neighborhood": "Capitol Hill",
-          "address": "1610 12th Ave, Seattle, WA 98122"
+          "address": "1610 12th Ave, Seattle, WA 98122",
+          "lat": 47.61562,
+          "lon": -122.31667
         }
       ],
       "locationsVerified": null,

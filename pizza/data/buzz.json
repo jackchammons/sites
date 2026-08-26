@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-26T01:30:51.854Z",
+  "updated": "2026-08-26T01:59:27.463Z",
   "sources": 4,
   "items": [
     {
@@ -140,7 +140,9 @@
       "source": "The Infatuation",
       "published": "2026-05-12T07:00:00.000Z",
       "kind": "mention",
-      "mentions": []
+      "mentions": [
+        "roma-roma"
+      ]
     },
     {
       "title": "Eat This: Mexican Pizza at Pedrito’s Pizzas Locas",
