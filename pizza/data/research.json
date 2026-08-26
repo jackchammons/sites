@@ -2,62 +2,81 @@
   "updated": "2026-08-26T00:00:00Z",
   "directory": [
     {
-      "name": "Cornuto Pizzeria",
-      "url": "https://www.cornutopizzeria.com/",
-      "neighborhood": "Phinney Ridge/Greenwood",
-      "style": "Neapolitan, wood-fired",
+      "name": "South Town Pie",
+      "url": "https://www.southtownpie.com/",
+      "neighborhood": "South Park",
+      "style": "New York-style, pizza bar",
       "status": "open",
-      "note": "Wood-fired Neapolitan-style pizzeria on Greenwood Ave N in Phinney Ridge, open Wednesday through Sunday.",
-      "source": "https://www.cornutopizzeria.com/",
-      "address": "7404 Greenwood Ave N, Seattle, WA 98103"
+      "note": "New York-style pizza bar in South Park from chef Sam Crannell (formerly of LloydMartin), with a full bar, outdoor seating and pinball machines.",
+      "source": "https://www.southtownpie.com/hourslocation",
+      "address": "8611 14th Ave S, Seattle, WA 98108"
     },
     {
-      "name": "Razzi's Pizzeria",
-      "neighborhood": "Greenwood",
-      "style": "Italian, gluten-free and vegan available",
+      "name": "Pizzeria 22",
+      "url": "https://www.pizzeria22.com/",
+      "neighborhood": "Admiral, West Seattle",
+      "style": "Wood-fired Neapolitan",
       "status": "open",
-      "note": "Long-running Greenwood pizzeria offering full gluten-free and vegan menus alongside classic Italian pizza.",
-      "source": "https://intentionalist.com/b/razzis-pizzeria-greenwood/",
-      "address": "8523 Greenwood Ave N, Seattle, WA 98103"
+      "note": "Wood-fired Neapolitan pizzeria in West Seattle's Admiral district serving Margherita D.O.C. and a weekend wood-fired brunch.",
+      "source": "https://www.pizzeria22.com/",
+      "address": "4213 SW College St, Seattle, WA 98116"
     },
     {
-      "name": "Pizzeria La Rocca",
-      "url": "https://www.pizzalarocca.com/",
-      "neighborhood": "Greenwood",
-      "style": "Wood-fired, Italian",
+      "name": "Johnny Mo's Pizzeria",
+      "url": "https://www.johnnymos.com/",
+      "neighborhood": "Eastlake",
+      "style": "Chicago-style deep dish",
       "status": "open",
-      "note": "Wood-fired Italian pizzeria founded in 2021 in the heart of Greenwood, using imported Italian flour and ingredients.",
-      "source": "https://www.pizzalarocca.com/",
-      "address": "8404 Greenwood Ave N, Seattle, WA 98103"
+      "note": "Chicago-style deep-dish pizzeria that started in a small nook in Eastlake and also serves a Chicago-style slice.",
+      "source": "https://www.johnnymos.com/locations",
+      "address": "3272 Fuhrman Ave E, Suite 100, Seattle, WA 98102"
     },
     {
-      "name": "Pi Vegan Pizzeria",
-      "neighborhood": "Roosevelt/University District",
-      "style": "Vegan",
+      "name": "Pazzo's on Eastlake",
+      "url": "https://www.pazzosoneastlake.com/",
+      "neighborhood": "Eastlake",
       "status": "open",
-      "note": "Seattle's 100% vegan pizzeria near the Roosevelt/University District line, with gluten-free and soy-free options.",
-      "source": "https://seattlevegan.com/pizza-pi-restaurant/",
-      "address": "5301 Roosevelt Way NE, Seattle, WA 98105"
+      "note": "Neighborhood pizza-and-bar spot on Eastlake Ave E with a dining room, lounge and seasonal patio.",
+      "source": "https://www.pazzosoneastlake.com/",
+      "address": "2307 Eastlake Ave E, Seattle, WA 98102"
     },
     {
-      "name": "Mioposto",
-      "url": "https://www.miopostopizza.com/",
-      "neighborhood": "Mount Baker",
-      "style": "Wood-fired, Italian",
+      "name": "Soprano's Antico",
+      "url": "https://www.anticosopranos.com/",
+      "neighborhood": "Admiral, West Seattle",
+      "style": "House-made dough, Italian-American",
       "status": "open",
-      "note": "Family-owned wood-fired pizzeria, bar and Italian kitchen across from Mt. Baker park, open since 2006.",
-      "source": "https://www.miopostopizza.com/",
-      "address": "3601 S McClellan St, Seattle, WA 98144"
+      "note": "Family-run pizza and pasta restaurant in the Admiral Junction making house-made dough and pasta daily.",
+      "source": "https://www.anticosopranos.com/",
+      "address": "2348 California Ave SW, Seattle, WA 98116"
     },
     {
-      "name": "Veraci Pizza",
-      "url": "https://www.veracipizza.com/",
-      "neighborhood": "Wedgwood",
-      "style": "Wood-fired, artisan",
+      "name": "Pizza Ritual",
+      "neighborhood": "Delridge",
+      "style": "Neapolitan, naturally leavened",
       "status": "open",
-      "note": "Wood-fired artisan pizzeria that grew out of a Ballard Farmers Market oven, now with a standalone Wedgwood location.",
-      "source": "https://www.veracipizza.com/",
-      "address": "7320 35th Ave NE, Seattle, WA 98115"
+      "note": "Takeout-only pop-up-turned-permanent pizzeria running out of the KBM Kitchen walk-up window, serving naturally leavened Neapolitan-style pizza Friday and Saturday evenings.",
+      "source": "https://westseattleblog.com/2026/01/biznote-its-just-pizza-says-proprietor-of-pizza-ritual-settling-on-days-hours/",
+      "address": "5608 Delridge Way SW, Seattle, WA 98106"
+    },
+    {
+      "name": "Pizzeria Pulcinella",
+      "neighborhood": "Rainier Beach",
+      "style": "Wood-fired Neapolitan",
+      "status": "open",
+      "note": "Long-running wood-fired Neapolitan pizzeria on Rainier Ave S, marked by a red glowing 'Wood Fire Pizza' sign, serving margherita pies and pasta.",
+      "source": "https://www.theinfatuation.com/seattle/reviews/pizzeria-pulcinella",
+      "address": "10003 Rainier Ave S, Seattle, WA 98178"
+    },
+    {
+      "name": "Romano Pizza & Pasta",
+      "url": "https://www.romanopizzaandpasta.com/",
+      "neighborhood": "Delridge",
+      "style": "Italian-American",
+      "status": "open",
+      "note": "Long-running Delridge pizza-and-pasta shop (formerly Olympia Pizza & Pasta) also serving calzones and Greek specialties.",
+      "source": "https://www.romanopizzaandpasta.com/",
+      "address": "5605 Delridge Way SW, Seattle, WA 98106"
     }
   ]
 }

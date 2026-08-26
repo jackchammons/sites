@@ -1737,6 +1737,182 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": []
+    },
+    {
+      "id": "south-town-pie",
+      "name": "South Town Pie",
+      "neighborhood": "South Park",
+      "style": "New York-style, pizza bar",
+      "blurb": "New York-style pizza bar in South Park from chef Sam Crannell (formerly of LloydMartin), with a full bar, outdoor seating and pinball machines.",
+      "url": "https://www.southtownpie.com/",
+      "status": "open",
+      "statusSource": "https://www.southtownpie.com/hourslocation",
+      "statusDate": "2026-08-26",
+      "statusChecked": "2026-08-26",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "South Park",
+          "address": "8611 14th Ave S, Seattle, WA 98108"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "pizzeria-22",
+      "name": "Pizzeria 22",
+      "neighborhood": "Admiral, West Seattle",
+      "style": "Wood-fired Neapolitan",
+      "blurb": "Wood-fired Neapolitan pizzeria in West Seattle's Admiral district serving Margherita D.O.C. and a weekend wood-fired brunch.",
+      "url": "https://www.pizzeria22.com/",
+      "status": "open",
+      "statusSource": "https://www.pizzeria22.com/",
+      "statusDate": "2026-08-26",
+      "statusChecked": "2026-08-26",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Admiral, West Seattle",
+          "address": "4213 SW College St, Seattle, WA 98116"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "johnny-mos-pizzeria",
+      "name": "Johnny Mo's Pizzeria",
+      "neighborhood": "Eastlake",
+      "style": "Chicago-style deep dish",
+      "blurb": "Chicago-style deep-dish pizzeria that started in a small nook in Eastlake and also serves a Chicago-style slice.",
+      "url": "https://www.johnnymos.com/",
+      "status": "open",
+      "statusSource": "https://www.johnnymos.com/locations",
+      "statusDate": "2026-08-26",
+      "statusChecked": "2026-08-26",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Eastlake",
+          "address": "3272 Fuhrman Ave E, Suite 100, Seattle, WA 98102"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "pazzos-on-eastlake",
+      "name": "Pazzo's on Eastlake",
+      "neighborhood": "Eastlake",
+      "style": null,
+      "blurb": "Neighborhood pizza-and-bar spot on Eastlake Ave E with a dining room, lounge and seasonal patio.",
+      "url": "https://www.pazzosoneastlake.com/",
+      "status": "open",
+      "statusSource": "https://www.pazzosoneastlake.com/",
+      "statusDate": "2026-08-26",
+      "statusChecked": "2026-08-26",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Eastlake",
+          "address": "2307 Eastlake Ave E, Seattle, WA 98102"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "sopranos-antico",
+      "name": "Soprano's Antico",
+      "neighborhood": "Admiral, West Seattle",
+      "style": "House-made dough, Italian-American",
+      "blurb": "Family-run pizza and pasta restaurant in the Admiral Junction making house-made dough and pasta daily.",
+      "url": "https://www.anticosopranos.com/",
+      "status": "open",
+      "statusSource": "https://www.anticosopranos.com/",
+      "statusDate": "2026-08-26",
+      "statusChecked": "2026-08-26",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Admiral, West Seattle",
+          "address": "2348 California Ave SW, Seattle, WA 98116"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "pizza-ritual",
+      "name": "Pizza Ritual",
+      "neighborhood": "Delridge",
+      "style": "Neapolitan, naturally leavened",
+      "blurb": "Takeout-only pop-up-turned-permanent pizzeria running out of the KBM Kitchen walk-up window, serving naturally leavened Neapolitan-style pizza Friday and Saturday evenings.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://westseattleblog.com/2026/01/biznote-its-just-pizza-says-proprietor-of-pizza-ritual-settling-on-days-hours/",
+      "statusDate": "2026-08-26",
+      "statusChecked": "2026-08-26",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Delridge",
+          "address": "5608 Delridge Way SW, Seattle, WA 98106"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "pizzeria-pulcinella",
+      "name": "Pizzeria Pulcinella",
+      "neighborhood": "Rainier Beach",
+      "style": "Wood-fired Neapolitan",
+      "blurb": "Long-running wood-fired Neapolitan pizzeria on Rainier Ave S, marked by a red glowing 'Wood Fire Pizza' sign, serving margherita pies and pasta.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://www.theinfatuation.com/seattle/reviews/pizzeria-pulcinella",
+      "statusDate": "2026-08-26",
+      "statusChecked": "2026-08-26",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Rainier Beach",
+          "address": "10003 Rainier Ave S, Seattle, WA 98178"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "romano-pizza-pasta",
+      "name": "Romano Pizza & Pasta",
+      "neighborhood": "Delridge",
+      "style": "Italian-American",
+      "blurb": "Long-running Delridge pizza-and-pasta shop (formerly Olympia Pizza & Pasta) also serving calzones and Greek specialties.",
+      "url": "https://www.romanopizzaandpasta.com/",
+      "status": "open",
+      "statusSource": "https://www.romanopizzaandpasta.com/",
+      "statusDate": "2026-08-26",
+      "statusChecked": "2026-08-26",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Delridge",
+          "address": "5605 Delridge Way SW, Seattle, WA 98106"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }
