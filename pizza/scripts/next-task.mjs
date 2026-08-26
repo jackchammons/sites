@@ -37,6 +37,26 @@ let brief = '';
 
 if (task === 'discovery') {
   const names = restaurants.map(r => r.name).sort().join('; ');
+
+  // News-driven searching finds newsworthy places and dries up fast. Each run
+  // also sweeps a handful of neighborhoods the file has no entry in, which is
+  // where the long tail of never-in-the-news pizzerias lives. Random pick so
+  // back-to-back backfill runs cover different ground.
+  const HOODS = ['Ballard','Fremont','Wallingford','Green Lake','Greenwood','Crown Hill',
+    'Magnolia','Queen Anne','Interbay','Belltown','Downtown','Pioneer Square',
+    'Chinatown-International District','Capitol Hill','First Hill','Central District',
+    'Madison Park','Madrona','Montlake','Eastlake','South Lake Union','University District',
+    'Ravenna','Wedgwood','Maple Leaf','Northgate','Lake City','Beacon Hill','Columbia City',
+    'Hillman City','Rainier Beach','Seward Park','Mount Baker','Georgetown','SoDo',
+    'West Seattle Junction','Admiral','Alki','South Park','Delridge','Roosevelt','Phinney Ridge'];
+  const covered = new Set();
+  for (const r of restaurants) {
+    if (r.neighborhood) covered.add(r.neighborhood.toLowerCase());
+    for (const l of r.locations ?? []) covered.add(l.neighborhood.toLowerCase());
+  }
+  const sparse = HOODS.filter(h => !covered.has(h.toLowerCase()));
+  const focus = sparse.sort(() => Math.random() - 0.5).slice(0, 5);
+
   brief = `Your task: find pizzerias inside Seattle city limits that are not yet on file.
 
 Already on file (do NOT propose any of these, under any spelling):
@@ -44,9 +64,16 @@ ${names}
 
 Search the way a local editor would: recent "new pizza Seattle" and
 neighborhood-roundup coverage, Eater Seattle, The Stranger, Seattle Times,
-neighborhood blogs. Delivery-only and pop-up operations count if they are
-genuinely operating in Seattle. For each find, open its official website
-when it has one.
+neighborhood blogs. Also sweep these specific neighborhoods, where the
+file currently has nothing — a "pizza <neighborhood> Seattle" search each.
+Long-running neighborhood places that never make the news are exactly
+what this is for:
+${focus.map(h => `- ${h}`).join('\n')}
+
+Delivery-only and pop-up operations count if they are genuinely operating
+in Seattle. Skip national chains (Domino's, Pizza Hut, Papa John's, MOD,
+Little Caesars): this is an index of Seattle's own pizzerias. For each
+find, open its official website when it has one.
 
 Report each as a "directory" entry: name, url (official site, only if you
 opened it), neighborhood, style, status ("open", or "opening" if not yet
