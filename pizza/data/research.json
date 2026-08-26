@@ -1,1 +1,63 @@
-{"updated":"2026-08-26T18:00:00Z","directory":[]}
+{
+  "updated": "2026-08-26T00:00:00Z",
+  "directory": [
+    {
+      "name": "Cornuto Pizzeria",
+      "url": "https://www.cornutopizzeria.com/",
+      "neighborhood": "Phinney Ridge/Greenwood",
+      "style": "Neapolitan, wood-fired",
+      "status": "open",
+      "note": "Wood-fired Neapolitan-style pizzeria on Greenwood Ave N in Phinney Ridge, open Wednesday through Sunday.",
+      "source": "https://www.cornutopizzeria.com/",
+      "address": "7404 Greenwood Ave N, Seattle, WA 98103"
+    },
+    {
+      "name": "Razzi's Pizzeria",
+      "neighborhood": "Greenwood",
+      "style": "Italian, gluten-free and vegan available",
+      "status": "open",
+      "note": "Long-running Greenwood pizzeria offering full gluten-free and vegan menus alongside classic Italian pizza.",
+      "source": "https://intentionalist.com/b/razzis-pizzeria-greenwood/",
+      "address": "8523 Greenwood Ave N, Seattle, WA 98103"
+    },
+    {
+      "name": "Pizzeria La Rocca",
+      "url": "https://www.pizzalarocca.com/",
+      "neighborhood": "Greenwood",
+      "style": "Wood-fired, Italian",
+      "status": "open",
+      "note": "Wood-fired Italian pizzeria founded in 2021 in the heart of Greenwood, using imported Italian flour and ingredients.",
+      "source": "https://www.pizzalarocca.com/",
+      "address": "8404 Greenwood Ave N, Seattle, WA 98103"
+    },
+    {
+      "name": "Pi Vegan Pizzeria",
+      "neighborhood": "Roosevelt/University District",
+      "style": "Vegan",
+      "status": "open",
+      "note": "Seattle's 100% vegan pizzeria near the Roosevelt/University District line, with gluten-free and soy-free options.",
+      "source": "https://seattlevegan.com/pizza-pi-restaurant/",
+      "address": "5301 Roosevelt Way NE, Seattle, WA 98105"
+    },
+    {
+      "name": "Mioposto",
+      "url": "https://www.miopostopizza.com/",
+      "neighborhood": "Mount Baker",
+      "style": "Wood-fired, Italian",
+      "status": "open",
+      "note": "Family-owned wood-fired pizzeria, bar and Italian kitchen across from Mt. Baker park, open since 2006.",
+      "source": "https://www.miopostopizza.com/",
+      "address": "3601 S McClellan St, Seattle, WA 98144"
+    },
+    {
+      "name": "Veraci Pizza",
+      "url": "https://www.veracipizza.com/",
+      "neighborhood": "Wedgwood",
+      "style": "Wood-fired, artisan",
+      "status": "open",
+      "note": "Wood-fired artisan pizzeria that grew out of a Ballard Farmers Market oven, now with a standalone Wedgwood location.",
+      "source": "https://www.veracipizza.com/",
+      "address": "7320 35th Ave NE, Seattle, WA 98115"
+    }
+  ]
+}
