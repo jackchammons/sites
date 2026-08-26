@@ -1597,7 +1597,9 @@
       "locations": [
         {
           "neighborhood": "South Lake Union",
-          "address": "400 Fairview Ave N #107, Seattle, WA 98109"
+          "address": "400 Fairview Ave N #107, Seattle, WA 98109",
+          "lat": 47.62246,
+          "lon": -122.33385
         }
       ],
       "locationsVerified": null,
