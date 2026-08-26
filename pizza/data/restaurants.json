@@ -1451,7 +1451,9 @@
       "locations": [
         {
           "neighborhood": "Tangletown",
-          "address": "2108 N 55th St, Seattle, WA 98103"
+          "address": "2108 N 55th St, Seattle, WA 98103",
+          "lat": 47.66881,
+          "lon": -122.33341
         }
       ],
       "locationsVerified": "2026-08-26",
@@ -1500,11 +1502,15 @@
       "locations": [
         {
           "neighborhood": "Burien",
-          "address": "822 SW 152nd St, Burien, WA 98166"
+          "address": "822 SW 152nd St, Burien, WA 98166",
+          "lat": 47.46688,
+          "lon": -122.34559
         },
         {
           "neighborhood": "Beacon Hill",
-          "address": "4864 Beacon Ave S, Seattle, WA 98108"
+          "address": "4864 Beacon Ave S, Seattle, WA 98108",
+          "lat": 47.55905,
+          "lon": -122.30374
         },
         {
           "neighborhood": "Phinney Ridge",
