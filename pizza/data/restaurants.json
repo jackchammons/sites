@@ -1621,7 +1621,9 @@
       "locations": [
         {
           "neighborhood": "Phinney Ridge/Greenwood",
-          "address": "7404 Greenwood Ave N, Seattle, WA 98103"
+          "address": "7404 Greenwood Ave N, Seattle, WA 98103",
+          "lat": 47.68277,
+          "lon": -122.35511
         }
       ],
       "locationsVerified": null,
@@ -1643,7 +1645,9 @@
       "locations": [
         {
           "neighborhood": "Greenwood",
-          "address": "8523 Greenwood Ave N, Seattle, WA 98103"
+          "address": "8523 Greenwood Ave N, Seattle, WA 98103",
+          "lat": 47.69115,
+          "lon": -122.35552
         }
       ],
       "locationsVerified": null,
@@ -1665,7 +1669,9 @@
       "locations": [
         {
           "neighborhood": "Greenwood",
-          "address": "8404 Greenwood Ave N, Seattle, WA 98103"
+          "address": "8404 Greenwood Ave N, Seattle, WA 98103",
+          "lat": 47.6901,
+          "lon": -122.3551
         }
       ],
       "locationsVerified": null,
@@ -1687,7 +1693,9 @@
       "locations": [
         {
           "neighborhood": "Roosevelt/University District",
-          "address": "5301 Roosevelt Way NE, Seattle, WA 98105"
+          "address": "5301 Roosevelt Way NE, Seattle, WA 98105",
+          "lat": 47.66723,
+          "lon": -122.31756
         }
       ],
       "locationsVerified": null,
@@ -1709,7 +1717,9 @@
       "locations": [
         {
           "neighborhood": "Mount Baker",
-          "address": "3601 S McClellan St, Seattle, WA 98144"
+          "address": "3601 S McClellan St, Seattle, WA 98144",
+          "lat": 47.57822,
+          "lon": -122.28811
         }
       ],
       "locationsVerified": null,
@@ -1731,7 +1741,9 @@
       "locations": [
         {
           "neighborhood": "Wedgwood",
-          "address": "7320 35th Ave NE, Seattle, WA 98115"
+          "address": "7320 35th Ave NE, Seattle, WA 98115",
+          "lat": 47.68191,
+          "lon": -122.29015
         }
       ],
       "locationsVerified": null,
@@ -1753,7 +1765,9 @@
       "locations": [
         {
           "neighborhood": "South Park",
-          "address": "8611 14th Ave S, Seattle, WA 98108"
+          "address": "8611 14th Ave S, Seattle, WA 98108",
+          "lat": 47.52606,
+          "lon": -122.31511
         }
       ],
       "locationsVerified": null,
@@ -1775,7 +1789,9 @@
       "locations": [
         {
           "neighborhood": "Admiral, West Seattle",
-          "address": "4213 SW College St, Seattle, WA 98116"
+          "address": "4213 SW College St, Seattle, WA 98116",
+          "lat": 47.58288,
+          "lon": -122.38589
         }
       ],
       "locationsVerified": null,
@@ -1797,7 +1813,9 @@
       "locations": [
         {
           "neighborhood": "Eastlake",
-          "address": "3272 Fuhrman Ave E, Suite 100, Seattle, WA 98102"
+          "address": "3272 Fuhrman Ave E, Suite 100, Seattle, WA 98102",
+          "lat": 47.65157,
+          "lon": -122.32079
         }
       ],
       "locationsVerified": null,
@@ -1819,7 +1837,9 @@
       "locations": [
         {
           "neighborhood": "Eastlake",
-          "address": "2307 Eastlake Ave E, Seattle, WA 98102"
+          "address": "2307 Eastlake Ave E, Seattle, WA 98102",
+          "lat": 47.64006,
+          "lon": -122.32608
         }
       ],
       "locationsVerified": null,
@@ -1841,7 +1861,9 @@
       "locations": [
         {
           "neighborhood": "Admiral, West Seattle",
-          "address": "2348 California Ave SW, Seattle, WA 98116"
+          "address": "2348 California Ave SW, Seattle, WA 98116",
+          "lat": 47.58154,
+          "lon": -122.38622
         }
       ],
       "locationsVerified": null,
@@ -1863,7 +1885,9 @@
       "locations": [
         {
           "neighborhood": "Delridge",
-          "address": "5608 Delridge Way SW, Seattle, WA 98106"
+          "address": "5608 Delridge Way SW, Seattle, WA 98106",
+          "lat": 47.55158,
+          "lon": -122.36273
         }
       ],
       "locationsVerified": null,
@@ -1885,7 +1909,9 @@
       "locations": [
         {
           "neighborhood": "Rainier Beach",
-          "address": "10003 Rainier Ave S, Seattle, WA 98178"
+          "address": "10003 Rainier Ave S, Seattle, WA 98178",
+          "lat": 47.51117,
+          "lon": -122.24814
         }
       ],
       "locationsVerified": null,
@@ -1907,7 +1933,9 @@
       "locations": [
         {
           "neighborhood": "Delridge",
-          "address": "5605 Delridge Way SW, Seattle, WA 98106"
+          "address": "5605 Delridge Way SW, Seattle, WA 98106",
+          "lat": 47.55177,
+          "lon": -122.36325
         }
       ],
       "locationsVerified": null,
@@ -1929,7 +1957,9 @@
       "locations": [
         {
           "neighborhood": "Chinatown-International District",
-          "address": "672 S King St, Seattle, WA 98104"
+          "address": "672 S King St, Seattle, WA 98104",
+          "lat": 47.59847,
+          "lon": -122.3241
         }
       ],
       "locationsVerified": null,
@@ -1951,7 +1981,9 @@
       "locations": [
         {
           "neighborhood": "Central District",
-          "address": "2524 S Jackson St, Seattle, WA 98144"
+          "address": "2524 S Jackson St, Seattle, WA 98144",
+          "lat": 47.59941,
+          "lon": -122.29895
         }
       ],
       "locationsVerified": null,
@@ -1973,7 +2005,9 @@
       "locations": [
         {
           "neighborhood": "Montlake",
-          "address": "2307 24th Ave E, Seattle, WA 98112"
+          "address": "2307 24th Ave E, Seattle, WA 98112",
+          "lat": 47.63983,
+          "lon": -122.30235
         }
       ],
       "locationsVerified": null,
@@ -1995,7 +2029,9 @@
       "locations": [
         {
           "neighborhood": "Interbay",
-          "address": "1417 Elliott Ave W, Seattle, WA 98119"
+          "address": "1417 Elliott Ave W, Seattle, WA 98119",
+          "lat": 47.6307,
+          "lon": -122.37412
         }
       ],
       "locationsVerified": null,
@@ -2017,7 +2053,9 @@
       "locations": [
         {
           "neighborhood": "First Hill",
-          "address": "800 Seneca St, Seattle, WA 98101"
+          "address": "800 Seneca St, Seattle, WA 98101",
+          "lat": 47.60961,
+          "lon": -122.32958
         }
       ],
       "locationsVerified": null,
