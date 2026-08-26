@@ -1,25 +1,57 @@
 {
-  "updated": "2026-08-26T18:00:00Z",
-  "directory": [
+  "updated": "2026-08-26T00:00:00Z",
+  "locations": [
     {
-      "name": "Dantini Pizza",
-      "url": "https://www.dantinipizza.com/",
-      "neighborhood": "Interbay",
-      "style": "New York-style thin-crust and Grandma pan pizza",
-      "status": "open",
-      "note": "A dedicated pizza kitchen in Interbay serving 16-inch New York-style pies and rectangular Grandma-style pan pizzas.",
-      "source": "https://www.theinfatuation.com/seattle/reviews/dantini-pizza",
-      "address": "1417 Elliott Ave W, Seattle, WA 98119"
+      "id": "my-friend-dereks",
+      "homepage": "https://myfrienddereks.com/",
+      "source": "https://myfrienddereks.com/",
+      "sites": [
+        {
+          "neighborhood": "Tangletown",
+          "address": "2108 N 55th St, Seattle, WA 98103"
+        }
+      ]
     },
     {
-      "name": "A Pizza Mart (First Hill)",
-      "url": "https://www.apizzamartfirsthill.com/",
-      "neighborhood": "First Hill",
-      "style": "New York-style, by the slice",
-      "status": "open",
-      "note": "Independent Seattle slice shop on Seneca Street serving First Hill, part of the locally owned A Pizza Mart mini-chain.",
-      "source": "https://www.apizzamartfirsthill.com/",
-      "address": "800 Seneca St, Seattle, WA 98101"
+      "id": "stevies-famous",
+      "homepage": "https://www.steviesfamous.com/",
+      "source": "https://www.steviesfamous.com/",
+      "sites": [
+        {
+          "neighborhood": "Burien",
+          "address": "822 SW 152nd St, Burien, WA 98166"
+        },
+        {
+          "neighborhood": "Beacon Hill",
+          "address": "4864 Beacon Ave S, Seattle, WA 98108"
+        },
+        {
+          "neighborhood": "Phinney Ridge",
+          "address": "6000 Phinney Ave N, Seattle, WA 98103"
+        }
+      ]
+    },
+    {
+      "id": "sinners-pizza",
+      "homepage": "https://sinners.pizza/",
+      "source": "https://sinners.pizza/",
+      "sites": [
+        {
+          "neighborhood": "University District",
+          "address": "4529 University Way NE, Seattle, WA 98105"
+        }
+      ]
+    },
+    {
+      "id": "roma-roma",
+      "homepage": "https://romaroma.pizza/",
+      "source": "https://romaroma.pizza/",
+      "sites": [
+        {
+          "neighborhood": "Capitol Hill",
+          "address": "1610 12th Ave, Seattle, WA 98122"
+        }
+      ]
     }
   ]
 }

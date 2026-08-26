@@ -1443,14 +1443,19 @@
       "neighborhood": "Tangletown",
       "style": "Wood-fired thin-crust",
       "blurb": "A home-oven pop-up that sold out most nights has grown into a permanent Tangletown storefront, still built around the same wood-fired thin crust.",
-      "url": null,
+      "url": "https://myfrienddereks.com/",
       "status": "open",
       "statusSource": "https://myfrienddereks.com/",
       "statusDate": "2026-08-26",
       "attributes": {},
-      "locations": [],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locations": [
+        {
+          "neighborhood": "Tangletown",
+          "address": "2108 N 55th St, Seattle, WA 98103"
+        }
+      ],
+      "locationsVerified": "2026-08-26",
+      "locationsSource": "https://myfrienddereks.com/",
       "mentions": [],
       "statusNote": "The Detroit-style pop-up converted to a permanent brick-and-mortar in Tangletown and is now operating with regular weekly hours.",
       "statusChecked": "2026-08-26"
@@ -1494,14 +1499,22 @@
       "attributes": {},
       "locations": [
         {
+          "neighborhood": "Burien",
+          "address": "822 SW 152nd St, Burien, WA 98166"
+        },
+        {
+          "neighborhood": "Beacon Hill",
+          "address": "4864 Beacon Ave S, Seattle, WA 98108"
+        },
+        {
           "neighborhood": "Phinney Ridge",
           "address": "6000 Phinney Ave N, Seattle, WA 98103",
           "lat": 47.67261,
           "lon": -122.35408
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-08-26",
+      "locationsSource": "https://www.steviesfamous.com/",
       "mentions": [
         {
           "url": "https://seattlemag.com/food-drink/opening-night-stevies-famous-comes-to-north-seattle",
@@ -1532,8 +1545,8 @@
           "lon": -122.31346
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-08-26",
+      "locationsSource": "https://sinners.pizza/",
       "mentions": []
     },
     {
@@ -1556,8 +1569,8 @@
           "lon": -122.31667
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-08-26",
+      "locationsSource": "https://romaroma.pizza/",
       "mentions": [
         {
           "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
