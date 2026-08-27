@@ -105,8 +105,8 @@ export function cardHtml(r) {
           </div>
           <div class="meta">${esc(locationLabel(r))} <em>·</em> ${esc(r.style)} <em>·</em> est. ${r.opened}</div>
           ${locationsHtml(r)}
-          <p class="sig">“${esc(r.signature)}”</p>
-          <p class="blurb">${esc(r.blurb)}</p>
+          ${r.signature ? `<p class="sig">“${esc(r.signature)}”</p>` : ''}
+          ${r.blurb ? `<p class="blurb">${esc(r.blurb)}</p>` : ''}
         </div>
         <div class="scorebox">
           <div class="n">${n1(r.score)}</div>
