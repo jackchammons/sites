@@ -146,9 +146,14 @@ if (task === 'rating') {
   // can actually be grounded in, and Roma Roma arrives with three.
   // Only places actually open: a pizzeria that has not opened its doors has
   // no pies for anyone to have written about, and cannot rank anyway.
+  // Mentions-first, then shuffled: an entry the agent skipped for want of
+  // coverage should not monopolise the front of every future worklist while
+  // others have never been attempted at all.
   const unrated = openField
     .filter(r => r.status !== 'opening' && !isRated(r))
-    .sort((a, b) => (b.mentions?.length ?? 0) - (a.mentions?.length ?? 0))
+    .map(r => [r, Math.random()])
+    .sort((a, b) => ((b[0].mentions?.length ?? 0) - (a[0].mentions?.length ?? 0)) || (a[1] - b[1]))
+    .map(([r]) => r)
     .slice(0, 6);
   const styleGroups = [...new Set(restaurants.map(r => r.styleGroup).filter(Boolean))].sort();
   brief = `Your task: rate pizzerias that are in the directory but not yet in
