@@ -2080,7 +2080,27 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/businesses/johnny-mo-s-pizzeria",
+          "note": "Seattle Met's comparison of the shop's dual New York and Chicago pies found the thin, foldable New York slice 'wins on both texture and wait times' against the 30-minute deep dish -- a well-executed neighborhood two-style shop rather than a destination for either style alone.",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/businesses/johnny-mo-s-pizzeria",
+          "note": "Seattle Met's comparison of the shop's dual New York and Chicago pies found the thin, foldable New York slice 'wins on both texture and wait times' against the 30-minute deep dish -- a well-executed neighborhood two-style shop rather than a destination for either style alone.",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 6,
+      "priceIndex": 2,
+      "styleGroup": "Thin crust",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "pazzos-on-eastlake",
@@ -2104,7 +2124,27 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://archive.seattletimes.com/archive/19920417/1486871/another-innovative-pizza-parlor-arrives",
+          "note": "A 1992 Seattle Times review of this Eastlake stone-oven pizzeria called pies like the Pazzo Pollo and the Prato excellent to very good, while flagging an underbaked crust on the Milano and an overloaded, unrestrained topping combo on the Bari -- a mixed-but-solid picture consistent with its decades-long run as a neighborhood institution where calzones outsell the pizza.",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 3.5,
+          "setBy": "agent",
+          "source": "https://archive.seattletimes.com/archive/19920417/1486871/another-innovative-pizza-parlor-arrives",
+          "note": "A 1992 Seattle Times review of this Eastlake stone-oven pizzeria called pies like the Pazzo Pollo and the Prato excellent to very good, while flagging an underbaked crust on the Milano and an overloaded, unrestrained topping combo on the Bari -- a mixed-but-solid picture consistent with its decades-long run as a neighborhood institution where calzones outsell the pizza.",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 6,
+      "opened": 1990,
+      "styleGroup": "Neighborhood",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "sopranos-antico",
@@ -2128,7 +2168,27 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.westsideseattle.com/west-seattle-herald/2017/11/01/sopranos-antico-now-open-after-months-long-delay",
+          "note": "West Seattle Herald and West Seattle Blog coverage of its long-delayed 2017 opening describe owner Plamen Stoyanov's Neapolitan program -- San Marzano tomatoes, Caputo flour, buffalo mozzarella -- built on training and certification under 12-time world pizza champion Tony Gemignani.",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.westsideseattle.com/west-seattle-herald/2017/11/01/sopranos-antico-now-open-after-months-long-delay",
+          "note": "West Seattle Herald and West Seattle Blog coverage of its long-delayed 2017 opening describe owner Plamen Stoyanov's Neapolitan program -- San Marzano tomatoes, Caputo flour, buffalo mozzarella -- built on training and certification under 12-time world pizza champion Tony Gemignani.",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 6,
+      "opened": 2017,
+      "styleGroup": "Neapolitan",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "pizza-ritual",
@@ -2248,7 +2308,28 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 8.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/sacro-bosco",
+          "note": "The Infatuation rates it 8.4/10 and calls it 'expert-level Roman pizza,' with massive rectangular trays that are crunchy yet airy; Seattle Met and Axios both covered its 2025 debut inside Temple Pastries as one of Seattle's most distinctive new pizza concepts.",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 8,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/sacro-bosco",
+          "note": "The Infatuation rates it 8.4/10 and calls it 'expert-level Roman pizza,' with massive rectangular trays that are crunchy yet airy; Seattle Met and Axios both covered its 2025 debut inside Temple Pastries as one of Seattle's most distinctive new pizza concepts.",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 8.5,
+      "opened": 2025,
+      "priceIndex": 4,
+      "styleGroup": "Roman",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "oxbow",
@@ -2272,7 +2353,27 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/oxbow",
+          "note": "The Infatuation calls the pizza Oxbow's finest asset -- a scientifically precise, crunchy-bottomed crust with an inflated cornicione, topped with inventive, seasonally rotating combinations like chimichurri-scallion-cotija and bacon-crackling pepperoni; the Seattle Times covered its 2022 opening as one of the city's notable new pizza launches, from the Sea Wolf bakery team's fermented-starter dough.",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/oxbow",
+          "note": "The Infatuation calls the pizza Oxbow's finest asset -- a scientifically precise, crunchy-bottomed crust with an inflated cornicione, topped with inventive, seasonally rotating combinations like chimichurri-scallion-cotija and bacon-crackling pepperoni; the Seattle Times covered its 2022 opening as one of the city's notable new pizza launches, from the Sea Wolf bakery team's fermented-starter dough.",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 7.5,
+      "opened": 2022,
+      "styleGroup": "Creative",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "dantini-pizza",

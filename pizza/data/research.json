@@ -1,31 +1,71 @@
 {
-  "updated": "2026-08-27T12:00:00Z",
+  "updated": "2026-08-27T18:00:00Z",
   "factorRatings": [
     {
-      "id": "south-town-pie",
+      "id": "pazzos-on-eastlake",
       "craft": 6,
-      "distinctiveness": 7,
-      "criticScore": 6.5,
-      "priceIndex": 2,
-      "styleGroup": "Pizza bar",
+      "distinctiveness": 3.5,
+      "criticScore": 6,
+      "opened": 1990,
+      "styleGroup": "Neighborhood",
       "sources": [
-        "https://www.theinfatuation.com/seattle/reviews/south-town-pie",
-        "https://www.southtownpie.com/"
+        "https://archive.seattletimes.com/archive/19920417/1486871/another-innovative-pizza-parlor-arrives"
       ],
-      "note": "The Infatuation rated it 7.4/10, saying the New York-style pizza has grown inconsistent since its early days — standard red-sauced pies now read as 'underseasoned' — but singled out the pastrami pie (everything-bagel-spiced crust, gruyere fondue, caramelized onion, pickles) as the one order that 'has stood the test of time beautifully.' It's a casual pizza-and-bar room in South Park from chef Sam Crannell, formerly of LloydMartin, with a creative menu that also runs to a breakfast pie and a wild boar ragu pie with fried sage and Funyuns."
+      "note": "A 1992 Seattle Times review of this Eastlake stone-oven pizzeria called pies like the Pazzo Pollo and the Prato excellent to very good, while flagging an underbaked crust on the Milano and an overloaded, unrestrained topping combo on the Bari -- a mixed-but-solid picture consistent with its decades-long run as a neighborhood institution where calzones outsell the pizza."
     },
     {
-      "id": "pizzeria-22",
+      "id": "oxbow",
       "craft": 7.5,
-      "distinctiveness": 6.5,
+      "distinctiveness": 7,
       "criticScore": 7.5,
+      "opened": 2022,
+      "styleGroup": "Creative",
+      "sources": [
+        "https://www.theinfatuation.com/seattle/reviews/oxbow",
+        "https://www.seattletimes.com/life/food-drink/3-new-seattle-area-pizza-places-including-one-from-a-local-food-celeb/"
+      ],
+      "note": "The Infatuation calls the pizza Oxbow's finest asset -- a scientifically precise, crunchy-bottomed crust with an inflated cornicione, topped with inventive, seasonally rotating combinations like chimichurri-scallion-cotija and bacon-crackling pepperoni; the Seattle Times covered its 2022 opening as one of the city's notable new pizza launches, from the Sea Wolf bakery team's fermented-starter dough."
+    },
+    {
+      "id": "johnny-mos-pizzeria",
+      "craft": 6,
+      "distinctiveness": 5,
+      "criticScore": 6,
       "priceIndex": 2,
+      "styleGroup": "Thin crust",
+      "sources": [
+        "https://www.seattlemet.com/businesses/johnny-mo-s-pizzeria",
+        "https://www.johnnymos.com/menu"
+      ],
+      "note": "Seattle Met's comparison of the shop's dual New York and Chicago pies found the thin, foldable New York slice 'wins on both texture and wait times' against the 30-minute deep dish -- a well-executed neighborhood two-style shop rather than a destination for either style alone."
+    },
+    {
+      "id": "sacro-bosco-pizza-wine",
+      "craft": 8.5,
+      "distinctiveness": 8,
+      "criticScore": 8.5,
+      "opened": 2025,
+      "priceIndex": 4,
+      "styleGroup": "Roman",
+      "sources": [
+        "https://www.theinfatuation.com/seattle/reviews/sacro-bosco",
+        "https://www.seattlemet.com/eat-and-drink/2025/08/sacro-bosco-temple-pastries-pizza",
+        "https://www.axios.com/local/seattle/2025/06/02/temple-pastries-roman-pizza-seattle"
+      ],
+      "note": "The Infatuation rates it 8.4/10 and calls it 'expert-level Roman pizza,' with massive rectangular trays that are crunchy yet airy; Seattle Met and Axios both covered its 2025 debut inside Temple Pastries as one of Seattle's most distinctive new pizza concepts."
+    },
+    {
+      "id": "sopranos-antico",
+      "craft": 6.5,
+      "distinctiveness": 5.5,
+      "criticScore": 6,
+      "opened": 2017,
       "styleGroup": "Neapolitan",
       "sources": [
-        "https://seattlemag.com/restaurant-review-pizzeria-22",
-        "https://www.pizzeria22.com/"
+        "https://www.westsideseattle.com/west-seattle-herald/2017/11/01/sopranos-antico-now-open-after-months-long-delay",
+        "https://westseattleblog.com/2017/10/biznote-sopranos-antico-in-admiral-finally-close-to-sit-down-opening/"
       ],
-      "note": "Seattle magazine praised the 'sturdy, chewy-crusted' wood-fired pies at this Admiral District spot from owner Cary Kemp, who trained at Sorbillo in Naples; the review calls out buffalo mozzarella added midway through the bake to protect the crust, house-sliced prosciutto, and a wood-oven clam special served with blistered, Parmesan-dusted flatbread. It is West Seattle's only VPN-certified Neapolitan kitchen, running an imported wood oven and Italian '00' flour and San Marzano-style tomatoes."
+      "note": "West Seattle Herald and West Seattle Blog coverage of its long-delayed 2017 opening describe owner Plamen Stoyanov's Neapolitan program -- San Marzano tomatoes, Caputo flour, buffalo mozzarella -- built on training and certification under 12-time world pizza champion Tony Gemignani."
     }
   ]
 }
