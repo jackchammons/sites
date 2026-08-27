@@ -1,55 +1,41 @@
 {
   "updated": "2026-08-27T18:00:00Z",
-  "factorRatings": [
+  "status": [
+    {
+      "id": "abecedary",
+      "status": "opening",
+      "note": "Owner Seth Eisner gave Seattle a first taste with a cheese-slice pop-up at Hillman City's What's Good block party, but the Seattle Times reports the permanent Abecedary storefront still won't open until 2027.",
+      "source": "https://www.seattletimes.com/life/food-drink/up-and-coming-seattle-pizza-baker-will-pop-up-saturday-in-hillman-city/"
+    },
+    {
+      "id": "razzis-pizzeria",
+      "status": "open",
+      "note": "Razzi's Pizzeria's Greenwood Ave N location shows an actively maintained Yelp listing updated August 2026 with current hours, menu and ongoing customer reviews.",
+      "source": "https://www.yelp.com/biz/razz%C3%ADs-pizzer%C3%ADa-seattle-4"
+    },
+    {
+      "id": "pi-vegan-pizzeria",
+      "status": "open",
+      "note": "Pi Vegan Pizzeria at 5301 Roosevelt Way NE has a Yelp listing updated August 2026 showing current hours and continued customer activity.",
+      "source": "https://www.yelp.com/biz/pi-vegan-pizzeria-seattle"
+    },
     {
       "id": "pizza-ritual",
-      "craft": 6.5,
-      "distinctiveness": 6.5,
-      "criticScore": 6.5,
-      "styleGroup": "Neapolitan",
-      "sources": [
-        "https://www.theinfatuation.com/seattle/reviews/pizza-ritual"
-      ],
-      "note": "The Infatuation (7.8/10) praises this Delridge takeout window's naturally leavened, long-fermented pies for charred, bubbled crusts and bold tang, calling it a fix for a Neapolitan-shaped hole in West Seattle, while noting not every topping combo lands."
-    },
-    {
-      "id": "dantini-pizza",
-      "craft": 7.5,
-      "distinctiveness": 6.5,
-      "criticScore": 7.5,
-      "styleGroup": "Thin crust",
-      "sources": [
-        "https://www.theinfatuation.com/seattle/reviews/dantini-pizza",
-        "https://www.dantinipizza.com/"
-      ],
-      "note": "The Infatuation scores this Interbay pop-up 8.4/10, calling its confit-garlic pepperoni pie flawless and its crust sturdy with sourdough-like chew, crisp bottom and charred, crackly bubbles; it operates out of Batch 206 Distillery."
-    },
-    {
-      "id": "world-pizza",
-      "craft": 6,
-      "distinctiveness": 7,
-      "criticScore": 6,
-      "opened": 1992,
-      "priceIndex": 1,
-      "styleGroup": "By the slice",
-      "sources": [
-        "https://en.wikipedia.org/wiki/World_Pizza",
-        "https://www.worldpizzaseattle.com/"
-      ],
-      "note": "A Chinatown-ID fixture since opening in Belltown in 1992 (relocated to King St in 2011), World Pizza is one of the city's few vegetarian-only slice shops, cited by Thrillist and Seattle Metropolitan for inventive toppings like gorgonzola-potato-rosemary on an unfussy, utilitarian crust."
+      "status": "open",
+      "note": "West Seattle Blog reports owner Matt Gorman confirming Pizza Ritual's ongoing online pre-order pickup plus Friday/Saturday walk-up window hours at the KBM Kitchen on Delridge.",
+      "source": "https://westseattleblog.com/2026/01/biznote-its-just-pizza-says-proprietor-of-pizza-ritual-settling-on-days-hours/"
     },
     {
       "id": "pizzeria-pulcinella",
-      "craft": 7.5,
-      "distinctiveness": 7,
-      "criticScore": 7.5,
-      "priceIndex": 3,
-      "styleGroup": "Neapolitan",
-      "sources": [
-        "https://www.seattletimes.com/life/food-drink/pulcinella-dishes-up-true-neapolitan-pizza/",
-        "https://www.theinfatuation.com/seattle/reviews/pizzeria-pulcinella"
-      ],
-      "note": "Seattle Times critic Providence Cicero gave Pulcinella three stars for VPN-certified true Neapolitan pizza baked in about 90 seconds in an imported Valoriani wood oven; The Infatuation still sends readers to Rainier Beach for a margherita well above heat-lamp-slice territory."
+      "status": "open",
+      "note": "Pizzeria Pulcinella's Yelp listing updated August 2026 shows continued seven-day operation, including a customer's 50th-anniversary party hosted there in February 2026.",
+      "source": "https://www.yelp.com/biz/pizzeria-pulcinella-seattle-2"
+    },
+    {
+      "id": "oxbow",
+      "status": "open",
+      "note": "Oxbow's own site lists current operating hours (Sun-Thu 7am-5pm, Fri-Sat 7am-7pm) and its pizza/bagel menu for the Montlake shop.",
+      "source": "https://oxbowmontlake.com/"
     }
   ]
 }
