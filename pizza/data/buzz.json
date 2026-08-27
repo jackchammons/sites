@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-27T06:20:31.984Z",
+  "updated": "2026-08-27T22:57:53.221Z",
   "sources": 4,
   "items": [
     {
@@ -108,6 +108,14 @@
       "source": "Secret Seattle",
       "published": "2026-05-30T07:00:00.000Z",
       "kind": "ranking",
+      "mentions": []
+    },
+    {
+      "title": "Why is this slice of pizza $55?",
+      "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE5OVXVvY0s0cDJIbjJvd205cFA4UDJ4dVB0ZHpyMjZTR2VYY1d0Q1VQUFhDcERkcEZXRV91d1FfTnpVNS12aTNJdHdPdUxGRTIxU0hSemdtejJhT2c0bmN2TzFFcDBYTTdpSUw0bWtyNlRYYmdpWEJoSWFadVE?oc=5",
+      "source": "The Seattle Times",
+      "published": "2026-05-22T07:00:00.000Z",
+      "kind": "mention",
       "mentions": []
     },
     {
