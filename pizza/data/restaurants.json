@@ -2212,7 +2212,26 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/pizza-ritual",
+          "note": "The Infatuation (7.8/10) praises this Delridge takeout window's naturally leavened, long-fermented pies for charred, bubbled crusts and bold tang, calling it a fix for a Neapolitan-shaped hole in West Seattle, while noting not every topping combo lands.",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/pizza-ritual",
+          "note": "The Infatuation (7.8/10) praises this Delridge takeout window's naturally leavened, long-fermented pies for charred, bubbled crusts and bold tang, calling it a fix for a Neapolitan-shaped hole in West Seattle, while noting not every topping combo lands.",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 6.5,
+      "styleGroup": "Neapolitan",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "pizzeria-pulcinella",
@@ -2236,7 +2255,27 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.seattletimes.com/life/food-drink/pulcinella-dishes-up-true-neapolitan-pizza/",
+          "note": "Seattle Times critic Providence Cicero gave Pulcinella three stars for VPN-certified true Neapolitan pizza baked in about 90 seconds in an imported Valoriani wood oven; The Infatuation still sends readers to Rainier Beach for a margherita well above heat-lamp-slice territory.",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.seattletimes.com/life/food-drink/pulcinella-dishes-up-true-neapolitan-pizza/",
+          "note": "Seattle Times critic Providence Cicero gave Pulcinella three stars for VPN-certified true Neapolitan pizza baked in about 90 seconds in an imported Valoriani wood oven; The Infatuation still sends readers to Rainier Beach for a margherita well above heat-lamp-slice territory.",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 7.5,
+      "priceIndex": 3,
+      "styleGroup": "Neapolitan",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "romano-pizza-pasta",
@@ -2284,7 +2323,28 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://en.wikipedia.org/wiki/World_Pizza",
+          "note": "A Chinatown-ID fixture since opening in Belltown in 1992 (relocated to King St in 2011), World Pizza is one of the city's few vegetarian-only slice shops, cited by Thrillist and Seattle Metropolitan for inventive toppings like gorgonzola-potato-rosemary on an unfussy, utilitarian crust.",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://en.wikipedia.org/wiki/World_Pizza",
+          "note": "A Chinatown-ID fixture since opening in Belltown in 1992 (relocated to King St in 2011), World Pizza is one of the city's few vegetarian-only slice shops, cited by Thrillist and Seattle Metropolitan for inventive toppings like gorgonzola-potato-rosemary on an unfussy, utilitarian crust.",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 6,
+      "opened": 1992,
+      "priceIndex": 1,
+      "styleGroup": "By the slice",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "sacro-bosco-pizza-wine",
@@ -2397,7 +2457,26 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/dantini-pizza",
+          "note": "The Infatuation scores this Interbay pop-up 8.4/10, calling its confit-garlic pepperoni pie flawless and its crust sturdy with sourdough-like chew, crisp bottom and charred, crackly bubbles; it operates out of Batch 206 Distillery.",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/dantini-pizza",
+          "note": "The Infatuation scores this Interbay pop-up 8.4/10, calling its confit-garlic pepperoni pie flawless and its crust sturdy with sourdough-like chew, crisp bottom and charred, crackly bubbles; it operates out of Batch 206 Distillery.",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 7.5,
+      "styleGroup": "Thin crust",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "a-pizza-mart-first-hill",
