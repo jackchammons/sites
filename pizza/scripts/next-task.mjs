@@ -182,8 +182,10 @@ grounded in that coverage:
 
 Skip any entry you cannot ground in at least one credible published
 source about that specific place -- no rating is far better than an
-invented one, and a skipped entry is a correct outcome. Never propose for
-an entry not in the list above.
+invented one, and a skipped entry is a correct outcome. If your research
+also surfaces solid coverage of another entry that is on file but
+unrated, you may rate it too, under exactly the same standard -- one
+proposal per pizzeria, at most 12 in total.
 
 Budget: about 3 searches per entry, 18 total. Write the file and stop.`;
 }

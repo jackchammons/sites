@@ -42,7 +42,7 @@ const byId = new Map(dataset.restaurants.map(r => [r.id, r]));
 const KINDS = new Set(['opening', 'closing', 'ranking', 'mention']);
 const CAPS = { news: 20, candidates: 15, closures: 10, locations: 12,
                directory: 10, status: 10, mentions: 30, factors: 5, newAttributes: 3,
-               factorRatings: 8 };
+               factorRatings: 12 };
 const MAX_AGE_DAYS = 180;
 
 const fails = [];
@@ -230,9 +230,12 @@ const thisYear = new Date().getUTCFullYear();
 const alreadyRated = r => Boolean(r.factors?.craft && r.factors?.distinctiveness
   && typeof r.criticScore === 'number');
 
+const ratingSeen = new Set();
 sections.factorRatings.forEach((it, i) => {
   const r = byId.get(it?.id);
   if (!r) { bad('factorRatings', i, `unknown restaurant id "${it?.id}"`); return; }
+  if (ratingSeen.has(it.id)) { bad('factorRatings', i, `duplicate proposal for "${it.id}"`); return; }
+  ratingSeen.add(it.id);
   if (alreadyRated(r)) { bad('factorRatings', i, `${r.name} is already rated; ratings are never overwritten`); return; }
   for (const k of ['craft', 'distinctiveness']) {
     if (!validFactorValue(it?.[k])) bad('factorRatings', i, `${k} must be 0-10 in 0.5 steps, got ${it?.[k]}`);
