@@ -1992,7 +1992,27 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/south-town-pie",
+          "note": "The Infatuation rated it 7.4/10, saying the New York-style pizza has grown inconsistent since its early days — standard red-sauced pies now read as 'underseasoned' — but singled out the pastrami pie (everything-bagel-spiced crust, gruyere fondue, caramelized onion, pickles) as the one order that 'has stood the test of time beautifully.' It's a casual pizza-and-bar room in South Park from chef Sam Crannell, formerly of LloydMartin, with a creative menu that also runs to a breakfast pie and a wild boar ragu pie with fried sage and Funyuns.",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/south-town-pie",
+          "note": "The Infatuation rated it 7.4/10, saying the New York-style pizza has grown inconsistent since its early days — standard red-sauced pies now read as 'underseasoned' — but singled out the pastrami pie (everything-bagel-spiced crust, gruyere fondue, caramelized onion, pickles) as the one order that 'has stood the test of time beautifully.' It's a casual pizza-and-bar room in South Park from chef Sam Crannell, formerly of LloydMartin, with a creative menu that also runs to a breakfast pie and a wild boar ragu pie with fried sage and Funyuns.",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 6.5,
+      "priceIndex": 2,
+      "styleGroup": "Pizza bar",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "pizzeria-22",
@@ -2016,7 +2036,27 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://seattlemag.com/restaurant-review-pizzeria-22",
+          "note": "Seattle magazine praised the 'sturdy, chewy-crusted' wood-fired pies at this Admiral District spot from owner Cary Kemp, who trained at Sorbillo in Naples; the review calls out buffalo mozzarella added midway through the bake to protect the crust, house-sliced prosciutto, and a wood-oven clam special served with blistered, Parmesan-dusted flatbread. It is West Seattle's only VPN-certified Neapolitan kitchen, running an imported wood oven and Italian '00' flour and San Marzano-style tomatoes.",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://seattlemag.com/restaurant-review-pizzeria-22",
+          "note": "Seattle magazine praised the 'sturdy, chewy-crusted' wood-fired pies at this Admiral District spot from owner Cary Kemp, who trained at Sorbillo in Naples; the review calls out buffalo mozzarella added midway through the bake to protect the crust, house-sliced prosciutto, and a wood-oven clam special served with blistered, Parmesan-dusted flatbread. It is West Seattle's only VPN-certified Neapolitan kitchen, running an imported wood oven and Italian '00' flour and San Marzano-style tomatoes.",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 7.5,
+      "priceIndex": 2,
+      "styleGroup": "Neapolitan",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "johnny-mos-pizzeria",

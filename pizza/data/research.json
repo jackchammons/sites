@@ -1,77 +1,31 @@
 {
-  "updated": "2026-08-27T18:00:00Z",
+  "updated": "2026-08-27T12:00:00Z",
   "factorRatings": [
     {
-      "id": "razzis-pizzeria",
+      "id": "south-town-pie",
       "craft": 6,
-      "distinctiveness": 6.5,
+      "distinctiveness": 7,
       "criticScore": 6.5,
-      "opened": 1983,
       "priceIndex": 2,
-      "styleGroup": "Neighborhood",
+      "styleGroup": "Pizza bar",
       "sources": [
-        "https://www.razzispizza.com/about.html",
-        "https://www.yelp.com/biz/razz%C3%ADs-pizzer%C3%ADa-seattle-4",
-        "https://www.findmeglutenfree.com/biz/razzis-pizzeria/1256016"
+        "https://www.theinfatuation.com/seattle/reviews/south-town-pie",
+        "https://www.southtownpie.com/"
       ],
-      "note": "Est. 1983, Razzi's runs a certified gluten-free kitchen alongside its regular menu, with four separate allergen-safe menus that Eater's gluten-free guide calls the holy grail of allergen-safe dining; hundreds of Yelp and Tripadvisor reviews describe consistently good food and generous portions rather than standout pizza craft specifically."
+      "note": "The Infatuation rated it 7.4/10, saying the New York-style pizza has grown inconsistent since its early days — standard red-sauced pies now read as 'underseasoned' — but singled out the pastrami pie (everything-bagel-spiced crust, gruyere fondue, caramelized onion, pickles) as the one order that 'has stood the test of time beautifully.' It's a casual pizza-and-bar room in South Park from chef Sam Crannell, formerly of LloydMartin, with a creative menu that also runs to a breakfast pie and a wild boar ragu pie with fried sage and Funyuns."
     },
     {
-      "id": "pizzeria-la-rocca",
-      "craft": 7.5,
-      "distinctiveness": 6.5,
-      "criticScore": 7,
-      "priceIndex": 3,
-      "styleGroup": "Wood-fired",
-      "sources": [
-        "https://www.pizzalarocca.com/",
-        "https://www.yelp.com/biz/pizzeria-la-rocca-seattle",
-        "https://www.tripadvisor.com/Restaurant_Review-g60878-d23849163-Reviews-Pizzeria_La_Rocca-Seattle_Washington.html"
-      ],
-      "note": "Reviewers on Yelp and Tripadvisor repeatedly single out the wood-fired crust as the thinnest and most delicate they've had, calling it some of the best pizza in the Pacific Northwest; prices run higher than most Seattle neighborhood shops."
-    },
-    {
-      "id": "pi-vegan-pizzeria",
-      "craft": 7,
-      "distinctiveness": 8,
-      "criticScore": 7.5,
-      "priceIndex": 2,
-      "styleGroup": "Creative",
-      "sources": [
-        "https://www.happycow.net/reviews/pi-vegan-pizzeria-seattle-2637",
-        "https://www.yelp.com/biz/pi-vegan-pizzeria-seattle",
-        "https://www.tripadvisor.com/Restaurant_Review-g60878-d432225-Reviews-Pizza_Pi_Vegan_Pizzeria-Seattle_Washington.html"
-      ],
-      "note": "An all-vegan pizzeria on Roosevelt Way with a devoted following; diners on HappyCow and Yelp call the crust the star of the show and the pizza the best vegan pizza they've ever had, with affordable, budget-friendly pricing."
-    },
-    {
-      "id": "mioposto",
+      "id": "pizzeria-22",
       "craft": 7.5,
       "distinctiveness": 6.5,
       "criticScore": 7.5,
-      "opened": 2006,
-      "styleGroup": "Wood-fired",
-      "sources": [
-        "https://www.seattletimes.com/life/food-drink/mioposto-secondo-pizzeria-fires-up-lively-fare/",
-        "https://www.seattlemet.com/businesses/mioposto",
-        "https://www.miopostopizza.com/"
-      ],
-      "note": "The Seattle Times' review of the Mount Baker original describes thin, foldable crusts, ballooning edges and a bread-like chew, tracing owner Jeremy Hardy's pizza pedigree through Pizzeria Bianco, dough school, and time in Florence and Rome; Seattle Met has carried it on its business listings since it opened in 2006."
-    },
-    {
-      "id": "veraci-pizza",
-      "craft": 7.5,
-      "distinctiveness": 7.5,
-      "criticScore": 7.5,
-      "opened": 2004,
       "priceIndex": 2,
       "styleGroup": "Neapolitan",
       "sources": [
-        "https://www.fearlesscritic.com/seattle/restaurant/5636/veraci-pizza-seattle",
-        "https://www.veracipizza.com/",
-        "https://www.yelp.com/biz/veraci-pizza-wedgwood-seattle"
+        "https://seattlemag.com/restaurant-review-pizzeria-22",
+        "https://www.pizzeria22.com/"
       ],
-      "note": "Fearless Critic scores Veraci's Neapolitan-style, applewood-fired slices 7.5/10 for food, tying for fifth among Seattle pizzerias at roughly $25 a person; the business grew out of a mobile wood-fired oven the founders built to sell pizza at the Ballard Farmers Market starting in 2004."
+      "note": "Seattle magazine praised the 'sturdy, chewy-crusted' wood-fired pies at this Admiral District spot from owner Cary Kemp, who trained at Sorbillo in Naples; the review calls out buffalo mozzarella added midway through the bake to protect the crust, house-sliced prosciutto, and a wood-oven clam special served with blistered, Parmesan-dusted flatbread. It is West Seattle's only VPN-certified Neapolitan kitchen, running an imported wood oven and Italian '00' flour and San Marzano-style tomatoes."
     }
   ]
 }
