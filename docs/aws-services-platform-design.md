@@ -101,12 +101,15 @@ services/
   "smoke":  ["node", "smoke/smoke.mjs"],
   "secrets": [],
   "capabilities": ["auth-client", "bucket-uploads", "db-dynamodb"],
+  "budget":  { "monthlyUsd": 10, "onExceed": "pause" },
   "prod":    { "desiredCount": 1, "spot": false },
   "preview": { "desiredCount": 1, "spot": true, "ttlDays": 7 }
 }
 ```
 
-`tier` selects the compute module (`static` | `lambda` | `fargate`); `capabilities` lists the add-on catalog modules the service's `infra/` composes. `secrets` names service-specific secrets (platform-wide ones like the Google client are implied by `auth-client`).
+`tier` selects the compute module (`static` | `lambda` | `fargate`); `capabilities` lists the add-on catalog modules the service's `infra/` composes. `secrets` names service-specific secrets (platform-wide ones like the Google client are implied by `auth-client`). `budget` is the service's spend limit (§7.2), seeded tight by the scaffolder.
+
+**Tier selection defaults to serverless**: `static` for sites, `lambda` for ordinary web apps and APIs (the `web-app-lambda` module runs a standard containerized app on Lambda via the Lambda Web Adapter — $0 idle), and `fargate` only when the app needs in-process WebSockets, long-lived connections, background processes, or >15-minute work. The fargate tier requires the container-tier foundations flag (§7.1).
 
 **The env-var contract** (the `OUT_DIR` generalization): every build/verify/smoke command receives `SERVICE_SLUG`, `SERVICE_ENV`, `SERVICE_URL`, `IMAGE_URI` (when applicable), and `OUT_DIR` (static tier). Every unit is standalone-runnable *and* orchestratable, unchanged from `sites`.
 
@@ -116,7 +119,7 @@ services/
 
 ### 2.1 State
 
-- **Backend**: S3 bucket `svc-tfstate-<account-id>` — versioned, SSE-KMS, public access blocked. Created by `bootstrap/seed` with local state, which then migrates its own state into the bucket.
+- **Backend**: S3 bucket `svc-tfstate-<account-id>` — versioned, SSE-S3 (no KMS key fee), public access blocked. Created by `bootstrap/seed` with local state, which then migrates its own state into the bucket.
 - **Locking**: native S3 locking via `use_lockfile = true` (a `.tflock` object written with S3 conditional writes). **No DynamoDB table.** Pin `required_version = ">= 1.12"`; the orchestrator refuses to run on older binaries.
 - **Keys**:
   - `platform/foundations.tfstate`
@@ -130,6 +133,8 @@ services/
 
 ### 2.2 Foundations stack (applied once, changed rarely)
 
+Foundations is **componentized behind flags** so the base state costs almost nothing (§7.1). The always-on core is OIDC + state + DNS + certs + observability; the container tier (VPC, ALB, ECS — the only always-on dollars) defaults **off** and is flipped on by an explicit foundations PR when the first fargate service needs it.
+
 | Resource | Details | Shared vs per-service |
 |---|---|---|
 | GitHub OIDC provider | `token.actions.githubusercontent.com` | shared |
@@ -138,9 +143,9 @@ services/
 | IAM `claude-debug` | read-only identity for Claude sessions (§4.3) | shared |
 | Route 53 zone | `apps.jackhammons.com`, delegated from parent DNS once | shared; services add records |
 | ACM certs | `*.apps.jackhammons.com` in **us-east-1** (CloudFront) and **us-west-2** (ALB / API GW) | shared |
-| VPC | no-NAT design, below | shared |
-| ALB | `svc-shared-alb`: HTTPS :443 with wildcard cert, default action fixed-404, HTTP→HTTPS redirect | shared; services add listener rules + target groups |
-| ECS cluster | `svc-cluster`, Fargate + Fargate Spot capacity providers, Container Insights off (cost) | shared; services add ECS services |
+| VPC | no-NAT design, below — **flag `enable_container_tier`, off by default** | shared |
+| ALB | `svc-shared-alb`: HTTPS :443 with wildcard cert, default action fixed-404, HTTP→HTTPS redirect — **same flag** (~$19/mo, the platform's only always-on cost) | shared; services add listener rules + target groups |
+| ECS cluster | `svc-cluster`, Fargate + Fargate Spot capacity providers, Container Insights off (cost) — **same flag** | shared; services add ECS services |
 | ECR | one repo per containerized service, lifecycle policy: keep last 10 images | per-service (created by its module) |
 | Cognito | shared user pool + hosted domain `auth.apps.jackhammons.com` + Google IdP (§4.2) | pool shared; **app clients per-service** |
 | SES | domain identity `apps.jackhammons.com`, DKIM via Route 53 | shared |
@@ -155,7 +160,8 @@ services/
 | Module | Composes | Key inputs | Key outputs | Idle cost/mo |
 |---|---|---|---|---|
 | `static-site` | S3 + CloudFront (OAC) + Route 53 alias; us-east-1 wildcard cert | `slug`, `env` | `url`, `bucket`, `distribution_id` | ~$0.01 |
-| `web-app-fargate` | ECR repo, task def, ECS service, target group, ALB host rule, Route 53 alias, log group, SG | `slug`, `env`, `cpu=256`, `memory=512`, `port`, `desired_count`, `spot`, `env_vars`, `secrets_map` | `url`, `ecr_repo_url`, `service_name`, `task_family` | ~$12.7 on-demand / ~$6.3 Spot (incl. IPv4) |
+| `web-app-lambda` | Lambda (container image, **Lambda Web Adapter** — runs a standard web app: Express, Fastify, Next.js…), HTTP API Gateway, custom domain, Route 53 alias, log group | `slug`, `env`, `memory=512`, `env_vars`, `secrets_map`, `reserved_concurrency` | `url`, `function_name` | ~$0 (cold starts ~0.5–1 s; no in-process WebSockets; 15-min cap) |
+| `web-app-fargate` | ECR repo, task def, ECS service, target group, ALB host rule, Route 53 alias, log group, SG — **requires the container-tier flag** | `slug`, `env`, `cpu=256`, `memory=512`, `port`, `desired_count`, `spot`, `env_vars`, `secrets_map` | `url`, `ecr_repo_url`, `service_name`, `task_family` | ~$12.7 on-demand / ~$6.3 Spot (incl. IPv4) |
 | `api-lambda` | Lambda (zip or image), HTTP API Gateway, custom domain on regional wildcard cert, Route 53 alias, log group | `slug`, `env`, `runtime`, `handler`, `env_vars`, `secrets_map` | `url`, `function_name`, `api_id` | ~$0 |
 | `db-dynamodb` | table, on-demand billing; PITR + `prevent_destroy` + deletion protection in prod | `slug`, `env`, `name_suffix`, `hash_key`, `range_key?`, `gsis[]`, `ttl_attribute?` | `table_name`, `table_arn` | ~$0 |
 | `auth-client` | Cognito **app client** on the shared pool: callback `https://<fqdn>/auth/callback`, logout `https://<fqdn>/`, Google + Cognito IdPs, code grant | `slug`, `env`, `fqdn`, `scopes` | `client_id`, `issuer_url`, `auth_domain` | $0 (Lite tier < 10k MAU) |
@@ -182,7 +188,8 @@ Every module: passes through `default_tags`, creates its own log groups with ret
 2. **Tags**: provider `default_tags = { service, env, managed-by = "terraform", repo = "jackchammons/services" }` from a scaffolder-emitted shared snippet; `required-tags.rego` fails any plan with an untagged taggable resource. `service` and `env` are activated as cost-allocation tags at bootstrap.
 3. **Policy engine**: **conftest (OPA/rego) on `terraform show -json` plan output** — chosen over checkov because these are bespoke platform invariants, not generic CIS checks. `tflint` runs too (cheap, catches provider-arg errors pre-plan). Deny: missing tags, dangerous resource types, backend-key/dir mismatch, any delete action on prod stateful resources outside `destroy-service.yml`. Warn→gate: raw `aws_*` resources outside catalog modules (the escape hatch, §8).
 4. **Stateful protection**: `prevent_destroy` + native deletion protection on prod DynamoDB, upload buckets, (later) RDS; the shared Cognito pool carries `prevent_destroy` in foundations and its deletion is denied to the services role outright.
-5. **Plan visibility**: every plan posts a sticky PR comment (create-or-update) with the resource-change summary and the conftest verdict — the "reviewer" that the CI-as-reviewer policy promises, readable from a phone.
+5. **Structural spend caps**: every module derives hard runtime ceilings from the manifest budget (§7.2) — Lambda reserved concurrency, API Gateway throttling, DynamoDB max on-demand throughput, ECS desired/max count, upload size limits. Billing data lags hours; these are the real-time bound on worst-case spend.
+6. **Plan visibility**: every plan posts a sticky PR comment (create-or-update) with the resource-change summary and the conftest verdict — the "reviewer" that the CI-as-reviewer policy promises, readable from a phone. A budget raise in the diff is called out in its own line.
 
 ---
 
@@ -225,7 +232,7 @@ Terraform owns the *skeleton*; CI owns the *payload*. The fargate module deploys
 | `foundations.yml` | PR touching `platform/foundations/**`: plan + conftest + comment. Push to main: apply | Apply runs in GitHub environment `foundations` with **required reviewer = owner** — the one deliberate human gate, because this stack is the blast-radius core and changes are rare. Tunable to auto later. |
 | `teardown-preview.yml` | `pull_request: closed`, branch `delete`, nightly cron | destroy per §2.4; cron leg runs the orphan sweeper |
 | `destroy-service.yml` | `workflow_dispatch(slug, confirm)` | refuses unless `confirm == slug`; destroys previews, then prod. Deletion-protected data resources require a **second** dispatch with `force-stateful: true` after a committed manifest change lifts protections — a two-key destroy for data. |
-| `health.yml` | daily cron + dispatch | smoke-all prod, `describe-alarms` for ALARM state, cost snapshot; the job summary is the daily fleet status page; failures → SNS email (and, phase 5, wake a triage session) |
+| `health.yml` | 2×-daily cron + dispatch | smoke-all prod, `describe-alarms` for ALARM state, and the **cost guard** (§7.2): Cost Explorer by `tag:service` vs each manifest budget — warn at 80%, enforce `onExceed` at 100%. The job summary is the fleet status page; failures → SNS email (and, phase 5, wake a triage session) |
 
 ---
 
@@ -296,30 +303,60 @@ The `sites` agent-in-CI safety rules carry over verbatim: never mention a tool t
 | 4 | `bootstrap/seed`: local `terraform apply` with admin creds → state bucket + OIDC provider + bootstrap role; then `init -migrate-state` moves seed state into the bucket. Everything after this deploys via Actions | human (agent-drafted) | 20 min |
 | 5 | After the first foundations apply creates the zone: copy the 4 NS records for `apps.jackhammons.com` into the parent `jackhammons.com` DNS; ACM then validates automatically | human | 10 min + propagation |
 | 6 | Google Cloud: project, OAuth consent screen (external, published), client with the single Cognito redirect URI; paste ID/secret into `/platform/secrets/google-oauth-*` | human | 15 min |
-| 7 | Push foundations; approve the `foundations.yml` apply. Verify: `dig`, ACM issued, ALB serves the default 404 over HTTPS | agent + human approval | 30 min |
+| 7 | Push foundations; approve the `foundations.yml` apply. Verify: `dig` resolves the delegated zone, both ACM certs issued (no ALB yet — the container tier stays off until a service needs it) | agent + human approval | 30 min |
 | 8 | SES production-access ticket (only when email matters; sandbox is fine to start) | human | 10 min, ~24 h wait |
 | 9 | Claude Code environment: `claude-debug` key in env vars, allowed-tools config; commit root CLAUDE.md | human | 15 min |
 | 10 | **Acceptance**: from a phone, prompt a session to scaffold `hello` (static tier), push, merge, and curl `https://hello.apps.jackhammons.com` — bootstrap is done when this loop closes hands-free | agent | 30 min |
 
 ---
 
-## 7. Cost model
+## 7. Cost control
 
-**Foundations baseline (always-on):**
+### 7.1 Base state: ~$1/mo until something needs more
 
-| Item | $/mo |
-|---|---|
-| Shared ALB ($16.43 + ~1 LCU) | ~$19 |
-| Route 53 hosted zone | $0.50 |
-| State bucket, logs, SSM, ECR storage | ~$1–2 |
-| Cognito (Lite, < 10k MAU), SES idle, budgets, SNS | ~$0 |
-| **Baseline** | **~$21–22** |
+Foundations is componentized behind flags, and everything with an always-on price defaults **off**:
 
-The ALB is ~90% of the floor — the price of instant Fargate deploys. A documented foundations flag can tear it down if months pass with no container services; recommended kept.
+| Component | Flag | Adds ($/mo) | Default |
+|---|---|---|---|
+| Core: OIDC, state bucket (SSE-S3), Route 53 zone, wildcard certs, SSM, SNS, account budget, CloudTrail | always on | ~$0.60–1 (the zone is $0.50; the rest is pennies) | on |
+| Auth: shared Cognito pool + Google IdP + `auth.apps` domain | `enable_auth` | $0 (Lite tier < 10k MAU) | on from phase 4 (free) |
+| Container tier: VPC, shared ALB, ECS cluster | `enable_container_tier` | ~$19 (ALB $16.43 + ~1 LCU) | **off** |
+| Email: SES identity | `enable_email` | $0 | off until wanted |
 
-**Per-service idle**: static ≈ $0.01 · lambda ≈ $0 · fargate (0.25 vCPU / 0.5 GB) ≈ $9.00 on-demand + $3.65 public IPv4 ≈ **$12.7**, or ≈ **$6.3 on Spot**. Previews run Spot with a 7-day TTL cap.
+**Base state ≈ $1/mo.** The `static` and `lambda` tiers deploy against the base state alone. A service declaring `tier: fargate` while the container tier is off fails its deploy with a pointed message: *"container tier is off — set `enable_container_tier = true` in foundations (adds ~$19/mo, shared by all container services) or use `tier: lambda`."* Enabling it is one foundations PR, and foundations applies are human-approved — so the platform's only always-on cost is always an explicit owner decision, never a side effect.
 
-**Worked example — the goal prompt** ("Google OAuth login, user management, document uploads, realtime chat"): tier `fargate` (stateful WebSockets + sessions), composing `auth-client` + `db-dynamodb` (users, messages) + `bucket-uploads`. Chat WebSockets ride the ALB natively — no extra module. Idle: fargate $12.70 + DynamoDB (PITR) ~$0.30 + uploads ~$0.25/10 GB + Cognito $0 ≈ **~$13.3/mo**, on the ~$21 platform floor. One active preview during development adds ~$6.3, prorated.
+**Why the ALB is deferred rather than replaced.** For *always-on containers* nothing cheaper substitutes well: App Runner idles at ~$5/mo per service and does not support WebSockets; LB-free Fargate (DNS pointed at task IPs) breaks ACM TLS termination and zero-downtime deploys; API Gateway + Cloud Map private integration works for HTTP but not WebSockets and adds moving parts. The better lever is needing containers less often — `web-app-lambda` (Lambda Web Adapter) runs the same containerized app on Lambda at $0 idle, which covers ordinary web apps and APIs entirely. Once a first real container service exists, the ALB amortizes across all of them and is the right tool.
+
+### 7.2 Per-service spend limits
+
+Every service carries a budget in its manifest, seeded tight by the scaffolder and raised only by an explicit, auditable commit:
+
+```json
+"budget": { "monthlyUsd": 10, "onExceed": "pause" }
+```
+
+Three layers enforce it:
+
+1. **Structural caps — real-time, preventive.** Billing data lags hours, so the only true bound on worst-case spend is what the infrastructure *can* consume. Every module derives hard ceilings from the budget: Lambda `reserved_concurrent_executions` (default 10), API Gateway stage throttling (rate + burst), DynamoDB on-demand `max_read/write_request_units`, ECS `desired_count` and autoscaling max (default 1), upload max object size, log retention. An agent can raise a cap only by raising the budget line it derives from — one visible diff.
+2. **The cost guard — reactive, hours-scale.** `health.yml` runs twice daily: a single Cost Explorer query grouped by `tag:service` (~$0.02/day total — deliberately *instead of* per-service AWS Budgets objects, which bill $0.02/day **each** beyond the first two and would drift from the manifest), comparing month-to-date actuals + forecast against each manifest budget. At ≥80%: SNS email + a GitHub issue. At ≥100%: enforce `onExceed` — `pause` scales fargate to 0 or sets Lambda concurrency to 0 and files the issue with the exact numbers; `alert-only` keeps serving. Unpausing = raise the budget (a commit) or wait for month rollover.
+3. **The account backstop.** One account-level AWS Budget (free) at the platform-wide ceiling catches whatever tags miss: untagged spend, foundations drift, forgotten previews.
+
+**Raising limits.** The manifest is the only knob, so a raise is a one-line PR that the plan comment calls out loudly ("budget: $10 → $25"). Raises above the platform ceiling (`/platform/foundations/max_service_budget`, default **$50/mo**) fail conftest until the ceiling itself is raised — and the ceiling lives in foundations, whose applies require the owner. Tight by default, raisable in seconds, never silently.
+
+**Honesty clause.** AWS offers no real-time hard spend cap; Cost Explorer lags 8–24 h and new tag values take up to a day to appear. Layer 1 bounds the worst case; layer 2 is a circuit breaker with hours of latency, not a meter. Previews are additionally bounded by Spot pricing, `ttlDays`, and 7-day object expiry regardless of budget.
+
+### 7.3 What things cost
+
+**Per-service idle**: static ≈ $0.01 · lambda / web-app-lambda ≈ $0 · fargate (0.25 vCPU / 0.5 GB) ≈ $9.00 on-demand + $3.65 public IPv4 ≈ **$12.7**, or ≈ **$6.3 on Spot** — plus the one-time $19 container-tier flag, shared. Previews run Spot with the TTL cap.
+
+**Worked example — the goal prompt** ("Google OAuth login, user management, document uploads, realtime chat"), two shapes:
+
+| Shape | Composition | Idle cost on top of base |
+|---|---|---|
+| **Serverless (default)** | `web-app-lambda` + `auth-client` + `db-dynamodb` + `bucket-uploads` + `realtime-websocket` (chat via API GW WebSockets) | **~$0.50/mo** (DynamoDB PITR + a little S3), base state stays ~$1 |
+| Container | `web-app-fargate` (in-process WebSockets) + same data modules | ~$6.6–13 + flips the $19 container-tier flag |
+
+The agent defaults to the serverless shape and says so in its report; the container shape is one manifest line and one foundations PR away if cold starts or connection limits ever bite.
 
 ---
 
@@ -330,7 +367,7 @@ The ALB is ~90% of the floor — the price of instant Fargate deploys. A documen
 | State corruption / concurrent applies | S3 versioning (point-in-time state recovery) + native lockfile + per-`slug+env` concurrency groups; orchestrator refuses Terraform < 1.12 |
 | One service's apply touching another's state | Computed keys (never typed) + rego key/dir check + state-policy deny on `platform/*`; residual cross-service risk accepted single-owner; graduation = per-service deploy roles |
 | Orphaned previews (missed webhooks) | Nightly sweeper diffs state keys against live branches, destroys past `ttlDays`; preview buckets expire objects at 7 days regardless |
-| Cost runaway | Budget alerts 50/80/100%; previews on Spot with TTL; `desiredCount` caps in the manifest schema; daily cost-delta line in `health.yml`; no NAT to leak data charges |
+| Cost runaway | Three layers per service (§7.2): structural caps bound worst case in real time; the 2×-daily cost guard pauses at 100% of the manifest budget; the account budget backstops untagged spend. Plus: previews on Spot with TTL, no NAT to leak data charges, and the only always-on cost (ALB) behind a human-gated flag |
 | Agent writes raw Terraform outside the catalog | **Escape hatch allowed but taxed**: conftest flags non-catalog resources and fails the run *unless* the manifest carries `escapeHatch: {reason: "…"}` — visible, justified, greppable for promotion into a real module |
 | Wildcard cert covers one label only | `preview-name.mjs` is the single source of names and emits single labels; rego denies any record deeper than one label under the zone |
 | ALB listener rule limit (~100) | ~2 rules/service ⇒ comfortable to ~40 services; `health.yml` reports the count; graduation: second ALB, or move low-traffic services to the lambda tier |
@@ -344,9 +381,9 @@ The ALB is ~90% of the floor — the price of instant Fargate deploys. A documen
 
 | Phase | Delivers | Contents | Est. sessions |
 |---|---|---|---|
-| 1 | **Prompt → live hello-world URL from a phone** | seed stack; foundations *minus* ALB/ECS/Cognito (OIDC, state, zone, certs, budget); `static-site` module; registry + `svc.mjs` + `new-service.mjs` (static tier); `deploy.yml` static path incl. previews + teardown; root CLAUDE.md | 3–4 |
-| 2 | Dynamic apps | VPC, ALB, ECS cluster into foundations; `web-app-fargate`; the docker fast path; conftest policies; preview sweeper | 3–4 |
-| 3 | Serverless + data | `api-lambda`, `db-dynamodb`, `bucket-uploads`, `queue`, `cron`; secrets vault + pending-secrets contract | 2–3 |
+| 1 | **Prompt → live hello-world URL from a phone** | seed stack; foundations core (OIDC, state, zone, certs, account budget — ~$1/mo); `static-site` module; registry + `svc.mjs` + `new-service.mjs` (static tier); `deploy.yml` static path incl. previews + teardown; root CLAUDE.md | 3–4 |
+| 2 | Arbitrary web apps, still ~$0 idle | `web-app-lambda` (Lambda Web Adapter), `api-lambda`, `db-dynamodb`, `bucket-uploads`, `queue`, `cron`; secrets vault + pending-secrets contract; conftest policies; budget schema + structural caps + cost guard | 3–4 |
+| 3 | Container tier (opt-in) | `enable_container_tier` components (VPC, ALB, ECS) into foundations; `web-app-fargate`; the docker fast path; preview sweeper | 2–3 |
 | 4 | Auth + realtime + email | shared Cognito + Google IdP; `auth-client`; scaffolder OIDC glue; `realtime-websocket`; `email-sender`. **Acceptance = the goal prompt, hands-free** | 3–4 |
 | 5 | Operational maturity | `health.yml`, alarm wiring, `cost-report.mjs`, rollback, pause/destroy polish, triage cron session | 2–3 |
 
