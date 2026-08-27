@@ -2,70 +2,76 @@
   "updated": "2026-08-27T18:00:00Z",
   "factorRatings": [
     {
-      "id": "roma-roma",
-      "craft": 6.5,
+      "id": "razzis-pizzeria",
+      "craft": 6,
       "distinctiveness": 6.5,
       "criticScore": 6.5,
-      "opened": 2026,
-      "styleGroup": "Roman",
+      "opened": 1983,
+      "priceIndex": 2,
+      "styleGroup": "Neighborhood",
       "sources": [
-        "https://www.theinfatuation.com/seattle/reviews/roma-roma",
-        "https://www.capitolhillseattle.com/2025/09/roma-roma-with-roman-pizza-by-the-cut-coming-to-capitol-hills-12th-ave/"
+        "https://www.razzispizza.com/about.html",
+        "https://www.yelp.com/biz/razz%C3%ADs-pizzer%C3%ADa-seattle-4",
+        "https://www.findmeglutenfree.com/biz/razzis-pizzeria/1256016"
       ],
-      "note": "The Infatuation rated it 7.5/10, calling the Roman by-the-cut al taglio pizza 'pretty good' with hit-or-miss toppings but singling out the Margherita and wild boar bolognese as standouts; CHS covered its Capitol Hill debut from the Brunton brothers, whose three-day naturally leavened dough anchors a concept built as much around the room and cocktails as the pizza."
+      "note": "Est. 1983, Razzi's runs a certified gluten-free kitchen alongside its regular menu, with four separate allergen-safe menus that Eater's gluten-free guide calls the holy grail of allergen-safe dining; hundreds of Yelp and Tripadvisor reviews describe consistently good food and generous portions rather than standout pizza craft specifically."
     },
     {
-      "id": "stevies-famous",
+      "id": "pizzeria-la-rocca",
       "craft": 7.5,
-      "distinctiveness": 7,
-      "criticScore": 7.5,
-      "opened": 2026,
-      "styleGroup": "Thin crust",
+      "distinctiveness": 6.5,
+      "criticScore": 7,
+      "priceIndex": 3,
+      "styleGroup": "Wood-fired",
       "sources": [
-        "https://www.seattletimes.com/life/food-drink/restaurant-review-this-slice-shop-is-worth-a-pizza-pilgrimage-to-burien/",
-        "https://www.seattletimes.com/life/food-drink/stevies-famous-is-the-champion-of-our-seattle-times-pizza-smackdown/",
-        "https://www.theinfatuation.com/seattle/reviews/stevies-famous-phinney-ridge"
+        "https://www.pizzalarocca.com/",
+        "https://www.yelp.com/biz/pizzeria-la-rocca-seattle",
+        "https://www.tripadvisor.com/Restaurant_Review-g60878-d23849163-Reviews-Pizzeria_La_Rocca-Seattle_Washington.html"
       ],
-      "note": "The Seattle Times called the original location worth a 'pizza pilgrimage' for its burrata-and-hot-honey pies on a 'crispy, never burned crust' and later crowned it champion of its citywide Pizza Smackdown; the Phinney Ridge location, opened in 2026, is now the flagship producing dough for all locations, and The Infatuation confirms it serves 'the same burrata-dolloped pies.'"
+      "note": "Reviewers on Yelp and Tripadvisor repeatedly single out the wood-fired crust as the thinnest and most delicate they've had, calling it some of the best pizza in the Pacific Northwest; prices run higher than most Seattle neighborhood shops."
     },
     {
-      "id": "my-friend-dereks",
-      "craft": 7.5,
-      "distinctiveness": 7,
-      "criticScore": 8,
-      "styleGroup": "Detroit pan",
-      "sources": [
-        "https://www.theinfatuation.com/seattle/reviews/my-friend-dereks",
-        "https://seattlepizza.substack.com/p/release-11"
-      ],
-      "note": "The Infatuation scored it 8.8/10, praising 'sturdy-but-light caramelized crusts' and calling the plain Detroit-style pie 'sublime,' alongside inventive slices like a Fishy Caesar; a Seattle pizza-focused newsletter ranked it #3 in its Definitive Seattle Pizza Rankings."
-    },
-    {
-      "id": "pizza-by-ruffin",
-      "craft": 7.5,
+      "id": "pi-vegan-pizzeria",
+      "craft": 7,
       "distinctiveness": 8,
       "criticScore": 7.5,
-      "opened": 2024,
-      "styleGroup": "Roman",
+      "priceIndex": 2,
+      "styleGroup": "Creative",
       "sources": [
-        "https://www.theinfatuation.com/seattle/reviews/pizza-by-ruffin",
-        "https://seattlerefined.com/eat-drink/restaurants-bars/pizza-by-ruffin-washingtons-first-black-owned-pizzeria-south-lake-union-veteran-woman-owned-fairview-market-hall-food"
+        "https://www.happycow.net/reviews/pi-vegan-pizzeria-seattle-2637",
+        "https://www.yelp.com/biz/pi-vegan-pizzeria-seattle",
+        "https://www.tripadvisor.com/Restaurant_Review-g60878-d432225-Reviews-Pizza_Pi_Vegan_Pizzeria-Seattle_Washington.html"
       ],
-      "note": "The Infatuation rated it 7.8/10 for its two-day cold-fermented, crackly-crust Roman al taglio slices and diaspora-inspired toppings like Jamaican-curry mushroom and gumbo-style pies; Seattle Refined covered its distinction as Washington's first Black-owned pizzeria, opened October 2024, which redirects tips to a nonprofit funding school garden grants."
+      "note": "An all-vegan pizzeria on Roosevelt Way with a devoted following; diners on HappyCow and Yelp call the crust the star of the show and the pizza the best vegan pizza they've ever had, with affordable, budget-friendly pricing."
     },
     {
-      "id": "cornuto-pizzeria",
+      "id": "mioposto",
       "craft": 7.5,
       "distinctiveness": 6.5,
       "criticScore": 7.5,
-      "opened": 2016,
+      "opened": 2006,
+      "styleGroup": "Wood-fired",
+      "sources": [
+        "https://www.seattletimes.com/life/food-drink/mioposto-secondo-pizzeria-fires-up-lively-fare/",
+        "https://www.seattlemet.com/businesses/mioposto",
+        "https://www.miopostopizza.com/"
+      ],
+      "note": "The Seattle Times' review of the Mount Baker original describes thin, foldable crusts, ballooning edges and a bread-like chew, tracing owner Jeremy Hardy's pizza pedigree through Pizzeria Bianco, dough school, and time in Florence and Rome; Seattle Met has carried it on its business listings since it opened in 2006."
+    },
+    {
+      "id": "veraci-pizza",
+      "craft": 7.5,
+      "distinctiveness": 7.5,
+      "criticScore": 7.5,
+      "opened": 2004,
+      "priceIndex": 2,
       "styleGroup": "Neapolitan",
       "sources": [
-        "https://www.seattletimes.com/life/food-drink/pizza-stars-at-cornuto-in-phinney-ridge/",
-        "https://www.theinfatuation.com/seattle/reviews/cornuto-pizzeria",
-        "https://phinneywood.com/2016/02/cornuto-pizzeria/"
+        "https://www.fearlesscritic.com/seattle/restaurant/5636/veraci-pizza-seattle",
+        "https://www.veracipizza.com/",
+        "https://www.yelp.com/biz/veraci-pizza-wedgwood-seattle"
       ],
-      "note": "The Seattle Times called it home to 'some of the best Neapolitan-style pizza around' in a traditional white-tiled oven; The Infatuation likewise praised its 'bubbly pies drizzled with chile oil' in a cozy, narrow, date-friendly room, and PhinneyWood covered its 2016 opening in Phinney Ridge/Greenwood by brothers Andrew and Giancarlo Martino."
+      "note": "Fearless Critic scores Veraci's Neapolitan-style, applewood-fired slices 7.5/10 for food, tying for fifth among Seattle pizzerias at roughly $25 a person; the business grew out of a mobile wood-fired oven the founders built to sell pizza at the Ballard Farmers Market starting in 2004."
     }
   ]
 }

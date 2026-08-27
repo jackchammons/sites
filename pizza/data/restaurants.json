@@ -1770,7 +1770,28 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.razzispizza.com/about.html",
+          "note": "Est. 1983, Razzi's runs a certified gluten-free kitchen alongside its regular menu, with four separate allergen-safe menus that Eater's gluten-free guide calls the holy grail of allergen-safe dining; hundreds of Yelp and Tripadvisor reviews describe consistently good food and generous portions rather than standout pizza craft specifically.",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.razzispizza.com/about.html",
+          "note": "Est. 1983, Razzi's runs a certified gluten-free kitchen alongside its regular menu, with four separate allergen-safe menus that Eater's gluten-free guide calls the holy grail of allergen-safe dining; hundreds of Yelp and Tripadvisor reviews describe consistently good food and generous portions rather than standout pizza craft specifically.",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 6.5,
+      "opened": 1983,
+      "priceIndex": 2,
+      "styleGroup": "Neighborhood",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "pizzeria-la-rocca",
@@ -1794,7 +1815,27 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.pizzalarocca.com/",
+          "note": "Reviewers on Yelp and Tripadvisor repeatedly single out the wood-fired crust as the thinnest and most delicate they've had, calling it some of the best pizza in the Pacific Northwest; prices run higher than most Seattle neighborhood shops.",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.pizzalarocca.com/",
+          "note": "Reviewers on Yelp and Tripadvisor repeatedly single out the wood-fired crust as the thinnest and most delicate they've had, calling it some of the best pizza in the Pacific Northwest; prices run higher than most Seattle neighborhood shops.",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 7,
+      "priceIndex": 3,
+      "styleGroup": "Wood-fired",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "pi-vegan-pizzeria",
@@ -1818,7 +1859,27 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.happycow.net/reviews/pi-vegan-pizzeria-seattle-2637",
+          "note": "An all-vegan pizzeria on Roosevelt Way with a devoted following; diners on HappyCow and Yelp call the crust the star of the show and the pizza the best vegan pizza they've ever had, with affordable, budget-friendly pricing.",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 8,
+          "setBy": "agent",
+          "source": "https://www.happycow.net/reviews/pi-vegan-pizzeria-seattle-2637",
+          "note": "An all-vegan pizzeria on Roosevelt Way with a devoted following; diners on HappyCow and Yelp call the crust the star of the show and the pizza the best vegan pizza they've ever had, with affordable, budget-friendly pricing.",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 7.5,
+      "priceIndex": 2,
+      "styleGroup": "Creative",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "mioposto",
@@ -1842,7 +1903,27 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.seattletimes.com/life/food-drink/mioposto-secondo-pizzeria-fires-up-lively-fare/",
+          "note": "The Seattle Times' review of the Mount Baker original describes thin, foldable crusts, ballooning edges and a bread-like chew, tracing owner Jeremy Hardy's pizza pedigree through Pizzeria Bianco, dough school, and time in Florence and Rome; Seattle Met has carried it on its business listings since it opened in 2006.",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.seattletimes.com/life/food-drink/mioposto-secondo-pizzeria-fires-up-lively-fare/",
+          "note": "The Seattle Times' review of the Mount Baker original describes thin, foldable crusts, ballooning edges and a bread-like chew, tracing owner Jeremy Hardy's pizza pedigree through Pizzeria Bianco, dough school, and time in Florence and Rome; Seattle Met has carried it on its business listings since it opened in 2006.",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 7.5,
+      "opened": 2006,
+      "styleGroup": "Wood-fired",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "veraci-pizza",
@@ -1866,7 +1947,28 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.fearlesscritic.com/seattle/restaurant/5636/veraci-pizza-seattle",
+          "note": "Fearless Critic scores Veraci's Neapolitan-style, applewood-fired slices 7.5/10 for food, tying for fifth among Seattle pizzerias at roughly $25 a person; the business grew out of a mobile wood-fired oven the founders built to sell pizza at the Ballard Farmers Market starting in 2004.",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.fearlesscritic.com/seattle/restaurant/5636/veraci-pizza-seattle",
+          "note": "Fearless Critic scores Veraci's Neapolitan-style, applewood-fired slices 7.5/10 for food, tying for fifth among Seattle pizzerias at roughly $25 a person; the business grew out of a mobile wood-fired oven the founders built to sell pizza at the Ballard Farmers Market starting in 2004.",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 7.5,
+      "opened": 2004,
+      "priceIndex": 2,
+      "styleGroup": "Neapolitan",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "south-town-pie",
