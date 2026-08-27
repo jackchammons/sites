@@ -1,57 +1,71 @@
 {
-  "updated": "2026-08-26T00:00:00Z",
-  "locations": [
+  "updated": "2026-08-27T18:00:00Z",
+  "factorRatings": [
     {
-      "id": "my-friend-dereks",
-      "homepage": "https://myfrienddereks.com/",
-      "source": "https://myfrienddereks.com/",
-      "sites": [
-        {
-          "neighborhood": "Tangletown",
-          "address": "2108 N 55th St, Seattle, WA 98103"
-        }
-      ]
+      "id": "roma-roma",
+      "craft": 6.5,
+      "distinctiveness": 6.5,
+      "criticScore": 6.5,
+      "opened": 2026,
+      "styleGroup": "Roman",
+      "sources": [
+        "https://www.theinfatuation.com/seattle/reviews/roma-roma",
+        "https://www.capitolhillseattle.com/2025/09/roma-roma-with-roman-pizza-by-the-cut-coming-to-capitol-hills-12th-ave/"
+      ],
+      "note": "The Infatuation rated it 7.5/10, calling the Roman by-the-cut al taglio pizza 'pretty good' with hit-or-miss toppings but singling out the Margherita and wild boar bolognese as standouts; CHS covered its Capitol Hill debut from the Brunton brothers, whose three-day naturally leavened dough anchors a concept built as much around the room and cocktails as the pizza."
     },
     {
       "id": "stevies-famous",
-      "homepage": "https://www.steviesfamous.com/",
-      "source": "https://www.steviesfamous.com/",
-      "sites": [
-        {
-          "neighborhood": "Burien",
-          "address": "822 SW 152nd St, Burien, WA 98166"
-        },
-        {
-          "neighborhood": "Beacon Hill",
-          "address": "4864 Beacon Ave S, Seattle, WA 98108"
-        },
-        {
-          "neighborhood": "Phinney Ridge",
-          "address": "6000 Phinney Ave N, Seattle, WA 98103"
-        }
-      ]
+      "craft": 7.5,
+      "distinctiveness": 7,
+      "criticScore": 7.5,
+      "opened": 2026,
+      "styleGroup": "Thin crust",
+      "sources": [
+        "https://www.seattletimes.com/life/food-drink/restaurant-review-this-slice-shop-is-worth-a-pizza-pilgrimage-to-burien/",
+        "https://www.seattletimes.com/life/food-drink/stevies-famous-is-the-champion-of-our-seattle-times-pizza-smackdown/",
+        "https://www.theinfatuation.com/seattle/reviews/stevies-famous-phinney-ridge"
+      ],
+      "note": "The Seattle Times called the original location worth a 'pizza pilgrimage' for its burrata-and-hot-honey pies on a 'crispy, never burned crust' and later crowned it champion of its citywide Pizza Smackdown; the Phinney Ridge location, opened in 2026, is now the flagship producing dough for all locations, and The Infatuation confirms it serves 'the same burrata-dolloped pies.'"
     },
     {
-      "id": "sinners-pizza",
-      "homepage": "https://sinners.pizza/",
-      "source": "https://sinners.pizza/",
-      "sites": [
-        {
-          "neighborhood": "University District",
-          "address": "4529 University Way NE, Seattle, WA 98105"
-        }
-      ]
+      "id": "my-friend-dereks",
+      "craft": 7.5,
+      "distinctiveness": 7,
+      "criticScore": 8,
+      "styleGroup": "Detroit pan",
+      "sources": [
+        "https://www.theinfatuation.com/seattle/reviews/my-friend-dereks",
+        "https://seattlepizza.substack.com/p/release-11"
+      ],
+      "note": "The Infatuation scored it 8.8/10, praising 'sturdy-but-light caramelized crusts' and calling the plain Detroit-style pie 'sublime,' alongside inventive slices like a Fishy Caesar; a Seattle pizza-focused newsletter ranked it #3 in its Definitive Seattle Pizza Rankings."
     },
     {
-      "id": "roma-roma",
-      "homepage": "https://romaroma.pizza/",
-      "source": "https://romaroma.pizza/",
-      "sites": [
-        {
-          "neighborhood": "Capitol Hill",
-          "address": "1610 12th Ave, Seattle, WA 98122"
-        }
-      ]
+      "id": "pizza-by-ruffin",
+      "craft": 7.5,
+      "distinctiveness": 8,
+      "criticScore": 7.5,
+      "opened": 2024,
+      "styleGroup": "Roman",
+      "sources": [
+        "https://www.theinfatuation.com/seattle/reviews/pizza-by-ruffin",
+        "https://seattlerefined.com/eat-drink/restaurants-bars/pizza-by-ruffin-washingtons-first-black-owned-pizzeria-south-lake-union-veteran-woman-owned-fairview-market-hall-food"
+      ],
+      "note": "The Infatuation rated it 7.8/10 for its two-day cold-fermented, crackly-crust Roman al taglio slices and diaspora-inspired toppings like Jamaican-curry mushroom and gumbo-style pies; Seattle Refined covered its distinction as Washington's first Black-owned pizzeria, opened October 2024, which redirects tips to a nonprofit funding school garden grants."
+    },
+    {
+      "id": "cornuto-pizzeria",
+      "craft": 7.5,
+      "distinctiveness": 6.5,
+      "criticScore": 7.5,
+      "opened": 2016,
+      "styleGroup": "Neapolitan",
+      "sources": [
+        "https://www.seattletimes.com/life/food-drink/pizza-stars-at-cornuto-in-phinney-ridge/",
+        "https://www.theinfatuation.com/seattle/reviews/cornuto-pizzeria",
+        "https://phinneywood.com/2016/02/cornuto-pizzeria/"
+      ],
+      "note": "The Seattle Times called it home to 'some of the best Neapolitan-style pizza around' in a traditional white-tiled oven; The Infatuation likewise praised its 'bubbly pies drizzled with chile oil' in a cozy, narrow, date-friendly room, and PhinneyWood covered its 2016 opening in Phinney Ridge/Greenwood by brothers Andrew and Giancarlo Martino."
     }
   ]
 }

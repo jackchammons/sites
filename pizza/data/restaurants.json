@@ -1460,7 +1460,26 @@
       "locationsSource": "https://myfrienddereks.com/",
       "mentions": [],
       "statusNote": "The Detroit-style pop-up converted to a permanent brick-and-mortar in Tangletown and is now operating with regular weekly hours.",
-      "statusChecked": "2026-08-26"
+      "statusChecked": "2026-08-26",
+      "factors": {
+        "craft": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/my-friend-dereks",
+          "note": "The Infatuation scored it 8.8/10, praising 'sturdy-but-light caramelized crusts' and calling the plain Detroit-style pie 'sublime,' alongside inventive slices like a Fishy Caesar; a Seattle pizza-focused newsletter ranked it #3 in its Definitive Seattle Pizza Rankings.",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/my-friend-dereks",
+          "note": "The Infatuation scored it 8.8/10, praising 'sturdy-but-light caramelized crusts' and calling the plain Detroit-style pie 'sublime,' alongside inventive slices like a Fishy Caesar; a Seattle pizza-focused newsletter ranked it #3 in its Definitive Seattle Pizza Rankings.",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 8,
+      "styleGroup": "Detroit pan",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "abecedary",
@@ -1529,7 +1548,27 @@
           "date": "2026-08-19T00:00:00Z",
           "kind": "opening"
         }
-      ]
+      ],
+      "factors": {
+        "craft": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.seattletimes.com/life/food-drink/restaurant-review-this-slice-shop-is-worth-a-pizza-pilgrimage-to-burien/",
+          "note": "The Seattle Times called the original location worth a 'pizza pilgrimage' for its burrata-and-hot-honey pies on a 'crispy, never burned crust' and later crowned it champion of its citywide Pizza Smackdown; the Phinney Ridge location, opened in 2026, is now the flagship producing dough for all locations, and The Infatuation confirms it serves 'the same burrata-dolloped pies.'",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.seattletimes.com/life/food-drink/restaurant-review-this-slice-shop-is-worth-a-pizza-pilgrimage-to-burien/",
+          "note": "The Seattle Times called the original location worth a 'pizza pilgrimage' for its burrata-and-hot-honey pies on a 'crispy, never burned crust' and later crowned it champion of its citywide Pizza Smackdown; the Phinney Ridge location, opened in 2026, is now the flagship producing dough for all locations, and The Infatuation confirms it serves 'the same burrata-dolloped pies.'",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 7.5,
+      "opened": 2026,
+      "styleGroup": "Thin crust",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "sinners-pizza",
@@ -1599,7 +1638,27 @@
           "date": "2026-05-12T07:00:00.000Z",
           "kind": "mention"
         }
-      ]
+      ],
+      "factors": {
+        "craft": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/roma-roma",
+          "note": "The Infatuation rated it 7.5/10, calling the Roman by-the-cut al taglio pizza 'pretty good' with hit-or-miss toppings but singling out the Margherita and wild boar bolognese as standouts; CHS covered its Capitol Hill debut from the Brunton brothers, whose three-day naturally leavened dough anchors a concept built as much around the room and cocktails as the pizza.",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/roma-roma",
+          "note": "The Infatuation rated it 7.5/10, calling the Roman by-the-cut al taglio pizza 'pretty good' with hit-or-miss toppings but singling out the Margherita and wild boar bolognese as standouts; CHS covered its Capitol Hill debut from the Brunton brothers, whose three-day naturally leavened dough anchors a concept built as much around the room and cocktails as the pizza.",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 6.5,
+      "opened": 2026,
+      "styleGroup": "Roman",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "pizza-by-ruffin",
@@ -1623,7 +1682,27 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/pizza-by-ruffin",
+          "note": "The Infatuation rated it 7.8/10 for its two-day cold-fermented, crackly-crust Roman al taglio slices and diaspora-inspired toppings like Jamaican-curry mushroom and gumbo-style pies; Seattle Refined covered its distinction as Washington's first Black-owned pizzeria, opened October 2024, which redirects tips to a nonprofit funding school garden grants.",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 8,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/pizza-by-ruffin",
+          "note": "The Infatuation rated it 7.8/10 for its two-day cold-fermented, crackly-crust Roman al taglio slices and diaspora-inspired toppings like Jamaican-curry mushroom and gumbo-style pies; Seattle Refined covered its distinction as Washington's first Black-owned pizzeria, opened October 2024, which redirects tips to a nonprofit funding school garden grants.",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 7.5,
+      "opened": 2024,
+      "styleGroup": "Roman",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "cornuto-pizzeria",
@@ -1647,7 +1726,27 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.seattletimes.com/life/food-drink/pizza-stars-at-cornuto-in-phinney-ridge/",
+          "note": "The Seattle Times called it home to 'some of the best Neapolitan-style pizza around' in a traditional white-tiled oven; The Infatuation likewise praised its 'bubbly pies drizzled with chile oil' in a cozy, narrow, date-friendly room, and PhinneyWood covered its 2016 opening in Phinney Ridge/Greenwood by brothers Andrew and Giancarlo Martino.",
+          "date": "2026-08-27"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.seattletimes.com/life/food-drink/pizza-stars-at-cornuto-in-phinney-ridge/",
+          "note": "The Seattle Times called it home to 'some of the best Neapolitan-style pizza around' in a traditional white-tiled oven; The Infatuation likewise praised its 'bubbly pies drizzled with chile oil' in a cozy, narrow, date-friendly room, and PhinneyWood covered its 2016 opening in Phinney Ridge/Greenwood by brothers Andrew and Giancarlo Martino.",
+          "date": "2026-08-27"
+        }
+      },
+      "criticScore": 7.5,
+      "opened": 2016,
+      "styleGroup": "Neapolitan",
+      "lastVerified": "2026-08-27"
     },
     {
       "id": "razzis-pizzeria",
