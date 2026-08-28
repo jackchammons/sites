@@ -1,41 +1,63 @@
 {
-  "updated": "2026-08-27T18:00:00Z",
-  "status": [
+  "updated": "2026-08-28T12:00:00Z",
+  "news": [
+    {
+      "title": "Acclaimed Stevie's Famous Pizza Celebrates Grand Opening on Phinney Ridge August 2",
+      "url": "https://phinneywood.com/2026/07/stevies-famous-pizza-celebrates-grand-opening-on-phinney-ridge/",
+      "source": "The PhinneyWood Blog",
+      "published": "2026-07-28",
+      "kind": "opening",
+      "mentions": ["stevies-famous"]
+    },
+    {
+      "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
+      "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
+      "source": "Seattle magazine",
+      "published": "2026-08-07",
+      "kind": "mention",
+      "mentions": ["abecedary", "roma-roma"]
+    }
+  ],
+  "mentions": [
+    {
+      "id": "stevies-famous",
+      "title": "Acclaimed Stevie's Famous Pizza Celebrates Grand Opening on Phinney Ridge August 2",
+      "url": "https://phinneywood.com/2026/07/stevies-famous-pizza-celebrates-grand-opening-on-phinney-ridge/",
+      "source": "The PhinneyWood Blog",
+      "date": "2026-07-28",
+      "kind": "opening"
+    },
     {
       "id": "abecedary",
-      "status": "opening",
-      "note": "Owner Seth Eisner gave Seattle a first taste with a cheese-slice pop-up at Hillman City's What's Good block party, but the Seattle Times reports the permanent Abecedary storefront still won't open until 2027.",
-      "source": "https://www.seattletimes.com/life/food-drink/up-and-coming-seattle-pizza-baker-will-pop-up-saturday-in-hillman-city/"
+      "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
+      "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
+      "source": "Seattle magazine",
+      "date": "2026-08-07",
+      "kind": "mention"
     },
     {
-      "id": "razzis-pizzeria",
-      "status": "open",
-      "note": "Razzi's Pizzeria's Greenwood Ave N location shows an actively maintained Yelp listing updated August 2026 with current hours, menu and ongoing customer reviews.",
-      "source": "https://www.yelp.com/biz/razz%C3%ADs-pizzer%C3%ADa-seattle-4"
+      "id": "roma-roma",
+      "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
+      "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
+      "source": "Seattle magazine",
+      "date": "2026-08-07",
+      "kind": "mention"
     },
     {
-      "id": "pi-vegan-pizzeria",
-      "status": "open",
-      "note": "Pi Vegan Pizzeria at 5301 Roosevelt Way NE has a Yelp listing updated August 2026 showing current hours and continued customer activity.",
-      "source": "https://www.yelp.com/biz/pi-vegan-pizzeria-seattle"
+      "id": "pizza-by-ruffin",
+      "title": "Restaurant Roundup: Pizza Pals and Paella on the Patio",
+      "url": "https://seattlemag.com/food-drink/restaurant-roundup-pizza-pals-and-paella-on-the-patio",
+      "source": "Seattle magazine",
+      "date": "2026-08-21",
+      "kind": "mention"
     },
     {
-      "id": "pizza-ritual",
-      "status": "open",
-      "note": "West Seattle Blog reports owner Matt Gorman confirming Pizza Ritual's ongoing online pre-order pickup plus Friday/Saturday walk-up window hours at the KBM Kitchen on Delridge.",
-      "source": "https://westseattleblog.com/2026/01/biznote-its-just-pizza-says-proprietor-of-pizza-ritual-settling-on-days-hours/"
-    },
-    {
-      "id": "pizzeria-pulcinella",
-      "status": "open",
-      "note": "Pizzeria Pulcinella's Yelp listing updated August 2026 shows continued seven-day operation, including a customer's 50th-anniversary party hosted there in February 2026.",
-      "source": "https://www.yelp.com/biz/pizzeria-pulcinella-seattle-2"
-    },
-    {
-      "id": "oxbow",
-      "status": "open",
-      "note": "Oxbow's own site lists current operating hours (Sun-Thu 7am-5pm, Fri-Sat 7am-7pm) and its pizza/bagel menu for the Montlake shop.",
-      "source": "https://oxbowmontlake.com/"
+      "id": "roma-roma",
+      "title": "Restaurant Roundup: Pizza Pals and Paella on the Patio",
+      "url": "https://seattlemag.com/food-drink/restaurant-roundup-pizza-pals-and-paella-on-the-patio",
+      "source": "Seattle magazine",
+      "date": "2026-08-21",
+      "kind": "mention"
     }
   ]
 }

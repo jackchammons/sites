@@ -1547,6 +1547,13 @@
           "source": "Seattle magazine",
           "date": "2026-08-19T00:00:00Z",
           "kind": "opening"
+        },
+        {
+          "url": "https://phinneywood.com/2026/07/stevies-famous-pizza-celebrates-grand-opening-on-phinney-ridge/",
+          "title": "Acclaimed Stevie's Famous Pizza Celebrates Grand Opening on Phinney Ridge August 2",
+          "source": "The PhinneyWood Blog",
+          "date": "2026-07-28",
+          "kind": "opening"
         }
       ],
       "factors": {
@@ -1637,6 +1644,13 @@
           "source": "The Infatuation",
           "date": "2026-05-12T07:00:00.000Z",
           "kind": "mention"
+        },
+        {
+          "url": "https://seattlemag.com/food-drink/restaurant-roundup-pizza-pals-and-paella-on-the-patio",
+          "title": "Restaurant Roundup: Pizza Pals and Paella on the Patio",
+          "source": "Seattle magazine",
+          "date": "2026-08-21",
+          "kind": "mention"
         }
       ],
       "factors": {
@@ -1682,7 +1696,15 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://seattlemag.com/food-drink/restaurant-roundup-pizza-pals-and-paella-on-the-patio",
+          "title": "Restaurant Roundup: Pizza Pals and Paella on the Patio",
+          "source": "Seattle magazine",
+          "date": "2026-08-21",
+          "kind": "mention"
+        }
+      ],
       "factors": {
         "craft": {
           "value": 7.5,
