@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-27T22:57:53.221Z",
+  "updated": "2026-08-28T23:02:17.361Z",
   "sources": 4,
   "items": [
     {
@@ -7,6 +7,14 @@
       "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPZWlRV0xFZ1NNRS1BSnNkQ3Fkd1BTNlM1SEx5M0FFNjNPYno2TkkwZzExZG5ZQXJ0SE92ZzExRDFfTlBzMzlwUmtPelF1c1Znc3pqNlV2aExMdllWQVg1a3dxNmxzWFE3eldxRXJxUmFfbHEwTDFaV0lKSW1LdjMtTi1CVXI1YlFJMG1JY281ME1zZw?oc=5",
       "source": "Seattle magazine",
       "published": "2026-08-21T11:01:51.000Z",
+      "kind": "mention",
+      "mentions": []
+    },
+    {
+      "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
+      "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxObHJnaFdyZmNtZlI5UnVDOGt1WWxZaFhmbXBMdzNGOWNFUzZXU29zSnlfY0tsWE5kQThfSWlNRXBDUkRWa3JfUVdycVZJMjAweTcyWllPcU1YUzg0a2xIYndPRlBnX3pjWWFvTjI1ZzhxU3Z5NW9TdE5DQk5qRjlxUFVnQm9ZZGNFOC1yZERlX3gya0wtczRJ?oc=5",
+      "source": "Seattle magazine",
+      "published": "2026-08-07T07:00:00.000Z",
       "kind": "mention",
       "mentions": []
     },
@@ -158,22 +166,6 @@
       "source": "Seattle Met",
       "published": "2026-05-08T07:00:00.000Z",
       "kind": "mention",
-      "mentions": []
-    },
-    {
-      "title": "Seattle’s Pizza Just Keeps Getting Better",
-      "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxQNUw3VGljMnBGRjcxMGhHQ0toLVFhNVpJdGVVZGVlSklzcHVmMTdYY2tvQVNPSlNqQ21OMHlNSndRSEpwZzFZRjkyUmVfUVBzQnlFejVOQlNGZXo2SG9aaGlwUENQd1ZiQmM3ODVfeERWRHZXUHg3THNuZGNHcnFoMw?oc=5",
-      "source": "Seattle magazine",
-      "published": "2026-04-30T07:00:00.000Z",
-      "kind": "mention",
-      "mentions": []
-    },
-    {
-      "title": "Forget New York and Chicago — Puget Sound's 'Pizza Triangle' is serving up some of the best pies on the planet",
-      "url": "https://news.google.com/rss/articles/CBMi3AFBVV95cUxQXzV1Y0dZbkMyTy1zc1NpdzZQbHhRV25JWUlhbVpja2hWTHpPTlVPZF8tdVZTeFVKQXFZYVpsUnJ4R0dhcktiMjgxN3JwcWZEQV9weEFEQkNSaFBsMjBqZWMxTm1nQW50djZIR2NScEZDS1pQcWcwbHl3cXNUaXNsdVgzdnBHVEhRNVVLUzRsSExOYVRBeXRubnE3REg1ZHhJaS1tUjZkd2NyaVp5Y29IMmNxUzE3dDZ3MllfVHVsY2JZUWs5OEFVNG5VcVJDWnFBZm1rSlRUTjhkeWxO?oc=5",
-      "source": "KING5.com",
-      "published": "2026-04-30T07:00:00.000Z",
-      "kind": "ranking",
       "mentions": []
     }
   ]
