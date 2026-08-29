@@ -346,7 +346,8 @@ footer p { max-width: 72ch; }
 }
 .buzz-body a:hover { color: var(--tomato-2); border-bottom-color: currentColor; }
 .buzz-meta {
-  display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px;
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 6px 10px; margin-top: 6px;
   font-family: var(--mono); font-size: 11px; color: var(--ink-3);
 }
 .buzz-ranked { color: var(--crust); }
@@ -499,6 +500,7 @@ footer p { max-width: 72ch; }
   display: inline-block; font-family: var(--mono); font-size: 10.5px;
   padding: 1px 8px; border: 1px solid var(--line); border-radius: 99px;
   color: var(--ink-2); text-decoration: none; background: var(--card);
+  white-space: nowrap;   /* a tag that wraps mid-name is unreadable */
 }
 a.buzz-tag:hover { border-color: var(--tomato); color: var(--tomato-2); }
 
@@ -564,3 +566,40 @@ a.buzz-tag:hover { border-color: var(--tomato); color: var(--tomato-2); }
 .rank-layout.customized button.reset:hover {
   background: var(--tomato-2); border-color: var(--tomato-2);
 }
+
+
+/* ---- Why it moved ---- */
+.why {
+  margin-top: 10px; font-size: 12px; color: var(--ink-2); line-height: 1.55;
+  padding: 7px 11px; border-left: 2px solid var(--crust);
+  background: color-mix(in srgb, var(--crust) 6%, transparent); border-radius: 0 8px 8px 0;
+}
+.why b { font-weight: 600; color: var(--ink); }
+.why a { color: var(--ink-2); }
+/* Under custom weights the movement is the reader's own doing; the published
+   evidence line would be attributing it to the wrong cause. */
+.rank-layout.customized .why { display: none; }
+
+/* ---- The record (bump chart) ---- */
+.chart-wrap { position: relative; margin-top: 24px; }
+.chart-scroll { overflow-x: auto; }
+.bump { display: block; width: 100%; min-width: 560px; height: auto; font-family: var(--mono); }
+.bump .grid line { stroke: var(--line-soft); stroke-width: 1; }
+.bump .rank-lab, .bump .week-lab { fill: var(--ink-3); font-size: 10.5px; }
+.bump .series path { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.bump .series circle { stroke: var(--bg); stroke-width: 2; }
+.bump .end-lab { fill: var(--ink-2); font-size: 11px; }
+.bump .cursor { stroke: var(--ink-3); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0; }
+.chart-tip {
+  position: absolute; pointer-events: none; display: none; z-index: 5;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+  padding: 9px 12px; font-family: var(--mono); font-size: 11px; color: var(--ink-2);
+  box-shadow: 0 6px 24px rgba(0,0,0,.25); min-width: 170px;
+}
+.chart-tip b { color: var(--ink); display: block; margin-bottom: 4px; }
+.chart-tip ol { margin: 0; padding-left: 18px; }
+.chart-table { margin-top: 14px; }
+.chart-table summary { cursor: pointer; font-size: 12.5px; color: var(--ink-3); }
+.chart-table table { border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+.chart-table th, .chart-table td { padding: 4px 10px; border-bottom: 1px solid var(--line-soft); text-align: left; }
+.chart-table th { font-family: var(--mono); font-size: 10px; text-transform: uppercase; color: var(--ink-3); }

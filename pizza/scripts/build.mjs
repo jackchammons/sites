@@ -75,6 +75,68 @@ const { top, bench: restRaw } = splitTiers(scoredAll, 10);
 const ranked = top.map(r => ({ ...r, previousRank: baseline[r.id] ?? null }));
 const restScored = restRaw;   // ranks 11+, shown in the directory with scores
 
+/* ---- why an entry moved ----
+ * The weekly delta says THAT a card moved; this says what the data shows
+ * behind it. Factor diffs come from the previous week's snapshot (older
+ * snapshots lack them, so the section degrades to citations); citations come
+ * from the entry's recent press mentions and, for a first appearance, the
+ * sources its rating was graded from. */
+const FACTOR_LABEL = { reputation: 'reputation', critical: 'critical reception',
+  craft: 'craft', distinctiveness: 'distinctiveness', value: 'value' };
+
+function evidenceFor(r) {
+  const moved = r.previousRank != null && r.previousRank !== r.rank;
+  const isNew = r.previousRank == null;
+  if (!moved && !isNew) return '';
+
+  const bits = [];
+  const pf = previous?.factors?.[r.id];
+  if (pf) {
+    const deltas = Object.keys(FACTOR_LABEL)
+      .map(k => [k, r.factorScores[k] - (pf[k] ?? r.factorScores[k])])
+      .filter(([, d]) => Math.abs(d) >= 0.1)
+      .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
+      .slice(0, 3);
+    for (const [k, d] of deltas) bits.push(`${FACTOR_LABEL[k]} ${d > 0 ? '+' : '−'}${Math.abs(d).toFixed(1)}`);
+    if (pf.penalty != null && Math.abs(r.penaltyApplied - pf.penalty) >= 0.1) {
+      const d = r.penaltyApplied - pf.penalty;
+      bits.push(`friction ${d > 0 ? 'grew' : 'eased'} ${Math.abs(d).toFixed(1)}`);
+    }
+  }
+
+  const cutoffMs = now.getTime() - 21 * 864e5;
+  const links = (r.mentions ?? [])
+    .filter(m => Date.parse(m.date) > cutoffMs)
+    .slice(0, 2)
+    .map(m => `<a href="${esc(m.url)}" target="_blank" rel="noopener nofollow">${esc(m.source)}</a>`);
+
+  if (isNew) {
+    const graded = ['craft', 'distinctiveness']
+      .map(k => r.factors?.[k])
+      .find(f => f?.setBy === 'agent' && f.source);
+    const src = graded
+      ? ` · rated from <a href="${esc(graded.source)}" target="_blank" rel="noopener nofollow">published coverage</a>`
+      : '';
+    return `<b>New to the ten:</b> ${bits.length ? bits.join(', ') : 'first week with a score high enough'}${src}${links.length ? ' · in the news: ' + links.join(' · ') : ''}`;
+  }
+
+  if (!bits.length) {
+    const prevScore = previous?.scores?.[r.id];
+    const drift = prevScore != null ? r.score - prevScore : null;
+    const cause = drift != null && Math.abs(drift) >= 0.3
+      ? `score ${drift > 0 ? 'up' : 'down'} ${Math.abs(drift).toFixed(1)}`
+      : `no change of its own — entries around it ${r.previousRank > r.rank ? 'fell' : 'rose'}`;
+    return `<b>Why it moved:</b> ${cause}${links.length ? ' — ' + links.join(' · ') : ''}`;
+  }
+  return `<b>Why it moved:</b> ${bits.join(', ')}${links.length ? ' — ' + links.join(' · ') : ''}`;
+}
+
+const evidenceMap = {};
+for (const r of ranked) {
+  const html = evidenceFor(r);
+  if (html) { evidenceMap[r.id] = html; r.evidenceHtml = html; }
+}
+
 /* Weekly spotlight: rotates through the top ten by ISO week. */
 const week = isoWeek(now);
 const spotlight = ranked[week % ranked.length];
@@ -313,6 +375,129 @@ const directorySection = `
 </section>
 `;
 
+/* ---- the record: 12 weeks of the top ten as a bump chart ----
+ * Server-rendered inline SVG. Colors: six categorical hues validated for CVD
+ * separation and contrast against both site surfaces; entities beyond six wear
+ * the muted ink and rely on their end labels, which every line carries -- the
+ * labels are the legend, so identity is never color alone. A table view of the
+ * same record sits underneath. */
+const CHART_HUES = ['#c8341f', '#2f7fd0', '#a9761a', '#7c4fd0', '#3f8b3e', '#d94f8e'];
+
+function bumpChart(snaps) {
+  const weeks = snaps.slice(-12);
+  if (weeks.length < 2) return null;
+
+  // Hues go to the entities that give the eye the most work: longest tenure
+  // in the ten first, best rank as the tie-break. Stable within any one view;
+  // everyone else wears the muted ink and is identified by its end label.
+  const stats = new Map();
+  weeks.forEach((w, i) => {
+    for (const [id, rk] of Object.entries(w.ranks)) {
+      if (rk > 10) continue;
+      const st = stats.get(id) ?? { weeks: 0, best: 99, first: i };
+      st.weeks++; st.best = Math.min(st.best, rk);
+      stats.set(id, st);
+    }
+  });
+  const order = [...stats.keys()].sort((a, b) => {
+    const A = stats.get(a), B = stats.get(b);
+    return B.weeks - A.weeks || A.best - B.best || A.first - B.first;
+  });
+  const colorOf = id => {
+    const i = order.indexOf(id);
+    return i < CHART_HUES.length ? CHART_HUES[i] : 'var(--ink-3)';
+  };
+  const nameOf = id => entriesById.get(id)?.name ?? id;
+
+  const padL = 34, padR = 200, padT = 26, padB = 10, rowH = 33;
+  const plotW = 680;
+  const W = padL + plotW + padR, H = padT + rowH * 9 + padB + 10;
+  const x = i => padL + (weeks.length === 1 ? plotW / 2 : (plotW / (weeks.length - 1)) * i);
+  const y = rank => padT + (rank - 1) * rowH + 5;
+
+  const grid = Array.from({ length: 10 }, (_, i) => {
+    const yy = y(i + 1);
+    return `<line x1="${padL - 6}" y1="${yy}" x2="${padL + plotW}" y2="${yy}"/>` +
+      `<text class="rank-lab" x="${padL - 12}" y="${yy + 3.5}" text-anchor="end">#${i + 1}</text>`;
+  }).join('');
+
+  const weekLabs = weeks.map((w, i) =>
+    `<text class="week-lab" x="${x(i)}" y="${padT - 12}" text-anchor="middle">W${String(w.week).padStart(2, '0')}</text>`).join('');
+
+  const series = order.map(id => {
+    const hue = colorOf(id);
+    const pts = weeks.map((w, i) => (w.ranks[id] != null && w.ranks[id] <= 10) ? [x(i), y(w.ranks[id]), i] : null);
+    // break the line where the entity leaves the ten
+    let d = ''; let pen = false;
+    for (const pt of pts) {
+      if (!pt) { pen = false; continue; }
+      d += `${pen ? 'L' : 'M'}${pt[0]},${pt[1]} `; pen = true;
+    }
+    const dots = pts.filter(Boolean).map(([px, py, i]) =>
+      `<circle cx="${px}" cy="${py}" r="4.5" fill="${hue}"><title>${esc(nameOf(id))} — #${weeks[i].ranks[id]} in W${weeks[i].week}</title></circle>`).join('');
+    const lastPt = [...pts].reverse().find(Boolean);
+    const label = lastPt
+      ? `<text class="end-lab" x="${lastPt[0] + 10}" y="${lastPt[1] + 3.5}">${esc(nameOf(id))}</text>`
+      : '';
+    return `<g class="series"><path d="${d.trim()}" stroke="${hue}"/>${dots}${label}</g>`;
+  }).join('');
+
+  const standings = weeks.map(w => ({
+    week: 'W' + String(w.week).padStart(2, '0'),
+    date: w.date,
+    names: Object.entries(w.ranks).filter(([, rk]) => rk <= 10).sort((a, b) => a[1] - b[1]).map(([id]) => nameOf(id))
+  }));
+
+  const cols = weeks.map((w, i) =>
+    `<rect class="colzone" x="${x(i) - (plotW / Math.max(1, weeks.length - 1)) / 2}" y="0" width="${plotW / Math.max(1, weeks.length - 1)}" height="${H}" fill="transparent" data-i="${i}"/>`).join('');
+
+  const table = `
+    <details class="chart-table"><summary>The same record as a table</summary>
+      <div class="dir-scroll"><table>
+        <thead><tr><th>#</th>${standings.map(sw => `<th>${sw.week}</th>`).join('')}</tr></thead>
+        <tbody>${Array.from({ length: 10 }, (_, i) =>
+          `<tr><td>${i + 1}</td>${standings.map(sw => `<td>${esc(sw.names[i] ?? '')}</td>`).join('')}</tr>`).join('')}
+        </tbody>
+      </table></div>
+    </details>`;
+
+  return `
+    <div class="chart-wrap" id="record-chart" data-standings='${JSON.stringify(standings).replace(/'/g, '&#39;')}'>
+      <div class="chart-scroll">
+      <svg class="bump" viewBox="0 0 ${W} ${H}" role="img" aria-label="Top ten rank by week">
+        <g class="grid">${grid}</g>
+        ${weekLabs}
+        <line class="cursor" id="chart-cursor" x1="0" y1="${padT - 6}" x2="0" y2="${padT + rowH * 9 + 10}"/>
+        ${series}
+        ${cols}
+      </svg>
+      </div>
+      <div class="chart-tip" id="chart-tip"></div>
+    </div>
+    ${table}`;
+}
+
+const chartHtml = bumpChart(history.snapshots.concat(
+  history.snapshots.at(-1)?.weekKey === weekKey ? [] : [{
+    weekKey, week, date: now.toISOString().slice(0, 10),
+    ranks: Object.fromEntries(ranked.map(r => [r.id, r.rank]))
+  }]));
+
+const recordSection = chartHtml ? `
+<section class="section">
+  <div class="wrap">
+    <div class="eyebrow">The record</div>
+    <h2 class="sec-h">Twelve weeks of the top ten</h2>
+    <p class="lede" style="margin-top:14px">
+      One line per pizzeria, one column per ISO week, position by rank. A line that stops fell
+      out of the ten; one that starts climbed in. The window shows up to twelve weeks and fills
+      as they accumulate.
+    </p>
+    ${chartHtml}
+  </div>
+</section>
+` : '';
+
 /* ---- controls ---- */
 const careHeader = `
           <div class="care-corner" aria-hidden="true"></div>
@@ -440,6 +625,7 @@ ${boardHtml(ranked)}
   </div>
 </section>
 
+${recordSection}
 ${bracketSection}
 ${radarSection}
 ${buzzSection}
@@ -597,6 +783,7 @@ tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75</pre>
 <script>window.__PIZZA__ = ${JSON.stringify({
   dataset,
   baseline,
+  evidence: evidenceMap,
   builtAt: now.toISOString()
 }).replace(/</g, '\\u003c')};</script>
 <script src="./leaflet.js"></script>
@@ -642,12 +829,20 @@ fs.writeFileSync(path.join(dist, 'rankings.json'), JSON.stringify({
 
 /* ---- record this week's standings ----
  * One snapshot per ISO week; a rerun inside the same week overwrites it. */
+/* Full scored field, not just the ten: weekly deltas can then say
+ * "was #14 last week" for a climber, and the factor breakdowns let next
+ * week's build explain WHY an entry moved. */
+const r1 = n => Math.round(n * 10) / 10;
 const snapshot = {
   weekKey,
   date: now.toISOString().slice(0, 10),
   week,
-  ranks: Object.fromEntries(ranked.map(r => [r.id, r.rank])),
-  scores: Object.fromEntries(ranked.map(r => [r.id, r.score]))
+  ranks: Object.fromEntries(allScored.map(r => [r.id, r.rank])),
+  scores: Object.fromEntries(allScored.map(r => [r.id, r.score])),
+  factors: Object.fromEntries(allScored.map(r => [r.id, {
+    ...Object.fromEntries(Object.entries(r.factorScores).map(([k, v]) => [k, r1(v)])),
+    penalty: r1(r.penaltyApplied)
+  }]))
 };
 const last = history.snapshots.at(-1);
 if (last && last.weekKey === weekKey) history.snapshots.pop();

@@ -115,6 +115,7 @@ export function cardHtml(r) {
         </div>
       </div>
       <div class="stack">${stack}</div>
+      ${r.evidenceHtml ? `<div class="why">${r.evidenceHtml}</div>` : ''}
       <div class="chips">${chips}</div>
       <details class="math">
         <summary>Show the math</summary>

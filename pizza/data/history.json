@@ -31,7 +31,7 @@
     },
     {
       "weekKey": "2026-W35",
-      "date": "2026-08-28",
+      "date": "2026-08-29",
       "week": 35,
       "ranks": {
         "delancey": 1,
@@ -43,7 +43,43 @@
         "veraci-pizza": 7,
         "independent-pizzeria": 8,
         "pagliacci": 9,
-        "mioposto": 10
+        "mioposto": 10,
+        "lupo": 11,
+        "cornuto-pizzeria": 12,
+        "moto-pizza": 13,
+        "world-pizza": 14,
+        "razzis-pizzeria": 15,
+        "oxbow": 16,
+        "pizza-by-ruffin": 17,
+        "sacro-bosco-pizza-wine": 18,
+        "sopranos-antico": 19,
+        "pazzos-on-eastlake": 20,
+        "breezy-town-pizza": 21,
+        "pizzeria-gabbiano": 22,
+        "humble-pie": 23,
+        "stevies-famous": 24,
+        "flying-squirrel": 25,
+        "my-friend-dereks": 26,
+        "slice-box": 27,
+        "big-marios": 28,
+        "pi-vegan-pizzeria": 29,
+        "via-tribunali": 30,
+        "talaricos": 31,
+        "pizzeria-22": 32,
+        "proletariat-pizza": 33,
+        "roma-roma": 34,
+        "ballard-pizza-co": 35,
+        "dantini-pizza": 36,
+        "pizzeria-pulcinella": 37,
+        "zeeks-pizza": 38,
+        "roccos": 39,
+        "pizzeria-la-rocca": 40,
+        "pegasus-pizza": 41,
+        "post-alley-pizza": 42,
+        "hot-mamas-pizza": 43,
+        "south-town-pie": 44,
+        "pizza-ritual": 45,
+        "johnny-mos-pizzeria": 46
       },
       "scores": {
         "delancey": 89.1,
@@ -55,7 +91,413 @@
         "veraci-pizza": 81.6,
         "independent-pizzeria": 81.3,
         "pagliacci": 80,
-        "mioposto": 79.2
+        "mioposto": 79.2,
+        "lupo": 78.4,
+        "cornuto-pizzeria": 75.9,
+        "moto-pizza": 75,
+        "world-pizza": 73.3,
+        "razzis-pizzeria": 72.6,
+        "oxbow": 70,
+        "pizza-by-ruffin": 66.6,
+        "sacro-bosco-pizza-wine": 66.3,
+        "sopranos-antico": 65.9,
+        "pazzos-on-eastlake": 65.1,
+        "breezy-town-pizza": 61.3,
+        "pizzeria-gabbiano": 60,
+        "humble-pie": 59.1,
+        "stevies-famous": 59,
+        "flying-squirrel": 58.2,
+        "my-friend-dereks": 57.7,
+        "slice-box": 57.7,
+        "big-marios": 57.5,
+        "pi-vegan-pizzeria": 57.1,
+        "via-tribunali": 57,
+        "talaricos": 56.3,
+        "pizzeria-22": 55.8,
+        "proletariat-pizza": 55.8,
+        "roma-roma": 55.8,
+        "ballard-pizza-co": 55.4,
+        "dantini-pizza": 55.2,
+        "pizzeria-pulcinella": 54.9,
+        "zeeks-pizza": 53.4,
+        "roccos": 53.2,
+        "pizzeria-la-rocca": 52.4,
+        "pegasus-pizza": 52.1,
+        "post-alley-pizza": 50.9,
+        "hot-mamas-pizza": 50.5,
+        "south-town-pie": 49.5,
+        "pizza-ritual": 49.4,
+        "johnny-mos-pizzeria": 44.3
+      },
+      "factors": {
+        "delancey": {
+          "reputation": 9.2,
+          "critical": 9.6,
+          "craft": 9.6,
+          "distinctiveness": 8.6,
+          "value": 8.6,
+          "penalty": 1.8
+        },
+        "windy-city-pie": {
+          "reputation": 8.5,
+          "critical": 9.4,
+          "craft": 9.3,
+          "distinctiveness": 9.7,
+          "value": 8.4,
+          "penalty": 3.3
+        },
+        "dinos-tomato-pie": {
+          "reputation": 8.4,
+          "critical": 8.5,
+          "craft": 8.4,
+          "distinctiveness": 9,
+          "value": 8.9,
+          "penalty": 0.4
+        },
+        "serious-pie": {
+          "reputation": 9.5,
+          "critical": 8.8,
+          "craft": 8.9,
+          "distinctiveness": 7.8,
+          "value": 8,
+          "penalty": 1.2
+        },
+        "tutta-bella": {
+          "reputation": 9.6,
+          "critical": 8.2,
+          "craft": 8.4,
+          "distinctiveness": 7,
+          "value": 8.7,
+          "penalty": 0
+        },
+        "cornelly": {
+          "reputation": 6.4,
+          "critical": 9.3,
+          "craft": 9.2,
+          "distinctiveness": 9.2,
+          "value": 8.3,
+          "penalty": 0.8
+        },
+        "veraci-pizza": {
+          "reputation": 10,
+          "critical": 7.5,
+          "craft": 7.5,
+          "distinctiveness": 7.5,
+          "value": 7.9,
+          "penalty": 0
+        },
+        "independent-pizzeria": {
+          "reputation": 8.3,
+          "critical": 8.7,
+          "craft": 8.7,
+          "distinctiveness": 8,
+          "value": 7.8,
+          "penalty": 1.5
+        },
+        "pagliacci": {
+          "reputation": 9.8,
+          "critical": 7.6,
+          "craft": 7.7,
+          "distinctiveness": 6.8,
+          "value": 8,
+          "penalty": 0
+        },
+        "mioposto": {
+          "reputation": 10,
+          "critical": 7.5,
+          "craft": 7.5,
+          "distinctiveness": 6.5,
+          "value": 7.5,
+          "penalty": 0
+        },
+        "lupo": {
+          "reputation": 6.1,
+          "critical": 8.9,
+          "craft": 9.1,
+          "distinctiveness": 8.4,
+          "value": 8.1,
+          "penalty": 1.5
+        },
+        "cornuto-pizzeria": {
+          "reputation": 8.6,
+          "critical": 7.5,
+          "craft": 7.5,
+          "distinctiveness": 6.5,
+          "value": 7.5,
+          "penalty": 0
+        },
+        "moto-pizza": {
+          "reputation": 6.6,
+          "critical": 8.9,
+          "craft": 9.2,
+          "distinctiveness": 9.4,
+          "value": 6.8,
+          "penalty": 6
+        },
+        "world-pizza": {
+          "reputation": 10,
+          "critical": 6,
+          "craft": 6,
+          "distinctiveness": 7,
+          "value": 7.2,
+          "penalty": 0
+        },
+        "razzis-pizzeria": {
+          "reputation": 10,
+          "critical": 6.5,
+          "craft": 6,
+          "distinctiveness": 6.5,
+          "value": 6.6,
+          "penalty": 0
+        },
+        "oxbow": {
+          "reputation": 5.8,
+          "critical": 7.5,
+          "craft": 7.5,
+          "distinctiveness": 7,
+          "value": 7.5,
+          "penalty": 0
+        },
+        "pizza-by-ruffin": {
+          "reputation": 3.4,
+          "critical": 7.7,
+          "craft": 7.5,
+          "distinctiveness": 8,
+          "value": 7.6,
+          "penalty": 0
+        },
+        "sacro-bosco-pizza-wine": {
+          "reputation": 2.5,
+          "critical": 8.5,
+          "craft": 8.5,
+          "distinctiveness": 8,
+          "value": 6.4,
+          "penalty": 0
+        },
+        "sopranos-antico": {
+          "reputation": 8.3,
+          "critical": 6,
+          "craft": 6.5,
+          "distinctiveness": 5.5,
+          "value": 6.3,
+          "penalty": 0
+        },
+        "pazzos-on-eastlake": {
+          "reputation": 10,
+          "critical": 6,
+          "craft": 6,
+          "distinctiveness": 3.5,
+          "value": 6,
+          "penalty": 0
+        },
+        "breezy-town-pizza": {
+          "reputation": 0,
+          "critical": 9,
+          "craft": 9,
+          "distinctiveness": 9.3,
+          "value": 8.1,
+          "penalty": 2.3
+        },
+        "pizzeria-gabbiano": {
+          "reputation": 0,
+          "critical": 8.2,
+          "craft": 8.4,
+          "distinctiveness": 8.8,
+          "value": 8.7,
+          "penalty": 0.8
+        },
+        "humble-pie": {
+          "reputation": 0,
+          "critical": 8.2,
+          "craft": 8.4,
+          "distinctiveness": 8.6,
+          "value": 8.7,
+          "penalty": 1.3
+        },
+        "stevies-famous": {
+          "reputation": 0.8,
+          "critical": 7.8,
+          "craft": 7.5,
+          "distinctiveness": 7,
+          "value": 7.6,
+          "penalty": 0
+        },
+        "flying-squirrel": {
+          "reputation": 0,
+          "critical": 8,
+          "craft": 8.2,
+          "distinctiveness": 8,
+          "value": 8.5,
+          "penalty": 0
+        },
+        "my-friend-dereks": {
+          "reputation": 0,
+          "critical": 8,
+          "craft": 7.5,
+          "distinctiveness": 7,
+          "value": 7.8,
+          "penalty": 0
+        },
+        "slice-box": {
+          "reputation": 0,
+          "critical": 7.8,
+          "craft": 8,
+          "distinctiveness": 8.8,
+          "value": 8.3,
+          "penalty": 0.8
+        },
+        "big-marios": {
+          "reputation": 0,
+          "critical": 7.9,
+          "craft": 8,
+          "distinctiveness": 7.2,
+          "value": 9.5,
+          "penalty": 0.4
+        },
+        "pi-vegan-pizzeria": {
+          "reputation": 0,
+          "critical": 7.5,
+          "craft": 7,
+          "distinctiveness": 8,
+          "value": 7.6,
+          "penalty": 0
+        },
+        "via-tribunali": {
+          "reputation": 0,
+          "critical": 8.3,
+          "craft": 8.5,
+          "distinctiveness": 7.4,
+          "value": 7.6,
+          "penalty": 0
+        },
+        "talaricos": {
+          "reputation": 0,
+          "critical": 7.4,
+          "craft": 7.5,
+          "distinctiveness": 8.2,
+          "value": 8.9,
+          "penalty": 0.4
+        },
+        "pizzeria-22": {
+          "reputation": 0,
+          "critical": 7.5,
+          "craft": 7.5,
+          "distinctiveness": 6.5,
+          "value": 7.9,
+          "penalty": 0
+        },
+        "proletariat-pizza": {
+          "reputation": 0,
+          "critical": 7.6,
+          "craft": 7.7,
+          "distinctiveness": 7,
+          "value": 9.2,
+          "penalty": 0
+        },
+        "roma-roma": {
+          "reputation": 1.7,
+          "critical": 7.2,
+          "craft": 6.5,
+          "distinctiveness": 6.5,
+          "value": 6.9,
+          "penalty": 0
+        },
+        "ballard-pizza-co": {
+          "reputation": 0,
+          "critical": 7.8,
+          "craft": 8.1,
+          "distinctiveness": 6.8,
+          "value": 8.3,
+          "penalty": 0
+        },
+        "dantini-pizza": {
+          "reputation": 0,
+          "critical": 7.5,
+          "craft": 7.5,
+          "distinctiveness": 6.5,
+          "value": 7.5,
+          "penalty": 0
+        },
+        "pizzeria-pulcinella": {
+          "reputation": 0,
+          "critical": 7.5,
+          "craft": 7.5,
+          "distinctiveness": 7,
+          "value": 6.8,
+          "penalty": 0
+        },
+        "zeeks-pizza": {
+          "reputation": 0,
+          "critical": 7.2,
+          "craft": 7.5,
+          "distinctiveness": 7.6,
+          "value": 7.7,
+          "penalty": 0
+        },
+        "roccos": {
+          "reputation": 0,
+          "critical": 7.5,
+          "craft": 7.6,
+          "distinctiveness": 7,
+          "value": 7.9,
+          "penalty": 0.4
+        },
+        "pizzeria-la-rocca": {
+          "reputation": 0,
+          "critical": 7,
+          "craft": 7.5,
+          "distinctiveness": 6.5,
+          "value": 6.5,
+          "penalty": 0
+        },
+        "pegasus-pizza": {
+          "reputation": 0,
+          "critical": 7.2,
+          "craft": 7.4,
+          "distinctiveness": 7,
+          "value": 7.7,
+          "penalty": 0
+        },
+        "post-alley-pizza": {
+          "reputation": 0,
+          "critical": 7.2,
+          "craft": 7.3,
+          "distinctiveness": 6.4,
+          "value": 7.6,
+          "penalty": 0
+        },
+        "hot-mamas-pizza": {
+          "reputation": 0,
+          "critical": 6.9,
+          "craft": 6.9,
+          "distinctiveness": 6.6,
+          "value": 8.3,
+          "penalty": 0.4
+        },
+        "south-town-pie": {
+          "reputation": 0,
+          "critical": 6.5,
+          "craft": 6,
+          "distinctiveness": 7,
+          "value": 6.6,
+          "penalty": 0
+        },
+        "pizza-ritual": {
+          "reputation": 0,
+          "critical": 6.5,
+          "craft": 6.5,
+          "distinctiveness": 6.5,
+          "value": 6.5,
+          "penalty": 0
+        },
+        "johnny-mos-pizzeria": {
+          "reputation": 0,
+          "critical": 6,
+          "craft": 6,
+          "distinctiveness": 5,
+          "value": 6.3,
+          "penalty": 0
+        }
       }
     }
   ]

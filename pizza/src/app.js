@@ -67,18 +67,48 @@ function render() {
     ? { ...r, previousRank: publishedRank.get(r.id) ?? null, deltaVs: 'published' }
     : { ...r, previousRank: DATA.baseline[r.id] ?? null });
 
+  // The published evidence lines explain published movement; under custom
+  // weights the movement is the reader's own doing, so they stay off.
+  if (!custom) for (const r of ranked) r.evidenceHtml = DATA.evidence?.[r.id] ?? '';
+
   const open = new Set([...board.querySelectorAll('details.math[open]')]
     .map(d => d.closest('.card').dataset.id));
+
+  // FLIP: record where each card was, re-render, then animate each card from
+  // its old position to its new one. An instant repaint made a re-rank read as
+  // the page jumping; a 400ms glide makes the reordering legible.
+  const before = new Map([...board.querySelectorAll('.card')]
+    .map(c => [c.dataset.id, c.getBoundingClientRect().top]));
+
   board.innerHTML = boardHtml(ranked);
   open.forEach(id => {
     const d = board.querySelector(`.card[data-id="${CSS.escape(id)}"] details.math`);
     if (d) d.open = true;
   });
 
+  if (before.size && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const ease = 'cubic-bezier(.22,.7,.3,1)';
+    for (const c of board.querySelectorAll('.card')) {
+      const old = before.get(c.dataset.id);
+      if (old == null) {
+        c.animate([{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'none' }],
+          { duration: 420, easing: ease });
+      } else {
+        const dy = old - c.getBoundingClientRect().top;
+        if (Math.abs(dy) > 2) c.animate([{ transform: `translateY(${dy}px)` }, { transform: 'none' }],
+          { duration: 420, easing: ease });
+      }
+    }
+  }
+
   document.querySelector('.rank-layout')?.classList.toggle('customized', custom);
-  note.textContent = custom
-    ? 'Your weights. Markers show movement from the published position.'
-    : 'Published ranking.';
+  if (custom) {
+    const entered = ranked.filter(r => r.previousRank == null || r.previousRank > 10).length;
+    const biggest = Math.max(0, ...ranked.map(r => r.previousRank != null ? r.previousRank - r.rank : 0));
+    note.textContent = `Your weights — ${entered ? `${entered} climbed in from outside the published ten, ` : ''}biggest move ▲${biggest}. Markers show each card's published position.`;
+  } else {
+    note.textContent = 'Published ranking.';
+  }
 }
 
 for (const k of KEYS) {
@@ -166,4 +196,36 @@ render();
   }
 
   map.fitBounds(bounds, { padding: [24, 24] });
+})();
+
+
+/* ---- record-chart hover: crosshair + that week's standings ---- */
+(() => {
+  const wrap = document.getElementById('record-chart');
+  if (!wrap) return;
+  const standings = JSON.parse(wrap.dataset.standings);
+  const svg = wrap.querySelector('svg');
+  const tip = document.getElementById('chart-tip');
+  const cursor = document.getElementById('chart-cursor');
+  const zones = [...wrap.querySelectorAll('.colzone')];
+  const xOf = i => {
+    const z = zones[i];
+    return parseFloat(z.getAttribute('x')) + parseFloat(z.getAttribute('width')) / 2;
+  };
+  function show(i, clientX, clientY) {
+    const sw = standings[i];
+    tip.innerHTML = `<b>${sw.week} · ${sw.date}</b><ol>` +
+      sw.names.map(n => `<li>${n.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</li>`).join('') + '</ol>';
+    tip.style.display = 'block';
+    const r = wrap.getBoundingClientRect();
+    const left = Math.min(clientX - r.left + 14, r.width - tip.offsetWidth - 4);
+    tip.style.left = Math.max(0, left) + 'px';
+    tip.style.top = Math.max(0, clientY - r.top - 10) + 'px';
+    cursor.setAttribute('x1', xOf(i)); cursor.setAttribute('x2', xOf(i));
+    cursor.style.opacity = 1;
+  }
+  for (const z of zones) {
+    z.addEventListener('mousemove', e => show(Number(z.dataset.i), e.clientX, e.clientY));
+  }
+  svg.addEventListener('mouseleave', () => { tip.style.display = 'none'; cursor.style.opacity = 0; });
 })();
