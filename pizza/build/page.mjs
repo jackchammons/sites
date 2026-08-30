@@ -128,6 +128,19 @@ ${directorySection}
     <div class="pillars">${factorCards}</div>
 
     <h3 class="method-h">Where the factor values come from</h3>
+    <p class="method-p">
+      Ratings are produced by a bounded research loop, not hand edits. Each day the research
+      job assembles a worklist — stalest facts first; for ratings, unrated entries with cited
+      press first — and hands it to a Claude agent as an explicit brief: these ids, this search
+      budget, write one JSON file, run nothing. The agent reads what has actually been
+      published about each place and proposes craft and distinctiveness on a 0.5 grid plus a
+      critic base, citing one to four https sources it actually read; an entry it cannot ground
+      in real coverage stays unrated, which is a correct outcome. A validator then rejects the
+      entire file if any value is off-grid, unsourced, or would overwrite an existing rating.
+      What survives is applied with provenance — who set it, from what source, when — which
+      every entry shows in the directory, and the computed factors below run from those stored
+      values at build time.
+    </p>
     <div class="grid2">
       <div class="mcard">
         <h3>Reputation — computed</h3>
@@ -194,34 +207,61 @@ tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75</pre>
     </div>
 
     <h3 class="method-h">The daily pipeline</h3>
-    <ol class="flow">
-      <li class="flow-step">
-        <span class="flow-when">12:47 UTC</span>
+    <p class="method-p">
+      Two scheduled jobs, half an hour apart, keep the dataset moving — and the whole design
+      assumes any given day can fail without consequence.
+    </p>
+    <div class="pipe">
+      <div class="pipe-stage">
+        <span class="pipe-num">01</span>
+        <span class="pipe-when">12:47 UTC</span>
         <b>Research</b>
-        <p>An agent works a rotating task list: verifying addresses and websites against each
-        pizzeria's own site, checking whether entries are still open, discovering pizzerias not
-        yet on file, and finding coverage the feed sweep missed.</p>
-      </li>
-      <li class="flow-gate">
-        <b>Validation</b>
-        <p>Everything the agent returns is checked before anything is written: https sources on
-        every claim, addresses that parse as addresses, Puget Sound ZIP codes, no duplicates,
-        factor proposals bounded and cited. One bad entry rejects the whole file.</p>
-      </li>
-      <li class="flow-step">
-        <span class="flow-when">13:17 UTC</span>
+        <p>A Claude research agent gets one bounded brief: an explicit worklist, a web-search
+        budget, no ability to run anything. It reads pizzerias' own sites and published local
+        coverage and writes a single file of proposals — facts with sources, never scores
+        applied directly.</p>
+        <div class="pipe-rota" aria-label="Task rotation">
+          <span>discovery</span><span>locations</span><span>liveness</span><span>news</span><span>rating</span>
+        </div>
+        <p class="pipe-sub">one task per day, rotating — a week covers every kind of upkeep</p>
+      </div>
+      <div class="pipe-stage pipe-check">
+        <span class="pipe-num">02</span>
+        <span class="pipe-when">on return</span>
+        <b><span class="pipe-tick">✓</span> Validation</b>
+        <p>Every proposal is checked before anything is written: an https source on each claim,
+        addresses that parse with Puget Sound ZIPs, dates that exist, ratings on the 0.5 grid
+        that never overwrite an existing one, no duplicates.</p>
+        <p class="pipe-reject">One bad entry rejects the whole file — the dataset stays exactly
+        as it was, and tomorrow's run starts fresh.</p>
+      </div>
+      <div class="pipe-stage">
+        <span class="pipe-num">03</span>
+        <span class="pipe-when">13:17 UTC</span>
         <b>Rebuild</b>
-        <p>Feeds are swept, validated research is merged, and every rated entry is scored from
-        scratch. The ten highest open entries become the list; everything else files into the
-        directory. Once per ISO week the standings are snapshotted, which is what the ▲▼
-        markers compare against.</p>
-      </li>
-      <li class="flow-step flow-last">
+        <p>The site recomputes from the dataset: feeds swept, validated research merged, every
+        rated entry re-scored from scratch, the ten highest open entries published. Once per
+        ISO week the standings are snapshotted — the ▲▼ markers, the record chart and the
+        "why it moved" lines all compare against those.</p>
+      </div>
+      <div class="pipe-stage">
+        <span class="pipe-num">04</span>
+        <span class="pipe-when">on green</span>
         <b>Deploy</b>
-        <p>The site is rebuilt and published. If any step fails, nothing deploys and yesterday's
-        site stays up.</p>
-      </li>
-    </ol>
+        <p>Unit tests, a dataset lint and a rendered-page verifier gate the publish. If
+        anything fails, nothing ships and yesterday's site stays up — the gate has already
+        refused real deploys.</p>
+      </div>
+      <div class="pipe-loop"><span>↺ tomorrow: the next task in the rotation</span></div>
+    </div>
+    <p class="method-p">
+      The result is eventual consistency, on purpose. No single run is load-bearing: a failed
+      research pass costs a day, a failed build leaves the last good site standing, and every
+      fact on file — an address, an open-or-closed status, a rating — has a task in the
+      rotation that will re-verify it within days. Freshness decay makes the waiting visible:
+      data nobody has re-checked slowly costs its entry score until the rotation comes back
+      around. Errors do not accumulate here; they age out.
+    </p>
 
     <p class="method-p" style="margin-top:22px">
       Ties break on critical reception, then craft, then alphabetically. The dataset, the scoring
