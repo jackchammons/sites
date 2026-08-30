@@ -67,6 +67,11 @@ export function writeSnapshot(ctx) {
   if (last && last.weekKey === weekKey) history.snapshots.pop();
   history.snapshots.push(snapshot);
   history.snapshots = history.snapshots.slice(-52);
+  /* Bound growth: ranks/scores stay the full 52 weeks (the bump chart needs
+   * them), but factor breakdowns only serve evidence lines, which look one
+   * week back. Strip them beyond 13 weeks — every write self-heals the file,
+   * so no migration pass is needed. */
+  for (const s of history.snapshots.slice(0, -13)) delete s.factors;
 
   const serialised = JSON.stringify(history, null, 2) + '\n';
   if (!fs.existsSync(historyPath) || fs.readFileSync(historyPath, 'utf8') !== serialised) {
