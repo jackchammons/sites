@@ -264,6 +264,9 @@ button.reset:hover { color: var(--ink); border-color: var(--tomato); }
   display: inline-block; white-space: nowrap;
 }
 .chip.fr { border-color: color-mix(in srgb, var(--tomato) 40%, var(--line)); color: var(--tomato-2); }
+a.chip { text-decoration: none; }
+.chip-ig { color: var(--tomato-2); border-color: color-mix(in srgb, var(--tomato) 35%, var(--line)); }
+.chip-ig:hover { background: color-mix(in srgb, var(--tomato) 10%, transparent); }
 
 details.math { border-top: 1px solid var(--line-soft); margin-top: 18px; }
 details.math > summary {

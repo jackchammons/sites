@@ -124,7 +124,7 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   out whatever research just committed. Keep that ordering if you change either cron;
   to see a research commit on the site sooner, dispatch `publish.yml` by hand.
 - **Agents stay out of the deploy path.** `research.yml` runs the Claude Code Action to write
-  `pizza/data/research.json` (news, mentions, locations, status, directory, factorRatings, newAttributes), gated behind
+  `pizza/data/research.json` (news, mentions, locations, status, directory, factorRatings, newAttributes, links), gated behind
   `CLAUDE_CODE_OAUTH_TOKEN`. `verify-research.mjs` validates it and `apply-research.mjs` then
   writes crowd figures and closure flags into `restaurants.json` — the agent never edits that
   file itself. If it hangs or fails, the site still publishes.
@@ -159,11 +159,21 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   not evidence), new directory entries (fuzzy-name dedup blocks variants like "Zeeks Pizza
   Co"), mentions (feed reputation and the critical boost), factor proposals (0–10 in 0.5
   steps, FILL GAPS ONLY — the validator rejects any overwrite of an existing rating — and
-  need published criticism), and newAttributes. One bad entry rejects the whole file.
+  need published criticism), newAttributes, and links. One bad entry rejects the whole file.
+- **`links` is the one channel for web presence.** `{id, website?, instagram?, source}`:
+  instagram must be a real `https://instagram.com/<handle>` profile URL the agent saw
+  linked or named somewhere (never guessed — plausible handles are fan pages and
+  namesakes); it is updatable on apply. `website` fills `url` only when the entry has
+  none — the locations pass owns correcting an existing official site — and for a place
+  with no site of its own it carries the best canonical link (often the Instagram).
+  `nameLink()` renders `url ?? instagram`, so a backfilled entry is always clickable.
 - **The agent runs one task per day**, rotated by `next-task.mjs`: discovery, locations,
-  liveness, news. A manual dispatch can force a type via the workflow's `task` input, which
-  is also how a discovery backfill works. Briefs are code (in `next-task.mjs`); the fixed
-  rules and schema live in `research.yml` so no task can drop them.
+  liveness, news, rating. The locations brief also collects Instagram links from the
+  official sites it is already reading. A manual dispatch can force a type via the
+  workflow's `task` input — including the dispatch-only `social` task (Instagram/website
+  backfill, never in the rotation) — which is how backfills work. Briefs are code (in
+  `next-task.mjs`); the fixed rules and schema live in `research.yml` so no task can
+  drop them.
 - **Crowd STAR ratings stay frozen; review counts are used.** Yelp 403s automated reads and
   no API key is in use, so the stored star figures cannot refresh and are display-only. The
   review COUNT does feed reputation — a count is durable in a way an average is not. Do not

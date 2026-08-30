@@ -60,3 +60,9 @@ test('duplicate ids and non-https urls fail', () => {
   failsWith(ds, 'duplicate id');
   failsWith(base({ url: 'http://goodpie.com' }), 'url must be https');
 });
+
+test('instagram, when present, must be an https instagram.com profile URL', () => {
+  failsWith(base({ instagram: 'https://facebook.com/zeeks' }), 'instagram must be');
+  failsWith(base({ instagram: 'http://instagram.com/zeeks' }), 'instagram must be');
+  assert.deepEqual(checkDataset(base({ instagram: 'https://www.instagram.com/zeeks.pizza' }), registry, NOW), []);
+});

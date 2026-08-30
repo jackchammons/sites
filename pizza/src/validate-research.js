@@ -9,7 +9,7 @@
 
 export const KINDS = new Set(['opening', 'closing', 'ranking', 'mention']);
 export const CAPS = { news: 20, locations: 12, directory: 10, status: 10,
-                      mentions: 30, newAttributes: 3, factorRatings: 12 };
+                      mentions: 30, newAttributes: 3, factorRatings: 12, links: 20 };
 export const MAX_AGE_DAYS = 180;
 
 export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()) {
@@ -27,7 +27,8 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
                      locations: doc.locations ?? [], directory: doc.directory ?? [],
                      status: doc.status ?? [], mentions: doc.mentions ?? [],
                      newAttributes: doc.newAttributes ?? [],
-                     factorRatings: doc.factorRatings ?? [] };
+                     factorRatings: doc.factorRatings ?? [],
+                     links: doc.links ?? [] };
   if (Array.isArray(doc.ratings) && doc.ratings.length) {
     fails.push('ratings are no longer accepted: crowd figures are frozen, see CLAUDE.md');
   }
@@ -217,6 +218,26 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
     if (typeof it?.note !== 'string' || it.note.trim().length < 20) {
       bad('factorRatings', i, 'note missing or too short — say what the coverage describes');
     }
+  });
+
+  /* ---- links: an entry's canonical web presence ----
+   * One record per entry, each field a URL the agent actually saw linked or
+   * stated -- never a guessed handle or domain (a lapsed pizzeria domain now
+   * serves a gambling site; the same trap exists for handles). */
+  const IG_PROFILE = /^https:\/\/(www\.)?instagram\.com\/[A-Za-z0-9._]{2,30}\/?$/;
+  const linkSeen = new Set();
+  sections.links.forEach((it, i) => {
+    if (!byId.has(it?.id)) bad('links', i, `unknown restaurant id "${it?.id}"`);
+    if (linkSeen.has(it?.id)) bad('links', i, `duplicate links record for "${it?.id}"`);
+    linkSeen.add(it?.id);
+    if (it?.website == null && it?.instagram == null) {
+      bad('links', i, 'must carry website or instagram (or both)');
+    }
+    if (it?.website != null) checkUrl('links', i, it.website, 'website');
+    if (it?.instagram != null && !IG_PROFILE.test(String(it.instagram))) {
+      bad('links', i, `instagram must be a profile URL like https://www.instagram.com/<handle>, got "${it.instagram}"`);
+    }
+    checkUrl('links', i, it?.source, 'source');
   });
 
   /* ---- newAttributes: registry additions ---- */

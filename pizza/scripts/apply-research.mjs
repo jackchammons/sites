@@ -117,6 +117,23 @@ for (const it of research.factorRatings ?? []) {
   console.log(`  # ${r.name}: rated — craft ${it.craft}, distinctiveness ${it.distinctiveness}, critic ${it.criticScore} (${src})`);
 }
 
+/* links: an entry's canonical web presence. Instagram is a pointer, not a
+ * judgment, so a fresher one replaces the stored one. website fills in only
+ * when the entry has no url at all -- the locations pass owns correcting an
+ * existing official site, and for a place with no site of its own this is
+ * where the best available link (often the Instagram itself) lands. */
+for (const it of research.links ?? []) {
+  const r = byId.get(it.id);
+  if (!r) continue;
+  const did = [];
+  if (it.instagram && r.instagram !== it.instagram) { r.instagram = it.instagram; did.push('instagram'); }
+  if (it.website && !r.url) { r.url = it.website; did.push('website'); }
+  if (did.length) {
+    changes++;
+    console.log(`  & ${r.name}: ${did.join(' + ')}`);
+  }
+}
+
 /* newAttributes: registry rows plus the flags on the entries that need them. */
 const registryPath = path.join(root, 'data/attributes.json');
 if ((research.newAttributes ?? []).length) {

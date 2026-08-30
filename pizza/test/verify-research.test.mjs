@@ -111,3 +111,29 @@ test('status: enum and citation enforced', () => {
   passes({ status: [{ id: 'delancey', status: 'open', note: 'confirmed on its site', source: 'https://x.com' }] });
   failsWith({ status: [{ id: 'delancey', status: 'gone', note: 'confirmed on its site', source: 'https://x.com' }] }, 'status must be');
 });
+
+/* ---- links: web presence records ---- */
+test('links: a sourced website + instagram record passes', () => {
+  passes({ links: [{ id: 'zeeks-pizza', website: 'https://zeekspizza.com',
+    instagram: 'https://www.instagram.com/zeekspizza', source: 'https://zeekspizza.com' }] });
+  passes({ links: [{ id: 'roma-roma', instagram: 'https://instagram.com/roma.roma_sea/',
+    source: 'https://romaroma.example/about' }] });
+});
+
+test('links: guessed handles, wrong hosts and bare records fail', () => {
+  failsWith({ links: [{ id: 'zeeks-pizza', instagram: 'https://facebook.com/zeeks',
+    source: 'https://z.com' }] }, 'instagram must be a profile URL');
+  failsWith({ links: [{ id: 'zeeks-pizza', instagram: 'https://www.instagram.com/p/abc123/extra',
+    source: 'https://z.com' }] }, 'instagram must be a profile URL');
+  failsWith({ links: [{ id: 'zeeks-pizza', source: 'https://z.com' }] }, 'website or instagram');
+  failsWith({ links: [{ id: 'zeeks-pizza', website: 'http://zeeks.com', source: 'https://z.com' }] }, 'must be https');
+});
+
+test('links: unknown ids and duplicate records fail', () => {
+  failsWith({ links: [{ id: 'nope', instagram: 'https://www.instagram.com/x_y',
+    source: 'https://z.com' }] }, 'unknown restaurant id');
+  failsWith({ links: [
+    { id: 'zeeks-pizza', instagram: 'https://www.instagram.com/zeeks', source: 'https://z.com' },
+    { id: 'zeeks-pizza', website: 'https://zeeks.com', source: 'https://z.com' }
+  ] }, 'duplicate links record');
+});

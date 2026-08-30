@@ -28,8 +28,11 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const { restaurants } = JSON.parse(fs.readFileSync(path.join(root, 'data/restaurants.json'), 'utf8'));
 
 const TYPES = ['discovery', 'locations', 'liveness', 'news', 'rating'];
+/* Dispatch-only tasks: forceable for backfills, never part of the daily
+ * rotation (their daily upkeep rides along on the rotating tasks). */
+const DISPATCH_ONLY = ['social'];
 const forced = (process.argv[2] || 'auto').toLowerCase();
-const task = TYPES.includes(forced)
+const task = [...TYPES, ...DISPATCH_ONLY].includes(forced)
   ? forced
   : TYPES[Math.floor(Date.now() / 864e5) % TYPES.length];
 
@@ -109,8 +112,13 @@ cannot find an official page, omit that entry — a wrong address is worse
 than a missing one.
 
 Report every branch that is open now, with its homepage. Branches outside
-the Puget Sound region do not belong. Write the "locations" section only.
-Budget: one or two page fetches per pizzeria plus at most 5 searches.`;
+the Puget Sound region do not belong. While you are on a pizzeria's own
+site, also look for its Instagram link (usually in the header or footer)
+and report it as a "links" record — the full profile URL exactly as the
+site links it, never a handle you guessed from the name.
+
+Write the "locations" section (plus "links" records for any Instagram you
+saw). Budget: one or two page fetches per pizzeria plus at most 5 searches.`;
 }
 
 if (task === 'liveness') {
@@ -187,6 +195,44 @@ unrated, you may rate it too, under exactly the same standard -- one
 proposal per pizzeria, at most 12 in total.
 
 Budget: about 3 searches per entry, 18 total. Write the file and stop.`;
+}
+
+if (task === 'social') {
+  // Dispatch-only backfill: fill in Instagram profiles, and best-available
+  // links for entries with no website on file. Cheap lookups, so the worklist
+  // runs bigger than the fact-verification tasks. Closed entries are excluded:
+  // their sites die, and lapsed domains are traps (one pizzeria's old domain
+  // now serves a gambling site).
+  const worklist = openField
+    .filter(r => !r.instagram || !r.url)
+    .sort((a, b) => (a.url ? 1 : 0) - (b.url ? 1 : 0) || a.name.localeCompare(b.name))
+    .slice(0, 15);
+  brief = `Your task: record each pizzeria's web presence — its Instagram
+profile, and an official website for any entry missing one. Cover these,
+and only these:
+
+${worklist.map(r => `- id: ${r.id} | ${r.name} | ${r.neighborhood ?? '?'} | site: ${r.url ?? 'MISSING — find one'} | instagram: ${r.instagram ? 'on file' : 'missing'}`).join('\n')}
+
+For each, report a "links" record. The rules that matter:
+- The best source for an Instagram link is the pizzeria's OWN website —
+  the icon in its header or footer. Report the full profile URL exactly
+  as linked.
+- If the site is unknown or has no Instagram link, a search result or a
+  news story that explicitly names the handle is acceptable. NEVER guess
+  a handle from the name: plausible-looking handles are often fan pages,
+  namesakes in other cities, or dead accounts. Instagram may block
+  fetching profile pages directly; you do not need to open the profile,
+  only to see it genuinely linked or named somewhere trustworthy.
+- For an entry whose site is MISSING: search for its official site
+  first. Never infer a domain from the name (a lapsed pizzeria domain
+  now serves a gambling site — report only sites you actually opened).
+  If it truly has no website, report its best canonical web presence as
+  "website" — its Instagram, or an ordering page it links as its own.
+- Omitting an entry you could not ground is correct. Every record needs
+  the https "source" page where you saw the link.
+
+Write the "links" section only. Budget: about 2 searches per entry,
+25 in total.`;
 }
 
 if (task === 'news') {

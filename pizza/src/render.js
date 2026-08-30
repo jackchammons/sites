@@ -73,7 +73,8 @@ export function cardHtml(r) {
   const chips = [
     `<span class="chip">${esc(r.style)}</span>`,
     `<span class="chip">${'$'.repeat(r.priceIndex)}</span>`,
-    ...(r.frictionDetail.all || []).map(a => `<span class="chip fr">${esc(a.label)}</span>`)
+    ...(r.frictionDetail.all || []).map(a => `<span class="chip fr">${esc(a.label)}</span>`),
+    ...(r.instagram ? [`<a class="chip chip-ig" href="${esc(r.instagram)}" target="_blank" rel="noopener nofollow">Instagram</a>`] : [])
   ].join('');
 
   const rows = Object.keys(PILLAR_META).map(k => `

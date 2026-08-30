@@ -43,6 +43,9 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
       if (r.status === 'closed' && !pastDate(r.statusDate)) bad(id, 'closed entries need a real statusDate');
     }
     if (r.url != null && !https(r.url)) bad(id, `url must be https, got "${r.url}"`);
+    if (r.instagram != null && !/^https:\/\/(www\.)?instagram\.com\/[A-Za-z0-9._]{2,30}\/?$/.test(r.instagram)) {
+      bad(id, `instagram must be an https instagram.com profile URL, got "${r.instagram}"`);
+    }
     if (r.lastVerified != null && !pastDate(r.lastVerified)) bad(id, `lastVerified is not a past date: "${r.lastVerified}"`);
 
     // Every flag an entry carries must exist in the registry: the same apply

@@ -28,7 +28,7 @@ on:
         description: 'Task type (auto rotates by day)'
         type: choice
         default: auto
-        options: [auto, discovery, locations, liveness, news, rating]
+        options: [auto, discovery, locations, liveness, news, rating, social]
 
 concurrency:
   group: research
@@ -180,6 +180,10 @@ jobs:
                                      "address":"<street address, city, WA, ZIP>"}]}],
              "status":[{"id":"<entry id>","status":"open|closed|opening",
                         "note":"<one sentence>","source":"<https page you read>"}],
+             "links":[{"id":"<entry id>",
+                       "website":"<https official site, or omit>",
+                       "instagram":"<https://www.instagram.com/handle, or omit>",
+                       "source":"<https page where you saw the link>"}],
              "directory":[{"name":"<pizzeria>","url":"<https official site or omit>",
                            "neighborhood":"<area>","style":"<style or omit>",
                            "status":"open|opening","note":"<one sentence>",
