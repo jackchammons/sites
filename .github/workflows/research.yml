@@ -74,39 +74,15 @@ jobs:
           fi
 
       # The action hides the SDK's output, so an auth or billing failure surfaces
-      # only as is_error:true with no cost and no model usage. This probe turns
-      # that into the actual API error before three minutes of retries.
+      # only as is_error:true with no cost and no model usage. The probe turns
+      # that into the actual API error before three minutes of retries. Fails
+      # the run only on a definitive rejection (401/403); see the script.
       - name: Preflight credential check
         if: steps.gate.outputs.enabled == 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-        run: |
-          if [ -n "$ANTHROPIC_API_KEY" ]; then
-            AUTH_HEADER="x-api-key: $ANTHROPIC_API_KEY"
-            EXTRA=()
-          else
-            AUTH_HEADER="Authorization: Bearer $CLAUDE_CODE_OAUTH_TOKEN"
-            EXTRA=(-H "anthropic-beta: oauth-2025-04-20")
-          fi
-          code=$(curl -sS -o /tmp/probe.json -w '%{http_code}'             https://api.anthropic.com/v1/messages             -H "$AUTH_HEADER"             -H "anthropic-version: 2023-06-01"             -H "content-type: application/json"             "${EXTRA[@]}"             -d '{"model":"claude-opus-5","max_tokens":64,"messages":[{"role":"user","content":"reply with OK"}]}' || echo 000)
-          echo "Preflight HTTP $code (auth: ${{ steps.gate.outputs.auth }})"
-          TYPE=$(python3 -c "import json;print(json.load(open('/tmp/probe.json')).get('error',{}).get('type','?'))" 2>/dev/null || echo '?')
-          MSG=$(python3 -c "import json;print(json.load(open('/tmp/probe.json')).get('error',{}).get('message','?'))" 2>/dev/null || echo '?')
-          case "$code" in
-            200)
-              echo "Credential is valid and claude-opus-5 is reachable." ;;
-            401|403)
-              # Definitively bad: wrong secret, revoked key, no access to the model.
-              echo "::error::Credential rejected — HTTP $code, $TYPE: $MSG"
-              exit 1 ;;
-            *)
-              # 429 and 5xx mean the credential authenticated and something
-              # transient got in the way. The agent has its own retries, so a
-              # probe that fails here must not fail the run.
-              echo "::warning::Preflight did not get a clean 200 (HTTP $code, $TYPE: $MSG). The credential is not rejected, so continuing — the agent will retry."
-              ;;
-          esac
+        run: bash scripts/preflight.sh claude-opus-5
 
       # What actually broke the first six runs, found by turning on
       # show_full_output: the prompt named verify-research.mjs, so the agent
@@ -277,56 +253,20 @@ jobs:
         if: steps.gate.outputs.enabled == 'true'
         run: node pizza/scripts/apply-research.mjs
 
-      # Pushes with an explicit token rather than the credential checkout
-      # persists. The Claude action mints its own GitHub App token and revokes
-      # it in its cleanup, inside the agent step, which leaves the persisted
-      # header pointing at a dead token by the time this step runs -- the push
-      # came back "Invalid username or token" on an otherwise clean pass.
-      # publish.yml gets away with a bare `git push` only because it never runs
-      # the action. GITHUB_TOKEN is job-scoped and outlives the app token.
-      #
-      # Rebase before pushing: publish.yml commits to main on its own schedule
-      # and the two can overlap. --autostash is not needed, the tree is clean
-      # after the commit, but a rejected push should retry rather than fail a
-      # run that did real work.
       # A bad apply must fail this run, not poison main for the next build.
       - name: Lint the dataset after apply
         if: steps.gate.outputs.enabled == 'true'
         run: node pizza/scripts/check-dataset.mjs
 
+      # commit-data.sh pushes through an explicit GITHUB_TOKEN remote with a
+      # rebase-retry loop; the script's comments explain why the persisted
+      # checkout credential is dead by this point (the Claude action revokes
+      # its own token in cleanup).
       - name: Commit research
         if: steps.gate.outputs.enabled == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          PATHS="pizza/data/research.json pizza/data/restaurants.json pizza/data/attributes.json"
-          if [ -n "$(git status --porcelain -- $PATHS)" ]; then
-            git config user.name  "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add -- $PATHS
-            git commit -m "chore(data): research pass (${{ steps.task.outputs.task }}) $(date -u +%Y-%m-%d)"
-            REMOTE="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-            pushed=no
-            for attempt in 1 2 3; do
-              [ "$attempt" = 1 ] || sleep $(( attempt * 5 ))
-              if ! git fetch "$REMOTE" main; then
-                echo "fetch failed on attempt $attempt"; continue
-              fi
-              if ! git rebase FETCH_HEAD; then
-                git rebase --abort || true
-                echo "rebase onto main failed on attempt $attempt"; continue
-              fi
-              if git push "$REMOTE" HEAD:main; then
-                pushed=yes
-                echo "pushed on attempt $attempt"
-                break
-              fi
-              echo "push rejected on attempt $attempt"
-            done
-            if [ "$pushed" != yes ]; then
-              echo "::error::Could not push the research commit after 3 attempts."
-              exit 1
-            fi
-          else
-            echo "No new research to record."
-          fi
+          bash scripts/commit-data.sh \
+            "chore(data): research pass (${{ steps.task.outputs.task }}) $(date -u +%Y-%m-%d)" \
+            pizza/data/research.json pizza/data/restaurants.json pizza/data/attributes.json

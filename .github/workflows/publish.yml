@@ -84,19 +84,16 @@ jobs:
 
       # Persist refreshed data so tomorrow's run can diff against it -- that is
       # what makes the buzz list accumulate and the ▲/▼ markers meaningful.
+      # Shares research.yml's commit script: same rebase-retry push, so an
+      # overlap with a research commit retries instead of failing the deploy.
       - name: Commit refreshed data
         if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          PATHS="pizza/data/history.json pizza/data/buzz.json pizza/data/restaurants.json"
-          if [ -n "$(git status --porcelain -- $PATHS)" ]; then
-            git config user.name  "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add -- $PATHS
-            git commit -m "chore(data): daily refresh $(date -u +%Y-%m-%d)"
-            git push
-          else
-            echo "No data changes to record."
-          fi
+          bash scripts/commit-data.sh \
+            "chore(data): daily refresh $(date -u +%Y-%m-%d)" \
+            pizza/data/history.json pizza/data/buzz.json pizza/data/restaurants.json
 
       - uses: actions/configure-pages@v5
 
