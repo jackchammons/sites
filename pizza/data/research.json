@@ -1,17 +1,79 @@
 {
-  "updated": "2026-08-30T18:00:00Z",
-  "factorRatings": [
+  "updated": "2026-08-30T22:30:00.000Z",
+  "news": [
     {
-      "id": "seward-park-pizza",
-      "craft": 6.5,
-      "distinctiveness": 3,
-      "criticScore": 6,
-      "styleGroup": "Neighborhood",
-      "sources": [
-        "https://onebite.app/restaurant/seward-park-pizza-company-seattle-washington-d741bf6b",
-        "https://southseattleemerald.org/community/2025/10/28/which-crust-does-the-south-end-trust"
-      ],
-      "note": "A One Bite reviewer scored it 7.5/10, describing a 'smokey crust' with 'crispy edges' and a flavor 'dominated by cheese and crust,' calling it 'quite respectable for the area'; South Seattle Emerald's South End pizza roundup lists it among the neighborhood's pizzerias."
+      "title": "Stevie's Famous Phinney Ridge",
+      "url": "https://www.theinfatuation.com/seattle/reviews/stevies-famous-phinney-ridge",
+      "source": "The Infatuation",
+      "published": "2026-08-06",
+      "kind": "opening",
+      "mentions": ["stevies-famous"]
+    }
+  ],
+  "mentions": [
+    {
+      "id": "stevies-famous",
+      "title": "Stevie's Famous Phinney Ridge",
+      "url": "https://www.theinfatuation.com/seattle/reviews/stevies-famous-phinney-ridge",
+      "source": "The Infatuation",
+      "date": "2026-08-06",
+      "kind": "opening"
+    },
+    {
+      "id": "stevies-famous",
+      "title": "Restaurant Roundup: Pizza Pals and Paella on the Patio",
+      "url": "https://seattlemag.com/food-drink/restaurant-roundup-pizza-pals-and-paella-on-the-patio",
+      "source": "Seattle magazine",
+      "date": "2026-08-21",
+      "kind": "opening"
+    },
+    {
+      "id": "roma-roma",
+      "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
+      "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
+      "source": "Seattle magazine",
+      "date": "2026-08-07",
+      "kind": "mention"
+    },
+    {
+      "id": "roma-roma",
+      "title": "Restaurant Roundup: Pizza Pals and Paella on the Patio",
+      "url": "https://seattlemag.com/food-drink/restaurant-roundup-pizza-pals-and-paella-on-the-patio",
+      "source": "Seattle magazine",
+      "date": "2026-08-21",
+      "kind": "mention"
+    },
+    {
+      "id": "pizza-by-ruffin",
+      "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
+      "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
+      "source": "Seattle magazine",
+      "date": "2026-08-07",
+      "kind": "mention"
+    },
+    {
+      "id": "pizza-by-ruffin",
+      "title": "Restaurant Roundup: Pizza Pals and Paella on the Patio",
+      "url": "https://seattlemag.com/food-drink/restaurant-roundup-pizza-pals-and-paella-on-the-patio",
+      "source": "Seattle magazine",
+      "date": "2026-08-21",
+      "kind": "mention"
+    },
+    {
+      "id": "abecedary",
+      "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
+      "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
+      "source": "Seattle magazine",
+      "date": "2026-08-07",
+      "kind": "mention"
+    },
+    {
+      "id": "abecedary",
+      "title": "Hillman City Gets First Bite of Seattle's Hottest New Pizzeria",
+      "url": "https://hoodline.com/2026/08/hillman-city-gets-first-bite-of-seattle-s-hottest-new-pizzeria/",
+      "source": "Hoodline",
+      "date": "2026-08-03",
+      "kind": "mention"
     }
   ]
 }

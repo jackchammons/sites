@@ -1607,6 +1607,13 @@
           "source": "Seattle magazine",
           "date": "2026-08-07T00:00:00Z",
           "kind": "mention"
+        },
+        {
+          "url": "https://hoodline.com/2026/08/hillman-city-gets-first-bite-of-seattle-s-hottest-new-pizzeria/",
+          "title": "Hillman City Gets First Bite of Seattle's Hottest New Pizzeria",
+          "source": "Hoodline",
+          "date": "2026-08-03",
+          "kind": "mention"
         }
       ],
       "statusChecked": "2026-08-27"
@@ -1658,6 +1665,20 @@
           "title": "Acclaimed Stevie's Famous Pizza Celebrates Grand Opening on Phinney Ridge August 2",
           "source": "The PhinneyWood Blog",
           "date": "2026-07-28",
+          "kind": "opening"
+        },
+        {
+          "url": "https://www.theinfatuation.com/seattle/reviews/stevies-famous-phinney-ridge",
+          "title": "Stevie's Famous Phinney Ridge",
+          "source": "The Infatuation",
+          "date": "2026-08-06",
+          "kind": "opening"
+        },
+        {
+          "url": "https://seattlemag.com/food-drink/restaurant-roundup-pizza-pals-and-paella-on-the-patio",
+          "title": "Restaurant Roundup: Pizza Pals and Paella on the Patio",
+          "source": "Seattle magazine",
+          "date": "2026-08-21",
           "kind": "opening"
         }
       ],
@@ -1817,6 +1838,13 @@
           "title": "Restaurant Roundup: Pizza Pals and Paella on the Patio",
           "source": "Seattle magazine",
           "date": "2026-08-21",
+          "kind": "mention"
+        },
+        {
+          "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
+          "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
+          "source": "Seattle magazine",
+          "date": "2026-08-07",
           "kind": "mention"
         }
       ],
