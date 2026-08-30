@@ -60,6 +60,11 @@ jobs:
       - name: Unit tests
         run: node --test pizza/test/*.test.mjs
 
+      # The dataset is the site's crown jewels; lint it before building so a
+      # bad hand edit or apply bug fails here, not as a rendered symptom.
+      - name: Lint the dataset
+        run: node pizza/scripts/check-dataset.mjs
+
       - name: Refresh Seattle pizza buzz
         run: node pizza/scripts/fetch-buzz.mjs
 

@@ -294,6 +294,11 @@ jobs:
       # and the two can overlap. --autostash is not needed, the tree is clean
       # after the commit, but a rejected push should retry rather than fail a
       # run that did real work.
+      # A bad apply must fail this run, not poison main for the next build.
+      - name: Lint the dataset after apply
+        if: steps.gate.outputs.enabled == 'true'
+        run: node pizza/scripts/check-dataset.mjs
+
       - name: Commit research
         if: steps.gate.outputs.enabled == 'true'
         env:
