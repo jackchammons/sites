@@ -1,79 +1,79 @@
 {
-  "updated": "2026-08-30T22:30:00.000Z",
-  "news": [
-    {
-      "title": "Stevie's Famous Phinney Ridge",
-      "url": "https://www.theinfatuation.com/seattle/reviews/stevies-famous-phinney-ridge",
-      "source": "The Infatuation",
-      "published": "2026-08-06",
-      "kind": "opening",
-      "mentions": ["stevies-famous"]
-    }
-  ],
-  "mentions": [
-    {
-      "id": "stevies-famous",
-      "title": "Stevie's Famous Phinney Ridge",
-      "url": "https://www.theinfatuation.com/seattle/reviews/stevies-famous-phinney-ridge",
-      "source": "The Infatuation",
-      "date": "2026-08-06",
-      "kind": "opening"
-    },
-    {
-      "id": "stevies-famous",
-      "title": "Restaurant Roundup: Pizza Pals and Paella on the Patio",
-      "url": "https://seattlemag.com/food-drink/restaurant-roundup-pizza-pals-and-paella-on-the-patio",
-      "source": "Seattle magazine",
-      "date": "2026-08-21",
-      "kind": "opening"
-    },
-    {
-      "id": "roma-roma",
-      "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
-      "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
-      "source": "Seattle magazine",
-      "date": "2026-08-07",
-      "kind": "mention"
-    },
-    {
-      "id": "roma-roma",
-      "title": "Restaurant Roundup: Pizza Pals and Paella on the Patio",
-      "url": "https://seattlemag.com/food-drink/restaurant-roundup-pizza-pals-and-paella-on-the-patio",
-      "source": "Seattle magazine",
-      "date": "2026-08-21",
-      "kind": "mention"
-    },
-    {
-      "id": "pizza-by-ruffin",
-      "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
-      "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
-      "source": "Seattle magazine",
-      "date": "2026-08-07",
-      "kind": "mention"
-    },
-    {
-      "id": "pizza-by-ruffin",
-      "title": "Restaurant Roundup: Pizza Pals and Paella on the Patio",
-      "url": "https://seattlemag.com/food-drink/restaurant-roundup-pizza-pals-and-paella-on-the-patio",
-      "source": "Seattle magazine",
-      "date": "2026-08-21",
-      "kind": "mention"
-    },
+  "updated": "2026-08-30T19:05:00Z",
+  "links": [
     {
       "id": "abecedary",
-      "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
-      "url": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
-      "source": "Seattle magazine",
-      "date": "2026-08-07",
-      "kind": "mention"
+      "instagram": "https://www.instagram.com/abecedaryseattle/",
+      "source": "https://www.instagram.com/abecedaryseattle/"
     },
     {
-      "id": "abecedary",
-      "title": "Hillman City Gets First Bite of Seattle's Hottest New Pizzeria",
-      "url": "https://hoodline.com/2026/08/hillman-city-gets-first-bite-of-seattle-s-hottest-new-pizzeria/",
-      "source": "Hoodline",
-      "date": "2026-08-03",
-      "kind": "mention"
+      "id": "oxbow",
+      "website": "https://www.oxbowmontlake.com",
+      "instagram": "https://www.instagram.com/oxbow_montlake/",
+      "source": "https://www.oxbowmontlake.com/contact"
+    },
+    {
+      "id": "pi-vegan-pizzeria",
+      "website": "https://www.pizzapivegan.com/",
+      "instagram": "https://www.instagram.com/pivegan/",
+      "source": "https://udistrictseattle.com/business/piveganpizzeria"
+    },
+    {
+      "id": "pizza-ritual",
+      "website": "https://pizzaritual.com",
+      "instagram": "https://www.instagram.com/pizzaritual/",
+      "source": "https://westseattleblog.com/2026/01/biznote-its-just-pizza-says-proprietor-of-pizza-ritual-settling-on-days-hours/"
+    },
+    {
+      "id": "pizzeria-pulcinella",
+      "website": "https://www.pulcinellapizza.com",
+      "instagram": "https://www.instagram.com/pizzeriapulcinella/",
+      "source": "https://www.pizzanapoletana.org/en/associati/246-pizzeria_pulcinella"
+    },
+    {
+      "id": "razzis-pizzeria",
+      "instagram": "https://www.instagram.com/razzisseattle/",
+      "source": "https://www.instagram.com/razzisseattle/"
+    },
+    {
+      "id": "a-pizza-mart-first-hill",
+      "instagram": "https://www.instagram.com/apizzamartfirsthill/",
+      "source": "https://www.instagram.com/apizzamartfirsthill/"
+    },
+    {
+      "id": "ballard-pizza-co",
+      "instagram": "https://www.instagram.com/ballardpizzaco/",
+      "source": "https://ballardpizzacompany.com"
+    },
+    {
+      "id": "big-marios",
+      "instagram": "https://www.instagram.com/bigmariospizza/",
+      "source": "https://bigmariosnewyorkpizza.com/"
+    },
+    {
+      "id": "breezy-town-pizza",
+      "instagram": "https://www.instagram.com/windycitypie/",
+      "source": "https://windycitypie.com"
+    },
+    {
+      "id": "cornelly",
+      "instagram": "https://www.instagram.com/cornellyseattle/",
+      "source": "https://www.instagram.com/cornellyseattle/"
+    },
+    {
+      "id": "dantini-pizza",
+      "instagram": "https://www.instagram.com/dantinipizza/",
+      "source": "https://www.dantinipizza.com/"
+    },
+    {
+      "id": "delancey",
+      "instagram": "https://www.instagram.com/delanceyseattle/",
+      "source": "https://www.delanceyseattle.com"
+    },
+    {
+      "id": "dinos-tomato-pie",
+      "instagram": "https://www.instagram.com/dinosseattle/",
+      "source": "https://www.instagram.com/dinosseattle/"
     }
   ]
 }

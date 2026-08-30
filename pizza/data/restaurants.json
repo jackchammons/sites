@@ -110,7 +110,8 @@
         }
       },
       "mentions": [],
-      "statusChecked": "2026-08-26"
+      "statusChecked": "2026-08-26",
+      "instagram": "https://www.instagram.com/delanceyseattle/"
     },
     {
       "id": "cornelly",
@@ -168,7 +169,8 @@
         }
       },
       "mentions": [],
-      "statusChecked": "2026-08-26"
+      "statusChecked": "2026-08-26",
+      "instagram": "https://www.instagram.com/cornellyseattle/"
     },
     {
       "id": "moto-pizza",
@@ -358,7 +360,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/dinosseattle/"
     },
     {
       "id": "lupo",
@@ -769,7 +772,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/windycitypie/"
     },
     {
       "id": "via-tribunali",
@@ -887,7 +891,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/bigmariospizza/"
     },
     {
       "id": "flying-squirrel",
@@ -1026,7 +1031,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/ballardpizzaco/"
     },
     {
       "id": "zeeks-pizza",
@@ -1616,7 +1622,8 @@
           "kind": "mention"
         }
       ],
-      "statusChecked": "2026-08-27"
+      "statusChecked": "2026-08-27",
+      "instagram": "https://www.instagram.com/abecedaryseattle/"
     },
     {
       "id": "stevies-famous",
@@ -1971,7 +1978,8 @@
       "opened": 1983,
       "priceIndex": 2,
       "styleGroup": "Neighborhood",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://www.instagram.com/razzisseattle/"
     },
     {
       "id": "pizzeria-la-rocca",
@@ -2028,7 +2036,7 @@
       "neighborhood": "Roosevelt/University District",
       "style": "Vegan",
       "blurb": "Seattle's 100% vegan pizzeria near the Roosevelt/University District line, with gluten-free and soy-free options.",
-      "url": null,
+      "url": "https://www.pizzapivegan.com/",
       "status": "open",
       "statusSource": "https://seattlevegan.com/pizza-pi-restaurant/",
       "statusDate": "2026-08-26",
@@ -2069,7 +2077,8 @@
       },
       "priceIndex": 2,
       "styleGroup": "Creative",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://www.instagram.com/pivegan/"
     },
     {
       "id": "mioposto",
@@ -2421,7 +2430,7 @@
       "neighborhood": "Delridge",
       "style": "Neapolitan, naturally leavened",
       "blurb": "Takeout-only pop-up-turned-permanent pizzeria running out of the KBM Kitchen walk-up window, serving naturally leavened Neapolitan-style pizza Friday and Saturday evenings.",
-      "url": null,
+      "url": "https://pizzaritual.com",
       "status": "open",
       "statusSource": "https://westseattleblog.com/2026/01/biznote-its-just-pizza-says-proprietor-of-pizza-ritual-settling-on-days-hours/",
       "statusDate": "2026-08-26",
@@ -2461,7 +2470,8 @@
         }
       },
       "styleGroup": "Neapolitan",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://www.instagram.com/pizzaritual/"
     },
     {
       "id": "pizzeria-pulcinella",
@@ -2469,7 +2479,7 @@
       "neighborhood": "Rainier Beach",
       "style": "Wood-fired Neapolitan",
       "blurb": "Long-running wood-fired Neapolitan pizzeria on Rainier Ave S, marked by a red glowing 'Wood Fire Pizza' sign, serving margherita pies and pasta.",
-      "url": null,
+      "url": "https://www.pulcinellapizza.com",
       "status": "open",
       "statusSource": "https://www.theinfatuation.com/seattle/reviews/pizzeria-pulcinella",
       "statusDate": "2026-08-26",
@@ -2510,7 +2520,8 @@
       },
       "priceIndex": 3,
       "styleGroup": "Neapolitan",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://www.instagram.com/pizzeriapulcinella/"
     },
     {
       "id": "romano-pizza-pasta",
@@ -2642,7 +2653,7 @@
       "neighborhood": "Montlake",
       "style": "Bakery counter, offbeat whole pies and slices",
       "blurb": "Sea Wolf-affiliated bakery and bagel shop that has also served whole pies and slices from noon to 5pm daily since opening in 2022.",
-      "url": null,
+      "url": "https://www.oxbowmontlake.com",
       "status": "open",
       "statusSource": "https://www.capitolhillseattle.com/2022/06/oxbow-now-providing-bagels-and-baked-goods-and-a-place-to-get-out-of-the-montlake-flow-on-24th-ave/",
       "statusDate": "2026-08-26",
@@ -2683,7 +2694,8 @@
       },
       "opened": 2022,
       "styleGroup": "Creative",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://www.instagram.com/oxbow_montlake/"
     },
     {
       "id": "dantini-pizza",
@@ -2731,7 +2743,8 @@
         }
       },
       "styleGroup": "Thin crust",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://www.instagram.com/dantinipizza/"
     },
     {
       "id": "a-pizza-mart-first-hill",
@@ -2755,7 +2768,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/apizzamartfirsthill/"
     },
     {
       "id": "seward-park-pizza",
