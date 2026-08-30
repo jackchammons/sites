@@ -1,4 +1,15 @@
 {
-  "updated": "2026-08-29T18:00:00Z",
-  "factorRatings": []
+  "updated": "2026-08-30T18:00:00Z",
+  "directory": [
+    {
+      "name": "Seward Park Pizza",
+      "url": "https://sewardparkpizza.com/",
+      "neighborhood": "Seward Park",
+      "style": "New York-style",
+      "status": "open",
+      "note": "Independent neighborhood pizzeria in Seward Park serving crispy, foldable New York-style slices and pies alongside salads, wine, cocktails and local beer on tap.",
+      "source": "https://sewardparkpizza.com/",
+      "address": "4920 S Genesee St, Seattle, WA 98118"
+    }
+  ]
 }
