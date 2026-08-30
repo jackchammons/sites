@@ -79,7 +79,8 @@
         "hot-mamas-pizza": 43,
         "south-town-pie": 44,
         "pizza-ritual": 45,
-        "johnny-mos-pizzeria": 46
+        "johnny-mos-pizzeria": 46,
+        "seward-park-pizza": 47
       },
       "scores": {
         "delancey": 89.1,
@@ -127,7 +128,8 @@
         "hot-mamas-pizza": 50.5,
         "south-town-pie": 49.4,
         "pizza-ritual": 49.3,
-        "johnny-mos-pizzeria": 44.2
+        "johnny-mos-pizzeria": 44.2,
+        "seward-park-pizza": 41.5
       },
       "factors": {
         "delancey": {
@@ -495,6 +497,14 @@
           "critical": 6,
           "craft": 6,
           "distinctiveness": 5,
+          "value": 6.3,
+          "penalty": 0
+        },
+        "seward-park-pizza": {
+          "reputation": 0,
+          "critical": 6,
+          "craft": 6.5,
+          "distinctiveness": 3,
           "value": 6.3,
           "penalty": 0
         }
