@@ -137,3 +137,36 @@ test('links: unknown ids and duplicate records fail', () => {
     { id: 'zeeks-pizza', website: 'https://zeeks.com', source: 'https://z.com' }
   ] }, 'duplicate links record');
 });
+
+/* ---- candidateReview: census verdicts ---- */
+const CANDS = { candidates: [
+  { name: 'Belltown Pizza', status: 'pending' },
+  { name: 'Ghost Pizza', status: 'rejected' }
+] };
+const review = it => validateResearch({ candidateReview: [it] }, dataset, registry, NOW, CANDS);
+const reviewFails = (it, snippet) => {
+  const { fails } = review(it);
+  assert.ok(fails.some(f => f.includes(snippet)),
+    `expected "${snippet}", got: ${JSON.stringify(fails)}`);
+};
+
+test('candidateReview: a verdict on a pending candidate passes', () => {
+  assert.deepEqual(review({ name: 'Belltown Pizza', verdict: 'not-pizza',
+    note: 'a bar where pizza is incidental', source: 'https://x.com/a' }).fails, []);
+});
+
+test('candidateReview: bad verdicts, unknown/resolved names, thin notes fail', () => {
+  reviewFails({ name: 'Belltown Pizza', verdict: 'meh', note: 'long enough note here' }, 'verdict must be');
+  reviewFails({ name: 'Ghost Pizza', verdict: 'closed', note: 'long enough note here' }, 'not a pending candidate');
+  reviewFails({ name: 'Nowhere Pizza', verdict: 'closed', note: 'long enough note here' }, 'not a pending candidate');
+  reviewFails({ name: 'Belltown Pizza', verdict: 'closed', note: 'short' }, 'note missing or too short');
+  reviewFails({ name: 'Belltown Pizza', verdict: 'closed', note: 'long enough note here',
+    source: 'http://x.com' }, 'must be https');
+});
+
+test('candidateReview: without a candidates queue, name matching is skipped', () => {
+  const { fails } = validateResearch({ candidateReview: [
+    { name: 'Anything Pizza', verdict: 'closed', note: 'long enough note here' }
+  ] }, dataset, registry, NOW);
+  assert.deepEqual(fails, []);
+});

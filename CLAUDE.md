@@ -170,10 +170,24 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
 - **The agent runs one task per day**, rotated by `next-task.mjs`: discovery, locations,
   liveness, news, rating. The locations brief also collects Instagram links from the
   official sites it is already reading. A manual dispatch can force a type via the
-  workflow's `task` input — including the dispatch-only `social` task (Instagram/website
-  backfill, never in the rotation) — which is how backfills work. Briefs are code (in
-  `next-task.mjs`); the fixed rules and schema live in `research.yml` so no task can
-  drop them.
+  workflow's `task` input — including the dispatch-only `social` (Instagram/website
+  backfill) and `census` (candidates-queue verification) tasks, never in the rotation —
+  which is how backfills work. Briefs are code (in `next-task.mjs`); the fixed rules and
+  schema live in `research.yml` so no task can drop them.
+- **The candidates queue is the discovery funnel's registry top.**
+  `data/candidates.json` is seeded by `scripts/fetch-candidates.mjs` from King County
+  food-establishment permit data (Socrata `r878-4sxa`; every operating restaurant holds
+  a permit — ground truth for "exists", including places with no web presence) plus
+  OpenStreetMap via Overpass when reachable. Candidates are LEADS, never entries: the
+  `census` task verifies each through the normal `directory` channel, or records why it
+  does not belong via `candidateReview` ({name (exact worklist name), verdict
+  closed|chain|not-pizza|duplicate|unverifiable, note, source?}) so resolved ghosts stop
+  re-entering worklists; same-name candidates are branches and one record covers them
+  all. Resolutions survive seed refreshes; anything matching a dataset entry
+  auto-promotes (pure logic in `src/census.js`, tested). The directory publishes the
+  coverage numbers (verified / pending / chains-excluded) and the inclusion rule:
+  pizza-forward, Seattle location, national chains excluded by policy. Refresh the seed
+  with `node pizza/scripts/fetch-candidates.mjs` when the queue runs dry.
 - **Crowd STAR ratings stay frozen; review counts are used.** Yelp 403s automated reads and
   no API key is in use, so the stored star figures cannot refresh and are display-only. The
   review COUNT does feed reputation — a count is durable in a way an average is not. Do not

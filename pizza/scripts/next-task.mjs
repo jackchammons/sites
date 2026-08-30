@@ -30,7 +30,7 @@ const { restaurants } = JSON.parse(fs.readFileSync(path.join(root, 'data/restaur
 const TYPES = ['discovery', 'locations', 'liveness', 'news', 'rating'];
 /* Dispatch-only tasks: forceable for backfills, never part of the daily
  * rotation (their daily upkeep rides along on the rotating tasks). */
-const DISPATCH_ONLY = ['social'];
+const DISPATCH_ONLY = ['social', 'census'];
 const forced = (process.argv[2] || 'auto').toLowerCase();
 const task = [...TYPES, ...DISPATCH_ONLY].includes(forced)
   ? forced
@@ -233,6 +233,54 @@ For each, report a "links" record. The rules that matter:
 
 Write the "links" section only. Budget: about 2 searches per entry,
 25 in total.`;
+}
+
+if (task === 'census') {
+  // Dispatch-only: drain the registry-seeded candidates queue. Candidates come
+  // from King County food-permit data (and OSM when reachable) -- they are
+  // leads, and every one either joins through the validated directory channel
+  // or gets a recorded verdict so it stops re-entering worklists.
+  const candPath = path.join(root, 'data/candidates.json');
+  const cands = fs.existsSync(candPath)
+    ? JSON.parse(fs.readFileSync(candPath, 'utf8')).candidates.filter(c => c.status === 'pending')
+    : [];
+  const worklist = cands.slice(0, 10);
+  const names = restaurants.map(r => r.name).sort().join('; ');
+  brief = `Your task: verify candidate pizzerias found in King County
+food-business permit data, so the real ones can join the directory.
+Verify these, and only these:
+
+${worklist.map(c => `- "${c.name}" | ${c.address ?? 'address unknown'}${c.lastInspection ? ` | last health inspection ${c.lastInspection}` : ''}`).join('\n')}
+
+Already on file (a candidate may be one of these under a permit-register
+spelling — that is a "duplicate", not a new entry):
+${names}
+
+For EVERY candidate above, produce exactly one of:
+
+1. It is real, currently operating, and pizza-forward (pizza is the core
+   of the business, not one menu item): report a "directory" entry —
+   name (the name it actually trades under, not the permit spelling),
+   url (official site, only if you opened it; never guess a domain),
+   neighborhood, style, status "open", note, source (an https page you
+   read), address (from the worklist unless its own site corrects it).
+2. It should NOT join: report a "candidateReview" record —
+   {"name":"<EXACT name from the worklist above>",
+    "verdict":"closed|chain|not-pizza|duplicate|unverifiable",
+    "note":"<what you found>","source":"<https page, when you have one>"}.
+   duplicate = same place as an entry on file or another candidate;
+   not-pizza = a grocery counter, bar or restaurant where pizza is
+   incidental; unverifiable = you could find no trace beyond the permit.
+
+Candidates sharing a name are branches of one business (permits are
+per-location): give that name exactly ONE record — a single directory
+entry listing its main address, or a single verdict — and it covers all
+its branches.
+
+A permit proves a kitchen exists, not that it belongs in a pizza index —
+be choosy on pizza-forward, and lean on each place's own site or real
+local coverage, not review aggregators. Budget: 2-3 searches per
+candidate, 25 in total.`;
 }
 
 if (task === 'news') {

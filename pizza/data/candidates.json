@@ -1,0 +1,898 @@
+{
+  "updated": "2026-08-30T23:47:42.261Z",
+  "cutoffMonths": 30,
+  "candidates": [
+    {
+      "key": "dominos|4717",
+      "name": "Domino'S Pizza #7084",
+      "address": "4717 Brooklyn Ave Ne, Seattle, WA 98105",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-04-08",
+      "status": "chain"
+    },
+    {
+      "key": "dominos|11025",
+      "name": "Domino'S Pizza #7095",
+      "address": "11025 5th Ave Ne, Seattle, WA 98125",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-08-10",
+      "status": "chain"
+    },
+    {
+      "key": "dominos|6540",
+      "name": "Domino'S Pizza #7142",
+      "address": "6540 California Ave Sw, Seattle, WA 98136",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-04-29",
+      "status": "chain"
+    },
+    {
+      "key": "dominos|4436",
+      "name": "Domino'S Pizza #7145",
+      "address": "4436 Rainier Ave S, #A, Seattle, WA 98118",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-06-25",
+      "status": "chain"
+    },
+    {
+      "key": "dominos|8345",
+      "name": "Domino'S Pizza,  #7148",
+      "address": "8345 15th Ave Nw, Seattle, WA 98117",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-02-24",
+      "status": "chain"
+    },
+    {
+      "key": "dominos|2320",
+      "name": "Dominos Pizza",
+      "address": "2320 N 45th St, Seattle, WA 98103",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-01-02",
+      "status": "chain"
+    },
+    {
+      "key": "dominos|2928",
+      "name": "Dominos Pizza #7172",
+      "address": "2928 1st Ave, 1, Seattle, WA 98121",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-08-05",
+      "status": "chain"
+    },
+    {
+      "key": "dominos|9610",
+      "name": "Dominos Pizza #7196",
+      "address": "9610 17th Ave Sw, Seattle, WA 98106",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-08-13",
+      "status": "chain"
+    },
+    {
+      "key": "mod|2800",
+      "name": "Mod Pizza",
+      "address": "2800 Sw Barton St, Seattle, WA 98126",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-03-26",
+      "status": "chain"
+    },
+    {
+      "key": "papa johns capitol hill|2116",
+      "name": "Papa Johns Pizza- Capitol Hill",
+      "address": "2116 E Denny Way, Seattle, WA 98122",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-05-13",
+      "status": "chain"
+    },
+    {
+      "key": "a mart|800",
+      "name": "A Pizza Mart",
+      "address": "800 Seneca St, 103, Seattle, WA 98101",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-06-11",
+      "status": "pending"
+    },
+    {
+      "key": "a mart|1823",
+      "name": "A Pizza Mart",
+      "address": "1823 Terry Ave, #102, Seattle, WA 98101",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-04-15",
+      "status": "pending"
+    },
+    {
+      "key": "a mart|1433",
+      "name": "A Pizza Mart",
+      "address": "1433 11th Ave, Seattle, WA 98122",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-03-25",
+      "status": "pending"
+    },
+    {
+      "key": "a mart|711",
+      "name": "A Pizza Mart",
+      "address": "711 Westlake Ave N, Seattle, WA 98109",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-02-20",
+      "status": "pending"
+    },
+    {
+      "key": "a mart bar grill|5240",
+      "name": "A Pizza Mart Bar & Grill Inc",
+      "address": "5240 University Way Ne, D, Seattle, WA 98105",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-05-28",
+      "status": "pending"
+    },
+    {
+      "key": "belltown|2422",
+      "name": "Belltown Pizza",
+      "address": "2422 1st Ave, Seattle, WA 98121",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-06-09",
+      "status": "pending"
+    },
+    {
+      "key": "big marios new york style|1011",
+      "name": "Big Mario'S New York Style Pizza",
+      "address": "1011 E Pike St, Seattle, WA 98122",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-07-17",
+      "status": "pending"
+    },
+    {
+      "key": "big marios ny style|4350",
+      "name": "Big Mario'S Ny Style Pizza",
+      "address": "4350 Leary Way Nw, Seattle, WA 98107",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-05-12",
+      "status": "pending"
+    },
+    {
+      "key": "candela|1622",
+      "name": "Candela Pizza",
+      "address": "1622 Sw Roxbury St, Seattle, WA 98106",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2025-08-29",
+      "status": "pending"
+    },
+    {
+      "key": "castello pasta|3756",
+      "name": "Castello Pizza & Pasta",
+      "address": "3756 Rainier Ave S, #B, Seattle, WA 98144",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-03-13",
+      "status": "pending"
+    },
+    {
+      "key": "domani|1515",
+      "name": "Domani Pizzeria & Restaurant",
+      "address": "1515 Queen Anne Ave N, Seattle, WA 98109",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2025-09-23",
+      "status": "pending"
+    },
+    {
+      "key": "dudez woodfired|2919",
+      "name": "Dude'Z Woodfired Pizza",
+      "address": "2919 Fuhrman Ave E, Seattle, WA 98102",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-03-06",
+      "status": "pending"
+    },
+    {
+      "key": "elemental|701",
+      "name": "Elemental Pizza",
+      "address": "701 5th Ave, 300, Seattle, WA 98104",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-06-09",
+      "status": "pending"
+    },
+    {
+      "key": "elemental|2634",
+      "name": "Elemental Pizza",
+      "address": "2634 Ne University Village, Seattle, WA 98105",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-02-06",
+      "status": "pending"
+    },
+    {
+      "key": "eymans|6711",
+      "name": "Eyman'S Pizza",
+      "address": "6711 M L King Jr Way S, Seattle, WA 98118",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-07-17",
+      "status": "pending"
+    },
+    {
+      "key": "g h pasta west seattle|7500",
+      "name": "G.H Pasta & Pizza West Seattle",
+      "address": "7500 35th Ave Sw, Seattle, WA 98126",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-01-08",
+      "status": "pending"
+    },
+    {
+      "key": "georgetown arcade|5513",
+      "name": "Georgetown Pizza & Arcade",
+      "address": "5513 Airport Way S, Seattle, WA 98108",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2025-10-01",
+      "status": "pending"
+    },
+    {
+      "key": "good shape|2601",
+      "name": "Good Shape Pizza LLC",
+      "address": "2601 S Mcclellan St, Seattle, WA 98144",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2024-03-22",
+      "status": "pending"
+    },
+    {
+      "key": "in we crust|3207",
+      "name": "In Pizza We Crust",
+      "address": "3207 California Ave Sw, Seattle, WA 98116",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-03-05",
+      "status": "pending"
+    },
+    {
+      "key": "in we crust kc507|3207",
+      "name": "In Pizza We Crust LLC - Kc507",
+      "address": "3207 California Ave Sw, Seattle, WA 98116",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2025-06-30",
+      "status": "pending"
+    },
+    {
+      "key": "italian family|1028",
+      "name": "Italian Family Pizza",
+      "address": "1028 Madison St, Seattle, WA 98104",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2025-09-03",
+      "status": "pending"
+    },
+    {
+      "key": "italio pasta|305",
+      "name": "Italio Pizza & Pasta",
+      "address": "305 Nw 85th St, Seattle, WA 98117",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-03-17",
+      "status": "pending"
+    },
+    {
+      "key": "jackson street lounge|2901",
+      "name": "Jackson Street Pizza Lounge",
+      "address": "2901 S Jackson St, Seattle, WA 98144",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-07-01",
+      "status": "pending"
+    },
+    {
+      "key": "la vita e bella|2411",
+      "name": "La Vita E 'Bella Pizzeria",
+      "address": "2411 2nd Ave, Seattle, WA 98121",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-05-22",
+      "status": "pending"
+    },
+    {
+      "key": "lil annies churrieria locas|7912",
+      "name": "Lil Annies Churrieria LLC / Pizza Locas",
+      "address": "7912 7th Ave S, Seattle, WA 98108",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-01-22",
+      "status": "pending"
+    },
+    {
+      "key": "mad|1321",
+      "name": "Mad Pizza",
+      "address": "1321 Madison St, Seattle, WA 98104",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-06-11",
+      "status": "pending"
+    },
+    {
+      "key": "managers|4741",
+      "name": "Manager'S Pizza",
+      "address": "4741 12th Ave Ne, Seattle, WA 98105",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-01-06",
+      "status": "pending"
+    },
+    {
+      "key": "mod super fast|1302",
+      "name": "Mod Super Fast Pizza",
+      "address": "1302 6th Ave, Seattle, WA 98101",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-08-25",
+      "status": "pending"
+    },
+    {
+      "key": "mod super fast ballard|6010",
+      "name": "Mod Super Fast Pizza Ballard",
+      "address": "6010 15th Ave Nw, Seattle, WA 98107",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-02-18",
+      "status": "pending"
+    },
+    {
+      "key": "mod superfast|305",
+      "name": "Mod Superfast Pizza",
+      "address": "305 Harrison St, #221, Seattle, WA 98109",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-06-09",
+      "status": "pending"
+    },
+    {
+      "key": "mod superfast|1414",
+      "name": "Mod Superfast Pizza",
+      "address": "1414 Ne 42nd St, #103b, Seattle, WA 98105",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-01-21",
+      "status": "pending"
+    },
+    {
+      "key": "modena pasta|8014",
+      "name": "Modena Pizza & Pasta",
+      "address": "8014 Lake City Way Ne, Seattle, WA 98115",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-08-20",
+      "status": "pending"
+    },
+    {
+      "key": "mohi dba hot slice|41",
+      "name": "Mohi Pizza Dba Hot Slice Pizza",
+      "address": "41 Dravus St, S10, Seattle, WA 98109",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-01-30",
+      "status": "pending"
+    },
+    {
+      "key": "oskars kc721|5604",
+      "name": "Oskar'S Pizza (Kc721)",
+      "address": "5604 Delridge Way Sw, Seattle, WA 98106",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2025-05-01",
+      "status": "pending"
+    },
+    {
+      "key": "palermo pasta|350",
+      "name": "Palermo Pizza & Pasta",
+      "address": "350 15th Ave E, Seattle, WA 98112",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-03-17",
+      "status": "pending"
+    },
+    {
+      "key": "gallery|1117",
+      "name": "Pizza Gallery The",
+      "address": "1117 Sw 128th St, Seattle, WA 98146",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-03-31",
+      "status": "pending"
+    },
+    {
+      "key": "paesano|5105",
+      "name": "Pizza Paesano",
+      "address": "5105 Ballard Ave Nw, Seattle, WA 98107",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-04-15",
+      "status": "pending"
+    },
+    {
+      "key": "twist|12319",
+      "name": "Pizza Twist",
+      "address": "12319 Roosevelt Way Ne, Seattle, WA 98125",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-02-26",
+      "status": "pending"
+    },
+    {
+      "key": "pudge bros|269",
+      "name": "Pudge Bros Pizza",
+      "address": "269 Ne 45th St, Seattle, WA 98105",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2025-05-20",
+      "status": "pending"
+    },
+    {
+      "key": "razzis downtown|1314",
+      "name": "Razzi'S Pizzeria Downtown",
+      "address": "1314 Howell St, Seattle, WA 98101",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-07-21",
+      "status": "pending"
+    },
+    {
+      "key": "ridge|7217",
+      "name": "Ridge Pizza",
+      "address": "7217 Greenwood Ave N, Seattle, WA 98103",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2025-11-06",
+      "status": "pending"
+    },
+    {
+      "key": "ridge northeast|3338",
+      "name": "Ridge Pizza - Northeast",
+      "address": "3338 Ne 65th St, Seattle, WA 98115",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2025-09-09",
+      "status": "pending"
+    },
+    {
+      "key": "romios pasta|1011",
+      "name": "Romio'S Pizza & Pasta",
+      "address": "1011 Pike St, C, Seattle, WA 98101",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-02-09",
+      "status": "pending"
+    },
+    {
+      "key": "seattle and bar|2801",
+      "name": "Seattle Pizza And Bar",
+      "address": "2801 Western Ave, E, Seattle, WA 98121",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-06-08",
+      "status": "pending"
+    },
+    {
+      "key": "seattle and bar|224",
+      "name": "Seattle Pizza And Bar",
+      "address": "224 Fairview Ave N, Seattle, WA 98109",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-04-29",
+      "status": "pending"
+    },
+    {
+      "key": "seattle super slices|1727",
+      "name": "Seattle Super Slices",
+      "address": "1727 1st Ave S, Seattle, WA 98134",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-06-10",
+      "status": "pending"
+    },
+    {
+      "key": "smoking monkey|3111",
+      "name": "Smoking Monkey Pizza",
+      "address": "3111 W Mcgraw St, #103, Seattle, WA 98199",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-02-11",
+      "status": "pending"
+    },
+    {
+      "key": "sopranos lake city|11754",
+      "name": "Sopranos Pizza - Lake City",
+      "address": "11754 15th Ave Ne, Seattle, WA 98125",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-04-08",
+      "status": "pending"
+    },
+    {
+      "key": "swing sandwiches and|223",
+      "name": "Swing Sandwiches And Pizza",
+      "address": "223 W Galer St, A, Seattle, WA 98119",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-01-21",
+      "status": "pending"
+    },
+    {
+      "key": "tutta bella neapolitan|4918",
+      "name": "Tutta Bella Neapolitan Pizzeria",
+      "address": "4918 Rainier Ave S, Seattle, WA 98118",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-07-01",
+      "status": "pending"
+    },
+    {
+      "key": "tutta bella neapolitan|4411",
+      "name": "Tutta Bella Neapolitan Pizzeria",
+      "address": "4411 Stone Way N, Seattle, WA 98103",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-06-29",
+      "status": "pending"
+    },
+    {
+      "key": "tutta bella neapolitan kc489|4918",
+      "name": "Tutta Bella Neapolitan Pizzeria (Kc489)",
+      "address": "4918 Rainier Ave S, Seattle, WA 98118",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2025-06-13",
+      "status": "pending"
+    },
+    {
+      "key": "veras and bar|5417",
+      "name": "Vera'S  Pizza And Bar",
+      "address": "5417 22nd Ave Nw, Seattle, WA 98107",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-05-07",
+      "status": "pending"
+    },
+    {
+      "key": "veraci catering kitchen|4260",
+      "name": "Veraci Pizza Catering Kitchen",
+      "address": "4260 23rd Ave W, Seattle, WA 98199",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-05-19",
+      "status": "pending"
+    },
+    {
+      "key": "zeeks white center|9809",
+      "name": "Zeeks Pizza White Center",
+      "address": "9809 16th Ave Sw, Seattle, WA 98106",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-01-08",
+      "status": "pending"
+    },
+    {
+      "key": "ballard|5205",
+      "name": "Ballard Pizza Company",
+      "address": "5205 Ballard Ave Nw, Seattle, WA 98107",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-03-18",
+      "status": "promoted",
+      "matchedId": "ballard-pizza-co"
+    },
+    {
+      "key": "dantini|1417",
+      "name": "Dantini Pizza",
+      "address": "1417 Elliott Ave W, Seattle, WA 98119",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-02-13",
+      "status": "promoted",
+      "matchedId": "dantini-pizza"
+    },
+    {
+      "key": "delancey|1415",
+      "name": "Delancey Pizzeria",
+      "address": "1415 Nw 70th St, Seattle, WA 98117",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-02-18",
+      "status": "promoted",
+      "matchedId": "delancey"
+    },
+    {
+      "key": "independent|4235",
+      "name": "Independent Pizzeria",
+      "address": "4235 E Madison St, Seattle, WA 98112",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2025-07-17",
+      "status": "promoted",
+      "matchedId": "independent-pizzeria"
+    },
+    {
+      "key": "pagliacci|4901",
+      "name": "Pagliacci Pizza Inc",
+      "address": "4901 Rainier Ave S, Seattle, WA 98118",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-08-07",
+      "status": "promoted",
+      "matchedId": "pagliacci"
+    },
+    {
+      "key": "pagliacci|415",
+      "name": "Pagliacci Pizza Inc",
+      "address": "415 E Pike St, Seattle, WA 98122",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-07-21",
+      "status": "promoted",
+      "matchedId": "pagliacci"
+    },
+    {
+      "key": "pagliacci|8024",
+      "name": "Pagliacci Pizza Inc",
+      "address": "8024 15th Ave Ne, Seattle, WA 98115",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-07-15",
+      "status": "promoted",
+      "matchedId": "pagliacci"
+    },
+    {
+      "key": "pagliacci|3015",
+      "name": "Pagliacci Pizza Inc",
+      "address": "3015 E Madison St, Seattle, WA 98112",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2025-09-25",
+      "status": "promoted",
+      "matchedId": "pagliacci"
+    },
+    {
+      "key": "pi vegan|5301",
+      "name": "Pi Vegan Pizzeria",
+      "address": "5301 Roosevelt Way Ne, Seattle, WA 98105",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-03-27",
+      "status": "promoted",
+      "matchedId": "pi-vegan-pizzeria"
+    },
+    {
+      "key": "by ruffin|527",
+      "name": "Pizza By Ruffin",
+      "address": "527 Eastlake Avenue E, Unit 302, Seattle, WA 98109",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-06-25",
+      "status": "promoted",
+      "matchedId": "pizza-by-ruffin"
+    },
+    {
+      "key": "ritual|5608",
+      "name": "Pizza Ritual",
+      "address": "5608 Delridge Way Sw, Seattle, WA 98106",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2025-11-07",
+      "status": "promoted",
+      "matchedId": "pizza-ritual"
+    },
+    {
+      "key": "22|4213",
+      "name": "Pizzeria 22",
+      "address": "4213 Sw College St, Seattle, WA 98116",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-08-18",
+      "status": "promoted",
+      "matchedId": "pizzeria-22"
+    },
+    {
+      "key": "la rocca|8404",
+      "name": "Pizzeria La Rocca",
+      "address": "8404 Greenwood Ave N, Seattle, WA 98103",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-05-07",
+      "status": "promoted",
+      "matchedId": "pizzeria-la-rocca"
+    },
+    {
+      "key": "post alley|1123",
+      "name": "Post Alley Pizza",
+      "address": "1123 Post Ave, Seattle, WA 98101",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-06-11",
+      "status": "promoted",
+      "matchedId": "post-alley-pizza"
+    },
+    {
+      "key": "proletariat|9622",
+      "name": "Proletariat Pizza",
+      "address": "9622 16th Ave Sw, A, Seattle, WA 98106",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-02-06",
+      "status": "promoted",
+      "matchedId": "proletariat-pizza"
+    },
+    {
+      "key": "romano pasta|5605",
+      "name": "Romano Pizza & Pasta",
+      "address": "5605  Delridge Way Sw , #B, Seattle, WA 98106",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-03-12",
+      "status": "promoted",
+      "matchedId": "romano-pizza-pasta"
+    },
+    {
+      "key": "talaricos|4718",
+      "name": "Talarico'S Pizzeria",
+      "address": "4718 California Ave Sw, Seattle, WA 98116",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-08-03",
+      "status": "promoted",
+      "matchedId": "talaricos"
+    },
+    {
+      "key": "veraci|500",
+      "name": "Veraci Pizza",
+      "address": "500 Nw Market St, Seattle, WA 98107",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-05-27",
+      "status": "promoted",
+      "matchedId": "veraci-pizza"
+    },
+    {
+      "key": "veraci|7320",
+      "name": "Veraci Pizza",
+      "address": "7320 35th Ave Ne, Seattle, WA 98115",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-03-03",
+      "status": "promoted",
+      "matchedId": "veraci-pizza"
+    },
+    {
+      "key": "world|672",
+      "name": "World Pizza LLC",
+      "address": "672 S King St, Seattle, WA 98104",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-06-11",
+      "status": "promoted",
+      "matchedId": "world-pizza"
+    },
+    {
+      "key": "zeeks|1915",
+      "name": "Zeeks Pizza",
+      "address": "1915 Queen Anne Ave N, Seattle, WA 98109",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-01-27",
+      "status": "promoted",
+      "matchedId": "zeeks-pizza"
+    },
+    {
+      "key": "zeeks|419",
+      "name": "Zeeks Pizza Inc",
+      "address": "419 Denny Way, Seattle, WA 98109",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-07-16",
+      "status": "promoted",
+      "matchedId": "zeeks-pizza"
+    }
+  ]
+}

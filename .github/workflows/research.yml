@@ -28,7 +28,7 @@ on:
         description: 'Task type (auto rotates by day)'
         type: choice
         default: auto
-        options: [auto, discovery, locations, liveness, news, rating, social]
+        options: [auto, discovery, locations, liveness, news, rating, social, census]
 
 concurrency:
   group: research
@@ -184,6 +184,10 @@ jobs:
                        "website":"<https official site, or omit>",
                        "instagram":"<https://www.instagram.com/handle, or omit>",
                        "source":"<https page where you saw the link>"}],
+             "candidateReview":[{"name":"<exact candidate name from the worklist>",
+                                 "verdict":"closed|chain|not-pizza|duplicate|unverifiable",
+                                 "note":"<what you found>",
+                                 "source":"<https page, or omit>"}],
              "directory":[{"name":"<pizzeria>","url":"<https official site or omit>",
                            "neighborhood":"<area>","style":"<style or omit>",
                            "status":"open|opening","note":"<one sentence>",
@@ -273,4 +277,5 @@ jobs:
         run: |
           bash scripts/commit-data.sh \
             "chore(data): research pass (${{ steps.task.outputs.task }}) $(date -u +%Y-%m-%d)" \
-            pizza/data/research.json pizza/data/restaurants.json pizza/data/attributes.json
+            pizza/data/research.json pizza/data/restaurants.json pizza/data/attributes.json \
+            pizza/data/candidates.json

@@ -48,5 +48,14 @@ export function loadContext(root) {
     }
   }
 
-  return { root, dataset, history, buzz };
+  /* The census candidates queue (registry-seeded leads). Fail-soft: the site
+   * renders fine without it, just with no coverage numbers to publish. */
+  const candidatesPath = path.join(root, 'data/candidates.json');
+  let candidates = null;
+  if (fs.existsSync(candidatesPath)) {
+    try { candidates = JSON.parse(fs.readFileSync(candidatesPath, 'utf8')).candidates; }
+    catch (e) { console.warn(`  ! ignoring data/candidates.json: ${e.message}`); }
+  }
+
+  return { root, dataset, history, buzz, candidates };
 }

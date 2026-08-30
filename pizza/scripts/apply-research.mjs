@@ -15,6 +15,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { matchEntry } from '../src/census.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const researchPath = path.join(root, 'data/research.json');
@@ -189,6 +190,48 @@ for (const it of research.locations ?? []) {
   located++;
   const changed = before !== JSON.stringify(sites);
   console.log(`  @ ${r.name}: ${sites.length} location(s)${changed ? '' : ' (unchanged)'} — ${sites.map(s => s.neighborhood).join(', ')}`);
+}
+
+/* candidateReview: census verdicts drain the registry queue. Promotions need
+ * no record of their own -- any candidate whose name now matches a dataset
+ * entry (usually one the same run just added through `directory`) is marked
+ * promoted here, and verdicts mark the rest so they stop re-entering census
+ * worklists. */
+const candidatesPath = path.join(root, 'data/candidates.json');
+if (fs.existsSync(candidatesPath)) {
+  const candFile = JSON.parse(fs.readFileSync(candidatesPath, 'utf8'));
+  let candChanges = 0;
+  for (const it of research.candidateReview ?? []) {
+    // Same-name candidates are branches of one business (permits are
+    // per-location); one verdict resolves them all.
+    const matches = candFile.candidates.filter(x =>
+      x.status === 'pending' && x.name.toLowerCase().trim() === String(it.name).toLowerCase().trim());
+    if (!matches.length) { console.warn(`  ? candidateReview names no pending candidate: "${it.name}"`); continue; }
+    for (const c of matches) {
+      c.status = it.verdict === 'chain' ? 'chain' : 'rejected';
+      c.verdict = it.verdict;
+      c.note = it.note;
+      if (it.source) c.resolutionSource = it.source;
+      c.resolvedDate = today;
+      candChanges++;
+    }
+    console.log(`  - candidate "${it.name}": ${it.verdict} (${matches.length} location(s))`);
+  }
+  for (const c of candFile.candidates) {
+    if (c.status !== 'pending') continue;
+    const matched = matchEntry(c, dataset.restaurants);
+    if (matched) {
+      c.status = 'promoted';
+      c.matchedId = matched.id;
+      c.resolvedDate = today;
+      candChanges++;
+      console.log(`  ^ candidate "${c.name}" promoted -> ${matched.id}`);
+    }
+  }
+  if (candChanges) {
+    fs.writeFileSync(candidatesPath, JSON.stringify(candFile, null, 2) + '\n');
+    changes += candChanges;
+  }
 }
 
 if (changes || located) {

@@ -9,10 +9,11 @@
 
 export const KINDS = new Set(['opening', 'closing', 'ranking', 'mention']);
 export const CAPS = { news: 20, locations: 12, directory: 10, status: 10,
-                      mentions: 30, newAttributes: 3, factorRatings: 12, links: 20 };
+                      mentions: 30, newAttributes: 3, factorRatings: 12, links: 20,
+                      candidateReview: 15 };
 export const MAX_AGE_DAYS = 180;
 
-export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()) {
+export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now(), extra = {}) {
   const fails = [];
   const bad = (sec, i, msg) => fails.push(`${sec}[${i}]: ${msg}`);
   const byId = new Map(dataset.restaurants.map(r => [r.id, r]));
@@ -28,7 +29,8 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
                      status: doc.status ?? [], mentions: doc.mentions ?? [],
                      newAttributes: doc.newAttributes ?? [],
                      factorRatings: doc.factorRatings ?? [],
-                     links: doc.links ?? [] };
+                     links: doc.links ?? [],
+                     candidateReview: doc.candidateReview ?? [] };
   if (Array.isArray(doc.ratings) && doc.ratings.length) {
     fails.push('ratings are no longer accepted: crowd figures are frozen, see CLAUDE.md');
   }
@@ -238,6 +240,34 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
       bad('links', i, `instagram must be a profile URL like https://www.instagram.com/<handle>, got "${it.instagram}"`);
     }
     checkUrl('links', i, it?.source, 'source');
+  });
+
+  /* ---- candidateReview: census verdicts on registry-seeded candidates ----
+   * Promotions go through `directory` like any discovery; this section only
+   * records why a candidate does NOT join, so the queue drains instead of the
+   * same ghosts monopolising every census worklist. When the candidates queue
+   * is provided (extra.candidates), names must match a pending candidate. */
+  const VERDICTS = new Set(['closed', 'chain', 'not-pizza', 'duplicate', 'unverifiable']);
+  const pendingNames = extra.candidates
+    ? new Set(extra.candidates.filter(c => c.status === 'pending')
+        .map(c => c.name.toLowerCase().trim()))
+    : null;
+  const reviewSeen = new Set();
+  sections.candidateReview.forEach((it, i) => {
+    const name = String(it?.name ?? '').toLowerCase().trim();
+    if (name.length < 2) bad('candidateReview', i, 'name missing');
+    else if (pendingNames && !pendingNames.has(name)) {
+      bad('candidateReview', i, `"${it.name}" is not a pending candidate (use the exact worklist name)`);
+    }
+    if (reviewSeen.has(name)) bad('candidateReview', i, `duplicate verdict for "${it?.name}"`);
+    reviewSeen.add(name);
+    if (!VERDICTS.has(it?.verdict)) {
+      bad('candidateReview', i, `verdict must be one of ${[...VERDICTS].join('|')}, got "${it?.verdict}"`);
+    }
+    if (typeof it?.note !== 'string' || it.note.trim().length < 10) {
+      bad('candidateReview', i, 'note missing or too short — say what you found');
+    }
+    if (it?.source != null) checkUrl('candidateReview', i, it.source, 'source');
   });
 
   /* ---- newAttributes: registry additions ---- */

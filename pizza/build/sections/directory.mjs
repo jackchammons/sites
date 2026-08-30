@@ -1,8 +1,9 @@
 import { esc, nameLink, shortDate } from '../html.mjs';
 import { locationLabel } from '../../src/locations.js';
+import { coverageStats } from '../../src/census.js';
 
 export function directorySection(ctx) {
-  const { dataset, allScored } = ctx;
+  const { dataset, allScored, candidates } = ctx;
 /* ---- Directory ---- */
 const STATUS_LABEL = { open: 'Open', opening: 'Opening soon', closed: 'Closed' };
 const scoreById = new Map(allScored.map(r => [r.id, r]));
@@ -129,6 +130,27 @@ const directorySection = `
       and up live. Click a row for everything on file about that pizzeria — and to find it on
       the map. Entries without a score have not been rated yet.
     </p>
+    ${(() => {
+      /* Coverage, stated honestly: what is verified, what is known-of and
+       * pending, and what is excluded on purpose. The pending queue is seeded
+       * from public registries (King County food-business permits, and
+       * OpenStreetMap), so "complete" is checkable rather than asserted. */
+      if (!candidates) return '';
+      const cov = coverageStats(candidates);
+      return `
+    <div class="stamp" style="margin-top:18px">
+      <span>${dataset.restaurants.length} <b>verified entries</b></span>
+      ${cov.pending ? `<span>${cov.pending} <b>candidates pending verification</b></span>` : ''}
+      ${cov.chains ? `<span>${cov.chains} <b>national-chain spots excluded</b></span>` : ''}
+    </div>
+    <p class="note" style="margin-top:10px; max-width:78ch">
+      Inclusion rule: a pizza-forward place with a location inside Seattle city limits.
+      National chains (Domino's, Pizza Hut, MOD, and the like) are excluded by policy — this is
+      an index of Seattle's own pizzerias. The pending queue is seeded from King County
+      food-business permit data; a candidate is listed only after the research pass verifies
+      it is real, open, and actually about pizza.
+    </p>`;
+    })()}
     <div class="dir-layout">
       <div class="dir-list">
         <div class="dir-scroll">

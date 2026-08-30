@@ -29,7 +29,13 @@ const dataset = JSON.parse(fs.readFileSync(path.join(root, 'data/restaurants.jso
 const registryPath = path.join(root, 'data/attributes.json');
 const registry = fs.existsSync(registryPath) ? JSON.parse(fs.readFileSync(registryPath, 'utf8')) : {};
 
-const { fails, sections } = validateResearch(doc, dataset, registry);
+const candidatesPath = path.join(root, 'data/candidates.json');
+const candidates = fs.existsSync(candidatesPath)
+  ? JSON.parse(fs.readFileSync(candidatesPath, 'utf8')).candidates
+  : null;
+
+const { fails, sections } = validateResearch(doc, dataset, registry, Date.now(),
+  candidates ? { candidates } : {});
 
 if (fails.length) {
   console.error(`research.json FAILED validation (${fails.length} problem(s)):`);
