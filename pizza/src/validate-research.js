@@ -183,7 +183,7 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
    * carries the sources it was read from. */
   const thisYear = new Date(nowMs).getUTCFullYear();
   const alreadyRated = r => Boolean(r.factors?.craft && r.factors?.distinctiveness
-    && typeof r.criticScore === 'number');
+    && r.factors?.critical);
 
   const ratingSeen = new Set();
   sections.factorRatings.forEach((it, i) => {

@@ -102,7 +102,7 @@ export const MENTION_WEIGHT = { ranking: 1.0, mention: 0.4, opening: 0.3, closin
 export const CRITICAL_BOOST_CAP = 1.5;
 
 export function criticalFactor(r, now) {
-  const base = clamp(r.criticScore ?? 0, 0, 10);
+  const base = clamp(r.factors?.critical?.value ?? 0, 0, 10);
   let signal = 0;
   for (const m of r.mentions ?? []) {
     const months = (now.getTime() - Date.parse(m.date)) / (30.44 * 864e5);
@@ -158,11 +158,10 @@ export function stalenessDecay(lastVerified, now) {
 
 /* ---------- scoring ---------- */
 
-/* An entry competes once it has the two editorial ratings and a critic base.
+/* An entry competes once all three graded factors are on file.
  * Everything else about it can be sparse; the computed factors handle gaps. */
 export function isRated(r) {
-  return Boolean(r.factors?.craft && r.factors?.distinctiveness
-    && typeof r.criticScore === 'number');
+  return Boolean(r.factors?.craft && r.factors?.distinctiveness && r.factors?.critical);
 }
 
 /* Score one entry, returning every intermediate value for display. */

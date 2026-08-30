@@ -18,7 +18,6 @@
         "rating": 4.6,
         "reviews": 2400
       },
-      "criticScore": 9.4,
       "priceIndex": 3,
       "lastVerified": "2026-08-01",
       "styleGroup": "Chicago pan",
@@ -50,6 +49,11 @@
           "value": 9.7,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 9.4,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": [],
@@ -68,7 +72,6 @@
         "rating": 4.4,
         "reviews": 1900
       },
-      "criticScore": 9.6,
       "priceIndex": 3,
       "lastVerified": "2026-08-01",
       "styleGroup": "Wood-fired",
@@ -99,6 +102,11 @@
           "value": 8.6,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 9.6,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": [],
@@ -117,7 +125,6 @@
         "rating": 4.5,
         "reviews": 900
       },
-      "criticScore": 9.3,
       "priceIndex": 3,
       "lastVerified": "2026-08-01",
       "styleGroup": "Wood-fired",
@@ -153,6 +160,11 @@
           "value": 9.2,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 9.3,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": [],
@@ -171,7 +183,6 @@
         "rating": 4.7,
         "reviews": 1100
       },
-      "criticScore": 8.9,
       "priceIndex": 4,
       "lastVerified": "2026-08-01",
       "styleGroup": "Detroit pan",
@@ -226,6 +237,11 @@
           "value": 9.4,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 8.9,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": []
@@ -243,7 +259,6 @@
         "rating": 4.4,
         "reviews": 3800
       },
-      "criticScore": 8.8,
       "priceIndex": 3,
       "lastVerified": "2026-08-01",
       "styleGroup": "Thin crust",
@@ -285,6 +300,11 @@
           "value": 7.8,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 8.8,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": []
@@ -302,7 +322,6 @@
         "rating": 4.3,
         "reviews": 1500
       },
-      "criticScore": 8.5,
       "priceIndex": 2,
       "lastVerified": "2026-08-01",
       "styleGroup": "Tavern square",
@@ -332,6 +351,11 @@
           "value": 9,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 8.5,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": []
@@ -349,7 +373,6 @@
         "rating": 4.6,
         "reviews": 650
       },
-      "criticScore": 8.9,
       "priceIndex": 3,
       "lastVerified": "2026-08-01",
       "styleGroup": "Wood-fired",
@@ -380,6 +403,11 @@
           "value": 8.4,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 8.9,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": []
@@ -397,7 +425,6 @@
         "rating": 4.4,
         "reviews": 700
       },
-      "criticScore": 8.7,
       "priceIndex": 3,
       "lastVerified": "2026-08-01",
       "styleGroup": "Wood-fired",
@@ -428,6 +455,11 @@
           "value": 8,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 8.7,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": []
@@ -445,7 +477,6 @@
         "rating": 4.3,
         "reviews": 5200
       },
-      "criticScore": 8.2,
       "priceIndex": 2,
       "lastVerified": "2026-08-01",
       "styleGroup": "Neapolitan",
@@ -497,6 +528,11 @@
           "value": 7,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 8.2,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": []
@@ -514,7 +550,6 @@
         "rating": 4.2,
         "reviews": 7600
       },
-      "criticScore": 7.6,
       "priceIndex": 2,
       "lastVerified": "2026-08-01",
       "styleGroup": "By the slice",
@@ -678,6 +713,11 @@
           "value": 6.8,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 7.6,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": []
@@ -693,7 +733,6 @@
       "url": "https://windycitypie.com",
       "opened": null,
       "crowd": null,
-      "criticScore": 9,
       "priceIndex": 3,
       "lastVerified": null,
       "locations": [
@@ -723,6 +762,11 @@
           "value": 9.3,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 9,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": []
@@ -738,7 +782,6 @@
       "url": "https://www.viatribunali.com/",
       "opened": null,
       "crowd": null,
-      "criticScore": 8.3,
       "priceIndex": 3,
       "lastVerified": null,
       "locations": [
@@ -771,6 +814,11 @@
           "value": 7.4,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 8.3,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": []
@@ -786,7 +834,6 @@
       "url": "https://bigmariosnewyorkpizza.com/",
       "opened": null,
       "crowd": null,
-      "criticScore": 7.9,
       "priceIndex": 1,
       "lastVerified": null,
       "locations": [
@@ -833,6 +880,11 @@
           "value": 7.2,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 7.9,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": []
@@ -848,7 +900,6 @@
       "url": null,
       "opened": null,
       "crowd": null,
-      "criticScore": 8,
       "priceIndex": 2,
       "lastVerified": null,
       "locations": [],
@@ -865,6 +916,11 @@
           "date": "2026-08-26"
         },
         "distinctiveness": {
+          "value": 8,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "critical": {
           "value": 8,
           "setBy": "editorial",
           "date": "2026-08-26"
@@ -885,7 +941,6 @@
       "url": "https://proletariatpizza.com",
       "opened": null,
       "crowd": null,
-      "criticScore": 7.6,
       "priceIndex": 1,
       "lastVerified": null,
       "locations": [
@@ -912,6 +967,11 @@
           "value": 7,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 7.6,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": []
@@ -927,7 +987,6 @@
       "url": "https://ballardpizzacompany.com",
       "opened": null,
       "crowd": null,
-      "criticScore": 7.8,
       "priceIndex": 2,
       "lastVerified": null,
       "locations": [
@@ -960,6 +1019,11 @@
           "value": 6.8,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 7.8,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": []
@@ -975,7 +1039,6 @@
       "url": "https://zeekspizza.com",
       "opened": null,
       "crowd": null,
-      "criticScore": 7.2,
       "priceIndex": 2,
       "lastVerified": null,
       "locations": [
@@ -1090,6 +1153,11 @@
           "value": 7.6,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 7.2,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": []
@@ -1105,7 +1173,6 @@
       "url": "https://www.talaricospizza.com/",
       "opened": null,
       "crowd": null,
-      "criticScore": 7.4,
       "priceIndex": 1,
       "lastVerified": null,
       "locations": [
@@ -1134,6 +1201,11 @@
           "value": 8.2,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 7.4,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": []
@@ -1149,7 +1221,6 @@
       "url": "https://www.hot-mamaspizza.com",
       "opened": null,
       "crowd": null,
-      "criticScore": 6.9,
       "priceIndex": 1,
       "lastVerified": null,
       "locations": [
@@ -1178,6 +1249,11 @@
           "value": 6.6,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 6.9,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": []
@@ -1193,7 +1269,6 @@
       "url": "https://humblepieseattle.com",
       "opened": null,
       "crowd": null,
-      "criticScore": 8.2,
       "priceIndex": 2,
       "lastVerified": null,
       "locations": [
@@ -1223,6 +1298,11 @@
           "value": 8.6,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 8.2,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": []
@@ -1238,7 +1318,6 @@
       "url": null,
       "opened": null,
       "crowd": null,
-      "criticScore": 8.2,
       "priceIndex": 2,
       "lastVerified": null,
       "locations": [],
@@ -1261,6 +1340,11 @@
           "value": 8.8,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 8.2,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": []
@@ -1276,7 +1360,6 @@
       "url": "https://www.postalley.pizza/",
       "opened": null,
       "crowd": null,
-      "criticScore": 7.2,
       "priceIndex": 2,
       "lastVerified": null,
       "locations": [
@@ -1303,6 +1386,11 @@
           "value": 6.4,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 7.2,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": []
@@ -1318,7 +1406,6 @@
       "url": "https://pegasuspizzaseattle.com/",
       "opened": null,
       "crowd": null,
-      "criticScore": 7.2,
       "priceIndex": 2,
       "lastVerified": null,
       "locations": [
@@ -1345,6 +1432,11 @@
           "value": 7,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 7.2,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": []
@@ -1360,7 +1452,6 @@
       "url": "https://www.sliceboxpizza.com",
       "opened": null,
       "crowd": null,
-      "criticScore": 7.8,
       "priceIndex": 2,
       "lastVerified": null,
       "locations": [
@@ -1389,6 +1480,11 @@
           "value": 8.8,
           "setBy": "editorial",
           "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 7.8,
+          "setBy": "editorial",
+          "date": "2026-08-26"
         }
       },
       "mentions": []
@@ -1404,7 +1500,6 @@
       "url": "https://www.roccosseattle.com",
       "opened": null,
       "crowd": null,
-      "criticScore": 7.5,
       "priceIndex": 2,
       "lastVerified": null,
       "locations": [
@@ -1431,6 +1526,11 @@
         },
         "distinctiveness": {
           "value": 7,
+          "setBy": "editorial",
+          "date": "2026-08-26"
+        },
+        "critical": {
+          "value": 7.5,
           "setBy": "editorial",
           "date": "2026-08-26"
         }
@@ -1475,9 +1575,14 @@
           "source": "https://www.theinfatuation.com/seattle/reviews/my-friend-dereks",
           "note": "The Infatuation scored it 8.8/10, praising 'sturdy-but-light caramelized crusts' and calling the plain Detroit-style pie 'sublime,' alongside inventive slices like a Fishy Caesar; a Seattle pizza-focused newsletter ranked it #3 in its Definitive Seattle Pizza Rankings.",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 8,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/my-friend-dereks",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 8,
       "styleGroup": "Detroit pan",
       "lastVerified": "2026-08-27"
     },
@@ -1570,9 +1675,14 @@
           "source": "https://www.seattletimes.com/life/food-drink/restaurant-review-this-slice-shop-is-worth-a-pizza-pilgrimage-to-burien/",
           "note": "The Seattle Times called the original location worth a 'pizza pilgrimage' for its burrata-and-hot-honey pies on a 'crispy, never burned crust' and later crowned it champion of its citywide Pizza Smackdown; the Phinney Ridge location, opened in 2026, is now the flagship producing dough for all locations, and The Infatuation confirms it serves 'the same burrata-dolloped pies.'",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.seattletimes.com/life/food-drink/restaurant-review-this-slice-shop-is-worth-a-pizza-pilgrimage-to-burien/",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 7.5,
       "opened": 2026,
       "styleGroup": "Thin crust",
       "lastVerified": "2026-08-27"
@@ -1667,9 +1777,14 @@
           "source": "https://www.theinfatuation.com/seattle/reviews/roma-roma",
           "note": "The Infatuation rated it 7.5/10, calling the Roman by-the-cut al taglio pizza 'pretty good' with hit-or-miss toppings but singling out the Margherita and wild boar bolognese as standouts; CHS covered its Capitol Hill debut from the Brunton brothers, whose three-day naturally leavened dough anchors a concept built as much around the room and cocktails as the pizza.",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/roma-roma",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 6.5,
       "opened": 2026,
       "styleGroup": "Roman",
       "lastVerified": "2026-08-27"
@@ -1719,9 +1834,14 @@
           "source": "https://www.theinfatuation.com/seattle/reviews/pizza-by-ruffin",
           "note": "The Infatuation rated it 7.8/10 for its two-day cold-fermented, crackly-crust Roman al taglio slices and diaspora-inspired toppings like Jamaican-curry mushroom and gumbo-style pies; Seattle Refined covered its distinction as Washington's first Black-owned pizzeria, opened October 2024, which redirects tips to a nonprofit funding school garden grants.",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/pizza-by-ruffin",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 7.5,
       "opened": 2024,
       "styleGroup": "Roman",
       "lastVerified": "2026-08-27"
@@ -1763,9 +1883,14 @@
           "source": "https://www.seattletimes.com/life/food-drink/pizza-stars-at-cornuto-in-phinney-ridge/",
           "note": "The Seattle Times called it home to 'some of the best Neapolitan-style pizza around' in a traditional white-tiled oven; The Infatuation likewise praised its 'bubbly pies drizzled with chile oil' in a cozy, narrow, date-friendly room, and PhinneyWood covered its 2016 opening in Phinney Ridge/Greenwood by brothers Andrew and Giancarlo Martino.",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.seattletimes.com/life/food-drink/pizza-stars-at-cornuto-in-phinney-ridge/",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 7.5,
       "opened": 2016,
       "styleGroup": "Neapolitan",
       "lastVerified": "2026-08-27"
@@ -1807,9 +1932,14 @@
           "source": "https://www.razzispizza.com/about.html",
           "note": "Est. 1983, Razzi's runs a certified gluten-free kitchen alongside its regular menu, with four separate allergen-safe menus that Eater's gluten-free guide calls the holy grail of allergen-safe dining; hundreds of Yelp and Tripadvisor reviews describe consistently good food and generous portions rather than standout pizza craft specifically.",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.razzispizza.com/about.html",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 6.5,
       "opened": 1983,
       "priceIndex": 2,
       "styleGroup": "Neighborhood",
@@ -1852,9 +1982,14 @@
           "source": "https://www.pizzalarocca.com/",
           "note": "Reviewers on Yelp and Tripadvisor repeatedly single out the wood-fired crust as the thinnest and most delicate they've had, calling it some of the best pizza in the Pacific Northwest; prices run higher than most Seattle neighborhood shops.",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.pizzalarocca.com/",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 7,
       "priceIndex": 3,
       "styleGroup": "Wood-fired",
       "lastVerified": "2026-08-27"
@@ -1896,9 +2031,14 @@
           "source": "https://www.happycow.net/reviews/pi-vegan-pizzeria-seattle-2637",
           "note": "An all-vegan pizzeria on Roosevelt Way with a devoted following; diners on HappyCow and Yelp call the crust the star of the show and the pizza the best vegan pizza they've ever had, with affordable, budget-friendly pricing.",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.happycow.net/reviews/pi-vegan-pizzeria-seattle-2637",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 7.5,
       "priceIndex": 2,
       "styleGroup": "Creative",
       "lastVerified": "2026-08-27"
@@ -1940,9 +2080,14 @@
           "source": "https://www.seattletimes.com/life/food-drink/mioposto-secondo-pizzeria-fires-up-lively-fare/",
           "note": "The Seattle Times' review of the Mount Baker original describes thin, foldable crusts, ballooning edges and a bread-like chew, tracing owner Jeremy Hardy's pizza pedigree through Pizzeria Bianco, dough school, and time in Florence and Rome; Seattle Met has carried it on its business listings since it opened in 2006.",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.seattletimes.com/life/food-drink/mioposto-secondo-pizzeria-fires-up-lively-fare/",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 7.5,
       "opened": 2006,
       "styleGroup": "Wood-fired",
       "lastVerified": "2026-08-27"
@@ -1984,9 +2129,14 @@
           "source": "https://www.fearlesscritic.com/seattle/restaurant/5636/veraci-pizza-seattle",
           "note": "Fearless Critic scores Veraci's Neapolitan-style, applewood-fired slices 7.5/10 for food, tying for fifth among Seattle pizzerias at roughly $25 a person; the business grew out of a mobile wood-fired oven the founders built to sell pizza at the Ballard Farmers Market starting in 2004.",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.fearlesscritic.com/seattle/restaurant/5636/veraci-pizza-seattle",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 7.5,
       "opened": 2004,
       "priceIndex": 2,
       "styleGroup": "Neapolitan",
@@ -2029,9 +2179,14 @@
           "source": "https://www.theinfatuation.com/seattle/reviews/south-town-pie",
           "note": "The Infatuation rated it 7.4/10, saying the New York-style pizza has grown inconsistent since its early days — standard red-sauced pies now read as 'underseasoned' — but singled out the pastrami pie (everything-bagel-spiced crust, gruyere fondue, caramelized onion, pickles) as the one order that 'has stood the test of time beautifully.' It's a casual pizza-and-bar room in South Park from chef Sam Crannell, formerly of LloydMartin, with a creative menu that also runs to a breakfast pie and a wild boar ragu pie with fried sage and Funyuns.",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/south-town-pie",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 6.5,
       "priceIndex": 2,
       "styleGroup": "Pizza bar",
       "lastVerified": "2026-08-27"
@@ -2073,9 +2228,14 @@
           "source": "https://seattlemag.com/restaurant-review-pizzeria-22",
           "note": "Seattle magazine praised the 'sturdy, chewy-crusted' wood-fired pies at this Admiral District spot from owner Cary Kemp, who trained at Sorbillo in Naples; the review calls out buffalo mozzarella added midway through the bake to protect the crust, house-sliced prosciutto, and a wood-oven clam special served with blistered, Parmesan-dusted flatbread. It is West Seattle's only VPN-certified Neapolitan kitchen, running an imported wood oven and Italian '00' flour and San Marzano-style tomatoes.",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://seattlemag.com/restaurant-review-pizzeria-22",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 7.5,
       "priceIndex": 2,
       "styleGroup": "Neapolitan",
       "lastVerified": "2026-08-27"
@@ -2117,9 +2277,14 @@
           "source": "https://www.seattlemet.com/businesses/johnny-mo-s-pizzeria",
           "note": "Seattle Met's comparison of the shop's dual New York and Chicago pies found the thin, foldable New York slice 'wins on both texture and wait times' against the 30-minute deep dish -- a well-executed neighborhood two-style shop rather than a destination for either style alone.",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/businesses/johnny-mo-s-pizzeria",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 6,
       "priceIndex": 2,
       "styleGroup": "Thin crust",
       "lastVerified": "2026-08-27"
@@ -2161,9 +2326,14 @@
           "source": "https://archive.seattletimes.com/archive/19920417/1486871/another-innovative-pizza-parlor-arrives",
           "note": "A 1992 Seattle Times review of this Eastlake stone-oven pizzeria called pies like the Pazzo Pollo and the Prato excellent to very good, while flagging an underbaked crust on the Milano and an overloaded, unrestrained topping combo on the Bari -- a mixed-but-solid picture consistent with its decades-long run as a neighborhood institution where calzones outsell the pizza.",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://archive.seattletimes.com/archive/19920417/1486871/another-innovative-pizza-parlor-arrives",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 6,
       "opened": 1990,
       "styleGroup": "Neighborhood",
       "lastVerified": "2026-08-27"
@@ -2205,9 +2375,14 @@
           "source": "https://www.westsideseattle.com/west-seattle-herald/2017/11/01/sopranos-antico-now-open-after-months-long-delay",
           "note": "West Seattle Herald and West Seattle Blog coverage of its long-delayed 2017 opening describe owner Plamen Stoyanov's Neapolitan program -- San Marzano tomatoes, Caputo flour, buffalo mozzarella -- built on training and certification under 12-time world pizza champion Tony Gemignani.",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.westsideseattle.com/west-seattle-herald/2017/11/01/sopranos-antico-now-open-after-months-long-delay",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 6,
       "opened": 2017,
       "styleGroup": "Neapolitan",
       "lastVerified": "2026-08-27"
@@ -2249,9 +2424,14 @@
           "source": "https://www.theinfatuation.com/seattle/reviews/pizza-ritual",
           "note": "The Infatuation (7.8/10) praises this Delridge takeout window's naturally leavened, long-fermented pies for charred, bubbled crusts and bold tang, calling it a fix for a Neapolitan-shaped hole in West Seattle, while noting not every topping combo lands.",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/pizza-ritual",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 6.5,
       "styleGroup": "Neapolitan",
       "lastVerified": "2026-08-27"
     },
@@ -2292,9 +2472,14 @@
           "source": "https://www.seattletimes.com/life/food-drink/pulcinella-dishes-up-true-neapolitan-pizza/",
           "note": "Seattle Times critic Providence Cicero gave Pulcinella three stars for VPN-certified true Neapolitan pizza baked in about 90 seconds in an imported Valoriani wood oven; The Infatuation still sends readers to Rainier Beach for a margherita well above heat-lamp-slice territory.",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.seattletimes.com/life/food-drink/pulcinella-dishes-up-true-neapolitan-pizza/",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 7.5,
       "priceIndex": 3,
       "styleGroup": "Neapolitan",
       "lastVerified": "2026-08-27"
@@ -2360,9 +2545,14 @@
           "source": "https://en.wikipedia.org/wiki/World_Pizza",
           "note": "A Chinatown-ID fixture since opening in Belltown in 1992 (relocated to King St in 2011), World Pizza is one of the city's few vegetarian-only slice shops, cited by Thrillist and Seattle Metropolitan for inventive toppings like gorgonzola-potato-rosemary on an unfussy, utilitarian crust.",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://en.wikipedia.org/wiki/World_Pizza",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 6,
       "opened": 1992,
       "priceIndex": 1,
       "styleGroup": "By the slice",
@@ -2405,9 +2595,14 @@
           "source": "https://www.theinfatuation.com/seattle/reviews/sacro-bosco",
           "note": "The Infatuation rates it 8.4/10 and calls it 'expert-level Roman pizza,' with massive rectangular trays that are crunchy yet airy; Seattle Met and Axios both covered its 2025 debut inside Temple Pastries as one of Seattle's most distinctive new pizza concepts.",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 8.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/sacro-bosco",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 8.5,
       "opened": 2025,
       "priceIndex": 4,
       "styleGroup": "Roman",
@@ -2450,9 +2645,14 @@
           "source": "https://www.theinfatuation.com/seattle/reviews/oxbow",
           "note": "The Infatuation calls the pizza Oxbow's finest asset -- a scientifically precise, crunchy-bottomed crust with an inflated cornicione, topped with inventive, seasonally rotating combinations like chimichurri-scallion-cotija and bacon-crackling pepperoni; the Seattle Times covered its 2022 opening as one of the city's notable new pizza launches, from the Sea Wolf bakery team's fermented-starter dough.",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/oxbow",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 7.5,
       "opened": 2022,
       "styleGroup": "Creative",
       "lastVerified": "2026-08-27"
@@ -2494,9 +2694,14 @@
           "source": "https://www.theinfatuation.com/seattle/reviews/dantini-pizza",
           "note": "The Infatuation scores this Interbay pop-up 8.4/10, calling its confit-garlic pepperoni pie flawless and its crust sturdy with sourdough-like chew, crisp bottom and charred, crackly bubbles; it operates out of Batch 206 Distillery.",
           "date": "2026-08-27"
+        },
+        "critical": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/dantini-pizza",
+          "date": "2026-08-27"
         }
       },
-      "criticScore": 7.5,
       "styleGroup": "Thin crust",
       "lastVerified": "2026-08-27"
     },

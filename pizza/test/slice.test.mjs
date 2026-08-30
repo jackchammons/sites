@@ -33,12 +33,12 @@ test('reputation longevity is log-curved: year 2 proves more than year 12 adds',
 test('critical boost is capped and fades with age', () => {
   const mention = d => ({ kind: 'ranking', date: d });
   const burst = Array.from({ length: 40 }, () => mention('2026-08-20'));
-  const boosted = criticalFactor({ criticScore: 7, mentions: burst }, NOW);
+  const boosted = criticalFactor({ factors: { critical: { value: 7 } }, mentions: burst }, NOW);
   assert.equal(boosted.boost, CRITICAL_BOOST_CAP);
   assert.equal(boosted.value, 7 + CRITICAL_BOOST_CAP);
-  const old = criticalFactor({ criticScore: 7, mentions: [mention('2022-01-01')] }, NOW);
+  const old = criticalFactor({ factors: { critical: { value: 7 } }, mentions: [mention('2022-01-01')] }, NOW);
   assert.ok(old.boost < 0.1);
-  const capped = criticalFactor({ criticScore: 9.5, mentions: burst }, NOW);
+  const capped = criticalFactor({ factors: { critical: { value: 9.5 } }, mentions: burst }, NOW);
   assert.equal(capped.value, 10); // never exceeds the scale
 });
 
@@ -76,8 +76,8 @@ test('shrinkRating pulls small samples toward the mean', () => {
 function entry(over = {}) {
   return {
     id: over.id ?? 'x', name: over.name ?? 'X', status: 'open',
-    factors: { craft: { value: 8 }, distinctiveness: { value: 7 } },
-    criticScore: 8, opened: 2015, priceIndex: 2,
+    factors: { craft: { value: 8 }, distinctiveness: { value: 7 }, critical: { value: 8 } },
+    opened: 2015, priceIndex: 2,
     attributes: {}, mentions: [], lastVerified: '2026-08-29',
     ...over
   };
@@ -85,14 +85,14 @@ function entry(over = {}) {
 
 test('isRated requires craft, distinctiveness and a critic base', () => {
   assert.ok(isRated(entry()));
-  assert.ok(!isRated(entry({ criticScore: undefined })));
-  assert.ok(!isRated(entry({ factors: { craft: { value: 8 } } })));
+  assert.ok(!isRated(entry({ factors: { craft: { value: 8 }, distinctiveness: { value: 7 } } })));
+  assert.ok(!isRated(entry({ factors: { craft: { value: 8 }, critical: { value: 8 } } })));
 });
 
 test('a perfect entry scores 100 before deductions', () => {
   const r = entry({
-    factors: { craft: { value: 10 }, distinctiveness: { value: 10 } },
-    criticScore: 10, opened: 1990, priceIndex: 1,
+    factors: { craft: { value: 10 }, distinctiveness: { value: 10 }, critical: { value: 10 } },
+    opened: 1990, priceIndex: 1,
     crowd: { rating: 5, reviews: 100000 }
   });
   const s = scoreOne(r, { now: NOW, registry: {} });
@@ -100,7 +100,7 @@ test('a perfect entry scores 100 before deductions', () => {
 });
 
 test('rank scores only rated entries and sorts descending', () => {
-  const dataset = { restaurants: [entry({ id: 'a', criticScore: 9 }), entry({ id: 'b', criticScore: 5 }),
+  const dataset = { restaurants: [entry({ id: 'a' }), entry({ id: 'b', factors: { craft: { value: 4 }, distinctiveness: { value: 4 }, critical: { value: 4 } } }),
     { id: 'unrated', name: 'U', status: 'open' }] };
   const out = rank(dataset, { now: NOW });
   assert.equal(out.length, 2);

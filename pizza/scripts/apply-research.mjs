@@ -99,13 +99,15 @@ let ratedNow = 0;
 for (const it of research.factorRatings ?? []) {
   const r = byId.get(it.id);
   if (!r) continue;
-  if (r.factors?.craft && r.factors?.distinctiveness && typeof r.criticScore === 'number') continue;
+  if (r.factors?.craft && r.factors?.distinctiveness && r.factors?.critical) continue;
   const src = (it.sources ?? [])[0];
   r.factors = r.factors ?? {};
   for (const k of ['craft', 'distinctiveness']) {
     if (!r.factors[k]) r.factors[k] = { value: it[k], setBy: 'agent', source: src, note: it.note, date: today };
   }
-  r.criticScore = it.criticScore;
+  // The proposal schema says criticScore; it lands as factors.critical so all
+  // three graded factors share one shape and one provenance rule.
+  r.factors.critical = { value: it.criticScore, setBy: 'agent', source: src, note: it.note, date: today };
   if (it.opened != null && r.opened == null) r.opened = it.opened;
   if (it.priceIndex != null && r.priceIndex == null) r.priceIndex = it.priceIndex;
   if (it.styleGroup && !r.styleGroup) r.styleGroup = it.styleGroup.trim();

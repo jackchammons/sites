@@ -10,8 +10,9 @@ const base = over => ({
   restaurants: [{
     id: 'good-pie', name: 'Good Pie', status: 'open', url: 'https://goodpie.com',
     factors: { craft: { value: 8, setBy: 'editorial', date: '2026-08-01' },
-               distinctiveness: { value: 7, setBy: 'agent', source: 'https://x.com/review', date: '2026-08-01' } },
-    criticScore: 8, opened: 2015, priceIndex: 2, attributes: { 'sells-out': true },
+               distinctiveness: { value: 7, setBy: 'agent', source: 'https://x.com/review', date: '2026-08-01' },
+               critical: { value: 8, setBy: 'editorial', date: '2026-08-01' } },
+    opened: 2015, priceIndex: 2, attributes: { 'sells-out': true },
     locations: [{ neighborhood: 'Ballard', address: '1 Main St, Seattle, WA 98117', lat: 47.6, lon: -122.3 }],
     mentions: [], lastVerified: '2026-08-20',
     ...over
@@ -46,8 +47,8 @@ test('coordinates outside Puget Sound fail', () => {
   failsWith(base({ locations: [{ neighborhood: 'X', address: '1 Main St, Seattle, WA 98117', lat: 40.7, lon: -74 }] }), 'lat');
 });
 
-test('out-of-range values fail: criticScore, priceIndex, crowd, opened', () => {
-  failsWith(base({ criticScore: 47 }), 'criticScore');
+test('out-of-range and legacy values fail: criticScore, priceIndex, crowd, opened', () => {
+  failsWith(base({ criticScore: 8 }), 'legacy top-level criticScore');
   failsWith(base({ priceIndex: 9 }), 'priceIndex');
   failsWith(base({ crowd: { rating: 6, reviews: 10 } }), 'crowd.rating');
   failsWith(base({ opened: 1850 }), 'opened');

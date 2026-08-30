@@ -10,7 +10,7 @@
 const STATUSES = new Set(['open', 'opening', 'closed']);
 const SET_BY = new Set(['editorial', 'agent']);
 const PUGET_SOUND_ZIP = /\b98[0-5]\d{2}\b/;
-const FACTOR_KEYS = ['craft', 'distinctiveness'];
+const FACTOR_KEYS = ['craft', 'distinctiveness', 'critical'];
 
 export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
   const fails = [];
@@ -60,9 +60,7 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
       if (!SET_BY.has(f.setBy)) bad(id, `factors.${k}.setBy must be editorial|agent`);
       if (f.setBy === 'agent' && !(f.source && https(f.source))) bad(id, `factors.${k} is agent-set but carries no https source`);
     }
-    if (r.criticScore != null && (typeof r.criticScore !== 'number' || r.criticScore < 0 || r.criticScore > 10)) {
-      bad(id, `criticScore out of range: ${r.criticScore}`);
-    }
+    if (r.criticScore != null) bad(id, 'legacy top-level criticScore: migrate to factors.critical');
     if (r.opened != null && (typeof r.opened !== 'number' || r.opened < 1900 || r.opened > new Date(nowMs).getUTCFullYear())) {
       bad(id, `opened is not a plausible year: ${r.opened}`);
     }

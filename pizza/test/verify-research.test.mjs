@@ -6,7 +6,7 @@ const NOW = Date.parse('2026-08-30T00:00:00Z');
 
 const dataset = { restaurants: [
   { id: 'delancey', name: 'Delancey', status: 'open',
-    factors: { craft: { value: 9.6 }, distinctiveness: { value: 8.6 } }, criticScore: 9.6 },
+    factors: { craft: { value: 9.6 }, distinctiveness: { value: 8.6 }, critical: { value: 9.6 } } },
   { id: 'zeeks-pizza', name: 'Zeeks Pizza', status: 'open' },
   { id: 'roma-roma', name: 'Roma Roma', status: 'open' }
 ] };
