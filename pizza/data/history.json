@@ -31,7 +31,7 @@
     },
     {
       "weekKey": "2026-W35",
-      "date": "2026-08-29",
+      "date": "2026-08-30",
       "week": 35,
       "ranks": {
         "delancey": 1,
@@ -59,14 +59,14 @@
         "humble-pie": 23,
         "stevies-famous": 24,
         "flying-squirrel": 25,
-        "my-friend-dereks": 26,
-        "slice-box": 27,
+        "slice-box": 26,
+        "my-friend-dereks": 27,
         "big-marios": 28,
         "pi-vegan-pizzeria": 29,
         "via-tribunali": 30,
         "talaricos": 31,
-        "pizzeria-22": 32,
-        "proletariat-pizza": 33,
+        "proletariat-pizza": 32,
+        "pizzeria-22": 33,
         "roma-roma": 34,
         "ballard-pizza-co": 35,
         "dantini-pizza": 36,
@@ -87,7 +87,7 @@
         "dinos-tomato-pie": 84.9,
         "serious-pie": 84.9,
         "tutta-bella": 83.8,
-        "cornelly": 82.8,
+        "cornelly": 82.7,
         "veraci-pizza": 81.5,
         "independent-pizzeria": 81.3,
         "pagliacci": 79.9,
@@ -95,7 +95,7 @@
         "lupo": 78.4,
         "cornuto-pizzeria": 75.9,
         "moto-pizza": 75,
-        "world-pizza": 73.3,
+        "world-pizza": 73.2,
         "razzis-pizzeria": 72.5,
         "oxbow": 70,
         "pizza-by-ruffin": 66.6,
@@ -107,26 +107,26 @@
         "humble-pie": 59.1,
         "stevies-famous": 59,
         "flying-squirrel": 58.2,
-        "my-friend-dereks": 57.7,
         "slice-box": 57.7,
+        "my-friend-dereks": 57.6,
         "big-marios": 57.5,
         "pi-vegan-pizzeria": 57.1,
         "via-tribunali": 57,
         "talaricos": 56.3,
-        "pizzeria-22": 55.8,
         "proletariat-pizza": 55.8,
+        "pizzeria-22": 55.7,
         "roma-roma": 55.7,
         "ballard-pizza-co": 55.4,
-        "dantini-pizza": 55.2,
-        "pizzeria-pulcinella": 54.9,
+        "dantini-pizza": 55.1,
+        "pizzeria-pulcinella": 54.8,
         "zeeks-pizza": 53.4,
         "roccos": 53.2,
         "pizzeria-la-rocca": 52.4,
         "pegasus-pizza": 52.1,
         "post-alley-pizza": 50.9,
         "hot-mamas-pizza": 50.5,
-        "south-town-pie": 49.5,
-        "pizza-ritual": 49.4,
+        "south-town-pie": 49.4,
+        "pizza-ritual": 49.3,
         "johnny-mos-pizzeria": 44.2
       },
       "factors": {
@@ -330,14 +330,6 @@
           "value": 8.5,
           "penalty": 0
         },
-        "my-friend-dereks": {
-          "reputation": 0,
-          "critical": 8,
-          "craft": 7.5,
-          "distinctiveness": 7,
-          "value": 7.8,
-          "penalty": 0
-        },
         "slice-box": {
           "reputation": 0,
           "critical": 7.8,
@@ -345,6 +337,14 @@
           "distinctiveness": 8.8,
           "value": 8.3,
           "penalty": 0.8
+        },
+        "my-friend-dereks": {
+          "reputation": 0,
+          "critical": 8,
+          "craft": 7.5,
+          "distinctiveness": 7,
+          "value": 7.8,
+          "penalty": 0
         },
         "big-marios": {
           "reputation": 0,
@@ -378,20 +378,20 @@
           "value": 8.9,
           "penalty": 0.4
         },
-        "pizzeria-22": {
-          "reputation": 0,
-          "critical": 7.5,
-          "craft": 7.5,
-          "distinctiveness": 6.5,
-          "value": 7.9,
-          "penalty": 0
-        },
         "proletariat-pizza": {
           "reputation": 0,
           "critical": 7.6,
           "craft": 7.7,
           "distinctiveness": 7,
           "value": 9.2,
+          "penalty": 0
+        },
+        "pizzeria-22": {
+          "reputation": 0,
+          "critical": 7.5,
+          "craft": 7.5,
+          "distinctiveness": 6.5,
+          "value": 7.9,
           "penalty": 0
         },
         "roma-roma": {

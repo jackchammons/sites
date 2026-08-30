@@ -2539,7 +2539,9 @@
       "locations": [
         {
           "neighborhood": "Seward Park",
-          "address": "4920 S Genesee St, Seattle, WA 98118"
+          "address": "4920 S Genesee St, Seattle, WA 98118",
+          "lat": 47.56427,
+          "lon": -122.27101
         }
       ],
       "locationsVerified": null,
