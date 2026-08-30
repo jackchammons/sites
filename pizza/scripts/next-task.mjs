@@ -11,8 +11,7 @@
  *   discovery   find Seattle pizzerias not yet on file
  *   locations   verify branches + website against the pizzeria's own site
  *   liveness    confirm entries are still open, with citations
- *   news        coverage the feed sweep missed + mention tags + factor
- *               proposals for unrated entries
+ *   news        coverage the feed sweep missed + mention tags
  *   rating      rate unrated entries from their critical coverage, so
  *               discoveries can join the ranking
  *
@@ -192,9 +191,6 @@ Budget: about 3 searches per entry, 18 total. Write the file and stop.`;
 
 if (task === 'news') {
   const ids = restaurants.map(r => `${r.id} = ${r.name}`).join('\n');
-  const unrated = openField.filter(r => !(r.factors?.craft && r.factors?.distinctiveness))
-    .slice(0, 8)
-    .map(r => `- id: ${r.id} | ${r.name} | site: ${r.url ?? 'unknown'}`).join('\n');
   brief = `Your task: find Seattle pizzeria news from the last 30 days that is
 not already covered, and connect coverage to the entries on file.
 
@@ -207,19 +203,7 @@ file — from this id list:
 ${ids}
 
 — also add a "mentions" record tying the story to that id.
-${unrated ? `
-These entries have no editorial ratings yet, which keeps them out of the
-ranking:
 
-${unrated}
-
-If you find at least two credible critical sources genuinely describing
-one of them (reviews or substantive coverage in real publications, not
-listicles), you may propose "factors" for it: craft and/or
-distinctiveness, 0-10 in 0.5 steps, judged from what the critics actually
-describe, citing the strongest source. Propose for at most 3 entries, and
-skip any you cannot ground in published criticism — no rating is better
-than an invented one.` : ''}
 Budget: at most 12 web searches in total. A short honest file is a good
 result on a quiet day.`;
 }

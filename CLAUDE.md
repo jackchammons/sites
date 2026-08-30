@@ -124,7 +124,7 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   out whatever research just committed. Keep that ordering if you change either cron;
   to see a research commit on the site sooner, dispatch `publish.yml` by hand.
 - **Agents stay out of the deploy path.** `research.yml` runs the Claude Code Action to write
-  `pizza/data/research.json` (news, ratings, candidates, closures), gated behind
+  `pizza/data/research.json` (news, mentions, locations, status, directory, factorRatings, newAttributes), gated behind
   `CLAUDE_CODE_OAUTH_TOKEN`. `verify-research.mjs` validates it and `apply-research.mjs` then
   writes crowd figures and closure flags into `restaurants.json` — the agent never edits that
   file itself. If it hangs or fails, the site still publishes.
@@ -201,7 +201,7 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   locations page, and carries a street address per branch. `neighborhood` is the original
   editorial string and stays as the fallback until a real set lands. Three entries stored
   placeholders there ("Multiple locations", "Citywide"), flagged with
-  `neighborhoodIsPlaceholder` so `next-locations.mjs` puts them first and the page shows
+  `neighborhoodIsPlaceholder` so the locations worklist in `next-task.mjs` puts them first and the page shows
   "Several locations" instead of pretending they are neighborhoods. Never render
   `r.neighborhood` directly — use `locationLabel(r)` from `src/locations.js`, which is what
   both the static build and the in-browser re-ranker call.

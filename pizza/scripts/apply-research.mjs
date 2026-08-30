@@ -34,19 +34,6 @@ let updated = 0;
 
 let changes = 0;
 
-/* closures: legacy section, still honoured. */
-for (const it of research.closures ?? []) {
-  const r = byId.get(it.id);
-  if (!r) continue;
-  r.status = 'closed';
-  r.statusNote = it.note;
-  r.statusSource = it.source;
-  r.statusDate = it.date ?? today;
-  r.statusChecked = today;
-  changes++;
-  console.log(`  ! ${r.name}: reported closed — ${it.note.slice(0, 60)}`);
-}
-
 /* status: liveness confirmations. A confirmation with no change still
  * advances statusChecked, which is what rotates the audit worklist. */
 for (const it of research.status ?? []) {
@@ -102,20 +89,6 @@ for (const it of research.mentions ?? []) {
   r.mentions = r.mentions.slice(-50);
   changes++;
   console.log(`  ~ ${r.name}: mention from ${it.source}`);
-}
-
-/* factors: proposals fill gaps only (the validator enforces it; this guards
- * against a stale file applied twice). Provenance recorded. */
-for (const it of research.factors ?? []) {
-  const r = byId.get(it.id);
-  if (!r) continue;
-  r.factors = r.factors ?? {};
-  for (const k of ['craft', 'distinctiveness']) {
-    if (it[k] == null || r.factors[k]) continue;
-    r.factors[k] = { value: it[k], setBy: 'agent', source: it.source, note: it.note, date: today };
-    changes++;
-    console.log(`  * ${r.name}: ${k} = ${it[k]} (agent, ${it.source})`);
-  }
 }
 
 /* factorRatings: the proposal that makes an unrated entry rankable. Applied

@@ -8,9 +8,8 @@
  */
 
 export const KINDS = new Set(['opening', 'closing', 'ranking', 'mention']);
-export const CAPS = { news: 20, candidates: 15, closures: 10, locations: 12,
-                      directory: 10, status: 10, mentions: 30, factors: 5, newAttributes: 3,
-                      factorRatings: 12 };
+export const CAPS = { news: 20, locations: 12, directory: 10, status: 10,
+                      mentions: 30, newAttributes: 3, factorRatings: 12 };
 export const MAX_AGE_DAYS = 180;
 
 export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()) {
@@ -24,13 +23,20 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
 
   /* `items` was the original field name; keep reading it so older files still work. */
   const news = doc.news ?? doc.items ?? [];
-  const sections = { news, candidates: doc.candidates ?? [], closures: doc.closures ?? [],
+  const sections = { news,
                      locations: doc.locations ?? [], directory: doc.directory ?? [],
                      status: doc.status ?? [], mentions: doc.mentions ?? [],
-                     factors: doc.factors ?? [], newAttributes: doc.newAttributes ?? [],
+                     newAttributes: doc.newAttributes ?? [],
                      factorRatings: doc.factorRatings ?? [] };
   if (Array.isArray(doc.ratings) && doc.ratings.length) {
     fails.push('ratings are no longer accepted: crowd figures are frozen, see CLAUDE.md');
+  }
+  /* Retired sections fail loudly rather than being dropped: a claim routed
+   * through an old channel must be re-expressed through the live one, not
+   * silently lost. */
+  const RETIRED = { candidates: 'use "directory"', closures: 'use "status"', factors: 'use "factorRatings"' };
+  for (const [k, hint] of Object.entries(RETIRED)) {
+    if (Array.isArray(doc[k]) && doc[k].length) fails.push(`"${k}" is retired — ${hint}`);
   }
 
   for (const [name, arr] of Object.entries(sections)) {
@@ -63,21 +69,6 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
     const key = String(it?.url || it?.title).toLowerCase();
     if (seen.has(key)) bad('news', i, 'duplicate of an earlier item');
     seen.add(key);
-  });
-
-  sections.candidates.forEach((it, i) => {
-    if (typeof it?.name !== 'string' || it.name.trim().length < 2) bad('candidates', i, 'name missing');
-    if (typeof it?.neighborhood !== 'string' || !it.neighborhood.trim()) bad('candidates', i, 'neighborhood missing');
-    if (typeof it?.note !== 'string' || it.note.trim().length < 15) bad('candidates', i, 'note missing or too short');
-    checkUrl('candidates', i, it?.source, 'source');
-    if (byId.has(it?.id)) bad('candidates', i, `"${it.id}" is already ranked — not a candidate`);
-  });
-
-  sections.closures.forEach((it, i) => {
-    if (!byId.has(it?.id)) bad('closures', i, `unknown restaurant id "${it?.id}"`);
-    if (typeof it?.note !== 'string' || it.note.trim().length < 10) bad('closures', i, 'note missing or too short');
-    checkUrl('closures', i, it?.source, 'source');
-    if (it?.date) checkDate('closures', i, it.date, 'date');
   });
 
   /* ---- locations ----
@@ -184,10 +175,7 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
     if (!KINDS.has(it?.kind)) bad('mentions', i, `kind must be one of ${[...KINDS].join('|')}, got "${it?.kind}"`);
   });
 
-  /* ---- factors: proposed editorial ratings ----
-   * The agent may FILL a missing rating from cited criticism; it may never
-   * overwrite one that exists. Values are bounded and stepped so a typo cannot
-   * smuggle in a 47. */
+  /* Values bounded and stepped so a typo cannot smuggle in a 47. */
   const validFactorValue = v => typeof v === 'number' && v >= 0 && v <= 10 && Math.round(v * 2) === v * 2;
   /* factorRatings: the full proposal that makes an unrated entry rankable.
    * Stricter than `factors` because it grants entry to the ladder: values
@@ -229,19 +217,6 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
     if (typeof it?.note !== 'string' || it.note.trim().length < 20) {
       bad('factorRatings', i, 'note missing or too short — say what the coverage describes');
     }
-  });
-
-  sections.factors.forEach((it, i) => {
-    const r = byId.get(it?.id);
-    if (!r) { bad('factors', i, `unknown restaurant id "${it?.id}"`); return; }
-    if (it?.craft == null && it?.distinctiveness == null) bad('factors', i, 'proposes neither craft nor distinctiveness');
-    for (const k of ['craft', 'distinctiveness']) {
-      if (it?.[k] == null) continue;
-      if (!validFactorValue(it[k])) bad('factors', i, `${k} must be 0-10 in 0.5 steps, got ${it[k]}`);
-      if (r.factors?.[k]) bad('factors', i, `${r.name} already has a ${k} rating; proposals only fill gaps`);
-    }
-    if (typeof it?.note !== 'string' || it.note.trim().length < 20) bad('factors', i, 'note missing or too short — say what the critics described');
-    checkUrl('factors', i, it?.source, 'source');
   });
 
   /* ---- newAttributes: registry additions ---- */
