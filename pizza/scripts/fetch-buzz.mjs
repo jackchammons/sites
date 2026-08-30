@@ -12,6 +12,7 @@
  * refuses anonymous reads (403).
  */
 import fs from 'node:fs';
+import { mentionMatch } from '../src/match.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -117,16 +118,7 @@ function classify(title) {
   return 'mention';
 }
 
-/* Which tracked pizzerias does this headline name? */
-const NAMES = dataset.restaurants.map(r => ({
-  id: r.id, name: r.name,
-  needles: [r.name.toLowerCase(), r.name.toLowerCase().replace(/^the\s+/, '')]
-    .filter(n => n.length > 4)
-}));
-const mentions = title => {
-  const t = title.toLowerCase();
-  return NAMES.filter(n => n.needles.some(x => t.includes(x))).map(n => n.id);
-};
+const mentions = title => mentionMatch(title, dataset.restaurants);
 
 async function get(url) {
   const res = await fetch(url, { headers: { 'user-agent': UA }, signal: AbortSignal.timeout(25000) });

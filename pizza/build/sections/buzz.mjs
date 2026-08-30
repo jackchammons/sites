@@ -1,19 +1,16 @@
 import { esc, nameLink, shortDate } from '../html.mjs';
 import { locationLabel } from '../../src/locations.js';
+import { mentionMatch } from '../../src/match.js';
 
 export function buzzSection(ctx) {
   const { dataset, buzz, entriesById } = ctx;
 /* ---- The Buzz: one timeline, tagged with the pizzerias each story mentions ---- */
 const KIND_LABEL = { opening: 'Opening', closing: 'Closing', ranking: 'List', mention: 'Mention' };
 
-/* Conservative name matching: an entry tags a story only when its full name
- * appears in the title. The agent's explicit mentions[] ids are merged in. */
+/* One matcher shared with the feed sweep (src/match.js); the agent's explicit
+ * mentions[] ids are merged in on top. */
 function storyTags(item) {
-  const title = String(item.title).toLowerCase();
-  const ids = new Set(item.mentions ?? []);
-  for (const r of dataset.restaurants) {
-    if (title.includes(r.name.toLowerCase())) ids.add(r.id);
-  }
+  const ids = new Set([...(item.mentions ?? []), ...mentionMatch(item.title, dataset.restaurants)]);
   return [...ids].map(id => entriesById.get(id)).filter(Boolean);
 }
 
