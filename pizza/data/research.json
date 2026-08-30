@@ -1,15 +1,17 @@
 {
   "updated": "2026-08-30T18:00:00Z",
-  "directory": [
+  "factorRatings": [
     {
-      "name": "Seward Park Pizza",
-      "url": "https://sewardparkpizza.com/",
-      "neighborhood": "Seward Park",
-      "style": "New York-style",
-      "status": "open",
-      "note": "Independent neighborhood pizzeria in Seward Park serving crispy, foldable New York-style slices and pies alongside salads, wine, cocktails and local beer on tap.",
-      "source": "https://sewardparkpizza.com/",
-      "address": "4920 S Genesee St, Seattle, WA 98118"
+      "id": "seward-park-pizza",
+      "craft": 6.5,
+      "distinctiveness": 3,
+      "criticScore": 6,
+      "styleGroup": "Neighborhood",
+      "sources": [
+        "https://onebite.app/restaurant/seward-park-pizza-company-seattle-washington-d741bf6b",
+        "https://southseattleemerald.org/community/2025/10/28/which-crust-does-the-south-end-trust"
+      ],
+      "note": "A One Bite reviewer scored it 7.5/10, describing a 'smokey crust' with 'crispy edges' and a flavor 'dominated by cheese and crust,' calling it 'quite respectable for the area'; South Seattle Emerald's South End pizza roundup lists it among the neighborhood's pizzerias."
     }
   ]
 }

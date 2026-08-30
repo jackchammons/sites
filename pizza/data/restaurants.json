@@ -2751,7 +2751,32 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://onebite.app/restaurant/seward-park-pizza-company-seattle-washington-d741bf6b",
+          "note": "A One Bite reviewer scored it 7.5/10, describing a 'smokey crust' with 'crispy edges' and a flavor 'dominated by cheese and crust,' calling it 'quite respectable for the area'; South Seattle Emerald's South End pizza roundup lists it among the neighborhood's pizzerias.",
+          "date": "2026-08-30"
+        },
+        "distinctiveness": {
+          "value": 3,
+          "setBy": "agent",
+          "source": "https://onebite.app/restaurant/seward-park-pizza-company-seattle-washington-d741bf6b",
+          "note": "A One Bite reviewer scored it 7.5/10, describing a 'smokey crust' with 'crispy edges' and a flavor 'dominated by cheese and crust,' calling it 'quite respectable for the area'; South Seattle Emerald's South End pizza roundup lists it among the neighborhood's pizzerias.",
+          "date": "2026-08-30"
+        },
+        "critical": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://onebite.app/restaurant/seward-park-pizza-company-seattle-washington-d741bf6b",
+          "note": "A One Bite reviewer scored it 7.5/10, describing a 'smokey crust' with 'crispy edges' and a flavor 'dominated by cheese and crust,' calling it 'quite respectable for the area'; South Seattle Emerald's South End pizza roundup lists it among the neighborhood's pizzerias.",
+          "date": "2026-08-30"
+        }
+      },
+      "styleGroup": "Neighborhood",
+      "lastVerified": "2026-08-30"
     }
   ]
 }
