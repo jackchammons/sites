@@ -30,7 +30,8 @@ const dirRow = r => {
           <td class="dir-style">${esc(r.style ?? '')}</td>
           <td class="dir-attrs">${attrs.map(a => `<span class="chip">${esc(a)}</span>`).join('')}</td>
           <td class="num dir-score">${scored ? scored.score.toFixed(1) : '—'}</td>
-          <td class="dir-status">${esc(STATUS_LABEL[r.status] ?? 'Open')}</td>
+          <td class="dir-status">${esc(STATUS_LABEL[r.status] ?? 'Open')}${
+            r.status === 'closed' && r.statusDate ? ` ${new Date(r.statusDate).getUTCFullYear()}` : ''}</td>
         </tr>`;
 };
 

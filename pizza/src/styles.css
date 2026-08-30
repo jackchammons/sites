@@ -260,6 +260,8 @@ button.reset:hover { color: var(--ink); border-color: var(--tomato); }
 .chip {
   font-family: var(--mono); font-size: 10.5px; letter-spacing: .04em;
   border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; color: var(--ink-3);
+  /* A chip is one tag: it moves to the next line whole, never breaks mid-label. */
+  display: inline-block; white-space: nowrap;
 }
 .chip.fr { border-color: color-mix(in srgb, var(--tomato) 40%, var(--line)); color: var(--tomato-2); }
 
@@ -440,23 +442,6 @@ footer p { max-width: 72ch; }
 }
 .flow-last { border-color: var(--basil); }
 
-.movers-h { font-size: 15px; margin: 34px 0 4px; }
-.movers {
-  display: grid; gap: 12px; margin-top: 14px;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-}
-.mover {
-  border: 1px solid var(--line); border-radius: var(--radius);
-  padding: 13px 15px; background: var(--card);
-}
-.mover-icon { font-size: 17px; line-height: 1; }
-.mover > b { display: block; font-size: 13.5px; margin: 5px 0 2px; }
-.mover-when {
-  display: inline-block; font-family: var(--mono); font-size: 9.5px;
-  text-transform: uppercase; letter-spacing: .07em; color: var(--tomato-2); margin-bottom: 6px;
-}
-.mover > p { margin: 0; font-size: 12px; color: var(--ink-2); line-height: 1.6; }
-
 @media (max-width: 560px) {
   .flow-step + .flow-step::before,
   .flow-step + .flow-gate::before,
@@ -507,8 +492,6 @@ a.buzz-tag:hover { border-color: var(--tomato); color: var(--tomato-2); }
 /* ---- Methodology ---- */
 .method-h { font-size: 16px; margin: 38px 0 8px; }
 .method-p { color: var(--ink-2); font-size: 14px; max-width: 74ch; line-height: 1.65; margin: 0 0 14px; }
-.method-movers { max-width: 78ch; }
-.method-movers li { margin: 7px 0; line-height: 1.6; font-size: 13.5px; color: var(--ink-2); }
 .dir-more summary {
   cursor: pointer; color: var(--tomato-2); font-family: var(--mono);
   font-size: 10.5px; margin-top: 2px; list-style: none;

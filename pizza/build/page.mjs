@@ -223,21 +223,6 @@ tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75</pre>
       </li>
     </ol>
 
-    <h3 class="method-h">What moves an entry</h3>
-    <ul class="plain method-movers">
-      <li><b>A closure</b> — immediate. A cited closure removes an entry from the top ten at the
-        next build, whatever its score.</li>
-      <li><b>Press coverage</b> — fast but bounded. New stories feed critical reception through
-        the capped boost and reputation through the coverage component.</li>
-      <li><b>Freshness decay</b> — continuous. The only input that moves with no news at all.</li>
-      <li><b>Attribute changes</b> — when verified. Dropping preorder-only service returns up to
-        ${FRICTION_CAP.toFixed(1)} points of friction.</li>
-      <li><b>A re-rating</b> — rare and deliberate. Craft and distinctiveness change only when
-        the judgment does, with the change and its source recorded.</li>
-      <li><b>Your weights</b> — instant, local, and yours alone. Nothing you set here is saved
-        or sent anywhere.</li>
-    </ul>
-
     <p class="method-p" style="margin-top:22px">
       Ties break on critical reception, then craft, then alphabetically. The dataset, the scoring
       module and this page's build script are public; if the data is wrong, it takes pull requests.

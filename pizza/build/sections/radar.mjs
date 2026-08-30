@@ -35,7 +35,9 @@ const radarSection = (opening.length || closedRecently.length) ? `
       Pizzerias on the way in${closedRecently.length ? ', and the ones Seattle just lost' : ''}.
       The daily research pass finds these in local coverage before they have review pages;
       each links to where it was reported. When one opens its doors it moves into the
-      directory below, and into the ranking once it has been rated.
+      directory below, and into the ranking once it has been rated.${closedRecently.length ? `
+      Closures are listed here for six months; older ones stay in the directory, marked
+      with the year they closed.` : ''}
     </p>
     ${opening.length ? `
     <h3 class="buzz-head">Opening soon</h3>
