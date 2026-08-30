@@ -57,6 +57,9 @@ jobs:
       # Data refresh runs before the build and only writes into */data/.
       # Fail-soft: no network or a bad response leaves the existing data in
       # place and the build still publishes.
+      - name: Unit tests
+        run: node --test pizza/test/*.test.mjs
+
       - name: Refresh Seattle pizza buzz
         run: node pizza/scripts/fetch-buzz.mjs
 

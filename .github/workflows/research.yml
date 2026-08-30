@@ -268,6 +268,10 @@ jobs:
                  "Validating the file on its merits."
           fi
 
+      - name: Unit tests
+        if: steps.gate.outputs.enabled == 'true'
+        run: node --test pizza/test/*.test.mjs
+
       - name: Validate the agent's output
         if: steps.gate.outputs.enabled == 'true'
         run: node pizza/scripts/verify-research.mjs

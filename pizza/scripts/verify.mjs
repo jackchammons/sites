@@ -11,6 +11,26 @@ const dist = process.env.OUT_DIR
   : path.join(root, '..', 'dist');
 const dataset = JSON.parse(fs.readFileSync(path.join(root, 'data/restaurants.json'), 'utf8'));
 
+/* The unit suite runs first: verify.mjs is the deploy gate the orchestrator
+ * calls, so a failing rule test blocks a deploy exactly like a bad page would.
+ * Explicit file list because this Node's --test does not take a directory. */
+import { execFileSync } from 'node:child_process';
+{
+  const testDir = path.join(root, 'test');
+  const files = fs.existsSync(testDir)
+    ? fs.readdirSync(testDir).filter(f => f.endsWith('.test.mjs')).map(f => path.join(testDir, f))
+    : [];
+  if (files.length) {
+    try {
+      execFileSync(process.execPath, ['--test', ...files], { stdio: ['ignore', 'ignore', 'inherit'] });
+      console.log(`unit tests passed (${files.length} file(s)).`);
+    } catch {
+      console.error('Build verification FAILED: unit tests failed. Run: node --test pizza/test/*.test.mjs');
+      process.exit(1);
+    }
+  }
+}
+
 const fails = [];
 const check = (ok, msg) => { if (!ok) fails.push(msg); };
 
