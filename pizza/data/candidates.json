@@ -110,7 +110,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-06-11",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "duplicate",
+      "note": "800 Seneca St, Ste 103 is the location already on file as 'A Pizza Mart (First Hill)'; the other worklist addresses (Terry Ave, 11th Ave, Westlake Ave N) are further branches of the same locally-owned A Pizza Mart mini-chain.",
+      "resolutionSource": "https://www.yelp.com/biz/a-pizza-mart-seattle-14",
+      "resolvedDate": "2026-08-30"
     },
     {
       "key": "a mart|1823",
@@ -120,7 +124,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-04-15",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "duplicate",
+      "note": "800 Seneca St, Ste 103 is the location already on file as 'A Pizza Mart (First Hill)'; the other worklist addresses (Terry Ave, 11th Ave, Westlake Ave N) are further branches of the same locally-owned A Pizza Mart mini-chain.",
+      "resolutionSource": "https://www.yelp.com/biz/a-pizza-mart-seattle-14",
+      "resolvedDate": "2026-08-30"
     },
     {
       "key": "a mart|1433",
@@ -130,7 +138,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-03-25",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "duplicate",
+      "note": "800 Seneca St, Ste 103 is the location already on file as 'A Pizza Mart (First Hill)'; the other worklist addresses (Terry Ave, 11th Ave, Westlake Ave N) are further branches of the same locally-owned A Pizza Mart mini-chain.",
+      "resolutionSource": "https://www.yelp.com/biz/a-pizza-mart-seattle-14",
+      "resolvedDate": "2026-08-30"
     },
     {
       "key": "a mart|711",
@@ -140,7 +152,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-02-20",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "duplicate",
+      "note": "800 Seneca St, Ste 103 is the location already on file as 'A Pizza Mart (First Hill)'; the other worklist addresses (Terry Ave, 11th Ave, Westlake Ave N) are further branches of the same locally-owned A Pizza Mart mini-chain.",
+      "resolutionSource": "https://www.yelp.com/biz/a-pizza-mart-seattle-14",
+      "resolvedDate": "2026-08-30"
     },
     {
       "key": "a mart bar grill|5240",
@@ -150,7 +166,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-05-28",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "duplicate",
+      "note": "University Way NE branch trading as 'A Pizza Mart Bar & Grill'; part of the same locally-owned A Pizza Mart mini-chain already on file as 'A Pizza Mart (First Hill)'.",
+      "resolutionSource": "https://www.apizzamartuniversity.com/",
+      "resolvedDate": "2026-08-30"
     },
     {
       "key": "belltown|2422",
@@ -160,7 +180,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-06-09",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "belltown-pizza",
+      "resolvedDate": "2026-08-30"
     },
     {
       "key": "big marios new york style|1011",
@@ -170,7 +192,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-07-17",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "duplicate",
+      "note": "E Pike St location is the original Capitol Hill Big Mario's, already on file as 'Big Mario's'.",
+      "resolutionSource": "https://www.yelp.com/biz/big-marios-new-york-style-pizza-seattle-3",
+      "resolvedDate": "2026-08-30"
     },
     {
       "key": "big marios ny style|4350",
@@ -180,7 +206,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-05-12",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "duplicate",
+      "note": "4350 Leary Way NW (Frelard) is Big Mario's second location, opened 2017; same business already on file as 'Big Mario's'.",
+      "resolutionSource": "https://www.myballard.com/2017/02/07/big-marios-pizza-to-open-in-frelard/",
+      "resolvedDate": "2026-08-30"
     },
     {
       "key": "candela|1622",
@@ -190,7 +220,9 @@
         "kc-health"
       ],
       "lastInspection": "2025-08-29",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "candela-pizza",
+      "resolvedDate": "2026-08-30"
     },
     {
       "key": "castello pasta|3756",
@@ -200,7 +232,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-03-13",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "castello-pizza-pasta",
+      "resolvedDate": "2026-08-30"
     },
     {
       "key": "domani|1515",

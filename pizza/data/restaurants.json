@@ -2819,6 +2819,72 @@
       },
       "styleGroup": "Neighborhood",
       "lastVerified": "2026-08-30"
+    },
+    {
+      "id": "belltown-pizza",
+      "name": "Belltown Pizza",
+      "neighborhood": "Belltown",
+      "style": "New York-style",
+      "blurb": "Belltown slice shop and bar open since 1998, serving NY-inspired pizza, calzones and salads alongside cocktails.",
+      "url": "https://belltownpizza.net/",
+      "status": "open",
+      "statusSource": "https://belltownpizza.net/",
+      "statusDate": "2026-08-30",
+      "statusChecked": "2026-08-30",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Belltown",
+          "address": "2422 1st Ave, Seattle, WA 98121"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "castello-pizza-pasta",
+      "name": "Castello Pizza & Pasta",
+      "neighborhood": "Rainier Valley",
+      "style": "Hand-tossed",
+      "blurb": "South Seattle pizza and pasta shop on Rainier Ave S serving Rainier Valley, Beacon Hill, Mount Baker and Columbia City, with halal and gluten-free options.",
+      "url": "https://www.castellopizzaandpasta.com/",
+      "status": "open",
+      "statusSource": "https://www.castellopizzaandpasta.com/",
+      "statusDate": "2026-08-30",
+      "statusChecked": "2026-08-30",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Rainier Valley",
+          "address": "3756 Rainier Ave S, Ste B, Seattle, WA 98144"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "candela-pizza",
+      "name": "Candela Pizza",
+      "neighborhood": "South Seattle",
+      "style": "Wood-fired, Latin-fusion",
+      "blurb": "Mobile wood-fired pizza trailer founded 2022 by the chef behind MexiCuban, fusing Latin American flavors into pizzas (Cochinita Pibil, Havana); commissary listed at the Roxbury St address.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://www.seattlefoodtruck.com/food-trucks/candela-pizza",
+      "statusDate": "2026-08-30",
+      "statusChecked": "2026-08-30",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "South Seattle",
+          "address": "1622 SW Roxbury St, Seattle, WA 98106"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }

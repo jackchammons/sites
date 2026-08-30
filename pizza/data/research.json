@@ -1,79 +1,60 @@
 {
-  "updated": "2026-08-30T19:05:00Z",
-  "links": [
+  "updated": "2026-08-30T20:15:00Z",
+  "candidateReview": [
     {
-      "id": "abecedary",
-      "instagram": "https://www.instagram.com/abecedaryseattle/",
-      "source": "https://www.instagram.com/abecedaryseattle/"
+      "name": "A Pizza Mart",
+      "verdict": "duplicate",
+      "note": "800 Seneca St, Ste 103 is the location already on file as 'A Pizza Mart (First Hill)'; the other worklist addresses (Terry Ave, 11th Ave, Westlake Ave N) are further branches of the same locally-owned A Pizza Mart mini-chain.",
+      "source": "https://www.yelp.com/biz/a-pizza-mart-seattle-14"
     },
     {
-      "id": "oxbow",
-      "website": "https://www.oxbowmontlake.com",
-      "instagram": "https://www.instagram.com/oxbow_montlake/",
-      "source": "https://www.oxbowmontlake.com/contact"
+      "name": "A Pizza Mart Bar & Grill Inc",
+      "verdict": "duplicate",
+      "note": "University Way NE branch trading as 'A Pizza Mart Bar & Grill'; part of the same locally-owned A Pizza Mart mini-chain already on file as 'A Pizza Mart (First Hill)'.",
+      "source": "https://www.apizzamartuniversity.com/"
     },
     {
-      "id": "pi-vegan-pizzeria",
-      "website": "https://www.pizzapivegan.com/",
-      "instagram": "https://www.instagram.com/pivegan/",
-      "source": "https://udistrictseattle.com/business/piveganpizzeria"
+      "name": "Big Mario'S New York Style Pizza",
+      "verdict": "duplicate",
+      "note": "E Pike St location is the original Capitol Hill Big Mario's, already on file as 'Big Mario's'.",
+      "source": "https://www.yelp.com/biz/big-marios-new-york-style-pizza-seattle-3"
     },
     {
-      "id": "pizza-ritual",
-      "website": "https://pizzaritual.com",
-      "instagram": "https://www.instagram.com/pizzaritual/",
-      "source": "https://westseattleblog.com/2026/01/biznote-its-just-pizza-says-proprietor-of-pizza-ritual-settling-on-days-hours/"
+      "name": "Big Mario'S Ny Style Pizza",
+      "verdict": "duplicate",
+      "note": "4350 Leary Way NW (Frelard) is Big Mario's second location, opened 2017; same business already on file as 'Big Mario's'.",
+      "source": "https://www.myballard.com/2017/02/07/big-marios-pizza-to-open-in-frelard/"
+    }
+  ],
+  "directory": [
+    {
+      "name": "Belltown Pizza",
+      "url": "https://belltownpizza.net/",
+      "neighborhood": "Belltown",
+      "style": "New York-style",
+      "status": "open",
+      "note": "Belltown slice shop and bar open since 1998, serving NY-inspired pizza, calzones and salads alongside cocktails.",
+      "source": "https://belltownpizza.net/",
+      "address": "2422 1st Ave, Seattle, WA 98121"
     },
     {
-      "id": "pizzeria-pulcinella",
-      "website": "https://www.pulcinellapizza.com",
-      "instagram": "https://www.instagram.com/pizzeriapulcinella/",
-      "source": "https://www.pizzanapoletana.org/en/associati/246-pizzeria_pulcinella"
+      "name": "Castello Pizza & Pasta",
+      "url": "https://www.castellopizzaandpasta.com/",
+      "neighborhood": "Rainier Valley",
+      "style": "Hand-tossed",
+      "status": "open",
+      "note": "South Seattle pizza and pasta shop on Rainier Ave S serving Rainier Valley, Beacon Hill, Mount Baker and Columbia City, with halal and gluten-free options.",
+      "source": "https://www.castellopizzaandpasta.com/",
+      "address": "3756 Rainier Ave S, Ste B, Seattle, WA 98144"
     },
     {
-      "id": "razzis-pizzeria",
-      "instagram": "https://www.instagram.com/razzisseattle/",
-      "source": "https://www.instagram.com/razzisseattle/"
-    },
-    {
-      "id": "a-pizza-mart-first-hill",
-      "instagram": "https://www.instagram.com/apizzamartfirsthill/",
-      "source": "https://www.instagram.com/apizzamartfirsthill/"
-    },
-    {
-      "id": "ballard-pizza-co",
-      "instagram": "https://www.instagram.com/ballardpizzaco/",
-      "source": "https://ballardpizzacompany.com"
-    },
-    {
-      "id": "big-marios",
-      "instagram": "https://www.instagram.com/bigmariospizza/",
-      "source": "https://bigmariosnewyorkpizza.com/"
-    },
-    {
-      "id": "breezy-town-pizza",
-      "instagram": "https://www.instagram.com/windycitypie/",
-      "source": "https://windycitypie.com"
-    },
-    {
-      "id": "cornelly",
-      "instagram": "https://www.instagram.com/cornellyseattle/",
-      "source": "https://www.instagram.com/cornellyseattle/"
-    },
-    {
-      "id": "dantini-pizza",
-      "instagram": "https://www.instagram.com/dantinipizza/",
-      "source": "https://www.dantinipizza.com/"
-    },
-    {
-      "id": "delancey",
-      "instagram": "https://www.instagram.com/delanceyseattle/",
-      "source": "https://www.delanceyseattle.com"
-    },
-    {
-      "id": "dinos-tomato-pie",
-      "instagram": "https://www.instagram.com/dinosseattle/",
-      "source": "https://www.instagram.com/dinosseattle/"
+      "name": "Candela Pizza",
+      "neighborhood": "South Seattle",
+      "style": "Wood-fired, Latin-fusion",
+      "status": "open",
+      "note": "Mobile wood-fired pizza trailer founded 2022 by the chef behind MexiCuban, fusing Latin American flavors into pizzas (Cochinita Pibil, Havana); commissary listed at the Roxbury St address.",
+      "source": "https://www.seattlefoodtruck.com/food-trucks/candela-pizza",
+      "address": "1622 SW Roxbury St, Seattle, WA 98106"
     }
   ]
 }
