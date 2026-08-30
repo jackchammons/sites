@@ -453,6 +453,27 @@ footer p { max-width: 72ch; }
 
 
 /* ---- Directory ---- */
+/* Stacked (map first) on narrow screens; on a wide one the table takes the
+   left column and the map rides beside it as a sticky rail, so clicking a row
+   can focus its marker without scrolling. */
+.dir-layout { display: flex; flex-direction: column; gap: 22px; margin-top: 22px; }
+.dir-rail { order: -1; min-width: 0; }
+.dir-list { min-width: 0; }
+.dir-layout .dir-scroll, .dir-layout .dir-map { margin-top: 0; }
+@media (min-width: 1100px) {
+  .dir-layout {
+    display: grid; grid-template-columns: minmax(0, 1fr) clamp(320px, 34vw, 460px);
+    gap: 22px; align-items: start;
+  }
+  .dir-rail { order: 0; position: sticky; top: 16px; }
+  .dir-rail .dir-map { height: min(72vh, 640px); }
+  /* The table shares the row with the map now: tighter cells so all six
+     columns sit inside the column without resting in a scrolled-off state. */
+  .dir-table { font-size: 12.5px; }
+  .dir-table td, .dir-table th { padding: 9px 9px; }
+  .dir-where { min-width: 120px; }
+  .dir-style { min-width: 100px; }
+}
 .dir-scroll { overflow-x: auto; margin-top: 22px; border: 1px solid var(--line); border-radius: var(--radius); }
 .dir-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .dir-table th {
@@ -479,6 +500,34 @@ footer p { max-width: 72ch; }
 .dir-row.st-closed { opacity: .55; }
 .dir-row.st-closed .dir-name a, .dir-row.st-closed .dir-name { text-decoration: line-through; }
 .dir-row.st-opening .dir-status { color: var(--basil); }
+
+/* The expanded record under a row: everything the dataset stores. */
+.dir-row { cursor: pointer; }
+.dir-row:hover td { background: color-mix(in srgb, var(--panel-2) 55%, transparent); }
+.dir-toggle {
+  appearance: none; background: none; border: 0; padding: 0 6px 0 0; margin: 0;
+  color: var(--ink-3); font-size: 11px; cursor: pointer; line-height: 1;
+  transition: transform .15s ease; display: inline-block;
+}
+.dir-row.expanded .dir-toggle { transform: rotate(90deg); color: var(--tomato-2); }
+.dir-detail > td {
+  background: var(--panel-2); padding: 14px 16px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.dd {
+  display: grid; gap: 12px 28px;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  font-size: 12.5px;
+}
+.dd-label {
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: .09em; color: var(--ink-3); margin-bottom: 4px;
+}
+.dd-row { margin: 2px 0; line-height: 1.55; color: var(--ink-2); overflow-wrap: anywhere; }
+.dd-row b { color: var(--ink); }
+.dd-dim { color: var(--ink-3); font-size: 11.5px; }
+.dd-note { color: var(--ink-3); font-size: 11.5px; margin: 1px 0 5px; max-width: 52ch; }
+.dd-chips { display: flex; flex-wrap: wrap; gap: 4px; }
 
 /* ---- Buzz tags ---- */
 .buzz-tag {

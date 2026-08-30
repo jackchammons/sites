@@ -140,6 +140,10 @@ render();
  * no location has coordinates yet, the map div collapses and the directory
  * table stands alone. Circle markers avoid Leaflet's image assets entirely.
  */
+/* Filled by initMap so the directory rows can focus the map; stays empty when
+ * the map never initialised (offline tiles, no coordinates). */
+const mapApi = { focus: null };
+
 (function initMap() {
   const el = document.getElementById('map');
   if (!el || typeof window.L === 'undefined') { if (el) el.remove(); return; }
@@ -178,6 +182,7 @@ render();
     : '#b08968';
 
   const bounds = [];
+  const markersById = new Map();   // first (usually primary) Seattle marker per entry
   for (const p of pts) {
     const { r, loc } = p;
     const m = L.circleMarker([loc.lat, loc.lon], {
@@ -193,9 +198,37 @@ render();
       `<div class="addr">${loc.address}${r.status === 'opening' ? ' · opening soon' : ''}${
         outside ? `<br>+ ${outside} location${outside > 1 ? 's' : ''} outside Seattle (see the table)` : ''}</div></div>`);
     bounds.push([loc.lat, loc.lon]);
+    if (!markersById.has(r.id)) markersById.set(r.id, m);
   }
 
   map.fitBounds(bounds, { padding: [24, 24] });
+
+  mapApi.focus = id => {
+    const m = markersById.get(id);
+    if (!m) return false;
+    map.setView(m.getLatLng(), Math.max(map.getZoom(), 14));
+    m.openPopup();
+    return true;
+  };
+})();
+
+/* ---- Directory rows: expand the full record, focus the map ----
+ * One click does both. Links inside a row keep their own behaviour. */
+(() => {
+  const body = document.getElementById('dir-body');
+  if (!body) return;
+  body.addEventListener('click', e => {
+    if (e.target.closest('a, details, .dir-detail')) return;
+    const row = e.target.closest('tr.dir-row');
+    if (!row) return;
+    const detail = document.getElementById('dd-' + row.dataset.id);
+    const open = detail && detail.hidden;
+    if (detail) detail.hidden = !detail.hidden;
+    row.classList.toggle('expanded', !!open);
+    const btn = row.querySelector('.dir-toggle');
+    if (btn) btn.setAttribute('aria-expanded', String(!!open));
+    if (open && mapApi.focus) mapApi.focus(row.dataset.id);
+  });
 })();
 
 
