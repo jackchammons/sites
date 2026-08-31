@@ -1839,7 +1839,9 @@
       "locations": [
         {
           "neighborhood": "South Lake Union",
-          "address": "400 Fairview Avenue Suite 107, Seattle, WA 98109"
+          "address": "400 Fairview Avenue Suite 107, Seattle, WA 98109",
+          "lat": 47.62246,
+          "lon": -122.33385
         }
       ],
       "locationsVerified": "2026-08-31",
@@ -3070,7 +3072,9 @@
       "locations": [
         {
           "neighborhood": "Greenwood",
-          "address": "305 NW 85th St, Seattle, WA 98117"
+          "address": "305 NW 85th St, Seattle, WA 98117",
+          "lat": 47.69036,
+          "lon": -122.36106
         }
       ],
       "locationsVerified": null,
@@ -3093,7 +3097,9 @@
       "locations": [
         {
           "neighborhood": "Central District",
-          "address": "2901 S Jackson St, Seattle, WA 98144"
+          "address": "2901 S Jackson St, Seattle, WA 98144",
+          "lat": 47.59898,
+          "lon": -122.29471
         }
       ],
       "locationsVerified": null,
@@ -3116,7 +3122,9 @@
       "locations": [
         {
           "neighborhood": "First Hill",
-          "address": "1321 Madison St, Seattle, WA 98104"
+          "address": "1321 Madison St, Seattle, WA 98104",
+          "lat": 47.61051,
+          "lon": -122.32192
         }
       ],
       "locationsVerified": null,
@@ -3139,7 +3147,9 @@
       "locations": [
         {
           "neighborhood": "University District",
-          "address": "4741 12th Ave NE, Seattle, WA 98105"
+          "address": "4741 12th Ave NE, Seattle, WA 98105",
+          "lat": 47.66432,
+          "lon": -122.31555
         }
       ],
       "locationsVerified": null,
