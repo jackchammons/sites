@@ -1,60 +1,83 @@
 {
-  "updated": "2026-08-30T20:15:00Z",
-  "candidateReview": [
-    {
-      "name": "A Pizza Mart",
-      "verdict": "duplicate",
-      "note": "800 Seneca St, Ste 103 is the location already on file as 'A Pizza Mart (First Hill)'; the other worklist addresses (Terry Ave, 11th Ave, Westlake Ave N) are further branches of the same locally-owned A Pizza Mart mini-chain.",
-      "source": "https://www.yelp.com/biz/a-pizza-mart-seattle-14"
-    },
-    {
-      "name": "A Pizza Mart Bar & Grill Inc",
-      "verdict": "duplicate",
-      "note": "University Way NE branch trading as 'A Pizza Mart Bar & Grill'; part of the same locally-owned A Pizza Mart mini-chain already on file as 'A Pizza Mart (First Hill)'.",
-      "source": "https://www.apizzamartuniversity.com/"
-    },
-    {
-      "name": "Big Mario'S New York Style Pizza",
-      "verdict": "duplicate",
-      "note": "E Pike St location is the original Capitol Hill Big Mario's, already on file as 'Big Mario's'.",
-      "source": "https://www.yelp.com/biz/big-marios-new-york-style-pizza-seattle-3"
-    },
-    {
-      "name": "Big Mario'S Ny Style Pizza",
-      "verdict": "duplicate",
-      "note": "4350 Leary Way NW (Frelard) is Big Mario's second location, opened 2017; same business already on file as 'Big Mario's'.",
-      "source": "https://www.myballard.com/2017/02/07/big-marios-pizza-to-open-in-frelard/"
-    }
-  ],
+  "updated": "2026-08-31T02:00:00Z",
   "directory": [
     {
-      "name": "Belltown Pizza",
-      "url": "https://belltownpizza.net/",
-      "neighborhood": "Belltown",
-      "style": "New York-style",
+      "name": "Dude'Z Woodfired Pizza",
+      "neighborhood": "Eastlake",
+      "style": "Wood-fired, New York-style",
       "status": "open",
-      "note": "Belltown slice shop and bar open since 1998, serving NY-inspired pizza, calzones and salads alongside cocktails.",
-      "source": "https://belltownpizza.net/",
-      "address": "2422 1st Ave, Seattle, WA 98121"
+      "note": "Wood-fired pizzeria on Fuhrman Ave E in Eastlake, run by two brothers and a cousin, serving New York-style pies from a wood oven.",
+      "source": "https://www.atly.com/location/DUDE'Z-woodfired-pizza",
+      "address": "2919 Fuhrman Ave E, Seattle, WA 98102"
     },
     {
-      "name": "Castello Pizza & Pasta",
-      "url": "https://www.castellopizzaandpasta.com/",
+      "name": "Elemental Pizza",
+      "neighborhood": "University Village",
+      "style": "Wood-fired",
+      "status": "open",
+      "note": "Wood-fired pizzeria founded in 2012 at University Village, now with a second Seattle location downtown near Columbia Center plus a mobile catering oven.",
+      "source": "https://elementalpizza.com/",
+      "address": "2634 NE University Village St, Seattle, WA 98105"
+    },
+    {
+      "name": "Eyman's Pizza",
+      "url": "https://www.eymanspizza.com/",
       "neighborhood": "Rainier Valley",
-      "style": "Hand-tossed",
+      "style": "Halal",
       "status": "open",
-      "note": "South Seattle pizza and pasta shop on Rainier Ave S serving Rainier Valley, Beacon Hill, Mount Baker and Columbia City, with halal and gluten-free options.",
-      "source": "https://www.castellopizzaandpasta.com/",
-      "address": "3756 Rainier Ave S, Ste B, Seattle, WA 98144"
+      "note": "Halal pizzeria on Martin Luther King Jr Way S making hand-stretched dough and scratch tomato sauce to order, with no pork in the kitchen.",
+      "source": "https://www.eymanspizza.com/",
+      "address": "6711 Martin Luther King Jr Way S, Seattle, WA 98118"
     },
     {
-      "name": "Candela Pizza",
-      "neighborhood": "South Seattle",
-      "style": "Wood-fired, Latin-fusion",
+      "name": "Georgetown Pizza & Arcade",
+      "url": "https://www.gpaseattle.com/",
+      "neighborhood": "Georgetown",
+      "style": "Square-cut",
       "status": "open",
-      "note": "Mobile wood-fired pizza trailer founded 2022 by the chef behind MexiCuban, fusing Latin American flavors into pizzas (Cochinita Pibil, Havana); commissary listed at the Roxbury St address.",
-      "source": "https://www.seattlefoodtruck.com/food-trucks/candela-pizza",
-      "address": "1622 SW Roxbury St, Seattle, WA 98106"
+      "note": "Georgetown pizza-and-pinball bar serving square pizzas by the slice or whole pie alongside 20+ arcade and pinball machines.",
+      "source": "https://www.gpaseattle.com/",
+      "address": "5513 Airport Way S, Seattle, WA 98108"
+    },
+    {
+      "name": "Good Shape Pizza",
+      "url": "https://goodshapepizza.com/",
+      "neighborhood": "Belltown",
+      "style": "Neapolitan-style",
+      "status": "open",
+      "note": "Neapolitan-leaning pizzeria that outgrew its pop-up run (Add-A-Ball, Chuck's Hop Shop, Oddfellows Cafe) to become a permanent kitchen inside Jupiter Bar in Belltown; its permit address is not the public storefront.",
+      "source": "https://www.theinfatuation.com/seattle/reviews/good-shape-pizza",
+      "address": "2126 2nd Ave, Ste A, Seattle, WA 98121"
+    },
+    {
+      "name": "In Pizza We Crust",
+      "url": "https://inpizzawecrust.net/",
+      "neighborhood": "Admiral, West Seattle",
+      "style": "Wood-fired",
+      "status": "open",
+      "note": "Family-run wood-fired pizzeria that grew from a 2019 Bellevue food truck into a permanent shop in West Seattle's Admiral Junction, opened in the former Swinery space.",
+      "source": "https://inpizzawecrust.net/",
+      "address": "3207 California Ave SW, Seattle, WA 98116"
+    }
+  ],
+  "candidateReview": [
+    {
+      "name": "Domani Pizzeria & Restaurant",
+      "verdict": "not-pizza",
+      "note": "Despite the name, Domani is a Mediterranean/Italian neighborhood restaurant on Queen Anne Ave N where fresh pasta, salads and sandwiches get equal billing with pizza — not a pizza-forward concept.",
+      "source": "https://www.domaniqueenanne.com/story"
+    },
+    {
+      "name": "G.H Pasta & Pizza West Seattle",
+      "verdict": "not-pizza",
+      "note": "West Seattle restaurant from General Harvest Restaurants built around house-extruded pasta as its stated priority, with a smaller selection of 12-inch pizzas as a secondary offering — not a pizza-forward concept.",
+      "source": "https://www.westsideseattle.com/robinson-papers/2023/11/21/update-gh-pasta-pizza-will-bring-flavor-and-taste-sunrise-heights"
+    },
+    {
+      "name": "In Pizza We Crust LLC - Kc507",
+      "verdict": "duplicate",
+      "note": "Same address (3207 California Ave SW) and business as 'In Pizza We Crust' — a second King County permit registration for the same wood-fired pizzeria, not a separate business.",
+      "source": "https://inpizzawecrust.net/"
     }
   ]
 }

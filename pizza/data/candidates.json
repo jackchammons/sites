@@ -244,7 +244,11 @@
         "kc-health"
       ],
       "lastInspection": "2025-09-23",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "not-pizza",
+      "note": "Despite the name, Domani is a Mediterranean/Italian neighborhood restaurant on Queen Anne Ave N where fresh pasta, salads and sandwiches get equal billing with pizza — not a pizza-forward concept.",
+      "resolutionSource": "https://www.domaniqueenanne.com/story",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "dudez woodfired|2919",
@@ -254,7 +258,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-03-06",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "dudez-woodfired-pizza",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "elemental|701",
@@ -264,7 +270,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-06-09",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "elemental-pizza",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "elemental|2634",
@@ -274,7 +282,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-02-06",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "elemental-pizza",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "eymans|6711",
@@ -284,7 +294,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-07-17",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "eymans-pizza",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "g h pasta west seattle|7500",
@@ -294,7 +306,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-01-08",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "not-pizza",
+      "note": "West Seattle restaurant from General Harvest Restaurants built around house-extruded pasta as its stated priority, with a smaller selection of 12-inch pizzas as a secondary offering — not a pizza-forward concept.",
+      "resolutionSource": "https://www.westsideseattle.com/robinson-papers/2023/11/21/update-gh-pasta-pizza-will-bring-flavor-and-taste-sunrise-heights",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "georgetown arcade|5513",
@@ -304,7 +320,9 @@
         "kc-health"
       ],
       "lastInspection": "2025-10-01",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "georgetown-pizza-arcade",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "good shape|2601",
@@ -314,7 +332,9 @@
         "kc-health"
       ],
       "lastInspection": "2024-03-22",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "good-shape-pizza",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "in we crust|3207",
@@ -324,7 +344,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-03-05",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "in-pizza-we-crust",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "in we crust kc507|3207",
@@ -334,7 +356,11 @@
         "kc-health"
       ],
       "lastInspection": "2025-06-30",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "duplicate",
+      "note": "Same address (3207 California Ave SW) and business as 'In Pizza We Crust' — a second King County permit registration for the same wood-fired pizzeria, not a separate business.",
+      "resolutionSource": "https://inpizzawecrust.net/",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "italian family|1028",

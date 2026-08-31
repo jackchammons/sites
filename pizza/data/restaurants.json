@@ -2885,6 +2885,138 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": []
+    },
+    {
+      "id": "dudez-woodfired-pizza",
+      "name": "Dude'Z Woodfired Pizza",
+      "neighborhood": "Eastlake",
+      "style": "Wood-fired, New York-style",
+      "blurb": "Wood-fired pizzeria on Fuhrman Ave E in Eastlake, run by two brothers and a cousin, serving New York-style pies from a wood oven.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://www.atly.com/location/DUDE'Z-woodfired-pizza",
+      "statusDate": "2026-08-31",
+      "statusChecked": "2026-08-31",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Eastlake",
+          "address": "2919 Fuhrman Ave E, Seattle, WA 98102"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "elemental-pizza",
+      "name": "Elemental Pizza",
+      "neighborhood": "University Village",
+      "style": "Wood-fired",
+      "blurb": "Wood-fired pizzeria founded in 2012 at University Village, now with a second Seattle location downtown near Columbia Center plus a mobile catering oven.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://elementalpizza.com/",
+      "statusDate": "2026-08-31",
+      "statusChecked": "2026-08-31",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "University Village",
+          "address": "2634 NE University Village St, Seattle, WA 98105"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "eymans-pizza",
+      "name": "Eyman's Pizza",
+      "neighborhood": "Rainier Valley",
+      "style": "Halal",
+      "blurb": "Halal pizzeria on Martin Luther King Jr Way S making hand-stretched dough and scratch tomato sauce to order, with no pork in the kitchen.",
+      "url": "https://www.eymanspizza.com/",
+      "status": "open",
+      "statusSource": "https://www.eymanspizza.com/",
+      "statusDate": "2026-08-31",
+      "statusChecked": "2026-08-31",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Rainier Valley",
+          "address": "6711 Martin Luther King Jr Way S, Seattle, WA 98118"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "georgetown-pizza-arcade",
+      "name": "Georgetown Pizza & Arcade",
+      "neighborhood": "Georgetown",
+      "style": "Square-cut",
+      "blurb": "Georgetown pizza-and-pinball bar serving square pizzas by the slice or whole pie alongside 20+ arcade and pinball machines.",
+      "url": "https://www.gpaseattle.com/",
+      "status": "open",
+      "statusSource": "https://www.gpaseattle.com/",
+      "statusDate": "2026-08-31",
+      "statusChecked": "2026-08-31",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Georgetown",
+          "address": "5513 Airport Way S, Seattle, WA 98108"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "good-shape-pizza",
+      "name": "Good Shape Pizza",
+      "neighborhood": "Belltown",
+      "style": "Neapolitan-style",
+      "blurb": "Neapolitan-leaning pizzeria that outgrew its pop-up run (Add-A-Ball, Chuck's Hop Shop, Oddfellows Cafe) to become a permanent kitchen inside Jupiter Bar in Belltown; its permit address is not the public storefront.",
+      "url": "https://goodshapepizza.com/",
+      "status": "open",
+      "statusSource": "https://www.theinfatuation.com/seattle/reviews/good-shape-pizza",
+      "statusDate": "2026-08-31",
+      "statusChecked": "2026-08-31",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Belltown",
+          "address": "2126 2nd Ave, Ste A, Seattle, WA 98121"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "in-pizza-we-crust",
+      "name": "In Pizza We Crust",
+      "neighborhood": "Admiral, West Seattle",
+      "style": "Wood-fired",
+      "blurb": "Family-run wood-fired pizzeria that grew from a 2019 Bellevue food truck into a permanent shop in West Seattle's Admiral Junction, opened in the former Swinery space.",
+      "url": "https://inpizzawecrust.net/",
+      "status": "open",
+      "statusSource": "https://inpizzawecrust.net/",
+      "statusDate": "2026-08-31",
+      "statusChecked": "2026-08-31",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Admiral, West Seattle",
+          "address": "3207 California Ave SW, Seattle, WA 98116"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }
