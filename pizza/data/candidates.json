@@ -370,7 +370,11 @@
         "kc-health"
       ],
       "lastInspection": "2025-09-03",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "closed",
+      "note": "Closed in 2026 after about 10 years on First Hill when the owner's lease at 1028 Madison St ended; the space is being sought for a new tenant.",
+      "resolutionSource": "https://www.capitolhillseattle.com/2026/07/rip-to-broadways-guillotine-first-hills-italian-family-pizza/",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "italio pasta|305",
@@ -380,7 +384,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-03-17",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "italio-pizza-pasta",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "jackson street lounge|2901",
@@ -390,7 +396,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-07-01",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "jackson-street-pizza-lounge",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "la vita e bella|2411",
@@ -400,7 +408,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-05-22",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "not-pizza",
+      "note": "Full-service Sicilian-Italian restaurant built around pasta and seafood; thin pizza is one menu item among many, not the core of the business.",
+      "resolutionSource": "https://www.lavitaebellarestaurant.com/",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "lil annies churrieria locas|7912",
@@ -410,7 +422,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-01-22",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "unverifiable",
+      "note": "Permit address 7912 7th Ave S is Northwest Commissary Kitchens, a shared commissary/incubator kitchen; found no storefront, website, or social presence for a 'Lil Annies Churrieria' or 'Pizza Locas' business at this address. A same-named 'Pizzas Locas' that does have a public presence is a separate, unrelated restaurant in Des Moines, WA.",
+      "resolutionSource": "https://www.yelp.com/biz/northwest-commissary-kitchens-seattle",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "mad|1321",
@@ -420,7 +436,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-06-11",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "mad-pizza",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "managers|4741",
@@ -430,7 +448,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-01-06",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "managers-pizza",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "mod super fast|1302",
@@ -440,7 +460,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-08-25",
-      "status": "pending"
+      "status": "chain",
+      "verdict": "chain",
+      "note": "MOD Super Fast Pizza LLC (MOD Pizza) is a national fast-casual chain with 460+ US locations, headquartered in Bellevue, WA; excluded by national-chain policy.",
+      "resolutionSource": "https://en.wikipedia.org/wiki/MOD_Pizza",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "mod super fast ballard|6010",
@@ -450,7 +474,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-02-18",
-      "status": "pending"
+      "status": "chain",
+      "verdict": "chain",
+      "note": "Ballard branch of the national MOD Pizza chain; excluded by national-chain policy.",
+      "resolutionSource": "https://en.wikipedia.org/wiki/MOD_Pizza",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "mod superfast|305",
@@ -460,7 +488,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-06-09",
-      "status": "pending"
+      "status": "chain",
+      "verdict": "chain",
+      "note": "Lower Queen Anne / Seattle Center branch of the national MOD Pizza chain; excluded by national-chain policy.",
+      "resolutionSource": "https://en.wikipedia.org/wiki/MOD_Pizza",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "mod superfast|1414",
@@ -470,7 +502,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-01-21",
-      "status": "pending"
+      "status": "chain",
+      "verdict": "chain",
+      "note": "Lower Queen Anne / Seattle Center branch of the national MOD Pizza chain; excluded by national-chain policy.",
+      "resolutionSource": "https://en.wikipedia.org/wiki/MOD_Pizza",
+      "resolvedDate": "2026-08-31"
     },
     {
       "key": "modena pasta|8014",

@@ -3048,6 +3048,94 @@
       "locationsSource": null,
       "mentions": [],
       "instagram": "https://www.instagram.com/inpizzawecrustllc/"
+    },
+    {
+      "id": "italio-pizza-pasta",
+      "name": "Italio Pizza & Pasta",
+      "neighborhood": "Greenwood",
+      "style": null,
+      "blurb": "Neighborhood Italian pizzeria and pasta spot with Classic, Specialty and Authentic Italian pizza sections as the core of its menu.",
+      "url": "https://www.italiopizzapastawa.com/",
+      "status": "open",
+      "statusSource": "https://www.italiopizzapastawa.com/",
+      "statusDate": "2026-08-31",
+      "statusChecked": "2026-08-31",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Greenwood",
+          "address": "305 NW 85th St, Seattle, WA 98117"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "jackson-street-pizza-lounge",
+      "name": "Jackson Street Pizza Lounge",
+      "neighborhood": "Central District",
+      "style": "hand-tossed",
+      "blurb": "Pizza-and-cocktail lounge from chef/bartender duo Michael Genardini and Donald Dolaghan serving hand-tossed pies with locally sourced toppings.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://order.toasttab.com/online/jackson-street-pizza-lounge-2901-s-jackson-st",
+      "statusDate": "2026-08-31",
+      "statusChecked": "2026-08-31",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Central District",
+          "address": "2901 S Jackson St, Seattle, WA 98144"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "mad-pizza",
+      "name": "Mad Pizza",
+      "neighborhood": "First Hill",
+      "style": "hand-tossed",
+      "blurb": "Single-location neighborhood pizzeria on First Hill serving hand-tossed pizza since 1995.",
+      "url": "https://www.madpizza.com/location",
+      "status": "open",
+      "statusSource": "https://www.madpizza.com/location",
+      "statusDate": "2026-08-31",
+      "statusChecked": "2026-08-31",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "First Hill",
+          "address": "1321 Madison St, Seattle, WA 98104"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "managers-pizza",
+      "name": "Manager's Pizza",
+      "neighborhood": "University District",
+      "style": "Indian-Italian fusion",
+      "blurb": "Newer neighborhood spot building its menu around American and Indian fusion pizzas, plus appetizers and sandwiches.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://nextdoor.com/pages/managers-pizza-seattle-wa/",
+      "statusDate": "2026-08-31",
+      "statusChecked": "2026-08-31",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "University District",
+          "address": "4741 12th Ave NE, Seattle, WA 98105"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }

@@ -1,76 +1,80 @@
 {
-  "updated": "2026-08-31T19:30:00Z",
-  "links": [
+  "updated": "2026-08-31T00:00:00Z",
+  "directory": [
     {
-      "id": "abecedary",
-      "website": "https://abecedaryseattle.com/",
-      "source": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/"
+      "name": "Italio Pizza & Pasta",
+      "url": "https://www.italiopizzapastawa.com/",
+      "neighborhood": "Greenwood",
+      "status": "open",
+      "note": "Neighborhood Italian pizzeria and pasta spot with Classic, Specialty and Authentic Italian pizza sections as the core of its menu.",
+      "source": "https://www.italiopizzapastawa.com/",
+      "address": "305 NW 85th St, Seattle, WA 98117"
     },
     {
-      "id": "candela-pizza",
-      "instagram": "https://www.instagram.com/candelapizza_/",
-      "source": "https://www.seattlefoodtruck.com/food-trucks/candela-pizza"
+      "name": "Jackson Street Pizza Lounge",
+      "neighborhood": "Central District",
+      "style": "hand-tossed",
+      "status": "open",
+      "note": "Pizza-and-cocktail lounge from chef/bartender duo Michael Genardini and Donald Dolaghan serving hand-tossed pies with locally sourced toppings.",
+      "source": "https://order.toasttab.com/online/jackson-street-pizza-lounge-2901-s-jackson-st",
+      "address": "2901 S Jackson St, Seattle, WA 98144"
     },
     {
-      "id": "dudez-woodfired-pizza",
-      "instagram": "https://www.instagram.com/dudezwoodfiredpizza/",
-      "source": "https://www.instagram.com/p/DA4iFXpy7kN/"
+      "name": "Mad Pizza",
+      "url": "https://www.madpizza.com/location",
+      "neighborhood": "First Hill",
+      "style": "hand-tossed",
+      "status": "open",
+      "note": "Single-location neighborhood pizzeria on First Hill serving hand-tossed pizza since 1995.",
+      "source": "https://www.madpizza.com/location",
+      "address": "1321 Madison St, Seattle, WA 98104"
     },
     {
-      "id": "elemental-pizza",
-      "website": "https://elementalpizza.com/",
-      "instagram": "https://www.instagram.com/elementalpizzaseattle/",
-      "source": "https://uvillage.com/directory/elemental-wood-fired-pizza/"
+      "name": "Manager's Pizza",
+      "neighborhood": "University District",
+      "style": "Indian-Italian fusion",
+      "status": "open",
+      "note": "Newer neighborhood spot building its menu around American and Indian fusion pizzas, plus appetizers and sandwiches.",
+      "source": "https://nextdoor.com/pages/managers-pizza-seattle-wa/",
+      "address": "4741 12th Ave NE, Seattle, WA 98105"
+    }
+  ],
+  "candidateReview": [
+    {
+      "name": "Italian Family Pizza",
+      "verdict": "closed",
+      "note": "Closed in 2026 after about 10 years on First Hill when the owner's lease at 1028 Madison St ended; the space is being sought for a new tenant.",
+      "source": "https://www.capitolhillseattle.com/2026/07/rip-to-broadways-guillotine-first-hills-italian-family-pizza/"
     },
     {
-      "id": "belltown-pizza",
-      "instagram": "https://www.instagram.com/belltownpizzaseattle",
-      "source": "https://belltownpizza.net/"
+      "name": "La Vita E 'Bella Pizzeria",
+      "verdict": "not-pizza",
+      "note": "Full-service Sicilian-Italian restaurant built around pasta and seafood; thin pizza is one menu item among many, not the core of the business.",
+      "source": "https://www.lavitaebellarestaurant.com/"
     },
     {
-      "id": "castello-pizza-pasta",
-      "instagram": "https://www.instagram.com/castellopizzaandpasta/",
-      "source": "https://www.castellopizzaandpasta.com/"
+      "name": "Lil Annies Churrieria LLC / Pizza Locas",
+      "verdict": "unverifiable",
+      "note": "Permit address 7912 7th Ave S is Northwest Commissary Kitchens, a shared commissary/incubator kitchen; found no storefront, website, or social presence for a 'Lil Annies Churrieria' or 'Pizza Locas' business at this address. A same-named 'Pizzas Locas' that does have a public presence is a separate, unrelated restaurant in Des Moines, WA.",
+      "source": "https://www.yelp.com/biz/northwest-commissary-kitchens-seattle"
     },
     {
-      "id": "cornuto-pizzeria",
-      "instagram": "https://www.instagram.com/cornuto_pizzeria/",
-      "source": "https://www.instagram.com/cornuto_pizzeria/?hl=en"
+      "name": "Mod Super Fast Pizza",
+      "verdict": "chain",
+      "note": "MOD Super Fast Pizza LLC (MOD Pizza) is a national fast-casual chain with 460+ US locations, headquartered in Bellevue, WA; excluded by national-chain policy.",
+      "source": "https://en.wikipedia.org/wiki/MOD_Pizza"
     },
     {
-      "id": "eymans-pizza",
-      "instagram": "https://www.instagram.com/eymans_pizza/",
-      "source": "https://www.instagram.com/eymans_pizza/"
+      "name": "Mod Super Fast Pizza Ballard",
+      "verdict": "chain",
+      "note": "Ballard branch of the national MOD Pizza chain; excluded by national-chain policy.",
+      "source": "https://en.wikipedia.org/wiki/MOD_Pizza"
     },
     {
-      "id": "georgetown-pizza-arcade",
-      "instagram": "https://www.instagram.com/gpa.seattle",
-      "source": "https://www.gpaseattle.com/"
-    },
-    {
-      "id": "good-shape-pizza",
-      "instagram": "https://www.instagram.com/goodshapepizza/",
-      "source": "https://goodshapepizza.com/"
-    },
-    {
-      "id": "hot-mamas-pizza",
-      "instagram": "https://www.instagram.com/hotmamasseattlepizza/",
-      "source": "https://www.instagram.com/hotmamasseattlepizza/"
-    },
-    {
-      "id": "humble-pie",
-      "instagram": "https://www.instagram.com/humblepie_seattle/",
-      "source": "https://www.instagram.com/humblepie_seattle/?hl=en"
-    },
-    {
-      "id": "in-pizza-we-crust",
-      "instagram": "https://www.instagram.com/inpizzawecrustllc/",
-      "source": "https://www.instagram.com/inpizzawecrustllc/"
-    },
-    {
-      "id": "johnny-mos-pizzeria",
-      "instagram": "https://www.instagram.com/johnnymospizzeria/",
-      "source": "https://www.johnnymos.com/"
+      "name": "Mod Superfast Pizza",
+      "verdict": "chain",
+      "note": "Lower Queen Anne / Seattle Center branch of the national MOD Pizza chain; excluded by national-chain policy.",
+      "source": "https://en.wikipedia.org/wiki/MOD_Pizza"
     }
   ]
 }
