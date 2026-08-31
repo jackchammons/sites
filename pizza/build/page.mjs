@@ -55,7 +55,10 @@ ${css}</style>
           <div class="big">🍕</div>
           <div>
             <h3>Pie of the Week · ${nameLink(spotlight)}</h3>
-            <p><b>#${spotlight.rank}, ${spotlight.score.toFixed(1)} SLICE.</b> ${esc(spotlight.signature)} — ${esc(locationLabel(spotlight))}.
+            <p><b>#${spotlight.rank}, ${spotlight.score.toFixed(1)} SLICE.</b> ${
+              /* Discovered entries have no hand-written signature; their
+               * discovery blurb (or just the location) stands in. */
+              esc(spotlight.signature ?? spotlight.blurb ?? spotlight.style ?? '')} — ${esc(locationLabel(spotlight))}.
             Rotates through the top ten each Monday.</p>
           </div>
         </div>

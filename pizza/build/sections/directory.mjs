@@ -143,7 +143,7 @@ const directorySection = `
       ${cov.pending ? `<span>${cov.pending} <b>candidates pending verification</b></span>` : ''}
       ${cov.chains ? `<span>${cov.chains} <b>national-chain spots excluded</b></span>` : ''}
     </div>
-    <p class="note" style="margin-top:10px; max-width:78ch">
+    <p class="note" style="margin-top:10px; max-width:110ch">
       Inclusion rule: a pizza-forward place with a location inside Seattle city limits.
       National chains (Domino's, Pizza Hut, MOD, and the like) are excluded by policy — this is
       an index of Seattle's own pizzerias. The pending queue is seeded from King County

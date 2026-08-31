@@ -51,6 +51,12 @@ h1, h2, h3 { line-height: 1.15; margin: 0; letter-spacing: -0.02em; }
   text-transform: uppercase; color: var(--tomato-2); margin-bottom: 14px;
 }
 .lede { color: var(--ink-2); font-size: 17px; max-width: 62ch; }
+/* Wide screens: intro text stretches into the space beside it instead of
+   leaving a 62ch ribbon down the left edge. */
+@media (min-width: 1100px) {
+  .lede { max-width: 110ch; }
+  .method-p { max-width: 110ch; }
+}
 
 /* ---------- hero ---------- */
 .hero {

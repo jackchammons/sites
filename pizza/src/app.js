@@ -143,6 +143,8 @@ render();
 /* Filled by initMap so the directory rows can focus the map; stays empty when
  * the map never initialised (offline tiles, no coordinates). */
 const mapApi = { focus: null };
+/* Filled by the directory wiring below, so map markers can focus a row. */
+const dirApi = { expand: null };
 
 (function initMap() {
   const el = document.getElementById('map');
@@ -170,7 +172,17 @@ const mapApi = { focus: null };
   }
   if (!pts.length) { el.remove(); return; }
 
+  /* Wheel zoom follows the layout. In the desktop rail the map is sticky
+   * beside the table, and a wheel gesture over it reads as "zoom the map" --
+   * with wheel zoom off it scrolled the page, which looked like the directory
+   * list jumping away. Stacked layouts keep it off, where a map that traps
+   * the wheel mid-page is the worse bug. */
   const map = L.map(el, { scrollWheelZoom: false });
+  const wideLayout = window.matchMedia('(min-width: 1100px)');
+  const setWheelZoom = () =>
+    wideLayout.matches ? map.scrollWheelZoom.enable() : map.scrollWheelZoom.disable();
+  setWheelZoom();
+  wideLayout.addEventListener?.('change', setWheelZoom);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -199,6 +211,7 @@ const mapApi = { focus: null };
         outside ? `<br>+ ${outside} location${outside > 1 ? 's' : ''} outside Seattle (see the table)` : ''}</div></div>`);
     bounds.push([loc.lat, loc.lon]);
     if (!markersById.has(r.id)) markersById.set(r.id, m);
+    m.on('click', () => { if (dirApi.expand) dirApi.expand(r.id); });
   }
 
   map.fitBounds(bounds, { padding: [24, 24] });
@@ -213,21 +226,40 @@ const mapApi = { focus: null };
 })();
 
 /* ---- Directory rows: expand the full record, focus the map ----
- * One click does both. Links inside a row keep their own behaviour. */
+ * An accordion: one record open at a time, so the table stays scannable.
+ * A row click expands and pans the map; a marker click expands and scrolls
+ * the table to the row. Links inside a row keep their own behaviour. */
 (() => {
   const body = document.getElementById('dir-body');
   if (!body) return;
+
+  const rowOf = id => body.querySelector(`tr.dir-row[data-id="${id}"]`);
+  const setOne = (id, open) => {
+    const row = rowOf(id);
+    const detail = document.getElementById('dd-' + id);
+    if (!row || !detail) return;
+    detail.hidden = !open;
+    row.classList.toggle('expanded', open);
+    const btn = row.querySelector('.dir-toggle');
+    if (btn) btn.setAttribute('aria-expanded', String(open));
+  };
+  const expand = (id, { fromMap = false } = {}) => {
+    for (const d of body.querySelectorAll('.dir-detail:not([hidden])')) {
+      if (d.id !== 'dd-' + id) setOne(d.id.slice(3), false);
+    }
+    setOne(id, true);
+    if (fromMap) rowOf(id)?.scrollIntoView({ block: 'center' });
+    else if (mapApi.focus) mapApi.focus(id);
+  };
+  dirApi.expand = id => expand(id, { fromMap: true });
+
   body.addEventListener('click', e => {
     if (e.target.closest('a, details, .dir-detail')) return;
     const row = e.target.closest('tr.dir-row');
     if (!row) return;
     const detail = document.getElementById('dd-' + row.dataset.id);
-    const open = detail && detail.hidden;
-    if (detail) detail.hidden = !detail.hidden;
-    row.classList.toggle('expanded', !!open);
-    const btn = row.querySelector('.dir-toggle');
-    if (btn) btn.setAttribute('aria-expanded', String(!!open));
-    if (open && mapApi.focus) mapApi.focus(row.dataset.id);
+    if (detail && !detail.hidden) setOne(row.dataset.id, false);
+    else expand(row.dataset.id);
   });
 })();
 

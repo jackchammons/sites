@@ -48,7 +48,7 @@ const buzzSection = buzz.items.length ? `
       ${buzz.updated ? `<span>Swept <b>${esc(shortDate(buzz.updated))}</b></span>` : ''}
     </div>
     <ul class="buzz-list">${buzz.items.map(buzzItem).join('')}</ul>
-    <p class="note" style="max-width:70ch">
+    <p class="note" style="max-width:110ch">
       Assembled automatically. A story is kept when it reads as local and about pizza;
       national-chain, crime and business-wire items are filtered out. Every item links to its
       original source.
