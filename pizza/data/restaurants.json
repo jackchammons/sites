@@ -246,7 +246,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/motopizzashop"
     },
     {
       "id": "serious-pie",
@@ -413,7 +414,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/lupofremont"
     },
     {
       "id": "independent-pizzeria",
@@ -723,7 +725,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/pagliaccipizza/"
     },
     {
       "id": "breezy-town-pizza",
@@ -1447,7 +1450,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/pegasuspizzaseattle"
     },
     {
       "id": "slice-box",
@@ -1592,7 +1596,8 @@
         }
       },
       "styleGroup": "Detroit pan",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://www.instagram.com/myfrienddereks"
     },
     {
       "id": "abecedary",
@@ -1881,7 +1886,8 @@
       },
       "opened": 2024,
       "styleGroup": "Roman",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://www.instagram.com/pizzabyruffin/"
     },
     {
       "id": "cornuto-pizzeria",
@@ -2130,7 +2136,8 @@
       },
       "opened": 2006,
       "styleGroup": "Wood-fired",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://www.instagram.com/mioposto"
     },
     {
       "id": "veraci-pizza",
@@ -3069,7 +3076,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/italiogreenwood"
     },
     {
       "id": "jackson-street-pizza-lounge",
@@ -3077,7 +3085,7 @@
       "neighborhood": "Central District",
       "style": "hand-tossed",
       "blurb": "Pizza-and-cocktail lounge from chef/bartender duo Michael Genardini and Donald Dolaghan serving hand-tossed pies with locally sourced toppings.",
-      "url": null,
+      "url": "https://jacksonstreetpizzalounge.com/",
       "status": "open",
       "statusSource": "https://order.toasttab.com/online/jackson-street-pizza-lounge-2901-s-jackson-st",
       "statusDate": "2026-08-31",
@@ -3091,7 +3099,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/jacksonstreetpizzalounge/"
     },
     {
       "id": "mad-pizza",
@@ -3113,7 +3122,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/madpizza_/"
     },
     {
       "id": "managers-pizza",
@@ -3135,7 +3145,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/managerspizzaseattle/"
     }
   ]
 }
