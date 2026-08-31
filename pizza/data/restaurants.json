@@ -2835,7 +2835,9 @@
       "locations": [
         {
           "neighborhood": "Belltown",
-          "address": "2422 1st Ave, Seattle, WA 98121"
+          "address": "2422 1st Ave, Seattle, WA 98121",
+          "lat": 47.6146,
+          "lon": -122.34826
         }
       ],
       "locationsVerified": null,
@@ -2857,7 +2859,9 @@
       "locations": [
         {
           "neighborhood": "Rainier Valley",
-          "address": "3756 Rainier Ave S, Ste B, Seattle, WA 98144"
+          "address": "3756 Rainier Ave S, Ste B, Seattle, WA 98144",
+          "lat": 47.57004,
+          "lon": -122.29048
         }
       ],
       "locationsVerified": null,
@@ -2879,7 +2883,9 @@
       "locations": [
         {
           "neighborhood": "South Seattle",
-          "address": "1622 SW Roxbury St, Seattle, WA 98106"
+          "address": "1622 SW Roxbury St, Seattle, WA 98106",
+          "lat": 47.51753,
+          "lon": -122.35637
         }
       ],
       "locationsVerified": null,
@@ -2901,7 +2907,9 @@
       "locations": [
         {
           "neighborhood": "Eastlake",
-          "address": "2919 Fuhrman Ave E, Seattle, WA 98102"
+          "address": "2919 Fuhrman Ave E, Seattle, WA 98102",
+          "lat": 47.64749,
+          "lon": -122.31782
         }
       ],
       "locationsVerified": null,
@@ -2923,7 +2931,9 @@
       "locations": [
         {
           "neighborhood": "University Village",
-          "address": "2634 NE University Village St, Seattle, WA 98105"
+          "address": "2634 NE University Village St, Seattle, WA 98105",
+          "lat": 47.66334,
+          "lon": -122.29788
         }
       ],
       "locationsVerified": null,
@@ -2945,7 +2955,9 @@
       "locations": [
         {
           "neighborhood": "Rainier Valley",
-          "address": "6711 Martin Luther King Jr Way S, Seattle, WA 98118"
+          "address": "6711 Martin Luther King Jr Way S, Seattle, WA 98118",
+          "lat": 47.54198,
+          "lon": -122.28399
         }
       ],
       "locationsVerified": null,
@@ -2967,7 +2979,9 @@
       "locations": [
         {
           "neighborhood": "Georgetown",
-          "address": "5513 Airport Way S, Seattle, WA 98108"
+          "address": "5513 Airport Way S, Seattle, WA 98108",
+          "lat": 47.55296,
+          "lon": -122.32082
         }
       ],
       "locationsVerified": null,
@@ -2989,7 +3003,9 @@
       "locations": [
         {
           "neighborhood": "Belltown",
-          "address": "2126 2nd Ave, Ste A, Seattle, WA 98121"
+          "address": "2126 2nd Ave, Ste A, Seattle, WA 98121",
+          "lat": 47.61321,
+          "lon": -122.34387
         }
       ],
       "locationsVerified": null,
@@ -3011,7 +3027,9 @@
       "locations": [
         {
           "neighborhood": "Admiral, West Seattle",
-          "address": "3207 California Ave SW, Seattle, WA 98116"
+          "address": "3207 California Ave SW, Seattle, WA 98116",
+          "lat": 47.57537,
+          "lon": -122.38709
         }
       ],
       "locationsVerified": null,
