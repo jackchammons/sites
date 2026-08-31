@@ -1262,7 +1262,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/hotmamasseattlepizza/"
     },
     {
       "id": "humble-pie",
@@ -1311,7 +1312,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/humblepie_seattle/"
     },
     {
       "id": "pizzeria-gabbiano",
@@ -1598,7 +1600,7 @@
       "neighborhood": "Hillman City",
       "style": "New Haven-style",
       "blurb": "Pizzaiolo Seth Eisner gave Seattle a cheese-and-basil sneak preview at the Hillman City Block Party; the full New Haven-style pizzeria and brewery isn't slated to open until 2027.",
-      "url": null,
+      "url": "https://abecedaryseattle.com/",
       "status": "opening",
       "statusSource": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
       "statusDate": "2026-08-25",
@@ -1928,7 +1930,8 @@
       },
       "opened": 2016,
       "styleGroup": "Neapolitan",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://www.instagram.com/cornuto_pizzeria/"
     },
     {
       "id": "razzis-pizzeria",
@@ -2324,7 +2327,8 @@
       },
       "priceIndex": 2,
       "styleGroup": "Thin crust",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://www.instagram.com/johnnymospizzeria/"
     },
     {
       "id": "pazzos-on-eastlake",
@@ -2842,7 +2846,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/belltownpizzaseattle"
     },
     {
       "id": "castello-pizza-pasta",
@@ -2866,7 +2871,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/castellopizzaandpasta/"
     },
     {
       "id": "candela-pizza",
@@ -2890,7 +2896,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/candelapizza_/"
     },
     {
       "id": "dudez-woodfired-pizza",
@@ -2914,7 +2921,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/dudezwoodfiredpizza/"
     },
     {
       "id": "elemental-pizza",
@@ -2922,7 +2930,7 @@
       "neighborhood": "University Village",
       "style": "Wood-fired",
       "blurb": "Wood-fired pizzeria founded in 2012 at University Village, now with a second Seattle location downtown near Columbia Center plus a mobile catering oven.",
-      "url": null,
+      "url": "https://elementalpizza.com/",
       "status": "open",
       "statusSource": "https://elementalpizza.com/",
       "statusDate": "2026-08-31",
@@ -2938,7 +2946,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/elementalpizzaseattle/"
     },
     {
       "id": "eymans-pizza",
@@ -2962,7 +2971,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/eymans_pizza/"
     },
     {
       "id": "georgetown-pizza-arcade",
@@ -2986,7 +2996,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/gpa.seattle"
     },
     {
       "id": "good-shape-pizza",
@@ -3010,7 +3021,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/goodshapepizza/"
     },
     {
       "id": "in-pizza-we-crust",
@@ -3034,7 +3046,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/inpizzawecrustllc/"
     }
   ]
 }

@@ -1,83 +1,76 @@
 {
-  "updated": "2026-08-31T02:00:00Z",
-  "directory": [
+  "updated": "2026-08-31T19:30:00Z",
+  "links": [
     {
-      "name": "Dude'Z Woodfired Pizza",
-      "neighborhood": "Eastlake",
-      "style": "Wood-fired, New York-style",
-      "status": "open",
-      "note": "Wood-fired pizzeria on Fuhrman Ave E in Eastlake, run by two brothers and a cousin, serving New York-style pies from a wood oven.",
-      "source": "https://www.atly.com/location/DUDE'Z-woodfired-pizza",
-      "address": "2919 Fuhrman Ave E, Seattle, WA 98102"
+      "id": "abecedary",
+      "website": "https://abecedaryseattle.com/",
+      "source": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/"
     },
     {
-      "name": "Elemental Pizza",
-      "neighborhood": "University Village",
-      "style": "Wood-fired",
-      "status": "open",
-      "note": "Wood-fired pizzeria founded in 2012 at University Village, now with a second Seattle location downtown near Columbia Center plus a mobile catering oven.",
-      "source": "https://elementalpizza.com/",
-      "address": "2634 NE University Village St, Seattle, WA 98105"
+      "id": "candela-pizza",
+      "instagram": "https://www.instagram.com/candelapizza_/",
+      "source": "https://www.seattlefoodtruck.com/food-trucks/candela-pizza"
     },
     {
-      "name": "Eyman's Pizza",
-      "url": "https://www.eymanspizza.com/",
-      "neighborhood": "Rainier Valley",
-      "style": "Halal",
-      "status": "open",
-      "note": "Halal pizzeria on Martin Luther King Jr Way S making hand-stretched dough and scratch tomato sauce to order, with no pork in the kitchen.",
-      "source": "https://www.eymanspizza.com/",
-      "address": "6711 Martin Luther King Jr Way S, Seattle, WA 98118"
+      "id": "dudez-woodfired-pizza",
+      "instagram": "https://www.instagram.com/dudezwoodfiredpizza/",
+      "source": "https://www.instagram.com/p/DA4iFXpy7kN/"
     },
     {
-      "name": "Georgetown Pizza & Arcade",
-      "url": "https://www.gpaseattle.com/",
-      "neighborhood": "Georgetown",
-      "style": "Square-cut",
-      "status": "open",
-      "note": "Georgetown pizza-and-pinball bar serving square pizzas by the slice or whole pie alongside 20+ arcade and pinball machines.",
-      "source": "https://www.gpaseattle.com/",
-      "address": "5513 Airport Way S, Seattle, WA 98108"
+      "id": "elemental-pizza",
+      "website": "https://elementalpizza.com/",
+      "instagram": "https://www.instagram.com/elementalpizzaseattle/",
+      "source": "https://uvillage.com/directory/elemental-wood-fired-pizza/"
     },
     {
-      "name": "Good Shape Pizza",
-      "url": "https://goodshapepizza.com/",
-      "neighborhood": "Belltown",
-      "style": "Neapolitan-style",
-      "status": "open",
-      "note": "Neapolitan-leaning pizzeria that outgrew its pop-up run (Add-A-Ball, Chuck's Hop Shop, Oddfellows Cafe) to become a permanent kitchen inside Jupiter Bar in Belltown; its permit address is not the public storefront.",
-      "source": "https://www.theinfatuation.com/seattle/reviews/good-shape-pizza",
-      "address": "2126 2nd Ave, Ste A, Seattle, WA 98121"
+      "id": "belltown-pizza",
+      "instagram": "https://www.instagram.com/belltownpizzaseattle",
+      "source": "https://belltownpizza.net/"
     },
     {
-      "name": "In Pizza We Crust",
-      "url": "https://inpizzawecrust.net/",
-      "neighborhood": "Admiral, West Seattle",
-      "style": "Wood-fired",
-      "status": "open",
-      "note": "Family-run wood-fired pizzeria that grew from a 2019 Bellevue food truck into a permanent shop in West Seattle's Admiral Junction, opened in the former Swinery space.",
-      "source": "https://inpizzawecrust.net/",
-      "address": "3207 California Ave SW, Seattle, WA 98116"
-    }
-  ],
-  "candidateReview": [
-    {
-      "name": "Domani Pizzeria & Restaurant",
-      "verdict": "not-pizza",
-      "note": "Despite the name, Domani is a Mediterranean/Italian neighborhood restaurant on Queen Anne Ave N where fresh pasta, salads and sandwiches get equal billing with pizza — not a pizza-forward concept.",
-      "source": "https://www.domaniqueenanne.com/story"
+      "id": "castello-pizza-pasta",
+      "instagram": "https://www.instagram.com/castellopizzaandpasta/",
+      "source": "https://www.castellopizzaandpasta.com/"
     },
     {
-      "name": "G.H Pasta & Pizza West Seattle",
-      "verdict": "not-pizza",
-      "note": "West Seattle restaurant from General Harvest Restaurants built around house-extruded pasta as its stated priority, with a smaller selection of 12-inch pizzas as a secondary offering — not a pizza-forward concept.",
-      "source": "https://www.westsideseattle.com/robinson-papers/2023/11/21/update-gh-pasta-pizza-will-bring-flavor-and-taste-sunrise-heights"
+      "id": "cornuto-pizzeria",
+      "instagram": "https://www.instagram.com/cornuto_pizzeria/",
+      "source": "https://www.instagram.com/cornuto_pizzeria/?hl=en"
     },
     {
-      "name": "In Pizza We Crust LLC - Kc507",
-      "verdict": "duplicate",
-      "note": "Same address (3207 California Ave SW) and business as 'In Pizza We Crust' — a second King County permit registration for the same wood-fired pizzeria, not a separate business.",
-      "source": "https://inpizzawecrust.net/"
+      "id": "eymans-pizza",
+      "instagram": "https://www.instagram.com/eymans_pizza/",
+      "source": "https://www.instagram.com/eymans_pizza/"
+    },
+    {
+      "id": "georgetown-pizza-arcade",
+      "instagram": "https://www.instagram.com/gpa.seattle",
+      "source": "https://www.gpaseattle.com/"
+    },
+    {
+      "id": "good-shape-pizza",
+      "instagram": "https://www.instagram.com/goodshapepizza/",
+      "source": "https://goodshapepizza.com/"
+    },
+    {
+      "id": "hot-mamas-pizza",
+      "instagram": "https://www.instagram.com/hotmamasseattlepizza/",
+      "source": "https://www.instagram.com/hotmamasseattlepizza/"
+    },
+    {
+      "id": "humble-pie",
+      "instagram": "https://www.instagram.com/humblepie_seattle/",
+      "source": "https://www.instagram.com/humblepie_seattle/?hl=en"
+    },
+    {
+      "id": "in-pizza-we-crust",
+      "instagram": "https://www.instagram.com/inpizzawecrustllc/",
+      "source": "https://www.instagram.com/inpizzawecrustllc/"
+    },
+    {
+      "id": "johnny-mos-pizzeria",
+      "instagram": "https://www.instagram.com/johnnymospizzeria/",
+      "source": "https://www.johnnymos.com/"
     }
   ]
 }
