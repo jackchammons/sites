@@ -1,61 +1,52 @@
 {
-  "updated": "2026-08-31T19:40:00Z",
-  "links": [
-    {
-      "id": "jackson-street-pizza-lounge",
-      "website": "https://jacksonstreetpizzalounge.com/",
-      "instagram": "https://www.instagram.com/jacksonstreetpizzalounge/",
-      "source": "https://jacksonstreetpizzalounge.com/"
-    },
-    {
-      "id": "managers-pizza",
-      "instagram": "https://www.instagram.com/managerspizzaseattle/",
-      "source": "https://www.instagram.com/managerspizzaseattle/"
-    },
-    {
-      "id": "italio-pizza-pasta",
-      "instagram": "https://www.instagram.com/italiogreenwood",
-      "source": "https://italiopizzaandpasta.com/"
-    },
-    {
-      "id": "lupo",
-      "instagram": "https://www.instagram.com/lupofremont",
-      "source": "https://www.lupofremont.com/about"
-    },
-    {
-      "id": "mad-pizza",
-      "instagram": "https://www.instagram.com/madpizza_/",
-      "source": "https://www.madpizza.com/location"
-    },
-    {
-      "id": "mioposto",
-      "instagram": "https://www.instagram.com/mioposto",
-      "source": "https://www.miopostopizza.com/"
-    },
-    {
-      "id": "moto-pizza",
-      "instagram": "https://www.instagram.com/motopizzashop",
-      "source": "https://motopizza.com/location/west-seattle/"
-    },
-    {
-      "id": "my-friend-dereks",
-      "instagram": "https://www.instagram.com/myfrienddereks",
-      "source": "https://myfrienddereks.com/"
-    },
-    {
-      "id": "pagliacci",
-      "instagram": "https://www.instagram.com/pagliaccipizza/",
-      "source": "https://www.pagliacci.com"
-    },
-    {
-      "id": "pegasus-pizza",
-      "instagram": "https://www.instagram.com/pegasuspizzaseattle",
-      "source": "https://pegasuspizzaseattle.com/"
-    },
+  "updated": "2026-08-31T12:00:00Z",
+  "locations": [
     {
       "id": "pizza-by-ruffin",
+      "homepage": "https://pizzabyruffin.com",
+      "source": "https://pizzabyruffin.com",
+      "sites": [
+        {
+          "neighborhood": "South Lake Union",
+          "address": "400 Fairview Avenue Suite 107, Seattle, WA 98109"
+        }
+      ]
+    },
+    {
+      "id": "cornuto-pizzeria",
+      "homepage": "https://www.cornutopizzeria.com/",
+      "source": "https://www.cornutopizzeria.com/",
+      "sites": [
+        {
+          "neighborhood": "Phinney Ridge",
+          "address": "7404 Greenwood Ave N, Seattle, WA 98103"
+        }
+      ]
+    },
+    {
+      "id": "pizzeria-la-rocca",
+      "homepage": "https://www.pizzalarocca.com/",
+      "source": "https://www.pizzalarocca.com/",
+      "sites": [
+        {
+          "neighborhood": "Greenwood",
+          "address": "8404 Greenwood Ave N, Seattle, WA 98103"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "id": "pizza-by-ruffin",
+      "website": "https://pizzabyruffin.com",
       "instagram": "https://www.instagram.com/pizzabyruffin/",
       "source": "https://pizzabyruffin.com"
+    },
+    {
+      "id": "pizzeria-la-rocca",
+      "website": "https://www.pizzalarocca.com/",
+      "instagram": "https://www.instagram.com/pizzerialaroccaseattle/",
+      "source": "https://www.pizzalarocca.com/"
     }
   ]
 }

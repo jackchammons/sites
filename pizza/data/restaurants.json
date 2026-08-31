@@ -1839,13 +1839,11 @@
       "locations": [
         {
           "neighborhood": "South Lake Union",
-          "address": "400 Fairview Ave N #107, Seattle, WA 98109",
-          "lat": 47.62246,
-          "lon": -122.33385
+          "address": "400 Fairview Avenue Suite 107, Seattle, WA 98109"
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-08-31",
+      "locationsSource": "https://pizzabyruffin.com",
       "mentions": [
         {
           "url": "https://seattlemag.com/food-drink/restaurant-roundup-pizza-pals-and-paella-on-the-patio",
@@ -1903,14 +1901,14 @@
       "attributes": {},
       "locations": [
         {
-          "neighborhood": "Phinney Ridge/Greenwood",
+          "neighborhood": "Phinney Ridge",
           "address": "7404 Greenwood Ave N, Seattle, WA 98103",
           "lat": 47.68277,
           "lon": -122.35511
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-08-31",
+      "locationsSource": "https://www.cornutopizzeria.com/",
       "mentions": [],
       "factors": {
         "craft": {
@@ -2010,8 +2008,8 @@
           "lon": -122.3551
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-08-31",
+      "locationsSource": "https://www.pizzalarocca.com/",
       "mentions": [],
       "factors": {
         "craft": {
@@ -2037,7 +2035,8 @@
       },
       "priceIndex": 3,
       "styleGroup": "Wood-fired",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://www.instagram.com/pizzerialaroccaseattle/"
     },
     {
       "id": "pi-vegan-pizzeria",
