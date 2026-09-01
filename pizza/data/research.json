@@ -1,52 +1,41 @@
 {
-  "updated": "2026-08-31T12:00:00Z",
-  "locations": [
+  "updated": "2026-09-01T12:00:00Z",
+  "status": [
     {
-      "id": "pizza-by-ruffin",
-      "homepage": "https://pizzabyruffin.com",
-      "source": "https://pizzabyruffin.com",
-      "sites": [
-        {
-          "neighborhood": "South Lake Union",
-          "address": "400 Fairview Avenue Suite 107, Seattle, WA 98109"
-        }
-      ]
+      "id": "abecedary",
+      "status": "opening",
+      "note": "Still pre-opening: pizzaiolo Seth Eisner ran a pop-up behind Sake Noire at Hillman City's What's Good block party in late August 2026, with the brick-and-mortar delayed by permitting to 2027.",
+      "source": "https://hoodline.com/2026/08/hillman-city-gets-first-bite-of-seattle-s-hottest-new-pizzeria/"
     },
     {
-      "id": "cornuto-pizzeria",
-      "homepage": "https://www.cornutopizzeria.com/",
-      "source": "https://www.cornutopizzeria.com/",
-      "sites": [
-        {
-          "neighborhood": "Phinney Ridge",
-          "address": "7404 Greenwood Ave N, Seattle, WA 98103"
-        }
-      ]
+      "id": "razzis-pizzeria",
+      "status": "open",
+      "note": "Online ordering page is live and shows the restaurant open, with an active Order Ahead button and posted opening time of 11:00 AM.",
+      "source": "https://slicelife.com/restaurants/wa/seattle/98103/razzi-s-pizza/menu"
     },
     {
-      "id": "pizzeria-la-rocca",
-      "homepage": "https://www.pizzalarocca.com/",
-      "source": "https://www.pizzalarocca.com/",
-      "sites": [
-        {
-          "neighborhood": "Greenwood",
-          "address": "8404 Greenwood Ave N, Seattle, WA 98103"
-        }
-      ]
-    }
-  ],
-  "links": [
-    {
-      "id": "pizza-by-ruffin",
-      "website": "https://pizzabyruffin.com",
-      "instagram": "https://www.instagram.com/pizzabyruffin/",
-      "source": "https://pizzabyruffin.com"
+      "id": "candela-pizza",
+      "status": "open",
+      "note": "Seattle Food Truck's directory lists Candela Pizza as an active food trailer (est. 2022) with a current menu and truck-schedule listing, no closure indication.",
+      "source": "https://www.seattlefoodtruck.com/food-trucks/candela-pizza"
     },
     {
-      "id": "pizzeria-la-rocca",
-      "website": "https://www.pizzalarocca.com/",
-      "instagram": "https://www.instagram.com/pizzerialaroccaseattle/",
-      "source": "https://www.pizzalarocca.com/"
+      "id": "dudez-woodfired-pizza",
+      "status": "open",
+      "note": "Seattle Food Truck's directory lists Dude'Z as an operating food trailer accepting catering, with no indication the business has closed.",
+      "source": "https://www.seattlefoodtruck.com/food-trucks/dude-z-woodfired-pizza"
+    },
+    {
+      "id": "managers-pizza",
+      "status": "open",
+      "note": "The pizzeria's own ordering site shows an \"Open Now\" indicator, posted hours of 10AM-11PM daily, and active online ordering.",
+      "source": "https://managerspizza.online"
+    },
+    {
+      "id": "moto-pizza",
+      "status": "open",
+      "note": "Moto Pizza's official locations page lists the West Seattle location as currently operating daily 11am-10pm with active online ordering.",
+      "source": "https://motopizza.com/locations/"
     }
   ]
 }

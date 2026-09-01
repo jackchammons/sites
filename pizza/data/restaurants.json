@@ -1,6 +1,6 @@
 {
   "city": "Seattle, WA",
-  "dataVersion": "2026.08",
+  "dataVersion": "2026.09",
   "cityMeanRating": 4.3,
   "priorWeight": 500,
   "notes": "Factor ratings (0-10) are editorial judgments applied uniformly to every entry by one rubric. Critical Read is scored from the critical consensus alone, identically for all entries. Crowd star ratings are rounded aggregates observed on review platforms at the dataset version shown; they are displayed as context and are not scored. Locations marked verified were read from the pizzeria's own site on the date recorded.",
@@ -247,7 +247,8 @@
         }
       },
       "mentions": [],
-      "instagram": "https://www.instagram.com/motopizzashop"
+      "instagram": "https://www.instagram.com/motopizzashop",
+      "statusChecked": "2026-09-01"
     },
     {
       "id": "serious-pie",
@@ -1629,7 +1630,7 @@
           "kind": "mention"
         }
       ],
-      "statusChecked": "2026-08-27",
+      "statusChecked": "2026-09-01",
       "instagram": "https://www.instagram.com/abecedaryseattle/"
     },
     {
@@ -1949,7 +1950,7 @@
       "status": "open",
       "statusSource": "https://intentionalist.com/b/razzis-pizzeria-greenwood/",
       "statusDate": "2026-08-26",
-      "statusChecked": "2026-08-27",
+      "statusChecked": "2026-09-01",
       "attributes": {},
       "locations": [
         {
@@ -2892,7 +2893,7 @@
       "status": "open",
       "statusSource": "https://www.seattlefoodtruck.com/food-trucks/candela-pizza",
       "statusDate": "2026-08-30",
-      "statusChecked": "2026-08-30",
+      "statusChecked": "2026-09-01",
       "attributes": {},
       "locations": [
         {
@@ -2917,7 +2918,7 @@
       "status": "open",
       "statusSource": "https://www.atly.com/location/DUDE'Z-woodfired-pizza",
       "statusDate": "2026-08-31",
-      "statusChecked": "2026-08-31",
+      "statusChecked": "2026-09-01",
       "attributes": {},
       "locations": [
         {
@@ -3142,7 +3143,7 @@
       "status": "open",
       "statusSource": "https://nextdoor.com/pages/managers-pizza-seattle-wa/",
       "statusDate": "2026-08-31",
-      "statusChecked": "2026-08-31",
+      "statusChecked": "2026-09-01",
       "attributes": {},
       "locations": [
         {
