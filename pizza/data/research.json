@@ -1,41 +1,5 @@
 {
-  "updated": "2026-09-01T12:00:00Z",
-  "status": [
-    {
-      "id": "abecedary",
-      "status": "opening",
-      "note": "Still pre-opening: pizzaiolo Seth Eisner ran a pop-up behind Sake Noire at Hillman City's What's Good block party in late August 2026, with the brick-and-mortar delayed by permitting to 2027.",
-      "source": "https://hoodline.com/2026/08/hillman-city-gets-first-bite-of-seattle-s-hottest-new-pizzeria/"
-    },
-    {
-      "id": "razzis-pizzeria",
-      "status": "open",
-      "note": "Online ordering page is live and shows the restaurant open, with an active Order Ahead button and posted opening time of 11:00 AM.",
-      "source": "https://slicelife.com/restaurants/wa/seattle/98103/razzi-s-pizza/menu"
-    },
-    {
-      "id": "candela-pizza",
-      "status": "open",
-      "note": "Seattle Food Truck's directory lists Candela Pizza as an active food trailer (est. 2022) with a current menu and truck-schedule listing, no closure indication.",
-      "source": "https://www.seattlefoodtruck.com/food-trucks/candela-pizza"
-    },
-    {
-      "id": "dudez-woodfired-pizza",
-      "status": "open",
-      "note": "Seattle Food Truck's directory lists Dude'Z as an operating food trailer accepting catering, with no indication the business has closed.",
-      "source": "https://www.seattlefoodtruck.com/food-trucks/dude-z-woodfired-pizza"
-    },
-    {
-      "id": "managers-pizza",
-      "status": "open",
-      "note": "The pizzeria's own ordering site shows an \"Open Now\" indicator, posted hours of 10AM-11PM daily, and active online ordering.",
-      "source": "https://managerspizza.online"
-    },
-    {
-      "id": "moto-pizza",
-      "status": "open",
-      "note": "Moto Pizza's official locations page lists the West Seattle location as currently operating daily 11am-10pm with active online ordering.",
-      "source": "https://motopizza.com/locations/"
-    }
-  ]
+  "updated": "2026-09-02T12:00:00Z",
+  "news": [],
+  "mentions": []
 }
