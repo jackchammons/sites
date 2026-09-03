@@ -2956,7 +2956,34 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/elementalpizzaseattle/"
+      "instagram": "https://www.instagram.com/elementalpizzaseattle/",
+      "factors": {
+        "craft": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/eat-and-drink/seattle-s-best-pizza-from-thick-crust-to-thin",
+          "note": "Seattle Met's pizza roundup credits Elemental's 'old-school pizza tossers' with 'fire-bubbled pies with genuine ambition' despite the family-restaurant setting; its October 2012 opening coverage described blistery-charred, thin crusts topped with local Zoe's meats and Mama Lil's peppers, plus gluten-free and vegan options, in the former Grace Kitchen space at University Village.",
+          "date": "2026-09-03"
+        },
+        "distinctiveness": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/eat-and-drink/seattle-s-best-pizza-from-thick-crust-to-thin",
+          "note": "Seattle Met's pizza roundup credits Elemental's 'old-school pizza tossers' with 'fire-bubbled pies with genuine ambition' despite the family-restaurant setting; its October 2012 opening coverage described blistery-charred, thin crusts topped with local Zoe's meats and Mama Lil's peppers, plus gluten-free and vegan options, in the former Grace Kitchen space at University Village.",
+          "date": "2026-09-03"
+        },
+        "critical": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/eat-and-drink/seattle-s-best-pizza-from-thick-crust-to-thin",
+          "note": "Seattle Met's pizza roundup credits Elemental's 'old-school pizza tossers' with 'fire-bubbled pies with genuine ambition' despite the family-restaurant setting; its October 2012 opening coverage described blistery-charred, thin crusts topped with local Zoe's meats and Mama Lil's peppers, plus gluten-free and vegan options, in the former Grace Kitchen space at University Village.",
+          "date": "2026-09-03"
+        }
+      },
+      "opened": 2012,
+      "priceIndex": 2,
+      "styleGroup": "Wood-fired",
+      "lastVerified": "2026-09-03"
     },
     {
       "id": "eymans-pizza",
@@ -3031,7 +3058,33 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/goodshapepizza/"
+      "instagram": "https://www.instagram.com/goodshapepizza/",
+      "factors": {
+        "craft": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/good-shape-pizza",
+          "note": "The Infatuation rates it 8.8/10 'Great,' praising paper-plate-sized pies with foldable, char-bubbled crusts, crisp pepperoni cups and a mozzarella-pecorino-provolone blend, and singles out the plain cheese pie as better than any takeout slice. Cascade PBS's Rachel Belle names it one of her top five Seattle pizza spots for the Everything-bagel-crusted breakfast pizza and prices ($9-14) less than half the city average.",
+          "date": "2026-09-03"
+        },
+        "distinctiveness": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/good-shape-pizza",
+          "note": "The Infatuation rates it 8.8/10 'Great,' praising paper-plate-sized pies with foldable, char-bubbled crusts, crisp pepperoni cups and a mozzarella-pecorino-provolone blend, and singles out the plain cheese pie as better than any takeout slice. Cascade PBS's Rachel Belle names it one of her top five Seattle pizza spots for the Everything-bagel-crusted breakfast pizza and prices ($9-14) less than half the city average.",
+          "date": "2026-09-03"
+        },
+        "critical": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/good-shape-pizza",
+          "note": "The Infatuation rates it 8.8/10 'Great,' praising paper-plate-sized pies with foldable, char-bubbled crusts, crisp pepperoni cups and a mozzarella-pecorino-provolone blend, and singles out the plain cheese pie as better than any takeout slice. Cascade PBS's Rachel Belle names it one of her top five Seattle pizza spots for the Everything-bagel-crusted breakfast pizza and prices ($9-14) less than half the city average.",
+          "date": "2026-09-03"
+        }
+      },
+      "priceIndex": 1,
+      "styleGroup": "Pizza bar",
+      "lastVerified": "2026-09-03"
     },
     {
       "id": "in-pizza-we-crust",
@@ -3131,7 +3184,32 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/madpizza_/"
+      "instagram": "https://www.instagram.com/madpizza_/",
+      "factors": {
+        "craft": {
+          "value": 4,
+          "setBy": "agent",
+          "source": "https://en.wikipedia.org/wiki/Mad_Pizza",
+          "note": "Sourced from Seattle Times, Seattle Weekly and Eater Seattle coverage, Wikipedia's history of the chain (open since 1995, known for inventive pesto-based pies like the Prozac Pie and Schizophrenic) notes it was named in Eater Seattle's 2012 'Seattle's Worst Pizza' compilation; crowd reviews echo that inconsistency, split between fast, hot delivery and complaints of dry pies and poor service.",
+          "date": "2026-09-03"
+        },
+        "distinctiveness": {
+          "value": 3.5,
+          "setBy": "agent",
+          "source": "https://en.wikipedia.org/wiki/Mad_Pizza",
+          "note": "Sourced from Seattle Times, Seattle Weekly and Eater Seattle coverage, Wikipedia's history of the chain (open since 1995, known for inventive pesto-based pies like the Prozac Pie and Schizophrenic) notes it was named in Eater Seattle's 2012 'Seattle's Worst Pizza' compilation; crowd reviews echo that inconsistency, split between fast, hot delivery and complaints of dry pies and poor service.",
+          "date": "2026-09-03"
+        },
+        "critical": {
+          "value": 3.5,
+          "setBy": "agent",
+          "source": "https://en.wikipedia.org/wiki/Mad_Pizza",
+          "note": "Sourced from Seattle Times, Seattle Weekly and Eater Seattle coverage, Wikipedia's history of the chain (open since 1995, known for inventive pesto-based pies like the Prozac Pie and Schizophrenic) notes it was named in Eater Seattle's 2012 'Seattle's Worst Pizza' compilation; crowd reviews echo that inconsistency, split between fast, hot delivery and complaints of dry pies and poor service.",
+          "date": "2026-09-03"
+        }
+      },
+      "styleGroup": "Neighborhood",
+      "lastVerified": "2026-09-03"
     },
     {
       "id": "managers-pizza",

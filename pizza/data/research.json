@@ -1,5 +1,43 @@
 {
-  "updated": "2026-09-02T12:00:00Z",
-  "news": [],
-  "mentions": []
+  "updated": "2026-09-03T19:05:00Z",
+  "factorRatings": [
+    {
+      "id": "good-shape-pizza",
+      "craft": 7.5,
+      "distinctiveness": 7,
+      "criticScore": 7.5,
+      "priceIndex": 1,
+      "styleGroup": "Pizza bar",
+      "sources": [
+        "https://www.theinfatuation.com/seattle/reviews/good-shape-pizza",
+        "https://www.cascadepbs.org/culture/2025/04/rachel-belle-shares-her-top-5-favorite-seattle-pizza-spots/"
+      ],
+      "note": "The Infatuation rates it 8.8/10 'Great,' praising paper-plate-sized pies with foldable, char-bubbled crusts, crisp pepperoni cups and a mozzarella-pecorino-provolone blend, and singles out the plain cheese pie as better than any takeout slice. Cascade PBS's Rachel Belle names it one of her top five Seattle pizza spots for the Everything-bagel-crusted breakfast pizza and prices ($9-14) less than half the city average."
+    },
+    {
+      "id": "elemental-pizza",
+      "craft": 6,
+      "distinctiveness": 5.5,
+      "criticScore": 6,
+      "opened": 2012,
+      "priceIndex": 2,
+      "styleGroup": "Wood-fired",
+      "sources": [
+        "https://www.seattlemet.com/eat-and-drink/seattle-s-best-pizza-from-thick-crust-to-thin",
+        "https://www.seattlemet.com/eat-and-drink/2012/10/elemental-wood-fired-pizza-opens-in-university-village"
+      ],
+      "note": "Seattle Met's pizza roundup credits Elemental's 'old-school pizza tossers' with 'fire-bubbled pies with genuine ambition' despite the family-restaurant setting; its October 2012 opening coverage described blistery-charred, thin crusts topped with local Zoe's meats and Mama Lil's peppers, plus gluten-free and vegan options, in the former Grace Kitchen space at University Village."
+    },
+    {
+      "id": "mad-pizza",
+      "craft": 4,
+      "distinctiveness": 3.5,
+      "criticScore": 3.5,
+      "styleGroup": "Neighborhood",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Mad_Pizza"
+      ],
+      "note": "Sourced from Seattle Times, Seattle Weekly and Eater Seattle coverage, Wikipedia's history of the chain (open since 1995, known for inventive pesto-based pies like the Prozac Pie and Schizophrenic) notes it was named in Eater Seattle's 2012 'Seattle's Worst Pizza' compilation; crowd reviews echo that inconsistency, split between fast, hot delivery and complaints of dry pies and poor service."
+    }
+  ]
 }
