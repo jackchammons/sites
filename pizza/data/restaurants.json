@@ -3251,7 +3251,9 @@
       "locations": [
         {
           "neighborhood": "Pioneer Square",
-          "address": "419 Occidental Ave S, Seattle, WA 98104"
+          "address": "419 Occidental Ave S, Seattle, WA 98104",
+          "lat": 47.59855,
+          "lon": -122.33326
         }
       ],
       "locationsVerified": null,
@@ -3273,7 +3275,9 @@
       "locations": [
         {
           "neighborhood": "Roosevelt",
-          "address": "6413 Roosevelt Way NE, Seattle, WA 98115"
+          "address": "6413 Roosevelt Way NE, Seattle, WA 98115",
+          "lat": 47.67543,
+          "lon": -122.31751
         }
       ],
       "locationsVerified": null,
