@@ -3235,6 +3235,50 @@
       "locationsSource": null,
       "mentions": [],
       "instagram": "https://www.instagram.com/managerspizzaseattle/"
+    },
+    {
+      "id": "un-po-tipsy",
+      "name": "Un Po Tipsy",
+      "neighborhood": "Pioneer Square",
+      "style": "New York-style, by the slice",
+      "blurb": "Walk-in New York-style pizza-by-the-slice counter from Renee Erickson's Sea Creatures group, part of the RailSpur development alongside Lowlander Brewing.",
+      "url": "https://unpotipsy.com",
+      "status": "open",
+      "statusSource": "https://intentionalist.com/b/un-po-tipsy/",
+      "statusDate": "2026-09-04",
+      "statusChecked": "2026-09-04",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Pioneer Square",
+          "address": "419 Occidental Ave S, Seattle, WA 98104"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "olympic-pizza-pasta",
+      "name": "Olympic Pizza & Pasta",
+      "neighborhood": "Roosevelt",
+      "style": "Greek-style thin crust",
+      "blurb": "Long-running Roosevelt neighborhood pizzeria serving Greek-style thin-crust pies and Mediterranean/Italian dishes for breakfast, lunch and dinner.",
+      "url": "https://seattleolympicpizza.com/",
+      "status": "open",
+      "statusSource": "https://www.yellowpages.com/seattle-wa/mip/olympic-pizza-pasta-8569826",
+      "statusDate": "2026-09-04",
+      "statusChecked": "2026-09-04",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Roosevelt",
+          "address": "6413 Roosevelt Way NE, Seattle, WA 98115"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }
