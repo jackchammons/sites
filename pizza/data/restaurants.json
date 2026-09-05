@@ -2156,7 +2156,9 @@
       "locations": [
         {
           "neighborhood": "Ballard",
-          "address": "500 NW Market St, Seattle, WA 98107"
+          "address": "500 NW Market St, Seattle, WA 98107",
+          "lat": 47.66888,
+          "lon": -122.36344
         },
         {
           "neighborhood": "Wedgwood",
