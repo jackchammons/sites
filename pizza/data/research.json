@@ -1,25 +1,54 @@
 {
-  "updated": "2026-09-04T00:00:00Z",
-  "directory": [
+  "updated": "2026-09-05T00:00:00Z",
+  "locations": [
     {
-      "name": "Un Po Tipsy",
-      "url": "https://unpotipsy.com",
-      "neighborhood": "Pioneer Square",
-      "style": "New York-style, by the slice",
-      "status": "open",
-      "note": "Walk-in New York-style pizza-by-the-slice counter from Renee Erickson's Sea Creatures group, part of the RailSpur development alongside Lowlander Brewing.",
-      "source": "https://intentionalist.com/b/un-po-tipsy/",
-      "address": "419 Occidental Ave S, Seattle, WA 98104"
+      "id": "pi-vegan-pizzeria",
+      "homepage": "https://www.pizzapivegan.com/",
+      "source": "https://www.pizzapivegan.com/",
+      "sites": [
+        {
+          "neighborhood": "Roosevelt",
+          "address": "5301 Roosevelt Way NE, Seattle, WA 98105"
+        }
+      ]
     },
     {
-      "name": "Olympic Pizza & Pasta",
-      "url": "https://seattleolympicpizza.com/",
-      "neighborhood": "Roosevelt",
-      "style": "Greek-style thin crust",
-      "status": "open",
-      "note": "Long-running Roosevelt neighborhood pizzeria serving Greek-style thin-crust pies and Mediterranean/Italian dishes for breakfast, lunch and dinner.",
-      "source": "https://www.yellowpages.com/seattle-wa/mip/olympic-pizza-pasta-8569826",
-      "address": "6413 Roosevelt Way NE, Seattle, WA 98115"
+      "id": "mioposto",
+      "homepage": "https://www.miopostopizza.com/",
+      "source": "https://www.miopostopizza.com/locations",
+      "sites": [
+        {
+          "neighborhood": "Mount Baker",
+          "address": "3601 S McClellan St, Seattle, WA 98144"
+        }
+      ]
+    },
+    {
+      "id": "veraci-pizza",
+      "homepage": "https://www.veracipizza.com/",
+      "source": "https://www.veracipizza.com/",
+      "sites": [
+        {
+          "neighborhood": "Ballard",
+          "address": "500 NW Market St, Seattle, WA 98107"
+        },
+        {
+          "neighborhood": "Wedgwood",
+          "address": "7320 35th Ave NE, Seattle, WA 98115"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "id": "pi-vegan-pizzeria",
+      "instagram": "https://www.instagram.com/pivegan/",
+      "source": "https://www.pizzapivegan.com/"
+    },
+    {
+      "id": "mioposto",
+      "instagram": "https://instagram.com/mioposto",
+      "source": "https://www.miopostopizza.com/"
     }
   ]
 }

@@ -2055,14 +2055,14 @@
       "attributes": {},
       "locations": [
         {
-          "neighborhood": "Roosevelt/University District",
+          "neighborhood": "Roosevelt",
           "address": "5301 Roosevelt Way NE, Seattle, WA 98105",
           "lat": 47.66723,
           "lon": -122.31756
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-09-05",
+      "locationsSource": "https://www.pizzapivegan.com/",
       "mentions": [],
       "factors": {
         "craft": {
@@ -2111,8 +2111,8 @@
           "lon": -122.28811
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-09-05",
+      "locationsSource": "https://www.miopostopizza.com/locations",
       "mentions": [],
       "factors": {
         "craft": {
@@ -2139,7 +2139,7 @@
       "opened": 2006,
       "styleGroup": "Wood-fired",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/mioposto"
+      "instagram": "https://instagram.com/mioposto"
     },
     {
       "id": "veraci-pizza",
@@ -2155,14 +2155,18 @@
       "attributes": {},
       "locations": [
         {
+          "neighborhood": "Ballard",
+          "address": "500 NW Market St, Seattle, WA 98107"
+        },
+        {
           "neighborhood": "Wedgwood",
           "address": "7320 35th Ave NE, Seattle, WA 98115",
           "lat": 47.68191,
           "lon": -122.29015
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-09-05",
+      "locationsSource": "https://www.veracipizza.com/",
       "mentions": [],
       "factors": {
         "craft": {
