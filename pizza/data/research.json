@@ -1,54 +1,41 @@
 {
-  "updated": "2026-09-05T00:00:00Z",
-  "locations": [
+  "updated": "2026-09-06T18:00:00Z",
+  "status": [
     {
-      "id": "pi-vegan-pizzeria",
-      "homepage": "https://www.pizzapivegan.com/",
-      "source": "https://www.pizzapivegan.com/",
-      "sites": [
-        {
-          "neighborhood": "Roosevelt",
-          "address": "5301 Roosevelt Way NE, Seattle, WA 98105"
-        }
-      ]
+      "id": "abecedary",
+      "status": "opening",
+      "note": "Still under construction with permitting delays; only a one-off cheese-slice pop-up at a Hillman City block party has happened, with a full opening not expected until 2027.",
+      "source": "https://hoodline.com/2026/08/hillman-city-gets-first-bite-of-seattle-s-hottest-new-pizzeria/"
     },
     {
-      "id": "mioposto",
-      "homepage": "https://www.miopostopizza.com/",
-      "source": "https://www.miopostopizza.com/locations",
-      "sites": [
-        {
-          "neighborhood": "Mount Baker",
-          "address": "3601 S McClellan St, Seattle, WA 98144"
-        }
-      ]
+      "id": "razzis-pizzeria",
+      "status": "open",
+      "note": "Both the Greenwood and downtown Belltown locations show active listings with reviews and photos current through August 2026.",
+      "source": "https://www.yelp.com/biz/razz%C3%ADs-pizzer%C3%ADa-seattle-4"
     },
     {
-      "id": "veraci-pizza",
-      "homepage": "https://www.veracipizza.com/",
-      "source": "https://www.veracipizza.com/",
-      "sites": [
-        {
-          "neighborhood": "Ballard",
-          "address": "500 NW Market St, Seattle, WA 98107"
-        },
-        {
-          "neighborhood": "Wedgwood",
-          "address": "7320 35th Ave NE, Seattle, WA 98115"
-        }
-      ]
-    }
-  ],
-  "links": [
-    {
-      "id": "pi-vegan-pizzeria",
-      "instagram": "https://www.instagram.com/pivegan/",
-      "source": "https://www.pizzapivegan.com/"
+      "id": "candela-pizza",
+      "status": "open",
+      "note": "The Latin-fusion wood-fired pizza food truck has an active listing updated August 2026 with current address, phone number and daily hours.",
+      "source": "https://www.yelp.com/biz/candela-pizza-seattle"
     },
     {
-      "id": "mioposto",
-      "instagram": "https://instagram.com/mioposto",
-      "source": "https://www.miopostopizza.com/"
+      "id": "dudez-woodfired-pizza",
+      "status": "open",
+      "note": "The Delridge-area wood-fired pizza spot has an active listing updated May 2026 alongside current delivery pages, indicating ongoing operation.",
+      "source": "https://www.yelp.com/biz/dudez-woodfired-pizza-seattle"
+    },
+    {
+      "id": "managers-pizza",
+      "status": "open",
+      "note": "The University District pizzeria has an active listing updated June 2026 showing current hours and a working delivery page.",
+      "source": "https://www.yelp.com/biz/manager-s-pizza-seattle"
+    },
+    {
+      "id": "serious-pie",
+      "status": "open",
+      "note": "The restaurant's own current site lists three operating locations (Downtown, Ballard, Totem Lake); the on-file tomdouglas.com link now 404s but the pizzeria itself is still running.",
+      "source": "https://www.seriouspieseattle.com/"
     }
   ]
 }
