@@ -3306,7 +3306,9 @@
       "locations": [
         {
           "neighborhood": "Lake City",
-          "address": "8014 Lake City Way NE, Seattle, WA 98115"
+          "address": "8014 Lake City Way NE, Seattle, WA 98115",
+          "lat": 47.6869,
+          "lon": -122.31246
         }
       ],
       "locationsVerified": null,
@@ -3350,7 +3352,9 @@
       "locations": [
         {
           "neighborhood": "Delridge / West Seattle",
-          "address": "5604 Delridge Way SW, Seattle, WA 98106"
+          "address": "5604 Delridge Way SW, Seattle, WA 98106",
+          "lat": 47.55167,
+          "lon": -122.36266
         }
       ],
       "locationsVerified": null,
@@ -3372,7 +3376,9 @@
       "locations": [
         {
           "neighborhood": "Capitol Hill",
-          "address": "350 15th Ave E, Seattle, WA 98112"
+          "address": "350 15th Ave E, Seattle, WA 98112",
+          "lat": 47.62198,
+          "lon": -122.31248
         }
       ],
       "locationsVerified": null,
@@ -3394,7 +3400,9 @@
       "locations": [
         {
           "neighborhood": "Ballard",
-          "address": "5105 Ballard Ave NW, Seattle, WA 98107"
+          "address": "5105 Ballard Ave NW, Seattle, WA 98107",
+          "lat": 47.66446,
+          "lon": -122.38131
         }
       ],
       "locationsVerified": null,
@@ -3416,7 +3424,9 @@
       "locations": [
         {
           "neighborhood": "University District",
-          "address": "269 NE 45th St, Seattle, WA 98105"
+          "address": "269 NE 45th St, Seattle, WA 98105",
+          "lat": 47.66123,
+          "lon": -122.32531
         }
       ],
       "locationsVerified": null,
@@ -3438,7 +3448,9 @@
       "locations": [
         {
           "neighborhood": "Phinney Ridge / Greenwood",
-          "address": "7217 Greenwood Ave N, Seattle, WA 98103"
+          "address": "7217 Greenwood Ave N, Seattle, WA 98103",
+          "lat": 47.68128,
+          "lon": -122.35549
         }
       ],
       "locationsVerified": null,
