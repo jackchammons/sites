@@ -1,92 +1,14 @@
 {
-  "updated": "2026-09-09T18:00:00Z",
+  "updated": "2026-09-09T00:00:00Z",
   "directory": [
     {
-      "name": "Modena Pizza & Pasta",
-      "neighborhood": "Lake City",
-      "style": "Italian-American (pizza & pasta)",
+      "name": "Good Luck Bread",
+      "url": "https://pizza.goodluckbread.com/",
+      "neighborhood": "SoDo",
+      "style": "Neapolitan-style sourdough, sold frozen",
       "status": "open",
-      "note": "Neighborhood Italian-American spot serving handcrafted pizza and pasta since 2016, with gluten-free and vegan options.",
-      "source": "https://www.yelp.com/biz/modena-pizza-and-pasta-seattle",
-      "address": "8014 Lake City Way NE, Seattle, WA 98115"
-    },
-    {
-      "name": "Hot Slice Pizza",
-      "url": "https://hotslicepizzasea.com/",
-      "neighborhood": "Interbay",
-      "style": "New York-style, halal",
-      "status": "open",
-      "note": "Family-owned halal NY-style pizza by the slice, whole pies, calzones and pasta; trades as Hot Slice Pizza (permit filed as Mohi Pizza Dba Hot Slice Pizza).",
-      "source": "https://hotslicepizzasea.com/",
-      "address": "41 Dravus St, S10, Seattle, WA 98109"
-    },
-    {
-      "name": "Oskar's Pizza",
-      "neighborhood": "Delridge / West Seattle",
-      "style": "food truck, New York-style",
-      "status": "open",
-      "note": "Mobile pizza food truck (no walk-in storefront) run by Piecora's alum Oskar Guerrero; still active per 2026 reviews and food-truck listings.",
-      "source": "https://www.seattlefoodtruck.com/food-trucks/oskar-s-pizza",
-      "address": "5604 Delridge Way SW, Seattle, WA 98106"
-    },
-    {
-      "name": "Palermo Pizza & Pasta",
-      "url": "https://www.mypalermopizza.com/",
-      "neighborhood": "Capitol Hill",
-      "style": "Italian-American (pizza & pasta), thin crust",
-      "status": "open",
-      "note": "Classic Capitol Hill Italian spot making dough fresh daily; thin-crust pizzas alongside pasta, calzones and salads.",
-      "source": "https://www.mypalermopizza.com/",
-      "address": "350 15th Ave E, Seattle, WA 98112"
-    },
-    {
-      "name": "Pizza Paesano",
-      "neighborhood": "Ballard",
-      "style": "Neapolitan pop-up",
-      "status": "open",
-      "note": "Neapolitan pizza pop-up run by Stefano Conte, operating out of Lock & Keel in Ballard (Fri-Sat nights) and Ruby Bar in Greenwood (Mondays); no standalone storefront.",
-      "source": "https://streetfoodfinder.com/PizzaPaesano",
-      "address": "5105 Ballard Ave NW, Seattle, WA 98107"
-    },
-    {
-      "name": "Pudge Bros Pizza",
-      "url": "https://www.pudgebros.com/",
-      "neighborhood": "University District",
-      "style": "New York-style",
-      "status": "open",
-      "note": "Family-owned NY-style pizzeria open since 1997, dough made fresh daily in house.",
-      "source": "https://www.yelp.com/biz/pudge-bros-pizza-seattle",
-      "address": "269 NE 45th St, Seattle, WA 98105"
-    },
-    {
-      "name": "Ridge Pizza",
-      "url": "https://www.ridgepizza.com/",
-      "neighborhood": "Phinney Ridge / Greenwood",
-      "style": "pizza & bar",
-      "status": "open",
-      "note": "Family-friendly pizza and bar with arcade games in the former Berserk Game Space; a related but separate second location (Ridge Pizza Northeast) operates in the Ravenna area.",
-      "source": "https://www.ridgepizza.com/",
-      "address": "7217 Greenwood Ave N, Seattle, WA 98103"
-    }
-  ],
-  "candidateReview": [
-    {
-      "name": "Pizza Gallery The",
-      "verdict": "unverifiable",
-      "note": "Real, long-running (since 1992) pizzeria, but its own site and area listings place it in Burien, WA, not inside Seattle city limits -- the King County permit's 'Seattle, WA 98146' mailing address doesn't reflect the municipal boundary here, so it can't be confirmed to meet the directory's Seattle-location inclusion rule.",
-      "source": "https://www.pizzagallery.biz/"
-    },
-    {
-      "name": "Pizza Twist",
-      "verdict": "chain",
-      "note": "Seattle franchisee of Chicago's Pizza With-A-Twist, a national franchise with roughly 150 locations across many states; excluded as a chain.",
-      "source": "https://www.franchising.com/chicagospizzawithatwist/"
-    },
-    {
-      "name": "Razzi'S Pizzeria Downtown",
-      "verdict": "duplicate",
-      "note": "Downtown/Belltown branch of Razzi's Pizzeria, already on file under its original Greenwood location; permits are issued per-location for the same business.",
-      "source": "https://dineinseattle.com/dt_listing/razzis-pizzeria-downtown/"
+      "note": "Delivery-only operation baking naturally-leavened, hand-shaped Neapolitan-style pizzas that are par-baked, frozen, and finished in the buyer's own oven, out of a SoDo commissary kitchen with Saturday pickup.",
+      "source": "https://www.seattlemet.com/eat-and-drink/2024/07/good-luck-bread-frozen-pizza-dough"
     }
   ]
 }

@@ -3444,6 +3444,23 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": []
+    },
+    {
+      "id": "good-luck-bread",
+      "name": "Good Luck Bread",
+      "neighborhood": "SoDo",
+      "style": "Neapolitan-style sourdough, sold frozen",
+      "blurb": "Delivery-only operation baking naturally-leavened, hand-shaped Neapolitan-style pizzas that are par-baked, frozen, and finished in the buyer's own oven, out of a SoDo commissary kitchen with Saturday pickup.",
+      "url": "https://pizza.goodluckbread.com/",
+      "status": "open",
+      "statusSource": "https://www.seattlemet.com/eat-and-drink/2024/07/good-luck-bread-frozen-pizza-dough",
+      "statusDate": "2026-09-09",
+      "statusChecked": "2026-09-09",
+      "attributes": {},
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }
