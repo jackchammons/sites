@@ -516,7 +516,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-08-20",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "modena-pizza-pasta",
+      "resolvedDate": "2026-09-09"
     },
     {
       "key": "mohi dba hot slice|41",
@@ -546,7 +548,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-03-17",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "palermo-pizza-pasta",
+      "resolvedDate": "2026-09-09"
     },
     {
       "key": "gallery|1117",
@@ -556,7 +560,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-03-31",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "unverifiable",
+      "note": "Real, long-running (since 1992) pizzeria, but its own site and area listings place it in Burien, WA, not inside Seattle city limits -- the King County permit's 'Seattle, WA 98146' mailing address doesn't reflect the municipal boundary here, so it can't be confirmed to meet the directory's Seattle-location inclusion rule.",
+      "resolutionSource": "https://www.pizzagallery.biz/",
+      "resolvedDate": "2026-09-09"
     },
     {
       "key": "paesano|5105",
@@ -566,7 +574,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-04-15",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "pizza-paesano",
+      "resolvedDate": "2026-09-09"
     },
     {
       "key": "twist|12319",
@@ -576,7 +586,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-02-26",
-      "status": "pending"
+      "status": "chain",
+      "verdict": "chain",
+      "note": "Seattle franchisee of Chicago's Pizza With-A-Twist, a national franchise with roughly 150 locations across many states; excluded as a chain.",
+      "resolutionSource": "https://www.franchising.com/chicagospizzawithatwist/",
+      "resolvedDate": "2026-09-09"
     },
     {
       "key": "pudge bros|269",
@@ -586,7 +600,9 @@
         "kc-health"
       ],
       "lastInspection": "2025-05-20",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "pudge-bros-pizza",
+      "resolvedDate": "2026-09-09"
     },
     {
       "key": "razzis downtown|1314",
@@ -596,7 +612,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-07-21",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "duplicate",
+      "note": "Downtown/Belltown branch of Razzi's Pizzeria, already on file under its original Greenwood location; permits are issued per-location for the same business.",
+      "resolutionSource": "https://dineinseattle.com/dt_listing/razzis-pizzeria-downtown/",
+      "resolvedDate": "2026-09-09"
     },
     {
       "key": "ridge|7217",
@@ -606,7 +626,9 @@
         "kc-health"
       ],
       "lastInspection": "2025-11-06",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "ridge-pizza",
+      "resolvedDate": "2026-09-09"
     },
     {
       "key": "ridge northeast|3338",

@@ -3290,6 +3290,160 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": []
+    },
+    {
+      "id": "modena-pizza-pasta",
+      "name": "Modena Pizza & Pasta",
+      "neighborhood": "Lake City",
+      "style": "Italian-American (pizza & pasta)",
+      "blurb": "Neighborhood Italian-American spot serving handcrafted pizza and pasta since 2016, with gluten-free and vegan options.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://www.yelp.com/biz/modena-pizza-and-pasta-seattle",
+      "statusDate": "2026-09-09",
+      "statusChecked": "2026-09-09",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Lake City",
+          "address": "8014 Lake City Way NE, Seattle, WA 98115"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "hot-slice-pizza",
+      "name": "Hot Slice Pizza",
+      "neighborhood": "Interbay",
+      "style": "New York-style, halal",
+      "blurb": "Family-owned halal NY-style pizza by the slice, whole pies, calzones and pasta; trades as Hot Slice Pizza (permit filed as Mohi Pizza Dba Hot Slice Pizza).",
+      "url": "https://hotslicepizzasea.com/",
+      "status": "open",
+      "statusSource": "https://hotslicepizzasea.com/",
+      "statusDate": "2026-09-09",
+      "statusChecked": "2026-09-09",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Interbay",
+          "address": "41 Dravus St, S10, Seattle, WA 98109"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "oskars-pizza",
+      "name": "Oskar's Pizza",
+      "neighborhood": "Delridge / West Seattle",
+      "style": "food truck, New York-style",
+      "blurb": "Mobile pizza food truck (no walk-in storefront) run by Piecora's alum Oskar Guerrero; still active per 2026 reviews and food-truck listings.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://www.seattlefoodtruck.com/food-trucks/oskar-s-pizza",
+      "statusDate": "2026-09-09",
+      "statusChecked": "2026-09-09",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Delridge / West Seattle",
+          "address": "5604 Delridge Way SW, Seattle, WA 98106"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "palermo-pizza-pasta",
+      "name": "Palermo Pizza & Pasta",
+      "neighborhood": "Capitol Hill",
+      "style": "Italian-American (pizza & pasta), thin crust",
+      "blurb": "Classic Capitol Hill Italian spot making dough fresh daily; thin-crust pizzas alongside pasta, calzones and salads.",
+      "url": "https://www.mypalermopizza.com/",
+      "status": "open",
+      "statusSource": "https://www.mypalermopizza.com/",
+      "statusDate": "2026-09-09",
+      "statusChecked": "2026-09-09",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Capitol Hill",
+          "address": "350 15th Ave E, Seattle, WA 98112"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "pizza-paesano",
+      "name": "Pizza Paesano",
+      "neighborhood": "Ballard",
+      "style": "Neapolitan pop-up",
+      "blurb": "Neapolitan pizza pop-up run by Stefano Conte, operating out of Lock & Keel in Ballard (Fri-Sat nights) and Ruby Bar in Greenwood (Mondays); no standalone storefront.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://streetfoodfinder.com/PizzaPaesano",
+      "statusDate": "2026-09-09",
+      "statusChecked": "2026-09-09",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Ballard",
+          "address": "5105 Ballard Ave NW, Seattle, WA 98107"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "pudge-bros-pizza",
+      "name": "Pudge Bros Pizza",
+      "neighborhood": "University District",
+      "style": "New York-style",
+      "blurb": "Family-owned NY-style pizzeria open since 1997, dough made fresh daily in house.",
+      "url": "https://www.pudgebros.com/",
+      "status": "open",
+      "statusSource": "https://www.yelp.com/biz/pudge-bros-pizza-seattle",
+      "statusDate": "2026-09-09",
+      "statusChecked": "2026-09-09",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "University District",
+          "address": "269 NE 45th St, Seattle, WA 98105"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "ridge-pizza",
+      "name": "Ridge Pizza",
+      "neighborhood": "Phinney Ridge / Greenwood",
+      "style": "pizza & bar",
+      "blurb": "Family-friendly pizza and bar with arcade games in the former Berserk Game Space; a related but separate second location (Ridge Pizza Northeast) operates in the Ravenna area.",
+      "url": "https://www.ridgepizza.com/",
+      "status": "open",
+      "statusSource": "https://www.ridgepizza.com/",
+      "statusDate": "2026-09-09",
+      "statusChecked": "2026-09-09",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Phinney Ridge / Greenwood",
+          "address": "7217 Greenwood Ave N, Seattle, WA 98103"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }
