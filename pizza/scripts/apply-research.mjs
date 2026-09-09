@@ -211,7 +211,7 @@ if (fs.existsSync(candidatesPath)) {
       c.status = it.verdict === 'chain' ? 'chain' : 'rejected';
       c.verdict = it.verdict;
       c.note = it.note;
-      if (it.source) c.resolutionSource = it.source;
+      if (it.source && /^https:/i.test(it.source)) c.resolutionSource = it.source;
       c.resolvedDate = today;
       candChanges++;
     }

@@ -161,7 +161,12 @@ test('candidateReview: bad verdicts, unknown/resolved names, thin notes fail', (
   reviewFails({ name: 'Nowhere Pizza', verdict: 'closed', note: 'long enough note here' }, 'not a pending candidate');
   reviewFails({ name: 'Belltown Pizza', verdict: 'closed', note: 'short' }, 'note missing or too short');
   reviewFails({ name: 'Belltown Pizza', verdict: 'closed', note: 'long enough note here',
-    source: 'http://x.com' }, 'must be https');
+    source: 'not a url' }, 'not a valid URL');
+});
+
+test('candidateReview: an http source is tolerated (dropped at apply), never fatal', () => {
+  assert.deepEqual(review({ name: 'Belltown Pizza', verdict: 'closed',
+    note: 'long enough note here', source: 'http://x.com/directions' }).fails, []);
 });
 
 test('candidateReview: without a candidates queue, name matching is skipped', () => {

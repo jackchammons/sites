@@ -267,7 +267,14 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
     if (typeof it?.note !== 'string' || it.note.trim().length < 10) {
       bad('candidateReview', i, 'note missing or too short — say what you found');
     }
-    if (it?.source != null) checkUrl('candidateReview', i, it.source, 'source');
+    /* source is optional here and a verdict publishes nothing to the site --
+     * it only marks a candidate resolved -- so a non-https source is dropped
+     * at apply time rather than costing the whole run (run #62 lost ten
+     * verified candidates to one http:// directions page). */
+    if (it?.source != null) {
+      try { new URL(it.source); }
+      catch { bad('candidateReview', i, `source is not a valid URL: ${it.source}`); }
+    }
   });
 
   /* ---- newAttributes: registry additions ---- */
