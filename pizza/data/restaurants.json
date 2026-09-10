@@ -2218,8 +2218,8 @@
           "lon": -122.31511
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-09-10",
+      "locationsSource": "https://www.southtownpie.com/",
       "mentions": [],
       "factors": {
         "craft": {
@@ -2245,7 +2245,8 @@
       },
       "priceIndex": 2,
       "styleGroup": "Pizza bar",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://instagram.com/southtownpie_seattle"
     },
     {
       "id": "pizzeria-22",
@@ -2261,14 +2262,14 @@
       "attributes": {},
       "locations": [
         {
-          "neighborhood": "Admiral, West Seattle",
+          "neighborhood": "West Seattle",
           "address": "4213 SW College St, Seattle, WA 98116",
           "lat": 47.58288,
           "lon": -122.38589
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-09-10",
+      "locationsSource": "https://www.pizzeria22.com/",
       "mentions": [],
       "factors": {
         "craft": {
@@ -2294,7 +2295,8 @@
       },
       "priceIndex": 2,
       "styleGroup": "Neapolitan",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://www.instagram.com/pizzeria__22/"
     },
     {
       "id": "johnny-mos-pizzeria",
@@ -3472,7 +3474,8 @@
       "locations": [],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/goodluckbread/"
     }
   ]
 }

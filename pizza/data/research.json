@@ -1,14 +1,44 @@
 {
-  "updated": "2026-09-09T00:00:00Z",
-  "directory": [
+  "updated": "2026-09-10T18:00:00Z",
+  "locations": [
     {
-      "name": "Good Luck Bread",
-      "url": "https://pizza.goodluckbread.com/",
-      "neighborhood": "SoDo",
-      "style": "Neapolitan-style sourdough, sold frozen",
-      "status": "open",
-      "note": "Delivery-only operation baking naturally-leavened, hand-shaped Neapolitan-style pizzas that are par-baked, frozen, and finished in the buyer's own oven, out of a SoDo commissary kitchen with Saturday pickup.",
-      "source": "https://www.seattlemet.com/eat-and-drink/2024/07/good-luck-bread-frozen-pizza-dough"
+      "id": "south-town-pie",
+      "homepage": "https://www.southtownpie.com/",
+      "source": "https://www.southtownpie.com/",
+      "sites": [
+        {
+          "neighborhood": "South Park",
+          "address": "8611 14th Ave S, Seattle, WA 98108"
+        }
+      ]
+    },
+    {
+      "id": "pizzeria-22",
+      "homepage": "https://www.pizzeria22.com/",
+      "source": "https://www.pizzeria22.com/",
+      "sites": [
+        {
+          "neighborhood": "West Seattle",
+          "address": "4213 SW College St, Seattle, WA 98116"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "id": "good-luck-bread",
+      "instagram": "https://www.instagram.com/goodluckbread/",
+      "source": "https://pizza.goodluckbread.com/"
+    },
+    {
+      "id": "south-town-pie",
+      "instagram": "https://instagram.com/southtownpie_seattle",
+      "source": "https://www.southtownpie.com/"
+    },
+    {
+      "id": "pizzeria-22",
+      "instagram": "https://www.instagram.com/pizzeria__22/",
+      "source": "https://www.pizzeria22.com/"
     }
   ]
 }
