@@ -1023,7 +1023,7 @@
     },
     {
       "weekKey": "2026-W37",
-      "date": "2026-09-09",
+      "date": "2026-09-10",
       "week": 37,
       "ranks": {
         "delancey": 1,
@@ -1056,8 +1056,8 @@
         "slice-box": 28,
         "big-marios": 29,
         "my-friend-dereks": 30,
-        "pi-vegan-pizzeria": 31,
-        "via-tribunali": 32,
+        "via-tribunali": 31,
+        "pi-vegan-pizzeria": 32,
         "talaricos": 33,
         "proletariat-pizza": 34,
         "pizzeria-22": 35,
@@ -1080,7 +1080,7 @@
       "scores": {
         "delancey": 88.8,
         "windy-city-pie": 86.3,
-        "dinos-tomato-pie": 84.7,
+        "dinos-tomato-pie": 84.6,
         "serious-pie": 84.6,
         "tutta-bella": 83.5,
         "cornelly": 82.5,
@@ -1088,12 +1088,12 @@
         "independent-pizzeria": 81,
         "pagliacci": 79.7,
         "mioposto": 78.9,
-        "lupo": 78.2,
-        "cornuto-pizzeria": 75.7,
+        "lupo": 78.1,
+        "cornuto-pizzeria": 75.6,
         "moto-pizza": 74.7,
         "world-pizza": 73,
         "razzis-pizzeria": 72.3,
-        "oxbow": 69.8,
+        "oxbow": 69.7,
         "elemental-pizza": 68.5,
         "pizza-by-ruffin": 68,
         "sacro-bosco-pizza-wine": 66,
@@ -1108,8 +1108,8 @@
         "slice-box": 57.7,
         "big-marios": 57.5,
         "my-friend-dereks": 57.5,
-        "pi-vegan-pizzeria": 57,
         "via-tribunali": 57,
+        "pi-vegan-pizzeria": 56.9,
         "talaricos": 56.3,
         "proletariat-pizza": 55.8,
         "pizzeria-22": 55.6,
@@ -1370,19 +1370,19 @@
           "value": 7.8,
           "penalty": 0
         },
-        "pi-vegan-pizzeria": {
-          "reputation": 0,
-          "critical": 7.5,
-          "craft": 7,
-          "distinctiveness": 8,
-          "value": 7.6,
-          "penalty": 0
-        },
         "via-tribunali": {
           "reputation": 0,
           "critical": 8.3,
           "craft": 8.5,
           "distinctiveness": 7.4,
+          "value": 7.6,
+          "penalty": 0
+        },
+        "pi-vegan-pizzeria": {
+          "reputation": 0,
+          "critical": 7.5,
+          "craft": 7,
+          "distinctiveness": 8,
           "value": 7.6,
           "penalty": 0
         },
