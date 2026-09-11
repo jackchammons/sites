@@ -3226,7 +3226,7 @@
       "neighborhood": "University District",
       "style": "Indian-Italian fusion",
       "blurb": "Newer neighborhood spot building its menu around American and Indian fusion pizzas, plus appetizers and sandwiches.",
-      "url": null,
+      "url": "https://managerspizza.online/",
       "status": "open",
       "statusSource": "https://nextdoor.com/pages/managers-pizza-seattle-wa/",
       "statusDate": "2026-08-31",
@@ -3337,7 +3337,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/hotslicepizzasea/"
     },
     {
       "id": "oskars-pizza",
@@ -3393,7 +3394,7 @@
       "neighborhood": "Ballard",
       "style": "Neapolitan pop-up",
       "blurb": "Neapolitan pizza pop-up run by Stefano Conte, operating out of Lock & Keel in Ballard (Fri-Sat nights) and Ruby Bar in Greenwood (Mondays); no standalone storefront.",
-      "url": null,
+      "url": "https://www.instagram.com/pizza_paesano_seattle/",
       "status": "open",
       "statusSource": "https://streetfoodfinder.com/PizzaPaesano",
       "statusDate": "2026-09-09",
@@ -3409,7 +3410,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/pizza_paesano_seattle/"
     },
     {
       "id": "pudge-bros-pizza",

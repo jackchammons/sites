@@ -1,44 +1,21 @@
 {
-  "updated": "2026-09-10T18:00:00Z",
-  "locations": [
-    {
-      "id": "south-town-pie",
-      "homepage": "https://www.southtownpie.com/",
-      "source": "https://www.southtownpie.com/",
-      "sites": [
-        {
-          "neighborhood": "South Park",
-          "address": "8611 14th Ave S, Seattle, WA 98108"
-        }
-      ]
-    },
-    {
-      "id": "pizzeria-22",
-      "homepage": "https://www.pizzeria22.com/",
-      "source": "https://www.pizzeria22.com/",
-      "sites": [
-        {
-          "neighborhood": "West Seattle",
-          "address": "4213 SW College St, Seattle, WA 98116"
-        }
-      ]
-    }
-  ],
+  "updated": "2026-09-11T18:30:00Z",
   "links": [
     {
-      "id": "good-luck-bread",
-      "instagram": "https://www.instagram.com/goodluckbread/",
-      "source": "https://pizza.goodluckbread.com/"
+      "id": "hot-slice-pizza",
+      "instagram": "https://www.instagram.com/hotslicepizzasea/",
+      "source": "https://www.instagram.com/hotslicepizzasea/"
     },
     {
-      "id": "south-town-pie",
-      "instagram": "https://instagram.com/southtownpie_seattle",
-      "source": "https://www.southtownpie.com/"
+      "id": "managers-pizza",
+      "website": "https://managerspizza.online/",
+      "source": "https://managerspizza.online/"
     },
     {
-      "id": "pizzeria-22",
-      "instagram": "https://www.instagram.com/pizzeria__22/",
-      "source": "https://www.pizzeria22.com/"
+      "id": "pizza-paesano",
+      "website": "https://www.instagram.com/pizza_paesano_seattle/",
+      "instagram": "https://www.instagram.com/pizza_paesano_seattle/",
+      "source": "https://www.instagram.com/pizza_paesano_seattle/"
     }
   ]
 }
