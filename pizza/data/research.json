@@ -1,21 +1,41 @@
 {
-  "updated": "2026-09-11T18:30:00Z",
-  "links": [
+  "updated": "2026-09-11T18:00:00Z",
+  "status": [
     {
-      "id": "hot-slice-pizza",
-      "instagram": "https://www.instagram.com/hotslicepizzasea/",
-      "source": "https://www.instagram.com/hotslicepizzasea/"
+      "id": "abecedary",
+      "status": "opening",
+      "note": "Still under construction with permitting delays; only a one-day pop-up preview has been held in Hillman City as of August 2026, with the brick-and-mortar not expected until 2027.",
+      "source": "https://hoodline.com/2026/08/hillman-city-gets-first-bite-of-seattle-s-hottest-new-pizzeria/"
     },
     {
-      "id": "managers-pizza",
-      "website": "https://managerspizza.online/",
-      "source": "https://managerspizza.online/"
+      "id": "razzis-pizzeria",
+      "status": "open",
+      "note": "Yelp listing for the Greenwood location is current as of September 2026 with active reviews and no closure notice.",
+      "source": "https://www.yelp.com/biz/razz%C3%ADs-pizzer%C3%ADa-seattle-4"
     },
     {
-      "id": "pizza-paesano",
-      "website": "https://www.instagram.com/pizza_paesano_seattle/",
-      "instagram": "https://www.instagram.com/pizza_paesano_seattle/",
-      "source": "https://www.instagram.com/pizza_paesano_seattle/"
+      "id": "candela-pizza",
+      "status": "open",
+      "note": "Food truck's Yelp listing (updated August 2026) and dedicated site show current hours and menu with no closure notice.",
+      "source": "https://www.yelp.com/biz/candela-pizza-seattle"
+    },
+    {
+      "id": "dudez-woodfired-pizza",
+      "status": "open",
+      "note": "Ordering page confirms current posted hours (Tue-Sun 11am-8pm) for the Fuhrman Ave E location.",
+      "source": "https://dudez-woodfired-pizza.grubbio.com/"
+    },
+    {
+      "id": "modena-pizza-pasta",
+      "status": "open",
+      "note": "Yelp listing (updated September 2026, 221 reviews) plus active DoorDash/Toast ordering pages show the Lake City Way location still operating.",
+      "source": "https://www.yelp.com/biz/modena-pizza-and-pasta-seattle"
+    },
+    {
+      "id": "oskars-pizza",
+      "status": "open",
+      "note": "Roaming Hunger profile shows an established, ongoing food truck presence, and its Yelp listing is current as of August 2026 with no closure notice.",
+      "source": "https://roaminghunger.com/oskars-pizza/"
     }
   ]
 }
