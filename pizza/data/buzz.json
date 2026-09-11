@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-10T16:59:46.046Z",
+  "updated": "2026-09-11T17:01:54.800Z",
   "sources": 4,
   "items": [
     {
@@ -61,7 +61,7 @@
     {
       "title": "RIP to Broadway’s Guillotine, First Hill’s Italian Family Pizza",
       "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPR3hKOENDbEx0a1lzMWNtek80d3NYUl94c1pMeVZIOUttV0FHNDBaRnkxVWVIdGMxdWEwSVlHWC1jLXNvUWZmM2kzWmdYbXFodWJON21CNkFJQnIwSTlIc3VGcFhFbDJDdHVpQVA0blhOcUtYQ2thS2lDYWdTQURMUW5MVUFFaldRcEhpXzdnc3pYYXFMTDZhenRXeDhnR0FfaTQxd1RBaw?oc=5",
-      "source": "CHS Capitol Hill Seattle News",
+      "source": "capitolhillseattle.com",
       "published": "2026-07-13T07:00:00.000Z",
       "kind": "closing",
       "mentions": []
@@ -103,7 +103,7 @@
     {
       "title": "Legacy in the Making: Head Chefs Gabriel Castro and Isidro Ocampo acquire West Seattle’s Pegasus Pizza",
       "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxPYjA0S01HbEVBN1U4V1BuSE82N09WenQ1NnctNmR6M1NXcGVpd1daaVd6S3BBYXpneFFad1A5Y09QSjlQbmF1Mmg1ZlN5cks4eTQ1U3MxOWpRZVNua0cwTFdOVGEwb0RONGFEb2M4SG00UTV0dVlTYjBud3VzU3duVjR6aU9femE5NTk2N2NhdnNpb2s3czdHU1hyMk1JNTZqaUhmMzdfNjh6cURzM0xjX0c0RlpsdjFaSTEtWmhRcUkyMG41VDNEVw?oc=5",
-      "source": "westsideseattle.com",
+      "source": "Westside Seattle",
       "published": "2026-06-08T07:00:00.000Z",
       "kind": "mention",
       "mentions": [
@@ -148,14 +148,6 @@
       "source": "MyNorthwest.com",
       "published": "2026-05-15T07:00:00.000Z",
       "kind": "mention",
-      "mentions": []
-    },
-    {
-      "title": "Strega Pizzeria closes after two years in Ballard",
-      "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxNQVdSV1M3VG1WQzgyMWJfWFZlUS1QUGZfRGZkQTJCbUVRUlBkTDY1MGNqWTBtaDdqdUEtQmFSZVVLN19lQmw4dlhXSkF4V25TeXR5U2Fsck9wQ2hFZTVDckllQ2pIeTFpTG9JSmI3QWN2aDcyYm9jN1FBRjd3Tmx1d3pqMDF6OUtUNWZXbXpPUEc?oc=5",
-      "source": "My Ballard",
-      "published": "2026-05-14T07:00:00.000Z",
-      "kind": "closing",
       "mentions": []
     }
   ]
