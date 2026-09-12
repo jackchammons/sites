@@ -203,9 +203,14 @@ if (task === 'social') {
   // runs bigger than the fact-verification tasks. Closed entries are excluded:
   // their sites die, and lapsed domains are traps (one pizzeria's old domain
   // now serves a gambling site).
+  // Entries with no website come first; within a tier the order is shuffled.
+  // An alphabetical order stalled: entries the agent could not find a handle
+  // for stayed at the head of the list, and everything past the fifteenth
+  // name never reached a brief.
   const worklist = openField
     .filter(r => !r.instagram || !r.url)
-    .sort((a, b) => (a.url ? 1 : 0) - (b.url ? 1 : 0) || a.name.localeCompare(b.name))
+    .sort(() => Math.random() - 0.5)
+    .sort((a, b) => (a.url ? 1 : 0) - (b.url ? 1 : 0))
     .slice(0, 15);
   brief = `Your task: record each pizzeria's web presence — its Instagram
 profile, and an official website for any entry missing one. Cover these,
