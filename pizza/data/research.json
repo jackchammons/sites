@@ -2,70 +2,58 @@
   "updated": "2026-09-12T00:00:00Z",
   "directory": [
     {
-      "name": "Downtown Romio's Pizza & Pasta",
-      "neighborhood": "Downtown (Pike St)",
-      "style": "Greek-influenced pizza & pasta",
+      "name": "Vera's Pizza and Bar",
+      "url": "https://www.verasballard.com/",
+      "neighborhood": "Ballard",
+      "style": "New York-style slice",
       "status": "open",
-      "note": "Longtime Pike Street pizza and pasta shop (in business 27+ years) known for Greek-influenced toppings like gyro meat, olives and feta; trades as 'Downtown Romio's' per its own branding and social pages, though the King County permit is filed as 'Romio'S Pizza & Pasta'.",
-      "source": "https://www.facebook.com/downtownromios/",
-      "address": "1011 Pike St, C, Seattle, WA 98101"
-    },
-    {
-      "name": "Seattle Pizza & Bar",
-      "neighborhood": "Belltown / South Lake Union (two locations)",
-      "status": "open",
-      "note": "Pizza-forward restaurant with a full bar; handcrafted pizzas anchor the menu at both its Belltown (Western Ave) and South Lake Union (Fairview Ave N) locations, which are one business under one record.",
-      "source": "https://www.seattlepizzaandbar.com/",
-      "address": "2801 Western Ave, E, Seattle, WA 98121"
-    },
-    {
-      "name": "Smoking Monkey Pizza",
-      "neighborhood": "Magnolia",
-      "style": "Wood-fired",
-      "status": "open",
-      "note": "Wood-fired pizzeria with a Magnolia storefront plus sister locations in Renton and Spokane; pizza and calzones from a Woodstone oven are the core menu.",
-      "source": "https://www.smokingmonkeypizza.com/",
-      "address": "3111 W Mcgraw St, #103, Seattle, WA 98199"
-    },
-    {
-      "name": "Soprano's Pizza & Pasta - Lake City",
-      "neighborhood": "Lake City",
-      "status": "open",
-      "note": "Family-owned Lake City pizza and pasta restaurant with active social/delivery listings as of 2026; distinct business from the on-file Soprano's Antico.",
-      "source": "https://www.facebook.com/p/Sopranos-Pizza-Pasta-Lake-City-100064063243882/",
-      "address": "11754 15th Ave Ne, Seattle, WA 98125"
+      "note": "Late-night Ballard pizza-and-bar concept that opened in 2019 in the space of the longtime Vera's diner; New York-style slices with 48-hour fermented dough are the core of the menu, alongside a full bar.",
+      "source": "https://www.myballard.com/2019/09/18/veras-pizza-bar-now-open/",
+      "address": "5417 22nd Ave NW, Seattle, WA 98107"
     }
   ],
   "candidateReview": [
     {
-      "name": "Mohi Pizza Dba Hot Slice Pizza",
+      "name": "Romio'S Pizza & Pasta",
       "verdict": "duplicate",
-      "note": "Trades as Hot Slice Pizza at 41 Dravus St, already on file as 'Hot Slice Pizza'.",
-      "source": "https://hotslicepizzasea.com/"
+      "note": "Same restaurant as the on-file 'Downtown Romio's Pizza & Pasta' at the identical 1011 Pike St address; the permit is filed under the plainer 'Romio'S Pizza & Pasta' name.",
+      "source": "https://downtownromios.com/directions/"
     },
     {
-      "name": "Oskar'S Pizza (Kc721)",
+      "name": "Seattle Pizza And Bar",
       "verdict": "duplicate",
-      "note": "Same food truck business as the on-file 'Oskar's Pizza'; it uses a prep kitchen on Delridge Way SW matching the permit address.",
-      "source": "https://www.westsideseattle.com/robinson-papers/2018/05/31/oskars-pizza-truck-new-and-hot"
+      "note": "Both permit branches (2801 Western Ave and 224 Fairview Ave N) belong to the single on-file 'Seattle Pizza & Bar' business, which operates both locations.",
+      "source": "https://www.seattlepizzaandbar.com/"
     },
     {
-      "name": "Ridge Pizza - Northeast",
+      "name": "Sopranos Pizza - Lake City",
       "verdict": "duplicate",
-      "note": "Expansion location of the on-file 'Ridge Pizza' (originally Phinney Ridge, opened 2012); same ownership, with the Northeast site's contact routing through matt@ridgepizza.com.",
-      "source": "https://www.ridgepizza.com/coming-soon"
+      "note": "Same restaurant as the on-file 'Soprano's Pizza & Pasta - Lake City' at the identical 11754 15th Ave NE address.",
+      "source": "https://lakecitysopranos.com/"
     },
     {
-      "name": "Seattle Super Slices",
-      "verdict": "unverifiable",
-      "note": "No business currently trades under this exact name beyond an inaccessible Facebook page. The permit address (1727 1st Ave S) is now home to a pizza-by-the-slice shop called Slice Box Pizza, but no source ties the two names together as the same entity.",
-      "source": "https://www.sliceboxpizza.com/"
+      "name": "Tutta Bella Neapolitan Pizzeria",
+      "verdict": "duplicate",
+      "note": "Both permit branches (4918 Rainier Ave S and 4411 Stone Way N) are locations of the on-file Neapolitan pizzeria chain 'Tutta Bella'.",
+      "source": "https://www.tuttabella.com/location/tutta-bella-wallingford/"
     },
     {
-      "name": "Swing Sandwiches And Pizza",
-      "verdict": "not-pizza",
-      "note": "Sandwich-and-focaccia counter that also sells well-regarded pizza slices, but sandwiches are billed first in its own name and Yelp categorizes it primarily as Sandwiches, so pizza isn't clearly the core of the business.",
-      "source": "https://www.yelp.com/biz/swing-sandwiches-and-pizza-seattle"
+      "name": "Tutta Bella Neapolitan Pizzeria (Kc489)",
+      "verdict": "duplicate",
+      "note": "A second permit registration at the same 4918 Rainier Ave S address already covered by the on-file 'Tutta Bella' chain; not a separate business.",
+      "source": "https://www.tripadvisor.com/Restaurant_Review-g60878-d487164-Reviews-Tutta_Bella_Neapolitan_Pizzeria-Seattle_Washington.html"
+    },
+    {
+      "name": "Veraci Pizza Catering Kitchen",
+      "verdict": "duplicate",
+      "note": "Production/commissary kitchen for the on-file 'Veraci Pizza' catering and mobile wood-fired pizza operation, not a separate storefront business.",
+      "source": "https://www.veracipizza.com/catering"
+    },
+    {
+      "name": "Zeeks Pizza White Center",
+      "verdict": "duplicate",
+      "note": "White Center location of the on-file 'Zeeks Pizza' chain, per the chain's own location page.",
+      "source": "https://zeekspizza.com/location/white-center/"
     }
   ]
 }

@@ -3566,6 +3566,28 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": []
+    },
+    {
+      "id": "veras-pizza-and-bar",
+      "name": "Vera's Pizza and Bar",
+      "neighborhood": "Ballard",
+      "style": "New York-style slice",
+      "blurb": "Late-night Ballard pizza-and-bar concept that opened in 2019 in the space of the longtime Vera's diner; New York-style slices with 48-hour fermented dough are the core of the menu, alongside a full bar.",
+      "url": "https://www.verasballard.com/",
+      "status": "open",
+      "statusSource": "https://www.myballard.com/2019/09/18/veras-pizza-bar-now-open/",
+      "statusDate": "2026-09-12",
+      "statusChecked": "2026-09-12",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Ballard",
+          "address": "5417 22nd Ave NW, Seattle, WA 98107"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }
