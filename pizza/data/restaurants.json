@@ -57,7 +57,8 @@
         }
       },
       "mentions": [],
-      "statusChecked": "2026-08-26"
+      "statusChecked": "2026-08-26",
+      "instagram": "https://www.instagram.com/windycitypie/"
     },
     {
       "id": "delancey",
@@ -312,7 +313,8 @@
         }
       },
       "mentions": [],
-      "statusChecked": "2026-09-06"
+      "statusChecked": "2026-09-06",
+      "instagram": "https://www.instagram.com/seriouspieseattle/"
     },
     {
       "id": "dinos-tomato-pie",
@@ -469,7 +471,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/independentpizzeria/"
     },
     {
       "id": "tutta-bella",
@@ -542,7 +545,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/tuttabella/"
     },
     {
       "id": "pagliacci",
@@ -830,7 +834,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/viatrib/"
     },
     {
       "id": "big-marios",
@@ -1172,7 +1177,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/zeekspizza/"
     },
     {
       "id": "talaricos",
@@ -2198,7 +2204,8 @@
       "opened": 2004,
       "priceIndex": 2,
       "styleGroup": "Neapolitan",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://www.instagram.com/veraci_pizza/"
     },
     {
       "id": "south-town-pie",
@@ -2620,7 +2627,8 @@
       "opened": 1992,
       "priceIndex": 1,
       "styleGroup": "By the slice",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://www.instagram.com/worldpizza/"
     },
     {
       "id": "sacro-bosco-pizza-wine",
@@ -3270,7 +3278,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/unpotipsy/"
     },
     {
       "id": "olympic-pizza-pasta",
@@ -3319,7 +3328,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/modenapizzaandpastaa/"
     },
     {
       "id": "hot-slice-pizza",
@@ -3505,7 +3515,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/downtownromios/"
     },
     {
       "id": "seattle-pizza-bar",

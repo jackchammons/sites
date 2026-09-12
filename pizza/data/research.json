@@ -2,62 +2,59 @@
   "updated": "2026-09-12T19:00:00Z",
   "links": [
     {
+      "id": "zeeks-pizza",
+      "instagram": "https://www.instagram.com/zeekspizza/",
+      "source": "https://www.instagram.com/zeekspizza/"
+    },
+    {
+      "id": "tutta-bella",
+      "instagram": "https://www.instagram.com/tuttabella/",
+      "source": "https://tuttabella.com"
+    },
+    {
+      "id": "windy-city-pie",
+      "instagram": "https://www.instagram.com/windycitypie/",
+      "source": "https://windycitypie.com"
+    },
+    {
+      "id": "un-po-tipsy",
+      "instagram": "https://www.instagram.com/unpotipsy/",
+      "source": "https://unpotipsy.com"
+    },
+    {
+      "id": "via-tribunali",
+      "instagram": "https://www.instagram.com/viatrib/",
+      "source": "https://www.viatribunali.com/"
+    },
+    {
       "id": "downtown-romios-pizza-pasta",
-      "website": "https://downtownromios.com/",
-      "source": "https://downtownromios.com/about-us/"
+      "instagram": "https://www.instagram.com/downtownromios/",
+      "source": "https://www.instagram.com/downtownromios/"
+    },
+    {
+      "id": "world-pizza",
+      "instagram": "https://www.instagram.com/worldpizza/",
+      "source": "https://www.instagram.com/worldpizza/"
     },
     {
       "id": "modena-pizza-pasta",
-      "website": "https://www.modenapizzanpasta.com/",
-      "source": "https://www.modenapizzanpasta.com/"
+      "instagram": "https://www.instagram.com/modenapizzaandpastaa/",
+      "source": "https://www.instagram.com/modenapizzaandpastaa/"
     },
     {
-      "id": "oskars-pizza",
-      "website": "https://www.instagram.com/oskarspizzas4/",
-      "instagram": "https://www.instagram.com/oskarspizzas4/",
-      "source": "https://www.instagram.com/oskarspizzas4/"
+      "id": "serious-pie",
+      "instagram": "https://www.instagram.com/seriouspieseattle/",
+      "source": "https://www.instagram.com/seriouspieseattle/"
     },
     {
-      "id": "seattle-pizza-bar",
-      "website": "https://www.seattlepizzaandbar.com/",
-      "instagram": "https://www.instagram.com/seattle_pizza_and_bar/",
-      "source": "https://www.seattlepizzaandbar.com/"
+      "id": "veraci-pizza",
+      "instagram": "https://www.instagram.com/veraci_pizza/",
+      "source": "https://www.instagram.com/veraci_pizza/"
     },
     {
-      "id": "smoking-monkey-pizza",
-      "website": "https://www.smokingmonkeypizza.com/",
-      "instagram": "https://www.instagram.com/smokingmonkeypizzaseattle",
-      "source": "https://www.smokingmonkeypizza.com/contacts-us"
-    },
-    {
-      "id": "sopranos-pizza-pasta-lake-city",
-      "website": "https://lakecitysopranos.com/",
-      "source": "https://lakecitysopranos.com/"
-    },
-    {
-      "id": "olympic-pizza-pasta",
-      "instagram": "https://www.instagram.com/seattleolympic/",
-      "source": "https://www.instagram.com/seattleolympic/"
-    },
-    {
-      "id": "palermo-pizza-pasta",
-      "instagram": "https://www.instagram.com/palermoseattle/",
-      "source": "https://www.instagram.com/palermoseattle/"
-    },
-    {
-      "id": "pazzos-on-eastlake",
-      "instagram": "https://www.instagram.com/pazzosoneastlake/",
-      "source": "https://www.instagram.com/pazzosoneastlake/"
-    },
-    {
-      "id": "post-alley-pizza",
-      "instagram": "https://www.instagram.com/postalleypizza/",
-      "source": "https://www.postalley.pizza/"
-    },
-    {
-      "id": "proletariat-pizza",
-      "instagram": "https://www.instagram.com/proletariatpizza/",
-      "source": "https://www.instagram.com/proletariatpizza/"
+      "id": "independent-pizzeria",
+      "instagram": "https://www.instagram.com/independentpizzeria/",
+      "source": "https://theindependentpizzeria.com"
     }
   ]
 }
