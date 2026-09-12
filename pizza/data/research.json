@@ -1,60 +1,39 @@
 {
-  "updated": "2026-09-12T19:00:00Z",
-  "links": [
+  "updated": "2026-09-12T20:00:00Z",
+  "news": [
     {
-      "id": "zeeks-pizza",
-      "instagram": "https://www.instagram.com/zeekspizza/",
-      "source": "https://www.instagram.com/zeekspizza/"
+      "title": "Opening Night: Stevie's Famous Comes to North Seattle",
+      "url": "https://seattlemag.com/food-drink/opening-night-stevies-famous-comes-to-north-seattle/",
+      "source": "Seattle magazine",
+      "published": "2026-08-19",
+      "kind": "opening",
+      "mentions": ["stevies-famous"]
+    }
+  ],
+  "mentions": [
+    {
+      "id": "stevies-famous",
+      "title": "Opening Night: Stevie's Famous Comes to North Seattle",
+      "url": "https://seattlemag.com/food-drink/opening-night-stevies-famous-comes-to-north-seattle/",
+      "source": "Seattle magazine",
+      "date": "2026-08-19",
+      "kind": "opening"
     },
     {
-      "id": "tutta-bella",
-      "instagram": "https://www.instagram.com/tuttabella/",
-      "source": "https://tuttabella.com"
+      "id": "pizza-by-ruffin",
+      "title": "Restaurant Roundup: Pizza Pals and Paella on the Patio",
+      "url": "https://seattlemag.com/food-drink/restaurant-roundup-pizza-pals-and-paella-on-the-patio",
+      "source": "Seattle magazine",
+      "date": "2026-08-21",
+      "kind": "mention"
     },
     {
-      "id": "windy-city-pie",
-      "instagram": "https://www.instagram.com/windycitypie/",
-      "source": "https://windycitypie.com"
-    },
-    {
-      "id": "un-po-tipsy",
-      "instagram": "https://www.instagram.com/unpotipsy/",
-      "source": "https://unpotipsy.com"
-    },
-    {
-      "id": "via-tribunali",
-      "instagram": "https://www.instagram.com/viatrib/",
-      "source": "https://www.viatribunali.com/"
-    },
-    {
-      "id": "downtown-romios-pizza-pasta",
-      "instagram": "https://www.instagram.com/downtownromios/",
-      "source": "https://www.instagram.com/downtownromios/"
-    },
-    {
-      "id": "world-pizza",
-      "instagram": "https://www.instagram.com/worldpizza/",
-      "source": "https://www.instagram.com/worldpizza/"
-    },
-    {
-      "id": "modena-pizza-pasta",
-      "instagram": "https://www.instagram.com/modenapizzaandpastaa/",
-      "source": "https://www.instagram.com/modenapizzaandpastaa/"
-    },
-    {
-      "id": "serious-pie",
-      "instagram": "https://www.instagram.com/seriouspieseattle/",
-      "source": "https://www.instagram.com/seriouspieseattle/"
-    },
-    {
-      "id": "veraci-pizza",
-      "instagram": "https://www.instagram.com/veraci_pizza/",
-      "source": "https://www.instagram.com/veraci_pizza/"
-    },
-    {
-      "id": "independent-pizzeria",
-      "instagram": "https://www.instagram.com/independentpizzeria/",
-      "source": "https://theindependentpizzeria.com"
+      "id": "roma-roma",
+      "title": "Restaurant Roundup: Pizza Pals and Paella on the Patio",
+      "url": "https://seattlemag.com/food-drink/restaurant-roundup-pizza-pals-and-paella-on-the-patio",
+      "source": "Seattle magazine",
+      "date": "2026-08-21",
+      "kind": "mention"
     }
   ]
 }
