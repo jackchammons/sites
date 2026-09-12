@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-12T03:02:22.974Z",
+  "updated": "2026-09-12T16:19:19.893Z",
   "sources": 4,
   "items": [
     {
@@ -61,7 +61,7 @@
     {
       "title": "RIP to Broadway’s Guillotine, First Hill’s Italian Family Pizza",
       "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPR3hKOENDbEx0a1lzMWNtek80d3NYUl94c1pMeVZIOUttV0FHNDBaRnkxVWVIdGMxdWEwSVlHWC1jLXNvUWZmM2kzWmdYbXFodWJON21CNkFJQnIwSTlIc3VGcFhFbDJDdHVpQVA0blhOcUtYQ2thS2lDYWdTQURMUW5MVUFFaldRcEhpXzdnc3pYYXFMTDZhenRXeDhnR0FfaTQxd1RBaw?oc=5",
-      "source": "CHS Capitol Hill Seattle News",
+      "source": "capitolhillseattle.com",
       "published": "2026-07-13T07:00:00.000Z",
       "kind": "closing",
       "mentions": []
@@ -113,7 +113,7 @@
     {
       "title": "Aslan opens in Seward Park with pizza, brews and soccer mania",
       "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQeEY2NGFGandRejZFWUNnUHZ5X244MXVocFMtQW1Gc0FfRGY2MUVmRU9xVGEycUFLdmtERFZYMUZ5V2tLaU1WVkFPS2plcEdBUmNwT1RoVDRfTTE2dXQ3THd1QzN4dERrcnNDYVk3dnBFWDFDR2s4NTFMTmN6NVpGU1B1bjViTHZsUngydGl2T2toZk5ZLTQtMVBFckVla1RBY3lzaXZJWTVTaEhkcjBtTjNTVHQ5X2s?oc=5",
-      "source": "seattlerefined.com",
+      "source": "Seattle Refined",
       "published": "2026-06-05T07:00:00.000Z",
       "kind": "opening",
       "mentions": []
@@ -129,7 +129,7 @@
     {
       "title": "Seattle has some of the most expensive pizza in the country, new ranking says",
       "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTFA3ZTFWOFprV3VSemROQTJOaE1YU3pJSjhfSUVwNlp1SWR3TDZlT1prOXhkdnhFRUhFTm1XN0hDNDlnaHZDYmZ6TG8tT2s1b0NDZkltTGltdTlDdGNVdTRGR1ZOU0RYc1lLcGZxMmJJMEhOeHBad3lPbw?oc=5",
-      "source": "secretseattle.co",
+      "source": "Secret Seattle",
       "published": "2026-05-30T07:00:00.000Z",
       "kind": "ranking",
       "mentions": []
@@ -139,14 +139,6 @@
       "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE5OVXVvY0s0cDJIbjJvd205cFA4UDJ4dVB0ZHpyMjZTR2VYY1d0Q1VQUFhDcERkcEZXRV91d1FfTnpVNS12aTNJdHdPdUxGRTIxU0hSemdtejJhT2c0bmN2TzFFcDBYTTdpSUw0bWtyNlRYYmdpWEJoSWFadVE?oc=5",
       "source": "The Seattle Times",
       "published": "2026-05-22T07:00:00.000Z",
-      "kind": "mention",
-      "mentions": []
-    },
-    {
-      "title": "Ballard pizzeria shuts down after two years, will maintain farmers’ market presence",
-      "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE5hQml5eFVpZTUxdTIyMjJ4NHdSZlJwRjZ6akh6ZDVLU2RNZjI2T0FyM0duc0Q2OWttYVdndkh0bjd4aEc3UnBjOENfc0pFR0ZIM0lNNkUydVhJMzQwMmV0UlJneTZTdGlXdXFWQWxyblZGLWpKM2xYbUNfaw?oc=5",
-      "source": "MyNorthwest.com",
-      "published": "2026-05-15T07:00:00.000Z",
       "kind": "mention",
       "mentions": []
     }

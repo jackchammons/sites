@@ -1099,7 +1099,7 @@
         "sacro-bosco-pizza-wine": 66,
         "sopranos-antico": 65.6,
         "pazzos-on-eastlake": 64.8,
-        "stevies-famous": 61.6,
+        "stevies-famous": 63.1,
         "breezy-town-pizza": 61.3,
         "pizzeria-gabbiano": 60,
         "humble-pie": 59.1,
@@ -1299,11 +1299,11 @@
           "penalty": 0
         },
         "stevies-famous": {
-          "reputation": 1.7,
-          "critical": 8.1,
+          "reputation": 2.1,
+          "critical": 8.2,
           "craft": 7.5,
           "distinctiveness": 7,
-          "value": 7.8,
+          "value": 7.9,
           "penalty": 0
         },
         "breezy-town-pizza": {
