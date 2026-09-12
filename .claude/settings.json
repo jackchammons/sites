@@ -1,12 +1,11 @@
 {
   "permissions": {
     "allow": [
+      "mcp__Claude_Code_Remote",
       "mcp__github__actions_run_trigger",
       "mcp__github__actions_list",
       "mcp__github__get_job_logs",
-      "mcp__Claude_Code_Remote__send_later",
-      "mcp__Claude_Code_Remote__list_triggers",
-      "mcp__Claude_Code_Remote__delete_trigger"
+      "mcp__github__get_file_contents"
     ]
   }
 }
