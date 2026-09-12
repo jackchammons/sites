@@ -1,59 +1,63 @@
 {
-  "updated": "2026-09-12T00:00:00Z",
-  "directory": [
+  "updated": "2026-09-12T19:00:00Z",
+  "links": [
     {
-      "name": "Vera's Pizza and Bar",
-      "url": "https://www.verasballard.com/",
-      "neighborhood": "Ballard",
-      "style": "New York-style slice",
-      "status": "open",
-      "note": "Late-night Ballard pizza-and-bar concept that opened in 2019 in the space of the longtime Vera's diner; New York-style slices with 48-hour fermented dough are the core of the menu, alongside a full bar.",
-      "source": "https://www.myballard.com/2019/09/18/veras-pizza-bar-now-open/",
-      "address": "5417 22nd Ave NW, Seattle, WA 98107"
-    }
-  ],
-  "candidateReview": [
-    {
-      "name": "Romio'S Pizza & Pasta",
-      "verdict": "duplicate",
-      "note": "Same restaurant as the on-file 'Downtown Romio's Pizza & Pasta' at the identical 1011 Pike St address; the permit is filed under the plainer 'Romio'S Pizza & Pasta' name.",
-      "source": "https://downtownromios.com/directions/"
+      "id": "downtown-romios-pizza-pasta",
+      "website": "https://downtownromios.com/",
+      "source": "https://downtownromios.com/about-us/"
     },
     {
-      "name": "Seattle Pizza And Bar",
-      "verdict": "duplicate",
-      "note": "Both permit branches (2801 Western Ave and 224 Fairview Ave N) belong to the single on-file 'Seattle Pizza & Bar' business, which operates both locations.",
+      "id": "modena-pizza-pasta",
+      "website": "https://www.modenapizzanpasta.com/",
+      "source": "https://www.modenapizzanpasta.com/"
+    },
+    {
+      "id": "oskars-pizza",
+      "website": "https://www.instagram.com/oskarspizzas4/",
+      "instagram": "https://www.instagram.com/oskarspizzas4/",
+      "source": "https://www.instagram.com/oskarspizzas4/"
+    },
+    {
+      "id": "seattle-pizza-bar",
+      "website": "https://www.seattlepizzaandbar.com/",
+      "instagram": "https://www.instagram.com/seattle_pizza_and_bar/",
       "source": "https://www.seattlepizzaandbar.com/"
     },
     {
-      "name": "Sopranos Pizza - Lake City",
-      "verdict": "duplicate",
-      "note": "Same restaurant as the on-file 'Soprano's Pizza & Pasta - Lake City' at the identical 11754 15th Ave NE address.",
+      "id": "smoking-monkey-pizza",
+      "website": "https://www.smokingmonkeypizza.com/",
+      "instagram": "https://www.instagram.com/smokingmonkeypizzaseattle",
+      "source": "https://www.smokingmonkeypizza.com/contacts-us"
+    },
+    {
+      "id": "sopranos-pizza-pasta-lake-city",
+      "website": "https://lakecitysopranos.com/",
       "source": "https://lakecitysopranos.com/"
     },
     {
-      "name": "Tutta Bella Neapolitan Pizzeria",
-      "verdict": "duplicate",
-      "note": "Both permit branches (4918 Rainier Ave S and 4411 Stone Way N) are locations of the on-file Neapolitan pizzeria chain 'Tutta Bella'.",
-      "source": "https://www.tuttabella.com/location/tutta-bella-wallingford/"
+      "id": "olympic-pizza-pasta",
+      "instagram": "https://www.instagram.com/seattleolympic/",
+      "source": "https://www.instagram.com/seattleolympic/"
     },
     {
-      "name": "Tutta Bella Neapolitan Pizzeria (Kc489)",
-      "verdict": "duplicate",
-      "note": "A second permit registration at the same 4918 Rainier Ave S address already covered by the on-file 'Tutta Bella' chain; not a separate business.",
-      "source": "https://www.tripadvisor.com/Restaurant_Review-g60878-d487164-Reviews-Tutta_Bella_Neapolitan_Pizzeria-Seattle_Washington.html"
+      "id": "palermo-pizza-pasta",
+      "instagram": "https://www.instagram.com/palermoseattle/",
+      "source": "https://www.instagram.com/palermoseattle/"
     },
     {
-      "name": "Veraci Pizza Catering Kitchen",
-      "verdict": "duplicate",
-      "note": "Production/commissary kitchen for the on-file 'Veraci Pizza' catering and mobile wood-fired pizza operation, not a separate storefront business.",
-      "source": "https://www.veracipizza.com/catering"
+      "id": "pazzos-on-eastlake",
+      "instagram": "https://www.instagram.com/pazzosoneastlake/",
+      "source": "https://www.instagram.com/pazzosoneastlake/"
     },
     {
-      "name": "Zeeks Pizza White Center",
-      "verdict": "duplicate",
-      "note": "White Center location of the on-file 'Zeeks Pizza' chain, per the chain's own location page.",
-      "source": "https://zeekspizza.com/location/white-center/"
+      "id": "post-alley-pizza",
+      "instagram": "https://www.instagram.com/postalleypizza/",
+      "source": "https://www.postalley.pizza/"
+    },
+    {
+      "id": "proletariat-pizza",
+      "instagram": "https://www.instagram.com/proletariatpizza/",
+      "source": "https://www.instagram.com/proletariatpizza/"
     }
   ]
 }

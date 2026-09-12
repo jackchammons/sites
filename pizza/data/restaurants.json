@@ -984,7 +984,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/proletariatpizza/"
     },
     {
       "id": "ballard-pizza-co",
@@ -1406,7 +1407,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/postalleypizza/"
     },
     {
       "id": "pegasus-pizza",
@@ -2395,7 +2397,8 @@
       },
       "opened": 1990,
       "styleGroup": "Neighborhood",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://www.instagram.com/pazzosoneastlake/"
     },
     {
       "id": "sopranos-antico",
@@ -3291,7 +3294,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/seattleolympic/"
     },
     {
       "id": "modena-pizza-pasta",
@@ -3299,7 +3303,7 @@
       "neighborhood": "Lake City",
       "style": "Italian-American (pizza & pasta)",
       "blurb": "Neighborhood Italian-American spot serving handcrafted pizza and pasta since 2016, with gluten-free and vegan options.",
-      "url": null,
+      "url": "https://www.modenapizzanpasta.com/",
       "status": "open",
       "statusSource": "https://www.yelp.com/biz/modena-pizza-and-pasta-seattle",
       "statusDate": "2026-09-09",
@@ -3346,7 +3350,7 @@
       "neighborhood": "Delridge / West Seattle",
       "style": "food truck, New York-style",
       "blurb": "Mobile pizza food truck (no walk-in storefront) run by Piecora's alum Oskar Guerrero; still active per 2026 reviews and food-truck listings.",
-      "url": null,
+      "url": "https://www.instagram.com/oskarspizzas4/",
       "status": "open",
       "statusSource": "https://www.seattlefoodtruck.com/food-trucks/oskar-s-pizza",
       "statusDate": "2026-09-09",
@@ -3362,7 +3366,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/oskarspizzas4/"
     },
     {
       "id": "palermo-pizza-pasta",
@@ -3386,7 +3391,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/palermoseattle/"
     },
     {
       "id": "pizza-paesano",
@@ -3485,7 +3491,7 @@
       "neighborhood": "Downtown (Pike St)",
       "style": "Greek-influenced pizza & pasta",
       "blurb": "Longtime Pike Street pizza and pasta shop (in business 27+ years) known for Greek-influenced toppings like gyro meat, olives and feta; trades as 'Downtown Romio's' per its own branding and social pages, though the King County permit is filed as 'Romio'S Pizza & Pasta'.",
-      "url": null,
+      "url": "https://downtownromios.com/",
       "status": "open",
       "statusSource": "https://www.facebook.com/downtownromios/",
       "statusDate": "2026-09-12",
@@ -3507,7 +3513,7 @@
       "neighborhood": "Belltown / South Lake Union (two locations)",
       "style": null,
       "blurb": "Pizza-forward restaurant with a full bar; handcrafted pizzas anchor the menu at both its Belltown (Western Ave) and South Lake Union (Fairview Ave N) locations, which are one business under one record.",
-      "url": null,
+      "url": "https://www.seattlepizzaandbar.com/",
       "status": "open",
       "statusSource": "https://www.seattlepizzaandbar.com/",
       "statusDate": "2026-09-12",
@@ -3521,7 +3527,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/seattle_pizza_and_bar/"
     },
     {
       "id": "smoking-monkey-pizza",
@@ -3529,7 +3536,7 @@
       "neighborhood": "Magnolia",
       "style": "Wood-fired",
       "blurb": "Wood-fired pizzeria with a Magnolia storefront plus sister locations in Renton and Spokane; pizza and calzones from a Woodstone oven are the core menu.",
-      "url": null,
+      "url": "https://www.smokingmonkeypizza.com/",
       "status": "open",
       "statusSource": "https://www.smokingmonkeypizza.com/",
       "statusDate": "2026-09-12",
@@ -3543,7 +3550,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/smokingmonkeypizzaseattle"
     },
     {
       "id": "sopranos-pizza-pasta-lake-city",
@@ -3551,7 +3559,7 @@
       "neighborhood": "Lake City",
       "style": null,
       "blurb": "Family-owned Lake City pizza and pasta restaurant with active social/delivery listings as of 2026; distinct business from the on-file Soprano's Antico.",
-      "url": null,
+      "url": "https://lakecitysopranos.com/",
       "status": "open",
       "statusSource": "https://www.facebook.com/p/Sopranos-Pizza-Pasta-Lake-City-100064063243882/",
       "statusDate": "2026-09-12",
