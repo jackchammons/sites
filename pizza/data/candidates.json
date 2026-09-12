@@ -528,7 +528,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-01-30",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "duplicate",
+      "note": "Trades as Hot Slice Pizza at 41 Dravus St, already on file as 'Hot Slice Pizza'.",
+      "resolutionSource": "https://hotslicepizzasea.com/",
+      "resolvedDate": "2026-09-12"
     },
     {
       "key": "oskars kc721|5604",
@@ -538,7 +542,11 @@
         "kc-health"
       ],
       "lastInspection": "2025-05-01",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "duplicate",
+      "note": "Same food truck business as the on-file 'Oskar's Pizza'; it uses a prep kitchen on Delridge Way SW matching the permit address.",
+      "resolutionSource": "https://www.westsideseattle.com/robinson-papers/2018/05/31/oskars-pizza-truck-new-and-hot",
+      "resolvedDate": "2026-09-12"
     },
     {
       "key": "palermo pasta|350",
@@ -638,7 +646,11 @@
         "kc-health"
       ],
       "lastInspection": "2025-09-09",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "duplicate",
+      "note": "Expansion location of the on-file 'Ridge Pizza' (originally Phinney Ridge, opened 2012); same ownership, with the Northeast site's contact routing through matt@ridgepizza.com.",
+      "resolutionSource": "https://www.ridgepizza.com/coming-soon",
+      "resolvedDate": "2026-09-12"
     },
     {
       "key": "romios pasta|1011",
@@ -678,7 +690,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-06-10",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "unverifiable",
+      "note": "No business currently trades under this exact name beyond an inaccessible Facebook page. The permit address (1727 1st Ave S) is now home to a pizza-by-the-slice shop called Slice Box Pizza, but no source ties the two names together as the same entity.",
+      "resolutionSource": "https://www.sliceboxpizza.com/",
+      "resolvedDate": "2026-09-12"
     },
     {
       "key": "smoking monkey|3111",
@@ -688,7 +704,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-02-11",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "smoking-monkey-pizza",
+      "resolvedDate": "2026-09-12"
     },
     {
       "key": "sopranos lake city|11754",
@@ -708,7 +726,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-01-21",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "not-pizza",
+      "note": "Sandwich-and-focaccia counter that also sells well-regarded pizza slices, but sandwiches are billed first in its own name and Yelp categorizes it primarily as Sandwiches, so pizza isn't clearly the core of the business.",
+      "resolutionSource": "https://www.yelp.com/biz/swing-sandwiches-and-pizza-seattle",
+      "resolvedDate": "2026-09-12"
     },
     {
       "key": "tutta bella neapolitan|4918",

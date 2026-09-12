@@ -1,41 +1,71 @@
 {
-  "updated": "2026-09-11T18:00:00Z",
-  "status": [
+  "updated": "2026-09-12T00:00:00Z",
+  "directory": [
     {
-      "id": "abecedary",
-      "status": "opening",
-      "note": "Still under construction with permitting delays; only a one-day pop-up preview has been held in Hillman City as of August 2026, with the brick-and-mortar not expected until 2027.",
-      "source": "https://hoodline.com/2026/08/hillman-city-gets-first-bite-of-seattle-s-hottest-new-pizzeria/"
+      "name": "Downtown Romio's Pizza & Pasta",
+      "neighborhood": "Downtown (Pike St)",
+      "style": "Greek-influenced pizza & pasta",
+      "status": "open",
+      "note": "Longtime Pike Street pizza and pasta shop (in business 27+ years) known for Greek-influenced toppings like gyro meat, olives and feta; trades as 'Downtown Romio's' per its own branding and social pages, though the King County permit is filed as 'Romio'S Pizza & Pasta'.",
+      "source": "https://www.facebook.com/downtownromios/",
+      "address": "1011 Pike St, C, Seattle, WA 98101"
     },
     {
-      "id": "razzis-pizzeria",
+      "name": "Seattle Pizza & Bar",
+      "neighborhood": "Belltown / South Lake Union (two locations)",
       "status": "open",
-      "note": "Yelp listing for the Greenwood location is current as of September 2026 with active reviews and no closure notice.",
-      "source": "https://www.yelp.com/biz/razz%C3%ADs-pizzer%C3%ADa-seattle-4"
+      "note": "Pizza-forward restaurant with a full bar; handcrafted pizzas anchor the menu at both its Belltown (Western Ave) and South Lake Union (Fairview Ave N) locations, which are one business under one record.",
+      "source": "https://www.seattlepizzaandbar.com/",
+      "address": "2801 Western Ave, E, Seattle, WA 98121"
     },
     {
-      "id": "candela-pizza",
+      "name": "Smoking Monkey Pizza",
+      "neighborhood": "Magnolia",
+      "style": "Wood-fired",
       "status": "open",
-      "note": "Food truck's Yelp listing (updated August 2026) and dedicated site show current hours and menu with no closure notice.",
-      "source": "https://www.yelp.com/biz/candela-pizza-seattle"
+      "note": "Wood-fired pizzeria with a Magnolia storefront plus sister locations in Renton and Spokane; pizza and calzones from a Woodstone oven are the core menu.",
+      "source": "https://www.smokingmonkeypizza.com/",
+      "address": "3111 W Mcgraw St, #103, Seattle, WA 98199"
     },
     {
-      "id": "dudez-woodfired-pizza",
+      "name": "Soprano's Pizza & Pasta - Lake City",
+      "neighborhood": "Lake City",
       "status": "open",
-      "note": "Ordering page confirms current posted hours (Tue-Sun 11am-8pm) for the Fuhrman Ave E location.",
-      "source": "https://dudez-woodfired-pizza.grubbio.com/"
+      "note": "Family-owned Lake City pizza and pasta restaurant with active social/delivery listings as of 2026; distinct business from the on-file Soprano's Antico.",
+      "source": "https://www.facebook.com/p/Sopranos-Pizza-Pasta-Lake-City-100064063243882/",
+      "address": "11754 15th Ave Ne, Seattle, WA 98125"
+    }
+  ],
+  "candidateReview": [
+    {
+      "name": "Mohi Pizza Dba Hot Slice Pizza",
+      "verdict": "duplicate",
+      "note": "Trades as Hot Slice Pizza at 41 Dravus St, already on file as 'Hot Slice Pizza'.",
+      "source": "https://hotslicepizzasea.com/"
     },
     {
-      "id": "modena-pizza-pasta",
-      "status": "open",
-      "note": "Yelp listing (updated September 2026, 221 reviews) plus active DoorDash/Toast ordering pages show the Lake City Way location still operating.",
-      "source": "https://www.yelp.com/biz/modena-pizza-and-pasta-seattle"
+      "name": "Oskar'S Pizza (Kc721)",
+      "verdict": "duplicate",
+      "note": "Same food truck business as the on-file 'Oskar's Pizza'; it uses a prep kitchen on Delridge Way SW matching the permit address.",
+      "source": "https://www.westsideseattle.com/robinson-papers/2018/05/31/oskars-pizza-truck-new-and-hot"
     },
     {
-      "id": "oskars-pizza",
-      "status": "open",
-      "note": "Roaming Hunger profile shows an established, ongoing food truck presence, and its Yelp listing is current as of August 2026 with no closure notice.",
-      "source": "https://roaminghunger.com/oskars-pizza/"
+      "name": "Ridge Pizza - Northeast",
+      "verdict": "duplicate",
+      "note": "Expansion location of the on-file 'Ridge Pizza' (originally Phinney Ridge, opened 2012); same ownership, with the Northeast site's contact routing through matt@ridgepizza.com.",
+      "source": "https://www.ridgepizza.com/coming-soon"
+    },
+    {
+      "name": "Seattle Super Slices",
+      "verdict": "unverifiable",
+      "note": "No business currently trades under this exact name beyond an inaccessible Facebook page. The permit address (1727 1st Ave S) is now home to a pizza-by-the-slice shop called Slice Box Pizza, but no source ties the two names together as the same entity.",
+      "source": "https://www.sliceboxpizza.com/"
+    },
+    {
+      "name": "Swing Sandwiches And Pizza",
+      "verdict": "not-pizza",
+      "note": "Sandwich-and-focaccia counter that also sells well-regarded pizza slices, but sandwiches are billed first in its own name and Yelp categorizes it primarily as Sandwiches, so pizza isn't clearly the core of the business.",
+      "source": "https://www.yelp.com/biz/swing-sandwiches-and-pizza-seattle"
     }
   ]
 }

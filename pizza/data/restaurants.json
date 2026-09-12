@@ -3478,6 +3478,94 @@
       "locationsSource": null,
       "mentions": [],
       "instagram": "https://www.instagram.com/goodluckbread/"
+    },
+    {
+      "id": "downtown-romios-pizza-pasta",
+      "name": "Downtown Romio's Pizza & Pasta",
+      "neighborhood": "Downtown (Pike St)",
+      "style": "Greek-influenced pizza & pasta",
+      "blurb": "Longtime Pike Street pizza and pasta shop (in business 27+ years) known for Greek-influenced toppings like gyro meat, olives and feta; trades as 'Downtown Romio's' per its own branding and social pages, though the King County permit is filed as 'Romio'S Pizza & Pasta'.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://www.facebook.com/downtownromios/",
+      "statusDate": "2026-09-12",
+      "statusChecked": "2026-09-12",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Downtown (Pike St)",
+          "address": "1011 Pike St, C, Seattle, WA 98101"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "seattle-pizza-bar",
+      "name": "Seattle Pizza & Bar",
+      "neighborhood": "Belltown / South Lake Union (two locations)",
+      "style": null,
+      "blurb": "Pizza-forward restaurant with a full bar; handcrafted pizzas anchor the menu at both its Belltown (Western Ave) and South Lake Union (Fairview Ave N) locations, which are one business under one record.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://www.seattlepizzaandbar.com/",
+      "statusDate": "2026-09-12",
+      "statusChecked": "2026-09-12",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Belltown / South Lake Union (two locations)",
+          "address": "2801 Western Ave, E, Seattle, WA 98121"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "smoking-monkey-pizza",
+      "name": "Smoking Monkey Pizza",
+      "neighborhood": "Magnolia",
+      "style": "Wood-fired",
+      "blurb": "Wood-fired pizzeria with a Magnolia storefront plus sister locations in Renton and Spokane; pizza and calzones from a Woodstone oven are the core menu.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://www.smokingmonkeypizza.com/",
+      "statusDate": "2026-09-12",
+      "statusChecked": "2026-09-12",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Magnolia",
+          "address": "3111 W Mcgraw St, #103, Seattle, WA 98199"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "sopranos-pizza-pasta-lake-city",
+      "name": "Soprano's Pizza & Pasta - Lake City",
+      "neighborhood": "Lake City",
+      "style": null,
+      "blurb": "Family-owned Lake City pizza and pasta restaurant with active social/delivery listings as of 2026; distinct business from the on-file Soprano's Antico.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://www.facebook.com/p/Sopranos-Pizza-Pasta-Lake-City-100064063243882/",
+      "statusDate": "2026-09-12",
+      "statusChecked": "2026-09-12",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Lake City",
+          "address": "11754 15th Ave Ne, Seattle, WA 98125"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }
