@@ -1023,7 +1023,7 @@
     },
     {
       "weekKey": "2026-W37",
-      "date": "2026-09-11",
+      "date": "2026-09-12",
       "week": 37,
       "ranks": {
         "delancey": 1,
@@ -1078,7 +1078,7 @@
         "mad-pizza": 50
       },
       "scores": {
-        "delancey": 88.8,
+        "delancey": 88.7,
         "windy-city-pie": 86.3,
         "dinos-tomato-pie": 84.6,
         "serious-pie": 84.6,
@@ -1094,7 +1094,7 @@
         "world-pizza": 73,
         "razzis-pizzeria": 72.3,
         "oxbow": 69.7,
-        "elemental-pizza": 68.5,
+        "elemental-pizza": 68.4,
         "pizza-by-ruffin": 67.9,
         "sacro-bosco-pizza-wine": 66,
         "sopranos-antico": 65.6,
@@ -1103,7 +1103,7 @@
         "breezy-town-pizza": 61.3,
         "pizzeria-gabbiano": 60,
         "humble-pie": 59.1,
-        "good-shape-pizza": 58.4,
+        "good-shape-pizza": 58.3,
         "flying-squirrel": 58.2,
         "slice-box": 57.7,
         "big-marios": 57.5,
@@ -1115,8 +1115,8 @@
         "pizzeria-22": 55.5,
         "roma-roma": 55.5,
         "ballard-pizza-co": 55.4,
-        "dantini-pizza": 55,
-        "pizzeria-pulcinella": 54.7,
+        "dantini-pizza": 54.9,
+        "pizzeria-pulcinella": 54.6,
         "zeeks-pizza": 53.4,
         "roccos": 53.2,
         "pizzeria-la-rocca": 52.2,

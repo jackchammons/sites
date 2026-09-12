@@ -3522,7 +3522,9 @@
       "locations": [
         {
           "neighborhood": "Belltown / South Lake Union (two locations)",
-          "address": "2801 Western Ave, E, Seattle, WA 98121"
+          "address": "2801 Western Ave, E, Seattle, WA 98121",
+          "lat": 47.61604,
+          "lon": -122.35332
         }
       ],
       "locationsVerified": null,
@@ -3545,7 +3547,9 @@
       "locations": [
         {
           "neighborhood": "Magnolia",
-          "address": "3111 W Mcgraw St, #103, Seattle, WA 98199"
+          "address": "3111 W Mcgraw St, #103, Seattle, WA 98199",
+          "lat": 47.63934,
+          "lon": -122.39752
         }
       ],
       "locationsVerified": null,
@@ -3568,7 +3572,9 @@
       "locations": [
         {
           "neighborhood": "Lake City",
-          "address": "11754 15th Ave Ne, Seattle, WA 98125"
+          "address": "11754 15th Ave Ne, Seattle, WA 98125",
+          "lat": 47.71566,
+          "lon": -122.31207
         }
       ],
       "locationsVerified": null,
@@ -3590,7 +3596,9 @@
       "locations": [
         {
           "neighborhood": "Ballard",
-          "address": "5417 22nd Ave NW, Seattle, WA 98107"
+          "address": "5417 22nd Ave NW, Seattle, WA 98107",
+          "lat": 47.66839,
+          "lon": -122.38491
         }
       ],
       "locationsVerified": null,
