@@ -1,39 +1,27 @@
 {
-  "updated": "2026-09-12T20:00:00Z",
-  "news": [
+  "updated": "2026-09-13T18:30:00Z",
+  "factorRatings": [
     {
-      "title": "Opening Night: Stevie's Famous Comes to North Seattle",
-      "url": "https://seattlemag.com/food-drink/opening-night-stevies-famous-comes-to-north-seattle/",
-      "source": "Seattle magazine",
-      "published": "2026-08-19",
-      "kind": "opening",
-      "mentions": ["stevies-famous"]
-    }
-  ],
-  "mentions": [
-    {
-      "id": "stevies-famous",
-      "title": "Opening Night: Stevie's Famous Comes to North Seattle",
-      "url": "https://seattlemag.com/food-drink/opening-night-stevies-famous-comes-to-north-seattle/",
-      "source": "Seattle magazine",
-      "date": "2026-08-19",
-      "kind": "opening"
+      "id": "un-po-tipsy",
+      "craft": 7.0,
+      "distinctiveness": 6.5,
+      "criticScore": 7.5,
+      "styleGroup": "By the slice",
+      "sources": [
+        "https://www.theinfatuation.com/seattle/reviews/un-po-tipsy-pizzeria"
+      ],
+      "note": "The Infatuation (8.0) calls the Italian sausage the standout slice, with well-crisped pepperoni cups and a bright, garlicky tomato pie, though the greens pizza reads bland and dry; a casual NY-style slice counter and cocktail bar in Pioneer Square's RailSpur, one of three concepts from chef Renee Erickson's Sea Creatures group."
     },
     {
-      "id": "pizza-by-ruffin",
-      "title": "Restaurant Roundup: Pizza Pals and Paella on the Patio",
-      "url": "https://seattlemag.com/food-drink/restaurant-roundup-pizza-pals-and-paella-on-the-patio",
-      "source": "Seattle magazine",
-      "date": "2026-08-21",
-      "kind": "mention"
-    },
-    {
-      "id": "roma-roma",
-      "title": "Restaurant Roundup: Pizza Pals and Paella on the Patio",
-      "url": "https://seattlemag.com/food-drink/restaurant-roundup-pizza-pals-and-paella-on-the-patio",
-      "source": "Seattle magazine",
-      "date": "2026-08-21",
-      "kind": "mention"
+      "id": "managers-pizza",
+      "craft": 6.0,
+      "distinctiveness": 6.5,
+      "criticScore": 6.0,
+      "styleGroup": "Creative",
+      "sources": [
+        "https://www.dailyuw.com/article/manager-s-pizza-food-from-the-heart-20251007"
+      ],
+      "note": "The Daily UW profiled owners Raveen and Shikha Kumar's Indian-Italian fusion shop near the Ave, built around dishes like tandoori paneer pizza and a service-first philosophy; a distinctive fusion lane covered as a neighborhood human-interest story rather than a critic's tasting review."
     }
   ]
 }

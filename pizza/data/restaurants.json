@@ -3261,7 +3261,32 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/managerspizzaseattle/"
+      "instagram": "https://www.instagram.com/managerspizzaseattle/",
+      "factors": {
+        "craft": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.dailyuw.com/article/manager-s-pizza-food-from-the-heart-20251007",
+          "note": "The Daily UW profiled owners Raveen and Shikha Kumar's Indian-Italian fusion shop near the Ave, built around dishes like tandoori paneer pizza and a service-first philosophy; a distinctive fusion lane covered as a neighborhood human-interest story rather than a critic's tasting review.",
+          "date": "2026-09-13"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.dailyuw.com/article/manager-s-pizza-food-from-the-heart-20251007",
+          "note": "The Daily UW profiled owners Raveen and Shikha Kumar's Indian-Italian fusion shop near the Ave, built around dishes like tandoori paneer pizza and a service-first philosophy; a distinctive fusion lane covered as a neighborhood human-interest story rather than a critic's tasting review.",
+          "date": "2026-09-13"
+        },
+        "critical": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.dailyuw.com/article/manager-s-pizza-food-from-the-heart-20251007",
+          "note": "The Daily UW profiled owners Raveen and Shikha Kumar's Indian-Italian fusion shop near the Ave, built around dishes like tandoori paneer pizza and a service-first philosophy; a distinctive fusion lane covered as a neighborhood human-interest story rather than a critic's tasting review.",
+          "date": "2026-09-13"
+        }
+      },
+      "styleGroup": "Creative",
+      "lastVerified": "2026-09-13"
     },
     {
       "id": "un-po-tipsy",
@@ -3286,7 +3311,32 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/unpotipsy/"
+      "instagram": "https://www.instagram.com/unpotipsy/",
+      "factors": {
+        "craft": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/un-po-tipsy-pizzeria",
+          "note": "The Infatuation (8.0) calls the Italian sausage the standout slice, with well-crisped pepperoni cups and a bright, garlicky tomato pie, though the greens pizza reads bland and dry; a casual NY-style slice counter and cocktail bar in Pioneer Square's RailSpur, one of three concepts from chef Renee Erickson's Sea Creatures group.",
+          "date": "2026-09-13"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/un-po-tipsy-pizzeria",
+          "note": "The Infatuation (8.0) calls the Italian sausage the standout slice, with well-crisped pepperoni cups and a bright, garlicky tomato pie, though the greens pizza reads bland and dry; a casual NY-style slice counter and cocktail bar in Pioneer Square's RailSpur, one of three concepts from chef Renee Erickson's Sea Creatures group.",
+          "date": "2026-09-13"
+        },
+        "critical": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/un-po-tipsy-pizzeria",
+          "note": "The Infatuation (8.0) calls the Italian sausage the standout slice, with well-crisped pepperoni cups and a bright, garlicky tomato pie, though the greens pizza reads bland and dry; a casual NY-style slice counter and cocktail bar in Pioneer Square's RailSpur, one of three concepts from chef Renee Erickson's Sea Creatures group.",
+          "date": "2026-09-13"
+        }
+      },
+      "styleGroup": "By the slice",
+      "lastVerified": "2026-09-13"
     },
     {
       "id": "olympic-pizza-pasta",
