@@ -1,1 +1,43 @@
-{"updated":"2026-09-14T18:00:00Z","directory":[]}
+{
+  "updated": "2026-09-15T00:00:00Z",
+  "locations": [
+    {
+      "id": "johnny-mos-pizzeria",
+      "homepage": "https://www.johnnymos.com/",
+      "source": "https://www.johnnymos.com/locations",
+      "sites": [
+        {
+          "neighborhood": "Eastlake",
+          "address": "3272 Fuhrman Ave E Suite 100, Seattle, WA 98102"
+        },
+        {
+          "neighborhood": "Edmonds",
+          "address": "558 Main Street Suite 200, Edmonds, WA 98020"
+        }
+      ]
+    },
+    {
+      "id": "pazzos-on-eastlake",
+      "homepage": "https://www.pazzosoneastlake.com/",
+      "source": "https://www.pazzosoneastlake.com/",
+      "sites": [
+        {
+          "neighborhood": "Eastlake",
+          "address": "2307 Eastlake Ave East, Seattle, WA 98102"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "id": "johnny-mos-pizzeria",
+      "instagram": "https://www.instagram.com/johnnymospizzeria/",
+      "source": "https://www.johnnymos.com/locations"
+    },
+    {
+      "id": "good-luck-bread",
+      "instagram": "https://www.instagram.com/goodluckbread/",
+      "source": "https://pizza.goodluckbread.com/"
+    }
+  ]
+}
