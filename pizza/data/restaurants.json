@@ -2335,7 +2335,9 @@
         },
         {
           "neighborhood": "Edmonds",
-          "address": "558 Main Street Suite 200, Edmonds, WA 98020"
+          "address": "558 Main Street Suite 200, Edmonds, WA 98020",
+          "lat": 47.81044,
+          "lon": -122.37598
         }
       ],
       "locationsVerified": "2026-09-15",
@@ -2383,7 +2385,9 @@
       "locations": [
         {
           "neighborhood": "Eastlake",
-          "address": "2307 Eastlake Ave East, Seattle, WA 98102"
+          "address": "2307 Eastlake Ave East, Seattle, WA 98102",
+          "lat": 47.64006,
+          "lon": -122.32608
         }
       ],
       "locationsVerified": "2026-09-15",
