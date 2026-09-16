@@ -1,43 +1,41 @@
 {
-  "updated": "2026-09-15T00:00:00Z",
-  "locations": [
+  "updated": "2026-09-16T17:00:00Z",
+  "status": [
     {
-      "id": "johnny-mos-pizzeria",
-      "homepage": "https://www.johnnymos.com/",
-      "source": "https://www.johnnymos.com/locations",
-      "sites": [
-        {
-          "neighborhood": "Eastlake",
-          "address": "3272 Fuhrman Ave E Suite 100, Seattle, WA 98102"
-        },
-        {
-          "neighborhood": "Edmonds",
-          "address": "558 Main Street Suite 200, Edmonds, WA 98020"
-        }
-      ]
+      "id": "abecedary",
+      "status": "opening",
+      "note": "Still not open; official site reads 'Coming Soon to Hillman City' and permitting delays have pushed the permanent opening past 2026, with only a one-off pop-up served so far.",
+      "source": "https://abecedaryseattle.com/"
     },
     {
-      "id": "pazzos-on-eastlake",
-      "homepage": "https://www.pazzosoneastlake.com/",
-      "source": "https://www.pazzosoneastlake.com/",
-      "sites": [
-        {
-          "neighborhood": "Eastlake",
-          "address": "2307 Eastlake Ave East, Seattle, WA 98102"
-        }
-      ]
-    }
-  ],
-  "links": [
-    {
-      "id": "johnny-mos-pizzeria",
-      "instagram": "https://www.instagram.com/johnnymospizzeria/",
-      "source": "https://www.johnnymos.com/locations"
+      "id": "razzis-pizzeria",
+      "status": "open",
+      "note": "Both the Greenwood and downtown Belltown locations show continuous activity, including a customer review from August 2026.",
+      "source": "https://www.yelp.com/biz/razz%C3%ADs-pizzer%C3%ADa-seattle-4"
     },
     {
-      "id": "good-luck-bread",
-      "instagram": "https://www.instagram.com/goodluckbread/",
-      "source": "https://pizza.goodluckbread.com/"
+      "id": "candela-pizza",
+      "status": "open",
+      "note": "The wood-fired food truck's vendor profile remains active with a Yelp update from August 2026 and a current schedule listing.",
+      "source": "https://www.seattlefoodtruck.com/food-trucks/candela-pizza"
+    },
+    {
+      "id": "dudez-woodfired-pizza",
+      "status": "open",
+      "note": "The Delridge pizzeria lists current weekly hours and shows a Yelp update from May 2026, indicating it remains in business.",
+      "source": "https://www.yelp.com/biz/dudez-woodfired-pizza-seattle"
+    },
+    {
+      "id": "dinos-tomato-pie",
+      "status": "open",
+      "note": "Capitol Hill Seattle News reported in April 2026 that Dino's Tomato Pie marked 10 years at its E Olive Way location with newly installed ovens, confirming ongoing operation.",
+      "source": "https://www.capitolhillseattle.com/2026/04/dinos-tomato-pie-marks-10-years-of-pizza-at-e-olive-way-and-denny-with-new-ovens/"
+    },
+    {
+      "id": "lupo",
+      "status": "open",
+      "note": "The Fremont pizzeria shows a Yelp update from September 2026 and continues to take reservations for its nightly service.",
+      "source": "https://www.yelp.com/biz/lupo-seattle-3"
     }
   ]
 }

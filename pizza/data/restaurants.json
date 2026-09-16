@@ -366,7 +366,8 @@
         }
       },
       "mentions": [],
-      "instagram": "https://www.instagram.com/dinosseattle/"
+      "instagram": "https://www.instagram.com/dinosseattle/",
+      "statusChecked": "2026-09-16"
     },
     {
       "id": "lupo",
@@ -419,7 +420,8 @@
         }
       },
       "mentions": [],
-      "instagram": "https://www.instagram.com/lupofremont"
+      "instagram": "https://www.instagram.com/lupofremont",
+      "statusChecked": "2026-09-16"
     },
     {
       "id": "independent-pizzeria",
@@ -1639,7 +1641,7 @@
           "kind": "mention"
         }
       ],
-      "statusChecked": "2026-09-11",
+      "statusChecked": "2026-09-16",
       "instagram": "https://www.instagram.com/abecedaryseattle/"
     },
     {
@@ -1966,7 +1968,7 @@
       "status": "open",
       "statusSource": "https://intentionalist.com/b/razzis-pizzeria-greenwood/",
       "statusDate": "2026-08-26",
-      "statusChecked": "2026-09-11",
+      "statusChecked": "2026-09-16",
       "attributes": {},
       "locations": [
         {
@@ -2926,7 +2928,7 @@
       "status": "open",
       "statusSource": "https://www.seattlefoodtruck.com/food-trucks/candela-pizza",
       "statusDate": "2026-08-30",
-      "statusChecked": "2026-09-11",
+      "statusChecked": "2026-09-16",
       "attributes": {},
       "locations": [
         {
@@ -2951,7 +2953,7 @@
       "status": "open",
       "statusSource": "https://www.atly.com/location/DUDE'Z-woodfired-pizza",
       "statusDate": "2026-08-31",
-      "statusChecked": "2026-09-11",
+      "statusChecked": "2026-09-16",
       "attributes": {},
       "locations": [
         {
