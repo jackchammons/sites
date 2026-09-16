@@ -1,41 +1,60 @@
 {
-  "updated": "2026-09-16T17:00:00Z",
-  "status": [
+  "updated": "2026-09-16T19:30:00Z",
+  "links": [
     {
-      "id": "abecedary",
-      "status": "opening",
-      "note": "Still not open; official site reads 'Coming Soon to Hillman City' and permitting delays have pushed the permanent opening past 2026, with only a one-off pop-up served so far.",
-      "source": "https://abecedaryseattle.com/"
+      "id": "roma-roma",
+      "instagram": "https://www.instagram.com/romaroma.pizza/",
+      "source": "https://romaroma.pizza/"
     },
     {
-      "id": "razzis-pizzeria",
-      "status": "open",
-      "note": "Both the Greenwood and downtown Belltown locations show continuous activity, including a customer review from August 2026.",
-      "source": "https://www.yelp.com/biz/razz%C3%ADs-pizzer%C3%ADa-seattle-4"
+      "id": "talaricos",
+      "instagram": "https://www.instagram.com/talaricos.pizza/",
+      "source": "https://www.instagram.com/talaricos.pizza/?hl=en"
     },
     {
-      "id": "candela-pizza",
-      "status": "open",
-      "note": "The wood-fired food truck's vendor profile remains active with a Yelp update from August 2026 and a current schedule listing.",
-      "source": "https://www.seattlefoodtruck.com/food-trucks/candela-pizza"
+      "id": "sacro-bosco-pizza-wine",
+      "instagram": "https://www.instagram.com/sacroboscopizza/",
+      "source": "https://www.sacroboscopizza.com/"
     },
     {
-      "id": "dudez-woodfired-pizza",
-      "status": "open",
-      "note": "The Delridge pizzeria lists current weekly hours and shows a Yelp update from May 2026, indicating it remains in business.",
-      "source": "https://www.yelp.com/biz/dudez-woodfired-pizza-seattle"
+      "id": "slice-box",
+      "instagram": "https://www.instagram.com/sliceboxpizza_sodo/",
+      "source": "https://www.sliceboxpizza.com"
     },
     {
-      "id": "dinos-tomato-pie",
-      "status": "open",
-      "note": "Capitol Hill Seattle News reported in April 2026 that Dino's Tomato Pie marked 10 years at its E Olive Way location with newly installed ovens, confirming ongoing operation.",
-      "source": "https://www.capitolhillseattle.com/2026/04/dinos-tomato-pie-marks-10-years-of-pizza-at-e-olive-way-and-denny-with-new-ovens/"
+      "id": "roccos",
+      "instagram": "https://www.instagram.com/roccos_seattle/",
+      "source": "https://www.instagram.com/roccos_seattle/?hl=en"
     },
     {
-      "id": "lupo",
-      "status": "open",
-      "note": "The Fremont pizzeria shows a Yelp update from September 2026 and continues to take reservations for its nightly service.",
-      "source": "https://www.yelp.com/biz/lupo-seattle-3"
+      "id": "stevies-famous",
+      "instagram": "https://www.instagram.com/steviesfamous/",
+      "source": "https://www.instagram.com/steviesfamous/?hl=en"
+    },
+    {
+      "id": "sopranos-antico",
+      "instagram": "https://www.instagram.com/anticosopranospizzapasta/",
+      "source": "https://www.anticosopranos.com/"
+    },
+    {
+      "id": "veras-pizza-and-bar",
+      "instagram": "https://www.instagram.com/verasballard/",
+      "source": "https://www.verasballard.com/"
+    },
+    {
+      "id": "ridge-pizza",
+      "instagram": "https://www.instagram.com/ridgepizza/",
+      "source": "https://www.instagram.com/ridgepizza/"
+    },
+    {
+      "id": "sinners-pizza",
+      "instagram": "https://www.instagram.com/sinnerspizzaco/",
+      "source": "https://sinners.pizza/"
+    },
+    {
+      "id": "seward-park-pizza",
+      "instagram": "https://www.instagram.com/sewardparkpizzacompany/",
+      "source": "https://www.instagram.com/sewardparkpizzacompany/"
     }
   ]
 }

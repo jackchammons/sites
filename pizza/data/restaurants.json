@@ -1230,7 +1230,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/talaricos.pizza/"
     },
     {
       "id": "hot-mamas-pizza",
@@ -1513,7 +1514,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/sliceboxpizza_sodo/"
     },
     {
       "id": "roccos",
@@ -1561,7 +1563,8 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/roccos_seattle/"
     },
     {
       "id": "my-friend-dereks",
@@ -1741,7 +1744,8 @@
       },
       "opened": 2026,
       "styleGroup": "Thin crust",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://www.instagram.com/steviesfamous/"
     },
     {
       "id": "sinners-pizza",
@@ -1765,7 +1769,8 @@
       ],
       "locationsVerified": "2026-08-26",
       "locationsSource": "https://sinners.pizza/",
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/sinnerspizzaco/"
     },
     {
       "id": "roma-roma",
@@ -1843,7 +1848,8 @@
       },
       "opened": 2026,
       "styleGroup": "Roman",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://www.instagram.com/romaroma.pizza/"
     },
     {
       "id": "pizza-by-ruffin",
@@ -2471,7 +2477,8 @@
       },
       "opened": 2017,
       "styleGroup": "Neapolitan",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://www.instagram.com/anticosopranospizzapasta/"
     },
     {
       "id": "pizza-ritual",
@@ -2695,7 +2702,8 @@
       "opened": 2025,
       "priceIndex": 4,
       "styleGroup": "Roman",
-      "lastVerified": "2026-08-27"
+      "lastVerified": "2026-08-27",
+      "instagram": "https://www.instagram.com/sacroboscopizza/"
     },
     {
       "id": "oxbow",
@@ -2868,7 +2876,8 @@
         }
       },
       "styleGroup": "Neighborhood",
-      "lastVerified": "2026-08-30"
+      "lastVerified": "2026-08-30",
+      "instagram": "https://www.instagram.com/sewardparkpizzacompany/"
     },
     {
       "id": "belltown-pizza",
@@ -3544,7 +3553,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/ridgepizza/"
     },
     {
       "id": "good-luck-bread",
@@ -3685,7 +3695,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "instagram": "https://www.instagram.com/verasballard/"
     }
   ]
 }
