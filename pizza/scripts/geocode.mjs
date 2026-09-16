@@ -23,10 +23,16 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 // Sanity box around Puget Sound; a geocode outside it is a mismatch, not a fact.
 const inRange = (lat, lon) => lat > 46.5 && lat < 48.8 && lon > -123.5 && lon < -121.0;
 
-// Nominatim chokes on suite numbers ("Suite J1", "#102") and building names.
-// The street address alone still pins the right rooftop.
-const simplify = addr => addr
+// Nominatim chokes on suite numbers ("Suite J1", "#102"), on a bare unit
+// between street and city ("41 Dravus St, S10, Seattle"; "1011 Pike St, C,
+// Seattle"), and on building names. The street address alone still pins the
+// right rooftop. It also wants OSM's spelling of a few local names that
+// pizzerias write as one word.
+const SPELLINGS = [[/\bgreenlake\b/i, 'Green Lake']];
+const simplify = addr => SPELLINGS
+  .reduce((s, [re, to]) => s.replace(re, to), addr)
   .replace(/,?\s*(suite|ste\.?|unit|#)\s*[\w-]+/i, '')
+  .replace(/,\s*(?:[A-Z]|[A-Z]?\d{1,4}[A-Z]?)(?=\s*,)/i, '')
   .replace(/\s{2,}/g, ' ');
 
 async function lookup(addr) {

@@ -1063,7 +1063,9 @@
       "locations": [
         {
           "neighborhood": "Greenlake",
-          "address": "7900 E Greenlake Drive N, Seattle, WA 98103"
+          "address": "7900 E Greenlake Drive N, Seattle, WA 98103",
+          "lat": 47.68577,
+          "lon": -122.33693
         },
         {
           "neighborhood": "Kirkland",
@@ -3411,7 +3413,9 @@
       "locations": [
         {
           "neighborhood": "Interbay",
-          "address": "41 Dravus St, S10, Seattle, WA 98109"
+          "address": "41 Dravus St, S10, Seattle, WA 98109",
+          "lat": 47.64842,
+          "lon": -122.35586
         }
       ],
       "locationsVerified": null,
@@ -3575,7 +3579,9 @@
       "locations": [
         {
           "neighborhood": "Downtown (Pike St)",
-          "address": "1011 Pike St, C, Seattle, WA 98101"
+          "address": "1011 Pike St, C, Seattle, WA 98101",
+          "lat": 47.61296,
+          "lon": -122.32954
         }
       ],
       "locationsVerified": null,
