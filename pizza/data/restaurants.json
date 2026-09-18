@@ -3205,7 +3205,33 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/jacksonstreetpizzalounge/"
+      "instagram": "https://www.instagram.com/jacksonstreetpizzalounge/",
+      "factors": {
+        "craft": {
+          "value": 4.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/jackson-street-pizza-lounge",
+          "note": "The Infatuation scored it 5.8/10 ('not recommended'), calling the crust thin, dry and crunchy despite creative pies like pineapple-chorizo and egg yolk-guanciale; the amaro-forward, jazz-bar-themed cocktail program and the banana-date cake drew the praise the pizza itself didn't.",
+          "date": "2026-09-18"
+        },
+        "distinctiveness": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/jackson-street-pizza-lounge",
+          "note": "The Infatuation scored it 5.8/10 ('not recommended'), calling the crust thin, dry and crunchy despite creative pies like pineapple-chorizo and egg yolk-guanciale; the amaro-forward, jazz-bar-themed cocktail program and the banana-date cake drew the praise the pizza itself didn't.",
+          "date": "2026-09-18"
+        },
+        "critical": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/jackson-street-pizza-lounge",
+          "note": "The Infatuation scored it 5.8/10 ('not recommended'), calling the crust thin, dry and crunchy despite creative pies like pineapple-chorizo and egg yolk-guanciale; the amaro-forward, jazz-bar-themed cocktail program and the banana-date cake drew the praise the pizza itself didn't.",
+          "date": "2026-09-18"
+        }
+      },
+      "priceIndex": 3,
+      "styleGroup": "Pizza bar",
+      "lastVerified": "2026-09-18"
     },
     {
       "id": "mad-pizza",
@@ -3572,7 +3598,34 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/goodluckbread/"
+      "instagram": "https://www.instagram.com/goodluckbread/",
+      "factors": {
+        "craft": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/eat-and-drink/2024/07/good-luck-bread-frozen-pizza-dough",
+          "note": "Seattle Met profiled the SoDo operation's 100%-naturally-leavened, self-milled sourdough crust and flash-freeze process; its own press page compiles Seattle Times praise for a 'crackle-crisp crust' with 'deep, tomato flavor' plus King 5 features and an endorsement from J. Kenji López-Alt, unusual sustained coverage for a take-home frozen pie ($12.50-22).",
+          "date": "2026-09-18"
+        },
+        "distinctiveness": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/eat-and-drink/2024/07/good-luck-bread-frozen-pizza-dough",
+          "note": "Seattle Met profiled the SoDo operation's 100%-naturally-leavened, self-milled sourdough crust and flash-freeze process; its own press page compiles Seattle Times praise for a 'crackle-crisp crust' with 'deep, tomato flavor' plus King 5 features and an endorsement from J. Kenji López-Alt, unusual sustained coverage for a take-home frozen pie ($12.50-22).",
+          "date": "2026-09-18"
+        },
+        "critical": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/eat-and-drink/2024/07/good-luck-bread-frozen-pizza-dough",
+          "note": "Seattle Met profiled the SoDo operation's 100%-naturally-leavened, self-milled sourdough crust and flash-freeze process; its own press page compiles Seattle Times praise for a 'crackle-crisp crust' with 'deep, tomato flavor' plus King 5 features and an endorsement from J. Kenji López-Alt, unusual sustained coverage for a take-home frozen pie ($12.50-22).",
+          "date": "2026-09-18"
+        }
+      },
+      "opened": 2020,
+      "priceIndex": 2,
+      "styleGroup": "Creative",
+      "lastVerified": "2026-09-18"
     },
     {
       "id": "downtown-romios-pizza-pasta",

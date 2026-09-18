@@ -1,60 +1,33 @@
 {
-  "updated": "2026-09-16T19:30:00Z",
-  "links": [
+  "updated": "2026-09-18T17:00:00Z",
+  "factorRatings": [
     {
-      "id": "roma-roma",
-      "instagram": "https://www.instagram.com/romaroma.pizza/",
-      "source": "https://romaroma.pizza/"
+      "id": "good-luck-bread",
+      "craft": 7,
+      "distinctiveness": 7.5,
+      "criticScore": 7,
+      "opened": 2020,
+      "priceIndex": 2,
+      "styleGroup": "Creative",
+      "sources": [
+        "https://www.seattlemet.com/eat-and-drink/2024/07/good-luck-bread-frozen-pizza-dough",
+        "https://pizza.goodluckbread.com/pages/press",
+        "https://pizza.goodluckbread.com/"
+      ],
+      "note": "Seattle Met profiled the SoDo operation's 100%-naturally-leavened, self-milled sourdough crust and flash-freeze process; its own press page compiles Seattle Times praise for a 'crackle-crisp crust' with 'deep, tomato flavor' plus King 5 features and an endorsement from J. Kenji López-Alt, unusual sustained coverage for a take-home frozen pie ($12.50-22)."
     },
     {
-      "id": "talaricos",
-      "instagram": "https://www.instagram.com/talaricos.pizza/",
-      "source": "https://www.instagram.com/talaricos.pizza/?hl=en"
-    },
-    {
-      "id": "sacro-bosco-pizza-wine",
-      "instagram": "https://www.instagram.com/sacroboscopizza/",
-      "source": "https://www.sacroboscopizza.com/"
-    },
-    {
-      "id": "slice-box",
-      "instagram": "https://www.instagram.com/sliceboxpizza_sodo/",
-      "source": "https://www.sliceboxpizza.com"
-    },
-    {
-      "id": "roccos",
-      "instagram": "https://www.instagram.com/roccos_seattle/",
-      "source": "https://www.instagram.com/roccos_seattle/?hl=en"
-    },
-    {
-      "id": "stevies-famous",
-      "instagram": "https://www.instagram.com/steviesfamous/",
-      "source": "https://www.instagram.com/steviesfamous/?hl=en"
-    },
-    {
-      "id": "sopranos-antico",
-      "instagram": "https://www.instagram.com/anticosopranospizzapasta/",
-      "source": "https://www.anticosopranos.com/"
-    },
-    {
-      "id": "veras-pizza-and-bar",
-      "instagram": "https://www.instagram.com/verasballard/",
-      "source": "https://www.verasballard.com/"
-    },
-    {
-      "id": "ridge-pizza",
-      "instagram": "https://www.instagram.com/ridgepizza/",
-      "source": "https://www.instagram.com/ridgepizza/"
-    },
-    {
-      "id": "sinners-pizza",
-      "instagram": "https://www.instagram.com/sinnerspizzaco/",
-      "source": "https://sinners.pizza/"
-    },
-    {
-      "id": "seward-park-pizza",
-      "instagram": "https://www.instagram.com/sewardparkpizzacompany/",
-      "source": "https://www.instagram.com/sewardparkpizzacompany/"
+      "id": "jackson-street-pizza-lounge",
+      "craft": 4.5,
+      "distinctiveness": 5.5,
+      "criticScore": 5,
+      "priceIndex": 3,
+      "styleGroup": "Pizza bar",
+      "sources": [
+        "https://www.theinfatuation.com/seattle/reviews/jackson-street-pizza-lounge",
+        "https://jacksonstreetpizzalounge.com/"
+      ],
+      "note": "The Infatuation scored it 5.8/10 ('not recommended'), calling the crust thin, dry and crunchy despite creative pies like pineapple-chorizo and egg yolk-guanciale; the amaro-forward, jazz-bar-themed cocktail program and the banana-date cake drew the praise the pizza itself didn't."
     }
   ]
 }
