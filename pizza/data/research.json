@@ -1,33 +1,23 @@
 {
-  "updated": "2026-09-18T17:00:00Z",
-  "factorRatings": [
+  "updated": "2026-09-19T18:00:00Z",
+  "directory": [
     {
-      "id": "good-luck-bread",
-      "craft": 7,
-      "distinctiveness": 7.5,
-      "criticScore": 7,
-      "opened": 2020,
-      "priceIndex": 2,
-      "styleGroup": "Creative",
-      "sources": [
-        "https://www.seattlemet.com/eat-and-drink/2024/07/good-luck-bread-frozen-pizza-dough",
-        "https://pizza.goodluckbread.com/pages/press",
-        "https://pizza.goodluckbread.com/"
-      ],
-      "note": "Seattle Met profiled the SoDo operation's 100%-naturally-leavened, self-milled sourdough crust and flash-freeze process; its own press page compiles Seattle Times praise for a 'crackle-crisp crust' with 'deep, tomato flavor' plus King 5 features and an endorsement from J. Kenji López-Alt, unusual sustained coverage for a take-home frozen pie ($12.50-22)."
+      "name": "BoBu",
+      "neighborhood": "Crown Hill",
+      "style": "Pizza, calzones and pretzels from a walk-up/drive-thru shipping-container stand",
+      "status": "open",
+      "note": "Walk-up and drive-thru pizza, calzone and pretzel stand in a converted shipping container, opened by Florin Bucur and Nick Bodea in April 2025.",
+      "source": "https://myballard.com/2025/06/10/bobu-brings-walk-up-and-drive-thru-pizza-and-pretzels-to-crown-hill/",
+      "address": "817 NW 85th St, Seattle, WA 98117"
     },
     {
-      "id": "jackson-street-pizza-lounge",
-      "craft": 4.5,
-      "distinctiveness": 5.5,
-      "criticScore": 5,
-      "priceIndex": 3,
-      "styleGroup": "Pizza bar",
-      "sources": [
-        "https://www.theinfatuation.com/seattle/reviews/jackson-street-pizza-lounge",
-        "https://jacksonstreetpizzalounge.com/"
-      ],
-      "note": "The Infatuation scored it 5.8/10 ('not recommended'), calling the crust thin, dry and crunchy despite creative pies like pineapple-chorizo and egg yolk-guanciale; the amaro-forward, jazz-bar-themed cocktail program and the banana-date cake drew the praise the pizza itself didn't."
+      "name": "Sunny Hill",
+      "neighborhood": "North Ballard",
+      "style": "Detroit-style squares and round pies",
+      "status": "open",
+      "note": "Long-running neighborhood pizzeria from the Stoneburner restaurant group, serving Detroit-style squares and round pies alongside burgers and brunch since 2020.",
+      "source": "https://www.theinfatuation.com/seattle/reviews/sunny-hill",
+      "address": "3127 NW 85th St, Seattle, WA 98117"
     }
   ]
 }
