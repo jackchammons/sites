@@ -3766,7 +3766,9 @@
       "locations": [
         {
           "neighborhood": "Crown Hill",
-          "address": "817 NW 85th St, Seattle, WA 98117"
+          "address": "817 NW 85th St, Seattle, WA 98117",
+          "lat": 47.69053,
+          "lon": -122.36674
         }
       ],
       "locationsVerified": null,
@@ -3788,7 +3790,9 @@
       "locations": [
         {
           "neighborhood": "North Ballard",
-          "address": "3127 NW 85th St, Seattle, WA 98117"
+          "address": "3127 NW 85th St, Seattle, WA 98117",
+          "lat": 47.69039,
+          "lon": -122.39797
         }
       ],
       "locationsVerified": null,
