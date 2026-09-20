@@ -1647,7 +1647,7 @@
         }
       ],
       "statusChecked": "2026-09-16",
-      "instagram": "https://www.instagram.com/abecedaryseattle/"
+      "instagram": "https://instagram.com/abecedaryseattle"
     },
     {
       "id": "stevies-famous",
@@ -2444,14 +2444,14 @@
       "attributes": {},
       "locations": [
         {
-          "neighborhood": "Admiral, West Seattle",
+          "neighborhood": "Admiral Junction, West Seattle",
           "address": "2348 California Ave SW, Seattle, WA 98116",
           "lat": 47.58154,
           "lon": -122.38622
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-09-20",
+      "locationsSource": "https://www.anticosopranos.com/",
       "mentions": [],
       "factors": {
         "craft": {

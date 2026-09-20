@@ -1,23 +1,33 @@
 {
-  "updated": "2026-09-19T18:00:00Z",
-  "directory": [
+  "updated": "2026-09-20T18:00:00Z",
+  "locations": [
     {
-      "name": "BoBu",
-      "neighborhood": "Crown Hill",
-      "style": "Pizza, calzones and pretzels from a walk-up/drive-thru shipping-container stand",
-      "status": "open",
-      "note": "Walk-up and drive-thru pizza, calzone and pretzel stand in a converted shipping container, opened by Florin Bucur and Nick Bodea in April 2025.",
-      "source": "https://myballard.com/2025/06/10/bobu-brings-walk-up-and-drive-thru-pizza-and-pretzels-to-crown-hill/",
-      "address": "817 NW 85th St, Seattle, WA 98117"
+      "id": "sopranos-antico",
+      "homepage": "https://www.anticosopranos.com/",
+      "source": "https://www.anticosopranos.com/",
+      "sites": [
+        {
+          "neighborhood": "Admiral Junction, West Seattle",
+          "address": "2348 California Ave SW, Seattle, WA 98116"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "id": "abecedary",
+      "instagram": "https://instagram.com/abecedaryseattle",
+      "source": "https://abecedaryseattle.com/"
     },
     {
-      "name": "Sunny Hill",
-      "neighborhood": "North Ballard",
-      "style": "Detroit-style squares and round pies",
-      "status": "open",
-      "note": "Long-running neighborhood pizzeria from the Stoneburner restaurant group, serving Detroit-style squares and round pies alongside burgers and brunch since 2020.",
-      "source": "https://www.theinfatuation.com/seattle/reviews/sunny-hill",
-      "address": "3127 NW 85th St, Seattle, WA 98117"
+      "id": "good-luck-bread",
+      "instagram": "https://www.instagram.com/goodluckbread/",
+      "source": "https://pizza.goodluckbread.com/"
+    },
+    {
+      "id": "sopranos-antico",
+      "instagram": "https://www.instagram.com/anticosopranospizzapasta/",
+      "source": "https://www.anticosopranos.com/"
     }
   ]
 }
