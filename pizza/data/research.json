@@ -1,33 +1,41 @@
 {
-  "updated": "2026-09-20T18:00:00Z",
-  "locations": [
-    {
-      "id": "sopranos-antico",
-      "homepage": "https://www.anticosopranos.com/",
-      "source": "https://www.anticosopranos.com/",
-      "sites": [
-        {
-          "neighborhood": "Admiral Junction, West Seattle",
-          "address": "2348 California Ave SW, Seattle, WA 98116"
-        }
-      ]
-    }
-  ],
-  "links": [
+  "updated": "2026-09-21T12:00:00Z",
+  "status": [
     {
       "id": "abecedary",
-      "instagram": "https://instagram.com/abecedaryseattle",
+      "status": "opening",
+      "note": "Official site still reads \"Coming Soon to Hillman City\"; the pizzeria and brewery remains pre-launch, doing pop-ups ahead of its planned 2027 opening.",
       "source": "https://abecedaryseattle.com/"
     },
     {
-      "id": "good-luck-bread",
-      "instagram": "https://www.instagram.com/goodluckbread/",
-      "source": "https://pizza.goodluckbread.com/"
+      "id": "razzis-pizzeria",
+      "status": "open",
+      "note": "HappyCow shows current posted hours and an active review from May 10, 2026 praising the vegan pizza, consistent with ongoing operation at 8523 Greenwood Ave N.",
+      "source": "https://www.happycow.net/reviews/razzis-pizzeria-seattle-26876"
     },
     {
-      "id": "sopranos-antico",
-      "instagram": "https://www.instagram.com/anticosopranospizzapasta/",
-      "source": "https://www.anticosopranos.com/"
+      "id": "candela-pizza",
+      "status": "open",
+      "note": "Roadtrippers lists the truck as \"Open now\" with posted daily hours (8am-5:30pm) at the 9454 17th Ave SW commissary address.",
+      "source": "https://maps.roadtrippers.com/us/seattle-wa/food-drink/candela-pizza"
+    },
+    {
+      "id": "dudez-woodfired-pizza",
+      "status": "open",
+      "note": "Atly's listing describes it as open seven days a week at 2919 Fuhrman Ave E, matching Yelp's review activity current through May 2026.",
+      "source": "https://www.atly.com/location/DUDE'Z-woodfired-pizza"
+    },
+    {
+      "id": "bobu",
+      "status": "closed",
+      "note": "MyBallard reported the walk-up/drive-thru stand at 817 NW 85th St closed on February 18, 2026 after about ten months, corroborated by Yelp now listing it as CLOSED.",
+      "source": "https://www.myballard.com/2026/02/18/bobu-pizza-and-pretzel-drive-thru-now-closed/"
+    },
+    {
+      "id": "sunny-hill",
+      "status": "open",
+      "note": "The Daily's April 29, 2026 dining feature recommends Sunny Hill as a current North Ballard pizza destination, consistent with Yelp's listing updated July 2026.",
+      "source": "https://www.dailyuw.com/article/dining-beyond-the-u-district-the-only-sunny-hill-ill-die-on-20260429"
     }
   ]
 }

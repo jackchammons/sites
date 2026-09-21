@@ -1646,7 +1646,7 @@
           "kind": "mention"
         }
       ],
-      "statusChecked": "2026-09-16",
+      "statusChecked": "2026-09-21",
       "instagram": "https://instagram.com/abecedaryseattle"
     },
     {
@@ -1976,7 +1976,7 @@
       "status": "open",
       "statusSource": "https://intentionalist.com/b/razzis-pizzeria-greenwood/",
       "statusDate": "2026-08-26",
-      "statusChecked": "2026-09-16",
+      "statusChecked": "2026-09-21",
       "attributes": {},
       "locations": [
         {
@@ -2939,7 +2939,7 @@
       "status": "open",
       "statusSource": "https://www.seattlefoodtruck.com/food-trucks/candela-pizza",
       "statusDate": "2026-08-30",
-      "statusChecked": "2026-09-16",
+      "statusChecked": "2026-09-21",
       "attributes": {},
       "locations": [
         {
@@ -2964,7 +2964,7 @@
       "status": "open",
       "statusSource": "https://www.atly.com/location/DUDE'Z-woodfired-pizza",
       "statusDate": "2026-08-31",
-      "statusChecked": "2026-09-16",
+      "statusChecked": "2026-09-21",
       "attributes": {},
       "locations": [
         {
@@ -3758,10 +3758,10 @@
       "style": "Pizza, calzones and pretzels from a walk-up/drive-thru shipping-container stand",
       "blurb": "Walk-up and drive-thru pizza, calzone and pretzel stand in a converted shipping container, opened by Florin Bucur and Nick Bodea in April 2025.",
       "url": null,
-      "status": "open",
-      "statusSource": "https://myballard.com/2025/06/10/bobu-brings-walk-up-and-drive-thru-pizza-and-pretzels-to-crown-hill/",
-      "statusDate": "2026-09-19",
-      "statusChecked": "2026-09-19",
+      "status": "closed",
+      "statusSource": "https://www.myballard.com/2026/02/18/bobu-pizza-and-pretzel-drive-thru-now-closed/",
+      "statusDate": "2026-09-21",
+      "statusChecked": "2026-09-21",
       "attributes": {},
       "locations": [
         {
@@ -3773,7 +3773,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "statusNote": "MyBallard reported the walk-up/drive-thru stand at 817 NW 85th St closed on February 18, 2026 after about ten months, corroborated by Yelp now listing it as CLOSED."
     },
     {
       "id": "sunny-hill",
@@ -3785,7 +3786,7 @@
       "status": "open",
       "statusSource": "https://www.theinfatuation.com/seattle/reviews/sunny-hill",
       "statusDate": "2026-09-19",
-      "statusChecked": "2026-09-19",
+      "statusChecked": "2026-09-21",
       "attributes": {},
       "locations": [
         {
