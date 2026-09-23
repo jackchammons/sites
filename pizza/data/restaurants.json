@@ -3749,7 +3749,34 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/verasballard/"
+      "instagram": "https://www.instagram.com/verasballard/",
+      "factors": {
+        "craft": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.myballard.com/2019/09/18/veras-pizza-bar-now-open/",
+          "note": "My Ballard's 2019 opening coverage describes a by-the-slice NY-style pizza bar built into the Polimenakos family's longtime Ballard diner space, serving big slices and 18-inch pies until 1am alongside a full bar, pinball and karaoke; the restaurant's own menu (slices $5.75-8, 14\"/18\" pies $22-39, red and white pies with build-your-own options) confirms a casual, late-night pizza-bar niche, though coverage doesn't go deep on the pizza's craft itself.",
+          "date": "2026-09-23"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.myballard.com/2019/09/18/veras-pizza-bar-now-open/",
+          "note": "My Ballard's 2019 opening coverage describes a by-the-slice NY-style pizza bar built into the Polimenakos family's longtime Ballard diner space, serving big slices and 18-inch pies until 1am alongside a full bar, pinball and karaoke; the restaurant's own menu (slices $5.75-8, 14\"/18\" pies $22-39, red and white pies with build-your-own options) confirms a casual, late-night pizza-bar niche, though coverage doesn't go deep on the pizza's craft itself.",
+          "date": "2026-09-23"
+        },
+        "critical": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.myballard.com/2019/09/18/veras-pizza-bar-now-open/",
+          "note": "My Ballard's 2019 opening coverage describes a by-the-slice NY-style pizza bar built into the Polimenakos family's longtime Ballard diner space, serving big slices and 18-inch pies until 1am alongside a full bar, pinball and karaoke; the restaurant's own menu (slices $5.75-8, 14\"/18\" pies $22-39, red and white pies with build-your-own options) confirms a casual, late-night pizza-bar niche, though coverage doesn't go deep on the pizza's craft itself.",
+          "date": "2026-09-23"
+        }
+      },
+      "opened": 2019,
+      "priceIndex": 2,
+      "styleGroup": "Pizza bar",
+      "lastVerified": "2026-09-23"
     },
     {
       "id": "bobu",
