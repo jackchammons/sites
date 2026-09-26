@@ -1,6 +1,10 @@
-{"updated":"2026-09-25T19:00:00Z",
- "links":[
-   {"id":"abecedary","instagram":"https://instagram.com/abecedaryseattle","source":"https://abecedaryseattle.com/"},
-   {"id":"good-luck-bread","instagram":"https://www.instagram.com/goodluckbread/","source":"https://pizza.goodluckbread.com/"}
+{"updated":"2026-09-26T18:00:00Z",
+ "status":[
+   {"id":"abecedary","status":"opening","note":"The pizzeria's own site still reads \"Coming Soon to Hillman City\" with no opening date or hours posted yet.","source":"https://abecedaryseattle.com/"},
+   {"id":"razzis-pizzeria","status":"open","note":"Razzi's Greenwood location has an active, September 2026-updated listing with current hours and ongoing reviews.","source":"https://www.yelp.com/biz/razz%C3%ADs-pizzeria-seattle-4"},
+   {"id":"candela-pizza","status":"open","note":"Candela Pizza's food truck listing is current with posted hours and no closure notice.","source":"https://www.yelp.com/biz/candela-pizza-seattle"},
+   {"id":"dudez-woodfired-pizza","status":"open","note":"Dude'Z Woodfired Pizza's listing is active with current hours and recent reviews, showing no closure.","source":"https://www.yelp.com/biz/dudez-woodfired-pizza-seattle"},
+   {"id":"sunny-hill","status":"open","note":"Sunny Hill's listing shows current hours and an active, recently updated review count with no closure notice.","source":"https://www.yelp.com/biz/sunny-hill-seattle"},
+   {"id":"independent-pizzeria","status":"open","note":"The Independent Pizzeria's own site lists current Thursday-Sunday pickup hours with no closure notice.","source":"https://theindependentpizzeria.com"}
  ]
 }
