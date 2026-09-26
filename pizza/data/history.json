@@ -2105,7 +2105,7 @@
     },
     {
       "weekKey": "2026-W39",
-      "date": "2026-09-25",
+      "date": "2026-09-26",
       "week": 39,
       "ranks": {
         "delancey": 1,
@@ -2167,12 +2167,12 @@
       "scores": {
         "delancey": 88.4,
         "windy-city-pie": 85.9,
-        "dinos-tomato-pie": 84.3,
+        "dinos-tomato-pie": 84.2,
         "serious-pie": 84.2,
-        "tutta-bella": 83.2,
+        "tutta-bella": 83.1,
         "cornelly": 82.1,
         "veraci-pizza": 80.9,
-        "independent-pizzeria": 80.7,
+        "independent-pizzeria": 80.6,
         "pagliacci": 79.3,
         "mioposto": 78.5,
         "lupo": 77.8,
@@ -2187,7 +2187,7 @@
         "sacro-bosco-pizza-wine": 65.7,
         "sopranos-antico": 65.4,
         "pazzos-on-eastlake": 64.5,
-        "stevies-famous": 62.8,
+        "stevies-famous": 62.7,
         "veras-pizza-and-bar": 62,
         "breezy-town-pizza": 61.3,
         "pizzeria-gabbiano": 60,
@@ -2218,7 +2218,7 @@
         "managers-pizza": 46.3,
         "johnny-mos-pizzeria": 43.9,
         "seward-park-pizza": 41.2,
-        "jackson-street-pizza-lounge": 36.8,
+        "jackson-street-pizza-lounge": 36.7,
         "mad-pizza": 27.7
       },
       "factors": {
