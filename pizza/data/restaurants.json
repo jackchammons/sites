@@ -1787,7 +1787,33 @@
       "locationsVerified": "2026-08-26",
       "locationsSource": "https://sinners.pizza/",
       "mentions": [],
-      "instagram": "https://www.instagram.com/sinnerspizzaco/"
+      "instagram": "https://www.instagram.com/sinnerspizzaco/",
+      "factors": {
+        "craft": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://www.dailyuw.com/article/sinners-pizza-opens-on-the-ave-with-late-night-hours-opening-day-sees-over-1-000-transactions-20260416",
+          "note": "The Daily (UW's student paper) covered the April 10, 2026 opening on the Ave -- late-night hours to 2:30am Fri/Sat and over 1,000 opening-day transactions -- and The Infatuation describes 'standard New York-style slices' in a Heaven-and-Hell-themed bar setting with a 21+ area, while explicitly noting its writers hadn't yet tasted the food; a distinctive late-night bar concept without an established critical verdict on the pizza itself.",
+          "date": "2026-09-28"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.dailyuw.com/article/sinners-pizza-opens-on-the-ave-with-late-night-hours-opening-day-sees-over-1-000-transactions-20260416",
+          "note": "The Daily (UW's student paper) covered the April 10, 2026 opening on the Ave -- late-night hours to 2:30am Fri/Sat and over 1,000 opening-day transactions -- and The Infatuation describes 'standard New York-style slices' in a Heaven-and-Hell-themed bar setting with a 21+ area, while explicitly noting its writers hadn't yet tasted the food; a distinctive late-night bar concept without an established critical verdict on the pizza itself.",
+          "date": "2026-09-28"
+        },
+        "critical": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://www.dailyuw.com/article/sinners-pizza-opens-on-the-ave-with-late-night-hours-opening-day-sees-over-1-000-transactions-20260416",
+          "note": "The Daily (UW's student paper) covered the April 10, 2026 opening on the Ave -- late-night hours to 2:30am Fri/Sat and over 1,000 opening-day transactions -- and The Infatuation describes 'standard New York-style slices' in a Heaven-and-Hell-themed bar setting with a 21+ area, while explicitly noting its writers hadn't yet tasted the food; a distinctive late-night bar concept without an established critical verdict on the pizza itself.",
+          "date": "2026-09-28"
+        }
+      },
+      "opened": 2026,
+      "styleGroup": "Pizza bar",
+      "lastVerified": "2026-09-28"
     },
     {
       "id": "roma-roma",
@@ -3717,7 +3743,33 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/smokingmonkeypizzaseattle"
+      "instagram": "https://www.instagram.com/smokingmonkeypizzaseattle",
+      "factors": {
+        "craft": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.seattletimes.com/life/food-drink/pizza-perfection-with-a-side-of-science-fiction-at-rentons-smoking-monkey-pizza/",
+          "note": "The Seattle Times profiled the Renton original of this wood-fired chain -- same Woodstone-oven recipes and specialty pies (like the Goatsmary: chili oil, goat cheese, rosemary, roasted cashews, parmesan, $16 for a 12-inch) that the Magnolia storefront serves under the same name and menu -- praising inventive topping combinations under the headline 'Pizza perfection with a side of science fiction.'",
+          "date": "2026-09-28"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.seattletimes.com/life/food-drink/pizza-perfection-with-a-side-of-science-fiction-at-rentons-smoking-monkey-pizza/",
+          "note": "The Seattle Times profiled the Renton original of this wood-fired chain -- same Woodstone-oven recipes and specialty pies (like the Goatsmary: chili oil, goat cheese, rosemary, roasted cashews, parmesan, $16 for a 12-inch) that the Magnolia storefront serves under the same name and menu -- praising inventive topping combinations under the headline 'Pizza perfection with a side of science fiction.'",
+          "date": "2026-09-28"
+        },
+        "critical": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.seattletimes.com/life/food-drink/pizza-perfection-with-a-side-of-science-fiction-at-rentons-smoking-monkey-pizza/",
+          "note": "The Seattle Times profiled the Renton original of this wood-fired chain -- same Woodstone-oven recipes and specialty pies (like the Goatsmary: chili oil, goat cheese, rosemary, roasted cashews, parmesan, $16 for a 12-inch) that the Magnolia storefront serves under the same name and menu -- praising inventive topping combinations under the headline 'Pizza perfection with a side of science fiction.'",
+          "date": "2026-09-28"
+        }
+      },
+      "priceIndex": 2,
+      "styleGroup": "Wood-fired",
+      "lastVerified": "2026-09-28"
     },
     {
       "id": "sopranos-pizza-pasta-lake-city",
