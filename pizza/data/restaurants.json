@@ -3911,7 +3911,9 @@
       "locations": [
         {
           "neighborhood": "Pioneer Square",
-          "address": "202 Occidental Ave S, Seattle, WA 98104"
+          "address": "202 Occidental Ave S, Seattle, WA 98104",
+          "lat": 47.60073,
+          "lon": -122.33266
         }
       ],
       "locationsVerified": null,
