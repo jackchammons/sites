@@ -1,30 +1,15 @@
 {
-  "updated": "2026-09-28T18:30:00Z",
-  "factorRatings": [
+  "updated": "2026-09-29T00:00:00Z",
+  "directory": [
     {
-      "id": "smoking-monkey-pizza",
-      "craft": 7,
-      "distinctiveness": 6.5,
-      "criticScore": 7,
-      "priceIndex": 2,
-      "styleGroup": "Wood-fired",
-      "sources": [
-        "https://www.seattletimes.com/life/food-drink/pizza-perfection-with-a-side-of-science-fiction-at-rentons-smoking-monkey-pizza/"
-      ],
-      "note": "The Seattle Times profiled the Renton original of this wood-fired chain -- same Woodstone-oven recipes and specialty pies (like the Goatsmary: chili oil, goat cheese, rosemary, roasted cashews, parmesan, $16 for a 12-inch) that the Magnolia storefront serves under the same name and menu -- praising inventive topping combinations under the headline 'Pizza perfection with a side of science fiction.'"
-    },
-    {
-      "id": "sinners-pizza",
-      "craft": 5,
-      "distinctiveness": 6.5,
-      "criticScore": 5,
-      "opened": 2026,
-      "styleGroup": "Pizza bar",
-      "sources": [
-        "https://www.dailyuw.com/article/sinners-pizza-opens-on-the-ave-with-late-night-hours-opening-day-sees-over-1-000-transactions-20260416",
-        "https://www.theinfatuation.com/seattle/reviews/sinners-pizza"
-      ],
-      "note": "The Daily (UW's student paper) covered the April 10, 2026 opening on the Ave -- late-night hours to 2:30am Fri/Sat and over 1,000 opening-day transactions -- and The Infatuation describes 'standard New York-style slices' in a Heaven-and-Hell-themed bar setting with a 21+ area, while explicitly noting its writers hadn't yet tasted the food; a distinctive late-night bar concept without an established critical verdict on the pizza itself."
+      "name": "DeLeo Bros. Pizza",
+      "url": "https://deleobrotherspizza.com/",
+      "neighborhood": "Pioneer Square",
+      "style": "New York slice",
+      "status": "open",
+      "note": "Minnesota-born New York-slice shop (its first location is at the Mall of America) that opened its first Seattle storefront in Pioneer Square in August 2026.",
+      "source": "https://pioneersquare.org/businesses/deleo-bros-pizza/",
+      "address": "202 Occidental Ave S, Seattle, WA 98104"
     }
   ]
 }

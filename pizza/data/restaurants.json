@@ -3895,6 +3895,28 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": []
+    },
+    {
+      "id": "deleo-bros-pizza",
+      "name": "DeLeo Bros. Pizza",
+      "neighborhood": "Pioneer Square",
+      "style": "New York slice",
+      "blurb": "Minnesota-born New York-slice shop (its first location is at the Mall of America) that opened its first Seattle storefront in Pioneer Square in August 2026.",
+      "url": "https://deleobrotherspizza.com/",
+      "status": "open",
+      "statusSource": "https://pioneersquare.org/businesses/deleo-bros-pizza/",
+      "statusDate": "2026-09-29",
+      "statusChecked": "2026-09-29",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Pioneer Square",
+          "address": "202 Occidental Ave S, Seattle, WA 98104"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }
