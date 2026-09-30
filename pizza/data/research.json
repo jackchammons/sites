@@ -1,15 +1,36 @@
 {
-  "updated": "2026-09-29T00:00:00Z",
-  "directory": [
+  "updated": "2026-09-30T00:00:00Z",
+  "locations": [
     {
-      "name": "DeLeo Bros. Pizza",
-      "url": "https://deleobrotherspizza.com/",
-      "neighborhood": "Pioneer Square",
-      "style": "New York slice",
-      "status": "open",
-      "note": "Minnesota-born New York-slice shop (its first location is at the Mall of America) that opened its first Seattle storefront in Pioneer Square in August 2026.",
-      "source": "https://pioneersquare.org/businesses/deleo-bros-pizza/",
-      "address": "202 Occidental Ave S, Seattle, WA 98104"
+      "id": "pizzeria-pulcinella",
+      "homepage": "https://vincesrestaurants.com/pizzeria-pulcinella",
+      "source": "https://vincesrestaurants.com/pizzeria-pulcinella",
+      "sites": [
+        {
+          "neighborhood": "Southeast Seattle",
+          "address": "10003 Rainier Ave S, Seattle, WA 98178"
+        }
+      ]
+    }
+  ],
+  "status": [
+    {
+      "id": "abecedary",
+      "status": "opening",
+      "note": "Official site describes the Hillman City pizzeria as 'Coming Soon,' with no address or opening date published yet.",
+      "source": "https://abecedaryseattle.com/"
+    }
+  ],
+  "links": [
+    {
+      "id": "abecedary",
+      "instagram": "https://instagram.com/abecedaryseattle",
+      "source": "https://abecedaryseattle.com/"
+    },
+    {
+      "id": "good-luck-bread",
+      "instagram": "https://www.instagram.com/goodluckbread/",
+      "source": "https://pizza.goodluckbread.com/"
     }
   ]
 }

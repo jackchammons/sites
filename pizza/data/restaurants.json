@@ -1663,7 +1663,7 @@
           "kind": "mention"
         }
       ],
-      "statusChecked": "2026-09-26",
+      "statusChecked": "2026-09-30",
       "instagram": "https://instagram.com/abecedaryseattle"
     },
     {
@@ -2586,14 +2586,14 @@
       "attributes": {},
       "locations": [
         {
-          "neighborhood": "Rainier Beach",
+          "neighborhood": "Southeast Seattle",
           "address": "10003 Rainier Ave S, Seattle, WA 98178",
           "lat": 47.51117,
           "lon": -122.24814
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-09-30",
+      "locationsSource": "https://vincesrestaurants.com/pizzeria-pulcinella",
       "mentions": [],
       "factors": {
         "craft": {
