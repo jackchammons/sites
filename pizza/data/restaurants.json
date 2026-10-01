@@ -1,6 +1,6 @@
 {
   "city": "Seattle, WA",
-  "dataVersion": "2026.09",
+  "dataVersion": "2026.10",
   "cityMeanRating": 4.3,
   "priorWeight": 500,
   "notes": "Factor ratings (0-10) are editorial judgments applied uniformly to every entry by one rubric. Critical Read is scored from the critical consensus alone, identically for all entries. Crowd star ratings are rounded aggregates observed on review platforms at the dataset version shown; they are displayed as context and are not scored. Locations marked verified were read from the pizzeria's own site on the date recorded.",
@@ -557,7 +557,8 @@
           "kind": "closing"
         }
       ],
-      "instagram": "https://www.instagram.com/tuttabella/"
+      "instagram": "https://www.instagram.com/tuttabella/",
+      "statusChecked": "2026-10-01"
     },
     {
       "id": "pagliacci",
@@ -1663,7 +1664,7 @@
           "kind": "mention"
         }
       ],
-      "statusChecked": "2026-09-30",
+      "statusChecked": "2026-10-01",
       "instagram": "https://instagram.com/abecedaryseattle"
     },
     {
@@ -2019,7 +2020,7 @@
       "status": "open",
       "statusSource": "https://intentionalist.com/b/razzis-pizzeria-greenwood/",
       "statusDate": "2026-08-26",
-      "statusChecked": "2026-09-26",
+      "statusChecked": "2026-10-01",
       "attributes": {},
       "locations": [
         {
@@ -2982,7 +2983,7 @@
       "status": "open",
       "statusSource": "https://www.seattlefoodtruck.com/food-trucks/candela-pizza",
       "statusDate": "2026-08-30",
-      "statusChecked": "2026-09-26",
+      "statusChecked": "2026-10-01",
       "attributes": {},
       "locations": [
         {
@@ -3007,7 +3008,7 @@
       "status": "open",
       "statusSource": "https://www.atly.com/location/DUDE'Z-woodfired-pizza",
       "statusDate": "2026-08-31",
-      "statusChecked": "2026-09-26",
+      "statusChecked": "2026-10-01",
       "attributes": {},
       "locations": [
         {
@@ -3882,7 +3883,7 @@
       "status": "open",
       "statusSource": "https://www.theinfatuation.com/seattle/reviews/sunny-hill",
       "statusDate": "2026-09-19",
-      "statusChecked": "2026-09-26",
+      "statusChecked": "2026-10-01",
       "attributes": {},
       "locations": [
         {
