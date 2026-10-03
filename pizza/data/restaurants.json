@@ -3199,7 +3199,33 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/inpizzawecrustllc/"
+      "instagram": "https://www.instagram.com/inpizzawecrustllc/",
+      "factors": {
+        "craft": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.westsideseattle.com/robinson-papers/2025/10/31/rocking-food-truck-admiral-area-comfort-pizza-we-crust-finds-permanent",
+          "note": "Family-owned wood-fired pizzeria that spent two years developing its hand-tossed dough and scratch-made sauce before launching as a food truck in 2019; local coverage of its September 2025 Admiral District brick-and-mortar describes a 650-degree wood-fired bake and fusion toppings (Indian curry, Korean-style corn cheese) alongside classics.",
+          "date": "2026-10-03"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.westsideseattle.com/robinson-papers/2025/10/31/rocking-food-truck-admiral-area-comfort-pizza-we-crust-finds-permanent",
+          "note": "Family-owned wood-fired pizzeria that spent two years developing its hand-tossed dough and scratch-made sauce before launching as a food truck in 2019; local coverage of its September 2025 Admiral District brick-and-mortar describes a 650-degree wood-fired bake and fusion toppings (Indian curry, Korean-style corn cheese) alongside classics.",
+          "date": "2026-10-03"
+        },
+        "critical": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.westsideseattle.com/robinson-papers/2025/10/31/rocking-food-truck-admiral-area-comfort-pizza-we-crust-finds-permanent",
+          "note": "Family-owned wood-fired pizzeria that spent two years developing its hand-tossed dough and scratch-made sauce before launching as a food truck in 2019; local coverage of its September 2025 Admiral District brick-and-mortar describes a 650-degree wood-fired bake and fusion toppings (Indian curry, Korean-style corn cheese) alongside classics.",
+          "date": "2026-10-03"
+        }
+      },
+      "opened": 2019,
+      "styleGroup": "Wood-fired",
+      "lastVerified": "2026-10-03"
     },
     {
       "id": "italio-pizza-pasta",

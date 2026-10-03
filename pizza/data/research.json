@@ -1,41 +1,18 @@
 {
-  "updated": "2026-10-01T19:00:00Z",
-  "status": [
+  "updated": "2026-10-03T18:30:00Z",
+  "factorRatings": [
     {
-      "id": "abecedary",
-      "status": "opening",
-      "note": "Still pre-opening: the pizzeria's own site says \"Coming Soon to Hillman City\" with no address or date, and an August 2026 pop-up at a block party was described as a test run, not a launch, with permitting delays cited for the delay.",
-      "source": "https://abecedaryseattle.com/"
-    },
-    {
-      "id": "razzis-pizzeria",
-      "status": "open",
-      "note": "Operating as usual at its Greenwood location with current address and phone number on file and no complaints or closure notes.",
-      "source": "https://www.bbb.org/us/wa/seattle/profile/restaurants/razzis-pizzeria-1296-22610935"
-    },
-    {
-      "id": "candela-pizza",
-      "status": "open",
-      "note": "The food truck shows a live \"Open now\" status with current hours (8am-5:30pm daily) at its usual West Seattle lot.",
-      "source": "https://maps.roadtrippers.com/us/seattle-wa/food-drink/candela-pizza"
-    },
-    {
-      "id": "dudez-woodfired-pizza",
-      "status": "open",
-      "note": "Listed as actively operating at 2919 Fuhrman Ave E with current posted hours (Tue-Sat 11am-8pm, Sun 12-8pm, closed Mon).",
-      "source": "https://wanderlog.com/place/details/15677572/dudez-woodfired-pizza"
-    },
-    {
-      "id": "sunny-hill",
-      "status": "open",
-      "note": "Still running at 3127 NW 85th St in Ballard with current hours and menu posted on its own site, consistent with active September 2026 listings elsewhere.",
-      "source": "https://sunnyhillseattle.com/"
-    },
-    {
-      "id": "tutta-bella",
-      "status": "open",
-      "note": "Official site confirms the chain is operating, currently listing Wallingford, Bellevue and Issaquah among its open restaurant locations.",
-      "source": "https://www.tuttabella.com/"
+      "id": "in-pizza-we-crust",
+      "craft": 6.5,
+      "distinctiveness": 6.5,
+      "criticScore": 6,
+      "opened": 2019,
+      "styleGroup": "Wood-fired",
+      "sources": [
+        "https://www.westsideseattle.com/robinson-papers/2025/10/31/rocking-food-truck-admiral-area-comfort-pizza-we-crust-finds-permanent",
+        "https://seattlerefined.com/lifestyle/in-pizza-we-crust"
+      ],
+      "note": "Family-owned wood-fired pizzeria that spent two years developing its hand-tossed dough and scratch-made sauce before launching as a food truck in 2019; local coverage of its September 2025 Admiral District brick-and-mortar describes a 650-degree wood-fired bake and fusion toppings (Indian curry, Korean-style corn cheese) alongside classics."
     }
   ]
 }
