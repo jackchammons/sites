@@ -1,1 +1,28 @@
-{"updated":"2026-10-04T00:00:00Z","directory":[]}
+{
+  "updated": "2026-10-05T18:00:00Z",
+  "locations": [
+    {
+      "id": "romano-pizza-pasta",
+      "homepage": "https://www.romanopizzaandpasta.com/",
+      "source": "https://www.romanopizzaandpasta.com/",
+      "sites": [
+        {
+          "neighborhood": "West Seattle",
+          "address": "5605 Delridge Way SW, Seattle, WA 98106"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "id": "abecedary",
+      "instagram": "https://instagram.com/abecedaryseattle",
+      "source": "https://abecedaryseattle.com/"
+    },
+    {
+      "id": "good-luck-bread",
+      "instagram": "https://www.instagram.com/goodluckbread/",
+      "source": "https://pizza.goodluckbread.com/"
+    }
+  ]
+}

@@ -2637,14 +2637,14 @@
       "attributes": {},
       "locations": [
         {
-          "neighborhood": "Delridge",
+          "neighborhood": "West Seattle",
           "address": "5605 Delridge Way SW, Seattle, WA 98106",
           "lat": 47.55177,
           "lon": -122.36325
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-10-05",
+      "locationsSource": "https://www.romanopizzaandpasta.com/",
       "mentions": []
     },
     {
