@@ -1,28 +1,41 @@
 {
-  "updated": "2026-10-05T18:00:00Z",
-  "locations": [
-    {
-      "id": "romano-pizza-pasta",
-      "homepage": "https://www.romanopizzaandpasta.com/",
-      "source": "https://www.romanopizzaandpasta.com/",
-      "sites": [
-        {
-          "neighborhood": "West Seattle",
-          "address": "5605 Delridge Way SW, Seattle, WA 98106"
-        }
-      ]
-    }
-  ],
-  "links": [
+  "updated": "2026-10-06T19:00:00Z",
+  "status": [
     {
       "id": "abecedary",
-      "instagram": "https://instagram.com/abecedaryseattle",
+      "status": "opening",
+      "note": "Still pre-opening: the pizzeria's own site says 'Coming Soon to Hillman City' and August 2026 coverage reports the full restaurant isn't expected to open until 2027 despite a pop-up preview event.",
       "source": "https://abecedaryseattle.com/"
     },
     {
-      "id": "good-luck-bread",
-      "instagram": "https://www.instagram.com/goodluckbread/",
-      "source": "https://pizza.goodluckbread.com/"
+      "id": "razzis-pizzeria",
+      "status": "open",
+      "note": "Both the downtown and Greenwood locations show current hours and reviews updated as recently as September 2026 with no closure indication.",
+      "source": "https://www.yelp.com/biz/razz%C3%ADs-pizzer%C3%ADa-seattle-4"
+    },
+    {
+      "id": "candela-pizza",
+      "status": "open",
+      "note": "The wood-fired Latin-fusion food truck is still listed as active at its West Seattle spot with current hours and reviews updated as recently as August 2026.",
+      "source": "https://www.yelp.com/biz/candela-pizza-seattle"
+    },
+    {
+      "id": "dudez-woodfired-pizza",
+      "status": "open",
+      "note": "The pizzeria's own site confirms it has consolidated to a single operating Seattle location in Portage Bay at 2919 Fuhrman Ave E after closing its Auburn spot; the previously-known Delridge Way address is outdated.",
+      "source": "https://sites.google.com/view/dudezwoodfiredpizza/home"
+    },
+    {
+      "id": "sunny-hill",
+      "status": "open",
+      "note": "The Ballard Detroit-style pizzeria shows current hours and reviews updated as recently as July 2026 with no closure indication.",
+      "source": "https://www.yelp.com/biz/sunny-hill-seattle"
+    },
+    {
+      "id": "pagliacci",
+      "status": "open",
+      "note": "The chain's own locations page lists 15 active Seattle locations open for pickup, with only one Eastside location (Kirkland - Bridle Trails) temporarily closed for a remodel through early November.",
+      "source": "https://www.pagliacci.com/locations"
     }
   ]
 }
