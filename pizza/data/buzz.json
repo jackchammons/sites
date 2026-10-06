@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-05T21:17:22.820Z",
+  "updated": "2026-10-06T18:54:57.339Z",
   "sources": 4,
   "items": [
     {
@@ -153,26 +153,6 @@
       "published": "2026-06-18T07:00:00.000Z",
       "kind": "opening",
       "mentions": []
-    },
-    {
-      "title": "Legacy in the Making: Head Chefs Gabriel Castro and Isidro Ocampo acquire West Seattle’s Pegasus Pizza",
-      "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxPYjA0S01HbEVBN1U4V1BuSE82N09WenQ1NnctNmR6M1NXcGVpd1daaVd6S3BBYXpneFFad1A5Y09QSjlQbmF1Mmg1ZlN5cks4eTQ1U3MxOWpRZVNua0cwTFdOVGEwb0RONGFEb2M4SG00UTV0dVlTYjBud3VzU3duVjR6aU9femE5NTk2N2NhdnNpb2s3czdHU1hyMk1JNTZqaUhmMzdfNjh6cURzM0xjX0c0RlpsdjFaSTEtWmhRcUkyMG41VDNEVw?oc=5",
-      "source": "Westside Seattle",
-      "published": "2026-06-08T07:00:00.000Z",
-      "kind": "mention",
-      "mentions": [
-        "pegasus-pizza"
-      ]
-    },
-    {
-      "title": "BIZNOTE: Pegasus Pizza announces new owners",
-      "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxPNzJ0TmhNcjFzMThENmNWNnlRR2JrM2dhdlNhZVJFbm55TTFOWkRkVVNSZmkySFkyOTdpMWprWG01Z1RRWWhDV09BXzdaQUNpQ0x3Y1p0eFhNdWZDX1M0VC1vVE1Hc3dINGpxNVZ1QzFHVVpsTXl4c05HNlJkMGZUa21EbHdUQQ?oc=5",
-      "source": "West Seattle Blog...",
-      "published": "2026-06-08T07:00:00.000Z",
-      "kind": "mention",
-      "mentions": [
-        "pegasus-pizza"
-      ]
     }
   ]
 }
