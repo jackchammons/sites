@@ -1,41 +1,46 @@
 {
-  "updated": "2026-10-06T19:00:00Z",
-  "status": [
+  "updated": "2026-10-07T16:00:00.000Z",
+  "news": [],
+  "mentions": [
     {
-      "id": "abecedary",
-      "status": "opening",
-      "note": "Still pre-opening: the pizzeria's own site says 'Coming Soon to Hillman City' and August 2026 coverage reports the full restaurant isn't expected to open until 2027 despite a pop-up preview event.",
-      "source": "https://abecedaryseattle.com/"
-    },
-    {
-      "id": "razzis-pizzeria",
-      "status": "open",
-      "note": "Both the downtown and Greenwood locations show current hours and reviews updated as recently as September 2026 with no closure indication.",
-      "source": "https://www.yelp.com/biz/razz%C3%ADs-pizzer%C3%ADa-seattle-4"
-    },
-    {
-      "id": "candela-pizza",
-      "status": "open",
-      "note": "The wood-fired Latin-fusion food truck is still listed as active at its West Seattle spot with current hours and reviews updated as recently as August 2026.",
-      "source": "https://www.yelp.com/biz/candela-pizza-seattle"
-    },
-    {
-      "id": "dudez-woodfired-pizza",
-      "status": "open",
-      "note": "The pizzeria's own site confirms it has consolidated to a single operating Seattle location in Portage Bay at 2919 Fuhrman Ave E after closing its Auburn spot; the previously-known Delridge Way address is outdated.",
-      "source": "https://sites.google.com/view/dudezwoodfiredpizza/home"
-    },
-    {
-      "id": "sunny-hill",
-      "status": "open",
-      "note": "The Ballard Detroit-style pizzeria shows current hours and reviews updated as recently as July 2026 with no closure indication.",
-      "source": "https://www.yelp.com/biz/sunny-hill-seattle"
+      "id": "tutta-bella",
+      "title": "Tutta Bella closes 2 Seattle locations, including original restaurant",
+      "url": "https://www.fox13seattle.com/news/tutta-bella-closes-2-seattle-locations",
+      "source": "FOX 13 Seattle",
+      "date": "2026-09-23",
+      "kind": "closing"
     },
     {
       "id": "pagliacci",
-      "status": "open",
-      "note": "The chain's own locations page lists 15 active Seattle locations open for pickup, with only one Eastside location (Kirkland - Bridle Trails) temporarily closed for a remodel through early November.",
-      "source": "https://www.pagliacci.com/locations"
+      "title": "Seattle pizza chains launch limited-time collabs with Taco Time, Ivar's this October",
+      "url": "https://www.kiro7.com/news/local/seattle-pizza-chains-launch-limited-time-collabs-with-taco-time-ivars-this-october/5BD7O233BVB4TBZE2NOL4EWMM4/",
+      "source": "KIRO 7 News Seattle",
+      "date": "2026-10-02",
+      "kind": "mention"
+    },
+    {
+      "id": "big-marios",
+      "title": "Seattle pizza chains launch limited-time collabs with Taco Time, Ivar's this October",
+      "url": "https://www.kiro7.com/news/local/seattle-pizza-chains-launch-limited-time-collabs-with-taco-time-ivars-this-october/5BD7O233BVB4TBZE2NOL4EWMM4/",
+      "source": "KIRO 7 News Seattle",
+      "date": "2026-10-02",
+      "kind": "mention"
+    },
+    {
+      "id": "stevies-famous",
+      "title": "Acclaimed Stevie's Famous Pizza Celebrates Grand Opening on Phinney Ridge August 2",
+      "url": "https://phinneywood.com/2026/07/stevies-famous-pizza-celebrates-grand-opening-on-phinney-ridge/",
+      "source": "PhinneyWood",
+      "date": "2026-07-28",
+      "kind": "opening"
+    },
+    {
+      "id": "abecedary",
+      "title": "Hillman City Gets First Bite of Seattle's Hottest New Pizzeria",
+      "url": "https://hoodline.com/2026/08/hillman-city-gets-first-bite-of-seattle-s-hottest-new-pizzeria/",
+      "source": "Hoodline",
+      "date": "2026-08-03",
+      "kind": "mention"
     }
   ]
 }
