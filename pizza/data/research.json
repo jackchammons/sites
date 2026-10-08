@@ -1,46 +1,4 @@
 {
-  "updated": "2026-10-07T16:00:00.000Z",
-  "news": [],
-  "mentions": [
-    {
-      "id": "tutta-bella",
-      "title": "Tutta Bella closes 2 Seattle locations, including original restaurant",
-      "url": "https://www.fox13seattle.com/news/tutta-bella-closes-2-seattle-locations",
-      "source": "FOX 13 Seattle",
-      "date": "2026-09-23",
-      "kind": "closing"
-    },
-    {
-      "id": "pagliacci",
-      "title": "Seattle pizza chains launch limited-time collabs with Taco Time, Ivar's this October",
-      "url": "https://www.kiro7.com/news/local/seattle-pizza-chains-launch-limited-time-collabs-with-taco-time-ivars-this-october/5BD7O233BVB4TBZE2NOL4EWMM4/",
-      "source": "KIRO 7 News Seattle",
-      "date": "2026-10-02",
-      "kind": "mention"
-    },
-    {
-      "id": "big-marios",
-      "title": "Seattle pizza chains launch limited-time collabs with Taco Time, Ivar's this October",
-      "url": "https://www.kiro7.com/news/local/seattle-pizza-chains-launch-limited-time-collabs-with-taco-time-ivars-this-october/5BD7O233BVB4TBZE2NOL4EWMM4/",
-      "source": "KIRO 7 News Seattle",
-      "date": "2026-10-02",
-      "kind": "mention"
-    },
-    {
-      "id": "stevies-famous",
-      "title": "Acclaimed Stevie's Famous Pizza Celebrates Grand Opening on Phinney Ridge August 2",
-      "url": "https://phinneywood.com/2026/07/stevies-famous-pizza-celebrates-grand-opening-on-phinney-ridge/",
-      "source": "PhinneyWood",
-      "date": "2026-07-28",
-      "kind": "opening"
-    },
-    {
-      "id": "abecedary",
-      "title": "Hillman City Gets First Bite of Seattle's Hottest New Pizzeria",
-      "url": "https://hoodline.com/2026/08/hillman-city-gets-first-bite-of-seattle-s-hottest-new-pizzeria/",
-      "source": "Hoodline",
-      "date": "2026-08-03",
-      "kind": "mention"
-    }
-  ]
+  "updated": "2026-10-08T15:00:00.000Z",
+  "factorRatings": []
 }
