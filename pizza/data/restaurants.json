@@ -3986,7 +3986,9 @@
       "locations": [
         {
           "neighborhood": "Othello (Rainier Valley)",
-          "address": "6901 Martin Luther King Jr Way S, Seattle, WA 98118"
+          "address": "6901 Martin Luther King Jr Way S, Seattle, WA 98118",
+          "lat": 47.54049,
+          "lon": -122.28312
         }
       ],
       "locationsVerified": null,
@@ -4008,7 +4010,9 @@
       "locations": [
         {
           "neighborhood": "Queen Anne",
-          "address": "350 1st Ave W, Seattle, WA 98119"
+          "address": "350 1st Ave W, Seattle, WA 98119",
+          "lat": 47.62197,
+          "lon": -122.35787
         }
       ],
       "locationsVerified": null,
@@ -4030,7 +4034,9 @@
       "locations": [
         {
           "neighborhood": "West Seattle (Alaska Junction)",
-          "address": "3770 SW Alaska St, Seattle, WA 98126"
+          "address": "3770 SW Alaska St, Seattle, WA 98126",
+          "lat": 47.56118,
+          "lon": -122.37992
         }
       ],
       "locationsVerified": null,
