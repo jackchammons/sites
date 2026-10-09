@@ -3970,6 +3970,72 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": []
+    },
+    {
+      "id": "a-k-pizza",
+      "name": "A.K. Pizza",
+      "neighborhood": "Othello (Rainier Valley)",
+      "style": "NYC-style thin crust",
+      "blurb": "Takeout-only pizzeria in Othello known for a charred, crunchy thin crust and a daily online pre-order system for a limited run of pies.",
+      "url": "https://ak-pizza.com",
+      "status": "open",
+      "statusSource": "https://www.theinfatuation.com/seattle/reviews/ak-pizza",
+      "statusDate": "2026-10-09",
+      "statusChecked": "2026-10-09",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Othello (Rainier Valley)",
+          "address": "6901 Martin Luther King Jr Way S, Seattle, WA 98118"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "coltiva-pizzeria-e-barra",
+      "name": "Coltiva Pizzeria e Barra",
+      "neighborhood": "Queen Anne",
+      "style": "Neapolitan, wood-fired",
+      "blurb": "Wood-fired Italian pizzeria and bar in lower Queen Anne serving Neapolitan pies alongside pastas and antipasti.",
+      "url": "https://www.coltivasea.com/",
+      "status": "open",
+      "statusSource": "https://www.coltivasea.com/",
+      "statusDate": "2026-10-09",
+      "statusChecked": "2026-10-09",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Queen Anne",
+          "address": "350 1st Ave W, Seattle, WA 98119"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "west-of-chicago-pizza-company",
+      "name": "West of Chicago Pizza Company",
+      "neighborhood": "West Seattle (Alaska Junction)",
+      "style": "Chicago-style deep dish and tavern-style",
+      "blurb": "West Seattle pizzeria specializing in Chicago deep dish with a cornmeal crust and cracker-thin tavern-style pies, plus Italian beef sandwiches.",
+      "url": "https://westofchicagopizzacompany.com/",
+      "status": "open",
+      "statusSource": "https://westofchicagopizzacompany.com/",
+      "statusDate": "2026-10-09",
+      "statusChecked": "2026-10-09",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "West Seattle (Alaska Junction)",
+          "address": "3770 SW Alaska St, Seattle, WA 98126"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }
