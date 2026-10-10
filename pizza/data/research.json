@@ -1,35 +1,28 @@
 {
-  "updated": "2026-10-09T18:00:00Z",
-  "directory": [
+  "updated": "2026-10-10T18:00:00Z",
+  "locations": [
     {
-      "name": "A.K. Pizza",
-      "url": "https://ak-pizza.com",
-      "neighborhood": "Othello (Rainier Valley)",
-      "style": "NYC-style thin crust",
-      "status": "open",
-      "note": "Takeout-only pizzeria in Othello known for a charred, crunchy thin crust and a daily online pre-order system for a limited run of pies.",
-      "source": "https://www.theinfatuation.com/seattle/reviews/ak-pizza",
-      "address": "6901 Martin Luther King Jr Way S, Seattle, WA 98118"
+      "id": "world-pizza",
+      "homepage": "https://www.worldpizzaseattle.com/",
+      "source": "https://www.worldpizzaseattle.com/",
+      "sites": [
+        {
+          "neighborhood": "Chinatown-International District",
+          "address": "672 S King St, Seattle, WA 98104"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "id": "abecedary",
+      "instagram": "https://instagram.com/abecedaryseattle",
+      "source": "https://abecedaryseattle.com/"
     },
     {
-      "name": "Coltiva Pizzeria e Barra",
-      "url": "https://www.coltivasea.com/",
-      "neighborhood": "Queen Anne",
-      "style": "Neapolitan, wood-fired",
-      "status": "open",
-      "note": "Wood-fired Italian pizzeria and bar in lower Queen Anne serving Neapolitan pies alongside pastas and antipasti.",
-      "source": "https://www.coltivasea.com/",
-      "address": "350 1st Ave W, Seattle, WA 98119"
-    },
-    {
-      "name": "West of Chicago Pizza Company",
-      "url": "https://westofchicagopizzacompany.com/",
-      "neighborhood": "West Seattle (Alaska Junction)",
-      "style": "Chicago-style deep dish and tavern-style",
-      "status": "open",
-      "note": "West Seattle pizzeria specializing in Chicago deep dish with a cornmeal crust and cracker-thin tavern-style pies, plus Italian beef sandwiches.",
-      "source": "https://westofchicagopizzacompany.com/",
-      "address": "3770 SW Alaska St, Seattle, WA 98126"
+      "id": "good-luck-bread",
+      "instagram": "https://www.instagram.com/goodluckbread/",
+      "source": "https://pizza.goodluckbread.com/"
     }
   ]
 }

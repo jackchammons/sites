@@ -2691,8 +2691,8 @@
           "lon": -122.3241
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-10-10",
+      "locationsSource": "https://www.worldpizzaseattle.com/",
       "mentions": [],
       "factors": {
         "craft": {
