@@ -3257,7 +3257,7 @@
     },
     {
       "weekKey": "2026-W41",
-      "date": "2026-10-09",
+      "date": "2026-10-10",
       "week": 41,
       "ranks": {
         "delancey": 1,
@@ -3294,8 +3294,8 @@
         "slice-box": 32,
         "my-friend-dereks": 33,
         "via-tribunali": 34,
-        "pi-vegan-pizzeria": 35,
-        "pegasus-pizza": 36,
+        "pegasus-pizza": 35,
+        "pi-vegan-pizzeria": 36,
         "talaricos": 37,
         "proletariat-pizza": 38,
         "ballard-pizza-co": 39,
@@ -3335,15 +3335,15 @@
         "moto-pizza": 74.1,
         "world-pizza": 72.4,
         "razzis-pizzeria": 71.7,
-        "good-luck-bread": 71.1,
-        "oxbow": 69.2,
+        "good-luck-bread": 71,
+        "oxbow": 69.1,
         "elemental-pizza": 67.9,
         "pizza-by-ruffin": 67.3,
         "in-pizza-we-crust": 65.7,
         "sacro-bosco-pizza-wine": 65.5,
         "sopranos-antico": 65.1,
         "pazzos-on-eastlake": 64.3,
-        "stevies-famous": 62.5,
+        "stevies-famous": 62.4,
         "big-marios": 61.9,
         "veras-pizza-and-bar": 61.7,
         "breezy-town-pizza": 61.3,
@@ -3354,8 +3354,8 @@
         "slice-box": 57.7,
         "my-friend-dereks": 57,
         "via-tribunali": 57,
-        "pi-vegan-pizzeria": 56.5,
         "pegasus-pizza": 56.4,
+        "pi-vegan-pizzeria": 56.4,
         "talaricos": 56.3,
         "proletariat-pizza": 55.8,
         "ballard-pizza-co": 55.4,
@@ -3652,20 +3652,20 @@
           "value": 7.6,
           "penalty": 0
         },
-        "pi-vegan-pizzeria": {
-          "reputation": 0,
-          "critical": 7.5,
-          "craft": 7,
-          "distinctiveness": 8,
-          "value": 7.6,
-          "penalty": 0
-        },
         "pegasus-pizza": {
           "reputation": 1.7,
           "critical": 7.4,
           "craft": 7.4,
           "distinctiveness": 7,
           "value": 7.7,
+          "penalty": 0
+        },
+        "pi-vegan-pizzeria": {
+          "reputation": 0,
+          "critical": 7.5,
+          "craft": 7,
+          "distinctiveness": 8,
+          "value": 7.6,
           "penalty": 0
         },
         "talaricos": {
