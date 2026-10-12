@@ -1,41 +1,13 @@
 {
-  "updated": "2026-10-11T18:00:00Z",
-  "status": [
+  "updated": "2026-10-12T00:00:00Z",
+  "mentions": [
     {
-      "id": "abecedary",
-      "status": "opening",
-      "note": "The site itself still reads \"Coming Soon to Hillman City\" with no opening date, and August 2026 press coverage says the permanent restaurant isn't expected until 2027.",
-      "source": "https://abecedaryseattle.com/"
-    },
-    {
-      "id": "razzis-pizzeria",
-      "status": "open",
-      "note": "Both Seattle locations (downtown on Howell St and Greenwood Ave N) have live online-ordering pages showing current address, phone and opening hours, with no closure notice.",
-      "source": "https://www.slicelife.com/restaurants/wa/seattle/98101/razzis-pizzeria/menu/"
-    },
-    {
-      "id": "candela-pizza",
-      "status": "open",
-      "note": "Candela Pizza now runs from a fixed daily counter at 9454 17th Ave SW in Westwood, listed with current hours (8am-5:30pm daily) and showing as open, plus a March 2025 brewery booking.",
-      "source": "https://maps.roadtrippers.com/us/seattle-wa/food-drink/candela-pizza"
-    },
-    {
-      "id": "dudez-woodfired-pizza",
-      "status": "open",
-      "note": "King County's most recent routine health inspection (March 6, 2026, data refreshed September 2026) rates the restaurant at 2919 Fuhrman Ave E satisfactory, and its Yelp and TikTok listings show 2026 menu updates.",
-      "source": "https://cleanplate.ai/inspections/wa/seattle/dude-z-woodfired-pizza-7feeec3cd59b"
-    },
-    {
-      "id": "sunny-hill",
-      "status": "open",
-      "note": "No closure evidence turned up in any source; the most recent confirmed visit is an August 2025 review with no indication the restaurant has since closed.",
-      "source": "https://onebite.app/restaurant/sunny-hill-seattle-wa-9da8daa1"
-    },
-    {
-      "id": "breezy-town-pizza",
-      "status": "open",
-      "note": "Windy City Pie's own site currently advertises Breezy Town Pizza whole pies available Tuesdays-Thursdays in limited quantities, contradicting stale third-party \"permanently closed\" tags that describe its old standalone Beacon Hill location.",
-      "source": "https://windycitypie.com"
+      "id": "tutta-bella",
+      "title": "Tutta Bella closes 2 Seattle locations, including original restaurant",
+      "url": "https://www.fox13seattle.com/news/tutta-bella-closes-2-seattle-locations",
+      "source": "FOX 13 Seattle",
+      "date": "2026-09-23T18:04:00Z",
+      "kind": "closing"
     }
   ]
 }
