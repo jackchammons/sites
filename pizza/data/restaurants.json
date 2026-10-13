@@ -3123,7 +3123,33 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/eymans_pizza/"
+      "instagram": "https://www.instagram.com/eymans_pizza/",
+      "factors": {
+        "craft": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.zabihah.com/restaurants/ca2acf24-7767-11ef-95ae-6045bdeb9f57/eymans-pizza-seattle-wa",
+          "note": "Halal-restaurant directory Zabihah (4.8 from 33 reviews) and local small-business directory Intentionalist both single out this Beacon Hill/Rainier Valley shop's hand-stretched dough and homemade sauce, with diners praising a 'crispy and soft' crust and heavily topped gyro and chicken pies; a few reviewers call the beef pizza inconsistent and the menu limited, and note it isn't aiming at Italian-style standards -- it's Seattle's niche halal pizza option rather than a craft destination.",
+          "date": "2026-10-13"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.zabihah.com/restaurants/ca2acf24-7767-11ef-95ae-6045bdeb9f57/eymans-pizza-seattle-wa",
+          "note": "Halal-restaurant directory Zabihah (4.8 from 33 reviews) and local small-business directory Intentionalist both single out this Beacon Hill/Rainier Valley shop's hand-stretched dough and homemade sauce, with diners praising a 'crispy and soft' crust and heavily topped gyro and chicken pies; a few reviewers call the beef pizza inconsistent and the menu limited, and note it isn't aiming at Italian-style standards -- it's Seattle's niche halal pizza option rather than a craft destination.",
+          "date": "2026-10-13"
+        },
+        "critical": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.zabihah.com/restaurants/ca2acf24-7767-11ef-95ae-6045bdeb9f57/eymans-pizza-seattle-wa",
+          "note": "Halal-restaurant directory Zabihah (4.8 from 33 reviews) and local small-business directory Intentionalist both single out this Beacon Hill/Rainier Valley shop's hand-stretched dough and homemade sauce, with diners praising a 'crispy and soft' crust and heavily topped gyro and chicken pies; a few reviewers call the beef pizza inconsistent and the menu limited, and note it isn't aiming at Italian-style standards -- it's Seattle's niche halal pizza option rather than a craft destination.",
+          "date": "2026-10-13"
+        }
+      },
+      "priceIndex": 1,
+      "styleGroup": "Neighborhood",
+      "lastVerified": "2026-10-13"
     },
     {
       "id": "georgetown-pizza-arcade",
