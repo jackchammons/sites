@@ -1,19 +1,4 @@
 {
-  "updated": "2026-10-13T18:00:00Z",
-  "factorRatings": [
-    {
-      "id": "eymans-pizza",
-      "craft": 6.0,
-      "distinctiveness": 6.5,
-      "criticScore": 5.5,
-      "priceIndex": 1,
-      "styleGroup": "Neighborhood",
-      "sources": [
-        "https://www.zabihah.com/restaurants/ca2acf24-7767-11ef-95ae-6045bdeb9f57/eymans-pizza-seattle-wa",
-        "https://intentionalist.com/b/eymans-pizza-cafe/",
-        "https://www.eymanspizza.com/"
-      ],
-      "note": "Halal-restaurant directory Zabihah (4.8 from 33 reviews) and local small-business directory Intentionalist both single out this Beacon Hill/Rainier Valley shop's hand-stretched dough and homemade sauce, with diners praising a 'crispy and soft' crust and heavily topped gyro and chicken pies; a few reviewers call the beef pizza inconsistent and the menu limited, and note it isn't aiming at Italian-style standards -- it's Seattle's niche halal pizza option rather than a craft destination."
-    }
-  ]
+  "updated": "2026-10-14T19:30:00Z",
+  "directory": []
 }
