@@ -1,4 +1,33 @@
 {
-  "updated": "2026-10-14T19:30:00Z",
-  "directory": []
+  "updated": "2026-10-15T18:00:00Z",
+  "locations": [
+    {
+      "id": "sacro-bosco-pizza-wine",
+      "homepage": "https://www.sacroboscopizza.com/",
+      "source": "https://www.sacroboscopizza.com/location",
+      "sites": [
+        {
+          "neighborhood": "Central District",
+          "address": "2524 S Jackson St, Seattle, WA 98144"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "id": "abecedary",
+      "instagram": "https://instagram.com/abecedaryseattle",
+      "source": "https://abecedaryseattle.com/"
+    },
+    {
+      "id": "good-luck-bread",
+      "instagram": "https://www.instagram.com/goodluckbread/",
+      "source": "https://pizza.goodluckbread.com/"
+    },
+    {
+      "id": "sacro-bosco-pizza-wine",
+      "instagram": "https://www.instagram.com/sacroboscopizza/",
+      "source": "https://www.sacroboscopizza.com/"
+    }
+  ]
 }

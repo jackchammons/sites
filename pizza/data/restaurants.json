@@ -2743,8 +2743,8 @@
           "lon": -122.29895
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-10-15",
+      "locationsSource": "https://www.sacroboscopizza.com/location",
       "mentions": [],
       "factors": {
         "craft": {
