@@ -1,7 +1,23 @@
 {
-  "updated": "2026-10-15T17:46:30.247Z",
+  "updated": "2026-10-16T17:23:49.142Z",
   "sources": 4,
   "items": [
+    {
+      "title": "Beloved Seattle pizzeria to close after more than 16 years",
+      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNbVZoTDA5UXJZVkVuYXRHOXBYRkhrVWtsT1pSVGlrS2pGdkZnTmRBTEpRY1BCbEFxTmxJMFNXZ2RHMGRBVjJWRGNjemJ5cm41cmRDV0Ntel9GcGhqVEJmT29LaG0yeEk5Q1k0UUVIQlRicVlhNmx4TmtvVXJfRk0tVzJ5YTVYVE9nOUpqYm1PcFozMEhqU2RXWWstSGViekd3bzJmZUg5UWhmMTZ3dWlQUkU5dXBLUWvSAcsBQVVfeXFMTjI0N291TjRqbzZXQ1NFUmZKekE0WEVFUHlCc2dZSmItOC05cWk2TmpMa2ZYWmlQajNNd1VFa3VOQy1UNWM2TXVxcHFZdEFRQVdXMUstMzN4TlQ0ajdBSXpIajZEMWZKU0hqZl9rTVRjdUUwa09vUzBOY2FJTGQxSEEwZDRDRUVhUFBXeDFqejdVNGJOeEktbHZEckdqSlphMEN5SWd0QV9MTHRScWxLY3VSVlBjd2RMempiMThuc1VDRzI3WUlHNngyaTQ?oc=5",
+      "source": "KIRO 7 News Seattle",
+      "published": "2026-10-16T10:40:31.000Z",
+      "kind": "closing",
+      "mentions": []
+    },
+    {
+      "title": "WA pizza chain takes over former MOD Pizza space at Tacoma Mall",
+      "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTFAxWlZidDJKZnIzeWtnTFQzaFpqMkhYY25laHUxMUFlYjc2RmFOWDNrbmdCQlZCVm9Kcy1UMkFNSUtmOERGV1dmNjVaSDE0bHRuY2ZadGtQcmVsRXFpSVZKdXhoU1dsSkQ3c045OGtpSQ?oc=5",
+      "source": "MyNorthwest.com",
+      "published": "2026-10-14T21:00:49.000Z",
+      "kind": "mention",
+      "mentions": []
+    },
     {
       "title": "I planned on eating every pizza in Seattle. My esophagus intervened",
       "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9JemVPMjFLYWpra0FjaVlCWF9NMmFZODNpMHRjRG1RdXNmcGFocFFwQWRJUV9Da29rN2pjOF91STZQWWVXbE9FNklsb1hEemcteUtjdWhiTnRvZWFjc3liazlISmtyM0x1QmNLYw?oc=5",
@@ -213,14 +229,6 @@
       "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNNFFUa2pGTkxzSURpX0NiakZ3U3gyMXZpYW9Da1lKVHB1VnBBVFNjN2NWTGhSMTdXSnoyT1ZZSnNncm91a3d2ZWxLS01jUXBPaUFtOXlsX3l0WUFJSUxPRWpxbkNCd29MbVFhUm9uV2N6ZEhUb2VGd1ZtQ0E2TnIzOEh6UzlLRy1IbS1SWk0tYTNuVGJhR2ZjcW0tdkV5ME80OWtyWFNzcUk?oc=5",
       "source": "The Seattle Times",
       "published": "2026-06-24T07:00:00.000Z",
-      "kind": "opening",
-      "mentions": []
-    },
-    {
-      "title": "Fat Zach’s Pizza Opening First Tacoma Location This Fall",
-      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPc2V2b1pQSVl1YjN2cE82VEdlajg5eDBuUEFCOWF5WHpWWUJ3RU9jMGotODZvZEdhNUlHNTVGU1FaMUVOVVVJSGFreVRfTDkzcjRyZ1hTelVueVBBWE5EUEVJQmpJZ2t6RnBZOXVDanNDYUJYTUEtNkxvQktCVGtMYWtWZlYyNW9OeThUeUtyOG5FYmk5X1V1dEpFRzg?oc=5",
-      "source": "WhatNow",
-      "published": "2026-06-18T07:00:00.000Z",
       "kind": "opening",
       "mentions": []
     }
