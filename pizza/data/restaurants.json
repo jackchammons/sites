@@ -864,7 +864,8 @@
         }
       },
       "mentions": [],
-      "instagram": "https://www.instagram.com/viatrib/"
+      "instagram": "https://www.instagram.com/viatrib/",
+      "statusChecked": "2026-10-16"
     },
     {
       "id": "big-marios",
@@ -1689,7 +1690,7 @@
           "kind": "mention"
         }
       ],
-      "statusChecked": "2026-10-11",
+      "statusChecked": "2026-10-16",
       "instagram": "https://instagram.com/abecedaryseattle"
     },
     {
@@ -2045,7 +2046,7 @@
       "status": "open",
       "statusSource": "https://intentionalist.com/b/razzis-pizzeria-greenwood/",
       "statusDate": "2026-08-26",
-      "statusChecked": "2026-10-11",
+      "statusChecked": "2026-10-16",
       "attributes": {},
       "locations": [
         {
@@ -3008,7 +3009,7 @@
       "status": "open",
       "statusSource": "https://www.seattlefoodtruck.com/food-trucks/candela-pizza",
       "statusDate": "2026-08-30",
-      "statusChecked": "2026-10-11",
+      "statusChecked": "2026-10-16",
       "attributes": {},
       "locations": [
         {
@@ -3033,7 +3034,7 @@
       "status": "open",
       "statusSource": "https://www.atly.com/location/DUDE'Z-woodfired-pizza",
       "statusDate": "2026-08-31",
-      "statusChecked": "2026-10-11",
+      "statusChecked": "2026-10-16",
       "attributes": {},
       "locations": [
         {
@@ -3960,7 +3961,7 @@
       "status": "open",
       "statusSource": "https://www.theinfatuation.com/seattle/reviews/sunny-hill",
       "statusDate": "2026-09-19",
-      "statusChecked": "2026-10-11",
+      "statusChecked": "2026-10-16",
       "attributes": {},
       "locations": [
         {
