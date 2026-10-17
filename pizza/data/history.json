@@ -3848,7 +3848,7 @@
     },
     {
       "weekKey": "2026-W42",
-      "date": "2026-10-16",
+      "date": "2026-10-17",
       "week": 42,
       "ranks": {
         "delancey": 1,
@@ -3857,8 +3857,8 @@
         "serious-pie": 4,
         "cornelly": 5,
         "veraci-pizza": 6,
-        "independent-pizzeria": 7,
-        "tutta-bella": 8,
+        "tutta-bella": 7,
+        "independent-pizzeria": 8,
         "mioposto": 9,
         "lupo": 10,
         "pagliacci": 11,
@@ -3912,29 +3912,29 @@
         "mad-pizza": 59
       },
       "scores": {
-        "delancey": 87.9,
+        "delancey": 87.8,
         "windy-city-pie": 85.4,
         "dinos-tomato-pie": 83.7,
         "serious-pie": 83.7,
         "cornelly": 81.6,
         "veraci-pizza": 80.4,
-        "independent-pizzeria": 80.2,
         "tutta-bella": 80.2,
-        "mioposto": 78.1,
+        "independent-pizzeria": 80.1,
+        "mioposto": 78,
         "lupo": 77.3,
         "pagliacci": 76.3,
-        "cornuto-pizzeria": 74.9,
+        "cornuto-pizzeria": 74.8,
         "moto-pizza": 73.9,
-        "world-pizza": 72.3,
+        "world-pizza": 72.2,
         "razzis-pizzeria": 71.5,
         "good-luck-bread": 70.9,
         "oxbow": 69,
-        "elemental-pizza": 67.8,
+        "elemental-pizza": 67.7,
         "pizza-by-ruffin": 67.2,
         "in-pizza-we-crust": 65.5,
         "sacro-bosco-pizza-wine": 65.3,
         "sopranos-antico": 65,
-        "pazzos-on-eastlake": 64.2,
+        "pazzos-on-eastlake": 64.1,
         "stevies-famous": 62.3,
         "big-marios": 61.9,
         "veras-pizza-and-bar": 61.6,
@@ -3945,9 +3945,9 @@
         "good-shape-pizza": 57.8,
         "slice-box": 57.7,
         "via-tribunali": 57,
-        "my-friend-dereks": 56.9,
+        "my-friend-dereks": 56.8,
         "pegasus-pizza": 56.4,
-        "pi-vegan-pizzeria": 56.4,
+        "pi-vegan-pizzeria": 56.3,
         "talaricos": 56.3,
         "proletariat-pizza": 55.8,
         "ballard-pizza-co": 55.4,
@@ -3965,12 +3965,12 @@
         "south-town-pie": 48.8,
         "pizza-ritual": 48.7,
         "eymans-pizza": 46.7,
-        "managers-pizza": 46.1,
+        "managers-pizza": 46,
         "johnny-mos-pizzeria": 43.6,
         "seward-park-pizza": 40.9,
         "sinners-pizza": 40.5,
         "jackson-street-pizza-lounge": 36.5,
-        "mad-pizza": 27.6
+        "mad-pizza": 27.5
       },
       "factors": {
         "delancey": {
@@ -4021,14 +4021,6 @@
           "value": 7.9,
           "penalty": 0
         },
-        "independent-pizzeria": {
-          "reputation": 8.3,
-          "critical": 8.7,
-          "craft": 8.7,
-          "distinctiveness": 8,
-          "value": 7.8,
-          "penalty": 1.5
-        },
         "tutta-bella": {
           "reputation": 8.6,
           "critical": 8.2,
@@ -4036,6 +4028,14 @@
           "distinctiveness": 7,
           "value": 8.7,
           "penalty": 0
+        },
+        "independent-pizzeria": {
+          "reputation": 8.3,
+          "critical": 8.7,
+          "craft": 8.7,
+          "distinctiveness": 8,
+          "value": 7.8,
+          "penalty": 1.5
         },
         "mioposto": {
           "reputation": 10,
