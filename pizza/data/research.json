@@ -1,41 +1,5 @@
 {
-  "updated": "2026-10-16T17:00:00Z",
-  "status": [
-    {
-      "id": "abecedary",
-      "status": "opening",
-      "note": "Still pre-opening: the site says 'Coming Soon to Hillman City' and local coverage says the brewery-pizzeria won't open until 2027, with pop-up slice events in the meantime.",
-      "source": "https://abecedaryseattle.com/"
-    },
-    {
-      "id": "razzis-pizzeria",
-      "status": "open",
-      "note": "Online ordering is live with a full current menu and an active 'Order Ahead' button for the Howell St location.",
-      "source": "https://www.slicelife.com/restaurants/wa/seattle/98101/razzis-pizzeria/menu/"
-    },
-    {
-      "id": "candela-pizza",
-      "status": "open",
-      "note": "The trailer now operates from a fixed Westwood address with daily 8am-5:30pm hours and shows as open now.",
-      "source": "https://maps.roadtrippers.com/us/seattle-wa/food-drink/candela-pizza"
-    },
-    {
-      "id": "dudez-woodfired-pizza",
-      "status": "open",
-      "note": "The business's own site lists its Portage Bay location as open Tue-Sat 11am-8pm and Sun 12-8pm with an online ordering link (a separate Auburn spot is marked closed permanently, with the truck for sale).",
-      "source": "https://sites.google.com/view/dudezwoodfiredpizza/home"
-    },
-    {
-      "id": "sunny-hill",
-      "status": "open",
-      "note": "Recent coverage describes the Ballard pizzeria as currently operating Wednesday-Monday, and no closure reports turned up anywhere.",
-      "source": "https://dishcrawl.com/?p=4126"
-    },
-    {
-      "id": "via-tribunali",
-      "status": "open",
-      "note": "The official site currently lists active Queen Anne and Capitol Hill locations, consistent with OpenTable reviews dated into 2026 for the Capitol Hill spot.",
-      "source": "https://www.viatribunali.com/"
-    }
-  ]
+  "updated": "2026-10-17T16:00:00.000Z",
+  "news": [],
+  "mentions": []
 }
