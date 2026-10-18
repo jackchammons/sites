@@ -2972,7 +2972,34 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/belltownpizzaseattle"
+      "instagram": "https://www.instagram.com/belltownpizzaseattle",
+      "factors": {
+        "craft": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/belltown-pizza",
+          "note": "The Infatuation calls its New York-style slices 'greasy-in-a-good-way' and recommends it mainly as a reliable late-night stop with an open booth past midnight; Intentionalist notes the bar-and-slice shop has operated since 1998.",
+          "date": "2026-10-18"
+        },
+        "distinctiveness": {
+          "value": 4.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/belltown-pizza",
+          "note": "The Infatuation calls its New York-style slices 'greasy-in-a-good-way' and recommends it mainly as a reliable late-night stop with an open booth past midnight; Intentionalist notes the bar-and-slice shop has operated since 1998.",
+          "date": "2026-10-18"
+        },
+        "critical": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/belltown-pizza",
+          "note": "The Infatuation calls its New York-style slices 'greasy-in-a-good-way' and recommends it mainly as a reliable late-night stop with an open booth past midnight; Intentionalist notes the bar-and-slice shop has operated since 1998.",
+          "date": "2026-10-18"
+        }
+      },
+      "opened": 1998,
+      "priceIndex": 2,
+      "styleGroup": "Pizza bar",
+      "lastVerified": "2026-10-18"
     },
     {
       "id": "castello-pizza-pasta",
@@ -3603,7 +3630,34 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/oskarspizzas4/"
+      "instagram": "https://www.instagram.com/oskarspizzas4/",
+      "factors": {
+        "craft": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://westsideseattle.com/node/53194",
+          "note": "West Seattle Herald's 2018 launch profile describes a thin, crisp crust made with Mantako flour and Grande mozzarella and scratch-made, locally sourced ingredients; Intentionalist's neighborhood guide calls it among the best pizza regulars have had outside the East Coast.",
+          "date": "2026-10-18"
+        },
+        "distinctiveness": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://westsideseattle.com/node/53194",
+          "note": "West Seattle Herald's 2018 launch profile describes a thin, crisp crust made with Mantako flour and Grande mozzarella and scratch-made, locally sourced ingredients; Intentionalist's neighborhood guide calls it among the best pizza regulars have had outside the East Coast.",
+          "date": "2026-10-18"
+        },
+        "critical": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://westsideseattle.com/node/53194",
+          "note": "West Seattle Herald's 2018 launch profile describes a thin, crisp crust made with Mantako flour and Grande mozzarella and scratch-made, locally sourced ingredients; Intentionalist's neighborhood guide calls it among the best pizza regulars have had outside the East Coast.",
+          "date": "2026-10-18"
+        }
+      },
+      "opened": 2018,
+      "priceIndex": 1,
+      "styleGroup": "By the slice",
+      "lastVerified": "2026-10-18"
     },
     {
       "id": "palermo-pizza-pasta",
@@ -3973,7 +4027,34 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/sunny-hill",
+          "note": "The Infatuation, Seattle Met, and Tasting Table all single out the Detroit-style square pies -- chewy, focaccia-like crust with frizzled cheese edges -- alongside wood-fired round pies; opened in North Ballard in April 2020.",
+          "date": "2026-10-18"
+        },
+        "distinctiveness": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/sunny-hill",
+          "note": "The Infatuation, Seattle Met, and Tasting Table all single out the Detroit-style square pies -- chewy, focaccia-like crust with frizzled cheese edges -- alongside wood-fired round pies; opened in North Ballard in April 2020.",
+          "date": "2026-10-18"
+        },
+        "critical": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/sunny-hill",
+          "note": "The Infatuation, Seattle Met, and Tasting Table all single out the Detroit-style square pies -- chewy, focaccia-like crust with frizzled cheese edges -- alongside wood-fired round pies; opened in North Ballard in April 2020.",
+          "date": "2026-10-18"
+        }
+      },
+      "opened": 2020,
+      "priceIndex": 3,
+      "styleGroup": "Detroit pan",
+      "lastVerified": "2026-10-18"
     },
     {
       "id": "deleo-bros-pizza",
@@ -4045,7 +4126,34 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://hoodline.com/2018/11/craving-pizza-here-are-3-new-spots-to-try-in-seattle/",
+          "note": "Hoodline's 2018 opening profile describes thin, crispy-crust pizzas made with ingredients sourced from Italy and the owner's own Oregon farm, including seasonal pies like the Autunno (gorgonzola, apple, walnut, honey) and the Calabrian-chile Piccante.",
+          "date": "2026-10-18"
+        },
+        "distinctiveness": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://hoodline.com/2018/11/craving-pizza-here-are-3-new-spots-to-try-in-seattle/",
+          "note": "Hoodline's 2018 opening profile describes thin, crispy-crust pizzas made with ingredients sourced from Italy and the owner's own Oregon farm, including seasonal pies like the Autunno (gorgonzola, apple, walnut, honey) and the Calabrian-chile Piccante.",
+          "date": "2026-10-18"
+        },
+        "critical": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://hoodline.com/2018/11/craving-pizza-here-are-3-new-spots-to-try-in-seattle/",
+          "note": "Hoodline's 2018 opening profile describes thin, crispy-crust pizzas made with ingredients sourced from Italy and the owner's own Oregon farm, including seasonal pies like the Autunno (gorgonzola, apple, walnut, honey) and the Calabrian-chile Piccante.",
+          "date": "2026-10-18"
+        }
+      },
+      "opened": 2018,
+      "priceIndex": 3,
+      "styleGroup": "Thin crust",
+      "lastVerified": "2026-10-18"
     },
     {
       "id": "west-of-chicago-pizza-company",
