@@ -2795,8 +2795,8 @@
           "lon": -122.30235
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-10-20",
+      "locationsSource": "https://www.oxbowmontlake.com/contact",
       "mentions": [],
       "factors": {
         "craft": {

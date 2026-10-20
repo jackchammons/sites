@@ -1,4 +1,29 @@
 {
-  "updated": "2026-10-19T00:00:00.000Z",
-  "directory": []
+  "updated": "2026-10-20T00:00:00Z",
+  "locations": [
+    {
+      "id": "oxbow",
+      "homepage": "https://www.oxbowmontlake.com",
+      "source": "https://www.oxbowmontlake.com/contact",
+      "sites": [
+        {
+          "neighborhood": "Montlake",
+          "address": "2307 24th Ave E, Seattle, WA 98112"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "id": "oxbow",
+      "website": "https://www.oxbowmontlake.com",
+      "instagram": "https://www.instagram.com/oxbow_montlake/",
+      "source": "https://www.oxbowmontlake.com/contact"
+    },
+    {
+      "id": "good-luck-bread",
+      "instagram": "https://www.instagram.com/goodluckbread/",
+      "source": "https://pizza.goodluckbread.com/"
+    }
+  ]
 }
