@@ -1,29 +1,41 @@
 {
-  "updated": "2026-10-20T00:00:00Z",
-  "locations": [
+  "updated": "2026-10-21T00:00:00Z",
+  "status": [
     {
-      "id": "oxbow",
-      "homepage": "https://www.oxbowmontlake.com",
-      "source": "https://www.oxbowmontlake.com/contact",
-      "sites": [
-        {
-          "neighborhood": "Montlake",
-          "address": "2307 24th Ave E, Seattle, WA 98112"
-        }
-      ]
-    }
-  ],
-  "links": [
-    {
-      "id": "oxbow",
-      "website": "https://www.oxbowmontlake.com",
-      "instagram": "https://www.instagram.com/oxbow_montlake/",
-      "source": "https://www.oxbowmontlake.com/contact"
+      "id": "abecedary",
+      "status": "opening",
+      "note": "An August 2026 Hillman City pop-up was an edible progress report, not an opening; the permanent restaurant is still delayed by permitting with no date set.",
+      "source": "https://hoodline.com/2026/08/hillman-city-gets-first-bite-of-seattle-s-hottest-new-pizzeria/"
     },
     {
-      "id": "good-luck-bread",
-      "instagram": "https://www.instagram.com/goodluckbread/",
-      "source": "https://pizza.goodluckbread.com/"
+      "id": "razzis-pizzeria",
+      "status": "open",
+      "note": "The downtown Seattle location at 1314 Howell St has a customer review dated July 29, 2026 and no closure signs.",
+      "source": "https://www.happycow.net/reviews/razzis-pizzeria-seattle-82806"
+    },
+    {
+      "id": "candela-pizza",
+      "status": "open",
+      "note": "The Latin-fusion wood-fired pizza food truck, based in Renton and serving Seattle-area breweries and events, has no closure reports.",
+      "source": "https://www.liveineverett.com/blog/candelapizza"
+    },
+    {
+      "id": "dudez-woodfired-pizza",
+      "status": "open",
+      "note": "The Portage Bay location at 2919 Fuhrman Ave E has a Google review dated June 1, 2026 and no closure signs.",
+      "source": "https://wanderlog.com/place/details/15677572/dudez-woodfired-pizza"
+    },
+    {
+      "id": "sunny-hill",
+      "status": "open",
+      "note": "A Cascade PBS roundup last updated June 19, 2025 still features Sunny Hill's Detroit-style squares as a top Seattle pizza pick, with no closure reports found.",
+      "source": "https://www.cascadepbs.org/culture/2025/04/rachel-belle-shares-her-top-5-favorite-seattle-pizza-spots"
+    },
+    {
+      "id": "big-marios",
+      "status": "open",
+      "note": "The official site lists current hours for all four locations plus an active October 2026 promotion, with no closure signs.",
+      "source": "https://bigmariosnewyorkpizza.com/"
     }
   ]
 }
