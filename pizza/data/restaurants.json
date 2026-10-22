@@ -473,7 +473,15 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://www.kiro7.com/news/local/beloved-seattle-pizzeria-close-after-more-than-16-years/PP5A3GUJN5GFJDHSQFB3YYPG7M/",
+          "title": "Beloved Seattle pizzeria to close after more than 16 years",
+          "source": "KIRO 7 News Seattle",
+          "date": "2026-10-16",
+          "kind": "closing"
+        }
+      ],
       "instagram": "https://www.instagram.com/independentpizzeria/",
       "statusChecked": "2026-09-26"
     },
@@ -757,6 +765,13 @@
           "source": "KIRO 7 News Seattle",
           "date": "2026-10-02",
           "kind": "mention"
+        },
+        {
+          "url": "https://mynorthwest.com/local/seattle-pizza-taco-time-ivars-october/4282053",
+          "title": "Seattle pizza chains launch limited-time collabs with Taco Time, Ivar's",
+          "source": "MyNorthwest.com",
+          "date": "2026-10-02",
+          "kind": "opening"
         }
       ],
       "instagram": "https://www.instagram.com/pagliaccipizza/",
@@ -938,6 +953,13 @@
           "source": "KIRO 7 News Seattle",
           "date": "2026-10-02",
           "kind": "mention"
+        },
+        {
+          "url": "https://mynorthwest.com/local/seattle-pizza-taco-time-ivars-october/4282053",
+          "title": "Seattle pizza chains launch limited-time collabs with Taco Time, Ivar's",
+          "source": "MyNorthwest.com",
+          "date": "2026-10-02",
+          "kind": "opening"
         }
       ],
       "instagram": "https://www.instagram.com/bigmariospizza/",

@@ -1,41 +1,29 @@
 {
-  "updated": "2026-10-21T00:00:00Z",
-  "status": [
+  "updated": "2026-10-22T12:00:00.000Z",
+  "mentions": [
     {
-      "id": "abecedary",
-      "status": "opening",
-      "note": "An August 2026 Hillman City pop-up was an edible progress report, not an opening; the permanent restaurant is still delayed by permitting with no date set.",
-      "source": "https://hoodline.com/2026/08/hillman-city-gets-first-bite-of-seattle-s-hottest-new-pizzeria/"
+      "id": "independent-pizzeria",
+      "title": "Beloved Seattle pizzeria to close after more than 16 years",
+      "url": "https://www.kiro7.com/news/local/beloved-seattle-pizzeria-close-after-more-than-16-years/PP5A3GUJN5GFJDHSQFB3YYPG7M/",
+      "source": "KIRO 7 News Seattle",
+      "date": "2026-10-16",
+      "kind": "closing"
     },
     {
-      "id": "razzis-pizzeria",
-      "status": "open",
-      "note": "The downtown Seattle location at 1314 Howell St has a customer review dated July 29, 2026 and no closure signs.",
-      "source": "https://www.happycow.net/reviews/razzis-pizzeria-seattle-82806"
-    },
-    {
-      "id": "candela-pizza",
-      "status": "open",
-      "note": "The Latin-fusion wood-fired pizza food truck, based in Renton and serving Seattle-area breweries and events, has no closure reports.",
-      "source": "https://www.liveineverett.com/blog/candelapizza"
-    },
-    {
-      "id": "dudez-woodfired-pizza",
-      "status": "open",
-      "note": "The Portage Bay location at 2919 Fuhrman Ave E has a Google review dated June 1, 2026 and no closure signs.",
-      "source": "https://wanderlog.com/place/details/15677572/dudez-woodfired-pizza"
-    },
-    {
-      "id": "sunny-hill",
-      "status": "open",
-      "note": "A Cascade PBS roundup last updated June 19, 2025 still features Sunny Hill's Detroit-style squares as a top Seattle pizza pick, with no closure reports found.",
-      "source": "https://www.cascadepbs.org/culture/2025/04/rachel-belle-shares-her-top-5-favorite-seattle-pizza-spots"
+      "id": "pagliacci",
+      "title": "Seattle pizza chains launch limited-time collabs with Taco Time, Ivar's",
+      "url": "https://mynorthwest.com/local/seattle-pizza-taco-time-ivars-october/4282053",
+      "source": "MyNorthwest.com",
+      "date": "2026-10-02",
+      "kind": "opening"
     },
     {
       "id": "big-marios",
-      "status": "open",
-      "note": "The official site lists current hours for all four locations plus an active October 2026 promotion, with no closure signs.",
-      "source": "https://bigmariosnewyorkpizza.com/"
+      "title": "Seattle pizza chains launch limited-time collabs with Taco Time, Ivar's",
+      "url": "https://mynorthwest.com/local/seattle-pizza-taco-time-ivars-october/4282053",
+      "source": "MyNorthwest.com",
+      "date": "2026-10-02",
+      "kind": "opening"
     }
   ]
 }
