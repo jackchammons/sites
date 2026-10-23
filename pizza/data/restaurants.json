@@ -4200,7 +4200,33 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://theinfatuation.com/seattle/reviews/west-of-chicago-pizza-company",
+          "note": "The Infatuation scored it 8.4 ('great'), calling the cracker-thin, diamond-cut tavern pie 'the pizza to beat here' and comparing its deep dish favorably to Lou Malnati's and Giordano's. Seattle Met covers owner Shawn Millard's 2022 move from takeout-only into a full West Seattle restaurant and the tavern pie's roots as a tribute to Chicago's Vito & Nick's Pizzeria.",
+          "date": "2026-10-23"
+        },
+        "distinctiveness": {
+          "value": 8,
+          "setBy": "agent",
+          "source": "https://theinfatuation.com/seattle/reviews/west-of-chicago-pizza-company",
+          "note": "The Infatuation scored it 8.4 ('great'), calling the cracker-thin, diamond-cut tavern pie 'the pizza to beat here' and comparing its deep dish favorably to Lou Malnati's and Giordano's. Seattle Met covers owner Shawn Millard's 2022 move from takeout-only into a full West Seattle restaurant and the tavern pie's roots as a tribute to Chicago's Vito & Nick's Pizzeria.",
+          "date": "2026-10-23"
+        },
+        "critical": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://theinfatuation.com/seattle/reviews/west-of-chicago-pizza-company",
+          "note": "The Infatuation scored it 8.4 ('great'), calling the cracker-thin, diamond-cut tavern pie 'the pizza to beat here' and comparing its deep dish favorably to Lou Malnati's and Giordano's. Seattle Met covers owner Shawn Millard's 2022 move from takeout-only into a full West Seattle restaurant and the tavern pie's roots as a tribute to Chicago's Vito & Nick's Pizzeria.",
+          "date": "2026-10-23"
+        }
+      },
+      "priceIndex": 2,
+      "styleGroup": "Chicago pan",
+      "lastVerified": "2026-10-23"
     }
   ]
 }

@@ -1,29 +1,18 @@
 {
-  "updated": "2026-10-22T12:00:00.000Z",
-  "mentions": [
+  "updated": "2026-10-23T18:00:00Z",
+  "factorRatings": [
     {
-      "id": "independent-pizzeria",
-      "title": "Beloved Seattle pizzeria to close after more than 16 years",
-      "url": "https://www.kiro7.com/news/local/beloved-seattle-pizzeria-close-after-more-than-16-years/PP5A3GUJN5GFJDHSQFB3YYPG7M/",
-      "source": "KIRO 7 News Seattle",
-      "date": "2026-10-16",
-      "kind": "closing"
-    },
-    {
-      "id": "pagliacci",
-      "title": "Seattle pizza chains launch limited-time collabs with Taco Time, Ivar's",
-      "url": "https://mynorthwest.com/local/seattle-pizza-taco-time-ivars-october/4282053",
-      "source": "MyNorthwest.com",
-      "date": "2026-10-02",
-      "kind": "opening"
-    },
-    {
-      "id": "big-marios",
-      "title": "Seattle pizza chains launch limited-time collabs with Taco Time, Ivar's",
-      "url": "https://mynorthwest.com/local/seattle-pizza-taco-time-ivars-october/4282053",
-      "source": "MyNorthwest.com",
-      "date": "2026-10-02",
-      "kind": "opening"
+      "id": "west-of-chicago-pizza-company",
+      "craft": 7.5,
+      "distinctiveness": 8,
+      "criticScore": 7.5,
+      "priceIndex": 2,
+      "styleGroup": "Chicago pan",
+      "sources": [
+        "https://theinfatuation.com/seattle/reviews/west-of-chicago-pizza-company",
+        "https://www.seattlemet.com/eat-and-drink/2022/09/west-of-chicago-pizza-company-brings-tavern-style-pies-to-west-seattle"
+      ],
+      "note": "The Infatuation scored it 8.4 ('great'), calling the cracker-thin, diamond-cut tavern pie 'the pizza to beat here' and comparing its deep dish favorably to Lou Malnati's and Giordano's. Seattle Met covers owner Shawn Millard's 2022 move from takeout-only into a full West Seattle restaurant and the tavern pie's roots as a tribute to Chicago's Vito & Nick's Pizzeria."
     }
   ]
 }
