@@ -4489,7 +4489,7 @@
     },
     {
       "weekKey": "2026-W43",
-      "date": "2026-10-23",
+      "date": "2026-10-24",
       "week": 43,
       "ranks": {
         "delancey": 1,
@@ -4501,8 +4501,8 @@
         "tutta-bella": 7,
         "mioposto": 8,
         "independent-pizzeria": 9,
-        "lupo": 10,
-        "pagliacci": 11,
+        "pagliacci": 10,
+        "lupo": 11,
         "cornuto-pizzeria": 12,
         "moto-pizza": 13,
         "world-pizza": 14,
@@ -4527,8 +4527,8 @@
         "humble-pie": 33,
         "west-of-chicago-pizza-company": 34,
         "flying-squirrel": 35,
-        "good-shape-pizza": 36,
-        "slice-box": 37,
+        "slice-box": 36,
+        "good-shape-pizza": 37,
         "via-tribunali": 38,
         "my-friend-dereks": 39,
         "pegasus-pizza": 40,
@@ -4561,14 +4561,14 @@
         "delancey": 87.7,
         "windy-city-pie": 85.2,
         "dinos-tomato-pie": 83.6,
-        "serious-pie": 83.6,
+        "serious-pie": 83.5,
         "cornelly": 81.4,
-        "veraci-pizza": 80.3,
+        "veraci-pizza": 80.2,
         "tutta-bella": 80,
         "mioposto": 77.9,
         "independent-pizzeria": 77.4,
-        "lupo": 77.2,
         "pagliacci": 77.2,
+        "lupo": 77.1,
         "cornuto-pizzeria": 74.7,
         "moto-pizza": 73.8,
         "world-pizza": 72.1,
@@ -4580,12 +4580,12 @@
         "pizza-by-ruffin": 67,
         "oskars-pizza": 66.9,
         "big-marios": 66.1,
-        "belltown-pizza": 65.7,
+        "belltown-pizza": 65.6,
         "in-pizza-we-crust": 65.4,
         "sacro-bosco-pizza-wine": 65.2,
         "sopranos-antico": 64.8,
         "pazzos-on-eastlake": 64,
-        "coltiva-pizzeria-e-barra": 63.6,
+        "coltiva-pizzeria-e-barra": 63.5,
         "stevies-famous": 62.1,
         "veras-pizza-and-bar": 61.5,
         "breezy-town-pizza": 61.3,
@@ -4593,8 +4593,8 @@
         "humble-pie": 59.1,
         "west-of-chicago-pizza-company": 58.5,
         "flying-squirrel": 58.2,
-        "good-shape-pizza": 57.7,
         "slice-box": 57.7,
+        "good-shape-pizza": 57.6,
         "via-tribunali": 57,
         "my-friend-dereks": 56.7,
         "pegasus-pizza": 56.4,
@@ -4616,9 +4616,9 @@
         "south-town-pie": 48.7,
         "pizza-ritual": 48.6,
         "eymans-pizza": 46.6,
-        "managers-pizza": 46,
+        "managers-pizza": 45.9,
         "johnny-mos-pizzeria": 43.5,
-        "seward-park-pizza": 40.9,
+        "seward-park-pizza": 40.8,
         "sinners-pizza": 40.4,
         "jackson-street-pizza-lounge": 36.5,
         "mad-pizza": 27.5
@@ -4696,14 +4696,6 @@
           "value": 7.8,
           "penalty": 1.5
         },
-        "lupo": {
-          "reputation": 6.1,
-          "critical": 8.9,
-          "craft": 9.1,
-          "distinctiveness": 8.4,
-          "value": 8.1,
-          "penalty": 1.5
-        },
         "pagliacci": {
           "reputation": 8.7,
           "critical": 7.9,
@@ -4711,6 +4703,14 @@
           "distinctiveness": 6.8,
           "value": 8.2,
           "penalty": 0
+        },
+        "lupo": {
+          "reputation": 6.1,
+          "critical": 8.9,
+          "craft": 9.1,
+          "distinctiveness": 8.4,
+          "value": 8.1,
+          "penalty": 1.5
         },
         "cornuto-pizzeria": {
           "reputation": 8.6,
@@ -4904,14 +4904,6 @@
           "value": 8.5,
           "penalty": 0
         },
-        "good-shape-pizza": {
-          "reputation": 0,
-          "critical": 7.5,
-          "craft": 7.5,
-          "distinctiveness": 7,
-          "value": 9,
-          "penalty": 0
-        },
         "slice-box": {
           "reputation": 0,
           "critical": 7.8,
@@ -4919,6 +4911,14 @@
           "distinctiveness": 8.8,
           "value": 8.3,
           "penalty": 0.8
+        },
+        "good-shape-pizza": {
+          "reputation": 0,
+          "critical": 7.5,
+          "craft": 7.5,
+          "distinctiveness": 7,
+          "value": 9,
+          "penalty": 0
         },
         "via-tribunali": {
           "reputation": 0,
