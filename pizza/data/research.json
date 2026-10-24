@@ -1,18 +1,4 @@
 {
-  "updated": "2026-10-23T18:00:00Z",
-  "factorRatings": [
-    {
-      "id": "west-of-chicago-pizza-company",
-      "craft": 7.5,
-      "distinctiveness": 8,
-      "criticScore": 7.5,
-      "priceIndex": 2,
-      "styleGroup": "Chicago pan",
-      "sources": [
-        "https://theinfatuation.com/seattle/reviews/west-of-chicago-pizza-company",
-        "https://www.seattlemet.com/eat-and-drink/2022/09/west-of-chicago-pizza-company-brings-tavern-style-pies-to-west-seattle"
-      ],
-      "note": "The Infatuation scored it 8.4 ('great'), calling the cracker-thin, diamond-cut tavern pie 'the pizza to beat here' and comparing its deep dish favorably to Lou Malnati's and Giordano's. Seattle Met covers owner Shawn Millard's 2022 move from takeout-only into a full West Seattle restaurant and the tavern pie's roots as a tribute to Chicago's Vito & Nick's Pizzeria."
-    }
-  ]
+  "updated": "2026-10-24T00:00:00Z",
+  "directory": []
 }
