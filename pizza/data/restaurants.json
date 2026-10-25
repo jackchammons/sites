@@ -2868,8 +2868,8 @@
           "lon": -122.37412
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-10-25",
+      "locationsSource": "https://www.dantinipizza.com/location",
       "mentions": [],
       "factors": {
         "craft": {
@@ -2895,7 +2895,7 @@
       },
       "styleGroup": "Thin crust",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/dantinipizza/"
+      "instagram": "https://www.instagram.com/dantinipizza"
     },
     {
       "id": "a-pizza-mart-first-hill",

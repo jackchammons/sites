@@ -1,4 +1,28 @@
 {
-  "updated": "2026-10-24T00:00:00Z",
-  "directory": []
+  "updated": "2026-10-25T00:00:00Z",
+  "locations": [
+    {
+      "id": "dantini-pizza",
+      "homepage": "https://www.dantinipizza.com/",
+      "source": "https://www.dantinipizza.com/location",
+      "sites": [
+        {
+          "neighborhood": "Interbay",
+          "address": "1417 Elliott Ave W, Seattle, WA 98119"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "id": "dantini-pizza",
+      "instagram": "https://www.instagram.com/dantinipizza",
+      "source": "https://www.dantinipizza.com/location"
+    },
+    {
+      "id": "good-luck-bread",
+      "instagram": "https://www.instagram.com/goodluckbread/",
+      "source": "https://pizza.goodluckbread.com/"
+    }
+  ]
 }
