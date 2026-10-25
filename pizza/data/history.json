@@ -4489,7 +4489,7 @@
     },
     {
       "weekKey": "2026-W43",
-      "date": "2026-10-24",
+      "date": "2026-10-25",
       "week": 43,
       "ranks": {
         "delancey": 1,
@@ -4541,8 +4541,8 @@
         "dantini-pizza": 47,
         "pizzeria-pulcinella": 48,
         "zeeks-pizza": 49,
-        "un-po-tipsy": 50,
-        "roccos": 51,
+        "roccos": 50,
+        "un-po-tipsy": 51,
         "smoking-monkey-pizza": 52,
         "pizzeria-la-rocca": 53,
         "post-alley-pizza": 54,
@@ -4558,14 +4558,14 @@
         "mad-pizza": 64
       },
       "scores": {
-        "delancey": 87.7,
+        "delancey": 87.6,
         "windy-city-pie": 85.2,
-        "dinos-tomato-pie": 83.6,
+        "dinos-tomato-pie": 83.5,
         "serious-pie": 83.5,
         "cornelly": 81.4,
         "veraci-pizza": 80.2,
         "tutta-bella": 80,
-        "mioposto": 77.9,
+        "mioposto": 77.8,
         "independent-pizzeria": 77.4,
         "pagliacci": 77.2,
         "lupo": 77.1,
@@ -4573,8 +4573,8 @@
         "moto-pizza": 73.8,
         "world-pizza": 72.1,
         "razzis-pizzeria": 71.4,
-        "good-luck-bread": 70.8,
-        "oxbow": 68.9,
+        "good-luck-bread": 70.7,
+        "oxbow": 68.8,
         "sunny-hill": 68.8,
         "elemental-pizza": 67.6,
         "pizza-by-ruffin": 67,
@@ -4602,15 +4602,15 @@
         "pi-vegan-pizzeria": 56.2,
         "proletariat-pizza": 55.8,
         "ballard-pizza-co": 55.4,
-        "pizzeria-22": 54.9,
+        "pizzeria-22": 54.8,
         "roma-roma": 54.6,
         "dantini-pizza": 54.3,
         "pizzeria-pulcinella": 54,
         "zeeks-pizza": 53.4,
-        "un-po-tipsy": 53.3,
         "roccos": 53.2,
-        "smoking-monkey-pizza": 52.5,
-        "pizzeria-la-rocca": 51.6,
+        "un-po-tipsy": 53.2,
+        "smoking-monkey-pizza": 52.4,
+        "pizzeria-la-rocca": 51.5,
         "post-alley-pizza": 50.9,
         "hot-mamas-pizza": 50.5,
         "south-town-pie": 48.7,
@@ -4620,7 +4620,7 @@
         "johnny-mos-pizzeria": 43.5,
         "seward-park-pizza": 40.8,
         "sinners-pizza": 40.4,
-        "jackson-street-pizza-lounge": 36.5,
+        "jackson-street-pizza-lounge": 36.4,
         "mad-pizza": 27.5
       },
       "factors": {
@@ -5016,14 +5016,6 @@
           "value": 7.7,
           "penalty": 0
         },
-        "un-po-tipsy": {
-          "reputation": 0,
-          "critical": 7.5,
-          "craft": 7,
-          "distinctiveness": 6.5,
-          "value": 7.3,
-          "penalty": 0
-        },
         "roccos": {
           "reputation": 0,
           "critical": 7.5,
@@ -5031,6 +5023,14 @@
           "distinctiveness": 7,
           "value": 7.9,
           "penalty": 0.4
+        },
+        "un-po-tipsy": {
+          "reputation": 0,
+          "critical": 7.5,
+          "craft": 7,
+          "distinctiveness": 6.5,
+          "value": 7.3,
+          "penalty": 0
         },
         "smoking-monkey-pizza": {
           "reputation": 0,

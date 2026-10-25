@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-24T16:35:15.276Z",
+  "updated": "2026-10-25T17:03:46.362Z",
   "sources": 4,
   "items": [
     {
@@ -50,6 +50,14 @@
       "source": "The Seattle Times",
       "published": "2026-10-09T20:00:00.000Z",
       "kind": "ranking",
+      "mentions": []
+    },
+    {
+      "title": "Seattle-based MOD Pizza debuts limited-time 'Abbott Elementary' Philly pizza",
+      "url": "https://news.google.com/rss/articles/CBMijwJBVV95cUxOcUZBSXRydG1fQzZqaFhoVjFYem04QXJKWlM0Z3ZaZHIzeUNRQnBSdzEwSFRNb1J3M1l4RUFzVXB3N1BZYXQzdWpKOVFPeWNobGI2MVBJWlN6c3hudHBmLTVmbUJ0aUZJWDFoWEJxZU5kN1QzVUxOcVBRLVlOTmNDTTNPTTBzSktod0dWT04zRW1MckkzTkNfR3F3YzAyc3FCd2liMXNlTFA4MFFJVXUwZWlHaDBKMkh2VDUyLV9PbzMwQlA3MHdWdTZZcDhHN1JUUmY3dWcyNWZqajlPLUNTRG11TWlSNGdBUGNXMHdsQzlvM2hRbEVxeFVtTy12N1dVc1pBT18tTEVuVlgtZFpj?oc=5",
+      "source": "Seattle Refined",
+      "published": "2026-10-07T21:46:54.000Z",
+      "kind": "mention",
       "mentions": []
     },
     {
