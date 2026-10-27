@@ -1,41 +1,30 @@
 {
-  "updated": "2026-10-26T17:30:00Z",
-  "status": [
+  "updated": "2026-10-27T17:30:00Z",
+  "news": [],
+  "mentions": [
     {
-      "id": "abecedary",
-      "status": "opening",
-      "note": "Still pre-opening as of early August 2026 — pizzaiolo Seth Eisner is running weekend pop-ups behind Sake Noir while the permanent Hillman City pizzeria/brewery, slowed by permitting, isn't expected before 2027.",
-      "source": "https://hoodline.com/2026/08/hillman-city-gets-first-bite-of-seattle-s-hottest-new-pizzeria/"
+      "id": "independent-pizzeria",
+      "title": "Beloved Seattle pizzeria to close after more than 16 years",
+      "url": "https://www.kiro7.com/news/local/beloved-seattle-pizzeria-close-after-more-than-16-years/PP5A3GUJN5GFJDHSQFB3YYPG7M/",
+      "source": "KIRO 7",
+      "date": "2026-10-16",
+      "kind": "closing"
     },
     {
-      "id": "razzis-pizzeria",
-      "status": "open",
-      "note": "The Greenwood location's directory listing, refreshed today, shows current hours and an active 1,630-review Google count with no closure reports found anywhere.",
-      "source": "https://spinach.guide/venues/razzis-pizzeria-greenwood-128099/"
+      "id": "pagliacci",
+      "title": "Seattle pizza chains launch limited-time collabs with Taco Time, Ivar's this October",
+      "url": "https://www.kiro7.com/news/local/seattle-pizza-chains-launch-limited-time-collabs-with-taco-time-ivars-this-october/5BD7O233BVB4TBZE2NOL4EWMM4/",
+      "source": "KIRO 7",
+      "date": "2026-10-01",
+      "kind": "mention"
     },
     {
-      "id": "candela-pizza",
-      "status": "open",
-      "note": "Still listed as an active Renton-based Latin-fusion wood-fired pizza food truck taking catering bookings, with no closure reports found.",
-      "source": "https://www.seattlefoodtruck.com/food-trucks/candela-pizza"
-    },
-    {
-      "id": "dudez-woodfired-pizza",
-      "status": "open",
-      "note": "Still listed as an active wood-fired pizza food trailer offering catering on Seattle's food-truck directory, with no closure reports found.",
-      "source": "https://www.seattlefoodtruck.com/food-trucks/dude-z-woodfired-pizza"
-    },
-    {
-      "id": "sunny-hill",
-      "status": "open",
-      "note": "The Ballard pizzeria's business listing still shows its address, phone number and ordering link active, with no closure notice found anywhere.",
-      "source": "https://intentionalist.com/b/sunny-hill/"
-    },
-    {
-      "id": "proletariat-pizza",
-      "status": "open",
-      "note": "proletariatpizza.com now redirects to the pizzeria's WordPress site, which lists current hours and an ordering phone line, confirming the White Center shop is still operating.",
-      "source": "https://proletariatpizzaratcity.wordpress.com/"
+      "id": "big-marios",
+      "title": "Seattle pizza chains launch limited-time collabs with Taco Time, Ivar's this October",
+      "url": "https://www.kiro7.com/news/local/seattle-pizza-chains-launch-limited-time-collabs-with-taco-time-ivars-this-october/5BD7O233BVB4TBZE2NOL4EWMM4/",
+      "source": "KIRO 7",
+      "date": "2026-10-01",
+      "kind": "mention"
     }
   ]
 }
