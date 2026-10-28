@@ -4126,7 +4126,32 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 8.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/ak-pizza",
+          "note": "The Infatuation named it the best pizza in Seattle (8.9/10), describing a charred, crunchy-chewy NY-style crust and inventive toppings — smoky scamorza, 'nduja, vodka sauce deepened with caramelized sofrito and cream — on a takeout-only, pre-order-only operation that sells out nightly.",
+          "date": "2026-10-28"
+        },
+        "distinctiveness": {
+          "value": 8.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/ak-pizza",
+          "note": "The Infatuation named it the best pizza in Seattle (8.9/10), describing a charred, crunchy-chewy NY-style crust and inventive toppings — smoky scamorza, 'nduja, vodka sauce deepened with caramelized sofrito and cream — on a takeout-only, pre-order-only operation that sells out nightly.",
+          "date": "2026-10-28"
+        },
+        "critical": {
+          "value": 8.9,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/ak-pizza",
+          "note": "The Infatuation named it the best pizza in Seattle (8.9/10), describing a charred, crunchy-chewy NY-style crust and inventive toppings — smoky scamorza, 'nduja, vodka sauce deepened with caramelized sofrito and cream — on a takeout-only, pre-order-only operation that sells out nightly.",
+          "date": "2026-10-28"
+        }
+      },
+      "styleGroup": "Creative",
+      "lastVerified": "2026-10-28"
     },
     {
       "id": "coltiva-pizzeria-e-barra",

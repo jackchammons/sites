@@ -1,30 +1,16 @@
 {
-  "updated": "2026-10-27T17:30:00Z",
-  "news": [],
-  "mentions": [
+  "updated": "2026-10-28T18:00:00Z",
+  "factorRatings": [
     {
-      "id": "independent-pizzeria",
-      "title": "Beloved Seattle pizzeria to close after more than 16 years",
-      "url": "https://www.kiro7.com/news/local/beloved-seattle-pizzeria-close-after-more-than-16-years/PP5A3GUJN5GFJDHSQFB3YYPG7M/",
-      "source": "KIRO 7",
-      "date": "2026-10-16",
-      "kind": "closing"
-    },
-    {
-      "id": "pagliacci",
-      "title": "Seattle pizza chains launch limited-time collabs with Taco Time, Ivar's this October",
-      "url": "https://www.kiro7.com/news/local/seattle-pizza-chains-launch-limited-time-collabs-with-taco-time-ivars-this-october/5BD7O233BVB4TBZE2NOL4EWMM4/",
-      "source": "KIRO 7",
-      "date": "2026-10-01",
-      "kind": "mention"
-    },
-    {
-      "id": "big-marios",
-      "title": "Seattle pizza chains launch limited-time collabs with Taco Time, Ivar's this October",
-      "url": "https://www.kiro7.com/news/local/seattle-pizza-chains-launch-limited-time-collabs-with-taco-time-ivars-this-october/5BD7O233BVB4TBZE2NOL4EWMM4/",
-      "source": "KIRO 7",
-      "date": "2026-10-01",
-      "kind": "mention"
+      "id": "a-k-pizza",
+      "craft": 8.5,
+      "distinctiveness": 8.5,
+      "criticScore": 8.9,
+      "styleGroup": "Creative",
+      "sources": [
+        "https://www.theinfatuation.com/seattle/reviews/ak-pizza"
+      ],
+      "note": "The Infatuation named it the best pizza in Seattle (8.9/10), describing a charred, crunchy-chewy NY-style crust and inventive toppings — smoky scamorza, 'nduja, vodka sauce deepened with caramelized sofrito and cream — on a takeout-only, pre-order-only operation that sells out nightly."
     }
   ]
 }
