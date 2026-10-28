@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-27T18:42:34.480Z",
+  "updated": "2026-10-28T18:51:42.153Z",
   "sources": 4,
   "items": [
     {
@@ -65,6 +65,14 @@
       "url": "https://news.google.com/rss/articles/CBMiiAJBVV95cUxOLWRNRVlKYjZYREtUdG5SMGpWd1UwWUNkbkdPckhMTTl3VGJsV0dnRjJLQkNZM0VmWlBTb3RqVkFTZVhqa3E5ZHRjb0N1cVlqUk5EbFVIQWJXYTB5dFBoempCY2otem5wZVZNaVByRjBOdzJOM05BUlU4emVzaHZZaElUdU1wcTNLTUdKRjQyZ2lSWkFtX1RFUlhTZVg0S3JkTkRVeTFMUjJkRkx2UTRscldncURIc0lTMWJPZVp4VnYzeXFzWndzQ3lMcW5rWHZyMUgzMDh4U0VPVTM2cWFOdTFwSklzOWNOeWV2TzR6MGJsaldVWExrNzd6VWFZSzhPWnJOUjc1cGM?oc=5",
       "source": "KOMO",
       "published": "2026-10-07T21:44:03.000Z",
+      "kind": "mention",
+      "mentions": []
+    },
+    {
+      "title": "Decades-old frozen pizza brand ends production, leaving fans nostalgic",
+      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQdS1hcFBPNGxKTmxVOURkaUl0UUVCLTRxbUJYMUZGcDBGelFHc0Zhb1FOb0tlbzNJT2hEMGxpZ1RHRFlBbjIyVnh3N054SlFfVGVzTEhqTjcwbU95VFF5VDRzaEtiUUNRNXY2YkoyUXdWSHlRT1VfdV9Pd0dRNUZiUmlxSTJRRkhGNHRqOGJUY2prVnFxTW1uZ3B1WldvY0pxUUxtRzJn?oc=5",
+      "source": "FOX 13 Seattle",
+      "published": "2026-10-07T07:00:00.000Z",
       "kind": "mention",
       "mentions": []
     },
