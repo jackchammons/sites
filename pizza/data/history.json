@@ -5140,7 +5140,7 @@
     },
     {
       "weekKey": "2026-W44",
-      "date": "2026-10-28",
+      "date": "2026-10-29",
       "week": 44,
       "ranks": {
         "delancey": 1,
@@ -5232,13 +5232,13 @@
         "pizza-by-ruffin": 66.9,
         "oskars-pizza": 66.8,
         "big-marios": 66.1,
-        "a-k-pizza": 65.9,
-        "belltown-pizza": 65.6,
+        "a-k-pizza": 65.8,
+        "belltown-pizza": 65.5,
         "in-pizza-we-crust": 65.3,
         "sacro-bosco-pizza-wine": 65.1,
         "sopranos-antico": 64.7,
         "pazzos-on-eastlake": 63.9,
-        "coltiva-pizzeria-e-barra": 63.5,
+        "coltiva-pizzeria-e-barra": 63.4,
         "stevies-famous": 62,
         "veras-pizza-and-bar": 61.4,
         "breezy-town-pizza": 61.3,
@@ -5249,10 +5249,10 @@
         "slice-box": 57.7,
         "good-shape-pizza": 57.6,
         "via-tribunali": 57,
-        "my-friend-dereks": 56.7,
+        "my-friend-dereks": 56.6,
         "pegasus-pizza": 56.4,
         "talaricos": 56.3,
-        "pi-vegan-pizzeria": 56.2,
+        "pi-vegan-pizzeria": 56.1,
         "proletariat-pizza": 55.8,
         "ballard-pizza-co": 55.4,
         "pizzeria-22": 54.8,
@@ -5274,7 +5274,7 @@
         "seward-park-pizza": 40.8,
         "sinners-pizza": 40.3,
         "jackson-street-pizza-lounge": 36.4,
-        "mad-pizza": 27.5
+        "mad-pizza": 27.4
       },
       "factors": {
         "delancey": {
