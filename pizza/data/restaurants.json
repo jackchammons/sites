@@ -4253,6 +4253,23 @@
       "priceIndex": 2,
       "styleGroup": "Chicago pan",
       "lastVerified": "2026-10-23"
+    },
+    {
+      "id": "starlas",
+      "name": "Starla's",
+      "neighborhood": "Capitol Hill",
+      "style": null,
+      "blurb": "Bellingham pizzeria relocating to Seattle; ran Saturday pop-ups at Slab on 12th Ave through September 2026 while planning a permanent Seattle location for late 2026 or early 2027.",
+      "url": "https://starlaspizza.com",
+      "status": "opening",
+      "statusSource": "https://starlaspizza.com",
+      "statusDate": "2026-10-29",
+      "statusChecked": "2026-10-29",
+      "attributes": {},
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }

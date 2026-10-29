@@ -1,16 +1,13 @@
 {
-  "updated": "2026-10-28T18:00:00Z",
-  "factorRatings": [
+  "updated": "2026-10-29T00:00:00Z",
+  "directory": [
     {
-      "id": "a-k-pizza",
-      "craft": 8.5,
-      "distinctiveness": 8.5,
-      "criticScore": 8.9,
-      "styleGroup": "Creative",
-      "sources": [
-        "https://www.theinfatuation.com/seattle/reviews/ak-pizza"
-      ],
-      "note": "The Infatuation named it the best pizza in Seattle (8.9/10), describing a charred, crunchy-chewy NY-style crust and inventive toppings — smoky scamorza, 'nduja, vodka sauce deepened with caramelized sofrito and cream — on a takeout-only, pre-order-only operation that sells out nightly."
+      "name": "Starla's",
+      "url": "https://starlaspizza.com",
+      "neighborhood": "Capitol Hill",
+      "status": "opening",
+      "note": "Bellingham pizzeria relocating to Seattle; ran Saturday pop-ups at Slab on 12th Ave through September 2026 while planning a permanent Seattle location for late 2026 or early 2027.",
+      "source": "https://starlaspizza.com"
     }
   ]
 }
