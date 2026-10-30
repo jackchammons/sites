@@ -1,13 +1,10 @@
 {
-  "updated": "2026-10-29T00:00:00Z",
-  "directory": [
+  "updated": "2026-10-30T12:00:00Z",
+  "links": [
     {
-      "name": "Starla's",
-      "url": "https://starlaspizza.com",
-      "neighborhood": "Capitol Hill",
-      "status": "opening",
-      "note": "Bellingham pizzeria relocating to Seattle; ran Saturday pop-ups at Slab on 12th Ave through September 2026 while planning a permanent Seattle location for late 2026 or early 2027.",
-      "source": "https://starlaspizza.com"
+      "id": "good-luck-bread",
+      "instagram": "https://www.instagram.com/goodluckbread/",
+      "source": "https://pizza.goodluckbread.com/"
     }
   ]
 }
