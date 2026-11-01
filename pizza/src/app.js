@@ -107,7 +107,7 @@ function render() {
     const biggest = Math.max(0, ...ranked.map(r => r.previousRank != null ? r.previousRank - r.rank : 0));
     note.textContent = `Your weights — ${entered ? `${entered} climbed in from outside the published ten, ` : ''}biggest move ▲${biggest}. Markers show each card's published position.`;
   } else {
-    note.textContent = 'Published ranking.';
+    note.textContent = '';
   }
 }
 

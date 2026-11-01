@@ -1,146 +1,115 @@
 # The Seattle Pizza Index
 
-A static site ranking Seattle's ten best pizzerias by the **SLICE Score** — a transparent,
-reproducible 0–100 algorithm published on the page itself. Rebuilt and redeployed by GitHub
-Actions daily; the ranking itself moves weekly, since the spotlight and the ▲/▼ markers are
-keyed to the ISO week.
+A static site that tracks Seattle's pizzerias: a ranked top ten, a full directory with a
+map, openings and closings, and the local press. Published at
+**https://sites.jackhammons.com/pizza/**, rebuilt daily by GitHub Actions.
 
-## The algorithm
+Every number on the page is computed at build time from `data/restaurants.json` by the
+scoring module in `src/slice.js`, which also runs in the browser so readers can re-weight
+the factors and watch the list re-sort.
+
+## The score (SLICE v2.1)
 
 ```
-SLICE = ( Σ pillarᵢ ÷ 10 × weightᵢ ) − min(friction, 6.0) × (1 − freshness decay)
+SLICE = ( Σ factorᵢ ÷ 10 × weightᵢ − min(friction, 6.0) ) × (1 − decay)
 ```
 
-| Pillar | Weight | What it measures |
+| Factor | Weight | How it is set |
 |---|---|---|
-| Crust Integrity | 26% | Fermentation, hydration, structure, bake |
-| Topping Craft | 18% | Sourcing and restraint |
-| Consensus Signal | 22% | Critical reads blended with a de-noised crowd rating |
-| Distinctiveness | 18% | Does it own a lane in this city |
-| Value Density | 16% | Satisfaction per dollar, folded with the price tier |
+| Reputation | 24% | Computed: longevity, review count and press coverage (see below) |
+| Critical reception | 24% | Graded critic base, lifted up to +1.5 by press the research pass files |
+| Craft | 18% | Graded |
+| Distinctiveness | 18% | Graded |
+| Value | 16% | Computed: (craft + critical) / 2 × price-tier multiplier |
 
-Three things make it more than a weighted average:
+The weights, caps and constants on the page are read from `src/slice.js` at build time,
+so the methodology section is always the code's own values.
 
-1. **Bayesian shrinkage on crowd ratings.** A 4.9★ from 80 reviews is a rumour; a 4.7★ from
-   4,000 is evidence. Each rating is pulled toward the city mean in proportion to how little
-   data stands behind it: `adjusted = (v/(v+m))·R + (m/(v+m))·C`, with `m = 500` and
-   `C = 4.30`.
-2. **A friction penalty.** Points come off for preorder-only drops, hour-long waits and
-   twenty-hour weeks, because a pie you cannot get is worth less than one you can. Capped at
-   −6.0 so logistics can dent a ranking but never decide it.
-3. **Freshness decay.** Entries lose 0.2%/week since their `lastVerified` date, capped at 6%,
-   so stale data drifts down instead of sitting at the top forever.
+**Graded factors** (craft, distinctiveness, critical) are stored once per entry with
+provenance (`setBy`, `source`, `date`) and never overwritten by a script. They have two
+sources, and the directory shows which applies: the founding entries were rated
+editorially when the index launched in August 2026 and carry no cited source; every entry
+added since is rated by the research agent from one to four published sources it read.
 
-Ties break on Consensus Signal, then Crust Integrity, then alphabetically.
+**Reputation** has three components, each 0 to 1: longevity (log curve on years open,
+weight 3), review volume (`reviews / (reviews + 500)`, weight 2) and coverage (press
+mentions in 24 months / 6, weight 1). They combine as the best weighted mean over any
+prefix of the components sorted best-first, so adding evidence can lift the factor but
+never lower it. An entry with no component on file has no reputation score; its 24% is
+shared by the other four factors rather than scored as zero.
+
+**Value** multiplies the mean of craft and critical by the price tier: $ ×1.20, $$ ×1.05,
+$$$ ×0.90, $$$$ ×0.75, no tier on file ×1.00.
+
+**Friction** subtracts a cost per attribute flag (`data/attributes.json` holds the labels
+and costs), capped at 6.0.
+
+**Freshness decay** takes 0.2% per week since the entry was last verified, capped at 6%
+after 30 weeks. "Verified" is the newest of a liveness check, a locations check or the
+rating date (`verifiedDate()` in `src/slice.js`).
+
+Ties break on critical reception, then craft, then alphabetically (`byRank` in
+`src/slice.js`). The ten highest-scoring entries with `status: "open"` are published;
+everything else rated is listed in the directory with its score.
 
 ## Layout
 
 ```
-pizza/                    # published at /pizza/
-  data/restaurants.json   the dataset — edit this to change the rankings
-  data/buzz.json          news sweep, refreshed daily (see below)
-  data/history.json       weekly snapshots, drives the ▲/▼ movement markers
-  src/slice.js            the algorithm (runs in Node AND in the browser)
+pizza/
+  data/restaurants.json   the dataset: every pizzeria on file, with provenance
+  data/attributes.json    attribute registry (label + frictionCost per flag)
+  data/history.json       weekly snapshots, stamped with the algorithm version
+  data/buzz.json          press sweep, refreshed daily
+  data/candidates.json    registry-seeded leads for the census task
+  data/research.json      the research agent's last validated proposals
+  src/slice.js            the scoring module (Node and browser)
   src/render.js           card rendering, shared by the build and the re-ranker
-  src/app.js              the in-browser weight sliders
-  src/styles.css
-  scripts/build.mjs       renders dist/
-  scripts/verify.mjs      post-build sanity checks
-  scripts/fetch-buzz.mjs  refreshes data/buzz.json from public news feeds
-  scripts/fetch-ratings.mjs  refreshes crowd ratings from Yelp (needs a key)
-  scripts/verify-research.mjs validates the research agent's output before it is used
-  scripts/apply-research.mjs  applies validated ratings and closures to the dataset
+  src/app.js              the in-browser weight controls, directory and map
+  src/locations.js        location labels and the locations worklist
+  src/validate-research.js   the research-file gate, as a pure function
+  src/check-dataset.js    the dataset lint, as a pure function
+  src/census.js           candidate matching and coverage numbers
+  build/                  the page, section by section (pure modules)
+  scripts/build.mjs       composes build/ into OUT_DIR (default ../dist)
+  scripts/verify.mjs      post-build gate: unit tests plus checks on the output
+  scripts/check-dataset.mjs, verify-research.mjs, apply-research.mjs
+  scripts/next-task.mjs   picks and briefs the research agent's daily task
+  scripts/fetch-buzz.mjs, fetch-candidates.mjs, geocode.mjs
+  test/                   node --test suites for every pure module
 ```
 
-`src/slice.js` is dependency-free ES module JavaScript with no Node or DOM APIs, so the static
-build and the page's live "re-rank it yourself" sliders run the exact same math. There is one
-implementation of the algorithm, not two.
+No dependencies, no lockfile. Leaflet is vendored under `src/vendor/`.
 
 ## Working on it
 
 ```bash
-node scripts/build-all.mjs       # all sites -> dist/ (this one at dist/pizza/)
-node pizza/scripts/build.mjs     # or just this site -> dist/
-node pizza/scripts/verify.mjs    # checks the output
-npx serve dist                   # or any static server
+node --test pizza/test/*.test.mjs        # unit tests
+node pizza/scripts/check-dataset.mjs     # lint the dataset
+cd pizza && OUT_DIR=/tmp/out node scripts/build.mjs && OUT_DIR=/tmp/out node scripts/verify.mjs
+node scripts/build-all.mjs --only pizza  # or through the orchestrator -> dist/pizza/
 ```
 
-No dependencies, no build tooling, no lockfile.
+A local build never writes the weekly snapshot; only `publish.yml` sets `SNAPSHOT=1`.
+Every push to a branch other than `main` runs `ci.yml` (tests, lint, build, verify for the
+Node sites). Only `main` deploys.
 
-## Deployment
+## The daily loop
 
-This site is published as part of the [`sites`](../README.md) repo at
-**https://sites.jackhammons.com/pizza/**, built by `scripts/build-all.mjs` and
-deployed by `.github/workflows/publish.yml` on:
+Two scheduled workflows. `research.yml` runs a Claude agent on one bounded task per day
+(discovery, locations, liveness, news, rating, rotating), writing proposals to
+`data/research.json`. The agent's write grant is scoped to that one file, a guard step
+fails the run if anything else changed, every record is validated by
+`validate-research.js`, the validated sections are applied to `restaurants.json`, the
+dataset is linted, and the page is built and verified before the commit. `publish.yml`
+then rebuilds every site and deploys.
 
-- a daily cron — 13:17 UTC (06:17 Pacific)
-- any push to `main` touching `pizza/**`
-- manual dispatch from the Actions tab
+What the agent may write: new directory entries, status changes (with the date the
+source states, if any), verified locations and official sites, press mentions, factor
+proposals for unrated entries only, Instagram links, attribute flags and candidate
+verdicts. It never writes a score. Crowd star ratings were seeded at launch and are never
+refreshed; they are shown as context, and only the review count feeds reputation.
 
-On scheduled runs the workflow also commits the week's standings to `data/history.json`, which
-is what the ▲/▼ markers compare against the following week.
+## Corrections
 
-## On the data
-
-Pillar scores are editorial judgments applied by one rubric to every restaurant — declared
-opinions, not measurements, which is why the page lets you overrule their weights. Crowd
-figures are rounded aggregates observed across major review platforms at the dataset version
-shown, not a live API feed. To change the rankings, edit `data/restaurants.json` and bump
-`lastVerified`.
-
-## Where the data comes from
-
-Two refresh steps run before the daily build. Both only write into `data/`, and both are
-fail-soft — no network, no API key, or a bad response leaves existing data in place and
-the site still publishes.
-
-**`fetch-buzz.mjs`** — keyless. Sweeps Google News RSS and Eater Seattle for Seattle pizza
-coverage, filters for stories that are both local and actually about pizza (national
-chains, crime, business-wire and other-city stories are dropped), classifies each as an
-opening, closing, list or mention, and merges into `data/buzz.json` deduped on title with
-a 120-day window. Reddit was considered and rejected: it now returns 403 to anonymous
-reads.
-
-**Crowd ratings are frozen.** The figures in `restaurants.json` were observed at the dataset
-version shown and will not refresh: Yelp returns 403 to automated fetching, Google's results
-carry no rating in the HTML, and a Yelp API key was ruled out. `fetch-ratings.mjs` has been
-removed rather than left dormant, so nothing implies a refresh that is not coming.
-
-**`research.yml`** — needs one credential: `CLAUDE_CODE_OAUTH_TOKEN` (subscription pool,
-generated with `claude setup-token`) or `ANTHROPIC_API_KEY` (metered API credits). Set one,
-not both. A
-separate daily workflow runs the Claude Code Action to refresh everything the keyless feeds
-cannot, writing one file, `data/research.json`, with four sections:
-
-| Section | What it does |
-|---|---|
-| `news` | Stories the RSS sweep missed; merged into the buzz list |
-| `candidates` | Unranked Seattle pizzerias worth considering, shown under the bench |
-| `closures` | Relegation signals; flags the entry and drops it out of the top ten |
-
-The agent writes only that file. `verify-research.mjs` then rejects the whole thing if any
-entry is malformed — invented or non-https URL, future or stale date, invented `kind`,
-unknown id, a rating moving more than 0.5, a review count halving, a duplicate. Only after it
-passes does `apply-research.mjs` write crowd figures and closure flags into
-`restaurants.json`. The agent never edits that file itself.
-
-Note on billing: that token draws on the subscription's programmatic credit pool. Do **not**
-also set `ANTHROPIC_API_KEY` here — it wins the credential chain and bills API credits
-instead, which is a documented way to run up a surprise bill.
-
-## Promotion and relegation
-
-The top ten is not a fixed list. Every entry with verified crowd figures competes on score
-alone; the ten highest are published and the rest form the bench. Two things hold an entry
-off the top regardless of score:
-
-- **Unverified crowd figures.** A provisional score rests on the critical read alone, so it
-  has not proven anything yet. Verifying it is exactly what the research pass does.
-- **A reported closure.** Relegation is immediate.
-
-That makes the research pass consequential rather than decorative: confirming Breezy Town's
-ratings moves it from bench #11 to the top ten, and pushes whoever sits at the cutoff out.
-
-**Pillar scores are never written by a script.** They are editorial judgments applied by
-one rubric, which is what the page claims, and automating them would make that claim
-false. Only the crowd figures refresh automatically.
+If a fact on the page is wrong, open an issue or send a pull request against
+`pizza/data/restaurants.json`. Every entry's record in the directory shows its sources.

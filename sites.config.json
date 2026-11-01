@@ -9,7 +9,7 @@
       "slug": "pizza",
       "name": "The Seattle Pizza Index",
       "emoji": "🍕",
-      "tagline": "Seattle's top 10 pizzerias, ranked by the SLICE Score — a transparent five-pillar algorithm with Bayesian-adjusted ratings and a friction penalty. Move the sliders and re-rank it yourself.",
+      "tagline": "Seattle's pizzerias, tracked daily: a ranked top ten and a full directory, scored by SLICE, a published five-factor method you can re-weight yourself.",
       "dir": "pizza",
       "build": [
         "node",

@@ -31,7 +31,9 @@ export const CARE_STEPS = [
 function locationsHtml(r) {
   const sites = locationList(r);
   if (!sites || sites.length < 2) return '';
-  return `<div class="locs" title="Verified ${esc(r.locationsVerified)} from ${esc(r.locationsSource ?? 'the pizzeria')}">`
+  const title = r.locationsVerified
+    ? ` title="Verified ${esc(r.locationsVerified)} from ${esc(r.locationsSource ?? 'the pizzeria')}"` : '';
+  return `<div class="locs"${title}>`
     + `<span class="locs-label">${esc(locationCount(r))}</span> ${sites.map(esc).join(' <em>·</em> ')}</div>`;
 }
 
@@ -70,9 +72,10 @@ export function cardHtml(r) {
       ? `<i class="penalty" style="width:${seg(r.penaltyApplied).toFixed(2)}%" title="Friction penalty: -${n1(r.penaltyApplied)} pts"></i>`
       : '');
 
+  const price = Number.isInteger(r.priceIndex) && r.priceIndex > 0 ? '$'.repeat(r.priceIndex) : '';
   const chips = [
     `<span class="chip">${esc(r.style)}</span>`,
-    `<span class="chip">${'$'.repeat(r.priceIndex)}</span>`,
+    ...(price ? [`<span class="chip">${price}</span>`] : []),
     ...(r.frictionDetail.all || []).map(a => `<span class="chip fr">${esc(a.label)}</span>`),
     ...(r.instagram ? [`<a class="chip chip-ig" href="${esc(r.instagram)}" target="_blank" rel="noopener nofollow">Instagram</a>`] : [])
   ].join('');
@@ -92,7 +95,8 @@ export function cardHtml(r) {
           <td class="num">—</td><td class="num">—</td><td class="num">−${n1(r.penaltyApplied)}</td></tr>` : '';
 
   const decayRow = r.stalenessDecay > 0 ? `
-        <tr class="neg"><td>Freshness factor · verified ${esc(r.lastVerified)}</td>
+        <tr class="neg"><td>Freshness factor · ${r.verified
+          ? `last ${esc(r.verified.source)} ${esc(r.verified.date)}` : 'never verified'}</td>
           <td class="num">—</td><td class="num">—</td>
           <td class="num">×${(1 - r.stalenessDecay).toFixed(3)}</td></tr>` : '';
 
@@ -104,7 +108,8 @@ export function cardHtml(r) {
           <div class="title-row">
             <h3>${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.name)}</a>` : esc(r.name)}</h3>
           </div>
-          <div class="meta">${esc(locationLabel(r))} <em>·</em> ${esc(r.style)} <em>·</em> est. ${r.opened}</div>
+          <div class="meta">${esc(locationLabel(r))} <em>·</em> ${esc(r.style)}${
+            typeof r.opened === 'number' ? ` <em>·</em> est. ${r.opened}` : ''}</div>
           ${locationsHtml(r)}
           ${r.signature ? `<p class="sig">“${esc(r.signature)}”</p>` : ''}
           ${r.blurb ? `<p class="blurb">${esc(r.blurb)}</p>` : ''}
@@ -122,7 +127,7 @@ export function cardHtml(r) {
         <summary>Show the math</summary>
         <div class="mathbody">
           <table class="calc">
-            <thead><tr><th>Pillar</th><th class="num">Score</th><th class="num">Weight</th><th class="num">Points</th></tr></thead>
+            <thead><tr><th>Factor</th><th class="num">Score</th><th class="num">Weight</th><th class="num">Points</th></tr></thead>
             <tbody>
               ${rows}
               ${penaltyRow}
@@ -134,13 +139,21 @@ export function cardHtml(r) {
             Critical reception starts from a critic base of ${n1(r.criticalDetail.base)}/10${
               r.criticalDetail.boost > 0
                 ? `, lifted ${n1(r.criticalDetail.boost)} by recent press coverage`
-                : ''}. Reputation combines ${r.reputationDetail.parts.map(p =>
-                `${p.key} (${esc(p.note)})`).join(', ') || 'no measurable inputs yet'}.
-            Value is ${n1(r.valueDetail.quality)}/10 quality &times; ${r.valueDetail.mult.toFixed(2)}
-            for the ${'$'.repeat(r.priceIndex)} tier.${r.crowd ? `
-            Star rating shown for context only, never scored: ${r.crowd.rating.toFixed(1)}★ across
-            ~${r.crowd.reviews.toLocaleString('en-US')} reviews, de-noised to
-            ${r.crowdContext.adjusted.toFixed(2)}★. Observed ${esc(r.lastVerified || 'at the dataset date')}.` : ''}
+                : ''}. ${r.reputationDetail.measured
+              ? `Reputation counts ${r.reputationDetail.counted.map(k => {
+                  const p = r.reputationDetail.parts.find(x => x.key === k);
+                  return `${k} (${esc(p.note)})`; }).join(', ')}${
+                  r.reputationDetail.parts.length > r.reputationDetail.counted.length
+                    ? `; ${r.reputationDetail.parts.filter(p => !r.reputationDetail.counted.includes(p.key))
+                        .map(p => `${p.key} (${esc(p.note)})`).join(', ')} on file but below that level, so not counted` : ''}`
+              : 'Reputation has no data on file yet (no founding year, review count or press), so it carries no weight here and the other four factors share it'}.
+            Value is ${n1(r.valueDetail.quality)}/10 quality &times; ${r.valueDetail.mult.toFixed(2)}${
+              price ? ` for the ${price} tier` : ' (price tier not on file, so the neutral multiplier applies)'}.${r.crowd ? `
+            Star average shown for context only: ${r.crowd.rating.toFixed(1)}★ across
+            ~${r.crowd.reviews.toLocaleString('en-US')} reviews (de-noised to
+            ${r.crowdContext.adjusted.toFixed(2)}★); the review count is what reputation reads.
+            Figures on file ${esc(r.crowd.observed ? `from ${r.crowd.observed}` : 'since the index launched')}${
+              r.crowd.source ? `, ${esc(r.crowd.source)}` : ''}.` : ''}
           </p>
         </div>
       </details>
