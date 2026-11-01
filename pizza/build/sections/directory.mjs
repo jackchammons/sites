@@ -38,7 +38,11 @@ const detailHtml = r => {
   if (r.instagram) links.push(dRow(`Instagram: ${srcLink(r.instagram, '@' + (r.instagram.match(/instagram\.com\/([^/?]+)/)?.[1] ?? 'profile'))}`));
 
   const status = [];
-  status.push(dRow(`${esc(STATUS_LABEL[r.status] ?? 'Open')}${r.statusDate ? ` since ${esc(shortDate(r.statusDate))}` : ''}${
+  // statusDate is the event date as the source reports it; statusDetected is
+  // when the pass recorded it. Only the former is ever printed as "since".
+  status.push(dRow(`${esc(STATUS_LABEL[r.status] ?? 'Open')}${
+    r.statusDate ? ` since ${esc(shortDate(r.statusDate))}` :
+    r.status !== 'open' && r.statusDetected ? ` <span class="dd-dim">(reported ${esc(shortDate(r.statusDetected))}; date not stated by the source)</span>` : ''}${
     r.statusChecked ? ` · last checked ${esc(shortDate(r.statusChecked))}` : ''}${
     r.statusSource ? ` · ${srcLink(r.statusSource)}` : ''}`));
   if (r.statusNote) status.push(dRow(esc(r.statusNote)));
@@ -52,17 +56,19 @@ const detailHtml = r => {
 
   const facts = [];
   if (r.style) facts.push(dRow(`Style: ${esc(r.style)}${r.styleGroup ? ` <span class="dd-dim">(${esc(r.styleGroup)})</span>` : ''}`));
-  if (r.opened) facts.push(dRow(`Opened: ${esc(String(r.opened))}`));
+  if (r.opened) facts.push(dRow(`Opened: ${esc(String(r.opened))}${r.openedSource ? ` ${srcLink(r.openedSource)}` : ''}`));
   if (r.priceIndex) facts.push(dRow(`Price: ${'$'.repeat(r.priceIndex)}`));
   if (r.lastVerified) facts.push(dRow(`Data last verified: ${esc(shortDate(r.lastVerified))}`));
-  if (r.crowd) facts.push(dRow(`<span class="dd-dim">Crowd context (never scored): ${r.crowd.rating.toFixed(1)}★ across ~${r.crowd.reviews.toLocaleString('en-US')} reviews</span>`));
+  if (r.crowd) facts.push(dRow(`<span class="dd-dim">Crowd figures: ${r.crowd.rating.toFixed(1)}★ (context only) across ~${r.crowd.reviews.toLocaleString('en-US')} reviews (the count feeds reputation)${
+    r.crowd.observed ? ` · on file from ${esc(shortDate(r.crowd.observed))}` : ''}${r.crowd.source ? `, ${esc(r.crowd.source)}` : ''}</span>`));
 
   const graded = ['craft', 'distinctiveness', 'critical']
     .filter(k => r.factors?.[k])
     .map(k => {
       const f = r.factors[k];
       return dRow(`${FACTOR_NAME[k]}: <b>${f.value.toFixed(1)}</b> <span class="dd-dim">set ${
-        f.setBy === 'agent' ? 'by the research agent' : 'editorially'}${f.date ? ` ${esc(shortDate(f.date))}` : ''}${
+        f.setBy === 'agent' ? 'by the research agent' : 'editorially at launch, no cited source'}${
+        f.setBy === 'agent' && f.date ? ` ${esc(shortDate(f.date))}` : ''}${
         f.source ? ` from ${srcLink(f.source, 'coverage')}` : ''}</span>${
         f.note ? `<div class="dd-note">${esc(f.note)}</div>` : ''}`);
     });
@@ -70,7 +76,8 @@ const detailHtml = r => {
   const computed = scored ? [dRow(
     `SLICE <b>${scored.score.toFixed(1)}</b> — ` +
     Object.entries(scored.factorScores).map(([k, v]) => `${k} ${v.toFixed(1)}`).join(' · ') +
-    ` · friction −${scored.penaltyApplied.toFixed(1)} · decay −${(scored.stalenessDecay * 100).toFixed(1)}%`
+    ` · friction −${scored.penaltyApplied.toFixed(1)} · decay −${(scored.stalenessDecay * 100).toFixed(1)}%${
+      scored.verified ? ` (last ${scored.verified.source} ${esc(shortDate(scored.verified.date))})` : ''}`
   )] : [dRow('<span class="dd-dim">Not yet rated — no score until the rating rotation grounds one in published coverage.</span>')];
 
   const attrs = Object.keys(r.attributes ?? {}).filter(k => r.attributes[k]).map(k => {
@@ -114,7 +121,7 @@ const dirRow = r => {
           <td class="dir-attrs">${attrs.map(a => `<span class="chip">${esc(a)}</span>`).join('')}</td>
           <td class="num dir-score">${scored ? scored.score.toFixed(1) : '—'}</td>
           <td class="dir-status">${esc(STATUS_LABEL[r.status] ?? 'Open')}${
-            r.status === 'closed' && r.statusDate ? ` ${new Date(r.statusDate).getUTCFullYear()}` : ''}</td>
+            r.status === 'closed' && r.statusDate ? ` ${r.statusDate.slice(0, 4)}` : ''}</td>
         </tr>
         <tr class="dir-detail" id="dd-${esc(r.id)}" hidden><td colspan="6">${detailHtml(r)}</td></tr>`;
 };

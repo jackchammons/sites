@@ -139,8 +139,9 @@ ${rows}
 
 For each: open its own website and search recent local coverage. Report a
 "status" record for every one you checked, whatever you find — status
-"open", "closed" or "opening", a one-sentence note, and the https source
-you actually read. Confirming an entry is still open counts and advances
+"open", "closed" or "opening", a one-sentence note, the https source you
+actually read, and "date" (YYYY-MM-DD) ONLY when the source states when the
+closure or opening took effect; omit it otherwise, never estimate it. Confirming an entry is still open counts and advances
 its check date. A closure claim needs real evidence: a news report, the
 pizzeria's own announcement, or its site gone plus a corroborating
 source. Review-site labels alone ("Yelp says closed") are a lead, not

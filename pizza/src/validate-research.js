@@ -54,11 +54,11 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
     try { u = new URL(url); } catch { bad(sec, i, `${field} is not a valid URL: ${url}`); return; }
     if (u.protocol !== 'https:') bad(sec, i, `${field} must be https: ${url}`);
   };
-  const checkDate = (sec, i, v, field) => {
+  const checkDate = (sec, i, v, field, maxAgeDays = MAX_AGE_DAYS) => {
     const t = Date.parse(v);
     if (!Number.isFinite(t)) { bad(sec, i, `${field} is not a parseable date: ${v}`); return; }
     if (t > nowMs + 864e5) bad(sec, i, `${field} is in the future: ${v}`);
-    else if (t < nowMs - MAX_AGE_DAYS * 864e5) bad(sec, i, `${field} is older than ${MAX_AGE_DAYS} days`);
+    else if (t < nowMs - maxAgeDays * 864e5) bad(sec, i, `${field} is older than ${maxAgeDays} days`);
   };
 
   const seen = new Set();
@@ -165,7 +165,12 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
     if (!['open', 'closed', 'opening'].includes(it?.status)) bad('status', i, `status must be open|closed|opening, got "${it?.status}"`);
     if (typeof it?.note !== 'string' || it.note.trim().length < 10) bad('status', i, 'note missing or too short');
     checkUrl('status', i, it?.source, 'source');
-    if (it?.date) checkDate('status', i, it.date, 'date');
+    // The date a status took effect, as the source reports it. A closure found
+    // late is still a closure that happened years ago, so no staleness cap.
+    if (it?.date != null) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(String(it.date))) bad('status', i, `date must be YYYY-MM-DD, got "${it.date}"`);
+      else checkDate('status', i, it.date, 'date', 365 * 40);
+    }
   });
 
   /* ---- mentions: coverage tied to entries ---- */
