@@ -1,6 +1,6 @@
 {
   "city": "Seattle, WA",
-  "dataVersion": "2026.09",
+  "dataVersion": "2026.10",
   "cityMeanRating": 4.3,
   "priorWeight": 500,
   "notes": "Factor ratings (0-10) are editorial judgments applied uniformly to every entry by one rubric. Critical Read is scored from the critical consensus alone, identically for all entries. Crowd star ratings are rounded aggregates observed on review platforms at the dataset version shown; they are displayed as context and are not scored. Locations marked verified were read from the pizzeria's own site on the date recorded.",
@@ -473,8 +473,17 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": [],
-      "instagram": "https://www.instagram.com/independentpizzeria/"
+      "mentions": [
+        {
+          "url": "https://www.kiro7.com/news/local/beloved-seattle-pizzeria-close-after-more-than-16-years/PP5A3GUJN5GFJDHSQFB3YYPG7M/",
+          "title": "Beloved Seattle pizzeria to close after more than 16 years",
+          "source": "KIRO 7 News Seattle",
+          "date": "2026-10-16",
+          "kind": "closing"
+        }
+      ],
+      "instagram": "https://www.instagram.com/independentpizzeria/",
+      "statusChecked": "2026-09-26"
     },
     {
       "id": "tutta-bella",
@@ -547,8 +556,24 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": [],
-      "instagram": "https://www.instagram.com/tuttabella/"
+      "mentions": [
+        {
+          "url": "https://hoodline.com/2026/09/tutta-bella-closes-downtown-columbia-city-pizzerias-after-22-years/",
+          "title": "Tutta Bella Closes Downtown, Columbia City Locations",
+          "source": "Hoodline",
+          "date": "2026-09-23",
+          "kind": "closing"
+        },
+        {
+          "url": "https://www.fox13seattle.com/news/tutta-bella-closes-2-seattle-locations",
+          "title": "Tutta Bella closes 2 Seattle locations, including original restaurant",
+          "source": "FOX 13 Seattle",
+          "date": "2026-09-23",
+          "kind": "closing"
+        }
+      ],
+      "instagram": "https://www.instagram.com/tuttabella/",
+      "statusChecked": "2026-10-01"
     },
     {
       "id": "pagliacci",
@@ -733,8 +758,24 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": [],
-      "instagram": "https://www.instagram.com/pagliaccipizza/"
+      "mentions": [
+        {
+          "url": "https://www.kiro7.com/news/local/seattle-pizza-chains-launch-limited-time-collabs-with-taco-time-ivars-this-october/5BD7O233BVB4TBZE2NOL4EWMM4/",
+          "title": "Seattle pizza chains launch limited-time collabs with Taco Time, Ivar's this October",
+          "source": "KIRO 7 News Seattle",
+          "date": "2026-10-02",
+          "kind": "mention"
+        },
+        {
+          "url": "https://mynorthwest.com/local/seattle-pizza-taco-time-ivars-october/4282053",
+          "title": "Seattle pizza chains launch limited-time collabs with Taco Time, Ivar's",
+          "source": "MyNorthwest.com",
+          "date": "2026-10-02",
+          "kind": "opening"
+        }
+      ],
+      "instagram": "https://www.instagram.com/pagliaccipizza/",
+      "statusChecked": "2026-10-06"
     },
     {
       "id": "breezy-town-pizza",
@@ -784,7 +825,8 @@
         }
       },
       "mentions": [],
-      "instagram": "https://www.instagram.com/windycitypie/"
+      "instagram": "https://www.instagram.com/windycitypie/",
+      "statusChecked": "2026-10-11"
     },
     {
       "id": "via-tribunali",
@@ -837,7 +879,8 @@
         }
       },
       "mentions": [],
-      "instagram": "https://www.instagram.com/viatrib/"
+      "instagram": "https://www.instagram.com/viatrib/",
+      "statusChecked": "2026-10-16"
     },
     {
       "id": "big-marios",
@@ -903,8 +946,24 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": [],
-      "instagram": "https://www.instagram.com/bigmariospizza/"
+      "mentions": [
+        {
+          "url": "https://www.kiro7.com/news/local/seattle-pizza-chains-launch-limited-time-collabs-with-taco-time-ivars-this-october/5BD7O233BVB4TBZE2NOL4EWMM4/",
+          "title": "Seattle pizza chains launch limited-time collabs with Taco Time, Ivar's this October",
+          "source": "KIRO 7 News Seattle",
+          "date": "2026-10-02",
+          "kind": "mention"
+        },
+        {
+          "url": "https://mynorthwest.com/local/seattle-pizza-taco-time-ivars-october/4282053",
+          "title": "Seattle pizza chains launch limited-time collabs with Taco Time, Ivar's",
+          "source": "MyNorthwest.com",
+          "date": "2026-10-02",
+          "kind": "opening"
+        }
+      ],
+      "instagram": "https://www.instagram.com/bigmariospizza/",
+      "statusChecked": "2026-10-21"
     },
     {
       "id": "flying-squirrel",
@@ -992,7 +1051,8 @@
         }
       },
       "mentions": [],
-      "instagram": "https://www.instagram.com/proletariatpizza/"
+      "instagram": "https://www.instagram.com/proletariatpizza/",
+      "statusChecked": "2026-10-26"
     },
     {
       "id": "ballard-pizza-co",
@@ -1465,7 +1525,15 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://westseattleblog.com/2026/06/biznote-pegasus-pizza-announces-new-owners/",
+          "title": "BIZNOTE: Pegasus Pizza announces new owners",
+          "source": "West Seattle Blog",
+          "date": "2026-06-08",
+          "kind": "mention"
+        }
+      ],
       "instagram": "https://www.instagram.com/pegasuspizzaseattle"
     },
     {
@@ -1646,8 +1714,8 @@
           "kind": "mention"
         }
       ],
-      "statusChecked": "2026-09-16",
-      "instagram": "https://www.instagram.com/abecedaryseattle/"
+      "statusChecked": "2026-10-31",
+      "instagram": "https://instagram.com/abecedaryseattle"
     },
     {
       "id": "stevies-famous",
@@ -1770,7 +1838,33 @@
       "locationsVerified": "2026-08-26",
       "locationsSource": "https://sinners.pizza/",
       "mentions": [],
-      "instagram": "https://www.instagram.com/sinnerspizzaco/"
+      "instagram": "https://www.instagram.com/sinnerspizzaco/",
+      "factors": {
+        "craft": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://www.dailyuw.com/article/sinners-pizza-opens-on-the-ave-with-late-night-hours-opening-day-sees-over-1-000-transactions-20260416",
+          "note": "The Daily (UW's student paper) covered the April 10, 2026 opening on the Ave -- late-night hours to 2:30am Fri/Sat and over 1,000 opening-day transactions -- and The Infatuation describes 'standard New York-style slices' in a Heaven-and-Hell-themed bar setting with a 21+ area, while explicitly noting its writers hadn't yet tasted the food; a distinctive late-night bar concept without an established critical verdict on the pizza itself.",
+          "date": "2026-09-28"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.dailyuw.com/article/sinners-pizza-opens-on-the-ave-with-late-night-hours-opening-day-sees-over-1-000-transactions-20260416",
+          "note": "The Daily (UW's student paper) covered the April 10, 2026 opening on the Ave -- late-night hours to 2:30am Fri/Sat and over 1,000 opening-day transactions -- and The Infatuation describes 'standard New York-style slices' in a Heaven-and-Hell-themed bar setting with a 21+ area, while explicitly noting its writers hadn't yet tasted the food; a distinctive late-night bar concept without an established critical verdict on the pizza itself.",
+          "date": "2026-09-28"
+        },
+        "critical": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://www.dailyuw.com/article/sinners-pizza-opens-on-the-ave-with-late-night-hours-opening-day-sees-over-1-000-transactions-20260416",
+          "note": "The Daily (UW's student paper) covered the April 10, 2026 opening on the Ave -- late-night hours to 2:30am Fri/Sat and over 1,000 opening-day transactions -- and The Infatuation describes 'standard New York-style slices' in a Heaven-and-Hell-themed bar setting with a 21+ area, while explicitly noting its writers hadn't yet tasted the food; a distinctive late-night bar concept without an established critical verdict on the pizza itself.",
+          "date": "2026-09-28"
+        }
+      },
+      "opened": 2026,
+      "styleGroup": "Pizza bar",
+      "lastVerified": "2026-09-28"
     },
     {
       "id": "roma-roma",
@@ -1976,7 +2070,7 @@
       "status": "open",
       "statusSource": "https://intentionalist.com/b/razzis-pizzeria-greenwood/",
       "statusDate": "2026-08-26",
-      "statusChecked": "2026-09-16",
+      "statusChecked": "2026-10-31",
       "attributes": {},
       "locations": [
         {
@@ -2444,14 +2538,14 @@
       "attributes": {},
       "locations": [
         {
-          "neighborhood": "Admiral, West Seattle",
+          "neighborhood": "Admiral Junction, West Seattle",
           "address": "2348 California Ave SW, Seattle, WA 98116",
           "lat": 47.58154,
           "lon": -122.38622
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-09-20",
+      "locationsSource": "https://www.anticosopranos.com/",
       "mentions": [],
       "factors": {
         "craft": {
@@ -2543,14 +2637,14 @@
       "attributes": {},
       "locations": [
         {
-          "neighborhood": "Rainier Beach",
+          "neighborhood": "Southeast Seattle",
           "address": "10003 Rainier Ave S, Seattle, WA 98178",
           "lat": 47.51117,
           "lon": -122.24814
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-09-30",
+      "locationsSource": "https://vincesrestaurants.com/pizzeria-pulcinella",
       "mentions": [],
       "factors": {
         "craft": {
@@ -2593,14 +2687,14 @@
       "attributes": {},
       "locations": [
         {
-          "neighborhood": "Delridge",
+          "neighborhood": "West Seattle",
           "address": "5605 Delridge Way SW, Seattle, WA 98106",
           "lat": 47.55177,
           "lon": -122.36325
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-10-05",
+      "locationsSource": "https://www.romanopizzaandpasta.com/",
       "mentions": []
     },
     {
@@ -2623,8 +2717,8 @@
           "lon": -122.3241
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-10-10",
+      "locationsSource": "https://www.worldpizzaseattle.com/",
       "mentions": [],
       "factors": {
         "craft": {
@@ -2674,8 +2768,8 @@
           "lon": -122.29895
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-10-15",
+      "locationsSource": "https://www.sacroboscopizza.com/location",
       "mentions": [],
       "factors": {
         "craft": {
@@ -2725,8 +2819,8 @@
           "lon": -122.30235
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-10-20",
+      "locationsSource": "https://www.oxbowmontlake.com/contact",
       "mentions": [],
       "factors": {
         "craft": {
@@ -2775,8 +2869,8 @@
           "lon": -122.37412
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-10-25",
+      "locationsSource": "https://www.dantinipizza.com/location",
       "mentions": [],
       "factors": {
         "craft": {
@@ -2802,7 +2896,7 @@
       },
       "styleGroup": "Thin crust",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/dantinipizza/"
+      "instagram": "https://www.instagram.com/dantinipizza"
     },
     {
       "id": "a-pizza-mart-first-hill",
@@ -2902,7 +2996,34 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/belltownpizzaseattle"
+      "instagram": "https://www.instagram.com/belltownpizzaseattle",
+      "factors": {
+        "craft": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/belltown-pizza",
+          "note": "The Infatuation calls its New York-style slices 'greasy-in-a-good-way' and recommends it mainly as a reliable late-night stop with an open booth past midnight; Intentionalist notes the bar-and-slice shop has operated since 1998.",
+          "date": "2026-10-18"
+        },
+        "distinctiveness": {
+          "value": 4.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/belltown-pizza",
+          "note": "The Infatuation calls its New York-style slices 'greasy-in-a-good-way' and recommends it mainly as a reliable late-night stop with an open booth past midnight; Intentionalist notes the bar-and-slice shop has operated since 1998.",
+          "date": "2026-10-18"
+        },
+        "critical": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/belltown-pizza",
+          "note": "The Infatuation calls its New York-style slices 'greasy-in-a-good-way' and recommends it mainly as a reliable late-night stop with an open booth past midnight; Intentionalist notes the bar-and-slice shop has operated since 1998.",
+          "date": "2026-10-18"
+        }
+      },
+      "opened": 1998,
+      "priceIndex": 2,
+      "styleGroup": "Pizza bar",
+      "lastVerified": "2026-10-18"
     },
     {
       "id": "castello-pizza-pasta",
@@ -2939,7 +3060,7 @@
       "status": "open",
       "statusSource": "https://www.seattlefoodtruck.com/food-trucks/candela-pizza",
       "statusDate": "2026-08-30",
-      "statusChecked": "2026-09-16",
+      "statusChecked": "2026-10-31",
       "attributes": {},
       "locations": [
         {
@@ -2964,7 +3085,7 @@
       "status": "open",
       "statusSource": "https://www.atly.com/location/DUDE'Z-woodfired-pizza",
       "statusDate": "2026-08-31",
-      "statusChecked": "2026-09-16",
+      "statusChecked": "2026-10-31",
       "attributes": {},
       "locations": [
         {
@@ -3054,7 +3175,33 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/eymans_pizza/"
+      "instagram": "https://www.instagram.com/eymans_pizza/",
+      "factors": {
+        "craft": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.zabihah.com/restaurants/ca2acf24-7767-11ef-95ae-6045bdeb9f57/eymans-pizza-seattle-wa",
+          "note": "Halal-restaurant directory Zabihah (4.8 from 33 reviews) and local small-business directory Intentionalist both single out this Beacon Hill/Rainier Valley shop's hand-stretched dough and homemade sauce, with diners praising a 'crispy and soft' crust and heavily topped gyro and chicken pies; a few reviewers call the beef pizza inconsistent and the menu limited, and note it isn't aiming at Italian-style standards -- it's Seattle's niche halal pizza option rather than a craft destination.",
+          "date": "2026-10-13"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.zabihah.com/restaurants/ca2acf24-7767-11ef-95ae-6045bdeb9f57/eymans-pizza-seattle-wa",
+          "note": "Halal-restaurant directory Zabihah (4.8 from 33 reviews) and local small-business directory Intentionalist both single out this Beacon Hill/Rainier Valley shop's hand-stretched dough and homemade sauce, with diners praising a 'crispy and soft' crust and heavily topped gyro and chicken pies; a few reviewers call the beef pizza inconsistent and the menu limited, and note it isn't aiming at Italian-style standards -- it's Seattle's niche halal pizza option rather than a craft destination.",
+          "date": "2026-10-13"
+        },
+        "critical": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.zabihah.com/restaurants/ca2acf24-7767-11ef-95ae-6045bdeb9f57/eymans-pizza-seattle-wa",
+          "note": "Halal-restaurant directory Zabihah (4.8 from 33 reviews) and local small-business directory Intentionalist both single out this Beacon Hill/Rainier Valley shop's hand-stretched dough and homemade sauce, with diners praising a 'crispy and soft' crust and heavily topped gyro and chicken pies; a few reviewers call the beef pizza inconsistent and the menu limited, and note it isn't aiming at Italian-style standards -- it's Seattle's niche halal pizza option rather than a craft destination.",
+          "date": "2026-10-13"
+        }
+      },
+      "priceIndex": 1,
+      "styleGroup": "Neighborhood",
+      "lastVerified": "2026-10-13"
     },
     {
       "id": "georgetown-pizza-arcade",
@@ -3155,7 +3302,33 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/inpizzawecrustllc/"
+      "instagram": "https://www.instagram.com/inpizzawecrustllc/",
+      "factors": {
+        "craft": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.westsideseattle.com/robinson-papers/2025/10/31/rocking-food-truck-admiral-area-comfort-pizza-we-crust-finds-permanent",
+          "note": "Family-owned wood-fired pizzeria that spent two years developing its hand-tossed dough and scratch-made sauce before launching as a food truck in 2019; local coverage of its September 2025 Admiral District brick-and-mortar describes a 650-degree wood-fired bake and fusion toppings (Indian curry, Korean-style corn cheese) alongside classics.",
+          "date": "2026-10-03"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.westsideseattle.com/robinson-papers/2025/10/31/rocking-food-truck-admiral-area-comfort-pizza-we-crust-finds-permanent",
+          "note": "Family-owned wood-fired pizzeria that spent two years developing its hand-tossed dough and scratch-made sauce before launching as a food truck in 2019; local coverage of its September 2025 Admiral District brick-and-mortar describes a 650-degree wood-fired bake and fusion toppings (Indian curry, Korean-style corn cheese) alongside classics.",
+          "date": "2026-10-03"
+        },
+        "critical": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.westsideseattle.com/robinson-papers/2025/10/31/rocking-food-truck-admiral-area-comfort-pizza-we-crust-finds-permanent",
+          "note": "Family-owned wood-fired pizzeria that spent two years developing its hand-tossed dough and scratch-made sauce before launching as a food truck in 2019; local coverage of its September 2025 Admiral District brick-and-mortar describes a 650-degree wood-fired bake and fusion toppings (Indian curry, Korean-style corn cheese) alongside classics.",
+          "date": "2026-10-03"
+        }
+      },
+      "opened": 2019,
+      "styleGroup": "Wood-fired",
+      "lastVerified": "2026-10-03"
     },
     {
       "id": "italio-pizza-pasta",
@@ -3205,7 +3378,33 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/jacksonstreetpizzalounge/"
+      "instagram": "https://www.instagram.com/jacksonstreetpizzalounge/",
+      "factors": {
+        "craft": {
+          "value": 4.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/jackson-street-pizza-lounge",
+          "note": "The Infatuation scored it 5.8/10 ('not recommended'), calling the crust thin, dry and crunchy despite creative pies like pineapple-chorizo and egg yolk-guanciale; the amaro-forward, jazz-bar-themed cocktail program and the banana-date cake drew the praise the pizza itself didn't.",
+          "date": "2026-09-18"
+        },
+        "distinctiveness": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/jackson-street-pizza-lounge",
+          "note": "The Infatuation scored it 5.8/10 ('not recommended'), calling the crust thin, dry and crunchy despite creative pies like pineapple-chorizo and egg yolk-guanciale; the amaro-forward, jazz-bar-themed cocktail program and the banana-date cake drew the praise the pizza itself didn't.",
+          "date": "2026-09-18"
+        },
+        "critical": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/jackson-street-pizza-lounge",
+          "note": "The Infatuation scored it 5.8/10 ('not recommended'), calling the crust thin, dry and crunchy despite creative pies like pineapple-chorizo and egg yolk-guanciale; the amaro-forward, jazz-bar-themed cocktail program and the banana-date cake drew the praise the pizza itself didn't.",
+          "date": "2026-09-18"
+        }
+      },
+      "priceIndex": 3,
+      "styleGroup": "Pizza bar",
+      "lastVerified": "2026-09-18"
     },
     {
       "id": "mad-pizza",
@@ -3455,7 +3654,34 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/oskarspizzas4/"
+      "instagram": "https://www.instagram.com/oskarspizzas4/",
+      "factors": {
+        "craft": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://westsideseattle.com/node/53194",
+          "note": "West Seattle Herald's 2018 launch profile describes a thin, crisp crust made with Mantako flour and Grande mozzarella and scratch-made, locally sourced ingredients; Intentionalist's neighborhood guide calls it among the best pizza regulars have had outside the East Coast.",
+          "date": "2026-10-18"
+        },
+        "distinctiveness": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://westsideseattle.com/node/53194",
+          "note": "West Seattle Herald's 2018 launch profile describes a thin, crisp crust made with Mantako flour and Grande mozzarella and scratch-made, locally sourced ingredients; Intentionalist's neighborhood guide calls it among the best pizza regulars have had outside the East Coast.",
+          "date": "2026-10-18"
+        },
+        "critical": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://westsideseattle.com/node/53194",
+          "note": "West Seattle Herald's 2018 launch profile describes a thin, crisp crust made with Mantako flour and Grande mozzarella and scratch-made, locally sourced ingredients; Intentionalist's neighborhood guide calls it among the best pizza regulars have had outside the East Coast.",
+          "date": "2026-10-18"
+        }
+      },
+      "opened": 2018,
+      "priceIndex": 1,
+      "styleGroup": "By the slice",
+      "lastVerified": "2026-10-18"
     },
     {
       "id": "palermo-pizza-pasta",
@@ -3572,7 +3798,34 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/goodluckbread/"
+      "instagram": "https://www.instagram.com/goodluckbread/",
+      "factors": {
+        "craft": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/eat-and-drink/2024/07/good-luck-bread-frozen-pizza-dough",
+          "note": "Seattle Met profiled the SoDo operation's 100%-naturally-leavened, self-milled sourdough crust and flash-freeze process; its own press page compiles Seattle Times praise for a 'crackle-crisp crust' with 'deep, tomato flavor' plus King 5 features and an endorsement from J. Kenji López-Alt, unusual sustained coverage for a take-home frozen pie ($12.50-22).",
+          "date": "2026-09-18"
+        },
+        "distinctiveness": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/eat-and-drink/2024/07/good-luck-bread-frozen-pizza-dough",
+          "note": "Seattle Met profiled the SoDo operation's 100%-naturally-leavened, self-milled sourdough crust and flash-freeze process; its own press page compiles Seattle Times praise for a 'crackle-crisp crust' with 'deep, tomato flavor' plus King 5 features and an endorsement from J. Kenji López-Alt, unusual sustained coverage for a take-home frozen pie ($12.50-22).",
+          "date": "2026-09-18"
+        },
+        "critical": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/eat-and-drink/2024/07/good-luck-bread-frozen-pizza-dough",
+          "note": "Seattle Met profiled the SoDo operation's 100%-naturally-leavened, self-milled sourdough crust and flash-freeze process; its own press page compiles Seattle Times praise for a 'crackle-crisp crust' with 'deep, tomato flavor' plus King 5 features and an endorsement from J. Kenji López-Alt, unusual sustained coverage for a take-home frozen pie ($12.50-22).",
+          "date": "2026-09-18"
+        }
+      },
+      "opened": 2020,
+      "priceIndex": 2,
+      "styleGroup": "Creative",
+      "lastVerified": "2026-09-18"
     },
     {
       "id": "downtown-romios-pizza-pasta",
@@ -3647,7 +3900,33 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/smokingmonkeypizzaseattle"
+      "instagram": "https://www.instagram.com/smokingmonkeypizzaseattle",
+      "factors": {
+        "craft": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.seattletimes.com/life/food-drink/pizza-perfection-with-a-side-of-science-fiction-at-rentons-smoking-monkey-pizza/",
+          "note": "The Seattle Times profiled the Renton original of this wood-fired chain -- same Woodstone-oven recipes and specialty pies (like the Goatsmary: chili oil, goat cheese, rosemary, roasted cashews, parmesan, $16 for a 12-inch) that the Magnolia storefront serves under the same name and menu -- praising inventive topping combinations under the headline 'Pizza perfection with a side of science fiction.'",
+          "date": "2026-09-28"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.seattletimes.com/life/food-drink/pizza-perfection-with-a-side-of-science-fiction-at-rentons-smoking-monkey-pizza/",
+          "note": "The Seattle Times profiled the Renton original of this wood-fired chain -- same Woodstone-oven recipes and specialty pies (like the Goatsmary: chili oil, goat cheese, rosemary, roasted cashews, parmesan, $16 for a 12-inch) that the Magnolia storefront serves under the same name and menu -- praising inventive topping combinations under the headline 'Pizza perfection with a side of science fiction.'",
+          "date": "2026-09-28"
+        },
+        "critical": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.seattletimes.com/life/food-drink/pizza-perfection-with-a-side-of-science-fiction-at-rentons-smoking-monkey-pizza/",
+          "note": "The Seattle Times profiled the Renton original of this wood-fired chain -- same Woodstone-oven recipes and specialty pies (like the Goatsmary: chili oil, goat cheese, rosemary, roasted cashews, parmesan, $16 for a 12-inch) that the Magnolia storefront serves under the same name and menu -- praising inventive topping combinations under the headline 'Pizza perfection with a side of science fiction.'",
+          "date": "2026-09-28"
+        }
+      },
+      "priceIndex": 2,
+      "styleGroup": "Wood-fired",
+      "lastVerified": "2026-09-28"
     },
     {
       "id": "sopranos-pizza-pasta-lake-city",
@@ -3696,7 +3975,301 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/verasballard/"
+      "instagram": "https://www.instagram.com/verasballard/",
+      "factors": {
+        "craft": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.myballard.com/2019/09/18/veras-pizza-bar-now-open/",
+          "note": "My Ballard's 2019 opening coverage describes a by-the-slice NY-style pizza bar built into the Polimenakos family's longtime Ballard diner space, serving big slices and 18-inch pies until 1am alongside a full bar, pinball and karaoke; the restaurant's own menu (slices $5.75-8, 14\"/18\" pies $22-39, red and white pies with build-your-own options) confirms a casual, late-night pizza-bar niche, though coverage doesn't go deep on the pizza's craft itself.",
+          "date": "2026-09-23"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.myballard.com/2019/09/18/veras-pizza-bar-now-open/",
+          "note": "My Ballard's 2019 opening coverage describes a by-the-slice NY-style pizza bar built into the Polimenakos family's longtime Ballard diner space, serving big slices and 18-inch pies until 1am alongside a full bar, pinball and karaoke; the restaurant's own menu (slices $5.75-8, 14\"/18\" pies $22-39, red and white pies with build-your-own options) confirms a casual, late-night pizza-bar niche, though coverage doesn't go deep on the pizza's craft itself.",
+          "date": "2026-09-23"
+        },
+        "critical": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.myballard.com/2019/09/18/veras-pizza-bar-now-open/",
+          "note": "My Ballard's 2019 opening coverage describes a by-the-slice NY-style pizza bar built into the Polimenakos family's longtime Ballard diner space, serving big slices and 18-inch pies until 1am alongside a full bar, pinball and karaoke; the restaurant's own menu (slices $5.75-8, 14\"/18\" pies $22-39, red and white pies with build-your-own options) confirms a casual, late-night pizza-bar niche, though coverage doesn't go deep on the pizza's craft itself.",
+          "date": "2026-09-23"
+        }
+      },
+      "opened": 2019,
+      "priceIndex": 2,
+      "styleGroup": "Pizza bar",
+      "lastVerified": "2026-09-23"
+    },
+    {
+      "id": "bobu",
+      "name": "BoBu",
+      "neighborhood": "Crown Hill",
+      "style": "Pizza, calzones and pretzels from a walk-up/drive-thru shipping-container stand",
+      "blurb": "Walk-up and drive-thru pizza, calzone and pretzel stand in a converted shipping container, opened by Florin Bucur and Nick Bodea in April 2025.",
+      "url": null,
+      "status": "closed",
+      "statusSource": "https://www.myballard.com/2026/02/18/bobu-pizza-and-pretzel-drive-thru-now-closed/",
+      "statusDate": "2026-09-21",
+      "statusChecked": "2026-09-21",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Crown Hill",
+          "address": "817 NW 85th St, Seattle, WA 98117",
+          "lat": 47.69053,
+          "lon": -122.36674
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": [],
+      "statusNote": "MyBallard reported the walk-up/drive-thru stand at 817 NW 85th St closed on February 18, 2026 after about ten months, corroborated by Yelp now listing it as CLOSED."
+    },
+    {
+      "id": "sunny-hill",
+      "name": "Sunny Hill",
+      "neighborhood": "North Ballard",
+      "style": "Detroit-style squares and round pies",
+      "blurb": "Long-running neighborhood pizzeria from the Stoneburner restaurant group, serving Detroit-style squares and round pies alongside burgers and brunch since 2020.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://www.theinfatuation.com/seattle/reviews/sunny-hill",
+      "statusDate": "2026-09-19",
+      "statusChecked": "2026-10-31",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "North Ballard",
+          "address": "3127 NW 85th St, Seattle, WA 98117",
+          "lat": 47.69039,
+          "lon": -122.39797
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/sunny-hill",
+          "note": "The Infatuation, Seattle Met, and Tasting Table all single out the Detroit-style square pies -- chewy, focaccia-like crust with frizzled cheese edges -- alongside wood-fired round pies; opened in North Ballard in April 2020.",
+          "date": "2026-10-18"
+        },
+        "distinctiveness": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/sunny-hill",
+          "note": "The Infatuation, Seattle Met, and Tasting Table all single out the Detroit-style square pies -- chewy, focaccia-like crust with frizzled cheese edges -- alongside wood-fired round pies; opened in North Ballard in April 2020.",
+          "date": "2026-10-18"
+        },
+        "critical": {
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/sunny-hill",
+          "note": "The Infatuation, Seattle Met, and Tasting Table all single out the Detroit-style square pies -- chewy, focaccia-like crust with frizzled cheese edges -- alongside wood-fired round pies; opened in North Ballard in April 2020.",
+          "date": "2026-10-18"
+        }
+      },
+      "opened": 2020,
+      "priceIndex": 3,
+      "styleGroup": "Detroit pan",
+      "lastVerified": "2026-10-18"
+    },
+    {
+      "id": "deleo-bros-pizza",
+      "name": "DeLeo Bros. Pizza",
+      "neighborhood": "Pioneer Square",
+      "style": "New York slice",
+      "blurb": "Minnesota-born New York-slice shop (its first location is at the Mall of America) that opened its first Seattle storefront in Pioneer Square in August 2026.",
+      "url": "https://deleobrotherspizza.com/",
+      "status": "open",
+      "statusSource": "https://pioneersquare.org/businesses/deleo-bros-pizza/",
+      "statusDate": "2026-09-29",
+      "statusChecked": "2026-09-29",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Pioneer Square",
+          "address": "202 Occidental Ave S, Seattle, WA 98104",
+          "lat": 47.60073,
+          "lon": -122.33266
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "a-k-pizza",
+      "name": "A.K. Pizza",
+      "neighborhood": "Othello (Rainier Valley)",
+      "style": "NYC-style thin crust",
+      "blurb": "Takeout-only pizzeria in Othello known for a charred, crunchy thin crust and a daily online pre-order system for a limited run of pies.",
+      "url": "https://ak-pizza.com",
+      "status": "open",
+      "statusSource": "https://www.theinfatuation.com/seattle/reviews/ak-pizza",
+      "statusDate": "2026-10-09",
+      "statusChecked": "2026-10-09",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Othello (Rainier Valley)",
+          "address": "6901 Martin Luther King Jr Way S, Seattle, WA 98118",
+          "lat": 47.54049,
+          "lon": -122.28312
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 8.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/ak-pizza",
+          "note": "The Infatuation named it the best pizza in Seattle (8.9/10), describing a charred, crunchy-chewy NY-style crust and inventive toppings — smoky scamorza, 'nduja, vodka sauce deepened with caramelized sofrito and cream — on a takeout-only, pre-order-only operation that sells out nightly.",
+          "date": "2026-10-28"
+        },
+        "distinctiveness": {
+          "value": 8.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/ak-pizza",
+          "note": "The Infatuation named it the best pizza in Seattle (8.9/10), describing a charred, crunchy-chewy NY-style crust and inventive toppings — smoky scamorza, 'nduja, vodka sauce deepened with caramelized sofrito and cream — on a takeout-only, pre-order-only operation that sells out nightly.",
+          "date": "2026-10-28"
+        },
+        "critical": {
+          "value": 8.9,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/ak-pizza",
+          "note": "The Infatuation named it the best pizza in Seattle (8.9/10), describing a charred, crunchy-chewy NY-style crust and inventive toppings — smoky scamorza, 'nduja, vodka sauce deepened with caramelized sofrito and cream — on a takeout-only, pre-order-only operation that sells out nightly.",
+          "date": "2026-10-28"
+        }
+      },
+      "styleGroup": "Creative",
+      "lastVerified": "2026-10-28"
+    },
+    {
+      "id": "coltiva-pizzeria-e-barra",
+      "name": "Coltiva Pizzeria e Barra",
+      "neighborhood": "Queen Anne",
+      "style": "Neapolitan, wood-fired",
+      "blurb": "Wood-fired Italian pizzeria and bar in lower Queen Anne serving Neapolitan pies alongside pastas and antipasti.",
+      "url": "https://www.coltivasea.com/",
+      "status": "open",
+      "statusSource": "https://www.coltivasea.com/",
+      "statusDate": "2026-10-09",
+      "statusChecked": "2026-10-09",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Queen Anne",
+          "address": "350 1st Ave W, Seattle, WA 98119",
+          "lat": 47.62197,
+          "lon": -122.35787
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://hoodline.com/2018/11/craving-pizza-here-are-3-new-spots-to-try-in-seattle/",
+          "note": "Hoodline's 2018 opening profile describes thin, crispy-crust pizzas made with ingredients sourced from Italy and the owner's own Oregon farm, including seasonal pies like the Autunno (gorgonzola, apple, walnut, honey) and the Calabrian-chile Piccante.",
+          "date": "2026-10-18"
+        },
+        "distinctiveness": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://hoodline.com/2018/11/craving-pizza-here-are-3-new-spots-to-try-in-seattle/",
+          "note": "Hoodline's 2018 opening profile describes thin, crispy-crust pizzas made with ingredients sourced from Italy and the owner's own Oregon farm, including seasonal pies like the Autunno (gorgonzola, apple, walnut, honey) and the Calabrian-chile Piccante.",
+          "date": "2026-10-18"
+        },
+        "critical": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://hoodline.com/2018/11/craving-pizza-here-are-3-new-spots-to-try-in-seattle/",
+          "note": "Hoodline's 2018 opening profile describes thin, crispy-crust pizzas made with ingredients sourced from Italy and the owner's own Oregon farm, including seasonal pies like the Autunno (gorgonzola, apple, walnut, honey) and the Calabrian-chile Piccante.",
+          "date": "2026-10-18"
+        }
+      },
+      "opened": 2018,
+      "priceIndex": 3,
+      "styleGroup": "Thin crust",
+      "lastVerified": "2026-10-18"
+    },
+    {
+      "id": "west-of-chicago-pizza-company",
+      "name": "West of Chicago Pizza Company",
+      "neighborhood": "West Seattle (Alaska Junction)",
+      "style": "Chicago-style deep dish and tavern-style",
+      "blurb": "West Seattle pizzeria specializing in Chicago deep dish with a cornmeal crust and cracker-thin tavern-style pies, plus Italian beef sandwiches.",
+      "url": "https://westofchicagopizzacompany.com/",
+      "status": "open",
+      "statusSource": "https://westofchicagopizzacompany.com/",
+      "statusDate": "2026-10-09",
+      "statusChecked": "2026-10-09",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "West Seattle (Alaska Junction)",
+          "address": "3770 SW Alaska St, Seattle, WA 98126",
+          "lat": 47.56118,
+          "lon": -122.37992
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://theinfatuation.com/seattle/reviews/west-of-chicago-pizza-company",
+          "note": "The Infatuation scored it 8.4 ('great'), calling the cracker-thin, diamond-cut tavern pie 'the pizza to beat here' and comparing its deep dish favorably to Lou Malnati's and Giordano's. Seattle Met covers owner Shawn Millard's 2022 move from takeout-only into a full West Seattle restaurant and the tavern pie's roots as a tribute to Chicago's Vito & Nick's Pizzeria.",
+          "date": "2026-10-23"
+        },
+        "distinctiveness": {
+          "value": 8,
+          "setBy": "agent",
+          "source": "https://theinfatuation.com/seattle/reviews/west-of-chicago-pizza-company",
+          "note": "The Infatuation scored it 8.4 ('great'), calling the cracker-thin, diamond-cut tavern pie 'the pizza to beat here' and comparing its deep dish favorably to Lou Malnati's and Giordano's. Seattle Met covers owner Shawn Millard's 2022 move from takeout-only into a full West Seattle restaurant and the tavern pie's roots as a tribute to Chicago's Vito & Nick's Pizzeria.",
+          "date": "2026-10-23"
+        },
+        "critical": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://theinfatuation.com/seattle/reviews/west-of-chicago-pizza-company",
+          "note": "The Infatuation scored it 8.4 ('great'), calling the cracker-thin, diamond-cut tavern pie 'the pizza to beat here' and comparing its deep dish favorably to Lou Malnati's and Giordano's. Seattle Met covers owner Shawn Millard's 2022 move from takeout-only into a full West Seattle restaurant and the tavern pie's roots as a tribute to Chicago's Vito & Nick's Pizzeria.",
+          "date": "2026-10-23"
+        }
+      },
+      "priceIndex": 2,
+      "styleGroup": "Chicago pan",
+      "lastVerified": "2026-10-23"
+    },
+    {
+      "id": "starlas",
+      "name": "Starla's",
+      "neighborhood": "Capitol Hill",
+      "style": null,
+      "blurb": "Bellingham pizzeria relocating to Seattle; ran Saturday pop-ups at Slab on 12th Ave through September 2026 while planning a permanent Seattle location for late 2026 or early 2027.",
+      "url": "https://starlaspizza.com",
+      "status": "opening",
+      "statusSource": "https://starlaspizza.com",
+      "statusDate": "2026-10-29",
+      "statusChecked": "2026-10-31",
+      "attributes": {},
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }

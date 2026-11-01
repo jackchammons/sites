@@ -1,60 +1,41 @@
 {
-  "updated": "2026-09-16T19:30:00Z",
-  "links": [
+  "updated": "2026-10-31T00:00:00Z",
+  "status": [
     {
-      "id": "roma-roma",
-      "instagram": "https://www.instagram.com/romaroma.pizza/",
-      "source": "https://romaroma.pizza/"
+      "id": "abecedary",
+      "status": "opening",
+      "note": "Still a pop-up only as of early August 2026; the permanent Hillman City pizzeria and brewery remains unopened, slowed by permitting delays.",
+      "source": "https://hoodline.com/2026/08/hillman-city-gets-first-bite-of-seattle-s-hottest-new-pizzeria/"
     },
     {
-      "id": "talaricos",
-      "instagram": "https://www.instagram.com/talaricos.pizza/",
-      "source": "https://www.instagram.com/talaricos.pizza/?hl=en"
+      "id": "starlas",
+      "status": "opening",
+      "note": "The Bellingham location closed in March 2026 and the team is planning a Seattle reopening for late 2026 or early 2027, with no lease signed as of the report.",
+      "source": "https://whatnow.com/?p=392296"
     },
     {
-      "id": "sacro-bosco-pizza-wine",
-      "instagram": "https://www.instagram.com/sacroboscopizza/",
-      "source": "https://www.sacroboscopizza.com/"
+      "id": "razzis-pizzeria",
+      "status": "open",
+      "note": "The Greenwood location's online-ordering page is live and shows normal operating hours.",
+      "source": "https://slicelife.com/restaurants/wa/seattle/98103/razzi-s-pizza/menu"
     },
     {
-      "id": "slice-box",
-      "instagram": "https://www.instagram.com/sliceboxpizza_sodo/",
-      "source": "https://www.sliceboxpizza.com"
+      "id": "candela-pizza",
+      "status": "open",
+      "note": "No closure evidence turned up; the truck is still listed in current Seattle food-truck directories, though I could not find a 2025-2026 dated confirmation.",
+      "source": "https://www.liveineverett.com/blog/candelapizza"
     },
     {
-      "id": "roccos",
-      "instagram": "https://www.instagram.com/roccos_seattle/",
-      "source": "https://www.instagram.com/roccos_seattle/?hl=en"
+      "id": "dudez-woodfired-pizza",
+      "status": "open",
+      "note": "No closure evidence found; coverage is limited to a Fox 13 Seattle food-truck feature with no recent schedule or social presence located.",
+      "source": "https://www.fox13seattle.com/video/1481074"
     },
     {
-      "id": "stevies-famous",
-      "instagram": "https://www.instagram.com/steviesfamous/",
-      "source": "https://www.instagram.com/steviesfamous/?hl=en"
-    },
-    {
-      "id": "sopranos-antico",
-      "instagram": "https://www.instagram.com/anticosopranospizzapasta/",
-      "source": "https://www.anticosopranos.com/"
-    },
-    {
-      "id": "veras-pizza-and-bar",
-      "instagram": "https://www.instagram.com/verasballard/",
-      "source": "https://www.verasballard.com/"
-    },
-    {
-      "id": "ridge-pizza",
-      "instagram": "https://www.instagram.com/ridgepizza/",
-      "source": "https://www.instagram.com/ridgepizza/"
-    },
-    {
-      "id": "sinners-pizza",
-      "instagram": "https://www.instagram.com/sinnerspizzaco/",
-      "source": "https://sinners.pizza/"
-    },
-    {
-      "id": "seward-park-pizza",
-      "instagram": "https://www.instagram.com/sewardparkpizzacompany/",
-      "source": "https://www.instagram.com/sewardparkpizzacompany/"
+      "id": "sunny-hill",
+      "status": "open",
+      "note": "Still actively recommended in a mid-2025 Seattle pizza roundup describing Jason Stoneburner's Crown Hill pizzeria, with no closure mentioned.",
+      "source": "https://www.cascadepbs.org/culture/2025/04/rachel-belle-shares-her-top-5-favorite-seattle-pizza-spots"
     }
   ]
 }

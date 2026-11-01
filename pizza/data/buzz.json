@@ -1,12 +1,176 @@
 {
-  "updated": "2026-09-16T17:47:56.545Z",
+  "updated": "2026-10-31T17:43:10.068Z",
   "sources": 4,
   "items": [
+    {
+      "title": "As a beloved Seattle pizzeria closes, a pro gets the keys (and the recipes)",
+      "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxNR0JQc1VhbTI1X3MwTm1ScVptWHVMX0VnRGVNQW93MVhQTTdCNFp0S1pNVk5WcHYyU1JjWEF4VTlLV1h6ZHZvZVdEQXQwTUZyaGhuN0tENG1PYWlNYk8wOXlGM0RTZ05YU1U1cWkwb3E3RnI2TzR4RlVzcVBoTmRLa3U4dTFScFBWdlhjc2RKMlhhWHF1a1JoX1NMcDN5TDNvVWt4cVhuOTZJN21mMzk5NGFpRjZlaGUy?oc=5",
+      "source": "The Seattle Times",
+      "published": "2026-10-29T17:00:00.000Z",
+      "kind": "closing",
+      "mentions": []
+    },
+    {
+      "title": "BIZNOTE: Mo’s Dough about to launch, with take-out vegetarian pizza by ex-engineer",
+      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxOSS1ZVWZ4M1c5dFBSdnZoX2VVbzMzd2VGaFBDdVJ0NFVMeWJabHFSYWI4RGlaNXAybVVnT3F2WVNiQzRmYUREUlVyS3hJelJ4LVVZekQtR21aUVMzMllFUTB0TEFjTFB1TmdmYWM1STVoUXplR0RPbUQ3M21odXRlaE9hYnVWeGs3U2tuOGtMbnNWdUdwVmN4VDBObUxod3Z1RHozT1V1X2k2dC1qLXhGVGtINVI1RmM?oc=5",
+      "source": "West Seattle Blog...",
+      "published": "2026-10-21T23:22:13.000Z",
+      "kind": "opening",
+      "mentions": []
+    },
+    {
+      "title": "Beloved Seattle pizzeria to close after more than 16 years",
+      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNbVZoTDA5UXJZVkVuYXRHOXBYRkhrVWtsT1pSVGlrS2pGdkZnTmRBTEpRY1BCbEFxTmxJMFNXZ2RHMGRBVjJWRGNjemJ5cm41cmRDV0Ntel9GcGhqVEJmT29LaG0yeEk5Q1k0UUVIQlRicVlhNmx4TmtvVXJfRk0tVzJ5YTVYVE9nOUpqYm1PcFozMEhqU2RXWWstSGViekd3bzJmZUg5UWhmMTZ3dWlQUkU5dXBLUWvSAcsBQVVfeXFMTjI0N291TjRqbzZXQ1NFUmZKekE0WEVFUHlCc2dZSmItOC05cWk2TmpMa2ZYWmlQajNNd1VFa3VOQy1UNWM2TXVxcHFZdEFRQVdXMUstMzN4TlQ0ajdBSXpIajZEMWZKU0hqZl9rTVRjdUUwa09vUzBOY2FJTGQxSEEwZDRDRUVhUFBXeDFqejdVNGJOeEktbHZEckdqSlphMEN5SWd0QV9MTHRScWxLY3VSVlBjd2RMempiMThuc1VDRzI3WUlHNngyaTQ?oc=5",
+      "source": "KIRO 7 News Seattle",
+      "published": "2026-10-16T10:40:31.000Z",
+      "kind": "closing",
+      "mentions": []
+    },
+    {
+      "title": "WA pizza chain takes over former MOD Pizza space at Tacoma Mall",
+      "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTFAxWlZidDJKZnIzeWtnTFQzaFpqMkhYY25laHUxMUFlYjc2RmFOWDNrbmdCQlZCVm9Kcy1UMkFNSUtmOERGV1dmNjVaSDE0bHRuY2ZadGtQcmVsRXFpSVZKdXhoU1dsSkQ3c045OGtpSQ?oc=5",
+      "source": "MyNorthwest.com",
+      "published": "2026-10-14T21:00:49.000Z",
+      "kind": "mention",
+      "mentions": []
+    },
+    {
+      "title": "I planned on eating every pizza in Seattle. My esophagus intervened",
+      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9JemVPMjFLYWpra0FjaVlCWF9NMmFZODNpMHRjRG1RdXNmcGFocFFwQWRJUV9Da29rN2pjOF91STZQWWVXbE9FNklsb1hEemcteUtjdWhiTnRvZWFjc3liazlISmtyM0x1QmNLYw?oc=5",
+      "source": "It's a Shanda",
+      "published": "2026-10-12T18:24:58.000Z",
+      "kind": "mention",
+      "mentions": []
+    },
+    {
+      "title": "BIZNOTE: Pegasus Pizza to add another West Seattle location",
+      "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxObDJ5M0ttdDZVRXg5bmFWYk50MDkxbGNvbm5ReHZ3eW9iSHcxbUtRdzM2ak1HU0cwNHBvR0gyeDByY0lJWWpydlVMMExfMHdoMHZjajN6TEFqRG95V1pITDVPQ01mZ3l0ejd0YTJWVWQzcXd2eUtaaUJnaXhMU1laZ3c1MEJpMHExY09IaTRJVjFZRk5QdXl6Qk9ERQ?oc=5",
+      "source": "West Seattle Blog...",
+      "published": "2026-10-12T02:11:00.000Z",
+      "kind": "mention",
+      "mentions": [
+        "pegasus-pizza"
+      ]
+    },
+    {
+      "title": "Seattle pizza named among best in the U.S.",
+      "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxQX21CdkdqTGpEc2ZJR1B3Z19ia0FGdE0zSlZJY3VER1h2dGc2bkhqbGJjYmtyU1JoLTFBWXVkQkF6SC1Ydjc5dFRRd1ZDbmV5N3o0UVBYS3B0a0cyUlpTcE1zb2x5OUt3NGRISG11YWdmNWpHQzZQLUpHR1BjTURMMWttdkdOc0tHOG9VNmFvVGw3OE5kTFJB?oc=5",
+      "source": "The Seattle Times",
+      "published": "2026-10-09T20:00:00.000Z",
+      "kind": "ranking",
+      "mentions": []
+    },
+    {
+      "title": "Seattle-based MOD Pizza debuts limited-time 'Abbott Elementary' Philly pizza",
+      "url": "https://news.google.com/rss/articles/CBMijwJBVV95cUxOcUZBSXRydG1fQzZqaFhoVjFYem04QXJKWlM0Z3ZaZHIzeUNRQnBSdzEwSFRNb1J3M1l4RUFzVXB3N1BZYXQzdWpKOVFPeWNobGI2MVBJWlN6c3hudHBmLTVmbUJ0aUZJWDFoWEJxZU5kN1QzVUxOcVBRLVlOTmNDTTNPTTBzSktod0dWT04zRW1MckkzTkNfR3F3YzAyc3FCd2liMXNlTFA4MFFJVXUwZWlHaDBKMkh2VDUyLV9PbzMwQlA3MHdWdTZZcDhHN1JUUmY3dWcyNWZqajlPLUNTRG11TWlSNGdBUGNXMHdsQzlvM2hRbEVxeFVtTy12N1dVc1pBT18tTEVuVlgtZFpj?oc=5",
+      "source": "Seattle Refined",
+      "published": "2026-10-07T21:46:54.000Z",
+      "kind": "mention",
+      "mentions": []
+    },
+    {
+      "title": "Seattle-based MOD Pizza has limited-time 'Abbott Elementary'-inspired Philly pizza",
+      "url": "https://news.google.com/rss/articles/CBMiiAJBVV95cUxOLWRNRVlKYjZYREtUdG5SMGpWd1UwWUNkbkdPckhMTTl3VGJsV0dnRjJLQkNZM0VmWlBTb3RqVkFTZVhqa3E5ZHRjb0N1cVlqUk5EbFVIQWJXYTB5dFBoempCY2otem5wZVZNaVByRjBOdzJOM05BUlU4emVzaHZZaElUdU1wcTNLTUdKRjQyZ2lSWkFtX1RFUlhTZVg0S3JkTkRVeTFMUjJkRkx2UTRscldncURIc0lTMWJPZVp4VnYzeXFzWndzQ3lMcW5rWHZyMUgzMDh4U0VPVTM2cWFOdTFwSklzOWNOeWV2TzR6MGJsaldVWExrNzd6VWFZSzhPWnJOUjc1cGM?oc=5",
+      "source": "KOMO",
+      "published": "2026-10-07T21:44:03.000Z",
+      "kind": "mention",
+      "mentions": []
+    },
+    {
+      "title": "Decades-old frozen pizza brand ends production, leaving fans nostalgic",
+      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQdS1hcFBPNGxKTmxVOURkaUl0UUVCLTRxbUJYMUZGcDBGelFHc0Zhb1FOb0tlbzNJT2hEMGxpZ1RHRFlBbjIyVnh3N054SlFfVGVzTEhqTjcwbU95VFF5VDRzaEtiUUNRNXY2YkoyUXdWSHlRT1VfdV9Pd0dRNUZiUmlxSTJRRkhGNHRqOGJUY2prVnFxTW1uZ3B1WldvY0pxUUxtRzJn?oc=5",
+      "source": "FOX 13 Seattle",
+      "published": "2026-10-07T07:00:00.000Z",
+      "kind": "mention",
+      "mentions": []
+    },
+    {
+      "title": "Welcome to Seattle Pizza Month",
+      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE5IbXY1NF9lRlpRamtkWnd1bnRjNWljbUhaa0RRWXBpdmNtRFhIU0dzdTFZX0Z0UDZCd19JcEhTalRQazNsUkZQOS1XS21wX0hucXRvWFpGUVlZcGZqOVdzM2VWeVJkdHkyZ1V3blRn?oc=5",
+      "source": "It's a Shanda",
+      "published": "2026-10-02T15:04:29.000Z",
+      "kind": "mention",
+      "mentions": []
+    },
+    {
+      "title": "Seattle pizza chains launch limited-time collabs with Taco Time, Ivar’s this October",
+      "url": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxObFp1cHEzU3gxcFVJQVg5Sm55bnhXUXVaanhoM0ZPNFZfRm4yZFZTNjdPVTlvcjVGZHVFU25qVTM2dVJSRGZzRElNMkVLZW9tYS1fbkhuX1U5THFnVW1VYkFCWXFCMEhtTzBqWkpjMG9qWUgxdnhyZXhnVWxOaHlPSE03eGNaV0E2ZXBXMnlCbWI5ZGppSlA0bk9oaG5CdXpqS3AzanVTZzBiWUY5YjB2UEhTa0Q0Vnp1OGhUdlU0OVo3QzFkUkFvbWw1WHBhNkxNMkZMTVVkVVVVaHPSAe8BQVVfeXFMTVRnV3VDdVhpcEdUVU14ZWNQTVJnaGJGdFpvOFVDajJIalU5V0kxODFydzNkaTRpUDZCUlFfM1ExNEdKc2ptdjRzM3ZaU3F0QmVEcEtHS1V3VGVKTzVwLXdzWHNzWkloeEsyWFFHUHVRS2ZDU0IzamY4RDVQTDhaTERfOTF2VExUVmh6QmNPaS1PWUNCVlVrNzJVelN0VERuX29mZXFBeVg5OVdfRkpoeEN5dk9TMThUdVhXS0VHNWJBMEZJa05hb3NEd0tMbXJlVGxSQmMzWTkzWHhrVkdaVG9xT29CREZLdDVGeDdIMG8?oc=5",
+      "source": "KIRO 7 News Seattle",
+      "published": "2026-10-02T11:37:34.000Z",
+      "kind": "opening",
+      "mentions": []
+    },
+    {
+      "title": "The Best Detroit-Style Pizza In Seattle, Ranked - Seattle",
+      "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxOdWpZR3ZFTkdINjJZQ1YtU3R6aDk1SFo1aFdLTWQwd0tLTXgyeGF2b2R4R3RVRVZUMUxTVDlSeWlfT3lOZDVfVUpITGZfcEcwQnNaSHJHVXdkNmZmWjkzYk0yLVAtVkNGSW1DY1Bha3phWHlYNXVuczFfbmhzMVd1cjhXRzM?oc=5",
+      "source": "The Infatuation",
+      "published": "2026-10-02T07:00:00.000Z",
+      "kind": "ranking",
+      "mentions": []
+    },
+    {
+      "title": "2 unlikely Seattle pizza collabs debut",
+      "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPczZFc1ZlTG1RZk5Fcm9XSHhIZDctYy1JTzdjTnAxdGwwWFpZdmJ6Q1lDYy1TYXNWRDNhblVIREw1NGxmNWFDblVkdXNmS3RuZmV3UmoxLWJraTBIV3d6Z01ZMkRybkZiYjNNdEktQ2p4U090c0tIRlNXd1dGbkpXb0F5M1pZWGdEakdMRHg1ckhpb0IxVHJiNjRzOWItN0ZuNXRsS2pkcGlKLUx2V0k3clpn?oc=5",
+      "source": "The Seattle Times",
+      "published": "2026-10-01T13:00:00.000Z",
+      "kind": "opening",
+      "mentions": []
+    },
+    {
+      "title": "Popular Neapolitan Pizza Chain Shutters Its Original Seattle and Downtown Locations",
+      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNMmlEUmVLcUJ5TFItV0Z2LTRweTZrWDliSm5qWU8zejlZYThPWkd4by1BTzFuRmgwaDBRM1AxZnVfbDR6WDBMbFZYWk1ISlRTX0RLRFl0eEpNTEhTbXlQUWNLOHFNbzVodTJwRHNEVTlyMEZfT3VLNk9hdHNjaHNuRHJQQ0ZYUldMUDF0a1lOMnpPLXNnRGh1RXo0aWo3aVhxX3NmbVBLeVZTLVM0anc1MWt0MEUtbkRGUWNpS28zWENvdw?oc=5",
+      "source": "whatnow.com",
+      "published": "2026-09-24T08:09:33.000Z",
+      "kind": "mention",
+      "mentions": []
+    },
+    {
+      "title": "These 2 Seattle pizza pop-ups are hot right now",
+      "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOWWtCOVpZQzNBRGRKOFpKYWdSRTBtd1Y1b2pTczhPcEsxdERGa1pyNzFtV0xYSDFzQkFFZkFMVGM2bnhnbExBUTdqVVlPdnNUNlBfZDJoUmwxV3VzWVRTRlc0djVwaEpVSHl5bG5rMjU0bjMzTjFTR1hsVG9uMHdrTHpXYXAxOHRmcWVnWlZnWkE4QU5GWmc?oc=5",
+      "source": "The Seattle Times",
+      "published": "2026-09-23T17:00:00.000Z",
+      "kind": "mention",
+      "mentions": []
+    },
+    {
+      "title": "Longtime Seattle pizza chain announces scaleback effort",
+      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNY2lNdEtBbzRyUHRPMlpmY05XSVEzSDFsems2NEFsZEZ5UThXeWxndlotWFA2X2ZWUHI2NXpfREkxcmcycjM0aGFGNk44b2VkaU1yMk9KS2Q4dFl3b1k4Z2lDSjhSc3V1Z3lwamFKX3Ytak1XT1dUWENjVlgwcmF2OGhVUEhhUkpwS2kyNmxQZVJmZjZKR1lkam9DTXZGelNNanBOamkzVTZpSUhxb2U0X1g2VGVucEk?oc=5",
+      "source": "The Seattle Times",
+      "published": "2026-09-23T00:00:00.000Z",
+      "kind": "mention",
+      "mentions": []
+    },
+    {
+      "title": "Longtime Neapolitan-style Seattle pizza chain announces scaleback effort",
+      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNY2lNdEtBbzRyUHRPMlpmY05XSVEzSDFsems2NEFsZEZ5UThXeWxndlotWFA2X2ZWUHI2NXpfREkxcmcycjM0aGFGNk44b2VkaU1yMk9KS2Q4dFl3b1k4Z2lDSjhSc3V1Z3lwamFKX3Ytak1XT1dUWENjVlgwcmF2OGhVUEhhUkpwS2kyNmxQZVJmZjZKR1lkam9DTXZGelNNanBOamkzVTZpSUhxb2U0X1g2VGVucEk?oc=5",
+      "source": "The Seattle Times",
+      "published": "2026-09-23T00:00:00.000Z",
+      "kind": "mention",
+      "mentions": []
+    },
+    {
+      "title": "Tutta Bella, longtime Seattle pizza chain, announces restaurant closures",
+      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNY2lNdEtBbzRyUHRPMlpmY05XSVEzSDFsems2NEFsZEZ5UThXeWxndlotWFA2X2ZWUHI2NXpfREkxcmcycjM0aGFGNk44b2VkaU1yMk9KS2Q4dFl3b1k4Z2lDSjhSc3V1Z3lwamFKX3Ytak1XT1dUWENjVlgwcmF2OGhVUEhhUkpwS2kyNmxQZVJmZjZKR1lkam9DTXZGelNNanBOamkzVTZpSUhxb2U0X1g2VGVucEk?oc=5",
+      "source": "The Seattle Times",
+      "published": "2026-09-22T07:00:00.000Z",
+      "kind": "mention",
+      "mentions": [
+        "tutta-bella"
+      ]
+    },
     {
       "title": "Starla's serves excellent pizza as a pop-up - Review - Seattle",
       "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE82WGtMRDV6bGdFV2prSmlqV3ZpUzdER19zSnlQejNTZnR2QkxQd2loNDlLbjBjWGdmYThXN2Y1UUhjNEVielR3QU1vSzVOdjZCNGFHX1ZfbUUtVGtLVEVYZjV1bHI?oc=5",
       "source": "theinfatuation.com",
       "published": "2026-09-09T21:55:03.000Z",
+      "kind": "mention",
+      "mentions": []
+    },
+    {
+      "title": "On National Cheese Pizza Day, the classic proves it never needed toppings",
+      "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxNQ09RaTBCdU1qM3o1U1pnNEtydlhfcURLS0drYmRnS181U04tYXQ4TWNHTDBQNUFRNXlPNXpXcGdkME93QjB5em84VHlLYVJrSU54UDE1T1hyb2RtM0Y4SXNydDhlSmkwa0lqV01ucU5URmxyai1pcjlkNnhpNE9WNXM4T3MzeGlPT3h5a21ibTNqS2h2SnFYdmQ2aF9yU0YxS0ZqVlFHaFVmcElnc29fU0Juc2NEU2VuVnc?oc=5",
+      "source": "The Seattle Times",
+      "published": "2026-08-31T07:00:00.000Z",
       "kind": "mention",
       "mentions": []
     },
@@ -19,6 +183,16 @@
       "mentions": []
     },
     {
+      "title": "Stevie's Famous Opens Phinney Ridge Pizzeria in Seattle",
+      "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPbENvOC1iTFRGbUlDbkFXc1RnSnRycDVOZDh4d2l6dnluaGs3WGRFbjI1S0czSm1uUXl1aE5BMEhqeWlSWThaU3RpV1hXVjRhbV9ENnFrdWV0RDNQSmtJSUttamJJdmQyY1lYVHAwbGd4Qkh1T29GcHNnWlVySExscE9MREh5UDRlYVg3N0dNNlNQZGZQdENiXzhKYXEzQ01HTHh2TW9oUk9INnM?oc=5",
+      "source": "Hoodline",
+      "published": "2026-08-21T07:00:00.000Z",
+      "kind": "opening",
+      "mentions": [
+        "stevies-famous"
+      ]
+    },
+    {
       "title": "Restaurant Roundup: Praise-Worthy Pizza and Aperitivo Hour",
       "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxObHJnaFdyZmNtZlI5UnVDOGt1WWxZaFhmbXBMdzNGOWNFUzZXU29zSnlfY0tsWE5kQThfSWlNRXBDUkRWa3JfUVdycVZJMjAweTcyWllPcU1YUzg0a2xIYndPRlBnX3pjWWFvTjI1ZzhxU3Z5NW9TdE5DQk5qRjlxUFVnQm9ZZGNFOC1yZERlX3gya0wtczRJ?oc=5",
       "source": "Seattle magazine",
@@ -27,17 +201,17 @@
       "mentions": []
     },
     {
-      "title": "Hillman City Gets First Bite of Seattle’s Hottest New Pizzeria",
-      "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOSm5mQUs1WDd3WmNFcDZ5RFB1NWpMeUtpUGtZVC11X1lBaE9GcjdsVVZRLWZHbTVkbFBOZGlfOW1hM201N3NIQmtVRXFicHRBdWdkQzZOYUh1czNybU90X1JUclZtZ3piOG85M1pLY0VEdWNYalBkcWozLWtLM2N4dmoxTEZVdDZwUDdRa29JcmttUWE4ZnNv?oc=5",
-      "source": "Hoodline",
+      "title": "A buzzy new pizzeria will give Seattle an early peek this weekend",
+      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxOa1lxWC10cVJpYUNaSGRxby00UjJFSXFHSXhkSXp4Wk9CNUZiX2hmWVZpaGdHMVpFMGlFN29rM3RCQnFmZ1JuTGdlVHV6NG9sbVY2WmxscTkwMUZGSkdRSzhRTWRoNXpjZTZpbmhZamNZbUtlS2N5OElvZV9LdjE2UkZTZTlqbUZQR0t0aE5OaTd6ZHZXNUVyNDUyUDRDeHJiZkRPQmk5dlRqMkpGaUJ0dlZRbWFYQ0k?oc=5",
+      "source": "The Seattle Times",
       "published": "2026-08-03T07:00:00.000Z",
       "kind": "opening",
       "mentions": []
     },
     {
-      "title": "A buzzy new pizzeria will give Seattle an early peek this weekend",
-      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxOa1lxWC10cVJpYUNaSGRxby00UjJFSXFHSXhkSXp4Wk9CNUZiX2hmWVZpaGdHMVpFMGlFN29rM3RCQnFmZ1JuTGdlVHV6NG9sbVY2WmxscTkwMUZGSkdRSzhRTWRoNXpjZTZpbmhZamNZbUtlS2N5OElvZV9LdjE2UkZTZTlqbUZQR0t0aE5OaTd6ZHZXNUVyNDUyUDRDeHJiZkRPQmk5dlRqMkpGaUJ0dlZRbWFYQ0k?oc=5",
-      "source": "The Seattle Times",
+      "title": "Hillman City Gets First Bite of Seattle’s Hottest New Pizzeria",
+      "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOSm5mQUs1WDd3WmNFcDZ5RFB1NWpMeUtpUGtZVC11X1lBaE9GcjdsVVZRLWZHbTVkbFBOZGlfOW1hM201N3NIQmtVRXFicHRBdWdkQzZOYUh1czNybU90X1JUclZtZ3piOG85M1pLY0VEdWNYalBkcWozLWtLM2N4dmoxTEZVdDZwUDdRa29JcmttUWE4ZnNv?oc=5",
+      "source": "Hoodline",
       "published": "2026-08-03T07:00:00.000Z",
       "kind": "opening",
       "mentions": []
@@ -64,82 +238,6 @@
       "source": "CHS Capitol Hill Seattle News",
       "published": "2026-07-13T07:00:00.000Z",
       "kind": "closing",
-      "mentions": []
-    },
-    {
-      "title": "YOU CAN HELP: Barton P-Patch pizza-and-bagels fundraiser Saturday",
-      "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxQZlJWU1dLSmVQam5nU1dwbGVNYml2Y1pSY2VHYzg3cFp1SnZIMUdDQlQzVEsyWjVxY3hDRWdCNVU3a3dWdGJCeFBHbzN0SGF1NVk3SEdfaDZpNWg2Zl9jTmhhd3pFNEszM18zRXRhZER6WnFsdnluVERhd29KSGJIWnMyd2szTXZ4Nmx2RXdBUFNub0NqdVI2NmJGMEJmVi1odzk4?oc=5",
-      "source": "West Seattle Blog...",
-      "published": "2026-06-25T07:00:00.000Z",
-      "kind": "mention",
-      "mentions": []
-    },
-    {
-      "title": "Much-anticipated pizzeria sets North Seattle opening date",
-      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNNFFUa2pGTkxzSURpX0NiakZ3U3gyMXZpYW9Da1lKVHB1VnBBVFNjN2NWTGhSMTdXSnoyT1ZZSnNncm91a3d2ZWxLS01jUXBPaUFtOXlsX3l0WUFJSUxPRWpxbkNCd29MbVFhUm9uV2N6ZEhUb2VGd1ZtQ0E2TnIzOEh6UzlLRy1IbS1SWk0tYTNuVGJhR2ZjcW0tdkV5ME80OWtyWFNzcUk?oc=5",
-      "source": "The Seattle Times",
-      "published": "2026-06-24T07:00:00.000Z",
-      "kind": "opening",
-      "mentions": []
-    },
-    {
-      "title": "Fat Zach’s Pizza Opening First Tacoma Location This Fall",
-      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPc2V2b1pQSVl1YjN2cE82VEdlajg5eDBuUEFCOWF5WHpWWUJ3RU9jMGotODZvZEdhNUlHNTVGU1FaMUVOVVVJSGFreVRfTDkzcjRyZ1hTelVueVBBWE5EUEVJQmpJZ2t6RnBZOXVDanNDYUJYTUEtNkxvQktCVGtMYWtWZlYyNW9OeThUeUtyOG5FYmk5X1V1dEpFRzg?oc=5",
-      "source": "WhatNow",
-      "published": "2026-06-18T07:00:00.000Z",
-      "kind": "opening",
-      "mentions": []
-    },
-    {
-      "title": "BIZNOTE: Pegasus Pizza announces new owners",
-      "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxPNzJ0TmhNcjFzMThENmNWNnlRR2JrM2dhdlNhZVJFbm55TTFOWkRkVVNSZmkySFkyOTdpMWprWG01Z1RRWWhDV09BXzdaQUNpQ0x3Y1p0eFhNdWZDX1M0VC1vVE1Hc3dINGpxNVZ1QzFHVVpsTXl4c05HNlJkMGZUa21EbHdUQQ?oc=5",
-      "source": "West Seattle Blog...",
-      "published": "2026-06-08T07:00:00.000Z",
-      "kind": "mention",
-      "mentions": [
-        "pegasus-pizza"
-      ]
-    },
-    {
-      "title": "Legacy in the Making: Head Chefs Gabriel Castro and Isidro Ocampo acquire West Seattle’s Pegasus Pizza",
-      "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxPYjA0S01HbEVBN1U4V1BuSE82N09WenQ1NnctNmR6M1NXcGVpd1daaVd6S3BBYXpneFFad1A5Y09QSjlQbmF1Mmg1ZlN5cks4eTQ1U3MxOWpRZVNua0cwTFdOVGEwb0RONGFEb2M4SG00UTV0dVlTYjBud3VzU3duVjR6aU9femE5NTk2N2NhdnNpb2s3czdHU1hyMk1JNTZqaUhmMzdfNjh6cURzM0xjX0c0RlpsdjFaSTEtWmhRcUkyMG41VDNEVw?oc=5",
-      "source": "Westside Seattle",
-      "published": "2026-06-08T07:00:00.000Z",
-      "kind": "mention",
-      "mentions": [
-        "pegasus-pizza"
-      ]
-    },
-    {
-      "title": "Aslan opens in Seward Park with pizza, brews and soccer mania",
-      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQeEY2NGFGandRejZFWUNnUHZ5X244MXVocFMtQW1Gc0FfRGY2MUVmRU9xVGEycUFLdmtERFZYMUZ5V2tLaU1WVkFPS2plcEdBUmNwT1RoVDRfTTE2dXQ3THd1QzN4dERrcnNDYVk3dnBFWDFDR2s4NTFMTmN6NVpGU1B1bjViTHZsUngydGl2T2toZk5ZLTQtMVBFckVla1RBY3lzaXZJWTVTaEhkcjBtTjNTVHQ5X2s?oc=5",
-      "source": "Seattle Refined",
-      "published": "2026-06-05T07:00:00.000Z",
-      "kind": "opening",
-      "mentions": []
-    },
-    {
-      "title": "Sounders and USMNT star gets his own pizza by popular Seattle chain",
-      "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNZHo4NTRLT0VKM3FJSTF3ZDJKM0ttb19yNW9zN1ZxMDBlZHZPYWFFQ3A5ci00VzkxQjA0NVhpRHMzUHlqQnFlX1BiblpfVE9UVS1CemhRdVNIWE0zVFNOVDdUaVllTEg2cW9iYkJiUGplX0JSeXlTZnJKV1dSUlFxc1JsaHdWdzdTTnl4bG5lSExyMTBpS2VaWTJ0UVI3LVh1ZGR6WlZwSHE2bFVYeFBUb05wZw?oc=5",
-      "source": "The Seattle Times",
-      "published": "2026-06-04T07:00:00.000Z",
-      "kind": "mention",
-      "mentions": []
-    },
-    {
-      "title": "Seattle has some of the most expensive pizza in the country, new ranking says",
-      "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTFA3ZTFWOFprV3VSemROQTJOaE1YU3pJSjhfSUVwNlp1SWR3TDZlT1prOXhkdnhFRUhFTm1XN0hDNDlnaHZDYmZ6TG8tT2s1b0NDZkltTGltdTlDdGNVdTRGR1ZOU0RYc1lLcGZxMmJJMEhOeHBad3lPbw?oc=5",
-      "source": "Secret Seattle",
-      "published": "2026-05-30T07:00:00.000Z",
-      "kind": "ranking",
-      "mentions": []
-    },
-    {
-      "title": "Why is this slice of pizza $55?",
-      "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE5OVXVvY0s0cDJIbjJvd205cFA4UDJ4dVB0ZHpyMjZTR2VYY1d0Q1VQUFhDcERkcEZXRV91d1FfTnpVNS12aTNJdHdPdUxGRTIxU0hSemdtejJhT2c0bmN2TzFFcDBYTTdpSUw0bWtyNlRYYmdpWEJoSWFadVE?oc=5",
-      "source": "The Seattle Times",
-      "published": "2026-05-22T07:00:00.000Z",
-      "kind": "mention",
       "mentions": []
     }
   ]
