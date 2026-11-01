@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   reputationFactor, criticalFactor, valueFactor, frictionPenalty, stalenessDecay,
-  scoreOne, rank, splitTiers, isRated, shrinkRating,
+  verifiedDate, scoreOne, rank, splitTiers, byRank, isRated, shrinkRating,
   DEFAULT_WEIGHTS, FRICTION_CAP, CRITICAL_BOOST_CAP, MAX_STALENESS_DECAY, PRICE_MULT
 } from '../src/slice.js';
 
@@ -22,6 +22,47 @@ test('reputation renormalises over the components an entry actually has', () => 
   assert.ok(full.value <= 10);
   const nothing = reputationFactor({}, NOW);
   assert.equal(nothing.value, 0);
+  assert.equal(nothing.measured, false);
+});
+
+test('reputation is monotone: added evidence never lowers it', () => {
+  const lonely = reputationFactor({ opened: 2000 }, NOW);                     // longevity 1.0
+  const withCount = reputationFactor({ opened: 2000, crowd: { reviews: 200 } }, NOW); // volume 0.29
+  assert.ok(withCount.value >= lonely.value, 'a review count must not cost points');
+  assert.deepEqual(withCount.counted, ['longevity']);
+  const withMention = reputationFactor({ opened: 2000, mentions: [{ date: '2026-08-01' }] }, NOW);
+  assert.ok(withMention.value >= lonely.value, 'a first mention must not cost points');
+  // a component that raises the mean is counted
+  const young = reputationFactor({ opened: 2025, crowd: { reviews: 5000 } }, NOW);
+  assert.ok(young.counted.includes('volume'));
+  assert.ok(young.value > reputationFactor({ opened: 2025 }, NOW).value);
+});
+
+test('an unmeasured reputation carries no weight; the other factors share it', () => {
+  const r = entry({ opened: undefined, crowd: undefined, mentions: [] });
+  const s = scoreOne(r, { now: NOW, registry: {} });
+  assert.equal(s.reputationDetail.measured, false);
+  assert.equal(s.weightShares.reputation, 0);
+  assert.equal(s.contributions.reputation, 0);
+  const others = Object.entries(s.weightShares).filter(([k]) => k !== 'reputation').map(([, v]) => v);
+  assert.ok(Math.abs(others.reduce((a, b) => a + b, 0) - 100) < 1e-9);
+  // identical graded factors with no reputation data must not score below the
+  // same entry with a founding year that earns full longevity marks...
+  const known = scoreOne(entry({ opened: 1990, crowd: undefined, mentions: [] }), { now: NOW, registry: {} });
+  assert.ok(known.score >= s.score);
+  // ...and must not be zeroed: it scores as the mean of what it has.
+  assert.ok(s.base > 70, `base ${s.base}`);
+});
+
+test('the freshness clock is the newest verification of any kind', () => {
+  assert.equal(verifiedDate({}), null);
+  assert.deepEqual(verifiedDate({ lastVerified: '2026-08-01', statusChecked: '2026-08-20' }),
+    { date: '2026-08-20', source: 'status check' });
+  assert.deepEqual(verifiedDate({ lastVerified: '2026-08-01', locationsVerified: '2026-07-01',
+    factors: { craft: { date: '2026-08-27' } } }), { date: '2026-08-27', source: 'rating' });
+  const fresh = scoreOne(entry({ lastVerified: '2026-01-01', statusChecked: '2026-08-29' }), { now: NOW, registry: {} });
+  assert.ok(fresh.stalenessDecay < 0.001);
+  assert.equal(fresh.verified.source, 'status check');
 });
 
 test('reputation longevity is log-curved: year 2 proves more than year 12 adds', () => {
@@ -106,6 +147,21 @@ test('rank scores only rated entries and sorts descending', () => {
   assert.equal(out.length, 2);
   assert.deepEqual(out.map(r => r.id), ['a', 'b']);
   assert.ok(out[0].score >= out[1].score);
+});
+
+test('splitTiers keeps rank() order: ties break on critical, then craft, never alphabetically', () => {
+  const fs = (critical, craft) => ({ reputation: 5, critical, craft, distinctiveness: 7, value: 7 });
+  // Equal published scores; Zed has the better critical read and must come first.
+  const alpha = { id: 'alpha', name: 'Alpha', status: 'open', score: 81.3, factorScores: fs(8.0, 8.0) };
+  const zed   = { id: 'zed',   name: 'Zed',   status: 'open', score: 81.3, factorScores: fs(8.4, 8.0) };
+  const ordered = [alpha, zed].sort(byRank);
+  assert.deepEqual(ordered.map(r => r.id), ['zed', 'alpha']);
+  // same score and critical: craft decides; then, and only then, the name
+  const bravo = { id: 'bravo', name: 'Bravo', status: 'open', score: 81.3, factorScores: fs(8.4, 8.5) };
+  assert.deepEqual([alpha, zed, bravo].sort(byRank).map(r => r.id), ['bravo', 'zed', 'alpha']);
+  const { top } = splitTiers(ordered, 10);
+  assert.deepEqual(top.map(r => r.id), ['zed', 'alpha']);
+  assert.deepEqual(top.map(r => r.rank), [1, 2]);
 });
 
 test('splitTiers holds anything not open out of the top, whatever it scores', () => {

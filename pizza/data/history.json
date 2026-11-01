@@ -4,6 +4,7 @@
       "weekKey": "2026-W34",
       "date": "2026-08-23",
       "week": 34,
+      "algorithm": "SLICE v1",
       "ranks": {
         "cornelly": 1,
         "delancey": 2,
@@ -33,6 +34,7 @@
       "weekKey": "2026-W35",
       "date": "2026-08-30",
       "week": 35,
+      "algorithm": "SLICE v2",
       "ranks": {
         "delancey": 1,
         "windy-city-pie": 2,
@@ -514,6 +516,7 @@
       "weekKey": "2026-W36",
       "date": "2026-09-06",
       "week": 36,
+      "algorithm": "SLICE v2",
       "ranks": {
         "delancey": 1,
         "windy-city-pie": 2,
@@ -1025,6 +1028,7 @@
       "weekKey": "2026-W37",
       "date": "2026-09-13",
       "week": 37,
+      "algorithm": "SLICE v2",
       "ranks": {
         "delancey": 1,
         "windy-city-pie": 2,
@@ -1556,6 +1560,7 @@
       "weekKey": "2026-W38",
       "date": "2026-09-20",
       "week": 38,
+      "algorithm": "SLICE v2",
       "ranks": {
         "delancey": 1,
         "windy-city-pie": 2,
@@ -2107,6 +2112,7 @@
       "weekKey": "2026-W39",
       "date": "2026-09-27",
       "week": 39,
+      "algorithm": "SLICE v2",
       "ranks": {
         "delancey": 1,
         "windy-city-pie": 2,
@@ -2668,6 +2674,7 @@
       "weekKey": "2026-W40",
       "date": "2026-10-04",
       "week": 40,
+      "algorithm": "SLICE v2",
       "ranks": {
         "delancey": 1,
         "windy-city-pie": 2,
@@ -3259,6 +3266,7 @@
       "weekKey": "2026-W41",
       "date": "2026-10-11",
       "week": 41,
+      "algorithm": "SLICE v2",
       "ranks": {
         "delancey": 1,
         "windy-city-pie": 2,
@@ -3850,6 +3858,7 @@
       "weekKey": "2026-W42",
       "date": "2026-10-18",
       "week": 42,
+      "algorithm": "SLICE v2",
       "ranks": {
         "delancey": 1,
         "windy-city-pie": 2,
@@ -4491,6 +4500,7 @@
       "weekKey": "2026-W43",
       "date": "2026-10-25",
       "week": 43,
+      "algorithm": "SLICE v2",
       "ranks": {
         "delancey": 1,
         "windy-city-pie": 2,
@@ -5142,6 +5152,7 @@
       "weekKey": "2026-W44",
       "date": "2026-10-31",
       "week": 44,
+      "algorithm": "SLICE v2",
       "ranks": {
         "delancey": 1,
         "windy-city-pie": 2,

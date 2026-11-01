@@ -1,7 +1,7 @@
 /* Everything computed from the loaded data before any HTML renders: the
  * scored field, the published split, weekly baselines, style brackets, and
  * the per-card movement evidence. Pure. */
-import { rank, splitTiers, isoWeek, isoWeekKey } from '../src/slice.js';
+import { rank, splitTiers, isoWeek, isoWeekKey, ALGORITHM } from '../src/slice.js';
 import { evidenceFor } from './evidence.mjs';
 
 export function deriveContext(ctx) {
@@ -22,7 +22,7 @@ export function deriveContext(ctx) {
 
   const evidenceMap = {};
   for (const r of ranked) {
-    const html = evidenceFor(r, previous, now);
+    const html = evidenceFor(r, previous, now, ALGORITHM);
     if (html) { evidenceMap[r.id] = html; r.evidenceHtml = html; }
   }
 

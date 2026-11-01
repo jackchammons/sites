@@ -27,10 +27,16 @@ const KIND_PHRASE = {
 };
 const mentionPhrase = m => (KIND_PHRASE[m.kind] ?? KIND_PHRASE.mention)(m);
 
-export function evidenceFor(r, previous, now) {
+export function evidenceFor(r, previous, now, algorithm) {
   const moved = r.previousRank != null && r.previousRank !== r.rank;
   const isNew = r.previousRank == null;
   if (!moved && !isNew) return '';
+
+  // A snapshot taken under a different formula is not a baseline for cause:
+  // the move is the method's, and saying anything else would be fiction.
+  if (previous && algorithm && previous.algorithm && previous.algorithm !== algorithm) {
+    return `<b>Why it moved:</b> the scoring method changed this week (${esc(previous.algorithm)} → ${esc(algorithm)}; see <a href="#methodology">how it works</a>). Movement against last week's standings reflects the new formula, not the pizzeria.`;
+  }
 
   const nowMs = now.getTime();
   const daysAgo = iso => (nowMs - Date.parse(iso)) / 864e5;

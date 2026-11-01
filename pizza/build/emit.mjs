@@ -2,7 +2,9 @@
  * rankings.json) and the weekly snapshot in data/history.json. */
 import fs from 'node:fs';
 import path from 'node:path';
-import { DEFAULT_WEIGHTS } from '../src/slice.js';
+import { DEFAULT_WEIGHTS, ALGORITHM } from '../src/slice.js';
+
+const r1 = n => Math.round(n * 10) / 10;
 import { locationLabel } from '../src/locations.js';
 
 export function writeDist(dist, ctx, html) {
@@ -22,7 +24,7 @@ export function writeDist(dist, ctx, html) {
   fs.writeFileSync(path.join(dist, 'rankings.json'), JSON.stringify({
     builtAt: now.toISOString(),
     week,
-    algorithm: 'SLICE v2',
+    algorithm: ALGORITHM,
     weights: DEFAULT_WEIGHTS,
     rankings: allScored.map(r => ({
       rank: r.rank, id: r.id, name: r.name, neighborhood: locationLabel(r),
@@ -30,7 +32,8 @@ export function writeDist(dist, ctx, html) {
       style: r.style, styleGroup: r.styleGroup,
       status: r.status ?? 'open',
       score: r.score, previousRank: baseline[r.id] ?? null,
-      factors: r.factorScores, penalty: r.penaltyApplied
+      factors: Object.fromEntries(Object.entries(r.factorScores).map(([k, v]) => [k, r1(v)])),
+      penalty: r1(r.penaltyApplied)
     })),
     directory: dataset.restaurants.map(r => ({
       id: r.id, name: r.name, url: r.url ?? null, status: r.status ?? 'open',
@@ -51,11 +54,11 @@ export function writeSnapshot(ctx) {
   /* Full scored field, not just the ten: weekly deltas can then say
    * "was #14 last week" for a climber, and the factor breakdowns let next
    * week's build explain WHY an entry moved. */
-  const r1 = n => Math.round(n * 10) / 10;
   const snapshot = {
     weekKey,
     date: now.toISOString().slice(0, 10),
     week,
+    algorithm: ALGORITHM,
     ranks: Object.fromEntries(allScored.map(r => [r.id, r.rank])),
     scores: Object.fromEntries(allScored.map(r => [r.id, r.score])),
     factors: Object.fromEntries(allScored.map(r => [r.id, {

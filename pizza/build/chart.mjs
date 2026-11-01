@@ -49,6 +49,12 @@ export function bumpChart(snaps, entriesById) {
   const weekLabs = weeks.map((w, i) =>
     `<text class="week-lab" x="${x(i)}" y="${padT - 12}" text-anchor="middle">W${String(w.week).padStart(2, '0')}</text>`).join('');
 
+  // A formula change is drawn as a rule between the two columns, so a line
+  // that stops there reads as a re-scoring, not a pizzeria falling out.
+  const changes = weeks.map((w, i) => i > 0 && w.algorithm && weeks[i - 1].algorithm && w.algorithm !== weeks[i - 1].algorithm
+    ? `<g class="method-change"><line x1="${(x(i - 1) + x(i)) / 2}" y1="${padT - 6}" x2="${(x(i - 1) + x(i)) / 2}" y2="${padT + rowH * 9 + 10}" stroke="var(--ink-3)" stroke-dasharray="4 4"/>` +
+      `<text class="week-lab" x="${(x(i - 1) + x(i)) / 2}" y="${padT - 12}" text-anchor="middle" fill="var(--ink-3)" font-size="9">↑ ${esc(w.algorithm)}</text></g>` : '').join('');
+
   const series = order.map(id => {
     const hue = colorOf(id);
     const pts = weeks.map((w, i) => (w.ranks[id] != null && w.ranks[id] <= 10) ? [x(i), y(w.ranks[id]), i] : null);
@@ -92,6 +98,7 @@ export function bumpChart(snaps, entriesById) {
       <svg class="bump" viewBox="0 0 ${W} ${H}" role="img" aria-label="Top ten rank by week">
         <g class="grid">${grid}</g>
         ${weekLabs}
+        ${changes}
         <line class="cursor" id="chart-cursor" x1="0" y1="${padT - 6}" x2="0" y2="${padT + rowH * 9 + 10}"/>
         ${series}
         ${cols}
