@@ -1,14 +1,19 @@
 {
-  "updated": "2026-11-01T00:00:00.000Z",
-  "news": [],
-  "mentions": [
+  "updated": "2026-11-02T19:30:00Z",
+  "factorRatings": [
     {
-      "id": "independent-pizzeria",
-      "title": "After Nearly 17 Years, a Madison Street Pizzeria Bids Farewell",
-      "url": "https://whatnow.com/?p=445511",
-      "source": "whatnow.com",
-      "date": "2026-10-16",
-      "kind": "closing"
+      "id": "georgetown-pizza-arcade",
+      "craft": 5.0,
+      "distinctiveness": 6.5,
+      "criticScore": 5.0,
+      "opened": 2022,
+      "styleGroup": "Tavern square",
+      "sources": [
+        "https://theticket.seattletimes.com/city-guides/a-first-timers-guide-to-arcades-in-seattle/",
+        "https://www.parentmap.com/article/best-pizza-places-seattle-tacoma-bellevue",
+        "https://www.gpaseattle.com/"
+      ],
+      "note": "Seattle Times and ParentMap guides describe it as a casual barcade that opened in November 2022, calling the 30+ pinball machines and tournaments the real draw over a limited classics menu (pepperoni, veggie, meat lovers); its own site confirms the format is square pizza sold whole or half rather than round pies, with coverage treating the arcade, not the kitchen, as the destination."
     }
   ]
 }
