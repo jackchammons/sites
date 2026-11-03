@@ -57,6 +57,23 @@
       ],
       "cadence": "Live in your browser",
       "accent": "#d9a441"
+    },
+    {
+      "slug": "mortgage",
+      "name": "Mortgage Calculator",
+      "emoji": "🏠",
+      "tagline": "A mortgage calculator: monthly payment with taxes, insurance, PMI and HOA, the full amortization schedule, and what extra principal saves you.",
+      "dir": "mortgage",
+      "build": [
+        "node",
+        "scripts/build.mjs"
+      ],
+      "verify": [
+        "node",
+        "scripts/verify.mjs"
+      ],
+      "cadence": "Live in your browser",
+      "accent": "#3f9b78"
     }
   ]
 }
