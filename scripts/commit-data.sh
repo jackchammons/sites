@@ -42,8 +42,25 @@ for attempt in 1 2 3; do
     echo "fetch failed on attempt $attempt"; continue
   fi
   if ! git rebase FETCH_HEAD; then
-    git rebase --abort || true
-    echo "rebase onto main failed on attempt $attempt"; continue
+    # research.json is replaced wholesale by every research run, so two runs
+    # queued back to back (a dispatch pins the ref's SHA at dispatch time, so
+    # the second checks out the pre-first-commit tree) always conflict on it.
+    # The newer run's file is the right one: it is the file this run
+    # validated and applied. Any other conflict is real and aborts the attempt.
+    conflicts=$(git diff --name-only --diff-filter=U)
+    if [ -n "$conflicts" ] && [ "$conflicts" = "pizza/data/research.json" ]; then
+      git checkout --theirs -- pizza/data/research.json
+      git add -- pizza/data/research.json
+      if GIT_EDITOR=true git rebase --continue; then
+        echo "rebase: kept this run's research.json over the previous run's"
+      else
+        git rebase --abort || true
+        echo "rebase onto main failed on attempt $attempt"; continue
+      fi
+    else
+      git rebase --abort || true
+      echo "rebase onto main failed on attempt $attempt (conflicts: ${conflicts:-none})"; continue
+    fi
   fi
   if git push "$REMOTE" HEAD:main; then
     pushed=yes
