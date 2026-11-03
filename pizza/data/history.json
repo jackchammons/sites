@@ -5814,6 +5814,7 @@
       "weekKey": "2026-W45",
       "date": "2026-11-02",
       "week": 45,
+      "algorithm": "SLICE v2",
       "ranks": {
         "delancey": 1,
         "windy-city-pie": 2,
