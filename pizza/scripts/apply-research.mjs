@@ -16,6 +16,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { matchEntry } from '../src/census.js';
+import { normUrl, normTitle } from '../src/match.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const researchPath = path.join(root, 'data/research.json');
@@ -89,13 +90,16 @@ for (const it of research.directory ?? []) {
   console.log(`  + ${it.name} (${id}): ${it.status}, ${it.neighborhood}`);
 }
 
-/* mentions: coverage history feeding reputation and critical reception. */
+/* mentions: coverage history feeding reputation and critical reception.
+ * Dedup on a normalised URL (scheme, www, trailing slash, tracking params
+ * stripped) OR a normalised title: the news pass re-files the same roundup
+ * under a Google News redirect and the publisher's URL. */
 for (const it of research.mentions ?? []) {
   const r = byId.get(it.id);
   if (!r) continue;
   r.mentions = r.mentions ?? [];
-  if (r.mentions.some(m => m.url.toLowerCase() === it.url.toLowerCase())) continue;
-  r.mentions.push({ url: it.url, title: it.title, source: it.source, date: it.date, kind: it.kind });
+  if (r.mentions.some(m => normUrl(m.url) === normUrl(it.url) || normTitle(m.title) === normTitle(it.title))) continue;
+  r.mentions.push({ url: it.url, title: it.title, source: it.source, date: String(it.date).slice(0, 10), kind: it.kind });
   r.mentions = r.mentions.slice(-50);
   changes++;
   console.log(`  ~ ${r.name}: mention from ${it.source}`);
@@ -111,13 +115,15 @@ for (const it of research.factorRatings ?? []) {
   if (!r) continue;
   if (r.factors?.craft && r.factors?.distinctiveness && r.factors?.critical) continue;
   const src = (it.sources ?? [])[0];
+  const sources = (it.sources ?? []).slice(0, 4);
   r.factors = r.factors ?? {};
   for (const k of ['craft', 'distinctiveness']) {
-    if (!r.factors[k]) r.factors[k] = { value: it[k], setBy: 'agent', source: src, note: it.note, date: today };
+    if (!r.factors[k]) r.factors[k] = { value: it[k], setBy: 'agent', source: src, sources, note: it.note, date: today };
   }
   // The proposal schema says criticScore; it lands as factors.critical so all
   // three graded factors share one shape and one provenance rule.
-  r.factors.critical = { value: it.criticScore, setBy: 'agent', source: src, note: it.note, date: today };
+  r.factors.critical = { value: it.criticScore, setBy: 'agent', source: src, sources, note: it.note, date: today };
+  r.ratingAttempted = today;
   if (it.opened != null && r.opened == null) r.opened = it.opened;
   if (it.priceIndex != null && r.priceIndex == null) r.priceIndex = it.priceIndex;
   if (it.styleGroup && !r.styleGroup) r.styleGroup = it.styleGroup.trim();
@@ -125,6 +131,56 @@ for (const it of research.factorRatings ?? []) {
   ratedNow++;
   changes++;
   console.log(`  # ${r.name}: rated — craft ${it.craft}, distinctiveness ${it.distinctiveness}, critic ${it.criticScore} (${src})`);
+}
+
+/* ratingSkipped: the rating task tried and found no coverage. Recorded so the
+ * worklist moves on; the entry is retried after a quarter. */
+for (const it of research.ratingSkipped ?? []) {
+  const r = byId.get(it.id);
+  if (!r || (r.factors?.craft && r.factors?.distinctiveness && r.factors?.critical)) continue;
+  r.ratingAttempted = today;
+  r.ratingNote = it.note;
+  changes++;
+  console.log(`  . ${r.name}: no coverage found — ${it.note}`);
+}
+
+/* facts: founding year and price tier, fill-gaps-only. The two plain facts
+ * reputation and value read, which an entry could otherwise never acquire
+ * once rated (the rating apply was their only writer). */
+for (const it of research.facts ?? []) {
+  const r = byId.get(it.id);
+  if (!r) continue;
+  const did = [];
+  if (it.opened != null && r.opened == null) { r.opened = it.opened; r.openedSource = it.source; did.push(`opened ${it.opened}`); }
+  if (it.priceIndex != null && r.priceIndex == null) { r.priceIndex = it.priceIndex; r.priceSource = it.source; did.push(`price ${'$'.repeat(it.priceIndex)}`); }
+  if (did.length) {
+    changes++;
+    console.log(`  = ${r.name}: ${did.join(', ')} (${it.source})`);
+  }
+}
+
+/* news: stories the agent found that the feed sweep missed. Folded into
+ * buzz.json so they survive the next pass overwriting research.json; the
+ * sweep's own merge keeps them for its 120-day window and dedups on title. */
+const buzzPath = path.join(root, 'data/buzz.json');
+if ((research.news ?? []).length && fs.existsSync(buzzPath)) {
+  const buzz = JSON.parse(fs.readFileSync(buzzPath, 'utf8'));
+  const known = new Set(buzz.items.flatMap(b => [normUrl(b.url), normTitle(b.title)]));
+  let added = 0;
+  for (const it of research.news) {
+    if (known.has(normUrl(it.url)) || known.has(normTitle(it.title))) continue;
+    buzz.items.push({ title: it.title, url: it.url, source: it.source,
+      published: new Date(it.published).toISOString(), kind: it.kind,
+      mentions: it.mentions ?? [], via: 'research' });
+    known.add(normUrl(it.url)); known.add(normTitle(it.title));
+    added++;
+  }
+  if (added) {
+    buzz.items.sort((a, b) => Date.parse(b.published) - Date.parse(a.published));
+    fs.writeFileSync(buzzPath, JSON.stringify(buzz, null, 2) + '\n');
+    changes += added;
+    console.log(`  + ${added} researched stor${added === 1 ? 'y' : 'ies'} folded into buzz.json`);
+  }
 }
 
 /* links: an entry's canonical web presence. Instagram is a pointer, not a

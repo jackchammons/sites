@@ -22,6 +22,65 @@ const failsWith = (doc, snippet) => {
 
 const NOTE = 'a note comfortably long enough to pass every length check';
 
+/* ---- per-record rejection ---- */
+test('a bad record is dropped from accepted; the rest of the section survives', () => {
+  const good = { id: 'delancey', status: 'open', note: 'confirmed on its site today', source: 'https://x.com/a' };
+  const badRec = { id: 'delancey', status: 'open', note: 'confirmed on its site today', source: 'http://x.com/a' };
+  const { fails, fatal, accepted } = run({ status: [good, badRec] });
+  assert.equal(fatal, false);
+  assert.equal(fails.length, 1);
+  assert.deepEqual(accepted.status, [good]);
+});
+
+test('structural problems are fatal and accept nothing', () => {
+  const over = run({ mentions: Array.from({ length: 41 }, () => ({})) });
+  assert.equal(over.fatal, true);
+  assert.deepEqual(over.accepted, {});
+  assert.equal(run('nope').fatal, true);
+});
+
+/* ---- text hygiene ---- */
+test('look-alike scripts and oversized text are refused', () => {
+  failsWith({ directory: [{ name: 'Zeeks Pizz\u0430', status: 'open', neighborhood: 'X',
+    note: NOTE, source: 'https://x.com/a' }] }, 'outside the Latin script');
+  failsWith({ directory: [{ name: 'Fine Pizza', status: 'open', neighborhood: 'X',
+    note: 'x'.repeat(601), source: 'https://x.com/a' }] }, 'longer than 600');
+  // an accented Latin name is fine, and dedups against its plain spelling
+  failsWith({ directory: [{ name: 'Z\u00e9eks Pizza', status: 'open', neighborhood: 'X',
+    note: NOTE, source: 'https://x.com/a' }] }, 'already on file');
+});
+
+/* ---- status: closures need evidence ---- */
+test('status: a closure citing a review site or listing is refused; news passes', () => {
+  failsWith({ status: [{ id: 'delancey', status: 'closed', note: 'Yelp marks it closed.',
+    source: 'https://www.yelp.com/biz/delancey-seattle' }] }, 'a closure needs');
+  passes({ status: [{ id: 'delancey', status: 'closed', note: 'Eater reports the closure.',
+    source: 'https://seattle.eater.com/closed', date: '2024-03-01' }] });
+  passes({ status: [{ id: 'delancey', status: 'open', note: 'Yelp says open, site confirms',
+    source: 'https://www.yelp.com/biz/delancey-seattle' }] });
+});
+
+/* ---- mentions: the 24-month window ---- */
+test('mentions: accepted up to 24 months back, news only 180 days', () => {
+  passes({ mentions: [{ id: 'roma-roma', title: 'An older but real review', url: 'https://x.com/r',
+    source: 'Seattle Met', date: '2025-01-15', kind: 'mention' }] });
+  failsWith({ mentions: [{ id: 'roma-roma', title: 'An ancient review', url: 'https://x.com/r',
+    source: 'Seattle Met', date: '2023-01-15', kind: 'mention' }] }, 'older than 730');
+});
+
+/* ---- facts and ratingSkipped ---- */
+test('facts: fill-gap records for opened and priceIndex', () => {
+  passes({ facts: [{ id: 'delancey', opened: 2009, source: 'https://delancey.example/about' }] });
+  failsWith({ facts: [{ id: 'delancey', source: 'https://x.com' }] }, 'must carry opened or priceIndex');
+  failsWith({ facts: [{ id: 'delancey', opened: 1850, source: 'https://x.com' }] }, 'opened must be');
+  failsWith({ facts: [{ id: 'nope', opened: 2000, source: 'https://x.com' }] }, 'unknown restaurant id');
+});
+
+test('ratingSkipped: records an attempt on an unrated entry only', () => {
+  passes({ ratingSkipped: [{ id: 'roma-roma', note: 'no published review found' }] });
+  failsWith({ ratingSkipped: [{ id: 'delancey', note: 'no published review found' }] }, 'already rated');
+});
+
 /* ---- locations: the address gate ---- */
 const site = (addr, hood = 'Somewhere') => ({ neighborhood: hood, address: addr });
 const loc = (...sites) => ({ locations: [{ id: 'zeeks-pizza', source: 'https://z.com/l', sites }] });
@@ -76,6 +135,12 @@ test('factorRatings: a grounded proposal for an unrated entry passes', () => {
   passes(rating({ opened: 2024, priceIndex: 2, styleGroup: 'Roman' }));
 });
 
+test('factorRatings: sources must include published criticism', () => {
+  failsWith(rating({ sources: ['https://www.yelp.com/biz/roma-roma'] }), 'no source is published criticism');
+  failsWith(rating({ sources: ['https://en.wikipedia.org/wiki/Roma_Roma', 'https://www.instagram.com/romaroma/'] }), 'no source is published criticism');
+  passes(rating({ sources: ['https://www.yelp.com/biz/roma-roma', 'https://seattlemet.com/review'] }));
+});
+
 test('factorRatings: never overwrites, never off-grid, always sourced', () => {
   failsWith(rating({ id: 'delancey' }), 'already rated');
   failsWith(rating({ craft: 7.3 }), '0.5 steps');
@@ -93,8 +158,8 @@ test('factorRatings: duplicate proposals for one entry are refused', () => {
 
 /* ---- caps and structure ---- */
 test('caps: an oversized section rejects the file', () => {
-  const doc = { mentions: Array.from({ length: 31 }, () => ({})) };
-  failsWith(doc, 'exceeds the 30 cap');
+  const doc = { mentions: Array.from({ length: 41 }, () => ({})) };
+  failsWith(doc, 'exceeds the 40 cap');
 });
 
 test('legacy crowd-rating payloads are refused outright', () => {

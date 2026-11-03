@@ -124,7 +124,7 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   out whatever research just committed. Keep that ordering if you change either cron;
   to see a research commit on the site sooner, dispatch `publish.yml` by hand.
 - **Agents stay out of the deploy path.** `research.yml` runs the Claude Code Action to write
-  `pizza/data/research.json` (news, mentions, locations, status, directory, factorRatings, newAttributes, links), gated behind
+  `pizza/data/research.json` (news, mentions, locations, status, directory, factorRatings, ratingSkipped, facts, newAttributes, links, candidateReview), gated behind
   `CLAUDE_CODE_OAUTH_TOKEN`. `verify-research.mjs` validates it and `apply-research.mjs` then
   applies the validated sections to `restaurants.json`. The agent's write grant is scoped to
   `research.json` (`Edit(pizza/data/research.json)` in `research.yml`) and a guard step fails the
@@ -179,7 +179,14 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   not evidence), new directory entries (fuzzy-name dedup blocks variants like "Zeeks Pizza
   Co"), mentions (feed reputation and the critical boost), factor proposals (0–10 in 0.5
   steps, FILL GAPS ONLY — the validator rejects any overwrite of an existing rating — and
-  need published criticism), newAttributes, and links. One bad entry rejects the whole file.
+  need at least one source that is published criticism, not the pizzeria's own site, an
+  aggregator or social), `ratingSkipped` (an attempt that found no coverage; the entry waits 90
+  days before the rating worklist redraws it), `facts` (`opened`/`priceIndex`, fill-gaps-only,
+  with the page that states them), newAttributes, and links. **Records are rejected one at a
+  time**: `verify-research.mjs` drops the records that fail, emits a workflow warning per drop,
+  writes the accepted set back to `research.json`, and fails the run only on a structural
+  problem (not an object, a section over its cap, a retired channel). A closure citing only a
+  review site or listing is one of the rejected shapes.
 - **`links` is the one channel for web presence.** `{id, website?, instagram?, source}`:
   instagram must be a real `https://instagram.com/<handle>` profile URL the agent saw
   linked or named somewhere (never guessed — plausible handles are fan pages and
@@ -187,12 +194,21 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   none — the locations pass owns correcting an existing official site — and for a place
   with no site of its own it carries the best canonical link (often the Instagram).
   `nameLink()` renders `url ?? instagram`, so a backfilled entry is always clickable.
-- **The agent runs one task per day**, rotated by `next-task.mjs`: discovery, locations,
-  liveness, news, rating. The locations brief also collects Instagram links from the
-  official sites it is already reading. A manual dispatch can force a type via the
-  workflow's `task` input — including the dispatch-only `social` (Instagram/website
-  backfill) and `census` (candidates-queue verification) tasks, never in the rotation —
-  which is how backfills work. Briefs are code (in `next-task.mjs`); the fixed rules and
+- **The agent runs one task per day**, picked by `next-task.mjs` as the type whose last
+  successful pass is oldest (read from the `chore(data): research pass (<type>)` commit
+  subjects; `research.yml` checks out full history for this), so a failed day is retried
+  next and a dispatch counts: discovery, locations, liveness, news, rating. The locations
+  brief also collects Instagram links and `facts` from the official sites it is already
+  reading; the rating brief files every review it cites as a mention. A manual dispatch can
+  force a type via the workflow's `task` input — including the dispatch-only `social`
+  (Instagram/website backfill), `census` (candidates-queue verification), `facts` (founding
+  year and price tier for entries missing them) and `coverage` (mentions up to 24 months
+  back, fewest-first) tasks, never in the rotation — which is how backfills work. A task
+  whose worklist is empty sets `skip=true` and the agent step does not run.
+- **Liveness is ordered by age of last check.** Never-checked first, then oldest; the
+  preference for openings and no-site entries applies only past a 14-day revisit window, and a
+  closure recorded in the last 90 days is re-confirmed once. The old tier-first sort pinned
+  the same four entries into four of six slots on every pass. Briefs are code (in `next-task.mjs`); the fixed rules and
   schema live in `research.yml` so no task can drop them.
 - **The candidates queue is the discovery funnel's registry top.**
   `data/candidates.json` is seeded by `scripts/fetch-candidates.mjs` from King County

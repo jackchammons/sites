@@ -57,7 +57,7 @@ const detailHtml = r => {
   const facts = [];
   if (r.style) facts.push(dRow(`Style: ${esc(r.style)}${r.styleGroup ? ` <span class="dd-dim">(${esc(r.styleGroup)})</span>` : ''}`));
   if (r.opened) facts.push(dRow(`Opened: ${esc(String(r.opened))}${r.openedSource ? ` ${srcLink(r.openedSource)}` : ''}`));
-  if (r.priceIndex) facts.push(dRow(`Price: ${'$'.repeat(r.priceIndex)}`));
+  if (r.priceIndex) facts.push(dRow(`Price: ${'$'.repeat(r.priceIndex)}${r.priceSource ? ` ${srcLink(r.priceSource)}` : ''}`));
   if (r.lastVerified) facts.push(dRow(`Data last verified: ${esc(shortDate(r.lastVerified))}`));
   if (r.crowd) facts.push(dRow(`<span class="dd-dim">Crowd figures: ${r.crowd.rating.toFixed(1)}★ (context only) across ~${r.crowd.reviews.toLocaleString('en-US')} reviews (the count feeds reputation)${
     r.crowd.observed ? ` · on file from ${esc(shortDate(r.crowd.observed))}` : ''}${r.crowd.source ? `, ${esc(r.crowd.source)}` : ''}</span>`));
@@ -69,7 +69,8 @@ const detailHtml = r => {
       return dRow(`${FACTOR_NAME[k]}: <b>${f.value.toFixed(1)}</b> <span class="dd-dim">set ${
         f.setBy === 'agent' ? 'by the research agent' : 'editorially at launch, no cited source'}${
         f.setBy === 'agent' && f.date ? ` ${esc(shortDate(f.date))}` : ''}${
-        f.source ? ` from ${srcLink(f.source, 'coverage')}` : ''}</span>${
+        (f.sources?.length ? f.sources : f.source ? [f.source] : []).length
+          ? ` from ${(f.sources?.length ? f.sources : [f.source]).map((u, n) => srcLink(u, n ? `source ${n + 1}` : 'coverage')).join(', ')}` : ''}</span>${
         f.note ? `<div class="dd-note">${esc(f.note)}</div>` : ''}`);
     });
 
@@ -78,7 +79,8 @@ const detailHtml = r => {
     Object.entries(scored.factorScores).map(([k, v]) => `${k} ${v.toFixed(1)}`).join(' · ') +
     ` · friction −${scored.penaltyApplied.toFixed(1)} · decay −${(scored.stalenessDecay * 100).toFixed(1)}%${
       scored.verified ? ` (last ${scored.verified.source} ${esc(shortDate(scored.verified.date))})` : ''}`
-  )] : [dRow('<span class="dd-dim">Not yet rated — no score until the rating rotation grounds one in published coverage.</span>')];
+  )] : [dRow(`<span class="dd-dim">Not yet rated — no score until the rating rotation grounds one in published coverage.${
+      r.ratingAttempted ? ` Last looked ${esc(shortDate(r.ratingAttempted))}${r.ratingNote ? `: ${esc(r.ratingNote)}` : ''}` : ''}</span>`)];
 
   const attrs = Object.keys(r.attributes ?? {}).filter(k => r.attributes[k]).map(k => {
     const reg = dataset.attributeRegistry[k];

@@ -96,17 +96,21 @@ Node sites). Only `main` deploys.
 ## The daily loop
 
 Two scheduled workflows. `research.yml` runs a Claude agent on one bounded task per day
-(discovery, locations, liveness, news, rating, rotating), writing proposals to
-`data/research.json`. The agent's write grant is scoped to that one file, a guard step
+(discovery, locations, liveness, news, rating; the type whose last successful pass is
+oldest goes next), writing proposals to `data/research.json`. Dispatch-only backfill tasks
+(`social`, `census`, `facts`, `coverage`) run from the Actions tab. The agent's write grant is scoped to that one file, a guard step
 fails the run if anything else changed, every record is validated by
-`validate-research.js`, the validated sections are applied to `restaurants.json`, the
-dataset is linted, and the page is built and verified before the commit. `publish.yml`
+`validate-research.js` (a record that fails is dropped with a warning; the rest are
+applied), the accepted records are applied to `restaurants.json`, the dataset is linted,
+and the page is built and verified before the commit. `publish.yml`
 then rebuilds every site and deploys.
 
 What the agent may write: new directory entries, status changes (with the date the
-source states, if any), verified locations and official sites, press mentions, factor
-proposals for unrated entries only, Instagram links, attribute flags and candidate
-verdicts. It never writes a score. Crowd star ratings were seeded at launch and are never
+source states, if any; a closure needs a news report or the pizzeria's own announcement),
+verified locations and official sites, press mentions up to two years old, factor
+proposals for unrated entries only (at least one source must be published criticism), a
+note on each unrated entry it could not ground, founding years and price tiers from pages
+that state them, Instagram links, attribute flags and candidate verdicts. It never writes a score. Crowd star ratings were seeded at launch and are never
 refreshed; they are shown as context, and only the review count feeds reputation.
 
 ## Corrections

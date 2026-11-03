@@ -34,13 +34,29 @@ const candidates = fs.existsSync(candidatesPath)
   ? JSON.parse(fs.readFileSync(candidatesPath, 'utf8')).candidates
   : null;
 
-const { fails, sections } = validateResearch(doc, dataset, registry, Date.now(),
+const { fails, sections, fatal, accepted } = validateResearch(doc, dataset, registry, Date.now(),
   candidates ? { candidates } : {});
 
-if (fails.length) {
+if (fatal) {
   console.error(`research.json FAILED validation (${fails.length} problem(s)):`);
   for (const f of fails.slice(0, 25)) console.error('  ✗ ' + f);
   process.exit(1);
 }
-const counts = Object.entries(sections).map(([k, v]) => `${v.length} ${k}`).join(', ');
+
+/* Per-record rejection. Every record is validated on its own, so dropping
+ * the ones that failed cannot let an unchecked claim through; rejecting the
+ * whole file over one http:// source threw away three complete passes. The
+ * accepted records are written back so apply-research reads exactly what
+ * passed, and each drop is a workflow warning with the reason. */
+if (fails.length) {
+  console.warn(`research.json: ${fails.length} record(s) rejected, the rest accepted:`);
+  for (const f of fails) {
+    console.warn('  ✗ ' + f);
+    console.log(`::warning title=research record rejected::${f}`);
+  }
+  const kept = { ...doc, ...accepted, rejected: fails };
+  for (const k of Object.keys(accepted)) if (!accepted[k].length) delete kept[k];
+  fs.writeFileSync(file, JSON.stringify(kept, null, 2) + '\n');
+}
+const counts = Object.entries(accepted).filter(([, v]) => v.length).map(([k, v]) => `${v.length} ${k}`).join(', ') || 'nothing';
 console.log(`research.json valid: ${counts}.`);
