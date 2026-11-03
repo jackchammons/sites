@@ -4420,7 +4420,9 @@
       "locations": [
         {
           "neighborhood": "Admiral",
-          "address": "2341 California Ave SW, Seattle, WA 98116"
+          "address": "2341 California Ave SW, Seattle, WA 98116",
+          "lat": 47.58183,
+          "lon": -122.38681
         }
       ],
       "locationsVerified": null,
