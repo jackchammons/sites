@@ -9,17 +9,42 @@
 
 export const KINDS = new Set(['opening', 'closing', 'ranking', 'mention']);
 export const CAPS = { news: 20, locations: 12, directory: 10, status: 10,
-                      mentions: 30, newAttributes: 3, factorRatings: 12, links: 20,
-                      candidateReview: 15 };
+                      mentions: 40, newAttributes: 3, factorRatings: 12, links: 20,
+                      candidateReview: 15, facts: 20, ratingSkipped: 12 };
 export const MAX_AGE_DAYS = 180;
+/* Mentions feed a 24-month coverage window in slice.js; capping them at 180
+ * days meant the window could never fill from the loop. */
+export const MENTION_MAX_AGE_DAYS = 730;
+export const MAX_LEN = { name: 80, note: 600, title: 200, address: 200 };
 
+/* Hosts that are not published criticism: aggregators, social, ordering and
+ * reference sites. A rating resting ONLY on these (or on the pizzeria's own
+ * site) is refused; a closure citing only one of these is a lead, not evidence. */
+export const NON_CRITICISM_HOSTS = ['yelp.com', 'tripadvisor.com', 'happycow.net', 'onebite.app',
+  'google.com', 'maps.google.com', 'wikipedia.org', 'facebook.com', 'instagram.com', 'doordash.com',
+  'grubhub.com', 'ubereats.com', 'toasttab.com', 'squareup.com', 'restaurantji.com', 'foursquare.com',
+  'zomato.com', 'opentable.com', 'resy.com'];
+export const hostOf = u => { try { return new URL(u).hostname.replace(/^www\./, '').toLowerCase(); } catch { return ''; } };
+export const isNonCriticism = (u, own = []) => {
+  const h = hostOf(u);
+  return !h || NON_CRITICISM_HOSTS.some(d => h === d || h.endsWith('.' + d)) || own.includes(h);
+};
+
+/* Returns { fails, sections, fatal, accepted }. `fails` is every problem found;
+ * `fatal` means the document itself is unusable (not an object, a section over
+ * its cap, a retired channel); otherwise `accepted` holds each section with the
+ * failing records dropped, so one bad record costs that record, not the run. */
 export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now(), extra = {}) {
   const fails = [];
-  const bad = (sec, i, msg) => fails.push(`${sec}[${i}]: ${msg}`);
+  const badIdx = {};
+  const bad = (sec, i, msg) => {
+    fails.push(`${sec}[${i}]: ${msg}`);
+    (badIdx[sec] ??= new Set()).add(i);
+  };
   const byId = new Map(dataset.restaurants.map(r => [r.id, r]));
 
   if (!doc || typeof doc !== 'object' || Array.isArray(doc)) {
-    return { fails: ['research.json must be a JSON object.'], sections: {} };
+    return { fails: ['research.json must be a JSON object.'], sections: {}, fatal: true, accepted: {} };
   }
 
   /* `items` was the original field name; keep reading it so older files still work. */
@@ -30,7 +55,9 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
                      newAttributes: doc.newAttributes ?? [],
                      factorRatings: doc.factorRatings ?? [],
                      links: doc.links ?? [],
-                     candidateReview: doc.candidateReview ?? [] };
+                     candidateReview: doc.candidateReview ?? [],
+                     facts: doc.facts ?? [],
+                     ratingSkipped: doc.ratingSkipped ?? [] };
   if (Array.isArray(doc.ratings) && doc.ratings.length) {
     fails.push('ratings are no longer accepted: crowd figures are frozen, see CLAUDE.md');
   }
@@ -46,7 +73,7 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
     if (!Array.isArray(arr)) { fails.push(`${name} must be an array`); continue; }
     if (arr.length > CAPS[name]) fails.push(`${name}: ${arr.length} entries exceeds the ${CAPS[name]} cap`);
   }
-  if (fails.length) return { fails, sections };
+  if (fails.length) return { fails, sections, fatal: true, accepted: {} };
 
   /* A claim we cannot check is not usable, so every section needs a live https source. */
   const checkUrl = (sec, i, url, field = 'url') => {
@@ -61,9 +88,20 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
     else if (t < nowMs - maxAgeDays * 864e5) bad(sec, i, `${field} is older than ${maxAgeDays} days`);
   };
 
+  /* Free text that reaches the page: bounded, and in a Latin script. A name in
+   * a look-alike script ('Zeeks Pizzа' with a Cyrillic а) normalises to a new
+   * slug and forks a real entry. */
+  const NON_LATIN = /[^\p{Script=Latin}\p{N}\p{P}\p{S}\s]/u;
+  const checkText = (sec, i, v, field, max, min = 0) => {
+    if (typeof v !== 'string' || v.trim().length < min) { bad(sec, i, `${field} missing or too short`); return false; }
+    if (v.length > max) { bad(sec, i, `${field} is longer than ${max} characters`); return false; }
+    if (NON_LATIN.test(v)) { bad(sec, i, `${field} contains characters outside the Latin script: "${v.slice(0, 40)}"`); return false; }
+    return true;
+  };
+
   const seen = new Set();
   news.forEach((it, i) => {
-    if (typeof it?.title !== 'string' || it.title.trim().length < 8) bad('news', i, 'title missing or too short');
+    checkText('news', i, it?.title, 'title', MAX_LEN.title, 8);
     if (typeof it?.source !== 'string' || !it.source.trim()) bad('news', i, 'source missing');
     checkUrl('news', i, it?.url);
     checkDate('news', i, it?.published, 'published');
@@ -139,18 +177,19 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
   /* ---- directory: discovered pizzerias ----
    * The important failure to catch is a duplicate of something on file under a
    * slightly different name, which would fork one pizzeria into two entries. */
-  const normName = n => String(n).toLowerCase()
+  const normName = n => String(n).normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
     .replace(/['’]/g, '')
     .replace(/\b(pizza company|pizza co|pizzeria|pizza|restaurant)\b/g, '')
     .replace(/[^a-z0-9]+/g, ' ').trim();
   const knownNames = new Set(dataset.restaurants.map(r => normName(r.name)));
 
   sections.directory.forEach((it, i) => {
-    if (typeof it?.name !== 'string' || it.name.trim().length < 2) { bad('directory', i, 'name missing'); return; }
+    if (!checkText('directory', i, it?.name, 'name', MAX_LEN.name, 2)) return;
     if (knownNames.has(normName(it.name))) bad('directory', i, `"${it.name}" is already on file`);
     if (!['open', 'opening'].includes(it?.status)) bad('directory', i, `status must be open|opening, got "${it?.status}"`);
-    if (typeof it?.neighborhood !== 'string' || !it.neighborhood.trim()) bad('directory', i, 'neighborhood missing');
-    if (typeof it?.note !== 'string' || it.note.trim().length < 15) bad('directory', i, 'note missing or too short');
+    checkText('directory', i, it?.neighborhood, 'neighborhood', MAX_LEN.name, 1);
+    checkText('directory', i, it?.note, 'note', MAX_LEN.note, 15);
+    if (it?.address != null) checkText('directory', i, it.address, 'address', MAX_LEN.address, 1);
     checkUrl('directory', i, it?.source, 'source');
     if (it?.url != null) checkUrl('directory', i, it.url, 'url');
     if (it?.address != null) {
@@ -163,8 +202,13 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
   sections.status.forEach((it, i) => {
     if (!byId.has(it?.id)) bad('status', i, `unknown restaurant id "${it?.id}"`);
     if (!['open', 'closed', 'opening'].includes(it?.status)) bad('status', i, `status must be open|closed|opening, got "${it?.status}"`);
-    if (typeof it?.note !== 'string' || it.note.trim().length < 10) bad('status', i, 'note missing or too short');
+    checkText('status', i, it?.note, 'note', MAX_LEN.note, 10);
     checkUrl('status', i, it?.source, 'source');
+    // A closure removes an entry from the ranking and from every worklist; a
+    // review-site label or a listing is a lead, not evidence of one.
+    if (it?.status === 'closed' && isNonCriticism(it?.source)) {
+      bad('status', i, `a closure needs a news report or the pizzeria's own announcement, not ${hostOf(it?.source) || 'that source'}`);
+    }
     // The date a status took effect, as the source reports it. A closure found
     // late is still a closure that happened years ago, so no staleness cap.
     if (it?.date != null) {
@@ -176,10 +220,10 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
   /* ---- mentions: coverage tied to entries ---- */
   sections.mentions.forEach((it, i) => {
     if (!byId.has(it?.id)) bad('mentions', i, `unknown restaurant id "${it?.id}"`);
-    if (typeof it?.title !== 'string' || it.title.trim().length < 8) bad('mentions', i, 'title missing');
+    checkText('mentions', i, it?.title, 'title', MAX_LEN.title, 8);
     if (typeof it?.source !== 'string' || !it.source.trim()) bad('mentions', i, 'source name missing');
     checkUrl('mentions', i, it?.url);
-    checkDate('mentions', i, it?.date, 'date');
+    checkDate('mentions', i, it?.date, 'date', MENTION_MAX_AGE_DAYS);
     if (!KINDS.has(it?.kind)) bad('mentions', i, `kind must be one of ${[...KINDS].join('|')}, got "${it?.kind}"`);
   });
 
@@ -221,10 +265,45 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
       bad('factorRatings', i, 'sources must be 1-4 https URLs actually read');
     } else {
       srcs.forEach((u, j) => checkUrl('factorRatings', i, u, `sources[${j}]`));
+      // "Published criticism" means at least one source that is not the
+      // pizzeria's own site, a review aggregator, social or an ordering page.
+      const own = [r.url, r.locationsSource, r.instagram].filter(Boolean).map(hostOf);
+      if (!srcs.some(u => !isNonCriticism(u, own))) {
+        bad('factorRatings', i, `no source is published criticism (${srcs.map(hostOf).join(', ')}); a rating needs a review, a roundup or a news story`);
+      }
     }
-    if (typeof it?.note !== 'string' || it.note.trim().length < 20) {
-      bad('factorRatings', i, 'note missing or too short — say what the coverage describes');
+    checkText('factorRatings', i, it?.note, 'note', MAX_LEN.note, 20);
+  });
+
+  /* ---- ratingSkipped: the rating task's memory ----
+   * An entry the agent looked for coverage on and could not ground. Recorded
+   * so the worklist stops redrawing the same no-coverage entries. */
+  sections.ratingSkipped.forEach((it, i) => {
+    const r = byId.get(it?.id);
+    if (!r) { bad('ratingSkipped', i, `unknown restaurant id "${it?.id}"`); return; }
+    if (alreadyRated(r)) bad('ratingSkipped', i, `${r.name} is already rated`);
+    if (ratingSeen.has(it.id)) bad('ratingSkipped', i, `${r.name} is also proposed in factorRatings`);
+    checkText('ratingSkipped', i, it?.note, 'note', MAX_LEN.note, 10);
+  });
+
+  /* ---- facts: founding year and price tier, for any entry that lacks them ----
+   * The two plain facts reputation and value read, and the only two an entry
+   * could never acquire once rated. Fill-gaps-only at apply time; the source
+   * is the page that states the year (the pizzeria's own site, or coverage). */
+  const factsSeen = new Set();
+  sections.facts.forEach((it, i) => {
+    const r = byId.get(it?.id);
+    if (!r) { bad('facts', i, `unknown restaurant id "${it?.id}"`); return; }
+    if (factsSeen.has(it.id)) bad('facts', i, `duplicate facts record for "${it.id}"`);
+    factsSeen.add(it.id);
+    if (it?.opened == null && it?.priceIndex == null) bad('facts', i, 'must carry opened or priceIndex');
+    if (it?.opened != null && (typeof it.opened !== 'number' || it.opened < 1900 || it.opened > thisYear)) {
+      bad('facts', i, `opened must be a year 1900-${thisYear}, got ${it.opened}`);
     }
+    if (it?.priceIndex != null && ![1, 2, 3, 4].includes(it.priceIndex)) {
+      bad('facts', i, `priceIndex must be 1-4, got ${it.priceIndex}`);
+    }
+    checkUrl('facts', i, it?.source, 'source');
   });
 
   /* ---- links: an entry's canonical web presence ----
@@ -295,5 +374,7 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
   });
 
 
-  return { fails, sections };
+  const accepted = Object.fromEntries(Object.entries(sections).map(([k, arr]) =>
+    [k, arr.filter((_, i) => !badIdx[k]?.has(i))]));
+  return { fails, sections, fatal: false, accepted };
 }

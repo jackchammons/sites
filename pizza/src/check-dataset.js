@@ -51,6 +51,8 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
       bad(id, `statusDate ${r.statusDate} is after it was detected (${r.statusDetected})`);
     }
     if (r.openedSource != null && !https(r.openedSource)) bad(id, `openedSource must be https`);
+    if (r.priceSource != null && !https(r.priceSource)) bad(id, `priceSource must be https`);
+    if (r.ratingAttempted != null && !pastDate(r.ratingAttempted)) bad(id, `ratingAttempted is not a past date`);
     if (r.crowd?.observed != null && !pastDate(r.crowd.observed)) bad(id, `crowd.observed is not a past date`);
     {
     }
@@ -74,6 +76,7 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
       if (typeof f.value !== 'number' || f.value < 0 || f.value > 10) bad(id, `factors.${k}.value out of range: ${f.value}`);
       if (!SET_BY.has(f.setBy)) bad(id, `factors.${k}.setBy must be editorial|agent`);
       if (f.setBy === 'agent' && !(f.source && https(f.source))) bad(id, `factors.${k} is agent-set but carries no https source`);
+      if (f.sources != null && !(Array.isArray(f.sources) && f.sources.every(https))) bad(id, `factors.${k}.sources must be https URLs`);
     }
     if (r.criticScore != null) bad(id, 'legacy top-level criticScore: migrate to factors.critical');
     if (r.opened != null && (typeof r.opened !== 'number' || r.opened < 1900 || r.opened > new Date(nowMs).getUTCFullYear())) {

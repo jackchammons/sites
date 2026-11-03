@@ -28,7 +28,7 @@ on:
         description: 'Task type (auto rotates by day)'
         type: choice
         default: auto
-        options: [auto, discovery, locations, liveness, news, rating, social, census]
+        options: [auto, discovery, locations, liveness, news, rating, social, census, facts, coverage]
 
 concurrency:
   group: research
@@ -50,7 +50,11 @@ jobs:
       contents: write
       id-token: write
     steps:
+      # Full history: next-task.mjs picks the day's task by the age of each
+      # type's last successful pass, read from the data commits' subjects.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -146,9 +150,13 @@ jobs:
         if: steps.gate.outputs.enabled == 'true'
         run: node pizza/scripts/next-task.mjs "${{ inputs.task || 'auto' }}"
 
+      - name: Nothing to research today
+        if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip == 'true'
+        run: echo "::notice::${{ steps.task.outputs.task }} has an empty worklist; the agent was not run."
+
       - name: Research and refresh pizza data
         id: agent
-        if: steps.gate.outputs.enabled == 'true'
+        if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
         continue-on-error: true
         uses: anthropics/claude-code-action@v1
         with:
@@ -198,6 +206,9 @@ jobs:
                            "status":"open|opening","note":"<one sentence>",
                            "source":"<https page you read>",
                            "address":"<street address or omit>"}],
+             "ratingSkipped":[{"id":"<id from the rating worklist>","note":"<what you searched and found>"}],
+             "facts":[{"id":"<entry id>","opened":<year or omit>,"priceIndex":<1-4 or omit>,
+                       "source":"<https page that states it>"}],
              "factorRatings":[{"id":"<id from the rating worklist>",
                                "craft":<0-10 in 0.5 steps>,
                                "distinctiveness":<0-10 in 0.5 steps>,
@@ -221,15 +232,21 @@ jobs:
             breaks the rules, so write carefully rather than checking:
             - Every claim needs a real https URL you actually opened. Never
               invent a URL, a headline, a date or an address.
-            - Dates must be real and not in the future; news within 180 days.
+            - Dates must be real and not in the future; news within 180 days,
+              mentions within two years.
+            - A closure needs a news report or the pizzeria's own announcement;
+              a review site's "closed" label is a lead, not evidence.
             - Addresses start with a street number and carry a Puget Sound ZIP
               (980xx-985xx).
             - factorRatings must all be for ids from the rating worklist, carry
               craft, distinctiveness and criticScore inside their bounds, and
-              cite 1-4 sources you actually read. Skipping an entry you could
-              not ground is correct; inventing a rating rejects the file.
-            - Stay within the search budget your task sets. Omissions are free;
-              fabrications are not.
+              cite 1-4 sources you actually read, at least one of them published
+              criticism (not the pizzeria's own site, an aggregator or social).
+              Skipping an entry you could not ground is correct; say so in
+              ratingSkipped.
+            - A record that breaks a rule is dropped on its own; the rest of
+              the file is still applied. Stay within the search budget your
+              task sets. Omissions are free; fabrications are not.
 
             Do not attempt crowd star ratings or review counts; those sources
             block automated reads and the stored figures are frozen by design.
@@ -242,7 +259,7 @@ jobs:
       # agent-writable tree is executed. Porcelain rather than diff so an
       # untracked file fails too.
       - name: Check the agent changed only research.json
-        if: steps.gate.outputs.enabled == 'true'
+        if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
         run: |
           dirty=$(git status --porcelain --untracked-files=all | awk '{print $2}')
           if [ -n "$dirty" ] && [ "$dirty" != "pizza/data/research.json" ]; then
@@ -252,7 +269,7 @@ jobs:
           fi
 
       - name: Check the agent actually wrote something
-        if: steps.gate.outputs.enabled == 'true'
+        if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
         run: |
           if [ ! -f pizza/data/research.json ]; then
             echo "::error::The agent wrote no pizza/data/research.json." \
@@ -273,30 +290,32 @@ jobs:
           fi
 
       - name: Unit tests
-        if: steps.gate.outputs.enabled == 'true'
+        if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
         run: node --test pizza/test/*.test.mjs
 
       - name: Validate the agent's output
-        if: steps.gate.outputs.enabled == 'true'
+        if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
         run: node pizza/scripts/verify-research.mjs
 
       # Only runs once validation passes, so nothing unchecked reaches the
       # dataset. Touches crowd figures and closure flags only.
       - name: Apply validated research
-        if: steps.gate.outputs.enabled == 'true'
+        if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
         run: node pizza/scripts/apply-research.mjs
 
       # A bad apply must fail this run, not poison main for the next build.
       - name: Lint the dataset after apply
-        if: steps.gate.outputs.enabled == 'true'
+        if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
         run: node pizza/scripts/check-dataset.mjs
 
       # Render the page from the applied data and run the deploy gate on it,
       # here, before the commit. A data shape the renderer did not expect (an
       # entry with no signature, on 2026-08-27) used to land on main and fail
       # the next three publishes. No snapshot: SNAPSHOT is unset.
+      # verify-research may have rewritten research.json with only the
+      # accepted records; that is the file apply read and the one committed.
       - name: Build and verify the page from the applied data
-        if: steps.gate.outputs.enabled == 'true'
+        if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
         working-directory: pizza
         env:
           OUT_DIR: /tmp/pizza-gate
@@ -309,11 +328,11 @@ jobs:
       # checkout credential is dead by this point (the Claude action revokes
       # its own token in cleanup).
       - name: Commit research
-        if: steps.gate.outputs.enabled == 'true'
+        if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           bash scripts/commit-data.sh \
             "chore(data): research pass (${{ steps.task.outputs.task }}) $(date -u +%Y-%m-%d)" \
             pizza/data/research.json pizza/data/restaurants.json pizza/data/attributes.json \
-            pizza/data/candidates.json
+            pizza/data/candidates.json pizza/data/buzz.json

@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mentionMatch } from '../src/match.js';
+import { mentionMatch, normUrl, normTitle } from '../src/match.js';
 
 const rs = [
   { id: 'independent', name: 'The Independent Pizzeria' },
@@ -26,4 +26,10 @@ test('short names never match by fragment', () => {
 test('multiple entries in one headline all tag', () => {
   assert.deepEqual(mentionMatch('Moto Pizza and The Independent Pizzeria share a block party', rs),
     ['independent', 'moto']);
+});
+
+test('normUrl folds scheme, www, trailing slash and tracking params', () => {
+  assert.equal(normUrl('https://www.seattlemag.com/a-story/'), normUrl('http://seattlemag.com/a-story?utm_source=x'));
+  assert.notEqual(normUrl('https://seattlemag.com/a-story'), normUrl('https://seattlemag.com/b-story'));
+  assert.equal(normTitle('Opening Night: Stevie\u2019s Famous!'), 'opening night stevie s famous');
 });
