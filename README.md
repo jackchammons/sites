@@ -11,6 +11,7 @@ page indexes them with a client-side search (`/` to focus, Enter to open the fir
 | The Seattle Pizza Index | [`/pizza/`](https://sites.jackhammons.com/pizza/) | [`pizza/`](pizza/) | Daily (ranked weekly) |
 | Odyssey 70mm Seat Maps | [`/odyssey-seats/`](https://sites.jackhammons.com/odyssey-seats/) | [`odyssey-seats/`](odyssey-seats/) | Daily |
 | Now | [`/clock/`](https://sites.jackhammons.com/clock/) | [`clock/`](clock/) | Live in the browser |
+| Mortgage Calculator | [`/mortgage/`](https://sites.jackhammons.com/mortgage/) | [`mortgage/`](mortgage/) | Live in your browser |
 
 ## Layout
 

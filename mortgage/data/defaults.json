@@ -1,0 +1,17 @@
+{
+  "title": "Mortgage Calculator",
+  "tagline": "What the house actually costs per month, and over the life of the loan.",
+  "note": "The starting figures are an example, not a quote: the rate in particular is a placeholder, so put in the one a lender actually offered you.",
+  "inputs": {
+    "price": 750000,
+    "downPct": 20,
+    "rate": 6.25,
+    "years": 30,
+    "taxRate": 0.92,
+    "insurance": 1800,
+    "hoa": 0,
+    "pmiRate": 0.5,
+    "extra": 0
+  },
+  "terms": [10, 15, 20, 25, 30, 40]
+}
