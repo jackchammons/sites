@@ -5837,8 +5837,8 @@
         "west-of-chicago-pizza-company": 19,
         "stevies-famous": 20,
         "ballard-pizza-co": 21,
-        "good-shape-pizza": 22,
-        "moto-pizza": 23,
+        "moto-pizza": 22,
+        "good-shape-pizza": 23,
         "cornuto-pizzeria": 24,
         "my-friend-dereks": 25,
         "pi-vegan-pizzeria": 26,
@@ -5905,8 +5905,8 @@
         "west-of-chicago-pizza-company": 76.7,
         "stevies-famous": 76.6,
         "ballard-pizza-co": 76,
+        "moto-pizza": 75.8,
         "good-shape-pizza": 75.6,
-        "moto-pizza": 74.8,
         "cornuto-pizzeria": 74.6,
         "my-friend-dereks": 74.4,
         "pi-vegan-pizzeria": 74,
@@ -6120,6 +6120,14 @@
           "value": 8.3,
           "penalty": 0
         },
+        "moto-pizza": {
+          "reputation": 6.9,
+          "critical": 9.2,
+          "craft": 9.2,
+          "distinctiveness": 9.4,
+          "value": 6.9,
+          "penalty": 6
+        },
         "good-shape-pizza": {
           "reputation": 0,
           "critical": 7.5,
@@ -6127,14 +6135,6 @@
           "distinctiveness": 7,
           "value": 9,
           "penalty": 0
-        },
-        "moto-pizza": {
-          "reputation": 6.9,
-          "critical": 8.9,
-          "craft": 9.2,
-          "distinctiveness": 9.4,
-          "value": 6.8,
-          "penalty": 6
         },
         "cornuto-pizzeria": {
           "reputation": 8.6,
