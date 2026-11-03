@@ -874,7 +874,7 @@
       "signature": "Wood-fired Neapolitan from imported ovens, unchanged for two decades",
       "blurb": "One of the city's original Neapolitan rooms, dark and wood-fired and stubbornly consistent. Where Tutta Bella made the style legible to Seattle, Via Tribunali kept it moody and Italian.",
       "url": "https://www.viatribunali.com/",
-      "opened": null,
+      "opened": 2004,
       "crowd": null,
       "priceIndex": 3,
       "lastVerified": null,
@@ -917,7 +917,8 @@
       },
       "mentions": [],
       "instagram": "https://www.instagram.com/viatrib/",
-      "statusChecked": "2026-10-16"
+      "statusChecked": "2026-10-16",
+      "openedSource": "https://en.wikipedia.org/wiki/Via_Tribunali"
     },
     {
       "id": "big-marios",
@@ -928,7 +929,7 @@
       "signature": "A foldable 18-inch pepperoni slice at one in the morning",
       "blurb": "The default Capitol Hill late-night slice, and a genuinely good New York pie rather than a merely convenient one. Thin, foldable, greasy in the correct way.",
       "url": "https://bigmariosnewyorkpizza.com/",
-      "opened": null,
+      "opened": 2010,
       "crowd": null,
       "priceIndex": 1,
       "lastVerified": null,
@@ -1000,7 +1001,8 @@
         }
       ],
       "instagram": "https://www.instagram.com/bigmariospizza/",
-      "statusChecked": "2026-10-21"
+      "statusChecked": "2026-10-21",
+      "openedSource": "https://en.wikipedia.org/wiki/Big_Mario%27s_Pizza"
     },
     {
       "id": "flying-squirrel",
@@ -1154,7 +1156,7 @@
       "signature": "Toppings that have no business working, and mostly do",
       "blurb": "A local chain that built its identity on combinations other kitchens would refuse. Not the city's best crust, but a genuine Seattle institution with more conviction than its size suggests.",
       "url": "https://zeekspizza.com",
-      "opened": null,
+      "opened": 1993,
       "crowd": null,
       "priceIndex": 2,
       "lastVerified": null,
@@ -1280,7 +1282,8 @@
         }
       },
       "mentions": [],
-      "instagram": "https://www.instagram.com/zeekspizza/"
+      "instagram": "https://www.instagram.com/zeekspizza/",
+      "openedSource": "https://zeekspizza.com"
     },
     {
       "id": "talaricos",
@@ -1340,7 +1343,7 @@
       "signature": "The cheapest honest slice on Pike/Pine",
       "blurb": "No ambition beyond feeding Capitol Hill quickly and cheaply, executed without cynicism. The value benchmark every other slice in the city is measured against.",
       "url": "https://www.hot-mamaspizza.com",
-      "opened": null,
+      "opened": 1995,
       "crowd": null,
       "priceIndex": 1,
       "lastVerified": null,
@@ -1378,7 +1381,8 @@
         }
       },
       "mentions": [],
-      "instagram": "https://www.instagram.com/hotmamasseattlepizza/"
+      "instagram": "https://www.instagram.com/hotmamasseattlepizza/",
+      "openedSource": "https://en.wikipedia.org/wiki/Hot_Mama%27s_Pizza"
     },
     {
       "id": "humble-pie",
@@ -1389,7 +1393,7 @@
       "signature": "Wood-fired pies eaten at picnic tables beside the garden they came from",
       "blurb": "A walled garden, a wood oven and a menu that leans on what is growing outside. More an argument about how to eat pizza than a competitor on crust alone.",
       "url": "https://humblepieseattle.com",
-      "opened": null,
+      "opened": 2013,
       "crowd": null,
       "priceIndex": 2,
       "lastVerified": null,
@@ -1428,7 +1432,8 @@
         }
       },
       "mentions": [],
-      "instagram": "https://www.instagram.com/humblepie_seattle/"
+      "instagram": "https://www.instagram.com/humblepie_seattle/",
+      "openedSource": "https://dailyhive.com/seattle/seattle-humble-pie-pizza"
     },
     {
       "id": "pizzeria-gabbiano",
@@ -1481,7 +1486,7 @@
       "signature": "A counter slice in the middle of the market crowds",
       "blurb": "Geography is half the appeal, but the pie is better than a tourist corridor requires. A reliable slice in the one part of town where that is hardest to find.",
       "url": "https://www.postalley.pizza/",
-      "opened": null,
+      "opened": 1997,
       "crowd": null,
       "priceIndex": 2,
       "lastVerified": null,
@@ -1517,7 +1522,8 @@
         }
       },
       "mentions": [],
-      "instagram": "https://www.instagram.com/postalleypizza/"
+      "instagram": "https://www.instagram.com/postalleypizza/",
+      "openedSource": "https://en.wikipedia.org/wiki/Post_Alley_Pizza"
     },
     {
       "id": "pegasus-pizza",
@@ -1528,7 +1534,7 @@
       "signature": "Pizza with a view of the water and forty years of regulars",
       "blurb": "An Alki institution where the setting and the sunset do real work. Recently changed hands, which makes its next year worth watching closely.",
       "url": "https://pegasuspizzaseattle.com/",
-      "opened": null,
+      "opened": 1984,
       "crowd": null,
       "priceIndex": 2,
       "lastVerified": null,
@@ -1572,7 +1578,8 @@
           "kind": "mention"
         }
       ],
-      "instagram": "https://www.instagram.com/pegasuspizzaseattle"
+      "instagram": "https://www.instagram.com/pegasuspizzaseattle",
+      "openedSource": "https://www.westsideseattle.com/node/39072"
     },
     {
       "id": "slice-box",
@@ -1583,7 +1590,7 @@
       "signature": "Pies that treat the format as a canvas rather than a tradition",
       "blurb": "Georgetown-appropriate: weird on purpose, occasionally brilliant, never boring. The bench entry most likely to either climb sharply or stay exactly where it is.",
       "url": "https://www.sliceboxpizza.com",
-      "opened": null,
+      "opened": 2017,
       "crowd": null,
       "priceIndex": 2,
       "lastVerified": null,
@@ -1621,7 +1628,8 @@
         }
       },
       "mentions": [],
-      "instagram": "https://www.instagram.com/sliceboxpizza_sodo/"
+      "instagram": "https://www.instagram.com/sliceboxpizza_sodo/",
+      "openedSource": "https://seattlemag.com/food-and-culture/serious-wave-new-pizza-restaurants-has-hit-seattle-recently/"
     },
     {
       "id": "roccos",
