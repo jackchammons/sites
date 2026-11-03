@@ -1,45 +1,14 @@
 {
-  "updated": "2026-11-03T18:00:00Z",
-  "facts": [
+  "updated": "2026-11-03T19:00:00Z",
+  "directory": [
     {
-      "id": "zeeks-pizza",
-      "opened": 1993,
-      "source": "https://zeekspizza.com"
-    },
-    {
-      "id": "via-tribunali",
-      "opened": 2004,
-      "source": "https://en.wikipedia.org/wiki/Via_Tribunali"
-    },
-    {
-      "id": "big-marios",
-      "opened": 2010,
-      "source": "https://en.wikipedia.org/wiki/Big_Mario%27s_Pizza"
-    },
-    {
-      "id": "hot-mamas-pizza",
-      "opened": 1995,
-      "source": "https://en.wikipedia.org/wiki/Hot_Mama%27s_Pizza"
-    },
-    {
-      "id": "humble-pie",
-      "opened": 2013,
-      "source": "https://dailyhive.com/seattle/seattle-humble-pie-pizza"
-    },
-    {
-      "id": "post-alley-pizza",
-      "opened": 1997,
-      "source": "https://en.wikipedia.org/wiki/Post_Alley_Pizza"
-    },
-    {
-      "id": "pegasus-pizza",
-      "opened": 1984,
-      "source": "https://www.westsideseattle.com/node/39072"
-    },
-    {
-      "id": "slice-box",
-      "opened": 2017,
-      "source": "https://seattlemag.com/food-and-culture/serious-wave-new-pizza-restaurants-has-hit-seattle-recently/"
+      "name": "Luciano's Pizza & Pasta",
+      "neighborhood": "Admiral",
+      "style": "Old-school New York-style, with vegan and gluten-free options",
+      "status": "open",
+      "note": "Long-running neighborhood pizzeria on California Ave SW in the Admiral district, with vegan, gluten-free and Chicago-style specialty pies alongside the classics.",
+      "source": "https://slicelife.com/restaurants/wa/seattle/98116/luciano-s-pizza-pasta/menu",
+      "address": "2341 California Ave SW, Seattle, WA 98116"
     }
   ]
 }

@@ -4403,6 +4403,29 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": []
+    },
+    {
+      "id": "lucianos-pizza-pasta",
+      "name": "Luciano's Pizza & Pasta",
+      "neighborhood": "Admiral",
+      "style": "Old-school New York-style, with vegan and gluten-free options",
+      "blurb": "Long-running neighborhood pizzeria on California Ave SW in the Admiral district, with vegan, gluten-free and Chicago-style specialty pies alongside the classics.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://slicelife.com/restaurants/wa/seattle/98116/luciano-s-pizza-pasta/menu",
+      "statusDate": null,
+      "statusDetected": "2026-11-03",
+      "statusChecked": "2026-11-03",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Admiral",
+          "address": "2341 California Ave SW, Seattle, WA 98116"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }
