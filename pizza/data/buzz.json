@@ -1,7 +1,15 @@
 {
-  "updated": "2026-10-30T18:37:53.417Z",
+  "updated": "2026-11-02T22:19:21.639Z",
   "sources": 4,
   "items": [
+    {
+      "title": "Best Seattle Pizza by Neighborhood",
+      "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNNmQwdDBXNWNoc1d3OHNOdVZyX3FjdktfUlRfeDlqSDRFQnBIdnoweFBtemtHRE9GY1RKcWhvRzNoSWtBOGRwNnB0aHJHd0lDeWR5ZlBvMTB4RklBLWt6NkpfTjFFX2s5NTducVZQYXRrZ0FpSmROTE9rOGxrVktwd0xjajBiN3JMM0JPUHdPUGNTUkJBWGM5cWVtQzB3dnRoV1RF?oc=5",
+      "source": "Seattle Met",
+      "published": "2026-10-29T18:33:18.000Z",
+      "kind": "ranking",
+      "mentions": []
+    },
     {
       "title": "As a beloved Seattle pizzeria closes, a pro gets the keys (and the recipes)",
       "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxNR0JQc1VhbTI1X3MwTm1ScVptWHVMX0VnRGVNQW93MVhQTTdCNFp0S1pNVk5WcHYyU1JjWEF4VTlLV1h6ZHZvZVdEQXQwTUZyaGhuN0tENG1PYWlNYk8wOXlGM0RTZ05YU1U1cWkwb3E3RnI2TzR4RlVzcVBoTmRLa3U4dTFScFBWdlhjc2RKMlhhWHF1a1JoX1NMcDN5TDNvVWt4cVhuOTZJN21mMzk5NGFpRjZlaGUy?oc=5",
@@ -73,6 +81,14 @@
       "url": "https://news.google.com/rss/articles/CBMiiAJBVV95cUxOLWRNRVlKYjZYREtUdG5SMGpWd1UwWUNkbkdPckhMTTl3VGJsV0dnRjJLQkNZM0VmWlBTb3RqVkFTZVhqa3E5ZHRjb0N1cVlqUk5EbFVIQWJXYTB5dFBoempCY2otem5wZVZNaVByRjBOdzJOM05BUlU4emVzaHZZaElUdU1wcTNLTUdKRjQyZ2lSWkFtX1RFUlhTZVg0S3JkTkRVeTFMUjJkRkx2UTRscldncURIc0lTMWJPZVp4VnYzeXFzWndzQ3lMcW5rWHZyMUgzMDh4U0VPVTM2cWFOdTFwSklzOWNOeWV2TzR6MGJsaldVWExrNzd6VWFZSzhPWnJOUjc1cGM?oc=5",
       "source": "KOMO",
       "published": "2026-10-07T21:44:03.000Z",
+      "kind": "mention",
+      "mentions": []
+    },
+    {
+      "title": "Seattle's MOD Pizza Bakes a Cheesesteak Pie to Toast Abbott Elementary's Return",
+      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPVE5uM0drTHI0LTJScGkzYmZKeTBLbWRaQlRaQ0hxMjB4emdGX2EwS1BzR2lzdi1IMzVPeENQR09GVUxFb0dYU1ZvNnBKWUR5cTAtTmxaRWZodmIzbXNvVkNqcHI3bTVKak1tcFVOR1puREFpYXFuZXJKU0ZkMlVud2J0dWlBaEYyaFRySF91aUo5eHlteU02Q2hvaEtkN3k4Mk5JY2xFczRLM2twUnc?oc=5",
+      "source": "Hoodline",
+      "published": "2026-10-07T07:00:00.000Z",
       "kind": "mention",
       "mentions": []
     },

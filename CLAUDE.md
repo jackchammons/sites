@@ -105,7 +105,7 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
 
 | Slug | Dir | Stack | Notes |
 |---|---|---|---|
-| `pizza` | `pizza/` | Node, no deps | `src/slice.js` is the ranking algorithm, imported by both the build and the browser — one implementation, don't fork it. `verify.mjs` gates the deploy. `fetch-buzz.mjs` (keyless) and `fetch-ratings.mjs` (needs `YELP_API_KEY`) refresh `data/` before the build; both fail soft. Pillar scores are editorial — never write them from a script. |
+| `pizza` | `pizza/` | Node, no deps | `src/slice.js` is the ranking algorithm, imported by both the build and the browser — one implementation, don't fork it. `verify.mjs` gates the deploy. `fetch-buzz.mjs` (keyless) refreshes `data/` before the build and fails soft. Graded factors are write-once with provenance — never overwrite them from a script. |
 | `odyssey-seats` | `odyssey-seats/` | Python, Playwright + Pillow | Scrapes SIFF's **dedicated 70mm page** (`MAIN_URL`), so every showtime found is 70mm and there is no date filter to maintain. Writes `report.html`, promoted to `index.html`. Needs `pip install playwright pillow` + `playwright install chromium`. |
 | `clock` | `clock/` | Node, no deps | Nothing time-dependent is rendered at build time — a baked-in figure would be wrong by however long ago the deploy ran. `build.mjs` emits a shell of ID'd slots and `src/app.js` fills every one from the viewer's device clock and Intl zone data. `verify.mjs` checks that each `$('...')` lookup in the script matches an `id` in the markup, since a typo there breaks only the browser. |
 
@@ -126,15 +126,35 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
 - **Agents stay out of the deploy path.** `research.yml` runs the Claude Code Action to write
   `pizza/data/research.json` (news, mentions, locations, status, directory, factorRatings, newAttributes, links), gated behind
   `CLAUDE_CODE_OAUTH_TOKEN`. `verify-research.mjs` validates it and `apply-research.mjs` then
-  writes crowd figures and closure flags into `restaurants.json` — the agent never edits that
-  file itself. If it hangs or fails, the site still publishes.
+  applies the validated sections to `restaurants.json`. The agent's write grant is scoped to
+  `research.json` (`Edit(pizza/data/research.json)` in `research.yml`) and a guard step fails the
+  run if `git status` shows any other path, so the gate is a control, not a prompt sentence.
+  `research.yml` also builds and verifies the page before committing, so a data shape the
+  renderer cannot handle turns the research run red instead of the next three publishes. If it hangs or fails, the site still publishes.
 - **SLICE v2: three factors are computed, two are editorial.** Reputation (longevity ×3,
-  review volume ×2, coverage ×1, renormalised over what an entry has), critical reception
+  review volume ×2, coverage ×1, combined as the best weighted mean over the components present
+  so added evidence never lowers it; with no component the factor is unmeasured and its weight is
+  shared by the other four), critical reception
   (critic base + recency-weighted mention boost capped at +1.5) and value ((craft+critical)/2
   × price multiplier) derive at build time in `slice.js` — never store them. Craft and
   distinctiveness live in `factors` with provenance (`setBy`, `source`, `date`). The
   methodology section publishes every constant; change a formula and the page copy in
   `build.mjs` must change with it.
+- **Two dates on a status.** `statusDate` is when a status took effect, as the source reports
+  it, and stays `null` when the source does not say; `statusDetected` is the day the pass
+  recorded it. Only `statusDate` is ever printed as "since" or as a closure year; the radar
+  labels a dated-by-detection closure as "closure reported". Writing the detection day into
+  `statusDate` published a March 2024 closure as a 2026 one.
+- **Freshness is the newest verification of any kind.** `verifiedDate()` in `slice.js` reads
+  `statusChecked`, `locationsVerified`, `lastVerified` and the graded factors' dates; decay
+  runs from the newest. Before this, only the rating apply wrote the clock, so the founding
+  entries decayed to the cap and nothing could reset them.
+- **Snapshots carry `algorithm`.** `ALGORITHM` in `slice.js` is stamped on every weekly snapshot;
+  bump it when a formula changes. The record chart draws a rule at a change and the evidence
+  line says "the scoring method changed" instead of inventing a cause. Only `publish.yml`
+  writes the snapshot (`SNAPSHOT=1`); a local or CI build must not move the baseline.
+- **`ci.yml` runs tests, lint, build and verify on every non-main push.** Push a branch before
+  merging; a red CI there is the check `main` never had.
 - **The top ten is computed, not stored.** `splitTiers()` publishes the ten highest-scoring
   entries with `status: "open"`; anything else is held out whatever it scores. There is no
   bench: ranks 11+ render in the directory table. `isRated()` decides who competes — craft +
@@ -211,7 +231,7 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   budget bounds the turns, which otherwise scaled with how much news existed that day; and
   the agent step is `continue-on-error` with the *next* step deciding the run, so an
   overrun cannot discard a file that was already written. A clean pass is ~3 minutes and
-  about $1.20 of plan allowance.
+  $0.62 to $1.07 of plan allowance (21 to 48 turns, measured Sep 2026).
 - **Two things the first green run then exposed**, both worth knowing before touching this
   path. `build.mjs` read `research.items` while the agent writes `research.news`, so every
   researched story was validated, committed and silently dropped — the candidates half kept

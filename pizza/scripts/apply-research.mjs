@@ -36,16 +36,24 @@ let updated = 0;
 let changes = 0;
 
 /* status: liveness confirmations. A confirmation with no change still
- * advances statusChecked, which is what rotates the audit worklist. */
+ * advances statusChecked, which is what rotates the audit worklist.
+ *
+ * Two dates, kept apart on purpose: statusDate is when the status took
+ * effect, as the source reports it, and stays null when the source does not
+ * say; statusDetected is the day the pass recorded the change. Writing the
+ * detection day into statusDate published a March 2024 closure as a 2026
+ * one and listed it under "recently closed". */
 for (const it of research.status ?? []) {
   const r = byId.get(it.id);
   if (!r) continue;
   const changed = r.status !== it.status;
   if (changed) {
+    r.statusPrev = r.status;
     r.status = it.status;
     r.statusNote = it.note;
     r.statusSource = it.source;
-    r.statusDate = it.date ?? today;
+    r.statusDate = it.date ?? null;
+    r.statusDetected = today;
   }
   r.statusChecked = today;
   changes++;
@@ -66,7 +74,8 @@ for (const it of research.directory ?? []) {
     url: it.url ?? null,
     status: it.status,
     statusSource: it.source,
-    statusDate: today,
+    statusDate: null,
+    statusDetected: today,
     statusChecked: today,
     attributes: {},
     locations: it.address ? [{ neighborhood: it.neighborhood, address: it.address }] : [],
@@ -179,12 +188,16 @@ for (const it of research.locations ?? []) {
   delete r.neighborhoodIsPlaceholder;
 
   /* Every entry on the page should be a link, and verifying locations already
-   * required finding the official site -- so the link comes free. Only filled
-   * in when absent: a hand-set url is a deliberate choice (a Tom Douglas
-   * restaurant page rather than the group homepage, say) and outranks the
-   * origin guessed from a locations URL. */
-  if (!r.url) {
-    try { r.url = it.homepage ?? new URL(it.source).origin; }
+   * required finding the official site -- so the link comes free. A homepage
+   * the agent actually read replaces whatever is stored: three ranked entries
+   * linked a 404 or a dead domain while the working site sat in
+   * locationsSource. With no homepage reported, the origin of the locations
+   * page fills an empty url only (a hand-set deep link is a deliberate choice). */
+  if (it.homepage && it.homepage !== r.url) {
+    console.log(`    url: ${r.url ?? '(none)'} -> ${it.homepage}`);
+    r.url = it.homepage;
+  } else if (!r.url) {
+    try { r.url = new URL(it.source).origin; }
     catch { /* validated upstream; a bad URL here just means no link */ }
   }
   located++;

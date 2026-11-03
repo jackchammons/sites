@@ -1,0 +1,48 @@
+name: CI
+
+# Tests, the dataset lint, the Node site builds and their verifiers, on every
+# branch push and pull request. Nothing here deploys: publish.yml is the only
+# workflow allowed to, and it runs on main. This exists because, before it,
+# the first place a broken render was caught was the deploy after the push.
+on:
+  push:
+    branches-ignore: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: Test, lint, build, verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Unit tests
+        run: node --test pizza/test/*.test.mjs
+      - name: Lint the dataset
+        run: node pizza/scripts/check-dataset.mjs
+      # Per site rather than build-all: the orchestrator refuses --skip under
+      # CI (a partial dist must never deploy), and the Python site needs a
+      # browser this job has no reason to install. No snapshot is written.
+      - name: Build and verify pizza
+        working-directory: pizza
+        env:
+          OUT_DIR: ${{ github.workspace }}/dist/pizza
+        run: |
+          node scripts/build.mjs
+          node scripts/verify.mjs
+      - name: Build and verify clock
+        working-directory: clock
+        env:
+          OUT_DIR: ${{ github.workspace }}/dist/clock
+        run: |
+          node scripts/build.mjs
+          node scripts/verify.mjs
+      - name: The build must not touch tracked files
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::the build modified tracked files:"; git status --porcelain; exit 1
+          fi

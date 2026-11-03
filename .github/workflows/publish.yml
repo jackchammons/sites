@@ -79,7 +79,12 @@ jobs:
       # entry page, then renders the landing page. If any site fails, the run
       # fails and nothing is deployed -- the previous deploy stays live rather
       # than a half-built site going out.
+      # SNAPSHOT=1 is what lets the pizza build write this week's standings
+      # into data/history.json; every other build (local, CI, the research
+      # workflow's gate) leaves the snapshot alone.
       - name: Build all sites
+        env:
+          SNAPSHOT: '1'
         run: node scripts/build-all.mjs
 
       # Persist refreshed data so tomorrow's run can diff against it -- that is

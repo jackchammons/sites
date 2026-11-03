@@ -2,12 +2,17 @@
  * methodology, footer). The data-driven sections come in pre-rendered via
  * `sections`; this module owns everything that is mostly prose. */
 import { boardHtml } from '../src/render.js';
-import { FRICTION_CAP } from '../src/slice.js';
+import { FRICTION_CAP, ALGORITHM, MAX_STALENESS_DECAY, STALENESS_PER_WEEK } from '../src/slice.js';
 import { esc, nameLink, fmtDate } from './html.mjs';
 import { locationLabel } from '../src/locations.js';
 
 export function pageHtml(ctx, sections) {
   const { dataset, now, week, scoredAll, ranked, spotlight, baseline, evidenceMap, history, css, leafletCss } = ctx;
+  const openRated = scoredAll.filter(r => !r.status || r.status === 'open').length;
+  const founding = dataset.restaurants.filter(r => r.factors?.craft?.setBy === 'editorial').length;
+  const agentRated = dataset.restaurants.filter(r => r.factors?.craft?.setBy === 'agent').length;
+  const capWeeks = Math.round(MAX_STALENESS_DECAY / STALENESS_PER_WEEK);
+  const REPO = 'https://github.com/jackchammons/sites';
   const { careHeader, careRows, factorCards, frictionRows } = sections.controls;
   const { recordSection, bracketSection, radarSection, buzzSection, directorySection } = sections;
   return `<!doctype html>
@@ -20,6 +25,10 @@ export function pageHtml(ctx, sections) {
 <meta property="og:title" content="The Seattle Pizza Index">
 <meta property="og:description" content="Seattle's pizzerias, tracked daily. A ranked top ten and a full directory, scored by a published method.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://sites.jackhammons.com/pizza/">
+<meta property="og:site_name" content="jackchammons / sites">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://sites.jackhammons.com/pizza/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍕</text></svg>">
 <style>${leafletCss}
 ${css}</style>
@@ -46,7 +55,7 @@ ${css}</style>
         <div class="stamp">
           <span>Updated <b>${fmtDate(now)}</b></span>
           <span>On file <b>${dataset.restaurants.length} pizzerias</b></span>
-          <span>Rated <b>${scoredAll.length}</b></span>
+          <span>Rated <b>${openRated}</b></span>
           <span>Week <b>${week}</b></span>
         </div>
       </div>
@@ -72,11 +81,11 @@ ${css}</style>
     <div class="eyebrow">The ranking</div>
     <h2 class="sec-h">The Top 10</h2>
     <p class="lede" style="margin:14px 0 8px">
-      The ten highest SLICE scores among ${scoredAll.length} rated pizzerias. Recomputed every
+      The ten highest SLICE scores among ${openRated} rated, open pizzerias. Recomputed every
       morning; the ▲▼ markers show movement since last week. Open <em>Show the math</em> on any
       card for the full calculation.
     </p>
-    <p class="lede" style="margin:0 0 26px" id="board-note">Published ranking.</p>
+    <p class="lede" style="margin:0 0 26px" id="board-note" aria-live="polite"></p>
 
     <div class="rank-layout">
     <div class="board" id="board">
@@ -115,9 +124,10 @@ ${directorySection}
     <div class="eyebrow">Methodology</div>
     <h2 class="sec-h">How it works</h2>
     <p class="lede" style="margin-top:14px">
-      The whole site is computed. A JSON dataset holds the facts; a scoring module turns them
-      into the ranking; a daily pipeline keeps the facts current. Nothing on this page is placed
-      by hand, and the same scoring code runs in your browser when you change the weights.
+      The whole site is computed. A JSON dataset holds the facts; a scoring module (${ALGORITHM})
+      turns them into the ranking; a daily pipeline keeps the facts current. Every number on this
+      page comes from that build, and the same scoring code runs in your browser when you change
+      the weights.
     </p>
 
     <h3 class="method-h">The score</h3>
@@ -132,37 +142,44 @@ ${directorySection}
 
     <h3 class="method-h">Where the factor values come from</h3>
     <p class="method-p">
-      Ratings are produced by a bounded research loop, not hand edits. Each day the research
-      job assembles a worklist — stalest facts first; for ratings, unrated entries with cited
-      press first — and hands it to a Claude agent as an explicit brief: these ids, this search
-      budget, write one JSON file, run nothing. The agent reads what has actually been
-      published about each place and proposes craft and distinctiveness on a 0.5 grid plus a
-      critic base, citing one to four https sources it actually read; an entry it cannot ground
-      in real coverage stays unrated, which is a correct outcome. A validator then rejects the
-      entire file if any value is off-grid, unsourced, or would overwrite an existing rating.
-      What survives is applied with provenance — who set it, from what source, when — which
-      every entry shows in the directory, and the computed factors below run from those stored
-      values at build time.
+      The three graded factors have two sources, and the directory says which applies to each
+      entry. The ${founding} founding entries were rated editorially when the index launched in
+      August 2026; those ratings carry no cited source. The ${agentRated} entries added since are
+      rated by a research agent. Each day the research job assembles a worklist and hands it to
+      a Claude agent as an explicit brief: these ids, this search budget, write one JSON file,
+      run nothing. For ratings, the agent reads what has actually been published about each
+      place and proposes craft and distinctiveness on a 0.5 grid plus a critic base, citing one
+      to four https sources it read; an entry it cannot ground in real coverage stays unrated. A
+      validator rejects the file if any value is off-grid, unsourced, or would overwrite an
+      existing rating. A rating is set once and never rewritten; what the rotation re-checks is
+      whether a place is open, where it is, and what has been written about it. The computed
+      factors below run from the stored values at build time.
     </p>
     <div class="grid2">
       <div class="mcard">
         <h3>Reputation — computed</h3>
-        <p>Three components, each 0–1, weighted 3 : 2 : 1 and renormalised over whichever an
-        entry actually has, so nobody is zeroed for data that was never collected:</p>
+        <p>Three components, each 0–1, weighted 3 : 2 : 1, scored over whichever an entry
+        actually has:</p>
         <pre>longevity = log(1+years) / log(1+15)   capped at 1
 volume    = reviews / (reviews + 500)
 coverage  = press mentions in 24 mo / 6, capped at 1
 
-reputation = 10 × Σ(wᵢ·xᵢ) / Σ(wᵢ present)</pre>
-        <p>The log curve means year two proves more than year twelve. The review <em>count</em>
-        is used, never the star average: how many people rated a place is durable, while stored
-        averages go stale.</p>
+reputation = 10 × best weighted mean over
+             the components present, taken
+             best-first (a component counts
+             only if it raises the mean)</pre>
+        <p>Taking the best prefix keeps the factor honest about evidence: a stored review count
+        or a first press mention can lift a score but never lower it. An entry with none of the
+        three on file has no reputation score at all; its 24% is shared by the other four
+        factors rather than scored as zero. The log curve means year two proves more than year
+        twelve. The review <em>count</em> is used, never the star average: how many people rated
+        a place is durable, while stored averages go stale.</p>
       </div>
       <div class="mcard">
         <h3>Critical reception — computed</h3>
-        <p>A critic base rating, refined by press coverage as it happens. Each story the pipeline
-        files adds a signal by kind — list appearance 1.0, mention 0.4, opening 0.3 — which fades
-        with a 12-month half-life:</p>
+        <p>A critic base rating, refined by the press coverage the research pass files against
+        the entry. Each story adds a signal by kind — list appearance 1.0, mention 0.4, opening
+        0.3, closing 0, anything else 0.3 — which fades with a 12-month half-life:</p>
         <pre>boost = min( 1.5, 0.5 × Σ kindWeight × 0.5^(months/12) )
 critical = base + boost</pre>
         <p>The cap matters: a burst of coverage can lift a score by at most 1.5 points, so press
@@ -173,16 +190,20 @@ critical = base + boost</pre>
         <p>Quality per dollar. The quality half is the mean of craft and critical reception; the
         price tier scales it:</p>
         <pre>value = (craft + critical) / 2 × tier
-tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75</pre>
+tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75
+      no tier on file ×1.00</pre>
         <p>A cheap great pie outruns its quality score. An expensive one has to be better than
-        its price to break even.</p>
+        its price to break even. An entry whose price tier is not yet on file takes the neutral
+        multiplier, and its card says so.</p>
       </div>
       <div class="mcard">
-        <h3>Craft &amp; Distinctiveness — editorial</h3>
+        <h3>Craft &amp; Distinctiveness — graded</h3>
         <p>The two factors that require judgment: how good the pizza itself is, and whether the
-        place owns a lane in this city. Both are stored with provenance — who set them, from what
-        source, and when — and the research agent may propose them for new entries only from
-        cited critical coverage. The weights are published and yours to overrule.</p>
+        place owns a lane in this city. Both are stored with who set them and when; for
+        agent-rated entries, with the coverage they were read from. The founding entries' values
+        are editorial and uncited, which the directory states plainly. The research agent may
+        propose these factors for unrated entries only, from cited critical coverage. The
+        weights are published and yours to overrule.</p>
       </div>
     </div>
 
@@ -200,12 +221,16 @@ tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75</pre>
       </div>
       <div class="mcard">
         <h3>Freshness decay</h3>
-        <p>Every entry records when it was last checked. Its score loses 0.2% per week since
-        then, capped at 6%. Data nobody has verified in a year says so in the score, and an
-        entry left alone slides slowly down the board until the rotation reaches it again.</p>
-        <p>Star ratings shown on cards are context, not score input. They are de-noised first —
-        small samples are pulled toward the Seattle mean of ${dataset.cityMeanRating.toFixed(2)}★
-        in proportion to how small they are (prior weight ${dataset.priorWeight}).</p>
+        <p>Every entry records when it was last verified: the newest of a liveness check, a
+        locations check or the date it was rated. Its score loses ${(STALENESS_PER_WEEK * 100).toFixed(1)}% per
+        week since then, capped at ${(MAX_STALENESS_DECAY * 100).toFixed(0)}% after ${capWeeks} weeks. An entry left
+        alone slides slowly down the board until the rotation checks it again, and the card
+        names which check reset the clock.</p>
+        <p>Star averages shown on cards are context, not score input; the review <em>count</em>
+        is what reputation reads. Averages are de-noised for display — small samples are pulled
+        toward the Seattle mean of ${dataset.cityMeanRating.toFixed(2)}★ in proportion to how
+        small they are (prior weight ${dataset.priorWeight}). The figures on file were seeded
+        when the index launched and are not refreshed.</p>
       </div>
     </div>
 
@@ -259,16 +284,19 @@ tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75</pre>
     </div>
     <p class="method-p">
       The result is eventual consistency, on purpose. No single run is load-bearing: a failed
-      research pass costs a day, a failed build leaves the last good site standing, and every
-      fact on file — an address, an open-or-closed status, a rating — has a task in the
-      rotation that will re-verify it within days. Freshness decay makes the waiting visible:
-      data nobody has re-checked slowly costs its entry score until the rotation comes back
-      around. Errors do not accumulate here; they age out.
+      research pass costs a day and a failed build leaves the last good site standing. The
+      facts the rotation re-checks are an entry's status, its addresses and its coverage; a
+      rating is set once, with its provenance, and stays. Freshness decay makes the waiting
+      visible: an entry nobody has re-checked slowly costs score until the rotation comes back
+      around.
     </p>
 
     <p class="method-p" style="margin-top:22px">
       Ties break on critical reception, then craft, then alphabetically. The dataset, the scoring
-      module and this page's build script are public; if the data is wrong, it takes pull requests.
+      module and this page's build script are public at
+      <a href="${REPO}" target="_blank" rel="noopener">github.com/jackchammons/sites</a>; if a
+      fact here is wrong, <a href="${REPO}/issues" target="_blank" rel="noopener">open an issue</a>
+      or send a pull request against <code>pizza/data/restaurants.json</code>.
     </p>
   </div>
 </section>
@@ -279,8 +307,9 @@ tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75</pre>
     JSON dataset and served as files. The same scoring module runs in your browser, which is how
     the weight controls re-sort the list without a request to anything. No analytics, no cookies,
     no tracking.</p>
-    <p style="margin-top:10px">Rebuilt daily at 13:17 UTC (6:17am Pacific) by GitHub Actions.
-    Dataset v${esc(dataset.dataVersion)} · built ${now.toISOString()}</p>
+    <p style="margin-top:10px">Rebuilt daily by GitHub Actions from
+    <a href="${REPO}" target="_blank" rel="noopener">jackchammons/sites</a>.
+    ${ALGORITHM} · dataset v${esc(dataset.dataVersion)} · built ${now.toISOString()}</p>
   </div>
 </footer>
 

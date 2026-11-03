@@ -1,6 +1,6 @@
 /*
- * THE SLICE SCORE, v2
- * -------------------
+ * THE SLICE SCORE, v2.1
+ * ---------------------
  * A 0-100 rating for pizzerias, computed the same way for every entry.
  *
  *   SLICE = (weighted factor base - friction penalty) x freshness factor
@@ -18,6 +18,12 @@
  * browser re-ranker run this exact file, so what the page claims is what the
  * page does.
  */
+
+/* Bumped whenever a formula changes. Stamped on every weekly snapshot so the
+ * record chart and the movement evidence can tell a re-scoring from a real
+ * move (v1 -> v2 on 2026-08-26 was read as three pizzerias falling out of the
+ * ten; it was the formula). */
+export const ALGORITHM = 'SLICE v2.1';
 
 export const DEFAULT_WEIGHTS = {
   reputation: 24,
@@ -58,39 +64,60 @@ export function confidence(reviews, priorWeight) {
 
 /* Reputation: has this place earned standing over time?
  *
- * Three components, each 0..1, combined by fixed weights and renormalised over
- * whichever are measurable for the entry -- a pizzeria with no stored review
- * count is scored on the components it has, not punished with a zero for data
- * nobody collected:
+ * Three components, each 0..1, with fixed weights. An entry is scored on the
+ * components it has: a pizzeria with no stored review count is not punished
+ * with a zero for data nobody collected.
  *
  *   longevity  (x3)  log-curve on years open; ~15 years earns full marks.
  *                    log1p because year 2 proves more than year 12.
  *   volume     (x2)  review count v -> v / (v + 500). The count, not the stars.
  *   coverage   (x1)  press mentions in the last 24 months -> /6, capped.
- *                    Only counted once the entry has any mention history, so
- *                    the factor stays fair while that history accumulates.
+ *
+ * Combination is monotone in added evidence: the factor is the best weighted
+ * mean over any non-empty subset of the present components (components sorted
+ * by their score, best prefix wins). A plain weighted mean punished the
+ * entries the pipeline knew most about -- a stored review count or a first
+ * press mention pulled a full-marks longevity DOWN -- so collecting data cost
+ * points. Under this rule a component counts only when it raises the factor.
+ *
+ * With no component at all the factor is unmeasured (`measured: false`), and
+ * scoreOne drops its weight so the other four factors share it. It is not
+ * scored as zero: 29 of 52 rated entries had reputation 0.0 for want of a
+ * founding year, and that, not quality, decided the published ten.
  */
+export const REPUTATION_WEIGHTS = { longevity: 3, volume: 2, coverage: 1 };
+
 export function reputationFactor(r, now) {
   const parts = [];
   if (typeof r.opened === 'number') {
     const years = Math.max(0, now.getUTCFullYear() - r.opened);
-    parts.push({ key: 'longevity', w: 3, x: clamp(Math.log1p(years) / Math.log1p(15), 0, 1),
-                 note: `${years} yr` });
+    parts.push({ key: 'longevity', w: REPUTATION_WEIGHTS.longevity,
+                 x: clamp(Math.log1p(years) / Math.log1p(15), 0, 1), note: `${years} yr` });
   }
   if (r.crowd && typeof r.crowd.reviews === 'number') {
-    parts.push({ key: 'volume', w: 2, x: r.crowd.reviews / (r.crowd.reviews + 500),
-                 note: `${r.crowd.reviews} reviews` });
+    parts.push({ key: 'volume', w: REPUTATION_WEIGHTS.volume,
+                 x: r.crowd.reviews / (r.crowd.reviews + 500), note: `${r.crowd.reviews} reviews` });
   }
   const mentions = r.mentions ?? [];
   if (mentions.length) {
     const cutoff = now.getTime() - 24 * 30.44 * 864e5;
     const recent = mentions.filter(m => Date.parse(m.date) > cutoff).length;
-    parts.push({ key: 'coverage', w: 1, x: clamp(recent / 6, 0, 1),
-                 note: `${recent} in 24 mo` });
+    parts.push({ key: 'coverage', w: REPUTATION_WEIGHTS.coverage,
+                 x: clamp(recent / 6, 0, 1), note: `${recent} in 24 mo` });
   }
-  const totalW = parts.reduce((s, p) => s + p.w, 0);
-  const value = totalW ? 10 * parts.reduce((s, p) => s + p.w * p.x, 0) / totalW : 0;
-  return { value: clamp(value, 0, 10), parts };
+  if (!parts.length) return { value: 0, parts, measured: false, counted: [] };
+
+  // Best prefix of the components sorted by score: each one is kept only if
+  // it raises the weighted mean of the ones before it.
+  const sorted = [...parts].sort((a, b) => b.x - a.x);
+  let best = -1, bestN = 0, sw = 0, sx = 0;
+  sorted.forEach((p, i) => {
+    sw += p.w; sx += p.w * p.x;
+    const mean = sx / sw;
+    if (mean > best) { best = mean; bestN = i + 1; }
+  });
+  const counted = sorted.slice(0, bestN).map(p => p.key);
+  return { value: clamp(10 * best, 0, 10), parts, measured: true, counted };
 }
 
 /* Critical reception: the critic base rating, refined -- never replaced -- by
@@ -147,11 +174,30 @@ export function frictionPenalty(attributes = {}, registry = {}) {
   return { all, items, raw, applied: Math.min(raw, FRICTION_CAP) };
 }
 
-/* Freshness: 0.2% off per week since the entry was last checked, capped at 6%.
- * Unverified data drifts down instead of coasting. */
+/* Freshness: 0.2% off per week since the entry was last verified, capped at 6%
+ * (reached after 30 weeks). Unverified data takes the cap.
+ *
+ * "Verified" means the newest of any check the pipeline records: a liveness
+ * confirmation (statusChecked), a locations pass (locationsVerified), the
+ * rating date on a graded factor, or the legacy lastVerified stamp. Reading
+ * lastVerified alone meant the clock only ever started on the day an entry
+ * was first rated and nothing in the rotation could reset it, so the decay
+ * was a permanent penalty keyed to rating date rather than freshness. */
+export function verifiedDate(r) {
+  const cands = [
+    ['status check', r.statusChecked],
+    ['locations check', r.locationsVerified],
+    ['rating', r.lastVerified],
+    ...['craft', 'distinctiveness', 'critical'].map(k => ['rating', r.factors?.[k]?.date])
+  ].filter(([, d]) => typeof d === 'string' && Number.isFinite(Date.parse(d)));
+  if (!cands.length) return null;
+  cands.sort((a, b) => Date.parse(b[1]) - Date.parse(a[1]));
+  return { date: cands[0][1].slice(0, 10), source: cands[0][0] };
+}
+
 export function stalenessDecay(lastVerified, now) {
   if (!lastVerified) return MAX_STALENESS_DECAY;
-  const weeks = (now - new Date(lastVerified + 'T00:00:00Z')) / (7 * 864e5);
+  const weeks = (now - new Date(lastVerified.slice(0, 10) + 'T00:00:00Z')) / (7 * 864e5);
   if (!isFinite(weeks) || weeks <= 0) return 0;
   return Math.min(MAX_STALENESS_DECAY, weeks * STALENESS_PER_WEEK);
 }
@@ -189,13 +235,17 @@ export function scoreOne(r, opts) {
     value: val.value
   };
 
-  const totalWeight = Object.values(weights).reduce((a, b) => a + b, 0) || 1;
+  // An unmeasured reputation carries no weight: the other four factors share
+  // it, as the methodology promises. Everything else normalises so the
+  // contributions sum toward 100 whatever weights the reader sets.
+  const effective = { ...weights };
+  if (!rep.measured) effective.reputation = 0;
+  const totalWeight = Object.values(effective).reduce((a, b) => a + b, 0) || 1;
   const contributions = {};
   const weightShares = {};
   let base = 0;
   for (const key of Object.keys(factorScores)) {
-    // normalise so contributions always sum toward 100 even with custom weights
-    const share = ((weights[key] ?? 0) / totalWeight) * 100;
+    const share = ((effective[key] ?? 0) / totalWeight) * 100;
     weightShares[key] = share;
     const c = (factorScores[key] / 10) * share;
     contributions[key] = c;
@@ -204,7 +254,8 @@ export function scoreOne(r, opts) {
 
   const fric = frictionPenalty(r.attributes, registry);
   const penalty = applyFriction ? fric.applied : 0;
-  const decay = applyFreshness ? stalenessDecay(r.lastVerified, now) : 0;
+  const verified = verifiedDate(r);
+  const decay = applyFreshness ? stalenessDecay(verified?.date, now) : 0;
   const score = Math.max(0, (base - penalty) * (1 - decay));
 
   const crowdContext = r.crowd
@@ -225,14 +276,23 @@ export function scoreOne(r, opts) {
     crowdContext,
     frictionDetail: fric,
     penaltyApplied: penalty,
+    verified,
     stalenessDecay: decay,
     base: round(base),
     score: round(score)
   };
 }
 
-/* Score and sort the rated field. Ties break on critical reception, then
- * craft, then alphabetically. */
+/* Ties break on critical reception, then craft, then alphabetically. The one
+ * comparator the page's order comes from; splitTiers partitions, never
+ * re-sorts, so the stated rule is the published rule. */
+export const byRank = (a, b) =>
+  b.score - a.score ||
+  b.factorScores.critical - a.factorScores.critical ||
+  b.factorScores.craft - a.factorScores.craft ||
+  a.name.localeCompare(b.name, 'en');
+
+/* Score and sort the rated field. */
 export function rank(dataset, opts = {}) {
   const cityMean = dataset.cityMeanRating;
   const priorWeight = dataset.priorWeight;
@@ -240,12 +300,7 @@ export function rank(dataset, opts = {}) {
   const scored = dataset.restaurants
     .filter(isRated)
     .map(r => scoreOne(r, { cityMean, priorWeight, registry, ...opts }));
-  scored.sort((a, b) =>
-    b.score - a.score ||
-    b.factorScores.critical - a.factorScores.critical ||
-    b.factorScores.craft - a.factorScores.craft ||
-    a.name.localeCompare(b.name)
-  );
+  scored.sort(byRank);
   return scored.map((r, i) => ({ ...r, rank: i + 1 }));
 }
 
@@ -268,9 +323,11 @@ export function isoWeekKey(date) {
   return `${year}-W${String(wk).padStart(2, '0')}`;
 }
 
-/* The published split: the ten highest-scoring open entries. Anything not
- * currently open is held out regardless of score. The remainder is returned
- * for the directory, still in score order. */
+/* The published split: the ten highest-scoring open entries, in the order
+ * rank() gave them. Anything not currently open is held out regardless of
+ * score and listed after the open remainder; nothing is re-sorted here. The
+ * old version re-sorted by score then name, which silently replaced the
+ * published tie-break with an alphabetical one. */
 export function splitTiers(scored, topN = 10) {
   const eligible = [];
   const held = [];
@@ -278,17 +335,8 @@ export function splitTiers(scored, topN = 10) {
     if (r.status && r.status !== 'open') held.push(r);
     else eligible.push(r);
   }
-  const byScore = (a, b) => b.score - a.score || a.name.localeCompare(b.name);
-  eligible.sort(byScore);
-
   const top = eligible.slice(0, topN).map((r, i) => ({ ...r, rank: i + 1 }));
-  const cutoff = top.length ? top[top.length - 1].score : 0;
   const bench = [...eligible.slice(topN), ...held]
-    .sort(byScore)
-    .map((r, i) => ({
-      ...r,
-      rank: top.length + i + 1,
-      contender: r.score > cutoff && (!r.status || r.status === 'open')
-    }));
-  return { top, bench, cutoff };
+    .map((r, i) => ({ ...r, rank: top.length + i + 1 }));
+  return { top, bench };
 }

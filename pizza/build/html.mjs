@@ -5,9 +5,15 @@ export { esc };
 export const fmtDate = d => d.toLocaleDateString('en-US', {
   timeZone: 'America/Los_Angeles', year: 'numeric', month: 'long', day: 'numeric'
 });
-export const shortDate = iso => new Date(iso).toLocaleDateString('en-US', {
-  timeZone: 'America/Los_Angeles', month: 'short', day: 'numeric', year: 'numeric'
-});
+/* A date-only string ("2026-08-27") is a calendar day, not an instant: format
+ * it in UTC or it renders a day early west of Greenwich. Full timestamps
+ * (feed items) are instants and get the site's local zone. */
+export const shortDate = iso => {
+  const dayOnly = /^\d{4}-\d{2}-\d{2}$/.test(String(iso));
+  return new Date(iso).toLocaleDateString('en-US', {
+    timeZone: dayOnly ? 'UTC' : 'America/Los_Angeles', month: 'short', day: 'numeric', year: 'numeric'
+  });
+};
 
 /* A pizzeria name, linked to its best web presence: the official site when one
  * is on file, its Instagram otherwise. Used everywhere a name appears outside

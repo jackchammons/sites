@@ -1,9 +1,9 @@
 {
   "city": "Seattle, WA",
-  "dataVersion": "2026.10",
+  "dataVersion": "2026.11",
   "cityMeanRating": 4.3,
   "priorWeight": 500,
-  "notes": "Factor ratings (0-10) are editorial judgments applied uniformly to every entry by one rubric. Critical Read is scored from the critical consensus alone, identically for all entries. Crowd star ratings are rounded aggregates observed on review platforms at the dataset version shown; they are displayed as context and are not scored. Locations marked verified were read from the pizzeria's own site on the date recorded.",
+  "notes": "Craft, distinctiveness and the critic base are 0-10 ratings stored with provenance. The founding entries were rated editorially when the index launched (August 2026) and carry no cited source; entries added since are rated by the research agent from published coverage, with the sources stored. Crowd star ratings were seeded at launch, are never refreshed and are displayed only; the review count feeds reputation. Locations marked verified were read from the pizzeria's own site on the date recorded.",
   "restaurants": [
     {
       "id": "windy-city-pie",
@@ -16,7 +16,9 @@
       "opened": 2016,
       "crowd": {
         "rating": 4.6,
-        "reviews": 2400
+        "reviews": 2400,
+        "observed": "2026-08-22",
+        "source": "seeded when the index launched; platform not recorded, never refreshed"
       },
       "priceIndex": 3,
       "lastVerified": "2026-08-01",
@@ -71,7 +73,9 @@
       "opened": 2009,
       "crowd": {
         "rating": 4.4,
-        "reviews": 1900
+        "reviews": 1900,
+        "observed": "2026-08-22",
+        "source": "seeded when the index launched; platform not recorded, never refreshed"
       },
       "priceIndex": 3,
       "lastVerified": "2026-08-01",
@@ -122,10 +126,12 @@
       "signature": "Seasonal produce treated as the main event, not a garnish",
       "blurb": "The Delancey brain trust pointed at the farmers market. Pizza is the backbone but the kitchen behaves like a full restaurant — charred brassicas, whipped ricotta, whatever the week gave them. It is the most convincing case in the city that a pizzeria can also be a serious vegetable restaurant.",
       "url": "https://www.cornellyseattle.com",
-      "opened": 2021,
+      "opened": 2020,
       "crowd": {
         "rating": 4.5,
-        "reviews": 900
+        "reviews": 900,
+        "observed": "2026-08-22",
+        "source": "seeded when the index launched; platform not recorded, never refreshed"
       },
       "priceIndex": 3,
       "lastVerified": "2026-08-01",
@@ -171,20 +177,23 @@
       },
       "mentions": [],
       "statusChecked": "2026-08-26",
-      "instagram": "https://www.instagram.com/cornellyseattle/"
+      "instagram": "https://www.instagram.com/cornellyseattle/",
+      "openedSource": "https://www.capitolhillseattle.com/2020/08/cornelly-set-to-open-early-fall-on-summit-ave/"
     },
     {
       "id": "moto-pizza",
       "name": "Moto Pizza",
-      "neighborhood": "Ballard",
+      "neighborhood": "West Seattle",
       "style": "Thick-pan, Detroit-adjacent",
       "signature": "A 72-hour dough baked into a crisp-edged slab with absurd topping architecture",
       "blurb": "The hardest reservation in Seattle pizza and it isn't close — drops sell out in minutes and the waitlist has become part of the folklore. What arrives justifies more of the hype than it has any right to: a tall, airy, crunchy-bottomed pan pie built with real precision.",
-      "url": "https://www.motopizzaseattle.com",
+      "url": "https://motopizza.com/",
       "opened": 2021,
       "crowd": {
         "rating": 4.7,
-        "reviews": 1100
+        "reviews": 1100,
+        "observed": "2026-08-22",
+        "source": "seeded when the index launched; platform not recorded, never refreshed"
       },
       "priceIndex": 4,
       "lastVerified": "2026-08-01",
@@ -258,11 +267,13 @@
       "style": "Blistered thin crust, applewood stone oven",
       "signature": "Sweet fennel sausage and roasted peppers on a charred, cracker-edged base",
       "blurb": "Tom Douglas's applewood-fired room has been packing communal tables since 2006 and remains the most reliable pizza in the core. The crust runs thin and aggressively blistered; the topping list stays short and Pacific Northwest-literate. Still the default answer when someone visiting asks.",
-      "url": "https://www.tomdouglas.com/restaurants/serious-pie",
+      "url": "https://www.seriouspieseattle.com/",
       "opened": 2006,
       "crowd": {
         "rating": 4.4,
-        "reviews": 3800
+        "reviews": 3800,
+        "observed": "2026-08-22",
+        "source": "seeded when the index launched; platform not recorded, never refreshed"
       },
       "priceIndex": 3,
       "lastVerified": "2026-08-01",
@@ -324,10 +335,12 @@
       "signature": "Sauce-on-top square slices under a red neon glow",
       "blurb": "A love letter to New Jersey pizza parlors, right down to the bar-forward room and the sauce ladled over the cheese. The squares are thin, crackly and built for a beer at 11pm. Nothing else in Seattle is doing this style with this much conviction.",
       "url": "https://www.dinostomatopie.com",
-      "opened": 2015,
+      "opened": 2016,
       "crowd": {
         "rating": 4.3,
-        "reviews": 1500
+        "reviews": 1500,
+        "observed": "2026-08-22",
+        "source": "seeded when the index launched; platform not recorded, never refreshed"
       },
       "priceIndex": 2,
       "lastVerified": "2026-08-01",
@@ -367,7 +380,8 @@
       },
       "mentions": [],
       "instagram": "https://www.instagram.com/dinosseattle/",
-      "statusChecked": "2026-09-16"
+      "statusChecked": "2026-09-16",
+      "openedSource": "https://www.seattlemet.com/eat-and-drink/2016/03/dino-s-tomato-pie-opens-wednesday-on-capitol-hill"
     },
     {
       "id": "lupo",
@@ -376,11 +390,13 @@
       "style": "Naturally leavened, seasonal",
       "signature": "Sourdough base with a menu that turns over with the market",
       "blurb": "A small, tightly-run room where the dough is naturally leavened and the toppings change on the kitchen's whim. The bake sits in the sweet spot between Neapolitan softness and a crust with actual structure — you can pick up a slice without it surrendering.",
-      "url": "https://www.luposeattle.com",
+      "url": "https://www.lupofremont.com/",
       "opened": 2021,
       "crowd": {
         "rating": 4.6,
-        "reviews": 650
+        "reviews": 650,
+        "observed": "2026-08-22",
+        "source": "seeded when the index launched; platform not recorded, never refreshed"
       },
       "priceIndex": 3,
       "lastVerified": "2026-08-01",
@@ -434,7 +450,9 @@
       "opened": 2010,
       "crowd": {
         "rating": 4.4,
-        "reviews": 700
+        "reviews": 700,
+        "observed": "2026-08-22",
+        "source": "seeded when the index launched; platform not recorded, never refreshed"
       },
       "priceIndex": 3,
       "lastVerified": "2026-08-01",
@@ -480,6 +498,13 @@
           "source": "KIRO 7 News Seattle",
           "date": "2026-10-16",
           "kind": "closing"
+        },
+        {
+          "url": "https://whatnow.com/?p=445511",
+          "title": "After Nearly 17 Years, a Madison Street Pizzeria Bids Farewell",
+          "source": "whatnow.com",
+          "date": "2026-10-16",
+          "kind": "closing"
         }
       ],
       "instagram": "https://www.instagram.com/independentpizzeria/",
@@ -496,7 +521,9 @@
       "opened": 2004,
       "crowd": {
         "rating": 4.3,
-        "reviews": 5200
+        "reviews": 5200,
+        "observed": "2026-08-22",
+        "source": "seeded when the index launched; platform not recorded, never refreshed"
       },
       "priceIndex": 2,
       "lastVerified": "2026-08-01",
@@ -586,7 +613,9 @@
       "opened": 1979,
       "crowd": {
         "rating": 4.2,
-        "reviews": 7600
+        "reviews": 7600,
+        "observed": "2026-08-22",
+        "source": "seeded when the index launched; platform not recorded, never refreshed"
       },
       "priceIndex": 2,
       "lastVerified": "2026-08-01",
@@ -983,7 +1012,8 @@
       "locationsSource": null,
       "status": "closed",
       "statusSource": "https://www.georgetowncommunitycouncil.com/post/two-eateries-and-winery-leave-georgetown",
-      "statusDate": "2026-08-26",
+      "statusDate": "2024-03-01",
+      "statusDetected": "2026-08-26",
       "attributes": {},
       "factors": {
         "craft": {
@@ -1643,7 +1673,8 @@
       "url": "https://myfrienddereks.com/",
       "status": "open",
       "statusSource": "https://myfrienddereks.com/",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "attributes": {},
       "locations": [
         {
@@ -1693,7 +1724,8 @@
       "url": "https://abecedaryseattle.com/",
       "status": "opening",
       "statusSource": "https://seattlemag.com/food-drink/restaurant-roundup-praise-worthy-pizza-and-aperitivo-hour/",
-      "statusDate": "2026-08-25",
+      "statusDate": null,
+      "statusDetected": "2026-08-25",
       "attributes": {},
       "locations": [],
       "locationsVerified": null,
@@ -1714,7 +1746,7 @@
           "kind": "mention"
         }
       ],
-      "statusChecked": "2026-10-26",
+      "statusChecked": "2026-10-31",
       "instagram": "https://instagram.com/abecedaryseattle"
     },
     {
@@ -1726,7 +1758,8 @@
       "url": "https://www.steviesfamous.com/",
       "status": "open",
       "statusSource": "https://phinneywood.com/2025/11/former-zeeks-phinney-location-to-become-stevies-famous/",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-26",
       "attributes": {},
       "locations": [
@@ -1824,7 +1857,8 @@
       "url": "https://sinners.pizza/",
       "status": "open",
       "statusSource": "https://www.dailyuw.com/article/sinners-pizza-opens-on-the-ave-with-late-night-hours-opening-day-sees-over-1-000-transactions-20260416",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-26",
       "attributes": {},
       "locations": [
@@ -1875,7 +1909,8 @@
       "url": "https://romaroma.pizza/",
       "status": "open",
       "statusSource": "https://www.capitolhillseattle.com/2026/02/roman-style-with-pizza-by-the-cut-roma-roma-opens-on-capitol-hill/",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-26",
       "attributes": {},
       "locations": [
@@ -1954,7 +1989,8 @@
       "url": "https://pizzabyruffin.com",
       "status": "open",
       "statusSource": "https://www.discoverslu.com/location/pizza-by-ruffin/",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-26",
       "attributes": {},
       "locations": [
@@ -2019,7 +2055,8 @@
       "url": "https://www.cornutopizzeria.com/",
       "status": "open",
       "statusSource": "https://www.cornutopizzeria.com/",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-26",
       "attributes": {},
       "locations": [
@@ -2069,8 +2106,9 @@
       "url": null,
       "status": "open",
       "statusSource": "https://intentionalist.com/b/razzis-pizzeria-greenwood/",
-      "statusDate": "2026-08-26",
-      "statusChecked": "2026-10-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
+      "statusChecked": "2026-10-31",
       "attributes": {},
       "locations": [
         {
@@ -2120,7 +2158,8 @@
       "url": "https://www.pizzalarocca.com/",
       "status": "open",
       "statusSource": "https://www.pizzalarocca.com/",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-26",
       "attributes": {},
       "locations": [
@@ -2170,7 +2209,8 @@
       "url": "https://www.pizzapivegan.com/",
       "status": "open",
       "statusSource": "https://seattlevegan.com/pizza-pi-restaurant/",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-27",
       "attributes": {},
       "locations": [
@@ -2220,7 +2260,8 @@
       "url": "https://www.miopostopizza.com/",
       "status": "open",
       "statusSource": "https://www.miopostopizza.com/",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-26",
       "attributes": {},
       "locations": [
@@ -2270,7 +2311,8 @@
       "url": "https://www.veracipizza.com/",
       "status": "open",
       "statusSource": "https://www.veracipizza.com/",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-26",
       "attributes": {},
       "locations": [
@@ -2327,7 +2369,8 @@
       "url": "https://www.southtownpie.com/",
       "status": "open",
       "statusSource": "https://www.southtownpie.com/hourslocation",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-26",
       "attributes": {},
       "locations": [
@@ -2377,7 +2420,8 @@
       "url": "https://www.pizzeria22.com/",
       "status": "open",
       "statusSource": "https://www.pizzeria22.com/",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-26",
       "attributes": {},
       "locations": [
@@ -2427,7 +2471,8 @@
       "url": "https://www.johnnymos.com/",
       "status": "open",
       "statusSource": "https://www.johnnymos.com/locations",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-26",
       "attributes": {},
       "locations": [
@@ -2483,7 +2528,8 @@
       "url": "https://www.pazzosoneastlake.com/",
       "status": "open",
       "statusSource": "https://www.pazzosoneastlake.com/",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-26",
       "attributes": {},
       "locations": [
@@ -2533,7 +2579,8 @@
       "url": "https://www.anticosopranos.com/",
       "status": "open",
       "statusSource": "https://www.anticosopranos.com/",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-26",
       "attributes": {},
       "locations": [
@@ -2583,7 +2630,8 @@
       "url": "https://pizzaritual.com",
       "status": "open",
       "statusSource": "https://westseattleblog.com/2026/01/biznote-its-just-pizza-says-proprietor-of-pizza-ritual-settling-on-days-hours/",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-27",
       "attributes": {},
       "locations": [
@@ -2632,7 +2680,8 @@
       "url": "https://www.pulcinellapizza.com",
       "status": "open",
       "statusSource": "https://www.theinfatuation.com/seattle/reviews/pizzeria-pulcinella",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-27",
       "attributes": {},
       "locations": [
@@ -2682,7 +2731,8 @@
       "url": "https://www.romanopizzaandpasta.com/",
       "status": "open",
       "statusSource": "https://www.romanopizzaandpasta.com/",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-26",
       "attributes": {},
       "locations": [
@@ -2706,7 +2756,8 @@
       "url": "https://www.worldpizzaseattle.com/",
       "status": "open",
       "statusSource": "https://www.worldpizzaseattle.com/",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-26",
       "attributes": {},
       "locations": [
@@ -2757,7 +2808,8 @@
       "url": "https://www.sacroboscopizza.com/",
       "status": "open",
       "statusSource": "https://www.theinfatuation.com/seattle/reviews/sacro-bosco",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-26",
       "attributes": {},
       "locations": [
@@ -2808,7 +2860,8 @@
       "url": "https://www.oxbowmontlake.com",
       "status": "open",
       "statusSource": "https://www.capitolhillseattle.com/2022/06/oxbow-now-providing-bagels-and-baked-goods-and-a-place-to-get-out-of-the-montlake-flow-on-24th-ave/",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-27",
       "attributes": {},
       "locations": [
@@ -2858,7 +2911,8 @@
       "url": "https://www.dantinipizza.com/",
       "status": "open",
       "statusSource": "https://www.theinfatuation.com/seattle/reviews/dantini-pizza",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-26",
       "attributes": {},
       "locations": [
@@ -2907,7 +2961,8 @@
       "url": "https://www.apizzamartfirsthill.com/",
       "status": "open",
       "statusSource": "https://www.apizzamartfirsthill.com/",
-      "statusDate": "2026-08-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-26",
       "statusChecked": "2026-08-26",
       "attributes": {},
       "locations": [
@@ -2932,7 +2987,8 @@
       "url": "https://sewardparkpizza.com/",
       "status": "open",
       "statusSource": "https://sewardparkpizza.com/",
-      "statusDate": "2026-08-30",
+      "statusDate": null,
+      "statusDetected": "2026-08-30",
       "statusChecked": "2026-08-30",
       "attributes": {},
       "locations": [
@@ -2982,7 +3038,8 @@
       "url": "https://belltownpizza.net/",
       "status": "open",
       "statusSource": "https://belltownpizza.net/",
-      "statusDate": "2026-08-30",
+      "statusDate": null,
+      "statusDetected": "2026-08-30",
       "statusChecked": "2026-08-30",
       "attributes": {},
       "locations": [
@@ -3034,7 +3091,8 @@
       "url": "https://www.castellopizzaandpasta.com/",
       "status": "open",
       "statusSource": "https://www.castellopizzaandpasta.com/",
-      "statusDate": "2026-08-30",
+      "statusDate": null,
+      "statusDetected": "2026-08-30",
       "statusChecked": "2026-08-30",
       "attributes": {},
       "locations": [
@@ -3059,8 +3117,9 @@
       "url": null,
       "status": "open",
       "statusSource": "https://www.seattlefoodtruck.com/food-trucks/candela-pizza",
-      "statusDate": "2026-08-30",
-      "statusChecked": "2026-10-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-30",
+      "statusChecked": "2026-10-31",
       "attributes": {},
       "locations": [
         {
@@ -3084,8 +3143,9 @@
       "url": null,
       "status": "open",
       "statusSource": "https://www.atly.com/location/DUDE'Z-woodfired-pizza",
-      "statusDate": "2026-08-31",
-      "statusChecked": "2026-10-26",
+      "statusDate": null,
+      "statusDetected": "2026-08-31",
+      "statusChecked": "2026-10-31",
       "attributes": {},
       "locations": [
         {
@@ -3109,7 +3169,8 @@
       "url": "https://elementalpizza.com/",
       "status": "open",
       "statusSource": "https://elementalpizza.com/",
-      "statusDate": "2026-08-31",
+      "statusDate": null,
+      "statusDetected": "2026-08-31",
       "statusChecked": "2026-08-31",
       "attributes": {},
       "locations": [
@@ -3161,7 +3222,8 @@
       "url": "https://www.eymanspizza.com/",
       "status": "open",
       "statusSource": "https://www.eymanspizza.com/",
-      "statusDate": "2026-08-31",
+      "statusDate": null,
+      "statusDetected": "2026-08-31",
       "statusChecked": "2026-08-31",
       "attributes": {},
       "locations": [
@@ -3212,7 +3274,8 @@
       "url": "https://www.gpaseattle.com/",
       "status": "open",
       "statusSource": "https://www.gpaseattle.com/",
-      "statusDate": "2026-08-31",
+      "statusDate": null,
+      "statusDetected": "2026-08-31",
       "statusChecked": "2026-08-31",
       "attributes": {},
       "locations": [
@@ -3226,7 +3289,33 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/gpa.seattle"
+      "instagram": "https://www.instagram.com/gpa.seattle",
+      "factors": {
+        "craft": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://theticket.seattletimes.com/city-guides/a-first-timers-guide-to-arcades-in-seattle/",
+          "note": "Seattle Times and ParentMap guides describe it as a casual barcade that opened in November 2022, calling the 30+ pinball machines and tournaments the real draw over a limited classics menu (pepperoni, veggie, meat lovers); its own site confirms the format is square pizza sold whole or half rather than round pies, with coverage treating the arcade, not the kitchen, as the destination.",
+          "date": "2026-11-02"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://theticket.seattletimes.com/city-guides/a-first-timers-guide-to-arcades-in-seattle/",
+          "note": "Seattle Times and ParentMap guides describe it as a casual barcade that opened in November 2022, calling the 30+ pinball machines and tournaments the real draw over a limited classics menu (pepperoni, veggie, meat lovers); its own site confirms the format is square pizza sold whole or half rather than round pies, with coverage treating the arcade, not the kitchen, as the destination.",
+          "date": "2026-11-02"
+        },
+        "critical": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://theticket.seattletimes.com/city-guides/a-first-timers-guide-to-arcades-in-seattle/",
+          "note": "Seattle Times and ParentMap guides describe it as a casual barcade that opened in November 2022, calling the 30+ pinball machines and tournaments the real draw over a limited classics menu (pepperoni, veggie, meat lovers); its own site confirms the format is square pizza sold whole or half rather than round pies, with coverage treating the arcade, not the kitchen, as the destination.",
+          "date": "2026-11-02"
+        }
+      },
+      "opened": 2022,
+      "styleGroup": "Tavern square",
+      "lastVerified": "2026-11-02"
     },
     {
       "id": "good-shape-pizza",
@@ -3237,7 +3326,8 @@
       "url": "https://goodshapepizza.com/",
       "status": "open",
       "statusSource": "https://www.theinfatuation.com/seattle/reviews/good-shape-pizza",
-      "statusDate": "2026-08-31",
+      "statusDate": null,
+      "statusDetected": "2026-08-31",
       "statusChecked": "2026-08-31",
       "attributes": {},
       "locations": [
@@ -3288,7 +3378,8 @@
       "url": "https://inpizzawecrust.net/",
       "status": "open",
       "statusSource": "https://inpizzawecrust.net/",
-      "statusDate": "2026-08-31",
+      "statusDate": null,
+      "statusDetected": "2026-08-31",
       "statusChecked": "2026-08-31",
       "attributes": {},
       "locations": [
@@ -3339,7 +3430,8 @@
       "url": "https://www.italiopizzapastawa.com/",
       "status": "open",
       "statusSource": "https://www.italiopizzapastawa.com/",
-      "statusDate": "2026-08-31",
+      "statusDate": null,
+      "statusDetected": "2026-08-31",
       "statusChecked": "2026-08-31",
       "attributes": {},
       "locations": [
@@ -3364,7 +3456,8 @@
       "url": "https://jacksonstreetpizzalounge.com/",
       "status": "open",
       "statusSource": "https://order.toasttab.com/online/jackson-street-pizza-lounge-2901-s-jackson-st",
-      "statusDate": "2026-08-31",
+      "statusDate": null,
+      "statusDetected": "2026-08-31",
       "statusChecked": "2026-08-31",
       "attributes": {},
       "locations": [
@@ -3415,7 +3508,8 @@
       "url": "https://www.madpizza.com/location",
       "status": "open",
       "statusSource": "https://www.madpizza.com/location",
-      "statusDate": "2026-08-31",
+      "statusDate": null,
+      "statusDetected": "2026-08-31",
       "statusChecked": "2026-08-31",
       "attributes": {},
       "locations": [
@@ -3465,7 +3559,8 @@
       "url": "https://managerspizza.online/",
       "status": "open",
       "statusSource": "https://nextdoor.com/pages/managers-pizza-seattle-wa/",
-      "statusDate": "2026-08-31",
+      "statusDate": null,
+      "statusDetected": "2026-08-31",
       "statusChecked": "2026-09-06",
       "attributes": {},
       "locations": [
@@ -3515,7 +3610,8 @@
       "url": "https://unpotipsy.com",
       "status": "open",
       "statusSource": "https://intentionalist.com/b/un-po-tipsy/",
-      "statusDate": "2026-09-04",
+      "statusDate": null,
+      "statusDetected": "2026-09-04",
       "statusChecked": "2026-09-04",
       "attributes": {},
       "locations": [
@@ -3565,7 +3661,8 @@
       "url": "https://seattleolympicpizza.com/",
       "status": "open",
       "statusSource": "https://www.yellowpages.com/seattle-wa/mip/olympic-pizza-pasta-8569826",
-      "statusDate": "2026-09-04",
+      "statusDate": null,
+      "statusDetected": "2026-09-04",
       "statusChecked": "2026-09-04",
       "attributes": {},
       "locations": [
@@ -3590,7 +3687,8 @@
       "url": "https://www.modenapizzanpasta.com/",
       "status": "open",
       "statusSource": "https://www.yelp.com/biz/modena-pizza-and-pasta-seattle",
-      "statusDate": "2026-09-09",
+      "statusDate": null,
+      "statusDetected": "2026-09-09",
       "statusChecked": "2026-09-11",
       "attributes": {},
       "locations": [
@@ -3615,7 +3713,8 @@
       "url": "https://hotslicepizzasea.com/",
       "status": "open",
       "statusSource": "https://hotslicepizzasea.com/",
-      "statusDate": "2026-09-09",
+      "statusDate": null,
+      "statusDetected": "2026-09-09",
       "statusChecked": "2026-09-09",
       "attributes": {},
       "locations": [
@@ -3640,7 +3739,8 @@
       "url": "https://www.instagram.com/oskarspizzas4/",
       "status": "open",
       "statusSource": "https://www.seattlefoodtruck.com/food-trucks/oskar-s-pizza",
-      "statusDate": "2026-09-09",
+      "statusDate": null,
+      "statusDetected": "2026-09-09",
       "statusChecked": "2026-09-11",
       "attributes": {},
       "locations": [
@@ -3692,7 +3792,8 @@
       "url": "https://www.mypalermopizza.com/",
       "status": "open",
       "statusSource": "https://www.mypalermopizza.com/",
-      "statusDate": "2026-09-09",
+      "statusDate": null,
+      "statusDetected": "2026-09-09",
       "statusChecked": "2026-09-09",
       "attributes": {},
       "locations": [
@@ -3717,7 +3818,8 @@
       "url": "https://www.instagram.com/pizza_paesano_seattle/",
       "status": "open",
       "statusSource": "https://streetfoodfinder.com/PizzaPaesano",
-      "statusDate": "2026-09-09",
+      "statusDate": null,
+      "statusDetected": "2026-09-09",
       "statusChecked": "2026-09-09",
       "attributes": {},
       "locations": [
@@ -3742,7 +3844,8 @@
       "url": "https://www.pudgebros.com/",
       "status": "open",
       "statusSource": "https://www.yelp.com/biz/pudge-bros-pizza-seattle",
-      "statusDate": "2026-09-09",
+      "statusDate": null,
+      "statusDetected": "2026-09-09",
       "statusChecked": "2026-09-09",
       "attributes": {},
       "locations": [
@@ -3766,7 +3869,8 @@
       "url": "https://www.ridgepizza.com/",
       "status": "open",
       "statusSource": "https://www.ridgepizza.com/",
-      "statusDate": "2026-09-09",
+      "statusDate": null,
+      "statusDetected": "2026-09-09",
       "statusChecked": "2026-09-09",
       "attributes": {},
       "locations": [
@@ -3791,7 +3895,8 @@
       "url": "https://pizza.goodluckbread.com/",
       "status": "open",
       "statusSource": "https://www.seattlemet.com/eat-and-drink/2024/07/good-luck-bread-frozen-pizza-dough",
-      "statusDate": "2026-09-09",
+      "statusDate": null,
+      "statusDetected": "2026-09-09",
       "statusChecked": "2026-09-09",
       "attributes": {},
       "locations": [],
@@ -3836,7 +3941,8 @@
       "url": "https://downtownromios.com/",
       "status": "open",
       "statusSource": "https://www.facebook.com/downtownromios/",
-      "statusDate": "2026-09-12",
+      "statusDate": null,
+      "statusDetected": "2026-09-12",
       "statusChecked": "2026-09-12",
       "attributes": {},
       "locations": [
@@ -3861,7 +3967,8 @@
       "url": "https://www.seattlepizzaandbar.com/",
       "status": "open",
       "statusSource": "https://www.seattlepizzaandbar.com/",
-      "statusDate": "2026-09-12",
+      "statusDate": null,
+      "statusDetected": "2026-09-12",
       "statusChecked": "2026-09-12",
       "attributes": {},
       "locations": [
@@ -3886,7 +3993,8 @@
       "url": "https://www.smokingmonkeypizza.com/",
       "status": "open",
       "statusSource": "https://www.smokingmonkeypizza.com/",
-      "statusDate": "2026-09-12",
+      "statusDate": null,
+      "statusDetected": "2026-09-12",
       "statusChecked": "2026-09-12",
       "attributes": {},
       "locations": [
@@ -3937,7 +4045,8 @@
       "url": "https://lakecitysopranos.com/",
       "status": "open",
       "statusSource": "https://www.facebook.com/p/Sopranos-Pizza-Pasta-Lake-City-100064063243882/",
-      "statusDate": "2026-09-12",
+      "statusDate": null,
+      "statusDetected": "2026-09-12",
       "statusChecked": "2026-09-12",
       "attributes": {},
       "locations": [
@@ -3961,7 +4070,8 @@
       "url": "https://www.verasballard.com/",
       "status": "open",
       "statusSource": "https://www.myballard.com/2019/09/18/veras-pizza-bar-now-open/",
-      "statusDate": "2026-09-12",
+      "statusDate": null,
+      "statusDetected": "2026-09-12",
       "statusChecked": "2026-09-12",
       "attributes": {},
       "locations": [
@@ -4013,7 +4123,8 @@
       "url": null,
       "status": "closed",
       "statusSource": "https://www.myballard.com/2026/02/18/bobu-pizza-and-pretzel-drive-thru-now-closed/",
-      "statusDate": "2026-09-21",
+      "statusDate": null,
+      "statusDetected": "2026-09-21",
       "statusChecked": "2026-09-21",
       "attributes": {},
       "locations": [
@@ -4038,8 +4149,9 @@
       "url": null,
       "status": "open",
       "statusSource": "https://www.theinfatuation.com/seattle/reviews/sunny-hill",
-      "statusDate": "2026-09-19",
-      "statusChecked": "2026-10-26",
+      "statusDate": null,
+      "statusDetected": "2026-09-19",
+      "statusChecked": "2026-10-31",
       "attributes": {},
       "locations": [
         {
@@ -4089,7 +4201,8 @@
       "url": "https://deleobrotherspizza.com/",
       "status": "open",
       "statusSource": "https://pioneersquare.org/businesses/deleo-bros-pizza/",
-      "statusDate": "2026-09-29",
+      "statusDate": null,
+      "statusDetected": "2026-09-29",
       "statusChecked": "2026-09-29",
       "attributes": {},
       "locations": [
@@ -4113,7 +4226,8 @@
       "url": "https://ak-pizza.com",
       "status": "open",
       "statusSource": "https://www.theinfatuation.com/seattle/reviews/ak-pizza",
-      "statusDate": "2026-10-09",
+      "statusDate": null,
+      "statusDetected": "2026-10-09",
       "statusChecked": "2026-10-09",
       "attributes": {},
       "locations": [
@@ -4162,7 +4276,8 @@
       "url": "https://www.coltivasea.com/",
       "status": "open",
       "statusSource": "https://www.coltivasea.com/",
-      "statusDate": "2026-10-09",
+      "statusDate": null,
+      "statusDetected": "2026-10-09",
       "statusChecked": "2026-10-09",
       "attributes": {},
       "locations": [
@@ -4213,7 +4328,8 @@
       "url": "https://westofchicagopizzacompany.com/",
       "status": "open",
       "statusSource": "https://westofchicagopizzacompany.com/",
-      "statusDate": "2026-10-09",
+      "statusDate": null,
+      "statusDetected": "2026-10-09",
       "statusChecked": "2026-10-09",
       "attributes": {},
       "locations": [
@@ -4263,8 +4379,9 @@
       "url": "https://starlaspizza.com",
       "status": "opening",
       "statusSource": "https://starlaspizza.com",
-      "statusDate": "2026-10-29",
-      "statusChecked": "2026-10-29",
+      "statusDate": null,
+      "statusDetected": "2026-10-29",
+      "statusChecked": "2026-10-31",
       "attributes": {},
       "locations": [],
       "locationsVerified": null,

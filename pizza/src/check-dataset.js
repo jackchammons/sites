@@ -40,7 +40,19 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
     if (!STATUSES.has(r.status)) bad(id, `status must be open|opening|closed, got "${r.status}"`);
     if (r.status !== 'open') {
       if (!r.statusSource || !https(r.statusSource)) bad(id, `status "${r.status}" needs an https statusSource`);
-      if (r.status === 'closed' && !pastDate(r.statusDate)) bad(id, 'closed entries need a real statusDate');
+      // A closure needs a date: the event date when the source gives one,
+      // otherwise the day it was detected (which the radar labels as such).
+      if (r.status === 'closed' && !pastDate(r.statusDate) && !pastDate(r.statusDetected)) {
+        bad(id, 'closed entries need a statusDate (event) or statusDetected (when recorded)');
+      }
+    }
+    if (r.statusDate != null && !/^\d{4}-\d{2}-\d{2}$/.test(String(r.statusDate))) bad(id, `statusDate must be YYYY-MM-DD: "${r.statusDate}"`);
+    if (r.statusDate != null && r.statusDetected != null && Date.parse(r.statusDate) > Date.parse(r.statusDetected) + 864e5) {
+      bad(id, `statusDate ${r.statusDate} is after it was detected (${r.statusDetected})`);
+    }
+    if (r.openedSource != null && !https(r.openedSource)) bad(id, `openedSource must be https`);
+    if (r.crowd?.observed != null && !pastDate(r.crowd.observed)) bad(id, `crowd.observed is not a past date`);
+    {
     }
     if (r.url != null && !https(r.url)) bad(id, `url must be https, got "${r.url}"`);
     if (r.instagram != null && !/^https:\/\/(www\.)?instagram\.com\/[A-Za-z0-9._]{2,30}\/?$/.test(r.instagram)) {

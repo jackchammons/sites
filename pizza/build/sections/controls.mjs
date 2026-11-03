@@ -3,10 +3,10 @@ import { esc } from '../html.mjs';
 import { DEFAULT_WEIGHTS } from '../../src/slice.js';
 
 const FACTOR_COPY = {
-  reputation:      'Standing earned over time: years in business, how many people have reviewed it, and whether the press keeps coming back. Computed from data.',
-  critical:        'A critic base rating, lifted a bounded amount by recent coverage. New reviews and list appearances feed it daily.',
-  craft:           'The pizza itself: dough, fermentation, bake, and what goes on top. An editorial rating, applied by one rubric.',
-  distinctiveness: 'Does it own a lane in this city, or is it a competent copy of someone else? Editorial.',
+  reputation:      'Standing earned over time: years in business, how many people have reviewed it, and whether the press keeps coming back. Computed from data; with no data on file it carries no weight.',
+  critical:        'A critic base rating, lifted a bounded amount by the press coverage the research pass files against the entry.',
+  craft:           'The pizza itself: dough, fermentation, bake, and what goes on top. Rated editorially for the founding entries, from cited coverage for the rest.',
+  distinctiveness: 'Does it own a lane in this city, or is it a competent copy of someone else? Rated the same two ways as craft.',
   value:           'Quality delivered per dollar: the craft and reception scores, scaled by the price tier. Computed.'
 };
 

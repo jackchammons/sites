@@ -6,9 +6,12 @@ export function radarSection(ctx) {
 /* ---- Opening radar / recently closed ---- */
 const opening = dataset.restaurants.filter(r => r.status === 'opening');
 const RECENT_CLOSE_DAYS = 183;
+/* Recent by the closure date the source reported; when none was stated, by
+ * the day the pass found it, and the row says so. A closure found late is
+ * not news, and must not be listed as one. */
 const closedRecently = dataset.restaurants.filter(r =>
-  r.status === 'closed' && r.statusDate &&
-  (now - new Date(r.statusDate)) < RECENT_CLOSE_DAYS * 864e5);
+  r.status === 'closed' &&
+  (now - new Date(r.statusDate ?? r.statusDetected ?? 0)) < RECENT_CLOSE_DAYS * 864e5);
 
 const radarRow = r => `
       <li>
@@ -21,7 +24,9 @@ const radarRow = r => `
 const closedRow = r => `
       <li>
         <strong>${esc(r.name)}</strong>
-        <span class="cand-meta">${esc(r.neighborhood ?? '')}${r.style ? ` · ${esc(r.style)}` : ''}</span>
+        <span class="cand-meta">${esc(r.neighborhood ?? '')}${r.style ? ` · ${esc(r.style)}` : ''}${
+          r.statusDate ? ` · closed ${esc(shortDate(r.statusDate))}` :
+          r.statusDetected ? ` · closure reported ${esc(shortDate(r.statusDetected))}` : ''}</span>
         ${r.statusNote ? `<span class="cand-note">${esc(r.statusNote)}</span>` : ''}
         ${r.statusSource ? `<a href="${esc(r.statusSource)}" target="_blank" rel="noopener nofollow">source</a>` : ''}
       </li>`;

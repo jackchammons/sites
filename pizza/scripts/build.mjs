@@ -40,7 +40,11 @@ const html = pageHtml(ctx, {
 });
 
 writeDist(dist, ctx, html);
-writeSnapshot(ctx);
+/* The weekly snapshot is source data (data/history.json), so only the publish
+ * workflow writes it: a local or CI build must never move the movement
+ * markers' baseline. publish.yml sets SNAPSHOT=1. */
+if (process.env.SNAPSHOT === '1') writeSnapshot(ctx);
+else console.log('snapshot not written (set SNAPSHOT=1; publish.yml does)');
 
 const { ranked, week } = ctx;
 console.log(`Built ${ranked.length} entries -> ${path.relative(process.cwd(), dist) || dist}/  (ISO week ${week})`);
