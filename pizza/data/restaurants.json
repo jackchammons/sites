@@ -1,6 +1,6 @@
 {
   "city": "Seattle, WA",
-  "dataVersion": "2026.10",
+  "dataVersion": "2026.11",
   "cityMeanRating": 4.3,
   "priorWeight": 500,
   "notes": "Craft, distinctiveness and the critic base are 0-10 ratings stored with provenance. The founding entries were rated editorially when the index launched (August 2026) and carry no cited source; entries added since are rated by the research agent from published coverage, with the sources stored. Crowd star ratings were seeded at launch, are never refreshed and are displayed only; the review count feeds reputation. Locations marked verified were read from the pizzeria's own site on the date recorded.",
@@ -496,6 +496,13 @@
           "url": "https://www.kiro7.com/news/local/beloved-seattle-pizzeria-close-after-more-than-16-years/PP5A3GUJN5GFJDHSQFB3YYPG7M/",
           "title": "Beloved Seattle pizzeria to close after more than 16 years",
           "source": "KIRO 7 News Seattle",
+          "date": "2026-10-16",
+          "kind": "closing"
+        },
+        {
+          "url": "https://whatnow.com/?p=445511",
+          "title": "After Nearly 17 Years, a Madison Street Pizzeria Bids Farewell",
+          "source": "whatnow.com",
           "date": "2026-10-16",
           "kind": "closing"
         }
@@ -3282,7 +3289,33 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/gpa.seattle"
+      "instagram": "https://www.instagram.com/gpa.seattle",
+      "factors": {
+        "craft": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://theticket.seattletimes.com/city-guides/a-first-timers-guide-to-arcades-in-seattle/",
+          "note": "Seattle Times and ParentMap guides describe it as a casual barcade that opened in November 2022, calling the 30+ pinball machines and tournaments the real draw over a limited classics menu (pepperoni, veggie, meat lovers); its own site confirms the format is square pizza sold whole or half rather than round pies, with coverage treating the arcade, not the kitchen, as the destination.",
+          "date": "2026-11-02"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://theticket.seattletimes.com/city-guides/a-first-timers-guide-to-arcades-in-seattle/",
+          "note": "Seattle Times and ParentMap guides describe it as a casual barcade that opened in November 2022, calling the 30+ pinball machines and tournaments the real draw over a limited classics menu (pepperoni, veggie, meat lovers); its own site confirms the format is square pizza sold whole or half rather than round pies, with coverage treating the arcade, not the kitchen, as the destination.",
+          "date": "2026-11-02"
+        },
+        "critical": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://theticket.seattletimes.com/city-guides/a-first-timers-guide-to-arcades-in-seattle/",
+          "note": "Seattle Times and ParentMap guides describe it as a casual barcade that opened in November 2022, calling the 30+ pinball machines and tournaments the real draw over a limited classics menu (pepperoni, veggie, meat lovers); its own site confirms the format is square pizza sold whole or half rather than round pies, with coverage treating the arcade, not the kitchen, as the destination.",
+          "date": "2026-11-02"
+        }
+      },
+      "opened": 2022,
+      "styleGroup": "Tavern square",
+      "lastVerified": "2026-11-02"
     },
     {
       "id": "good-shape-pizza",
