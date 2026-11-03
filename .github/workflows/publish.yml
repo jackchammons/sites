@@ -20,6 +20,13 @@ on:
       - 'sites.config.json'
       - '.github/workflows/publish.yml'
   workflow_dispatch:
+  # A research commit is pushed with GITHUB_TOKEN, which never fires a push
+  # event; but a workflow finishing is a first-class event the Actions
+  # service emits, so this is how researched data reaches the site the same
+  # hour instead of on tomorrow's cron (which stays as the fallback).
+  workflow_run:
+    workflows: ["Research pizza buzz"]
+    types: [completed]
 
 concurrency:
   group: pages
@@ -28,6 +35,8 @@ concurrency:
 jobs:
   build:
     name: Build sites
+    # A failed research run committed nothing worth publishing.
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
