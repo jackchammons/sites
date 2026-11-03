@@ -1,19 +1,13 @@
 {
-  "updated": "2026-11-02T19:30:00Z",
-  "factorRatings": [
+  "updated": "2026-11-03T00:00:00Z",
+  "mentions": [
     {
-      "id": "georgetown-pizza-arcade",
-      "craft": 5.0,
-      "distinctiveness": 6.5,
-      "criticScore": 5.0,
-      "opened": 2022,
-      "styleGroup": "Tavern square",
-      "sources": [
-        "https://theticket.seattletimes.com/city-guides/a-first-timers-guide-to-arcades-in-seattle/",
-        "https://www.parentmap.com/article/best-pizza-places-seattle-tacoma-bellevue",
-        "https://www.gpaseattle.com/"
-      ],
-      "note": "Seattle Times and ParentMap guides describe it as a casual barcade that opened in November 2022, calling the 30+ pinball machines and tournaments the real draw over a limited classics menu (pepperoni, veggie, meat lovers); its own site confirms the format is square pizza sold whole or half rather than round pies, with coverage treating the arcade, not the kitchen, as the destination."
+      "id": "moto-pizza",
+      "title": "Seattle's Moto Pizza crowned world champion; Donates $5,000 prize to West Seattle Food Bank",
+      "url": "https://www.westsideseattle.com/node/61251",
+      "source": "West Seattle Blog",
+      "date": "2026-04-12",
+      "kind": "ranking"
     }
   ]
 }

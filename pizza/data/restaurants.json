@@ -256,7 +256,15 @@
           "date": "2026-08-26"
         }
       },
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://www.westsideseattle.com/node/61251",
+          "title": "Seattle's Moto Pizza crowned world champion; Donates $5,000 prize to West Seattle Food Bank",
+          "source": "West Seattle Blog",
+          "date": "2026-04-12",
+          "kind": "ranking"
+        }
+      ],
       "instagram": "https://www.instagram.com/motopizzashop",
       "statusChecked": "2026-09-01"
     },
