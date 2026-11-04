@@ -13,6 +13,7 @@ page indexes them with a client-side search (`/` to focus, Enter to open the fir
 | Now | [`/clock/`](https://sites.jackhammons.com/clock/) | [`clock/`](clock/) | Live in the browser |
 | Mortgage Calculator | [`/mortgage/`](https://sites.jackhammons.com/mortgage/) | [`mortgage/`](mortgage/) | Live in your browser |
 | Life | [`/life/`](https://sites.jackhammons.com/life/) | [`life/`](life/) | Live in your browser |
+| Screen & Seat | [`/screen/`](https://sites.jackhammons.com/screen/) | [`screen/`](screen/) | Live in your browser |
 
 ## Layout
 
