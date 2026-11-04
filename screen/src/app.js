@@ -1,0 +1,520 @@
+/* Screen & Seat — the live half of the page.
+ *
+ * Reads the form, runs src/screen.js (the module the tests and the deploy
+ * gate also use), and writes every figure, the lanes chart, the tables and
+ * the side view. State round-trips through the URL hash so a room can be
+ * shared as a link; nothing is sent anywhere.
+ */
+import {
+  ASPECTS, RESOLUTIONS, ANGLE_STANDARDS, ITU_STANDARDS, RULE_OF_THUMB, BRIGHTNESS, PLACEMENT,
+  aspect, resolution, dims, hfov, vfov, distanceForAngle, diagonalForAngle,
+  seatingDistances, ituDistances, pixelPitch, pixelAngle, pixelsPerDegree, acuityDistance,
+  acuityTable, throwDistance, widthAtThrow, lensOffsetInches, footLamberts, nits,
+  placement, describeAngle, describeResolution,
+} from './screen.js';
+
+const $ = id => document.getElementById(id);
+
+try {
+  boot();
+} catch (e) {
+  $('boot-error').hidden = false;
+  throw e;
+}
+
+function boot() {
+  /* Not every tag a browser reports is one Intl accepts ("en-US@posix"
+     throws), so use the first that constructs. */
+  const locale = (() => {
+    const tags = [].concat(navigator.languages || [], navigator.language || [], 'en-US');
+    for (const t of tags) {
+      try { new Intl.NumberFormat(t); return t; } catch {}
+    }
+    return 'en-US';
+  })();
+  const nf = digits => new Intl.NumberFormat(locale, { maximumFractionDigits: digits, minimumFractionDigits: 0 });
+  const n0 = nf(0), n1 = nf(1), n2 = nf(2), n3 = nf(3);
+  const deg = (x, d = 1) => `${(d ? n1 : n0).format(x)}°`;
+
+  const DATA = JSON.parse($('defaults').textContent);
+  const DEFAULTS = DATA.inputs;
+
+  const els = {
+    diag: $('in-diag'), aspect: $('in-aspect'), res: $('in-res'), dist: $('in-dist'),
+    eye: $('in-eye'), centre: $('in-centre'),
+    throw1: $('in-throw1'), throw2: $('in-throw2'), offset: $('in-offset'),
+    gain: $('in-gain'), lumens: $('in-lumens'),
+  };
+
+  /* ---- units -------------------------------------------------------- */
+  let units = DEFAULTS.units;       // 'imperial' | 'metric'
+  let mode = DEFAULTS.mode;         // 'tv' | 'projector'
+  const metric = () => units === 'metric';
+
+  /* A length as people write it, to inches. `dflt` is the unit a bare
+     number means. "8′6″", "8 ft 6 in", "8.5", "2.6 m", "260 cm" all work. */
+  function parseLength(s, dflt) {
+    let t = String(s).trim().toLowerCase()
+      .replace(/[′’']/g, ' ft ').replace(/[″”“"]/g, ' in ')
+      .replace(/,/g, '.').replace(/\s+/g, ' ').trim();
+    const m = t.match(/^(\d*\.?\d+) ?(ft|feet|foot|in|inch|inches|cm|mm|m)?(?: ?(\d*\.?\d+) ?(in|inch|inches)?)?$/);
+    if (!m) return NaN;
+    const a = +m[1], u = m[2], b = m[3] != null ? +m[3] : null;
+    if (b != null) {
+      if (u && !/^f/.test(u)) return NaN;      // "6 in 3" means nothing
+      return a * 12 + b;
+    }
+    const unit = u || dflt;
+    const per = { ft: 12, feet: 12, foot: 12, in: 1, inch: 1, inches: 1, cm: 1 / 2.54, mm: 1 / 25.4, m: 100 / 2.54 }[unit];
+    return a * per;
+  }
+  const parseNum = s => {
+    const t = String(s).trim().replace(/[%,\s]/g, '');
+    return /^\d*\.?\d+$/.test(t) ? +t : NaN;
+  };
+
+  /* Lengths for display. kind 'dist' is a room distance, 'dim' a picture
+     dimension: feet-and-inches vs inches, metres vs centimetres. */
+  function fmtLen(inches, kind = 'dist') {
+    if (!Number.isFinite(inches)) return '—';
+    if (metric()) {
+      const cm = inches * 2.54;
+      if (kind === 'dim' || cm < 100) return `${(kind === 'dim' ? n1 : n0).format(cm)} cm`;
+      return `${n2.format(cm / 100)} m`;
+    }
+    if (kind === 'dim' || inches < 12) return `${n1.format(inches)} in`;
+    let ft = Math.floor(inches / 12), rem = Math.round(inches - ft * 12);
+    if (rem === 12) { ft += 1; rem = 0; }
+    return rem ? `${ft} ft ${rem} in` : `${ft} ft`;
+  }
+  const fmtArea = in2 => metric()
+    ? `${n2.format(in2 * 0.00064516)} m²`
+    : `${n1.format(in2 / 144)} ft²`;
+  /* What to put in a field so it reads back the same. Field values never
+     go through Intl: a locale that writes "3,66" would be parsed as 366. */
+  const plain = (x, digits) => String(+x.toFixed(digits));
+  const distField = inches => metric()
+    ? plain(inches * 2.54 / 100, 2)
+    : (inches % 12 === 0 ? String(inches / 12) : `${Math.floor(inches / 12)} ft ${plain(inches % 12, 1)} in`);
+  const heightField = inches => metric() ? plain(inches * 2.54, 1) : plain(inches, 1);
+
+  function applyUnits() {
+    $('unit-imperial').setAttribute('aria-pressed', String(!metric()));
+    $('unit-metric').setAttribute('aria-pressed', String(metric()));
+    $('in-dist-unit').textContent = metric() ? 'm' : 'ft';
+    $('in-eye-unit').textContent = metric() ? 'cm' : 'in';
+    $('in-centre-unit').textContent = metric() ? 'cm' : 'in';
+    $('in-eye-hint').textContent = metric() ? 'Floor to eye; a sofa is 95–115 cm' : 'Floor to eye; a sofa is 38–46 in';
+    $('in-dist-hint').textContent = metric()
+      ? 'Accepts 2.6, 2.6 m, 260 cm, 8′6″, 8 ft 6 in'
+      : 'Accepts 9, 8′6″, 8 ft 6 in, 2.6 m, 260 cm';
+  }
+  function applyMode() {
+    const pj = mode === 'projector';
+    $('mode-tv').setAttribute('aria-pressed', String(!pj));
+    $('mode-pj').setAttribute('aria-pressed', String(pj));
+    $('pj-fields').hidden = !pj;
+    $('pj-section').hidden = !pj;
+  }
+
+  /* ---- state <-> form <-> hash ------------------------------------- */
+  const KEYS = { diag: 'd', aspect: 'a', res: 'r', dist: 'v', eye: 'e', centre: 'c',
+    throw1: 't1', throw2: 't2', offset: 'o', lumens: 'l', gain: 'g' };
+
+  function stateFromDefaults() {
+    return {
+      diag: DEFAULTS.diagonal, aspect: DEFAULTS.aspect, res: DEFAULTS.resolution,
+      dist: DEFAULTS.distance, eye: DEFAULTS.eyeHeight, centre: DEFAULTS.centreHeight,
+      throw1: DEFAULTS.throwMin, throw2: DEFAULTS.throwMax, offset: DEFAULTS.lensOffset,
+      lumens: DEFAULTS.lumens, gain: DEFAULTS.gain,
+    };
+  }
+
+  function fill(st) {
+    els.diag.value = plain(st.diag, 1);
+    els.aspect.value = aspect(st.aspect).id;
+    els.res.value = resolution(st.res).id;
+    els.dist.value = distField(st.dist);
+    els.eye.value = heightField(st.eye);
+    els.centre.value = heightField(st.centre);
+    els.throw1.value = st.throw1; els.throw2.value = st.throw2;
+    els.offset.value = st.offset; els.lumens.value = st.lumens; els.gain.value = st.gain;
+  }
+
+  const bad = new Set();
+  const mark = (el, ok) => { el.closest('.field').classList.toggle('invalid', !ok); if (!ok) bad.add(el.id); };
+
+  function read() {
+    bad.clear();
+    const hUnit = metric() ? 'cm' : 'in';
+    const diag = parseNum(els.diag.value);
+    const dist = parseLength(els.dist.value, metric() ? 'm' : 'ft');
+    const eye = parseLength(els.eye.value, hUnit);
+    const centre = parseLength(els.centre.value, hUnit);
+    const throw1 = parseNum(els.throw1.value), throw2 = parseNum(els.throw2.value);
+    const offset = (() => { const t = String(els.offset.value).trim().replace(/[%\s]/g, ''); return /^-?\d*\.?\d+$/.test(t) ? +t : NaN; })();
+    const lumens = parseNum(els.lumens.value), gain = parseNum(els.gain.value);
+    mark(els.diag, diag > 0 && diag < 1000);
+    mark(els.dist, dist > 0 && dist < 12000);
+    mark(els.eye, eye >= 0 && eye < 2400);
+    mark(els.centre, centre >= 0 && centre < 2400);
+    if (mode === 'projector') {
+      mark(els.throw1, throw1 > 0); mark(els.throw2, throw2 > 0);
+      mark(els.offset, Number.isFinite(offset));
+      mark(els.lumens, lumens > 0); mark(els.gain, gain > 0);
+    } else {
+      for (const el of [els.throw1, els.throw2, els.offset, els.lumens, els.gain]) mark(el, true);
+    }
+    return { diag, aspect: els.aspect.value, res: els.res.value, dist, eye, centre,
+      throw1, throw2, offset, lumens, gain };
+  }
+
+  function writeHash(st) {
+    const p = new URLSearchParams();
+    for (const [k, key] of Object.entries(KEYS)) {
+      const val = st[k];
+      if (val == null || (typeof val === 'number' && !Number.isFinite(val))) continue;
+      p.set(key, typeof val === 'number' ? String(+val.toFixed(3)) : val);
+    }
+    p.set('u', metric() ? 'm' : 'i');
+    p.set('m', mode === 'projector' ? 'pj' : 'tv');
+    const h = '#' + p.toString().replace(/%3A/g, ':');
+    if (location.hash !== h) history.replaceState(null, '', h);
+  }
+
+  function readHash() {
+    const st = stateFromDefaults();
+    if (!location.hash.length) return st;
+    const p = new URLSearchParams(location.hash.slice(1));
+    for (const [k, key] of Object.entries(KEYS)) {
+      if (!p.has(key)) continue;
+      const raw = p.get(key);
+      if (k === 'aspect' || k === 'res') { st[k] = raw; continue; }
+      const x = +raw;
+      if (Number.isFinite(x)) st[k] = x;
+    }
+    if (p.get('u') === 'm') units = 'metric';
+    if (p.get('u') === 'i') units = 'imperial';
+    if (p.get('m') === 'pj') mode = 'projector';
+    if (p.get('m') === 'tv') mode = 'tv';
+    return st;
+  }
+
+  /* ---- compute + render -------------------------------------------- */
+  let last = null;
+
+  function compute() {
+    const st = read();
+    const ok = bad.size === 0;
+    const d = dims(ok ? st.diag : DEFAULTS.diagonal, aspect(st.aspect).ratio);
+    const res = resolution(st.res);
+    last = { st, d, res, ok };
+    writeHash(st);
+
+    if (!ok) {
+      $('out-fov').textContent = '—';
+      $('out-sub').textContent = 'Check the highlighted field.';
+      return;
+    }
+
+    const fov = hfov(d, st.dist), vf = vfov(d, st.dist);
+    $('out-fov').textContent = deg(fov);
+    $('out-sub').textContent = `${describeAngle(fov)} — a ${n1.format(st.diag)}-inch ${aspect(st.aspect).id} picture seen from ${fmtLen(st.dist)}.`;
+
+    const set = (k, main, sub = '', cls = '') => {
+      $('sum-' + k).textContent = main; $('sub-' + k).textContent = sub;
+      const f = $('fact-' + k); f.classList.remove('warn', 'good'); if (cls) f.classList.add(cls);
+    };
+    set('size', `${fmtLen(d.width, 'dim')} × ${fmtLen(d.height, 'dim')}`,
+      `width × height; ${n1.format(st.diag)} in is ${n0.format(st.diag * 2.54)} cm`);
+    set('area', fmtArea(d.area), `${n2.format(d.ratio)}:1`);
+    set('vfov', deg(vf), `${n2.format(st.dist / d.height)} picture heights away`);
+
+    const pitch = pixelPitch(d, res);
+    const ppd = pixelsPerDegree(pitch, st.dist);
+    set('pixel', `${n1.format(ppd)} px/°`,
+      `${n2.format(pixelAngle(pitch, st.dist) * 60)}′ per pixel at ${metric() ? `${n2.format(pitch * 25.4)} mm` : `${n3.format(pitch)} in`} pitch; 60 px/° is 20/20`);
+
+    const rv = describeResolution(d, res, st.dist);
+    const short = r => r.label.replace(/ \(.*$/, '');
+    if (rv.wasted) {
+      set('res', `Past ${fmtLen(rv.limit)}`,
+        `${short(res)} pixels merge beyond ${fmtLen(rv.limit)}; ${rv.lower ? `${short(rv.lower)} would look as sharp from here` : 'you cannot see them from your seat'}`, 'warn');
+    } else {
+      set('res', 'Fully used',
+        `${short(res)} pixels stay distinct out to ${fmtLen(rv.limit)}; you are inside that`, 'good');
+    }
+
+    const pl = placement(d, st.dist, st.eye, st.centre);
+    const dir = Math.abs(pl.centre) < 0.5 ? 'level' : pl.centre > 0 ? 'up' : 'down';
+    set('tilt', dir === 'level' ? 'Level' : `${deg(Math.abs(pl.centre))} ${dir}`,
+      pl.ok ? `within ${PLACEMENT.maxUp}° up / ${PLACEMENT.maxDown}° down` : pl.centre > 0 ? `over ${PLACEMENT.maxUp}°: lower the screen or sit back` : `over ${PLACEMENT.maxDown}° down: raise the screen`,
+      pl.ok ? '' : 'warn');
+
+    drawLanes();
+    drawSeats();
+    drawSizes();
+    drawProjector();
+    drawPlacement(pl);
+  }
+
+  /* ---- lanes chart: where the standards put the seat ---------------- */
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  const svgEl = (tag, attrs, text) => {
+    const e = document.createElementNS(SVGNS, tag);
+    for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+    if (text != null) e.textContent = text;
+    return e;
+  };
+  /* Axis ticks: a step that leaves room for a label, in the display unit. */
+  function axisTicks(maxIn, iw) {
+    const per = metric() ? 100 / 2.54 : 12;         // inches per metre / foot
+    const unitLabel = metric() ? 'm' : 'ft';
+    const maxU = maxIn / per;
+    const step = [0.25, 0.5, 1, 2, 5, 10, 20].find(s => iw / (maxU / s) >= 44) || 20;
+    const ticks = [];
+    for (let u = 0; u <= maxU + 1e-9; u += step) ticks.push({ at: u * per, label: `${n2.format(u)}${unitLabel === 'm' ? ' m' : '′'}` });
+    return ticks;
+  }
+
+  function drawLanes() {
+    const { st, d, res } = last;
+    const host = $('lanes');
+    host.textContent = '';
+    const seats = seatingDistances(d);
+    const at = id => seats.find(s => s.id === id).distance;
+    const acuity = acuityTable(d);
+    const resRows = [...new Set(['1080', '2160', res.id])].map(id => acuity.find(r => r.id === id))
+      .sort((a, b) => b.w - a.w);
+    const itu = ituDistances(d);
+    const rows = [
+      { fam: 's1', label: `THX best seat · ≥${seats[0].angle}°`, from: 0, to: at('thx-best'), open: true, tip: `Within ${fmtLen(at('thx-best'))} the picture fills ${seats[0].angle}° or more.` },
+      { fam: 's1', label: `THX recommended · ${seats[1].angle}–${seats[0].angle}°`, from: at('thx-best'), to: at('thx'), tip: `${fmtLen(at('thx-best'))} to ${fmtLen(at('thx'))}.` },
+      { fam: 's1', label: `SMPTE minimum · ${seats[2].angle}–${seats[1].angle}°`, from: at('thx'), to: at('smpte'), tip: `${fmtLen(at('thx'))} to ${fmtLen(at('smpte'))}.` },
+      { fam: 's1', label: `THX back row · ${seats[3].angle}–${seats[2].angle}°`, from: at('smpte'), to: at('thx-far'), tip: `${fmtLen(at('smpte'))} to ${fmtLen(at('thx-far'))}. Past this a certified cinema would not seat you.` },
+      ...itu.filter(s => s.res === '1080' || s.res === '2160').map(s => ({
+        fam: 's3', label: `${s.short} · ${s.heights}H`, from: s.distance, to: s.distance, mark: true,
+        tip: `${s.label}: ${s.heights} picture heights, ${fmtLen(s.distance)} (${deg(s.angle, 0)}).` })),
+      ...resRows.map(r => ({
+        fam: 's3', label: `${r.label.replace(/ \(.*$/, '')} pixels visible`, from: 0, to: r.distance, open: true,
+        tip: `${r.label}: pixels distinct up to ${fmtLen(r.distance)} for 20/20 eyes; beyond that the resolution is not visible.` })),
+      { fam: 's4', label: `Rule of thumb · ${RULE_OF_THUMB.near}–${RULE_OF_THUMB.far}× diagonal`, from: st.diag * RULE_OF_THUMB.near, to: st.diag * RULE_OF_THUMB.far,
+        tip: `${fmtLen(st.diag * RULE_OF_THUMB.near)} to ${fmtLen(st.diag * RULE_OF_THUMB.far)}: the pre-HD shop-floor rule.` },
+    ];
+
+    const W = Math.max(320, host.clientWidth || 640);
+    /* Narrow screens have no room for a label column, so each label sits
+       above its band and the rows grow to make space. */
+    const narrow = W < 560;
+    const rowH = narrow ? 36 : 24, labelW = narrow ? 12 : 230;
+    const m = { t: 22, r: 24, b: 30, l: labelW };
+    const H = m.t + rows.length * rowH + m.b;
+    const iw = W - m.l - m.r;
+    const maxIn = Math.max(st.diag * (RULE_OF_THUMB.far + 0.2), st.dist * 1.12, ...rows.map(r => r.to * 1.04));
+    const X = inches => m.l + Math.min(1, inches / maxIn) * iw;
+    const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: 'img',
+      'aria-label': 'Viewing distance bands by standard, with your seat marked' });
+
+    const g = svgEl('g', { class: 'grid' });
+    for (const t of axisTicks(maxIn, iw)) {
+      const x = X(t.at);
+      g.append(svgEl('line', { x1: x, x2: x, y1: m.t, y2: H - m.b }));
+      g.append(svgEl('text', { x, y: H - m.b + 16, 'text-anchor': 'middle', class: 'tick' }, t.label));
+    }
+    svg.append(g);
+
+    const tip = $('tip');
+    rows.forEach((r, i) => {
+      const y = m.t + i * rowH;
+      const bandY = narrow ? y + 20 : y + 6, bandH = 12;
+      const lbl = narrow
+        ? svgEl('text', { x: m.l + 2, y: y + 13, 'text-anchor': 'start', 'font-size': '11' }, r.label)
+        : svgEl('text', { x: m.l - 10, y: y + rowH / 2 + 4, 'text-anchor': 'end' }, r.label);
+      svg.append(lbl);
+      let x1 = X(r.from), x2 = X(r.to);
+      if (r.mark) { x1 = X(r.from) - 2; x2 = x1 + 4; }
+      if (x2 - x1 < 4) x2 = x1 + 4;
+      const band = svgEl('rect', { x: x1, y: bandY, width: x2 - x1, height: bandH, class: `band ${r.fam}${r.open ? ' open' : ''}` });
+      svg.append(band);
+      const hit = svgEl('rect', { x: m.l, y, width: iw, height: rowH, class: 'hit' });
+      const show = ev => {
+        tip.innerHTML = `<b>${r.label}</b><br>${r.tip}`;
+        tip.hidden = false;
+        const box = host.getBoundingClientRect();
+        const left = ev.clientX - box.left, top = ev.clientY - box.top;
+        const tw = tip.offsetWidth;
+        tip.style.left = Math.max(0, Math.min(box.width - tw, left + (left > box.width / 2 ? -tw - 12 : 12))) + 'px';
+        tip.style.top = (host.offsetTop + top + 14) + 'px';
+      };
+      hit.addEventListener('pointermove', show);
+      hit.addEventListener('pointerdown', show);
+      hit.addEventListener('pointerleave', () => { tip.hidden = true; });
+      svg.append(hit);
+    });
+
+    const xy = X(st.dist);
+    svg.append(svgEl('line', { x1: xy, x2: xy, y1: m.t - 4, y2: H - m.b, class: 'you' }));
+    const anchor = xy > W - m.r - 70 ? 'end' : xy < m.l + 70 ? 'start' : 'middle';
+    svg.append(svgEl('text', { x: xy, y: m.t - 8, class: 'you-lbl', 'text-anchor': anchor }, `you · ${fmtLen(st.dist)}`));
+    host.append(svg);
+    $('lanes-note').textContent = `${n1.format(st.diag)}-inch ${aspect(st.aspect).id}; distance along the bottom`;
+  }
+
+  /* ---- table: how far to sit from this screen ---------------------- */
+  function drawSeats() {
+    const { st, d, res } = last;
+    const rows = [];
+    for (const s of seatingDistances(d)) rows.push({ label: s.label, note: s.note, distance: s.distance, angle: s.angle });
+    for (const s of ituDistances(d)) rows.push({ label: s.label, note: `${s.heights} picture heights`, distance: s.distance, angle: s.angle });
+    for (const r of acuityTable(d)) {
+      if (['1080', '2160', '4320', res.id].includes(r.id)) {
+        rows.push({ label: `${r.label.replace(/ \(.*$/, '')} pixels merge`, note: `one arc-minute per pixel; beyond this ${r.label.replace(/ \(.*$/, '')} is not visible`, distance: r.distance, angle: hfov(d, r.distance) });
+      }
+    }
+    rows.push({ label: 'Rule of thumb, near', note: `${RULE_OF_THUMB.near} × diagonal`, distance: st.diag * RULE_OF_THUMB.near, angle: hfov(d, st.diag * RULE_OF_THUMB.near) });
+    rows.push({ label: 'Rule of thumb, far', note: `${RULE_OF_THUMB.far} × diagonal`, distance: st.diag * RULE_OF_THUMB.far, angle: hfov(d, st.diag * RULE_OF_THUMB.far) });
+    rows.push({ label: 'Your seat', here: true, distance: st.dist, angle: hfov(d, st.dist) });
+    rows.sort((a, b) => a.distance - b.distance);
+    $('seats').innerHTML = rows.map(r => `<tr${r.here ? ' class="here"' : ''}>
+      <th scope="row">${r.label}${r.note ? `<small>${r.note}</small>` : ''}</th>
+      <td>${fmtLen(r.distance)}</td><td>${deg(r.angle)}</td>
+      <td>${n2.format(r.distance / st.diag)}</td><td>${n2.format(r.distance / d.height)}</td></tr>`).join('');
+    $('seats-note').textContent = 'nearest first; your seat is highlighted';
+  }
+
+  /* ---- table: what size for your seat ------------------------------- */
+  function drawSizes() {
+    const { st, d, res } = last;
+    const ratio = d.ratio;
+    const sizes = [...new Set([...DATA.sizes, Math.round(st.diag)])].sort((a, b) => a - b);
+    const limitAt = diag => acuityDistance(pixelPitch(dims(diag, ratio), res));
+    $('sizes').innerHTML = sizes.map(diag => {
+      const dd = dims(diag, ratio);
+      const a = hfov(dd, st.dist);
+      const vis = st.dist <= limitAt(diag);
+      const here = diag === Math.round(st.diag);
+      return `<tr${here ? ' class="here"' : ''}>
+        <th scope="row">${n0.format(diag)} in${here ? '<span class="pill on">yours</span>' : ''}</th>
+        <td>${fmtLen(dd.width, 'dim')} × ${fmtLen(dd.height, 'dim')}</td>
+        <td>${deg(a)}</td>
+        <td class="verdict">${describeAngle(a)}</td>
+        <td>${vis ? `<span class="pill on">${res.label.replace(/ \(.*$/, '')} visible</span>` : `<span class="nil">merged</span>`}</td></tr>`;
+    }).join('');
+    const fit = ANGLE_STANDARDS.map(s => `${n0.format(diagonalForAngle(st.dist, s.angle, ratio))} in for ${s.short}`);
+    $('sizes-note').textContent = `from ${fmtLen(st.dist)}: ${fit.join(' · ')}`;
+  }
+
+  /* ---- projector ---------------------------------------------------- */
+  function drawProjector() {
+    const { st, d } = last;
+    if (mode !== 'projector') return;
+    const set = (k, main, sub = '', cls = '') => {
+      $('sum-' + k).textContent = main; $('sub-' + k).textContent = sub;
+      const f = $('fact-' + k); f.classList.remove('warn', 'good'); if (cls) f.classList.add(cls);
+    };
+    const t1 = Math.min(st.throw1, st.throw2), t2 = Math.max(st.throw1, st.throw2);
+    const near = throwDistance(d.width, t1), far = throwDistance(d.width, t2);
+    set('throw', t1 === t2 ? fmtLen(near) : `${fmtLen(near)} – ${fmtLen(far)}`,
+      `lens to screen for a ${fmtLen(d.width, 'dim')}-wide picture at throw ${n2.format(t1)}${t1 === t2 ? '' : `–${n2.format(t2)}`}`);
+    const off = lensOffsetInches(d, st.offset);
+    const lensH = st.centre - off;
+    set('lens', fmtLen(lensH, 'dim'),
+      `from the floor: ${fmtLen(Math.abs(off), 'dim')} ${off >= 0 ? 'below' : 'above'} the picture centre at ${n0.format(st.offset)}% offset${st.offset >= 0 ? '' : ' (ceiling mount, inverted)'}`);
+    const fl = footLamberts(st.lumens, st.gain, d);
+    set('fl', `${n1.format(fl)} fL`,
+      `${n0.format(nits(fl))} cd/m² from ${n0.format(st.lumens)} lm × ${n2.format(st.gain)} gain over ${fmtArea(d.area)}; cinema ${BRIGHTNESS.cinema}, home ≥${BRIGHTNESS.sdrHome}, bright room ~${BRIGHTNESS.bright}`,
+      fl < BRIGHTNESS.cinema ? 'warn' : fl >= BRIGHTNESS.sdrHome ? 'good' : '');
+    const wNear = widthAtThrow(st.dist, t2), wFar = widthAtThrow(st.dist, t1);
+    const dg = w => n0.format(dims(w * Math.sqrt(1 + 1 / (d.ratio * d.ratio)), d.ratio).diagonal);
+    set('width', t1 === t2 ? fmtLen(wNear, 'dim') : `${fmtLen(wNear, 'dim')} – ${fmtLen(wFar, 'dim')}`,
+      `if the lens sat at your seat distance (${fmtLen(st.dist)}): a ${dg(wNear)}${t1 === t2 ? '' : `–${dg(wFar)}`} in diagonal`);
+    $('pj-note').textContent = `${n1.format(st.diag)}-inch ${aspect(st.aspect).id}, ${fmtLen(d.width, 'dim')} wide`;
+  }
+
+  /* ---- placement ---------------------------------------------------- */
+  function drawPlacement(pl) {
+    const { st, d } = last;
+    const set = (k, main, sub = '', cls = '') => {
+      $('sum-' + k).textContent = main; $('sub-' + k).textContent = sub;
+      const f = $('fact-' + k); f.classList.remove('warn', 'good'); if (cls) f.classList.add(cls);
+    };
+    const updown = a => Math.abs(a) < 0.5 ? 'level' : `${deg(Math.abs(a))} ${a > 0 ? 'up' : 'down'}`;
+    set('top', updown(pl.top), `${fmtLen(st.centre + d.height / 2, 'dim')} from the floor`);
+    set('bottom', updown(pl.bottom), `${fmtLen(pl.bottomEdge, 'dim')} from the floor`);
+    set('max', fmtLen(pl.maxCentre, 'dim'), `centre height for a ${PLACEMENT.maxUp}° eye line from ${fmtLen(st.dist)}`);
+    set('stand', fmtLen(pl.bottomEdge, 'dim'),
+      pl.bottomEdge < 0 ? 'below the floor: raise the centre' : `a stand or mount puts the bottom edge here`,
+      pl.bottomEdge < 0 ? 'warn' : '');
+    $('place-note').textContent = pl.ok
+      ? `centre ${fmtLen(st.centre, 'dim')} up, eyes at ${fmtLen(st.eye, 'dim')}: comfortable`
+      : `centre ${fmtLen(st.centre, 'dim')} up, eyes at ${fmtLen(st.eye, 'dim')}: ${pl.centre > 0 ? 'too high' : 'too low'} for a long sitting`;
+
+    /* Side view, to scale: eye at left, screen at right. */
+    const host = $('side-view');
+    host.textContent = '';
+    const W = 260, H = 190, pad = 16;
+    const top = Math.max(st.centre + d.height / 2, st.eye, st.dist * Math.tan(PLACEMENT.maxUp * Math.PI / 180) + st.eye) * 1.08;
+    const scale = Math.min((W - 2 * pad - 20) / st.dist, (H - 2 * pad - 14) / top);
+    const ex = pad + 10, floorY = H - pad - 8;
+    const sx = ex + st.dist * scale;
+    const Y = h => floorY - h * scale;
+    const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Side view: eye line to the screen' });
+    // Comfort wedge from the eye to the screen plane.
+    const upY = Y(st.eye + st.dist * Math.tan(PLACEMENT.maxUp * Math.PI / 180));
+    const dnY = Y(st.eye - st.dist * Math.tan(PLACEMENT.maxDown * Math.PI / 180));
+    svg.append(svgEl('polygon', { points: `${ex},${Y(st.eye)} ${sx},${upY} ${sx},${dnY}`, class: 'band' }));
+    svg.append(svgEl('line', { x1: pad, x2: W - pad, y1: floorY, y2: floorY, class: 'floor' }));
+    svg.append(svgEl('line', { x1: sx + 6, x2: sx + 6, y1: pad, y2: floorY, class: 'wall' }));
+    svg.append(svgEl('rect', { x: sx, y: Y(st.centre + d.height / 2), width: 4, height: Math.max(2, d.height * scale), class: 'scr' }));
+    svg.append(svgEl('line', { x1: ex, y1: Y(st.eye), x2: sx, y2: Y(st.centre + d.height / 2), class: 'ray edge' }));
+    svg.append(svgEl('line', { x1: ex, y1: Y(st.eye), x2: sx, y2: Y(st.centre - d.height / 2), class: 'ray edge' }));
+    svg.append(svgEl('line', { x1: ex, y1: Y(st.eye), x2: sx, y2: Y(st.centre), class: 'ray' }));
+    svg.append(svgEl('circle', { cx: ex, cy: Y(st.eye), r: 4, class: 'eye' }));
+    svg.append(svgEl('text', { x: (ex + sx) / 2, y: floorY + 12, 'text-anchor': 'middle' }, fmtLen(st.dist)));
+    svg.append(svgEl('text', { x: ex - 4, y: Y(st.eye) - 7, 'text-anchor': 'start' }, `eye ${fmtLen(st.eye, 'dim')}`));
+    svg.append(svgEl('text', { x: sx - 6, y: Y(st.centre + d.height / 2) - 5, 'text-anchor': 'end' }, `centre ${fmtLen(st.centre, 'dim')}`));
+    host.append(svg);
+  }
+
+  /* ---- wiring ------------------------------------------------------- */
+  let t = 0;
+  const schedule = () => { clearTimeout(t); t = setTimeout(compute, 60); };
+  $('form').addEventListener('input', schedule);
+  $('form').addEventListener('change', schedule);
+  $('form').addEventListener('submit', e => { e.preventDefault(); compute(); });
+
+  const switchUnits = u => {
+    if (u === units) return;
+    const st = last && last.ok ? last.st : read();
+    units = u;
+    applyUnits();
+    fill(st);
+    compute();
+  };
+  $('unit-imperial').addEventListener('click', () => switchUnits('imperial'));
+  $('unit-metric').addEventListener('click', () => switchUnits('metric'));
+  const switchMode = mo => { mode = mo; applyMode(); compute(); };
+  $('mode-tv').addEventListener('click', () => switchMode('tv'));
+  $('mode-pj').addEventListener('click', () => switchMode('projector'));
+
+  $('btn-reset').addEventListener('click', () => {
+    units = DEFAULTS.units; mode = DEFAULTS.mode;
+    applyUnits(); applyMode(); fill(stateFromDefaults()); compute();
+    $('status').textContent = 'Back to the example room.';
+  });
+  $('btn-copy').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(location.href);
+      $('status').textContent = 'Link copied — it carries every input.';
+    } catch {
+      $('status').textContent = 'Copy the address bar: it carries every input.';
+    }
+  });
+  window.addEventListener('hashchange', () => { fill(readHash()); applyUnits(); applyMode(); compute(); });
+  window.addEventListener('resize', () => { if (last && last.ok) { drawLanes(); } });
+
+  const start = readHash();
+  applyUnits(); applyMode();
+  fill(start);
+  compute();
+}

@@ -17,6 +17,7 @@ on:
       - 'clock/**'
       - 'mortgage/**'
       - 'life/**'
+      - 'screen/**'
       - 'scripts/**'
       - 'sites.config.json'
       - '.github/workflows/publish.yml'

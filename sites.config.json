@@ -91,6 +91,23 @@
       ],
       "cadence": "Live in your browser",
       "accent": "#111111"
+    },
+    {
+      "slug": "screen",
+      "name": "Screen & Seat",
+      "emoji": "📐",
+      "tagline": "TV and projector sizing: how far to sit for each standard, field of view, pixel visibility, screen dimensions by aspect ratio, throw distance and mounting height.",
+      "dir": "screen",
+      "build": [
+        "node",
+        "scripts/build.mjs"
+      ],
+      "verify": [
+        "node",
+        "scripts/verify.mjs"
+      ],
+      "cadence": "Live in your browser",
+      "accent": "#5b6fd6"
     }
   ]
 }

@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: '24'
       - name: Unit tests
-        run: node --test pizza/test/*.test.mjs mortgage/test/*.test.mjs
+        run: node --test pizza/test/*.test.mjs mortgage/test/*.test.mjs screen/test/*.test.mjs
       - name: Lint the dataset
         run: node pizza/scripts/check-dataset.mjs
       # Per site rather than build-all: the orchestrator refuses --skip under
@@ -45,6 +45,13 @@ jobs:
         working-directory: mortgage
         env:
           OUT_DIR: ${{ github.workspace }}/dist/mortgage
+        run: |
+          node scripts/build.mjs
+          node scripts/verify.mjs
+      - name: Build and verify screen
+        working-directory: screen
+        env:
+          OUT_DIR: ${{ github.workspace }}/dist/screen
         run: |
           node scripts/build.mjs
           node scripts/verify.mjs
