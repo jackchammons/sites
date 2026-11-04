@@ -51,7 +51,9 @@ section{margin-top:30px}
      border-radius:9px;padding:0 10px;transition:border-color .15s,box-shadow .15s}
 .box:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .box i{font-style:normal;color:var(--ink-3);font-family:var(--mono);font-size:13px;white-space:nowrap}
-.box input,.box select{flex:1;min-width:0;width:100%;font:inherit;font-family:var(--mono);font-size:15px;
+/* 16px is the floor below which iOS Safari zooms the page on focus; keep every
+   field at or above it rather than disabling zoom in the viewport meta. */
+.box input,.box select{flex:1;min-width:0;width:100%;font:inherit;font-family:var(--mono);font-size:16px;
   color:var(--ink);background:transparent;border:0;outline:0;padding:9px 6px;
   font-variant-numeric:tabular-nums}
 .box select{padding-left:0;cursor:pointer}
