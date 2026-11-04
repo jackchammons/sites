@@ -37,7 +37,7 @@ const careRows = Object.keys(DEFAULT_WEIGHTS).map(k => `
 const factorCards = Object.keys(DEFAULT_WEIGHTS).map(k => `
         <div class="pillar">
           <div class="w">${DEFAULT_WEIGHTS[k]}<span style="font-size:15px;color:var(--ink-3)">%</span></div>
-          <h3><span class="swatch" style="background:${PILLAR_META[k].color}"></span>${PILLAR_META[k].label}</h3>
+          <h4><span class="swatch" style="background:${PILLAR_META[k].color}"></span>${PILLAR_META[k].label}</h4>
           <p>${FACTOR_COPY[k]}</p>
         </div>`).join('');
 

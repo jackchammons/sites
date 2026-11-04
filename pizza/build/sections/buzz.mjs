@@ -32,7 +32,7 @@ const buzzItem = b => {
 const buzzSources = [...new Set(buzz.items.map(b => b.source))].length;
 
 const buzzSection = buzz.items.length ? `
-<section class="section">
+<section class="section" id="buzz">
   <div class="wrap">
     <div class="eyebrow">The buzz</div>
     <h2 class="sec-h">What Seattle is writing about</h2>

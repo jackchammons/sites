@@ -13,6 +13,20 @@ export function pageHtml(ctx, sections) {
   const agentRated = dataset.restaurants.filter(r => r.factors?.craft?.setBy === 'agent').length;
   const capWeeks = Math.round(MAX_STALENESS_DECAY / STALENESS_PER_WEEK);
   const REPO = 'https://github.com/jackchammons/sites';
+  /* Rendered twice: in the hero beside the lede on wide screens, and under
+   * the board on phones, where the hero must get out of the ranking's way. */
+  const spotlightHtml = `
+        <div class="spotlight">
+          <div class="big">🍕</div>
+          <div>
+            <p class="spot-title">Pie of the Week · ${nameLink(spotlight)}</p>
+            <p><b>#${spotlight.rank}, ${spotlight.score.toFixed(1)} SLICE.</b> ${
+              /* Discovered entries have no hand-written signature; their
+               * discovery blurb (or just the location) stands in. */
+              esc(spotlight.signature ?? spotlight.blurb ?? spotlight.style ?? '')} — ${esc(locationLabel(spotlight))}.
+            Rotates through the top ten each Monday.</p>
+          </div>
+        </div>`;
   const { careHeader, careRows, factorCards, frictionRows } = sections.controls;
   const { recordSection, bracketSection, radarSection, buzzSection, directorySection } = sections;
   return `<!doctype html>
@@ -34,6 +48,7 @@ export function pageHtml(ctx, sections) {
 ${css}</style>
 </head>
 <body>
+<a class="skip" href="#board">Skip to the ranking</a>
 
 <header class="hero">
   <div class="wrap">
@@ -47,7 +62,7 @@ ${css}</style>
           100 from five weighted factors, and the ten highest make the list. The full method is
           further down this page, and you can change the weights yourself.
         </p>
-        <p class="lede" style="margin-top:10px;font-size:14.5px">
+        <p class="lede lede-rule" style="margin-top:10px;font-size:14.5px">
           To be included, a pizzeria must have at least one location inside Seattle itself.
           Chains that qualify are tracked with all their branches, but the suburbs are never
           the subject.
@@ -60,23 +75,27 @@ ${css}</style>
         </div>
       </div>
       <div class="hero-side">
-        <div class="spotlight">
-          <div class="big">🍕</div>
-          <div>
-            <h3>Pie of the Week · ${nameLink(spotlight)}</h3>
-            <p><b>#${spotlight.rank}, ${spotlight.score.toFixed(1)} SLICE.</b> ${
-              /* Discovered entries have no hand-written signature; their
-               * discovery blurb (or just the location) stands in. */
-              esc(spotlight.signature ?? spotlight.blurb ?? spotlight.style ?? '')} — ${esc(locationLabel(spotlight))}.
-            Rotates through the top ten each Monday.</p>
-          </div>
-        </div>
+        ${spotlightHtml}
       </div>
     </div>
   </div>
 </header>
 
-<section class="section">
+<nav class="site-nav" aria-label="Sections">
+  <div class="wrap">
+    <a href="#top-ten">Top 10</a>
+    <a href="#record">Record</a>
+    <a href="#styles">By style</a>
+    <a href="#radar">Radar</a>
+    <a href="#buzz">Buzz</a>
+    <a href="#directory">Directory</a>
+    <a href="#methodology">Method</a>
+  </div>
+</nav>
+
+<main>
+
+<section class="section" id="top-ten">
   <div class="wrap">
     <div class="eyebrow">The ranking</div>
     <h2 class="sec-h">The Top 10</h2>
@@ -88,14 +107,10 @@ ${css}</style>
     <p class="lede" style="margin:0 0 26px" id="board-note" aria-live="polite"></p>
 
     <div class="rank-layout">
-    <div class="board" id="board">
-${boardHtml(ranked)}
-    </div>
-
-    <div class="controls" id="controls" hidden>
+    <details class="controls" id="controls" hidden open>
+      <summary><strong>How much do you care about each factor?</strong> <span class="ctl-hint">re-weight and re-sort</span></summary>
       <div class="controls-head">
-        <strong>How much do you care about each factor?</strong>
-        <span>The list above uses the published weights. Set any factor from 0% (ignore it) to
+        <span>The list uses the published weights. Set any factor from 0% (ignore it) to
         200% (double it) and the list re-sorts in your browser. The five weights always rescale
         to total 100%; the number beside each factor is the share it currently gets.</span>
       </div>
@@ -108,8 +123,13 @@ ${boardHtml(ranked)}
         <label class="toggle"><input type="checkbox" id="opt-freshness" checked> Apply freshness decay</label>
         <button class="reset" id="reset" type="button">Back to the published ranking</button>
       </div>
+    </details>
+
+    <div class="board" id="board">
+${boardHtml(ranked)}
     </div>
     </div>
+    <div class="spotlight-inline">${spotlightHtml}</div>
   </div>
 </section>
 
@@ -118,6 +138,8 @@ ${bracketSection}
 ${radarSection}
 ${buzzSection}
 ${directorySection}
+
+</main>
 
 <section class="section" id="methodology">
   <div class="wrap">
@@ -157,7 +179,7 @@ ${directorySection}
     </p>
     <div class="grid2">
       <div class="mcard">
-        <h3>Reputation — computed</h3>
+        <h4>Reputation — computed</h4>
         <p>Three components, each 0–1, weighted 3 : 2 : 1, scored over whichever an entry
         actually has:</p>
         <pre>longevity = log(1+years) / log(1+15)   capped at 1
@@ -176,7 +198,7 @@ reputation = 10 × best weighted mean over
         a place is durable, while stored averages go stale.</p>
       </div>
       <div class="mcard">
-        <h3>Critical reception — computed</h3>
+        <h4>Critical reception — computed</h4>
         <p>A critic base rating, refined by the press coverage the research pass files against
         the entry. Each story adds a signal by kind — list appearance 1.0, mention 0.4, opening
         0.3, closing 0, anything else 0.3 — which fades with a 12-month half-life:</p>
@@ -186,7 +208,7 @@ critical = base + boost</pre>
         refines the rating and never replaces it.</p>
       </div>
       <div class="mcard">
-        <h3>Value — computed</h3>
+        <h4>Value — computed</h4>
         <p>Quality per dollar. The quality half is the mean of craft and critical reception; the
         price tier scales it:</p>
         <pre>value = (craft + critical) / 2 × tier
@@ -197,7 +219,7 @@ tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75
         multiplier, and its card says so.</p>
       </div>
       <div class="mcard">
-        <h3>Craft &amp; Distinctiveness — graded</h3>
+        <h4>Craft &amp; Distinctiveness — graded</h4>
         <p>The two factors that require judgment: how good the pizza itself is, and whether the
         place owns a lane in this city. Both are stored with who set them and when; for
         agent-rated entries, with the coverage they were read from. The founding entries' values
@@ -210,7 +232,7 @@ tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75
     <h3 class="method-h">The deductions</h3>
     <div class="grid2">
       <div class="mcard">
-        <h3>Friction</h3>
+        <h4>Friction</h4>
         <p>Points for the gap between wanting the pizza and eating it, read from each entry's
         attribute flags. Capped at −${FRICTION_CAP.toFixed(1)} so logistics can dent a ranking,
         never decide it.</p>
@@ -220,7 +242,7 @@ tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75
         </table>
       </div>
       <div class="mcard">
-        <h3>Freshness decay</h3>
+        <h4>Freshness decay</h4>
         <p>Every entry records when it was last verified: the newest of a liveness check, a
         locations check or the date it was rated. Its score loses ${(STALENESS_PER_WEEK * 100).toFixed(1)}% per
         week since then, capped at ${(MAX_STALENESS_DECAY * 100).toFixed(0)}% after ${capWeeks} weeks. An entry left

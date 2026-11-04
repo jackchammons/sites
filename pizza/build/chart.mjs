@@ -34,7 +34,7 @@ export function bumpChart(snaps, entriesById) {
   };
   const nameOf = id => entriesById.get(id)?.name ?? id;
 
-  const padL = 34, padR = 200, padT = 26, padB = 10, rowH = 33;
+  const padL = 34, padR = 200, padT = 26, padB = 22, rowH = 33;
   const plotW = 680;
   const W = padL + plotW + padR, H = padT + rowH * 9 + padB + 10;
   const x = i => padL + (weeks.length === 1 ? plotW / 2 : (plotW / (weeks.length - 1)) * i);
@@ -53,7 +53,7 @@ export function bumpChart(snaps, entriesById) {
   // that stops there reads as a re-scoring, not a pizzeria falling out.
   const changes = weeks.map((w, i) => i > 0 && w.algorithm && weeks[i - 1].algorithm && w.algorithm !== weeks[i - 1].algorithm
     ? `<g class="method-change"><line x1="${(x(i - 1) + x(i)) / 2}" y1="${padT - 6}" x2="${(x(i - 1) + x(i)) / 2}" y2="${padT + rowH * 9 + 10}" stroke="var(--ink-3)" stroke-dasharray="4 4"/>` +
-      `<text class="week-lab" x="${(x(i - 1) + x(i)) / 2}" y="${padT - 12}" text-anchor="middle" fill="var(--ink-3)" font-size="9">↑ ${esc(w.algorithm)}</text></g>` : '').join('');
+      `<text class="week-lab" x="${(x(i - 1) + x(i)) / 2}" y="${padT + rowH * 9 + 22}" text-anchor="middle" fill="var(--ink-3)" font-size="9">↑ ${esc(w.algorithm)}</text></g>` : '').join('');
 
   const series = order.map(id => {
     const hue = colorOf(id);
@@ -67,9 +67,14 @@ export function bumpChart(snaps, entriesById) {
     const dots = pts.filter(Boolean).map(([px, py, i]) =>
       `<circle cx="${px}" cy="${py}" r="4.5" fill="${hue}"><title>${esc(nameOf(id))} — #${weeks[i].ranks[id]} in W${weeks[i].week}</title></circle>`).join('');
     const lastPt = [...pts].reverse().find(Boolean);
-    const label = lastPt
-      ? `<text class="end-lab" x="${lastPt[0] + 10}" y="${lastPt[1] + 3.5}">${esc(nameOf(id))}</text>`
-      : '';
+    // A line that reaches the newest week is named in the margin to its right.
+    // One that stopped earlier has a column of newer dots there, so its name
+    // sits just above its last point instead, anchored to end at the dot.
+    const current = lastPt && lastPt[2] === weeks.length - 1;
+    const label = !lastPt ? ''
+      : current
+        ? `<text class="end-lab" x="${lastPt[0] + 10}" y="${lastPt[1] + 3.5}">${esc(nameOf(id))}</text>`
+        : `<text class="end-lab out-lab" x="${lastPt[0] + 4}" y="${lastPt[1] - 9}" text-anchor="end">${esc(nameOf(id))}</text>`;
     return `<g class="series"><path d="${d.trim()}" stroke="${hue}"/>${dots}${label}</g>`;
   }).join('');
 
@@ -84,7 +89,7 @@ export function bumpChart(snaps, entriesById) {
 
   const table = `
     <details class="chart-table"><summary>The same record as a table</summary>
-      <div class="dir-scroll"><table>
+      <div class="chart-table-x"><table>
         <thead><tr><th>#</th>${standings.map(sw => `<th>${sw.week}</th>`).join('')}</tr></thead>
         <tbody>${Array.from({ length: 10 }, (_, i) =>
           `<tr><td>${i + 1}</td>${standings.map(sw => `<td>${esc(sw.names[i] ?? '')}</td>`).join('')}</tr>`).join('')}

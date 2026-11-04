@@ -113,9 +113,10 @@ const dirRow = r => {
         <tr class="dir-row st-${esc(r.status ?? 'open')}" data-id="${esc(r.id)}">
           <td class="dir-name">
             <button class="dir-toggle" aria-expanded="false" aria-controls="dd-${esc(r.id)}"
-              title="Show everything on file">▸</button>
+              aria-label="Show everything on file for ${esc(r.name)}" title="Show everything on file">▸</button>
             ${nameLink(r)}
-            ${scored && scored.rank <= 10 ? `<span class="dir-rank">#${scored.rank}</span>` : ''}</td>
+            ${scored && scored.rank <= 10 ? `<span class="dir-rank">#${scored.rank}</span>` : ''}${
+              r.status && r.status !== 'open' ? `<span class="dir-st">${esc(STATUS_LABEL[r.status])}</span>` : ''}</td>
           <td class="dir-where">${esc(locationLabel(r))}${addr.length ? `
             <div class="dir-addr">${addr.slice(0, 3).map(esc).join('<br>')}${addr.length > 3 ? `
             <details class="dir-more"><summary>+ ${addr.length - 3} more</summary>${addr.slice(3).map(esc).join('<br>')}</details>` : ''}</div>` : ''}</td>
