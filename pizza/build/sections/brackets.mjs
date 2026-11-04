@@ -26,7 +26,7 @@ const bracketCard = ({ group, list }) => {
 };
 
 const bracketSection = `
-<section class="section">
+<section class="section" id="styles">
   <div class="wrap">
     <div class="eyebrow">By style</div>
     <h2 class="sec-h">Best of each kind</h2>

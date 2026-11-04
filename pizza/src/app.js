@@ -132,7 +132,14 @@ document.getElementById('reset').addEventListener('click', () => {
   render();
 });
 
-document.getElementById('controls').hidden = false;
+const controls = document.getElementById('controls');
+controls.hidden = false;
+/* Open in the desktop rail, where it has a column to itself; collapsed on
+ * narrower layouts, where it sits above the cards and would otherwise push
+ * the first one a screen down. */
+const wideRank = matchMedia('(min-width: 1200px)');
+controls.open = wideRank.matches;
+wideRank.addEventListener?.('change', e => { if (e.matches) controls.open = true; });
 render();
 
 /* ---- Directory map ----
@@ -291,6 +298,14 @@ const dirApi = { expand: null };
   }
   for (const z of zones) {
     z.addEventListener('mousemove', e => show(Number(z.dataset.i), e.clientX, e.clientY));
+    // Touch: a tap on a column shows that week; a second tap elsewhere hides it.
+    z.addEventListener('click', e => { show(Number(z.dataset.i), e.clientX, e.clientY); e.stopPropagation(); });
   }
-  svg.addEventListener('mouseleave', () => { tip.style.display = 'none'; cursor.style.opacity = 0; });
+  const hide = () => { tip.style.display = 'none'; cursor.style.opacity = 0; };
+  svg.addEventListener('mouseleave', hide);
+  document.addEventListener('click', e => { if (!wrap.contains(e.target)) hide(); });
+  // On a narrow screen the chart scrolls; start at the newest week and the
+  // end labels, which are the legend, instead of the oldest column.
+  const scroller = wrap.querySelector('.chart-scroll');
+  if (scroller) scroller.scrollLeft = scroller.scrollWidth;
 })();

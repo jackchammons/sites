@@ -9,7 +9,7 @@ const chartHtml = bumpChart(history.snapshots.concat(
   }]), entriesById);
 
 const recordSection = chartHtml ? `
-<section class="section">
+<section class="section" id="record">
   <div class="wrap">
     <div class="eyebrow">The record</div>
     <h2 class="sec-h">Twelve weeks of the top ten</h2>

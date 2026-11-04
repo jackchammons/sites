@@ -32,7 +32,7 @@ const closedRow = r => `
       </li>`;
 
 const radarSection = (opening.length || closedRecently.length) ? `
-<section class="section">
+<section class="section" id="radar">
   <div class="wrap">
     <div class="eyebrow">The radar</div>
     <h2 class="sec-h">Opening soon${closedRecently.length ? ' &amp; recently closed' : ''}</h2>

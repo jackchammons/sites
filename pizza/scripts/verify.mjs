@@ -64,6 +64,11 @@ walkImports('app.js');
 const html = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');
 check(html.length > 20000, `index.html suspiciously small (${html.length} bytes)`);
 check(/<title>[^<]+<\/title>/.test(html), 'missing <title>');
+check(/<main>/.test(html) && /<nav class="site-nav"/.test(html), 'landmarks missing (main, nav)');
+for (const id of ['top-ten', 'record', 'styles', 'buzz', 'directory', 'methodology']) {
+  check(html.includes(`id="${id}"`), `section id "${id}" missing (the nav links to it)`);
+}
+check(!/<th>Pillar<\/th>/.test(html), 'math table still says Pillar');
 
 // The published split is computed, not stored: top 10 full cards, every other
 // rated entry a compact row. Unrated entries (status "opening", discoveries)
