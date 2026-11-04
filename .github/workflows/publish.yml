@@ -16,6 +16,7 @@ on:
       - 'odyssey-seats/**'
       - 'clock/**'
       - 'mortgage/**'
+      - 'life/**'
       - 'scripts/**'
       - 'sites.config.json'
       - '.github/workflows/publish.yml'

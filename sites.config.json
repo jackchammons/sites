@@ -74,6 +74,23 @@
       ],
       "cadence": "Live in your browser",
       "accent": "#3f9b78"
+    },
+    {
+      "slug": "life",
+      "name": "Life",
+      "emoji": "🦠",
+      "tagline": "Conway's Game of Life, running from a random seed the moment the page opens: a white grid, black cells, forever.",
+      "dir": "life",
+      "build": [
+        "node",
+        "scripts/build.mjs"
+      ],
+      "verify": [
+        "node",
+        "scripts/verify.mjs"
+      ],
+      "cadence": "Live in your browser",
+      "accent": "#111111"
     }
   ]
 }
