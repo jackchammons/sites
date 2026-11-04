@@ -1,14 +1,10 @@
 {
-  "updated": "2026-11-03T19:00:00Z",
-  "directory": [
+  "updated": "2026-11-04T18:30:00Z",
+  "links": [
     {
-      "name": "Luciano's Pizza & Pasta",
-      "neighborhood": "Admiral",
-      "style": "Old-school New York-style, with vegan and gluten-free options",
-      "status": "open",
-      "note": "Long-running neighborhood pizzeria on California Ave SW in the Admiral district, with vegan, gluten-free and Chicago-style specialty pies alongside the classics.",
-      "source": "https://slicelife.com/restaurants/wa/seattle/98116/luciano-s-pizza-pasta/menu",
-      "address": "2341 California Ave SW, Seattle, WA 98116"
+      "id": "good-luck-bread",
+      "instagram": "https://www.instagram.com/goodluckbread/",
+      "source": "https://pizza.goodluckbread.com/"
     }
   ]
 }
