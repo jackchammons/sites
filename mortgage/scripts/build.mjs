@@ -148,11 +148,13 @@ const html = `<!doctype html>
   </div>
 
   <section>
-    <div class="head"><h2>The balance, year by year</h2><span class="eyebrow" id="chart-note"></span></div>
+    <div class="head"><h2>Balance, principal and interest over time</h2><span class="eyebrow" id="chart-note"></span></div>
     <div class="panel chart-panel">
       <ul class="chart-legend" id="chart-legend">
-        <li class="s1"><span class="sw"></span>Balance on schedule</li>
-        <li class="s2" id="legend-extra"><span class="sw"></span>With extra principal</li>
+        <li class="s1"><span class="sw"></span><span id="legend-balance">Balance</span></li>
+        <li class="s2" id="legend-extra"><span class="sw"></span>Balance with extra principal</li>
+        <li class="s3"><span class="sw"></span>Principal paid so far</li>
+        <li class="s4"><span class="sw"></span>Interest paid so far</li>
       </ul>
       <div class="chart" id="chart"></div>
       <div class="tip" id="tip" hidden></div>
