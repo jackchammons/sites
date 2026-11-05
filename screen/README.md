@@ -29,7 +29,7 @@ data/defaults.json     the example room, the size table, the page copy
 src/screen.js          the maths: dimensions, angles, standards, acuity, throw, placement
 src/app.js             reads the form, renders figures, lanes chart, tables, side view
 src/styles.css
-scripts/build.mjs      renders the form + method copy into OUT_DIR
+scripts/build.mjs      renders the form and output slots into OUT_DIR
 scripts/verify.mjs     deploy gate: ID seam + maths checked on the built copy
 test/screen.test.mjs   unit tests (node --test)
 ```
@@ -40,9 +40,9 @@ Length fields accept `8′6″`, `8 ft 6 in`, `8.5`, `2.6 m` or `260 cm` whateve
 toggle says; field values are never locale-formatted, because a `3,66` written back into
 a field would read as 366.
 
-The standards are constants in `src/screen.js` and the method section prints them from
-there; the verifier checks the built page mentions each one. Change a constant and the
-copy follows; change a formula and the prose in `build.mjs` must change with it.
+The standards are constants in `src/screen.js`. There is no method section on the page
+(removed on request); the standards, the grading rules and the eye-limit model are
+documented in `src/screen.js`, `src/app.js` and the tests. The footer credits the paper.
 
 ## Working on it
 

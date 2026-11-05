@@ -31,7 +31,7 @@ if (fails.length) report();
 const html = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');
 const app = fs.readFileSync(path.join(dist, 'app.js'), 'utf8');
 
-check(html.length > 8000, `index.html suspiciously small (${html.length} bytes)`);
+check(html.length > 6000, `index.html suspiciously small (${html.length} bytes)`);
 check(/<title>[^<]+<\/title>/.test(html), 'missing <title>');
 check(!/undefined|NaN|\[object Object\]/.test(html), 'page contains undefined/NaN/[object Object]');
 
@@ -80,17 +80,9 @@ near(s.seatingDistances(s.dims(100, 16 / 9)).find(x => x.id === 'thx-best').dist
 near(s.acuityDistance(s.pixelPitch(d65, s.resolution('2160'))) / 12, 4.23, 0.05, '4K limit on a 65"');
 near(s.acuityDistance(s.pixelPitch(d65, s.resolution('1080'))) / 12, 8.45, 0.05, '1080p limit on a 65"');
 near(s.footLamberts(2000, 1, s.dims(120, 16 / 9)), 46.8, 0.1, '2000 lm on a 120"');
-for (const st of s.ANGLE_STANDARDS) {
-  check(html.includes(`${st.angle}°`), `method copy does not mention ${st.label}'s ${st.angle}°`);
-}
-for (const st of s.ITU_STANDARDS) check(html.includes(`${st.heights}H`), `method copy does not mention ${st.heights}H`);
-check(html.includes(`${s.BRIGHTNESS.cinema} fL`), 'method copy does not state the cinema brightness reference');
-check(html.includes(`${s.PLACEMENT.maxUp}°`), 'method copy does not state the comfort limit');
-/* The Cambridge eye-limit model: its constants must be printed, and the fit
-   must still put the median near 95 px/° and the 95th percentile near 113,
-   which is what reproduces their published matrix. */
-check(html.includes(String(s.EYE_LIMIT.mu)) && html.includes(String(s.EYE_LIMIT.sigma)), 'method copy does not print the eye-limit constants');
-check(html.includes('Nature Communications') && html.includes(s.EYE_LIMIT.paper), 'method copy does not cite the Cambridge paper');
+/* The Cambridge eye-limit model must still put the median near 95 px/° and
+   the 95th percentile near 113, which is what reproduces their matrix. */
+check(html.includes(s.EYE_LIMIT.paper) && html.includes(s.EYE_LIMIT.calculator), 'the footer no longer credits the Cambridge model');
 near(s.ppdForFraction(0.5), 95.4, 0.3, 'median eye limit');
 near(s.ppdForFraction(0.05), 113.4, 0.5, '95th percentile eye limit');
 const M = 100 / 2.54;
@@ -113,7 +105,6 @@ if (data) {
 
 check(/id="boot-error"[^>]*hidden/.test(html), 'the hidden boot-error note is missing');
 check(ids.has('out-total'), 'the headline angle has no colourable wrapper');
-check(html.includes(`${s.verticalEquivalent(30).toFixed(1)}°`) && html.includes(`${s.verticalEquivalent(26).toFixed(1)}°`), 'method copy does not state the vertical grading angles');
 
 if (fails.length) report();
 console.log(`Build verified (${wanted.size} live slots, maths checked).`);

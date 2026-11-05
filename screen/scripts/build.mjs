@@ -3,22 +3,19 @@
  * Build for Screen & Seat.
  *
  * Everything is computed in the browser, so this renders the form (seeded
- * with the example room in data/defaults.json), the labelled output slots
- * and the method copy, then copies src/ beside it. src/app.js fills every
+ * with the example room in data/defaults.json) and the labelled output
+ * slots, then copies src/ beside it. src/app.js fills every
  * slot by importing the same src/screen.js the tests and the deploy gate
  * use — one implementation of the maths.
  *
- * Nothing room-specific is decided here: the defaults are an example, and
- * the page says so. The method section prints the constants from screen.js
- * so the copy can never drift from the code.
+ * Nothing room-specific is decided here: the defaults are an example.
+ * There is no method section (removed on request); the standards and the
+ * eye-limit model are documented in src/screen.js and the tests.
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import {
-  ASPECTS, RESOLUTIONS, ANGLE_STANDARDS, ITU_STANDARDS, RULE_OF_THUMB,
-  BRIGHTNESS, PLACEMENT, EYE_LIMIT, MATRIX_RESOLUTIONS, ppdForFraction,
-} from '../src/screen.js';
+import { ASPECTS, RESOLUTIONS, EYE_LIMIT } from '../src/screen.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -82,7 +79,6 @@ const pjFacts = PJ.map(([k, label]) => `
         </div>`).join('');
 
 const built = new Date().toISOString();
-const deg = x => `${x}°`;
 
 const html = `<!doctype html>
 <html lang="en">
@@ -269,40 +265,12 @@ const html = `<!doctype html>
     </div>
   </section>
 
-  <section class="panel method">
-    <h2>Method</h2>
-    <p>Every figure comes from four inputs — the diagonal, the picture’s shape, the panel’s pixel count and how far your eyes are from the screen — plus the heights for placement and the lens figures for a projector. Nothing is looked up; the standards are constants, listed here as the code holds them.</p>
-
-    <h3>Picture size</h3>
-    <p>For a diagonal <code>D</code> and shape <code>r = width ÷ height</code>: <code>height = D ÷ √(1 + r²)</code> and <code>width = height × r</code>. The shapes offered are ${ASPECTS.map(a => `<code>${esc(a.id)}</code>`).join(', ')}.</p>
-
-    <h3>Viewing angle</h3>
-    <p>The horizontal angle is what the picture’s width subtends at your eye, viewed square-on from its centre: <code>2 × atan(width ÷ 2d)</code>. The vertical angle uses the height. Each seating standard is a horizontal angle, so the distance it implies is <code>width ÷ (2 × tan(angle ÷ 2))</code>:</p>
-    <ul>${ANGLE_STANDARDS.map(s => `
-      <li><b>${esc(s.label)}, ${deg(s.angle)}</b> — ${esc(s.note)}</li>`).join('')}
-    </ul>
-    <p>Colours grade each figure: green meets the standard, amber is inside a weaker one, red is outside every published limit. The headline angle is green from SMPTE’s 30°, amber from THX’s 26°; the vertical angle is graded on the height a 16:9 picture shows at those same angles (${esc(deg(+(2 * Math.atan(Math.tan(15 * Math.PI / 180) * 9 / 16) * 180 / Math.PI).toFixed(1)))} and ${esc(deg(+(2 * Math.atan(Math.tan(13 * Math.PI / 180) * 9 / 16) * 180 / Math.PI).toFixed(1)))}), so a scope picture is judged on the height it actually gives.</p>
-    <p>The ITU figures are distances in picture heights rather than angles: ${ITU_STANDARDS.map(s => `${esc(s.label)} at <b>${s.heights}H</b>`).join(', ')}. Each is where one pixel of that format subtends about one minute of arc, which is why they fall close to the resolution limits below. The pre-HD rule of thumb, <b>${RULE_OF_THUMB.near}× to ${RULE_OF_THUMB.far}× the diagonal</b>, is shown for comparison; it dates from standard-definition tubes and lands well outside every cinema standard.</p>
-
-    <h3>Resolution</h3>
-    <p>A pixel’s pitch is the picture width divided by the panel’s pixel count across (the panel is scaled to fit inside the picture area, so a scope screen with a 16:9 panel uses the height instead). An eye with 20/20 (6/6) acuity resolves detail about one minute of arc apart, so individual pixels disappear beyond <code>pitch ÷ tan(1′)</code>, where the picture delivers 60 pixels per degree. Past that distance a sharper panel adds nothing you can see; closer, the next resolution down would show its structure. Sharper-than-average eyes push each limit out by their acuity in arc-minutes.</p>
-
-    <h3>The eye’s own limit</h3>
-    <p>One arc-minute is the textbook 20/20 figure, but a sliding-display experiment at Cambridge (Ashraf, Chapiro and Mantiuk, <a href="${esc(EYE_LIMIT.paper)}">“Resolution limit of the eye — how many pixels can we see?”</a>, Nature Communications 16:9086, 2025) measured where people actually stop seeing a difference: a median of about ${Math.round(ppdForFraction(0.5))} pixels per degree for black-and-white detail, with 19 in 20 people below about ${Math.round(ppdForFraction(0.05))}. Their <a href="${esc(EYE_LIMIT.calculator)}">display resolution calculator</a> fits the per-person limit as a normal distribution over the cube root of cycles per degree (half the pixels per degree) with mean <code>${EYE_LIMIT.mu}</code> and standard deviation <code>${EYE_LIMIT.sigma}</code>; the share of people who would notice a sharper display than one showing <code>p</code> pixels per degree is <code>1 − Φ((∛(p ÷ 2) − ${EYE_LIMIT.mu}) ÷ ${EYE_LIMIT.sigma})</code>. The same fit drives the bar, the target distances and the resolution matrix here, which climbs ${MATRIX_RESOLUTIONS.map(r => r.label).join(', ')}. Pixels per degree at the centre is <code>1 ÷ (2 × atan(pitch ÷ 2d))</code>; the average across the picture is the panel’s rows divided by the vertical angle, lower because a flat panel’s edge pixels are seen obliquely.</p>
-
-    <h3>Projector</h3>
-    <p>Throw ratio is lens-to-screen distance over image width, so a lens quoted at <code>${v.throwMin}–${v.throwMax}</code> fills a given width from <code>${v.throwMin} × width</code> to <code>${v.throwMax} × width</code>; the two ends of the zoom bound where the projector can sit. Lens offset is quoted as a percentage of picture height between the lens axis and the picture centre: 0% puts the lens level with the centre, 50% level with the bottom edge. Screen brightness in foot-lamberts is <code>lumens × gain ÷ area in ft²</code> (1 fL = 3.426 cd/m²). Targets: <b>${BRIGHTNESS.cinema} fL</b> is the SMPTE ST 431-1 cinema reference, <b>${BRIGHTNESS.sdrHome} fL</b> the floor home calibrators work above, and around <b>${BRIGHTNESS.bright} fL</b> for a bright room or HDR headroom. Use calibrated lumens, not the box figure.</p>
-
-    <h3>Height</h3>
-    <p>The eye line to the picture centre is <code>atan((centre − eye) ÷ d)</code>. Up to <b>${PLACEMENT.maxUp}°</b> above the eye and <b>${PLACEMENT.maxDown}°</b> below is comfortable for a long sitting; the highest comfortable centre is <code>eye + d × tan(${PLACEMENT.maxUp}°)</code>. The default seated eye height of ${v.eyeHeight} in is a typical sofa; measure yours.</p>
-
-    <p>Inputs accept feet-and-inches (<code>8′6″</code>, <code>8 ft 6 in</code>, <code>8.5</code>) or metric (<code>2.6 m</code>, <code>260 cm</code>) whatever the unit toggle says. The defaults are an example room, not a recommendation. Nothing leaves your browser: the numbers live in the page’s URL hash so a link reproduces them.</p>
-  </section>
 
 </div></main>
 
 <footer><div class="wrap">
   <span>Built ${built}</span>
+  <span>Eye-limit model: <a href="${esc(EYE_LIMIT.paper)}">Ashraf, Chapiro &amp; Mantiuk 2025</a> via <a href="${esc(EYE_LIMIT.calculator)}">Cambridge’s calculator</a></span>
   <span><a href="../">All sites</a> · <a href="https://github.com/jackchammons/sites/tree/main/screen">Source</a></span>
 </div></footer>
 </body>
