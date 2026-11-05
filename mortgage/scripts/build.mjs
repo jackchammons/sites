@@ -3,8 +3,8 @@
  * Build for the Mortgage Calculator.
  *
  * The calculator runs in the browser, so this renders the form (with the
- * example inputs from data/defaults.json), the labelled output slots and the
- * methodology copy, then copies src/ beside it. src/app.js does every
+ * example inputs from data/defaults.json), the labelled output slots, then
+ * copies src/ beside it. src/app.js does every
  * calculation, importing the same src/mortgage.js that the tests and the
  * deploy gate exercise — one implementation of the maths.
  *
@@ -15,7 +15,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { PMI_CANCEL_LTV, PMI_REQUIRED_LTV } from '../src/mortgage.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -92,8 +91,6 @@ const summary = SUMMARY.map(([k, label]) => `
         </div>`).join('');
 
 const built = new Date().toISOString();
-const pct = x => `${Math.round(x * 100)}%`;
-
 const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -227,39 +224,6 @@ const html = `<!doctype html>
     </div>
   </section>
 
-  <section class="method">
-    <div class="head"><h2>How it is worked out</h2><span class="eyebrow">method</span></div>
-    <div class="panel prose">
-      <p><b>Principal and interest</b> is the standard fixed-rate amortization payment:
-        <code>P × r ÷ (1 − (1 + r)<sup>−n</sup>)</code>, where <code>P</code> is the loan,
-        <code>r</code> the annual rate ÷ 12 and <code>n</code> the number of monthly payments.
-        Each month's interest is the outstanding balance × <code>r</code>, rounded to the cent; the rest of
-        the payment is principal. The final payment is trimmed so the balance ends at exactly zero.</p>
-      <p><b>Already paying?</b> Enter the balance owed today, the month of your next payment and the
-        month of the last one (the maturity date on a statement), and the schedule runs from there:
-        <code>P</code> is the balance and <code>n</code> the payments left. That reproduces your payment
-        if the loan is on its original schedule. If you have paid ahead, your real payment is a little
-        higher than shown and the loan ends sooner; if the servicer has recast it, the shown figure is
-        the recast one. Equity, PMI and the tax rate are measured against the home price you enter.</p>
-      <p><b>Property tax</b> can be entered as a rate — then it is the rate × the price ÷ 12, a stand-in
-        for the assessed value, which is usually close to but not the same as what you pay — or as a yearly
-        or monthly dollar figure. <b>Insurance</b> is the yearly premium ÷ 12, or a monthly figure as given.
-        If you have one <b>escrow</b> number covering both, as a servicer's statement shows it, enter that
-        instead and it stands in for the two. <b>HOA</b> dues are taken as given. All of these are held flat;
-        in reality they rise.</p>
-      <p><b>PMI</b> applies when the loan is more than ${pct(PMI_REQUIRED_LTV)} of the price, at the yearly rate
-        × the original loan ÷ 12. It is dropped once the balance falls to ${pct(PMI_CANCEL_LTV)} of the original
-        price, the point at which the Homeowners Protection Act requires a lender to cancel it automatically on
-        a conventional loan. You may ask for it to be removed at ${pct(PMI_REQUIRED_LTV)}; the schedule assumes you don't.
-        FHA mortgage insurance follows different rules and is not modelled.</p>
-      <p><b>Extra principal</b> goes straight to the balance, which shortens the loan rather than lowering
-        the payment. It is paid on the cadence you choose — every month, quarter, half-year or year, starting
-        with the first payment, or once only with the first payment — and the schedule shows it in the month it
-        lands. The savings figure compares that schedule against the same loan with no extra.</p>
-      <p>${esc(data.note)} Nothing you type leaves your browser: the numbers are computed on this page, and the
-        share link carries them in the part of the address after the <code>#</code>, which is never sent to a server.</p>
-    </div>
-  </section>
 
   <p class="noscript" id="boot-error" hidden>The calculator could not start in this browser, so the figures above
     are blank. The console has the reason.</p>
@@ -270,7 +234,9 @@ const html = `<!doctype html>
 
 <footer><div class="wrap">
   <p>An estimate, not an offer or financial advice. Lenders' figures will differ by fees, escrow
-     cushions and rounding.</p>
+     cushions and rounding. ${esc(data.note)}</p>
+  <p>Nothing you type leaves your browser: the numbers are computed on this page, and the share link
+     carries them in the part of the address after the <code>#</code>, which is never sent to a server.</p>
   <p>Page built ${esc(built)} · <a href="../">all sites</a></p>
 </div></footer>
 
