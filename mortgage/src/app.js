@@ -188,7 +188,7 @@ function boot() {
         : inf.paid >= inf.n ? 'The next payment is after the last one — check the dates and term.'
         : 'Enter the balance and dates.';
     }
-    return { d, bad };
+    return { d, bad, inf };
   }
 
   /* First and last payment are two views of one fact, given the term:
@@ -285,13 +285,30 @@ function boot() {
   const cadenceWord = e => ({ 0: 'once', 3: 'each quarter', 6: 'twice a year', 12: 'each year' })[e] || `every ${e} months`;
 
   function render() {
-    const { d, bad } = read();
+    const { d, bad, inf } = read();
     const start = startDate();
     const base = amortize(d, { extra: 0 });
     const fast = d.extra > 0 ? amortize(d) : base;
+    /* What the chart draws. A new loan: the schedule as is. A loan under
+       way: the whole original term, with the elapsed payments reconstructed
+       on schedule from the inferred original loan and the rest being the
+       real schedule from today's balance, so the two halves meet at the
+       balance the viewer typed. */
+    let chart = { start, loan0: d.loan, baseRows: base.rows, fastRows: fast.rows, note: d.loan > 0 ? `${d.years}-year term` : '' };
+    if (d.inProgress && inf && inf.ok && inf.paid > 0) {
+      const hist = amortize(describe({ price: inf.loan, down: 0, rate: d.rate, months: inf.n }), { extra: 0 }).rows.slice(0, inf.paid);
+      const shift = rows => rows.map(r => ({ ...r, n: r.n + inf.paid }));
+      chart = {
+        start: monthFrom(els.start) || start, loan0: inf.loan,
+        baseRows: hist.concat(shift(base.rows)), fastRows: hist.concat(shift(fast.rows)),
+        note: `${termWord(inf.n)} term, ${termWord(d.months)} left`,
+      };
+    } else if (d.inProgress) {
+      chart.note = d.loan > 0 ? `${termWord(d.months)} left` : '';
+    }
     const bd = monthlyBreakdown(d);
     const total = bd.pi + bd.tax + bd.insurance + bd.escrow + bd.pmi + bd.hoa;
-    last = { d, base, fast, start };
+    last = { d, base, fast, start, chart };
 
     $('out-total').textContent = bad.length ? '—' : usd(total);
     $('out-sub').textContent = bad.length
@@ -362,13 +379,15 @@ function boot() {
   }
 
   function drawChart() {
-    const { d, base, fast, start } = last;
+    const { d, chart } = last;
+    const { start, loan0, baseRows, fastRows } = chart;
     const host = $('chart');
     host.textContent = '';
-    $('legend-extra').hidden = fast === base;
-    $('legend-balance').textContent = fast === base ? 'Balance' : 'Balance on schedule';
-    $('chart-note').textContent = d.loan > 0 ? (d.inProgress ? `${termWord(d.months)} left` : `${d.years}-year term`) : '';
-    if (!(d.loan > 0) || !base.months) {
+    const withExtra = d.extra > 0;
+    $('legend-extra').hidden = !withExtra;
+    $('legend-balance').textContent = withExtra ? 'Balance on schedule' : 'Balance';
+    $('chart-note').textContent = chart.note;
+    if (!(loan0 > 0) || !baseRows.length) {
       host.innerHTML = '<p class="empty">Nothing borrowed — no balance to chart.</p>';
       return;
     }
@@ -378,16 +397,16 @@ function boot() {
        interest paid under the active schedule. All are dollars on the same
        scale, which is what lets them share a chart; interest paid can
        outgrow the loan, so the axis fits whichever is larger. */
-    const running = (sch, key) => { let c = 0; return sch.rows.map(r => (c += key(r))); };
-    const cumP = running(fast, r => r.principal + r.extra);
-    const cumI = running(fast, r => r.interest);
-    const yMax0 = niceMax(Math.max(d.loan, fast.totalInterest));
+    const running = (rows, key) => { let c = 0; return rows.map(r => (c += key(r))); };
+    const cumP = running(fastRows, r => r.principal + r.extra);
+    const cumI = running(fastRows, r => r.interest);
+    const yMax0 = niceMax(Math.max(loan0, cumI[cumI.length - 1] || 0));
     const yLabels = [0, 1, 2, 3, 4].map(i => compact.format(yMax0 * i / 4));
     // Size the gutter to the widest tick label: locales differ a lot here
     // ("$600K" vs "600.000 $"), and a fixed gutter clipped the long ones.
     const m = { t: 12, r: 18, b: 28, l: 14 + 6.8 * Math.max(...yLabels.map(l => l.length)) };
     const iw = W - m.l - m.r, ih = H - m.t - m.b;
-    const N = base.months;
+    const N = baseRows.length;
     const yMax = yMax0;
     const X = n => m.l + n / N * iw, Y = b => m.t + ih - b / yMax * ih;
     const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: 'img',
@@ -413,9 +432,9 @@ function boot() {
     }
     svg.append(g);
 
-    /* A loan already under way: mark the current month, so the viewer can
-       see where on the curves they stand. Read from the device clock at
-       draw time, never baked in. */
+    /* A loan already under way: a dashed rule marks the current month, so
+       the viewer can see where on the curves they stand. Read from the
+       device clock at draw time, never baked in. */
     const now = new Date();
     const nowN = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth()) + 1;
     if (nowN > 1 && nowN <= N) {
@@ -430,12 +449,11 @@ function boot() {
     /* Each series: a value at payment n (0 = before the first), a colour slot
        and a tooltip label. Balance series fall to zero after payoff; the
        running totals hold their final value. */
-    const balAt = sch => n => n <= 0 ? d.loan : n > sch.months ? 0 : sch.rows[n - 1].balance;
+    const balAt = rows => n => n <= 0 ? loan0 : n > rows.length ? 0 : rows[n - 1].balance;
     const sumAt = arr => n => n <= 0 ? 0 : arr[Math.min(n, arr.length) - 1];
-    const withExtra = fast !== base;
     const series = [
-      { cls: 's1', label: withExtra ? 'Balance on schedule' : 'Balance', at: balAt(base) },
-      withExtra && { cls: 's2', label: 'Balance with extra', at: balAt(fast) },
+      { cls: 's1', label: withExtra ? 'Balance on schedule' : 'Balance', at: balAt(baseRows) },
+      withExtra && { cls: 's2', label: 'Balance with extra', at: balAt(fastRows) },
       { cls: 's3', label: `Principal paid${withExtra ? ' (with extra)' : ''}`, at: sumAt(cumP) },
       { cls: 's4', label: `Interest paid${withExtra ? ' (with extra)' : ''}`, at: sumAt(cumI) },
     ].filter(Boolean);
