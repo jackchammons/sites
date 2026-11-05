@@ -5896,7 +5896,7 @@
         "humble-pie": 84,
         "cornelly": 83.4,
         "proletariat-pizza": 83.1,
-        "pagliacci": 81.5,
+        "pagliacci": 82,
         "ballard-pizza-co": 80.7,
         "veraci-pizza": 80.2,
         "slice-box": 79.7,
@@ -6050,10 +6050,10 @@
         },
         "pagliacci": {
           "reputation": 10,
-          "critical": 7.9,
+          "critical": 8.1,
           "craft": 7.7,
           "distinctiveness": 6.8,
-          "value": 8.2,
+          "value": 8.3,
           "penalty": 0
         },
         "ballard-pizza-co": {
