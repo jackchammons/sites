@@ -67,6 +67,18 @@ test('PMI applies only above 80% LTV and stops at 78% of price', () => {
   assert.equal(monthlyBreakdown(d).pmi, 158.33);
 });
 
+test('tax as a rate or a dollar figure; escrow replaces tax and insurance', () => {
+  const byRate = monthlyBreakdown(describe({ price: 600000, down: 0, rate: 6, years: 30, taxRate: 1, insurance: 1200 }));
+  assert.equal(byRate.tax, 500);
+  assert.equal(byRate.insurance, 100);
+  assert.equal(byRate.escrow, 0);
+  const byDollar = monthlyBreakdown(describe({ price: 600000, down: 0, rate: 6, years: 30, tax: 7200, taxRate: 99 }));
+  assert.equal(byDollar.tax, 600);
+  const esc = monthlyBreakdown(describe({ price: 600000, down: 0, rate: 6, years: 30, taxRate: 1, insurance: 1200, escrow: 9000 }));
+  assert.deepEqual([esc.tax, esc.insurance, esc.escrow], [0, 0, 750]);
+  assert.equal(describe({ price: 1, escrow: 'x' }).escrow, null);
+});
+
 test('down payment is clamped to the price', () => {
   const d = describe({ price: 100000, down: 250000, rate: 6, years: 30 });
   assert.equal(d.loan, 0);

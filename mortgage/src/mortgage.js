@@ -30,7 +30,15 @@ export function describe(input) {
     rate: Math.max(0, +input.rate || 0),
     years: Math.max(1, Math.round(+input.years || 30)),
     taxRate: Math.max(0, +input.taxRate || 0),       // % of price per year
+    // Property tax as $ per year: given directly, or derived from taxRate.
+    tax: input.tax != null && Number.isFinite(+input.tax)
+      ? Math.max(0, +input.tax)
+      : price * Math.max(0, +input.taxRate || 0) / 100,
     insurance: Math.max(0, +input.insurance || 0),   // $ per year
+    // One escrow figure ($ per year) standing in for tax + insurance
+    // together, as a servicer's statement often shows it. null when the
+    // two are entered separately.
+    escrow: input.escrow != null && Number.isFinite(+input.escrow) ? Math.max(0, +input.escrow) : null,
     hoa: Math.max(0, +input.hoa || 0),               // $ per month
     pmiRate: Math.max(0, +input.pmiRate || 0),       // % of loan per year
     extra: Math.max(0, +input.extra || 0),           // $ extra principal per payment
@@ -89,13 +97,15 @@ export function amortize(d, { extra = d.extra, extraEvery = d.extraEvery ?? 1 } 
   };
 }
 
-/** The first month's bill, split into its parts. */
+/** The first month's bill, split into its parts. Tax and insurance are
+ *  either two parts or one escrow part, never both. */
 export function monthlyBreakdown(d) {
   const pi = cents(monthlyPI(d.loan, d.rate, d.years));
   return {
     pi,
-    tax: cents(d.price * d.taxRate / 100 / 12),
-    insurance: cents(d.insurance / 12),
+    tax: d.escrow == null ? cents(d.tax / 12) : 0,
+    insurance: d.escrow == null ? cents(d.insurance / 12) : 0,
+    escrow: d.escrow == null ? 0 : cents(d.escrow / 12),
     pmi: needsPMI(d) ? cents(d.loan * d.pmiRate / 100 / 12) : 0,
     hoa: cents(d.hoa),
   };
