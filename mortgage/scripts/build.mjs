@@ -130,9 +130,8 @@ const html = `<!doctype html>
       ${field({ id: 'in-down', label: 'Down payment', value: downAmt, pre: '$', mode: 'numeric' })}
       ${field({ id: 'in-downpct', label: 'Down %', value: v.downPct, post: '%' })}
     </div>
-    <div class="pair" id="progress-fields" hidden>
+    <div id="progress-fields" hidden>
       ${field({ id: 'in-balance', label: 'Current balance', value: '', pre: '$', mode: 'numeric', hint: 'Principal owed today, from a statement' })}
-      ${field({ id: 'in-assumed', label: 'Down % (if known)', value: v.downPct, post: '%', hint: 'Sets the inferred price' })}
     </div>
     <div class="pair">
       ${field({ id: 'in-rate', label: 'Interest rate', value: v.rate, post: '%', hint: 'Fixed, annual' })}
@@ -158,7 +157,7 @@ const html = `<!doctype html>
         <span class="box"><input id="in-next" name="in-next" type="month"></span>
       </label>
       <div class="inferred" id="inferred">
-        <span class="lbl">Inferred from the balance</span>
+        <span class="lbl">Loan amount, inferred from the balance</span>
         <p><b id="inf-price">—</b> <span id="inf-note"></span></p>
       </div>
     </div>

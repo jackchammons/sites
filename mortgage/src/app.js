@@ -36,7 +36,7 @@ function boot() {
   const DEFAULTS = JSON.parse($('defaults').textContent);
   const els = {
     price: $('in-price'), down: $('in-down'), downpct: $('in-downpct'), rate: $('in-rate'),
-    years: $('in-years'), start: $('in-start'), balance: $('in-balance'), maturity: $('in-maturity'), next: $('in-next'), assumed: $('in-assumed'), tax: $('in-tax'), ins: $('in-ins'),
+    years: $('in-years'), start: $('in-start'), balance: $('in-balance'), maturity: $('in-maturity'), next: $('in-next'), tax: $('in-tax'), ins: $('in-ins'),
     hoa: $('in-hoa'), pmi: $('in-pmi'), extra: $('in-extra'), every: $('in-every'),
     taxUnit: $('in-tax-unit'), insUnit: $('in-ins-unit'), escrow: $('in-escrow'), escrowUnit: $('in-escrow-unit'),
   };
@@ -66,7 +66,7 @@ function boot() {
   const monthOf = (n, start) => new Date(start.getFullYear(), start.getMonth() + n - 1, 1);
 
   /* ---- state <-> form <-> hash ------------------------------------- */
-  const KEYS = { price: 'p', down: 'd', balance: 'b', next: 'nx', assumed: 'ad', rate: 'r', years: 'y', tax: 't', taxUnit: 'tu', ins: 'i', insUnit: 'iu', escrow: 'w', escrowUnit: 'wu', hoa: 'h', pmi: 'm', extra: 'x', every: 'e', start: 's' };
+  const KEYS = { price: 'p', down: 'd', balance: 'b', next: 'nx', rate: 'r', years: 'y', tax: 't', taxUnit: 'tu', ins: 'i', insUnit: 'iu', escrow: 'w', escrowUnit: 'wu', hoa: 'h', pmi: 'm', extra: 'x', every: 'e', start: 's' };
   let escrowMode = false;
   let progressMode = false;
 
@@ -93,7 +93,6 @@ function boot() {
     els.start.value = st.start || ym(nextMonth());
     els.balance.value = st.balance ?? '';
     els.next.value = st.next || ym(nextMonth());
-    els.assumed.value = st.assumed ?? st.downPct;
     syncMaturity();
     setLoanMode(!!st.progressMode);
   }
@@ -125,8 +124,6 @@ function boot() {
     if (Number.isFinite(b) && b >= 0) st.balance = b;
     const nx = q.get('nx');
     if (nx && /^\d{4}-\d{2}$/.test(nx)) st.next = nx;
-    const ad = parse(q.get('ad') ?? '');
-    if (Number.isFinite(ad) && ad >= 0 && ad < 100) st.assumed = ad;
     st.progressMode = q.get('lm') === '1';
     return st;
   }
@@ -186,7 +183,7 @@ function boot() {
       if (!inf.ok) bad.push('dates');
       $('inf-price').textContent = inf.ok ? usd(inf.price) : '—';
       $('inf-note').textContent = inf.ok
-        ? `home price at ${plain.format(inf.assumed)}% down, from an original loan of about ${usd(inf.loan)} with ${inf.paid} of ${inf.n} payments made`
+        ? `original loan amount, with ${inf.paid} of ${inf.n} payments made; tax, PMI and equity are measured against it`
         : inf.paid < 0 ? 'The next payment is before the first.'
         : inf.paid >= inf.n ? 'The next payment is after the last one — check the dates and term.'
         : 'Enter the balance and dates.';
@@ -211,17 +208,16 @@ function boot() {
   els.years.addEventListener('input', () => syncMaturity());
 
   /* A loan under way: the balance, the term and how far along the loan is
-     give back the original principal, and with an assumed down payment the
-     home price. Assumes payments have been exactly on schedule. */
+     give back the original principal, which stands in for the home price
+     wherever one is needed. Assumes payments have been exactly on schedule. */
   function inferred(val) {
     const balance = val(els.balance, 'balance');
     const n = (+els.years.value || 30) * 12;
     const first = monthFrom(els.start) || nextMonth(), next = monthFrom(els.next) || nextMonth();
     const paid = monthsBetween(first, next);
-    const assumed = Math.min(99, val(els.assumed, 'assumed'));
     const loan = originalLoan(balance, num(els.rate) || 0, n, paid);
     const ok = Number.isFinite(loan);
-    return { ok, n, paid, left: ok ? n - paid : NaN, loan, assumed, price: ok ? loan / (1 - assumed / 100) : 0 };
+    return { ok, n, paid, left: ok ? n - paid : NaN, loan, price: ok ? loan : 0 };
   }
   const termWord = months => {
     const y = Math.floor(months / 12), mo = months % 12;
@@ -240,6 +236,8 @@ function boot() {
     $('next-field').hidden = !progress;
     $('term-label').textContent = progress ? 'Original term' : 'Term';
     $('lbl-loan').textContent = progress ? 'Balance' : 'Loan amount';
+    $('in-tax-hint').textContent = progress ? '% is of the loan amount' : '% is of the price';
+    $('in-pmi-hint').textContent = progress ? 'Charged while over 80% of the loan amount; 0 if none' : 'Charged under 20% down; 0 if none';
     $('mode-new').setAttribute('aria-pressed', String(!progress));
     $('mode-progress').setAttribute('aria-pressed', String(progress));
     if (progress) {
@@ -248,7 +246,6 @@ function boot() {
         els.balance.value = Math.max(0, Math.round(p - dn));
       }
       if (!monthFrom(els.next)) els.next.value = ym(nextMonth());
-      if (els.assumed.value.trim() === '') els.assumed.value = els.downpct.value || 20;
       syncMaturity();
     }
   }
@@ -322,7 +319,7 @@ function boot() {
     const payoff = fast.months ? monthOf(fast.months, start) : null;
     const set = (k, main, sub = '') => { $('sum-' + k).textContent = main; $('sub-' + k).textContent = sub; };
     set('loan', usd(d.loan), d.inProgress
-      ? (d.price > 0 ? `${plain.format(+(d.loan / d.price * 100).toFixed(1))}% of the inferred price` : '')
+      ? (d.price > 0 ? `${plain.format(+(d.loan / d.price * 100).toFixed(1))}% of the original loan` : '')
       : `${plain.format(+d.downPct.toFixed(1))}% down`);
     set('interest', usd(fast.totalInterest),
       d.loan > 0 ? `${plain.format(+(fast.totalInterest / d.loan * 100).toFixed(0))}% of the loan` : '');
@@ -333,7 +330,7 @@ function boot() {
     if (fast.pmiMonths > 0) {
       set('pmiend', monthFmt.format(monthOf(fast.pmiMonths + 1, start)), `${usd(fast.totalPMI)} paid in total`);
     } else {
-      set('pmiend', 'None', !(d.loan > 0) ? '' : d.downPct >= 20 ? 'at least 20% down' : 'no PMI rate entered');
+      set('pmiend', 'None', !(d.loan > 0) ? '' : d.pmiRate > 0 ? (d.inProgress ? 'balance under 80% of the loan' : 'at least 20% down') : 'no PMI rate entered');
     }
     $('fact-saved').classList.toggle('muted', !(d.extra > 0));
     if (d.extra > 0) {
