@@ -37,6 +37,12 @@ const field = ({ id, label, value, pre, post, hint, step = 'any', mode = 'decima
         ${hint ? `<span class="hint" id="${id}-hint">${hint}</span>` : ''}
       </label>`;
 
+/* How often the extra principal is paid, in months; 0 is a one-off. The
+   option values are what app.js stores in the hash. */
+const CADENCES = [[1, 'Every month'], [3, 'Every quarter'], [6, 'Twice a year'], [12, 'Once a year'], [0, 'Once, with the first payment']];
+const cadences = CADENCES.map(([v2, label]) =>
+  `<option value="${v2}"${v2 === (v.extraEvery ?? 1) ? ' selected' : ''}>${esc(label)}</option>`).join('');
+
 const terms = data.terms.map(t =>
   `<option value="${t}"${t === v.years ? ' selected' : ''}>${t} years</option>`).join('');
 
@@ -125,7 +131,13 @@ const html = `<!doctype html>
     </div>
 
     <h2>Pay it down faster</h2>
-    ${field({ id: 'in-extra', label: 'Extra principal', value: v.extra, pre: '$', post: '/mo', mode: 'numeric', hint: 'Added to every payment' })}
+    <div class="pair">
+      ${field({ id: 'in-extra', label: 'Extra principal', value: v.extra, pre: '$', mode: 'numeric', hint: 'Goes straight to the balance' })}
+      <label class="field" for="in-every">
+        <span class="lbl">Paid</span>
+        <span class="box"><select id="in-every" name="in-every">${cadences}</select></span>
+      </label>
+    </div>
 
     <div class="actions">
       <button type="button" id="btn-share">Copy link to these numbers</button>
@@ -192,9 +204,10 @@ const html = `<!doctype html>
         price, the point at which the Homeowners Protection Act requires a lender to cancel it automatically on
         a conventional loan. You may ask for it to be removed at ${pct(PMI_REQUIRED_LTV)}; the schedule assumes you don't.
         FHA mortgage insurance follows different rules and is not modelled.</p>
-      <p><b>Extra principal</b> is added to every payment from the first month and goes straight to the
-        balance, which shortens the loan rather than lowering the payment. The savings figure compares that
-        schedule against the same loan with no extra.</p>
+      <p><b>Extra principal</b> goes straight to the balance, which shortens the loan rather than lowering
+        the payment. It is paid on the cadence you choose — every month, quarter, half-year or year, starting
+        with the first payment, or once only with the first payment — and the schedule shows it in the month it
+        lands. The savings figure compares that schedule against the same loan with no extra.</p>
       <p>${esc(data.note)} Nothing you type leaves your browser: the numbers are computed on this page, and the
         share link carries them in the part of the address after the <code>#</code>, which is never sent to a server.</p>
     </div>

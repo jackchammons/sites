@@ -37,7 +37,7 @@ function boot() {
   const els = {
     price: $('in-price'), down: $('in-down'), downpct: $('in-downpct'), rate: $('in-rate'),
     years: $('in-years'), start: $('in-start'), tax: $('in-tax'), ins: $('in-ins'),
-    hoa: $('in-hoa'), pmi: $('in-pmi'), extra: $('in-extra'),
+    hoa: $('in-hoa'), pmi: $('in-pmi'), extra: $('in-extra'), every: $('in-every'),
   };
 
   /* Accept what people type: "$750,000", "750k", "1.2m", "6.25%". */
@@ -61,7 +61,7 @@ function boot() {
   const monthOf = (n, start) => new Date(start.getFullYear(), start.getMonth() + n - 1, 1);
 
   /* ---- state <-> form <-> hash ------------------------------------- */
-  const KEYS = { price: 'p', down: 'd', rate: 'r', years: 'y', tax: 't', ins: 'i', hoa: 'h', pmi: 'm', extra: 'x', start: 's' };
+  const KEYS = { price: 'p', down: 'd', rate: 'r', years: 'y', tax: 't', ins: 'i', hoa: 'h', pmi: 'm', extra: 'x', every: 'e', start: 's' };
 
   function fill(st) {
     els.price.value = st.price;
@@ -77,6 +77,7 @@ function boot() {
     els.hoa.value = st.hoa;
     els.pmi.value = st.pmiRate;
     els.extra.value = st.extra;
+    els.every.value = String([...els.every.options].some(o => +o.value === +st.extraEvery) ? st.extraEvery : 1);
     els.start.value = st.start || ym(nextMonth());
   }
 
@@ -93,6 +94,8 @@ function boot() {
       const x = parse(q.get(k) ?? '');
       if (Number.isFinite(x) && x >= 0) st[f] = x;
     }
+    const e = parse(q.get('e') ?? '');
+    if (Number.isFinite(e) && e >= 0) st.extraEvery = e;
     const s = q.get('s');
     if (s && /^\d{4}-\d{2}$/.test(s)) st.start = s;
     return st;
@@ -137,10 +140,13 @@ function boot() {
       price: val(els.price, 'price'), down: val(els.down, 'down'), rate,
       years: +els.years.value, taxRate: val(els.tax, 'tax'), insurance: val(els.ins, 'ins'),
       hoa: val(els.hoa, 'hoa'), pmiRate: val(els.pmi, 'pmi'), extra: val(els.extra, 'extra'),
+      extraEvery: +els.every.value,
     });
     val(els.downpct, 'downpct');
     return { d, bad };
   }
+
+  const cadenceWord = e => ({ 0: 'once', 3: 'each quarter', 6: 'twice a year', 12: 'each year' })[e] || `every ${e} months`;
 
   function render() {
     const { d, bad } = read();
@@ -155,7 +161,9 @@ function boot() {
     $('out-sub').textContent = bad.length
       ? 'Check the highlighted field.'
       : d.extra > 0
-        ? `plus ${usd(d.extra)} extra principal, ${usd(total + d.extra)} in all`
+        ? d.extraEvery === 1
+          ? `plus ${usd(d.extra)} extra principal, ${usd(total + d.extra)} in all`
+          : `plus ${usd(d.extra)} extra principal ${cadenceWord(d.extraEvery)}`
         : d.loan > 0 ? `on a ${usd(d.loan)} loan over ${d.years} years` : 'Nothing borrowed, so nothing to repay.';
 
     for (const k of ['pi', 'tax', 'insurance', 'pmi', 'hoa']) {

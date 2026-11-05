@@ -39,6 +39,23 @@ test('extra principal shortens the loan and cuts interest', () => {
   assert.ok(fast.months > 250 && fast.months < 275, `got ${fast.months}`);
 });
 
+test('extra cadence: quarterly, yearly and once', () => {
+  const d = describe({ price: 250000, down: 50000, rate: 6, years: 30, extra: 600, extraEvery: 3 });
+  const q = amortize(d);
+  assert.deepEqual(q.rows.slice(0, 4).map(r => r.extra), [600, 0, 0, 600]);
+  const y = amortize(d, { extraEvery: 12 });
+  assert.deepEqual(y.rows.slice(0, 13).map(r => r.extra), [600, ...Array(11).fill(0), 600]);
+  const once = amortize(d, { extra: 20000, extraEvery: 0 });
+  assert.equal(once.rows[0].extra, 20000);
+  assert.equal(once.rows.slice(1).reduce((t, r) => t + r.extra, 0), 0);
+  for (const s of [q, y, once]) assert.equal(s.rows.at(-1).balance, 0);
+  // $600 at the start of each quarter is $200 a month paid a little early,
+  // so it lands within a hair of the monthly schedule, on the cheaper side.
+  const monthly = amortize(d, { extra: 200, extraEvery: 1 });
+  assert.ok(q.totalInterest <= monthly.totalInterest && q.totalInterest > monthly.totalInterest * 0.98);
+  assert.equal(describe({ price: 1, extraEvery: undefined }).extraEvery, 1);
+});
+
 test('PMI applies only above 80% LTV and stops at 78% of price', () => {
   assert.equal(needsPMI(describe({ price: 400000, down: 80000, rate: 6, years: 30, pmiRate: 0.5 })), false);
   const d = describe({ price: 400000, down: 20000, rate: 6, years: 30, pmiRate: 0.5 });

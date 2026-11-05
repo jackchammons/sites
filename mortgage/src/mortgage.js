@@ -33,7 +33,10 @@ export function describe(input) {
     insurance: Math.max(0, +input.insurance || 0),   // $ per year
     hoa: Math.max(0, +input.hoa || 0),               // $ per month
     pmiRate: Math.max(0, +input.pmiRate || 0),       // % of loan per year
-    extra: Math.max(0, +input.extra || 0),           // $ extra principal per month
+    extra: Math.max(0, +input.extra || 0),           // $ extra principal per payment
+    // Every how many months the extra is paid: 1 monthly, 3 quarterly,
+    // 12 yearly. 0 means once, with the first payment.
+    extraEvery: input.extraEvery == null ? 1 : Math.max(0, Math.round(+input.extraEvery) || 0),
     downPct: price > 0 ? down / price * 100 : 0,
   };
 }
@@ -50,11 +53,12 @@ export function needsPMI(d) {
 }
 
 /**
- * Month-by-month schedule. `extra` is additional principal paid every month.
+ * Month-by-month schedule. `extra` is additional principal, paid every
+ * `extraEvery` months starting with the first payment (0: once only).
  * Returns { rows, pi, months, totalInterest, totalPMI, pmiMonths }.
  * Each row: { n, payment, principal, interest, extra, pmi, balance }.
  */
-export function amortize(d, { extra = d.extra } = {}) {
+export function amortize(d, { extra = d.extra, extraEvery = d.extraEvery ?? 1 } = {}) {
   const pi = cents(monthlyPI(d.loan, d.rate, d.years));
   const r = d.rate / 100 / 12;
   const pmiMonthly = needsPMI(d) ? cents(d.loan * d.pmiRate / 100 / 12) : 0;
@@ -68,7 +72,8 @@ export function amortize(d, { extra = d.extra } = {}) {
     let principal = cents(pi - interest);
     // Final scheduled month: whatever float drift remains is cleared here.
     if (n === cap) principal = bal;
-    let x = Math.min(extra, Math.max(0, bal - principal));
+    const due = extraEvery > 0 ? (n - 1) % extraEvery === 0 : n === 1;
+    let x = due ? Math.min(extra, Math.max(0, bal - principal)) : 0;
     if (principal >= bal) { principal = cents(bal); x = 0; }
     bal = cents(bal - principal - x);
     totalInterest += interest;
