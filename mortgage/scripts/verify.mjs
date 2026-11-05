@@ -36,9 +36,11 @@ check(/<title>[^<]+<\/title>/.test(html), 'missing <title>');
 check(!/undefined|NaN|\[object Object\]/.test(html), 'page contains undefined/NaN/[object Object]');
 
 /* Served from /mortgage/, so every asset reference must be relative. */
-check(/src="\.\/app\.js"/.test(html), 'script not linked relatively');
-check(/href="\.\/styles\.css"/.test(html), 'stylesheet not linked relatively');
-check(/from '\.\/mortgage\.js'/.test(app), 'app.js does not import ./mortgage.js relatively');
+/* …and must carry a content stamp, or a redeploy leaves viewers running
+   the cached old script against the new page. */
+check(/src="\.\/app\.js\?v=[0-9a-f]{8}"/.test(html), 'script not linked relatively with a cache stamp');
+check(/href="\.\/styles\.css\?v=[0-9a-f]{8}"/.test(html), 'stylesheet not linked relatively with a cache stamp');
+check(/from '\.\/mortgage\.js\?v=[0-9a-f]{8}'/.test(app), 'app.js does not import ./mortgage.js relatively with a cache stamp');
 for (const m of html.matchAll(/(?:href|src)="(\/[^/][^"]*)"/g)) {
   fails.push(`root-relative asset "${m[1]}" will 404 under /mortgage/`);
 }

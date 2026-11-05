@@ -13,6 +13,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { PMI_CANCEL_LTV, PMI_REQUIRED_LTV } from '../src/mortgage.js';
 
@@ -24,6 +25,17 @@ const dist = process.env.OUT_DIR
   : path.join(root, '..', 'dist');
 
 const data = JSON.parse(fs.readFileSync(path.join(root, 'data/defaults.json'), 'utf8'));
+
+/* Asset URLs carry a content hash. Pages serves files with a ten-minute
+   cache and browsers hold module scripts longer still, so after a deploy a
+   viewer got the new HTML with the old app.js — the chart silently lacked
+   its new series. A changed file is a changed URL, which no cache has. */
+const src = f => fs.readFileSync(path.join(root, 'src', f));
+const stamp = f => createHash('sha1').update(src(f)).digest('hex').slice(0, 8);
+const ver = { 'styles.css': stamp('styles.css'), 'mortgage.js': stamp('mortgage.js') };
+// app.js imports mortgage.js, so its stamp has to cover both.
+const appJs = src('app.js').toString().replace("from './mortgage.js'", `from './mortgage.js?v=${ver['mortgage.js']}'`);
+ver['app.js'] = createHash('sha1').update(appJs).digest('hex').slice(0, 8);
 const esc = s => String(s).replace(/[&<>"']/g, c =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const v = data.inputs;
@@ -86,9 +98,9 @@ const html = `<!doctype html>
 <meta name="theme-color" content="#101614" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#f6f8f5" media="(prefers-color-scheme: light)">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
-<link rel="stylesheet" href="./styles.css">
+<link rel="stylesheet" href="./styles.css?v=${ver['styles.css']}">
 <script type="application/json" id="defaults">${JSON.stringify(data.inputs).replace(/</g, '\\u003c')}</script>
-<script type="module" src="./app.js"></script>
+<script type="module" src="./app.js?v=${ver['app.js']}"></script>
 </head>
 <body>
 
@@ -233,7 +245,8 @@ const html = `<!doctype html>
 fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(dist, { recursive: true });
 fs.writeFileSync(path.join(dist, 'index.html'), html);
-for (const asset of ['app.js', 'mortgage.js', 'styles.css']) {
+fs.writeFileSync(path.join(dist, 'app.js'), appJs);
+for (const asset of ['mortgage.js', 'styles.css']) {
   fs.copyFileSync(path.join(root, 'src', asset), path.join(dist, asset));
 }
 fs.writeFileSync(path.join(dist, '.nojekyll'), '');
