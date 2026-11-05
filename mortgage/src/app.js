@@ -299,7 +299,7 @@ function boot() {
       const hist = amortize(describe({ price: inf.loan, down: 0, rate: d.rate, months: inf.n }), { extra: 0 }).rows.slice(0, inf.paid);
       const shift = rows => rows.map(r => ({ ...r, n: r.n + inf.paid }));
       chart = {
-        start: monthFrom(els.start) || start, loan0: inf.loan,
+        start: monthFrom(els.start) || start, loan0: inf.loan, hist,
         baseRows: hist.concat(shift(base.rows)), fastRows: hist.concat(shift(fast.rows)),
         note: `${termWord(inf.n)} term, ${termWord(d.months)} left`,
       };
@@ -335,13 +335,27 @@ function boot() {
 
     const payoff = fast.months ? monthOf(fast.months, start) : null;
     const set = (k, main, sub = '') => { $('sum-' + k).textContent = main; $('sub-' + k).textContent = sub; };
+    /* A loan under way has two horizons: the whole loan, first payment to
+       last (the reconstructed history plus what is ahead), and what is
+       still to pay from today. The headline is the whole loan; the line
+       beneath carries the remainder. */
+    const hist = chart.hist || [];
+    const sumOf = (rows, key) => rows.reduce((t, r) => t + key(r), 0);
+    const life = hist.length ? {
+      interest: sumOf(hist, r => r.interest) + fast.totalInterest,
+      pmi: sumOf(hist, r => r.pmi) + fast.totalPMI,
+    } : null;
     set('loan', usd(d.loan), d.inProgress
-      ? (d.price > 0 ? `${plain.format(+(d.loan / d.price * 100).toFixed(1))}% of the original loan` : '')
+      ? (life ? `balance today, ${plain.format(+(d.loan / chart.loan0 * 100).toFixed(1))}% of the ${usd(chart.loan0)} loan` : d.price > 0 ? `${plain.format(+(d.loan / d.price * 100).toFixed(1))}% of the original loan` : '')
       : `${plain.format(+d.downPct.toFixed(1))}% down`);
-    set('interest', usd(fast.totalInterest),
-      d.loan > 0 ? `${plain.format(+(fast.totalInterest / d.loan * 100).toFixed(0))}% of the loan` : '');
-    const paidAll = d.loan + fast.totalInterest + fast.totalPMI;
-    set('cost', usd(paidAll), 'principal, interest and PMI');
+    if (life) {
+      set('interest', usd(life.interest), `whole loan · ${usd(fast.totalInterest)} still to pay`);
+      set('cost', usd(chart.loan0 + life.interest + life.pmi), `whole loan · ${usd(d.loan + fast.totalInterest + fast.totalPMI)} still to pay`);
+    } else {
+      set('interest', usd(fast.totalInterest),
+        d.loan > 0 ? `${plain.format(+(fast.totalInterest / d.loan * 100).toFixed(0))}% of the loan` : '');
+      set('cost', d.loan + fast.totalInterest + fast.totalPMI ? usd(d.loan + fast.totalInterest + fast.totalPMI) : usd(0), 'principal, interest and PMI');
+    }
     set('payoff', payoff ? monthFmt.format(payoff) : '—',
       fast.months ? `${Math.floor(fast.months / 12)} yr ${fast.months % 12 ? (fast.months % 12) + ' mo' : ''}`.trim() : '');
     $('fact-extra').classList.toggle('muted', !(d.extra > 0));
