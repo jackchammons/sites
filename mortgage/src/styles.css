@@ -126,6 +126,8 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .chart .line.s1{stroke:var(--s1)} .chart .line.s2{stroke:var(--s2)}
 .chart .line.s3{stroke:var(--s3)} .chart .line.s4{stroke:var(--s4)}
 .chart .cross{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:3 3}
+.chart .today{stroke:var(--ink-2);stroke-width:1.2;stroke-dasharray:1.5 4;stroke-linecap:round}
+.chart .today-label{fill:var(--ink-2);font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase}
 .chart .dot{stroke:var(--panel);stroke-width:2}
 .chart .dot.s1{fill:var(--s1)} .chart .dot.s2{fill:var(--s2)}
 .chart .dot.s3{fill:var(--s3)} .chart .dot.s4{fill:var(--s4)}

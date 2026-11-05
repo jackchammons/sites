@@ -237,7 +237,7 @@ function boot() {
     if (fast.pmiMonths > 0) {
       set('pmiend', monthFmt.format(monthOf(fast.pmiMonths + 1, start)), `${usd(fast.totalPMI)} paid in total`);
     } else {
-      set('pmiend', 'None', d.loan > 0 ? 'at least 20% down' : '');
+      set('pmiend', 'None', !(d.loan > 0) ? '' : d.downPct >= 20 ? 'at least 20% down' : 'no PMI rate entered');
     }
     $('fact-saved').classList.toggle('muted', !(d.extra > 0));
     if (d.extra > 0) {
@@ -319,6 +319,20 @@ function boot() {
       g.append(t);
     }
     svg.append(g);
+
+    /* A loan already under way: mark the current month, so the viewer can
+       see where on the curves they stand. Read from the device clock at
+       draw time, never baked in. */
+    const now = new Date();
+    const nowN = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth()) + 1;
+    if (nowN > 1 && nowN <= N) {
+      const x = X(nowN);
+      svg.append(svgEl('line', { class: 'today', x1: x, x2: x, y1: m.t, y2: m.t + ih }));
+      const flip = x > W - m.r - 48;
+      const t = svgEl('text', { class: 'today-label', x: x + (flip ? -5 : 5), y: m.t + 11, 'text-anchor': flip ? 'end' : 'start' });
+      t.textContent = 'Today';
+      svg.append(t);
+    }
 
     /* Each series: a value at payment n (0 = before the first), a colour slot
        and a tooltip label. Balance series fall to zero after payoff; the
