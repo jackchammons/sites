@@ -125,13 +125,19 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .chart-panel{padding:16px 18px 10px;position:relative}
 .chart-legend{list-style:none;display:flex;gap:18px;flex-wrap:wrap;margin:0 0 6px;padding:0;
   font-size:13px;color:var(--ink-2)}
-.chart-legend li{display:flex;align-items:center;gap:7px}
-.chart-legend li[hidden]{display:none}
+.chart-legend li{display:flex}
+.chart-legend button{display:flex;align-items:center;gap:7px;font:inherit;font-size:13px;color:var(--ink-2);
+  background:transparent;border:1px solid transparent;border-radius:999px;padding:3px 8px 3px 6px;cursor:pointer}
+.chart-legend button:hover{border-color:var(--line)}
+.chart-legend button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.chart-legend button[aria-pressed="false"]{color:var(--ink-3);text-decoration:line-through}
+.chart-legend button[aria-pressed="false"] .sw{opacity:.25}
 .chart-legend .sw{height:2px;width:16px;border-radius:2px}
 .chart{position:relative;width:100%}
 .chart svg{display:block;width:100%;height:auto}
 .chart .grid line{stroke:var(--line);stroke-width:1}
 .chart .grid text{fill:var(--ink-3);font-family:var(--mono);font-size:11px}
+.chart .empty-lines{fill:var(--ink-3);font-size:13px}
 .chart .line{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
 .chart .line.s1{stroke:var(--s1)} .chart .line.s2{stroke:var(--s2)}
 .chart .line.s3{stroke:var(--s3)} .chart .line.s4{stroke:var(--s4)}

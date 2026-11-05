@@ -105,6 +105,9 @@ if (defaults) {
 }
 
 check(/id="boot-error"[^>]*hidden/.test(html), 'the hidden boot-error note is missing');
+for (const id of ['chart', 'chart2', 'chart-legend', 'chart2-legend', 'tip', 'tip2']) {
+  check(ids.has(id), `chart slot #${id} missing`);
+}
 
 if (fails.length) report();
 console.log(`Build verified (${wanted.size} live slots, maths checked).`);

@@ -358,7 +358,7 @@ function boot() {
       set('saved', '—', 'add an amount to see it');
     }
 
-    drawChart();
+    drawCharts();
     drawTable();
   }
 
@@ -378,43 +378,53 @@ function boot() {
     return 10 * p;
   }
 
-  function drawChart() {
-    const { d, chart } = last;
-    const { start, loan0, baseRows, fastRows } = chart;
-    const host = $('chart');
+  /* ---- charts ------------------------------------------------------- */
+  /* Which lines are switched off, per chart, remembered per viewer. */
+  const hiddenLines = key => {
+    try { return new Set(JSON.parse(localStorage.getItem('mortgage.hide.' + key) || '[]')); } catch { return new Set(); }
+  };
+  const rememberHidden = (key, set) => {
+    try { localStorage.setItem('mortgage.hide.' + key, JSON.stringify([...set])); } catch {}
+  };
+
+  /* One line chart: a legend of toggles, the grid, the lines, the Today
+     rule, and a crosshair tooltip. `series` is [{ id, cls, label, at(n) }]
+     with n the payment number (0 = before the first); the y axis fits the
+     lines that are switched on. */
+  function drawLineChart({ key, host, legend, tip, start, N, series, ariaLabel }) {
     host.textContent = '';
-    const withExtra = d.extra > 0;
-    $('legend-extra').hidden = !withExtra;
-    $('legend-balance').textContent = withExtra ? 'Balance on schedule' : 'Balance';
-    $('chart-note').textContent = chart.note;
-    if (!(loan0 > 0) || !baseRows.length) {
-      host.innerHTML = '<p class="empty">Nothing borrowed — no balance to chart.</p>';
-      return;
+    const hidden = hiddenLines(key);
+    legend.textContent = '';
+    for (const sr of series) {
+      const li = document.createElement('li');
+      const btn = document.createElement('button');
+      btn.type = 'button'; btn.className = sr.cls;
+      btn.setAttribute('aria-pressed', String(!hidden.has(sr.id)));
+      btn.innerHTML = `<span class="sw"></span>${sr.label}`;
+      btn.addEventListener('click', () => {
+        if (hidden.has(sr.id)) hidden.delete(sr.id); else hidden.add(sr.id);
+        rememberHidden(key, hidden);
+        drawCharts();
+      });
+      li.append(btn); legend.append(li);
     }
+    const shown = series.filter(sr => !hidden.has(sr.id));
+
     const W = Math.max(300, host.clientWidth || 640), H = W < 520 ? 220 : 280;
-    /* Four series on one axis: the balance (on schedule, and with extra
-       principal when there is any), and the running totals of principal and
-       interest paid under the active schedule. All are dollars on the same
-       scale, which is what lets them share a chart; interest paid can
-       outgrow the loan, so the axis fits whichever is larger. */
-    const running = (rows, key) => { let c = 0; return rows.map(r => (c += key(r))); };
-    const cumP = running(fastRows, r => r.principal + r.extra);
-    const cumI = running(fastRows, r => r.interest);
-    const yMax0 = niceMax(Math.max(loan0, cumI[cumI.length - 1] || 0));
-    const yLabels = [0, 1, 2, 3, 4].map(i => compact.format(yMax0 * i / 4));
+    let top = 0;
+    for (const sr of shown) for (let n = 0; n <= N; n++) top = Math.max(top, sr.at(n));
+    const yMax = niceMax(top);
+    const yLabels = [0, 1, 2, 3, 4].map(i => compact.format(yMax * i / 4));
     // Size the gutter to the widest tick label: locales differ a lot here
     // ("$600K" vs "600.000 $"), and a fixed gutter clipped the long ones.
     const m = { t: 12, r: 18, b: 28, l: 14 + 6.8 * Math.max(...yLabels.map(l => l.length)) };
     const iw = W - m.l - m.r, ih = H - m.t - m.b;
-    const N = baseRows.length;
-    const yMax = yMax0;
-    const X = n => m.l + n / N * iw, Y = b => m.t + ih - b / yMax * ih;
-    const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: 'img',
-      'aria-label': 'Loan balance, principal paid and interest paid over time' });
+    const X = n => m.l + n / N * iw, Y = v => m.t + ih - v / yMax * ih;
+    const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: 'img', 'aria-label': ariaLabel });
 
     const g = svgEl('g', { class: 'grid' });
     for (let i = 0; i <= 4; i++) {
-      const val = yMax * i / 4, y = Y(val);
+      const y = Y(yMax * i / 4);
       g.append(svgEl('line', { x1: m.l, x2: W - m.r, y1: y, y2: y }));
       const t = svgEl('text', { x: m.l - 8, y: y + 4, 'text-anchor': 'end' });
       t.textContent = yLabels[i];
@@ -446,26 +456,21 @@ function boot() {
       svg.append(t);
     }
 
-    /* Each series: a value at payment n (0 = before the first), a colour slot
-       and a tooltip label. Balance series fall to zero after payoff; the
-       running totals hold their final value. */
-    const balAt = rows => n => n <= 0 ? loan0 : n > rows.length ? 0 : rows[n - 1].balance;
-    const sumAt = arr => n => n <= 0 ? 0 : arr[Math.min(n, arr.length) - 1];
-    const series = [
-      { cls: 's1', label: withExtra ? 'Balance on schedule' : 'Balance', at: balAt(baseRows) },
-      withExtra && { cls: 's2', label: 'Balance with extra', at: balAt(fastRows) },
-      { cls: 's3', label: `Principal paid${withExtra ? ' (with extra)' : ''}`, at: sumAt(cumP) },
-      { cls: 's4', label: `Interest paid${withExtra ? ' (with extra)' : ''}`, at: sumAt(cumI) },
-    ].filter(Boolean);
-    for (const sr of series) {
+    for (const sr of shown) {
       const pts = [];
-      for (let n = 0; n <= N; n++) pts.push(`${X(n).toFixed(1)},${Y(sr.at(n)).toFixed(1)}`);
+      // Running figures start before the first payment; per-payment ones at it.
+      for (let n = sr.from || 0; n <= N; n++) pts.push(`${X(n).toFixed(1)},${Y(sr.at(n)).toFixed(1)}`);
       svg.append(svgEl('path', { d: 'M' + pts.join('L'), class: `line ${sr.cls}` }));
+    }
+    if (!shown.length) {
+      const t = svgEl('text', { class: 'empty-lines', x: m.l + iw / 2, y: m.t + ih / 2, 'text-anchor': 'middle' });
+      t.textContent = 'Every line is switched off — click one in the legend.';
+      svg.append(t);
     }
 
     const cross = svgEl('line', { class: 'cross', y1: m.t, y2: m.t + ih, x1: -10, x2: -10 });
     svg.append(cross);
-    for (const sr of series) {
+    for (const sr of shown) {
       sr.dot = svgEl('circle', { class: `dot ${sr.cls}`, r: 4.5, cx: -10, cy: -10 });
       svg.append(sr.dot);
     }
@@ -473,17 +478,16 @@ function boot() {
     svg.append(hit);
     host.append(svg);
 
-    const tip = $('tip');
     const move = ev => {
       const rect = svg.getBoundingClientRect();
       const px = (ev.clientX - rect.left) * (W / rect.width);
       const n = Math.max(1, Math.min(N, Math.round((px - m.l) / iw * N)));
       const x = X(n);
       cross.setAttribute('x1', x); cross.setAttribute('x2', x);
-      for (const sr of series) { sr.dot.setAttribute('cx', x); sr.dot.setAttribute('cy', Y(sr.at(n))); }
+      for (const sr of shown) { sr.dot.setAttribute('cx', x); sr.dot.setAttribute('cy', Y(sr.at(n))); }
       tip.innerHTML =
         `<b>${monthFmt.format(monthOf(n, start))}</b> · payment ${n}` +
-        series.map(sr => `<div class="tr ${sr.cls}"><span class="sw"></span>${sr.label}<em>${usd(sr.at(n))}</em></div>`).join('');
+        shown.map(sr => `<div class="tr ${sr.cls}"><span class="sw"></span>${sr.label}<em>${usd2(sr.at(n))}</em></div>`).join('');
       tip.hidden = false;
       const box = host.getBoundingClientRect();
       const left = (x / W) * box.width;
@@ -494,11 +498,56 @@ function boot() {
     const leave = () => {
       tip.hidden = true;
       cross.setAttribute('x1', -10); cross.setAttribute('x2', -10);
-      for (const sr of series) sr.dot.setAttribute('cx', -10);
+      for (const sr of shown) sr.dot.setAttribute('cx', -10);
     };
     hit.addEventListener('pointermove', move);
     hit.addEventListener('pointerdown', move);
     hit.addEventListener('pointerleave', leave);
+  }
+
+  function drawCharts() {
+    const { d, chart } = last;
+    const { start, loan0, baseRows, fastRows } = chart;
+    const withExtra = d.extra > 0;
+    $('chart-note').textContent = chart.note;
+    $('chart2-note').textContent = chart.note;
+    if (!(loan0 > 0) || !baseRows.length) {
+      for (const [h, l] of [['chart', 'chart-legend'], ['chart2', 'chart2-legend']]) {
+        $(h).innerHTML = '<p class="empty">Nothing borrowed — nothing to chart.</p>';
+        $(l).textContent = '';
+      }
+      return;
+    }
+    const N = baseRows.length;
+    const running = (rows, key) => { let c = 0; return rows.map(r => (c += key(r))); };
+    const cumP = running(fastRows, r => r.principal + r.extra);
+    const cumI = running(fastRows, r => r.interest);
+    /* Balance series fall to zero after payoff; running totals hold their
+       final value; per-payment figures are zero once nothing is owed. */
+    const balAt = rows => n => n <= 0 ? loan0 : n > rows.length ? 0 : rows[n - 1].balance;
+    const sumAt = arr => n => n <= 0 ? 0 : arr[Math.min(n, arr.length) - 1];
+    const rowAt = (rows, key) => n => n <= 0 || n > rows.length ? 0 : key(rows[n - 1]);
+    const tag = withExtra ? ' (with extra)' : '';
+
+    drawLineChart({
+      key: 'totals', host: $('chart'), legend: $('chart-legend'), tip: $('tip'), start, N,
+      ariaLabel: 'Loan balance, principal paid and interest paid over time',
+      series: [
+        { id: 'balance', cls: 's1', label: withExtra ? 'Balance on schedule' : 'Balance', at: balAt(baseRows) },
+        withExtra && { id: 'balance-extra', cls: 's2', label: 'Balance with extra principal', at: balAt(fastRows) },
+        { id: 'principal', cls: 's3', label: `Principal paid so far${tag}`, at: sumAt(cumP) },
+        { id: 'interest', cls: 's4', label: `Interest paid so far${tag}`, at: sumAt(cumI) },
+      ].filter(Boolean),
+    });
+    drawLineChart({
+      key: 'monthly', host: $('chart2'), legend: $('chart2-legend'), tip: $('tip2'), start, N,
+      ariaLabel: 'Interest and principal in each monthly payment over time',
+      series: [
+        { id: 'interest', cls: 's4', label: 'Interest this month', from: 1, at: rowAt(fastRows, r => r.interest) },
+        { id: 'principal', cls: 's3', label: 'Principal this month', from: 1, at: rowAt(fastRows, r => r.principal) },
+        withExtra && { id: 'extra', cls: 's2', label: 'Extra principal', from: 1, at: rowAt(fastRows, r => r.extra) },
+      ].filter(Boolean),
+    });
   }
 
   /* ---- schedule table ----------------------------------------------- */
@@ -554,7 +603,7 @@ function boot() {
   });
   window.addEventListener('hashchange', () => { const st = fromHash(); if (st) { fill(st); render(); } });
   let rw = 0;
-  window.addEventListener('resize', () => { clearTimeout(rw); rw = setTimeout(() => last && drawChart(), 120); });
+  window.addEventListener('resize', () => { clearTimeout(rw); rw = setTimeout(() => last && drawCharts(), 120); });
 
   fill(fromHash() || fromDefaults());
   render();
