@@ -355,8 +355,11 @@ function boot() {
     }
     if (d.extra > 0) {
       const mo = base.months - fast.months;
-      set('saved', usd(base.totalInterest - fast.totalInterest + base.totalPMI - fast.totalPMI),
-        `and ${Math.floor(mo / 12)} yr ${mo % 12} mo sooner`);
+      const costOf = sch => sch.totalInterest + sch.totalPMI;
+      // The figure is the equation, spelled out: what the loan costs in
+      // interest (and PMI) on schedule, less what it costs with the extra.
+      set('saved', usd(costOf(base) - costOf(fast)),
+        `${usd(costOf(base))} interest${base.totalPMI > 0 ? ' + PMI' : ''} on schedule − ${usd(costOf(fast))} with extra; paid off ${Math.floor(mo / 12)} yr ${mo % 12} mo sooner`);
     } else {
       set('saved', '—', 'add an amount to see it');
     }
