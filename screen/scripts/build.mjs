@@ -163,7 +163,7 @@ const html = `<!doctype html>
     <div class="actions">
       <button type="button" id="btn-copy">Copy link</button>
       <button type="button" class="quiet" id="btn-reset">Reset</button>
-      <span class="status" id="status">The URL carries your numbers.</span>
+      <span class="status" id="status"></span>
     </div>
   </form>
 
@@ -174,7 +174,6 @@ const html = `<!doctype html>
 
     <dl class="facts">${facts}
     </dl>
-    <p class="note"><span class="key good">Green</span> meets the standard, <span class="key ok">amber</span> is inside a weaker one, <span class="key warn">red</span> is outside every published limit.</p>
   </section>
 
   </div>
@@ -182,7 +181,6 @@ const html = `<!doctype html>
   <section class="panel chart-panel">
     <div class="head">
       <h2>Where the standards put your seat</h2>
-      <p id="lanes-note"></p>
     </div>
     <ul class="chart-legend">
       <li><span class="sw s1"></span>Seating standards, by viewing angle</li>
@@ -196,10 +194,8 @@ const html = `<!doctype html>
 
   <section class="panel chart-panel">
     <div class="head">
-      <h2>Can your eyes use the pixels?</h2>
-      <p id="eye-note"></p>
+      <h2>Who could see a sharper display</h2>
     </div>
-    <p class="note" style="margin:0 0 10px">The share of people who could tell this display from a perfect one, by its pixels per degree at the centre. From the Cambridge measurement of the eye’s resolution limit; your seat is marked.</p>
     <div class="lanes" id="eye-bar"></div>
     <div class="tip" id="eye-tip" hidden></div>
     <div class="table-wrap" style="margin-top:14px">
@@ -215,7 +211,7 @@ const html = `<!doctype html>
       <h2>Resolution worth paying for</h2>
       <p id="matrix-note"></p>
     </div>
-    <p class="note" style="padding:0 20px;margin:0 0 12px">For each screen size and seat, the lowest standard resolution that 19 in 20 people could not tell from a perfect display. Sharper than that cell buys nothing visible. Your size and seat are added as a row and a column.</p>
+    <p class="note" style="padding:0 20px;margin:0 0 12px">The lowest resolution 19 in 20 people could not tell from a perfect display; sharper buys nothing visible.</p>
     <div class="table-wrap" style="padding:0 20px 20px">
       <table class="mx" id="matrix" aria-label="Resolution limit by screen size and viewing distance"></table>
     </div>
@@ -224,7 +220,6 @@ const html = `<!doctype html>
   <section class="panel">
     <div class="head" style="padding:18px 20px 0">
       <h2>How far to sit from this screen</h2>
-      <p id="seats-note"></p>
     </div>
     <div class="table-wrap">
       <table class="list" aria-label="Viewing distance by standard">
@@ -250,7 +245,6 @@ const html = `<!doctype html>
   <section class="panel" id="pj-section" hidden>
     <div class="head" style="padding:18px 20px 0">
       <h2>Projector placement</h2>
-      <p id="pj-note"></p>
     </div>
     <div style="padding:0 20px 20px">
       <dl class="facts" style="margin-top:12px">${pjFacts}
@@ -261,7 +255,6 @@ const html = `<!doctype html>
   <section class="panel">
     <div class="head" style="padding:18px 20px 0">
       <h2>Height on the wall</h2>
-      <p id="place-note"></p>
     </div>
     <div class="side" style="padding:0 20px 20px">
       <div>
@@ -271,7 +264,6 @@ const html = `<!doctype html>
           <div class="fact" id="fact-max"><dt>Highest comfortable centre</dt><dd><span id="sum-max">—</span><small id="sub-max"></small></dd></div>
           <div class="fact" id="fact-stand"><dt>Bottom edge from floor</dt><dd><span id="sum-stand">—</span><small id="sub-stand"></small></dd></div>
         </dl>
-        <p class="note">Sit so the centre of the picture is near eye level. Looking up more than ${PLACEMENT.maxUp}° to the centre, or down more than ${PLACEMENT.maxDown}°, strains the neck over a film; that is the band shaded in the side view.</p>
       </div>
       <div id="side-view" aria-label="Side view of the seat and screen"></div>
     </div>
@@ -289,6 +281,7 @@ const html = `<!doctype html>
     <ul>${ANGLE_STANDARDS.map(s => `
       <li><b>${esc(s.label)}, ${deg(s.angle)}</b> — ${esc(s.note)}</li>`).join('')}
     </ul>
+    <p>Colours grade each figure: green meets the standard, amber is inside a weaker one, red is outside every published limit. The headline angle is green from SMPTE’s 30°, amber from THX’s 26°; the vertical angle is graded on the height a 16:9 picture shows at those same angles (${esc(deg(+(2 * Math.atan(Math.tan(15 * Math.PI / 180) * 9 / 16) * 180 / Math.PI).toFixed(1)))} and ${esc(deg(+(2 * Math.atan(Math.tan(13 * Math.PI / 180) * 9 / 16) * 180 / Math.PI).toFixed(1)))}), so a scope picture is judged on the height it actually gives.</p>
     <p>The ITU figures are distances in picture heights rather than angles: ${ITU_STANDARDS.map(s => `${esc(s.label)} at <b>${s.heights}H</b>`).join(', ')}. Each is where one pixel of that format subtends about one minute of arc, which is why they fall close to the resolution limits below. The pre-HD rule of thumb, <b>${RULE_OF_THUMB.near}× to ${RULE_OF_THUMB.far}× the diagonal</b>, is shown for comparison; it dates from standard-definition tubes and lands well outside every cinema standard.</p>
 
     <h3>Resolution</h3>

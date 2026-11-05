@@ -95,6 +95,12 @@ export const subtended = (span, distance) =>
 export const hfov = (d, distance) => subtended(d.width, distance);
 export const vfov = (d, distance) => subtended(d.height, distance);
 
+/* The vertical angle a 16:9 picture shows when its width subtends `angle`:
+   how a horizontal seating standard reads on the height axis, so a scope
+   picture can be judged on the height it actually gives. */
+export const verticalEquivalent = (angle, ratio = 16 / 9) =>
+  2 * Math.atan(Math.tan(angle / 2 * DEG) / ratio) / DEG;
+
 /* Distance from which a span subtends the angle. */
 export const distanceForAngle = (span, angle) => span / (2 * Math.tan(angle / 2 * DEG));
 
