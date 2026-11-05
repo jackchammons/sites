@@ -15,7 +15,7 @@
     "escrowUnit": "mo",
     "escrowMode": false,
     "hoa": 0,
-    "pmiRate": 0.5,
+    "pmiRate": 0,
     "extra": 0,
     "extraEvery": 1
   },

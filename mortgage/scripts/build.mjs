@@ -153,7 +153,7 @@ const html = `<!doctype html>
     </div>
     <div class="pair">
       ${field({ id: 'in-hoa', label: 'HOA dues', value: v.hoa, pre: '$', post: '/mo', mode: 'numeric' })}
-      ${field({ id: 'in-pmi', label: 'PMI rate', value: v.pmiRate, post: '%/yr', hint: 'Under 20% down' })}
+      ${field({ id: 'in-pmi', label: 'PMI rate', value: v.pmiRate, post: '%/yr', hint: 'Charged under 20% down; 0 if none' })}
     </div>
 
     <h2>Pay it down faster</h2>
