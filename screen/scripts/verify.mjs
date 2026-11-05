@@ -112,6 +112,7 @@ if (data) {
 }
 
 check(/id="boot-error"[^>]*hidden/.test(html), 'the hidden boot-error note is missing');
+check(ids.has('out-total'), 'the headline angle has no colourable wrapper');
 
 if (fails.length) report();
 console.log(`Build verified (${wanted.size} live slots, maths checked).`);

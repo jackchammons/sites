@@ -170,11 +170,12 @@ const html = `<!doctype html>
 
   <section class="panel results" aria-live="polite">
     <p class="eyebrow">Horizontal viewing angle</p>
-    <p class="total"><span id="out-fov">—</span><small>of view</small></p>
+    <p class="total" id="out-total"><span id="out-fov">—</span><small>of view</small></p>
     <p class="sub" id="out-sub"></p>
 
     <dl class="facts">${facts}
     </dl>
+    <p class="note"><span class="key good">Green</span> meets the standard, <span class="key ok">amber</span> is inside a weaker one, <span class="key warn">red</span> is outside every published limit.</p>
   </section>
 
   </div>
