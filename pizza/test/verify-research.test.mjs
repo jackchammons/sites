@@ -177,6 +177,13 @@ test('status: enum and citation enforced', () => {
   failsWith({ status: [{ id: 'delancey', status: 'gone', note: 'confirmed on its site', source: 'https://x.com' }] }, 'status must be');
 });
 
+test('factsSkipped: an attempt that found nothing, never alongside a facts record', () => {
+  passes({ factsSkipped: [{ id: 'zeeks-pizza', note: 'no page states a founding year or shows prices' }] });
+  failsWith({ factsSkipped: [{ id: 'nope', note: 'searched the site and local coverage' }] }, 'unknown restaurant id');
+  failsWith({ facts: [{ id: 'delancey', opened: 2009, source: 'https://delancey.example/about' }],
+    factsSkipped: [{ id: 'delancey', note: 'searched the site and local coverage' }] }, 'is also reported in facts');
+});
+
 /* ---- factorSources: citations for a rating already on file ---- */
 test('factorSources: attaches criticism to a rated entry, never to an unrated one', () => {
   passes({ factorSources: [{ id: 'delancey', sources: ['https://www.thestranger.com/food/delancey-review'], note: NOTE }] });
