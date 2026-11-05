@@ -387,47 +387,81 @@ function boot() {
     try { localStorage.setItem('mortgage.hide.' + key, JSON.stringify([...set])); } catch {}
   };
 
-  /* One line chart: a legend of toggles, the grid, the lines, the Today
-     rule, and a crosshair tooltip. `series` is [{ id, cls, label, at(n) }]
-     with n the payment number (0 = before the first); the y axis fits the
-     lines that are switched on. */
+  /* The chart: a legend of toggles, the grid, the lines, the Today rule
+     and a crosshair tooltip. Two y axes — balances and running totals on
+     the left (solid lines), each payment's parts on the right (dashed),
+     because a $600,000 balance and a $3,000 payment cannot share a scale.
+     `series` is [{ id, cls, label, axis, at(n), from? }] with n the payment
+     number (0 = before the first); each axis fits the lines switched on. */
+  const AXES = [
+    { side: 'left', cap: '◀ left axis: balance & totals', title: 'balance & totals' },
+    { side: 'right', cap: 'right axis: each payment ▶', title: 'per payment' },
+  ];
   function drawLineChart({ key, host, legend, tip, start, N, series, ariaLabel }) {
     host.textContent = '';
     const hidden = hiddenLines(key);
     legend.textContent = '';
-    for (const sr of series) {
-      const li = document.createElement('li');
-      const btn = document.createElement('button');
-      btn.type = 'button'; btn.className = sr.cls;
-      btn.setAttribute('aria-pressed', String(!hidden.has(sr.id)));
-      btn.innerHTML = `<span class="sw"></span>${sr.label}`;
-      btn.addEventListener('click', () => {
-        if (hidden.has(sr.id)) hidden.delete(sr.id); else hidden.add(sr.id);
-        rememberHidden(key, hidden);
-        drawCharts();
-      });
-      li.append(btn); legend.append(li);
+    for (const ax of AXES) {
+      const group = series.filter(sr => sr.axis === ax.side);
+      if (!group.length) continue;
+      if (ax.side === 'right') legend.insertAdjacentHTML('beforeend', '<li class="gap" aria-hidden="true"></li>');
+      legend.insertAdjacentHTML('beforeend', `<li class="axis-cap">${ax.cap}</li>`);
+      for (const sr of group) {
+        const li = document.createElement('li');
+        const btn = document.createElement('button');
+        btn.type = 'button'; btn.className = `${sr.cls}${ax.side === 'right' ? ' dashed' : ''}`;
+        btn.setAttribute('aria-pressed', String(!hidden.has(sr.id)));
+        btn.innerHTML = `<span class="sw"></span>${sr.label}`;
+        btn.addEventListener('click', () => {
+          if (hidden.has(sr.id)) hidden.delete(sr.id); else hidden.add(sr.id);
+          rememberHidden(key, hidden);
+          drawCharts();
+        });
+        li.append(btn); legend.append(li);
+      }
     }
     const shown = series.filter(sr => !hidden.has(sr.id));
+    const onLeft = shown.filter(sr => sr.axis === 'left'), onRight = shown.filter(sr => sr.axis === 'right');
 
-    const W = Math.max(300, host.clientWidth || 640), H = W < 520 ? 220 : 280;
-    let top = 0;
-    for (const sr of shown) for (let n = 0; n <= N; n++) top = Math.max(top, sr.at(n));
-    const yMax = niceMax(top);
-    const yLabels = [0, 1, 2, 3, 4].map(i => compact.format(yMax * i / 4));
-    // Size the gutter to the widest tick label: locales differ a lot here
+    const W = Math.max(300, host.clientWidth || 640), H = W < 520 ? 230 : 290;
+    const topOf = group => { let t = 0; for (const sr of group) for (let n = 0; n <= N; n++) t = Math.max(t, sr.at(n)); return t; };
+    const yMaxL = niceMax(topOf(onLeft)), yMaxR = niceMax(topOf(onRight));
+    const labelsL = [0, 1, 2, 3, 4].map(i => compact.format(yMaxL * i / 4));
+    const labelsR = [0, 1, 2, 3, 4].map(i => compact.format(yMaxR * i / 4));
+    // Size each gutter to its widest tick label: locales differ a lot here
     // ("$600K" vs "600.000 $"), and a fixed gutter clipped the long ones.
-    const m = { t: 12, r: 18, b: 28, l: 14 + 6.8 * Math.max(...yLabels.map(l => l.length)) };
+    const gutter = labels => 14 + 6.8 * Math.max(...labels.map(l => l.length));
+    const m = { t: W < 520 ? 14 : 26, b: 28, l: onLeft.length ? gutter(labelsL) : 18, r: onRight.length ? gutter(labelsR) : 18 };
     const iw = W - m.l - m.r, ih = H - m.t - m.b;
-    const X = n => m.l + n / N * iw, Y = v => m.t + ih - v / yMax * ih;
+    const X = n => m.l + n / N * iw;
+    const YL = v => m.t + ih - v / yMaxL * ih, YR = v => m.t + ih - v / yMaxR * ih;
+    const Y = sr => (sr.axis === 'right' ? YR : YL);
     const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: 'img', 'aria-label': ariaLabel });
 
     const g = svgEl('g', { class: 'grid' });
     for (let i = 0; i <= 4; i++) {
-      const y = Y(yMax * i / 4);
+      const y = m.t + ih - ih * i / 4;
       g.append(svgEl('line', { x1: m.l, x2: W - m.r, y1: y, y2: y }));
-      const t = svgEl('text', { x: m.l - 8, y: y + 4, 'text-anchor': 'end' });
-      t.textContent = yLabels[i];
+      if (onLeft.length) {
+        const t = svgEl('text', { x: m.l - 8, y: y + 4, 'text-anchor': 'end' });
+        t.textContent = labelsL[i];
+        g.append(t);
+      }
+      if (onRight.length) {
+        const t = svgEl('text', { x: W - m.r + 8, y: y + 4, 'text-anchor': 'start' });
+        t.textContent = labelsR[i];
+        g.append(t);
+      }
+    }
+    // Axis titles only where there is room; narrow screens rely on the
+    // legend captions, which say the same thing.
+    for (const ax of (W < 520 ? [] : AXES)) {
+      const group = ax.side === 'left' ? onLeft : onRight;
+      if (!group.length) continue;
+      const t = svgEl('text', { class: 'axis-title', x: ax.side === 'left' ? m.l - 8 : W - m.r + 8, y: m.t - 10,
+        'text-anchor': ax.side === 'left' ? 'start' : 'end' });
+      t.textContent = ax.title;
+      t.setAttribute('x', ax.side === 'left' ? m.l : W - m.r);
       g.append(t);
     }
     // Year ticks: the smallest step that leaves room for a four-digit label.
@@ -457,10 +491,10 @@ function boot() {
     }
 
     for (const sr of shown) {
-      const pts = [];
+      const pts = [], y = Y(sr);
       // Running figures start before the first payment; per-payment ones at it.
-      for (let n = sr.from || 0; n <= N; n++) pts.push(`${X(n).toFixed(1)},${Y(sr.at(n)).toFixed(1)}`);
-      svg.append(svgEl('path', { d: 'M' + pts.join('L'), class: `line ${sr.cls}` }));
+      for (let n = sr.from || 0; n <= N; n++) pts.push(`${X(n).toFixed(1)},${y(sr.at(n)).toFixed(1)}`);
+      svg.append(svgEl('path', { d: 'M' + pts.join('L'), class: `line ${sr.cls}${sr.axis === 'right' ? ' dashed' : ''}` }));
     }
     if (!shown.length) {
       const t = svgEl('text', { class: 'empty-lines', x: m.l + iw / 2, y: m.t + ih / 2, 'text-anchor': 'middle' });
@@ -484,10 +518,9 @@ function boot() {
       const n = Math.max(1, Math.min(N, Math.round((px - m.l) / iw * N)));
       const x = X(n);
       cross.setAttribute('x1', x); cross.setAttribute('x2', x);
-      for (const sr of shown) { sr.dot.setAttribute('cx', x); sr.dot.setAttribute('cy', Y(sr.at(n))); }
-      tip.innerHTML =
-        `<b>${monthFmt.format(monthOf(n, start))}</b> · payment ${n}` +
-        shown.map(sr => `<div class="tr ${sr.cls}"><span class="sw"></span>${sr.label}<em>${usd2(sr.at(n))}</em></div>`).join('');
+      for (const sr of shown) { sr.dot.setAttribute('cx', x); sr.dot.setAttribute('cy', Y(sr)(sr.at(n))); }
+      const row = sr => `<div class="tr ${sr.cls}${sr.axis === 'right' ? ' dashed' : ''}"><span class="sw"></span>${sr.label}<em>${usd2(sr.at(n))}${sr.axis === 'right' ? '<small>/mo</small>' : ''}</em></div>`;
+      tip.innerHTML = `<b>${monthFmt.format(monthOf(n, start))}</b> · payment ${n}` + shown.map(row).join('');
       tip.hidden = false;
       const box = host.getBoundingClientRect();
       const left = (x / W) * box.width;
@@ -510,18 +543,16 @@ function boot() {
     const { start, loan0, baseRows, fastRows } = chart;
     const withExtra = d.extra > 0;
     $('chart-note').textContent = chart.note;
-    $('chart2-note').textContent = chart.note;
     if (!(loan0 > 0) || !baseRows.length) {
-      for (const [h, l] of [['chart', 'chart-legend'], ['chart2', 'chart2-legend']]) {
-        $(h).innerHTML = '<p class="empty">Nothing borrowed — nothing to chart.</p>';
-        $(l).textContent = '';
-      }
+      $('chart').innerHTML = '<p class="empty">Nothing borrowed — nothing to chart.</p>';
+      $('chart-legend').textContent = '';
       return;
     }
     const N = baseRows.length;
     const running = (rows, key) => { let c = 0; return rows.map(r => (c += key(r))); };
     const cumP = running(fastRows, r => r.principal + r.extra);
     const cumI = running(fastRows, r => r.interest);
+    const cumX = running(fastRows, r => r.extra);
     /* Balance series fall to zero after payoff; running totals hold their
        final value; per-payment figures are zero once nothing is owed. */
     const balAt = rows => n => n <= 0 ? loan0 : n > rows.length ? 0 : rows[n - 1].balance;
@@ -531,21 +562,15 @@ function boot() {
 
     drawLineChart({
       key: 'totals', host: $('chart'), legend: $('chart-legend'), tip: $('tip'), start, N,
-      ariaLabel: 'Loan balance, principal paid and interest paid over time',
+      ariaLabel: 'Loan balance, principal and interest paid so far, and each payment\'s split, over time',
       series: [
-        { id: 'balance', cls: 's1', label: withExtra ? 'Balance on schedule' : 'Balance', at: balAt(baseRows) },
-        withExtra && { id: 'balance-extra', cls: 's2', label: 'Balance with extra principal', at: balAt(fastRows) },
-        { id: 'principal', cls: 's3', label: `Principal paid so far${tag}`, at: sumAt(cumP) },
-        { id: 'interest', cls: 's4', label: `Interest paid so far${tag}`, at: sumAt(cumI) },
-      ].filter(Boolean),
-    });
-    drawLineChart({
-      key: 'monthly', host: $('chart2'), legend: $('chart2-legend'), tip: $('tip2'), start, N,
-      ariaLabel: 'Interest and principal in each monthly payment over time',
-      series: [
-        { id: 'interest', cls: 's4', label: 'Interest this month', from: 1, at: rowAt(fastRows, r => r.interest) },
-        { id: 'principal', cls: 's3', label: 'Principal this month', from: 1, at: rowAt(fastRows, r => r.principal) },
-        withExtra && { id: 'extra', cls: 's2', label: 'Extra principal', from: 1, at: rowAt(fastRows, r => r.extra) },
+        { id: 'balance', axis: 'left', cls: 's1', label: withExtra ? 'Balance on schedule' : 'Balance', at: balAt(baseRows) },
+        withExtra && { id: 'balance-extra', axis: 'left', cls: 's2', label: 'Balance with extra principal', at: balAt(fastRows) },
+        { id: 'principal', axis: 'left', cls: 's3', label: `Principal paid so far${tag}`, at: sumAt(cumP) },
+        { id: 'interest', axis: 'left', cls: 's4', label: `Interest paid so far${tag}`, at: sumAt(cumI) },
+        withExtra && { id: 'extra', axis: 'left', cls: 's6', label: 'Extra principal paid so far', at: sumAt(cumX) },
+        { id: 'm-interest', axis: 'right', cls: 's4', label: 'Interest in the payment', from: 1, at: rowAt(fastRows, r => r.interest) },
+        { id: 'm-principal', axis: 'right', cls: 's3', label: 'Principal in the payment', from: 1, at: rowAt(fastRows, r => r.principal) },
       ].filter(Boolean),
     });
   }

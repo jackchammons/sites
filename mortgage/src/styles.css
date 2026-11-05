@@ -123,9 +123,16 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 /* ---- chart ---- */
 .chart-panel{padding:16px 18px 10px;position:relative}
-.chart-legend{list-style:none;display:flex;gap:18px;flex-wrap:wrap;margin:0 0 6px;padding:0;
+.chart-legend{list-style:none;display:flex;gap:2px 14px;flex-wrap:wrap;margin:0 0 6px;padding:0;
   font-size:13px;color:var(--ink-2)}
 .chart-legend li{display:flex}
+/* Each axis has its own group in the legend: a caption, then its lines.
+   Right-axis lines are dashed everywhere they appear — chart, legend,
+   tooltip — so the eye can pair a line with its scale without reading. */
+.chart-legend .axis-cap{align-items:center;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);padding:3px 0;white-space:nowrap}
+.chart-legend .axis-cap+li{margin-left:-6px}
+.chart-legend .gap{flex-basis:100%;height:4px}
 .chart-legend button{display:flex;align-items:center;gap:7px;font:inherit;font-size:13px;color:var(--ink-2);
   background:transparent;border:1px solid transparent;border-radius:999px;padding:3px 8px 3px 6px;cursor:pointer}
 .chart-legend button:hover{border-color:var(--line)}
@@ -133,6 +140,9 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .chart-legend button[aria-pressed="false"]{color:var(--ink-3);text-decoration:line-through}
 .chart-legend button[aria-pressed="false"] .sw{opacity:.25}
 .chart-legend .sw{height:2px;width:16px;border-radius:2px}
+.chart-legend button.dashed .sw,.tip .tr.dashed .sw{background:repeating-linear-gradient(90deg,currentColor 0 4px,transparent 4px 7px)}
+.chart-legend button.dashed.s3 .sw,.tip .tr.dashed.s3 .sw{color:var(--s3)} .chart-legend button.dashed.s4 .sw,.tip .tr.dashed.s4 .sw{color:var(--s4)}
+.chart-legend button.dashed.s2 .sw,.tip .tr.dashed.s2 .sw{color:var(--s2)} .chart-legend button.dashed.s6 .sw,.tip .tr.dashed.s6 .sw{color:var(--s6)}
 .chart{position:relative;width:100%}
 .chart svg{display:block;width:100%;height:auto}
 .chart .grid line{stroke:var(--line);stroke-width:1}
@@ -141,6 +151,9 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .chart .line{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
 .chart .line.s1{stroke:var(--s1)} .chart .line.s2{stroke:var(--s2)}
 .chart .line.s3{stroke:var(--s3)} .chart .line.s4{stroke:var(--s4)}
+.chart .line.s6{stroke:var(--s6)} .chart .dot.s6{fill:var(--s6)}
+.chart .line.dashed{stroke-dasharray:5 4}
+.chart .axis-title{fill:var(--ink-3);font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase}
 .chart .cross{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:3 3}
 .chart .today{stroke:var(--ink-2);stroke-width:1.2;stroke-dasharray:1.5 4;stroke-linecap:round}
 .chart .today-label{fill:var(--ink-2);font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase}
@@ -155,6 +168,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .tip b{font-weight:600}
 .tip .tr{display:flex;align-items:center;gap:8px;margin-top:4px;color:var(--ink-2)}
 .tip .tr .sw{height:2px;width:12px}
+.tip .tr.dashed .sw{background-color:transparent}
 .tip .tr > span:first-child:empty{width:12px}
 .tip em{font-style:normal;margin-left:auto;font-family:var(--mono);color:var(--ink);padding-left:14px}
 
