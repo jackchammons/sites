@@ -1,10 +1,35 @@
 {
-  "updated": "2026-11-04T18:30:00Z",
-  "links": [
+  "updated": "2026-11-05T19:00:00Z",
+  "facts": [
     {
-      "id": "good-luck-bread",
-      "instagram": "https://www.instagram.com/goodluckbread/",
-      "source": "https://pizza.goodluckbread.com/"
+      "id": "roccos",
+      "opened": 2014,
+      "source": "https://www.roccosseattle.com"
+    },
+    {
+      "id": "proletariat-pizza",
+      "opened": 2009,
+      "source": "https://whitecenternow.com/?p=5015"
+    },
+    {
+      "id": "ballard-pizza-co",
+      "opened": 2012,
+      "source": "https://www.seattlemet.com/eat-and-drink/2012/04/first-look-ballard-pizza-company"
+    },
+    {
+      "id": "south-town-pie",
+      "opened": 2018,
+      "source": "https://seattlemag.com/food-and-culture/after-closing-his-fine-dining-restaurant-queen-anne-seattle-chef-back-new-south-park/"
+    },
+    {
+      "id": "pizzeria-22",
+      "opened": 2011,
+      "source": "https://www.westsideseattle.com/node/60041"
+    },
+    {
+      "id": "my-friend-dereks",
+      "priceIndex": 2,
+      "source": "https://myfrienddereks.com/menu"
     }
   ]
 }

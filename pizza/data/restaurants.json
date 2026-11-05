@@ -1055,7 +1055,7 @@
       "signature": "A White Center institution that never chased the city's attention",
       "blurb": "Unfussy, generous and beloved locally in a way the downtown lists rarely register. The kind of place that anchors a neighbourhood rather than a listicle.",
       "url": "https://proletariatpizza.com",
-      "opened": null,
+      "opened": 2009,
       "crowd": null,
       "priceIndex": 1,
       "lastVerified": null,
@@ -1092,7 +1092,8 @@
       },
       "mentions": [],
       "instagram": "https://www.instagram.com/proletariatpizza/",
-      "statusChecked": "2026-10-26"
+      "statusChecked": "2026-10-26",
+      "openedSource": "https://whitecenternow.com/?p=5015"
     },
     {
       "id": "ballard-pizza-co",
@@ -1103,7 +1104,7 @@
       "signature": "Ethan Stowell's slice shop, run with restaurant discipline",
       "blurb": "A chef-driven take on the counter slice: better sourcing than the format demands, executed at volume. Proof that a slice shop can be serious without being precious.",
       "url": "https://ballardpizzacompany.com",
-      "opened": null,
+      "opened": 2012,
       "crowd": null,
       "priceIndex": 2,
       "lastVerified": null,
@@ -1145,7 +1146,8 @@
         }
       },
       "mentions": [],
-      "instagram": "https://www.instagram.com/ballardpizzaco/"
+      "instagram": "https://www.instagram.com/ballardpizzaco/",
+      "openedSource": "https://www.seattlemet.com/eat-and-drink/2012/04/first-look-ballard-pizza-company"
     },
     {
       "id": "zeeks-pizza",
@@ -1640,7 +1642,7 @@
       "signature": "A slice and a beer at closing time in Belltown",
       "blurb": "Belltown's late-night anchor, doing volume without the pie collapsing into an afterthought. The bar is the draw; the pizza is why you stay.",
       "url": "https://www.roccosseattle.com",
-      "opened": null,
+      "opened": 2014,
       "crowd": null,
       "priceIndex": 2,
       "lastVerified": null,
@@ -1678,7 +1680,8 @@
         }
       },
       "mentions": [],
-      "instagram": "https://www.instagram.com/roccos_seattle/"
+      "instagram": "https://www.instagram.com/roccos_seattle/",
+      "openedSource": "https://www.roccosseattle.com"
     },
     {
       "id": "my-friend-dereks",
@@ -1729,7 +1732,9 @@
       },
       "styleGroup": "Detroit pan",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/myfrienddereks"
+      "instagram": "https://www.instagram.com/myfrienddereks",
+      "priceIndex": 2,
+      "priceSource": "https://myfrienddereks.com/menu"
     },
     {
       "id": "abecedary",
@@ -2425,7 +2430,9 @@
       "priceIndex": 2,
       "styleGroup": "Pizza bar",
       "lastVerified": "2026-08-27",
-      "instagram": "https://instagram.com/southtownpie_seattle"
+      "instagram": "https://instagram.com/southtownpie_seattle",
+      "opened": 2018,
+      "openedSource": "https://seattlemag.com/food-and-culture/after-closing-his-fine-dining-restaurant-queen-anne-seattle-chef-back-new-south-park/"
     },
     {
       "id": "pizzeria-22",
@@ -2476,7 +2483,9 @@
       "priceIndex": 2,
       "styleGroup": "Neapolitan",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/pizzeria__22/"
+      "instagram": "https://www.instagram.com/pizzeria__22/",
+      "opened": 2011,
+      "openedSource": "https://www.westsideseattle.com/node/60041"
     },
     {
       "id": "johnny-mos-pizzeria",
