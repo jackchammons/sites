@@ -14,8 +14,8 @@
  *   distinctiveness  editorial  whether it owns a lane in this city
  *   value            computed   quality delivered per price tier
  *
- * Plain ES module with no Node or DOM dependencies: the static build and the
- * browser re-ranker run this exact file, so what the page claims is what the
+ * Plain ES module with no Node or DOM dependencies, run by the build and the
+ * tests from this exact file, so what the page claims is what the
  * page does.
  */
 

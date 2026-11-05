@@ -34,14 +34,14 @@ import { execFileSync } from 'node:child_process';
 const fails = [];
 const check = (ok, msg) => { if (!ok) fails.push(msg); };
 
-for (const f of ['index.html', 'app.js', 'slice.js', 'render.js', 'rankings.json', '.nojekyll']) {
+for (const f of ['index.html', 'app.js', 'rankings.json', '.nojekyll']) {
   check(fs.existsSync(path.join(dist, f)), `missing dist/${f}`);
 }
 if (fails.length) { report(); }
 
 /* Follow every relative import from the shipped modules and confirm it landed.
  * The static build cannot notice a missing one -- it renders server-side and is
- * perfectly happy -- but the browser 404s and the re-ranker dies silently. The
+ * perfectly happy -- but the browser 404s and the map dies silently. The
  * copy list in build.mjs is hand-maintained, so this walks what the code
  * actually imports rather than trusting that list to stay in step. */
 const seenMod = new Set();

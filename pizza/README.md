@@ -5,8 +5,8 @@ map, openings and closings, and the local press. Published at
 **https://sites.jackhammons.com/pizza/**, rebuilt daily by GitHub Actions.
 
 Every number on the page is computed at build time from `data/restaurants.json` by the
-scoring module in `src/slice.js`, which also runs in the browser so readers can re-weight
-the factors and watch the list re-sort.
+scoring module in `src/slice.js`. Each ranked card opens to show every input behind its
+score, read against the rest of the rated field; the browser runs only the map.
 
 ## The score (SLICE v2.1)
 
@@ -65,8 +65,8 @@ pizza/
   data/candidates.json    registry-seeded leads for the census task
   data/research.json      the research agent's last validated proposals
   src/slice.js            the scoring module (Node and browser)
-  src/render.js           card rendering, shared by the build and the re-ranker
-  src/app.js              the in-browser weight controls, directory and map
+  src/render.js           card rendering and the per-card explanation
+  src/app.js              the directory map and rows, chart tooltip, card toggles
   src/locations.js        location labels and the locations worklist
   src/validate-research.js   the research-file gate, as a pure function
   src/check-dataset.js    the dataset lint, as a pure function

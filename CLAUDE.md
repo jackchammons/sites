@@ -105,7 +105,7 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
 
 | Slug | Dir | Stack | Notes |
 |---|---|---|---|
-| `pizza` | `pizza/` | Node, no deps | `src/slice.js` is the ranking algorithm, imported by both the build and the browser — one implementation, don't fork it. `verify.mjs` gates the deploy. `fetch-buzz.mjs` (keyless) refreshes `data/` before the build and fails soft. Graded factors are write-once with provenance — never overwrite them from a script. |
+| `pizza` | `pizza/` | Node, no deps | `src/slice.js` is the ranking algorithm, run at build time only; the page has no reader re-weighting (removed by request — every card explains its inputs instead). `verify.mjs` gates the deploy. `fetch-buzz.mjs` (keyless) refreshes `data/` before the build and fails soft. Graded factors are write-once with provenance — never overwrite them from a script. |
 | `odyssey-seats` | `odyssey-seats/` | Python, Playwright + Pillow | Scrapes SIFF's **dedicated 70mm page** (`MAIN_URL`), so every showtime found is 70mm and there is no date filter to maintain. Writes `report.html`, promoted to `index.html`. Needs `pip install playwright pillow` + `playwright install chromium`. |
 | `clock` | `clock/` | Node, no deps | Nothing time-dependent is rendered at build time — a baked-in figure would be wrong by however long ago the deploy ran. `build.mjs` emits a shell of ID'd slots and `src/app.js` fills every one from the viewer's device clock and Intl zone data. `verify.mjs` checks that each `$('...')` lookup in the script matches an `id` in the markup, since a typo there breaks only the browser. |
 | `mortgage` | `mortgage/` | Node, no deps | Computed entirely in the browser. `src/mortgage.js` is the maths, imported by `app.js`, `test/mortgage.test.mjs` and `verify.mjs` (which runs it from the *built* copy) — one implementation, don't fork it. Defaults live in `data/defaults.json` and are inlined as JSON; the rate there is an example, not a quote, and the page says so. Nothing date-dependent is baked in: the start month defaults to the viewer's next month. Inputs round-trip through the URL hash. There is no method section on the page (removed on request); the maths is documented only in `src/mortgage.js` comments and the tests. |
@@ -270,7 +270,7 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   `neighborhoodIsPlaceholder` so the locations worklist in `next-task.mjs` puts them first and the page shows
   "Several locations" instead of pretending they are neighborhoods. Never render
   `r.neighborhood` directly — use `locationLabel(r)` from `src/locations.js`, which is what
-  both the static build and the in-browser re-ranker call.
+  the static build calls.
 - **Addresses are the one factual field an agent may write.** They are published by the
   business itself on a page that serves to anyone, so they are checkable — unlike crowd
   ratings (403, frozen) and pillar scores (editorial, no script writes them). The validator

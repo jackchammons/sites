@@ -1,146 +1,18 @@
-/* In-browser re-ranker: change how much you care about a factor and the
- * leaderboard re-sorts live.
- *
- * The control is a multiplier, not a raw weight. Each factor sits at one of five
- * steps -- 0, 0.5, 1, 1.5, 2 -- applied to the weight this site publishes for
- * it, and rank() renormalises the five to 100% afterwards. So the number shown
- * on the right of each row is the share that factor actually gets, which moves
- * when any other factor moves. Raw-percentage sliders made that relationship
- * invisible: dragging one to 40% silently shrank every other.
- */
-import { rank, splitTiers, DEFAULT_WEIGHTS } from './slice.js';
-import { boardHtml } from './render.js';
-
-const KEYS = Object.keys(DEFAULT_WEIGHTS);
+/* Browser behaviour for the published page: the directory map and rows, the
+ * record chart's tooltip, and opening a card's explanation. The ranking itself
+ * is computed at build time and served as HTML; nothing here re-scores it. */
 const DATA = window.__PIZZA__;
-const BUILT_AT = new Date(DATA.builtAt);
-const board = document.getElementById('board');
 
-const care = Object.fromEntries(KEYS.map(k => [k, 1]));
-
-/* The full published order, ranks 1 through the whole rated field, computed
- * once with the default weights. Custom-weight deltas compare against this --
- * not the weekly snapshot, which only covers the published ten -- so an entry
- * climbing in from #14 shows where it actually came from. */
-const publishedRank = new Map(
-  rank(DATA.dataset, { now: BUILT_AT }).map(r => [r.id, r.rank]));
-const weightsNow = () =>
-  Object.fromEntries(KEYS.map(k => [k, DEFAULT_WEIGHTS[k] * care[k]]));
-
-const opts = () => ({
-  weights: weightsNow(),
-  now: BUILT_AT,
-  applyFriction: document.getElementById('opt-friction').checked,
-  applyFreshness: document.getElementById('opt-freshness').checked
+/* ---- Ranked cards: click anywhere on a card to open its explanation ----
+ * The summary line still works on its own; this makes the whole card the
+ * target, since "why is this #2" is the question a card exists to answer.
+ * Links keep their own behaviour. */
+document.getElementById('board')?.addEventListener('click', e => {
+  if (e.target.closest('a, details.math, summary')) return;
+  const card = e.target.closest('.card');
+  const d = card?.querySelector('details.math');
+  if (d) d.open = !d.open;
 });
-
-const dirty = () =>
-  KEYS.some(k => care[k] !== 1) ||
-  !document.getElementById('opt-friction').checked ||
-  !document.getElementById('opt-freshness').checked;
-
-/* Every factor at 0 leaves nothing to rank on. Rather than divide by zero or
- * silently fall back to the published weights, the panel says so and the board
- * keeps the last usable ranking. */
-const allZero = () => KEYS.every(k => care[k] === 0);
-
-function syncLabels() {
-  const w = weightsNow();
-  const total = Object.values(w).reduce((a, b) => a + b, 0);
-  for (const k of KEYS) {
-    document.getElementById(`v-${k}`).textContent =
-      total ? Math.round((w[k] / total) * 100) + '%' : '—';
-  }
-}
-
-function render() {
-  syncLabels();
-  const note = document.getElementById('board-note');
-  if (allZero()) {
-    note.textContent = 'Every factor is set to 0%, so there is nothing to rank on. Turn one back up.';
-    return;
-  }
-
-  const custom = dirty();
-  const { top } = splitTiers(rank(DATA.dataset, opts()), 10);
-  const ranked = top.map(r => custom
-    ? { ...r, previousRank: publishedRank.get(r.id) ?? null, deltaVs: 'published' }
-    : { ...r, previousRank: DATA.baseline[r.id] ?? null });
-
-  // The published evidence lines explain published movement; under custom
-  // weights the movement is the reader's own doing, so they stay off.
-  if (!custom) for (const r of ranked) r.evidenceHtml = DATA.evidence?.[r.id] ?? '';
-
-  const open = new Set([...board.querySelectorAll('details.math[open]')]
-    .map(d => d.closest('.card').dataset.id));
-
-  // FLIP: record where each card was, re-render, then animate each card from
-  // its old position to its new one. An instant repaint made a re-rank read as
-  // the page jumping; a 400ms glide makes the reordering legible.
-  const before = new Map([...board.querySelectorAll('.card')]
-    .map(c => [c.dataset.id, c.getBoundingClientRect().top]));
-
-  board.innerHTML = boardHtml(ranked);
-  open.forEach(id => {
-    const d = board.querySelector(`.card[data-id="${CSS.escape(id)}"] details.math`);
-    if (d) d.open = true;
-  });
-
-  if (before.size && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const ease = 'cubic-bezier(.22,.7,.3,1)';
-    for (const c of board.querySelectorAll('.card')) {
-      const old = before.get(c.dataset.id);
-      if (old == null) {
-        c.animate([{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'none' }],
-          { duration: 420, easing: ease });
-      } else {
-        const dy = old - c.getBoundingClientRect().top;
-        if (Math.abs(dy) > 2) c.animate([{ transform: `translateY(${dy}px)` }, { transform: 'none' }],
-          { duration: 420, easing: ease });
-      }
-    }
-  }
-
-  document.querySelector('.rank-layout')?.classList.toggle('customized', custom);
-  if (custom) {
-    const entered = ranked.filter(r => r.previousRank == null || r.previousRank > 10).length;
-    const biggest = Math.max(0, ...ranked.map(r => r.previousRank != null ? r.previousRank - r.rank : 0));
-    note.textContent = `Your weights — ${entered ? `${entered} climbed in from outside the published ten, ` : ''}biggest move ▲${biggest}. Markers show each card's published position.`;
-  } else {
-    note.textContent = '';
-  }
-}
-
-for (const k of KEYS) {
-  for (const input of document.querySelectorAll(`input[name="care-${k}"]`)) {
-    input.addEventListener('change', () => {
-      care[k] = Number(input.value);
-      render();
-    });
-  }
-}
-for (const id of ['opt-friction', 'opt-freshness']) {
-  document.getElementById(id).addEventListener('change', render);
-}
-document.getElementById('reset').addEventListener('click', () => {
-  for (const k of KEYS) {
-    care[k] = 1;
-    document.getElementById(`care-${k}-1`).checked = true;
-  }
-  document.getElementById('opt-friction').checked = true;
-  document.getElementById('opt-freshness').checked = true;
-  render();
-});
-
-const controls = document.getElementById('controls');
-controls.hidden = false;
-/* Open in the desktop rail, where it has a column to itself; collapsed on
- * narrower layouts, where it sits above the cards and would otherwise push
- * the first one a screen down. */
-const wideRank = matchMedia('(min-width: 1200px)');
-controls.open = wideRank.matches;
-wideRank.addEventListener?.('change', e => { if (e.matches) controls.open = true; });
-render();
 
 /* ---- Directory map ----
  * Leaflet is loaded as a plain script tag (window.L); if it failed to load, or
