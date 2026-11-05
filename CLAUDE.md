@@ -125,7 +125,7 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   out whatever research just committed. Keep that ordering if you change either cron;
   to see a research commit on the site sooner, dispatch `publish.yml` by hand.
 - **Agents stay out of the deploy path.** `research.yml` runs the Claude Code Action to write
-  `pizza/data/research.json` (news, mentions, locations, status, directory, factorRatings, ratingSkipped, facts, newAttributes, links, candidateReview), gated behind
+  `pizza/data/research.json` (news, mentions, locations, status, directory, factorRatings, factorSources, ratingSkipped, facts, newAttributes, links, candidateReview), gated behind
   `CLAUDE_CODE_OAUTH_TOKEN`. `verify-research.mjs` validates it and `apply-research.mjs` then
   applies the validated sections to `restaurants.json`. The agent's write grant is scoped to
   `research.json` (`Edit(pizza/data/research.json)` in `research.yml`) and a guard step fails the
@@ -182,7 +182,8 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   steps, FILL GAPS ONLY — the validator rejects any overwrite of an existing rating — and
   need at least one source that is published criticism, not the pizzeria's own site, an
   aggregator or social), `ratingSkipped` (an attempt that found no coverage; the entry waits 90
-  days before the rating worklist redraws it), `facts` (`opened`/`priceIndex`, fill-gaps-only,
+  days before the rating worklist redraws it), `factorSources` (citations attached to a rating already on file, values untouched — the
+  only agent write that touches `factors`, and it appends to `sources` only), `facts` (`opened`/`priceIndex`, fill-gaps-only,
   with the page that states them), newAttributes, and links. **Records are rejected one at a
   time**: `verify-research.mjs` drops the records that fail, emits a workflow warning per drop,
   writes the accepted set back to `research.json`, and fails the run only on a structural
@@ -204,7 +205,8 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   force a type via the workflow's `task` input — including the dispatch-only `social`
   (Instagram/website backfill), `census` (candidates-queue verification), `facts` (founding
   year and price tier for entries missing them) and `coverage` (mentions up to 24 months
-  back, fewest-first) tasks, never in the rotation — which is how backfills work. A task
+  back, fewest-first) and `sources` (published criticism attached to the founding
+  ratings, five per run, values never changed) tasks, never in the rotation — which is how backfills work. A task
   whose worklist is empty sets `skip=true` and the agent step does not run.
 - **Liveness is ordered by age of last check.** Never-checked first, then oldest; the
   preference for openings and no-site entries applies only past a 14-day revisit window, and a

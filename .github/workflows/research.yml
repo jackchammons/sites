@@ -28,7 +28,7 @@ on:
         description: 'Task type (auto rotates by day)'
         type: choice
         default: auto
-        options: [auto, discovery, locations, liveness, news, rating, social, census, facts, coverage]
+        options: [auto, discovery, locations, liveness, news, rating, social, census, facts, coverage, sources]
 
 concurrency:
   group: research
@@ -209,6 +209,9 @@ jobs:
              "ratingSkipped":[{"id":"<id from the rating worklist>","note":"<what you searched and found>"}],
              "facts":[{"id":"<entry id>","opened":<year or omit>,"priceIndex":<1-4 or omit>,
                        "source":"<https page that states it>"}],
+             "factorSources":[{"id":"<id from the sources worklist>",
+                               "sources":["<https you actually read>"],
+                               "note":"<what the coverage says>"}],
              "factorRatings":[{"id":"<id from the rating worklist>",
                                "craft":<0-10 in 0.5 steps>,
                                "distinctiveness":<0-10 in 0.5 steps>,
@@ -244,6 +247,8 @@ jobs:
               criticism (not the pizzeria's own site, an aggregator or social).
               Skipping an entry you could not ground is correct; say so in
               ratingSkipped.
+            - factorSources attach citations to a rating already on file and
+              never carry values; the same criticism rule applies.
             - A record that breaks a rule is dropped on its own; the rest of
               the file is still applied. Stay within the search budget your
               task sets. Omissions are free; fabrications are not.

@@ -159,6 +159,33 @@ for (const it of research.facts ?? []) {
   }
 }
 
+/* factorSources: citations attached to a rating that already exists, values
+ * untouched. Written for the founding entries, which were rated editorially
+ * with nothing on file; the directory then shows the coverage beside the
+ * number. Appends to every graded factor's sources, deduplicated by URL;
+ * the freshness clock is not reset, since nothing about the place was
+ * verified. */
+for (const it of research.factorSources ?? []) {
+  const r = byId.get(it.id);
+  if (!r || !(r.factors?.craft && r.factors?.distinctiveness && r.factors?.critical)) continue;
+  let added = 0;
+  for (const k of ['craft', 'distinctiveness', 'critical']) {
+    const f = r.factors[k];
+    const have = new Set((f.sources ?? (f.source ? [f.source] : [])).map(normUrl));
+    const fresh = (it.sources ?? []).filter(u => !have.has(normUrl(u)));
+    if (!fresh.length) continue;
+    f.sources = [...(f.sources ?? (f.source ? [f.source] : [])), ...fresh].slice(0, 8);
+    if (!f.source) f.source = f.sources[0];
+    f.sourcedDate = today;
+    if (it.note && !f.note) f.note = it.note;
+    added += fresh.length;
+  }
+  if (added) {
+    changes++;
+    console.log(`  + ${r.name}: ${added} source(s) attached to its rating (${it.sources[0]})`);
+  }
+}
+
 /* news: stories the agent found that the feed sweep missed. Folded into
  * buzz.json so they survive the next pass overwriting research.json; the
  * sweep's own merge keeps them for its 120-day window and dedups on title. */

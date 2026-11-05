@@ -11,6 +11,8 @@ export function pageHtml(ctx, sections) {
   const openRated = scoredAll.filter(r => !r.status || r.status === 'open').length;
   const founding = dataset.restaurants.filter(r => r.factors?.craft?.setBy === 'editorial').length;
   const agentRated = dataset.restaurants.filter(r => r.factors?.craft?.setBy === 'agent').length;
+  const foundingCited = dataset.restaurants.filter(r => r.factors?.craft?.setBy === 'editorial'
+    && (r.factors.craft.sources?.length || r.factors.craft.source)).length;
   const capWeeks = Math.round(MAX_STALENESS_DECAY / STALENESS_PER_WEEK);
   const REPO = 'https://github.com/jackchammons/sites';
   /* Rendered twice: in the hero beside the lede on wide screens, and under
@@ -166,7 +168,9 @@ ${directorySection}
     <p class="method-p">
       The three graded factors have two sources, and the directory says which applies to each
       entry. The ${founding} founding entries were rated editorially when the index launched in
-      August 2026; those ratings carry no cited source. The ${agentRated} entries added since are
+      August 2026, with nothing cited at the time; a backfill task has since attached published
+      coverage to ${foundingCited} of them, values untouched, and the rest say so plainly. The
+      ${agentRated} entries added since are
       rated by a research agent. Each day the research job assembles a worklist and hands it to
       a Claude agent as an explicit brief: these ids, this search budget, write one JSON file,
       run nothing. For ratings, the agent reads what has actually been published about each
@@ -223,8 +227,10 @@ tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75
         <p>The two factors that require judgment: how good the pizza itself is, and whether the
         place owns a lane in this city. Both are stored with who set them and when; for
         agent-rated entries, with the coverage they were read from. The founding entries' values
-        are editorial and uncited, which the directory states plainly. The research agent may
-        propose these factors for unrated entries only, from cited critical coverage. The
+        are editorial; where coverage has been attached after the fact the directory links it,
+        and where none is on file it says so. The research agent may propose these factors for
+        unrated entries only, from cited critical coverage, and may attach sources to an
+        existing rating but never change its value. The
         weights are published and yours to overrule.</p>
       </div>
     </div>

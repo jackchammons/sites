@@ -10,7 +10,8 @@
 export const KINDS = new Set(['opening', 'closing', 'ranking', 'mention']);
 export const CAPS = { news: 20, locations: 12, directory: 10, status: 10,
                       mentions: 40, newAttributes: 3, factorRatings: 12, links: 20,
-                      candidateReview: 15, facts: 20, ratingSkipped: 12 };
+                      candidateReview: 15, facts: 20, ratingSkipped: 12,
+                      factorSources: 12 };
 export const MAX_AGE_DAYS = 180;
 /* Mentions feed a 24-month coverage window in slice.js; capping them at 180
  * days meant the window could never fill from the loop. */
@@ -57,7 +58,8 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
                      links: doc.links ?? [],
                      candidateReview: doc.candidateReview ?? [],
                      facts: doc.facts ?? [],
-                     ratingSkipped: doc.ratingSkipped ?? [] };
+                     ratingSkipped: doc.ratingSkipped ?? [],
+                     factorSources: doc.factorSources ?? [] };
   if (Array.isArray(doc.ratings) && doc.ratings.length) {
     fails.push('ratings are no longer accepted: crowd figures are frozen, see CLAUDE.md');
   }
@@ -304,6 +306,34 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
       bad('facts', i, `priceIndex must be 1-4, got ${it.priceIndex}`);
     }
     checkUrl('facts', i, it?.source, 'source');
+  });
+
+  /* ---- factorSources: citations for a rating that already exists ----
+   * The founding entries were rated editorially with no source on file. This
+   * channel attaches published criticism to such a rating without touching
+   * its values: the apply step appends to every graded factor's sources and
+   * writes nothing else. Only already-rated entries qualify, and the same
+   * criticism rule as factorRatings applies (own site, aggregators and
+   * social may ride along but never stand alone). */
+  const sourcesSeen = new Set();
+  sections.factorSources.forEach((it, i) => {
+    const r = byId.get(it?.id);
+    if (!r) { bad('factorSources', i, `unknown restaurant id "${it?.id}"`); return; }
+    if (sourcesSeen.has(it.id)) { bad('factorSources', i, `duplicate factorSources record for "${it.id}"`); return; }
+    sourcesSeen.add(it.id);
+    if (!alreadyRated(r)) { bad('factorSources', i, `${r.name} is not rated; sources attach to an existing rating (propose one through factorRatings)`); return; }
+    if (ratingSeen.has(it.id)) { bad('factorSources', i, `${r.name} is also proposed in factorRatings`); return; }
+    const srcs = it?.sources;
+    if (!Array.isArray(srcs) || srcs.length < 1 || srcs.length > 4) {
+      bad('factorSources', i, 'sources must be 1-4 https URLs actually read');
+    } else {
+      srcs.forEach((u, j) => checkUrl('factorSources', i, u, `sources[${j}]`));
+      const own = [r.url, r.locationsSource, r.instagram].filter(Boolean).map(hostOf);
+      if (!srcs.some(u => !isNonCriticism(u, own))) {
+        bad('factorSources', i, `no source is published criticism (${srcs.map(hostOf).join(', ')}); cite a review, a roundup or a news story`);
+      }
+    }
+    checkText('factorSources', i, it?.note, 'note', MAX_LEN.note, 20);
   });
 
   /* ---- links: an entry's canonical web presence ----

@@ -11,7 +11,7 @@
       "neighborhood": "Phinney Ridge",
       "style": "Chicago-style deep pan",
       "signature": "The caramelized cheese crown — a molten parmesan ring fused to the pan wall",
-      "blurb": "Started as a clandestine SoDo parking-lot handoff: call ahead, text on arrival, trade cash for a deep pan pie. Now a proper Phinney Ridge dining room where your pizza is walked to the table like a bottle of Barolo. The bake is engineered — a buttery biscuit-crumb base, a tomato layer with real acid, and a cheese wall that shatters.",
+      "blurb": "Started as a clandestine SoDo parking-lot handoff: call ahead, text on arrival, trade cash for a deep pan pie. Now a proper Phinney Ridge dining room where your pizza is walked to the table like a bottle of Barolo. The bake is engineered — a buttery biscuit-crumb base, a tomato layer with real acid, and a cheese wall that shatters. It also bakes the sourdough-base Breezy Town pie, Tuesday to Thursday in limited numbers, since that sibling's Beacon Hill room closed.",
       "url": "https://windycitypie.com",
       "opened": 2016,
       "crowd": {
@@ -821,24 +821,17 @@
       "style": "Sourdough Chicago-Detroit pan",
       "styleGroup": "Chicago pan",
       "signature": "A sourdough deep-dish served out of the back of a dive bar",
-      "blurb": "Windy City Pie's sibling, operating inside the Clock-Out Lounge. Same engineered pan bake, same caramelised cheese edge, but with a sourdough base and a room where a punk show might be starting. The most promising promotion candidate on the bench.",
-      "url": "https://windycitypie.com",
+      "blurb": "Windy City Pie's sibling, which ran inside Beacon Hill's Clock-Out Lounge: the same engineered pan bake and caramelised cheese edge on a sourdough base, in a room where a punk show might be starting. The lounge's kitchen is now Stevie's Famous. The Breezy Town pie lives on as a limited Tuesday-to-Thursday bake at Windy City Pie.",
+      "url": null,
       "opened": null,
       "crowd": null,
       "priceIndex": 3,
       "lastVerified": null,
-      "locations": [
-        {
-          "neighborhood": "Phinney Ridge",
-          "address": "5918 Phinney Ave N, Seattle, WA 98103",
-          "lat": 47.67233,
-          "lon": -122.35418
-        }
-      ],
-      "locationsVerified": "2026-08-24",
-      "locationsSource": "https://windycitypie.com",
-      "status": "open",
-      "statusSource": null,
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "status": "closed",
+      "statusSource": "https://www.clockoutlounge.com/",
       "statusDate": null,
       "attributes": {
         "limited-hours": true,
@@ -862,8 +855,11 @@
         }
       },
       "mentions": [],
-      "instagram": "https://www.instagram.com/windycitypie/",
-      "statusChecked": "2026-10-11"
+      "instagram": null,
+      "statusChecked": "2026-11-05",
+      "statusPrev": "open",
+      "statusDetected": "2026-11-05",
+      "statusNote": "The Clock-Out Lounge's own site now links its pizza menu to Stevie's Famous, and The Infatuation lists Breezy Town as permanently closed. The sourdough pan pie survives as a Tuesday-to-Thursday item at Windy City Pie."
     },
     {
       "id": "via-tribunali",
