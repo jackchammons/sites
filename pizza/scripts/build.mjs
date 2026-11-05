@@ -12,7 +12,7 @@ import { loadContext } from '../build/load.mjs';
 import { deriveContext } from '../build/derive.mjs';
 import { pageHtml } from '../build/page.mjs';
 import { writeDist, writeSnapshot } from '../build/emit.mjs';
-import { controlsParts } from '../build/sections/controls.mjs';
+import { methodParts } from '../build/sections/method.mjs';
 import { recordSection } from '../build/sections/record.mjs';
 import { bracketsSection } from '../build/sections/brackets.mjs';
 import { radarSection } from '../build/sections/radar.mjs';
@@ -31,7 +31,7 @@ ctx.css = fs.readFileSync(path.join(root, 'src/styles.css'), 'utf8');
 ctx.leafletCss = fs.readFileSync(path.join(root, 'src/vendor/leaflet.css'), 'utf8');
 
 const html = pageHtml(ctx, {
-  controls: controlsParts(ctx),
+  method: methodParts(ctx),
   recordSection: recordSection(ctx),
   bracketSection: bracketsSection(ctx),
   radarSection: radarSection(ctx),

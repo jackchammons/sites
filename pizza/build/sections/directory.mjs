@@ -62,24 +62,32 @@ const detailHtml = r => {
   if (r.crowd) facts.push(dRow(`<span class="dd-dim">Crowd figures: ${r.crowd.rating.toFixed(1)}★ (context only) across ~${r.crowd.reviews.toLocaleString('en-US')} reviews (the count feeds reputation)${
     r.crowd.observed ? ` · on file from ${esc(shortDate(r.crowd.observed))}` : ''}${r.crowd.source ? `, ${esc(r.crowd.source)}` : ''}</span>`));
 
-  const graded = ['craft', 'distinctiveness', 'critical']
-    .filter(k => r.factors?.[k])
-    .map(k => {
-      const f = r.factors[k];
-      const cited = Boolean(f.sources?.length || f.source);
-      return dRow(`${FACTOR_NAME[k]}: <b>${f.value.toFixed(1)}</b> <span class="dd-dim">set ${
-        f.setBy === 'agent' ? 'by the research agent'
-          : cited ? `editorially at launch; coverage attached${f.sourcedDate ? ` ${esc(shortDate(f.sourcedDate))}` : ''}`
-          : 'editorially at launch, no cited source'}${
-        f.setBy === 'agent' && f.date ? ` ${esc(shortDate(f.date))}` : ''}${
-        (f.sources?.length ? f.sources : f.source ? [f.source] : []).length
-          ? ` from ${(f.sources?.length ? f.sources : [f.source]).map((u, n) => srcLink(u, n ? `source ${n + 1}` : 'coverage')).join(', ')}` : ''}</span>${
-        f.note ? `<div class="dd-note">${esc(f.note)}</div>` : ''}`);
-    });
+  /* The three graded factors usually share one provenance (one agent pass, one
+   * note, the same sources), so it is printed once with the three values on a
+   * line, instead of the same paragraph three times. Factors whose provenance
+   * differs fall back to a row each. */
+  const provenanceOf = f => {
+    const srcs = f.sources?.length ? f.sources : f.source ? [f.source] : [];
+    const cited = srcs.length > 0;
+    const who = f.setBy === 'agent' ? 'by the research agent'
+      : cited ? `editorially at launch; coverage attached${f.sourcedDate ? ` ${esc(shortDate(f.sourcedDate))}` : ''}`
+      : 'editorially at launch, no cited source';
+    const when = f.setBy === 'agent' && f.date ? ` ${esc(shortDate(f.date))}` : '';
+    const from = cited ? ` from ${srcs.map((u, n) => srcLink(u, n ? `source ${n + 1}` : 'coverage')).join(', ')}` : '';
+    return { line: `set ${who}${when}${from}`, note: f.note ?? '' };
+  };
+  const present = ['craft', 'distinctiveness', 'critical'].filter(k => r.factors?.[k]);
+  const provs = present.map(k => provenanceOf(r.factors[k]));
+  const shared = present.length > 1 && provs.every(p => p.line === provs[0].line && p.note === provs[0].note);
+  const graded = shared
+    ? [dRow(`${present.map(k => `${FACTOR_NAME[k]}: <b>${r.factors[k].value.toFixed(1)}</b>`).join(' <span class="dd-dim">·</span> ')}`),
+       dRow(`<span class="dd-dim">All three ${provs[0].line}</span>${provs[0].note ? `<div class="dd-note">${esc(provs[0].note)}</div>` : ''}`)]
+    : present.map((k, i) => dRow(`${FACTOR_NAME[k]}: <b>${r.factors[k].value.toFixed(1)}</b> <span class="dd-dim">${provs[i].line}</span>${
+        provs[i].note ? `<div class="dd-note">${esc(provs[i].note)}</div>` : ''}`));
 
   const computed = scored ? [dRow(
     `SLICE <b>${scored.score.toFixed(1)}</b> — ` +
-    Object.entries(scored.factorScores).map(([k, v]) => `${k} ${v.toFixed(1)}`).join(' · ') +
+    Object.entries(scored.factorScores).map(([k, v]) => `${k} ${k === 'reputation' && !scored.reputationDetail.measured ? 'unmeasured' : v.toFixed(1)}`).join(' · ') +
     ` · friction −${scored.penaltyApplied.toFixed(1)} · decay −${(scored.stalenessDecay * 100).toFixed(1)}%${
       scored.verified ? ` (last ${scored.verified.source} ${esc(shortDate(scored.verified.date))})` : ''}`
   )] : [dRow(`<span class="dd-dim">Not yet rated — no score until the rating rotation grounds one in published coverage.${

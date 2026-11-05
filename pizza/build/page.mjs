@@ -1,13 +1,13 @@
 /* The page shell plus its static-copy sections (hero, ranking wrapper,
  * methodology, footer). The data-driven sections come in pre-rendered via
  * `sections`; this module owns everything that is mostly prose. */
-import { boardHtml } from '../src/render.js';
+import { boardHtml, fieldStats } from '../src/render.js';
 import { FRICTION_CAP, ALGORITHM, MAX_STALENESS_DECAY, STALENESS_PER_WEEK } from '../src/slice.js';
 import { esc, nameLink, fmtDate } from './html.mjs';
 import { locationLabel } from '../src/locations.js';
 
 export function pageHtml(ctx, sections) {
-  const { dataset, now, week, scoredAll, ranked, spotlight, baseline, evidenceMap, history, css, leafletCss } = ctx;
+  const { dataset, now, week, scoredAll, ranked, spotlight, history, css, leafletCss } = ctx;
   const openRated = scoredAll.filter(r => !r.status || r.status === 'open').length;
   const founding = dataset.restaurants.filter(r => r.factors?.craft?.setBy === 'editorial').length;
   const agentRated = dataset.restaurants.filter(r => r.factors?.craft?.setBy === 'agent').length;
@@ -29,7 +29,8 @@ export function pageHtml(ctx, sections) {
             Rotates through the top ten each Monday.</p>
           </div>
         </div>`;
-  const { careHeader, careRows, factorCards, frictionRows } = sections.controls;
+  const { factorCards, frictionRows } = sections.method;
+  const field = fieldStats(ctx.allScored);
   const { recordSection, bracketSection, radarSection, buzzSection, directorySection } = sections;
   return `<!doctype html>
 <html lang="en">
@@ -37,7 +38,7 @@ export function pageHtml(ctx, sections) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Seattle Pizza Index</title>
-<meta name="description" content="Seattle's pizzerias, tracked daily: a ranked top ten, a full directory, openings and closings, and the news. Scored by SLICE, a published five-factor method you can re-weight yourself.">
+<meta name="description" content="Seattle's pizzerias, tracked daily: a ranked top ten, a full directory, openings and closings, and the news. Scored by SLICE, a published five-factor method, with every input shown.">
 <meta property="og:title" content="The Seattle Pizza Index">
 <meta property="og:description" content="Seattle's pizzerias, tracked daily. A ranked top ten and a full directory, scored by a published method.">
 <meta property="og:type" content="website">
@@ -62,7 +63,7 @@ ${css}</style>
           A running record of Seattle's pizzerias: who's best, who's new, who's gone, and what
           the city is saying about them. Each rated pizzeria gets a <b>SLICE score</b> out of
           100 from five weighted factors, and the ten highest make the list. The full method is
-          further down this page, and you can change the weights yourself.
+          further down this page, and every card shows the inputs behind its number.
         </p>
         <p class="lede lede-rule" style="margin-top:10px;font-size:14.5px">
           To be included, a pizzeria must have at least one location inside Seattle itself.
@@ -103,33 +104,12 @@ ${css}</style>
     <h2 class="sec-h">The Top 10</h2>
     <p class="lede" style="margin:14px 0 8px">
       The ten highest SLICE scores among ${openRated} rated, open pizzerias. Recomputed every
-      morning; the ▲▼ markers show movement since last week. Open <em>Show the math</em> on any
-      card for the full calculation.
+      morning; the ▲▼ markers show movement since last week. Click a card to see why it ranks
+      where it does: every input, read against the rest of the rated field.
     </p>
-    <p class="lede" style="margin:0 0 26px" id="board-note" aria-live="polite"></p>
-
-    <div class="rank-layout">
-    <details class="controls" id="controls" hidden open>
-      <summary><strong>How much do you care about each factor?</strong> <span class="ctl-hint">re-weight and re-sort</span></summary>
-      <div class="controls-head">
-        <span>The list uses the published weights. Set any factor from 0% (ignore it) to
-        200% (double it) and the list re-sorts in your browser. The five weights always rescale
-        to total 100%; the number beside each factor is the share it currently gets.</span>
-      </div>
-      <div class="care-grid">
-        ${careHeader}
-        ${careRows}
-      </div>
-      <div class="ctl-row">
-        <label class="toggle"><input type="checkbox" id="opt-friction" checked> Apply friction penalty</label>
-        <label class="toggle"><input type="checkbox" id="opt-freshness" checked> Apply freshness decay</label>
-        <button class="reset" id="reset" type="button">Back to the published ranking</button>
-      </div>
-    </details>
 
     <div class="board" id="board">
-${boardHtml(ranked)}
-    </div>
+${boardHtml(ranked, field)}
     </div>
     <div class="spotlight-inline">${spotlightHtml}</div>
   </div>
@@ -231,7 +211,7 @@ tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75
         and where none is on file it says so. The research agent may propose these factors for
         unrated entries only, from cited critical coverage, and may attach sources to an
         existing rating but never change its value. The
-        weights are published and yours to overrule.</p>
+        weights are published above.</p>
       </div>
     </div>
 
@@ -332,9 +312,8 @@ tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75
 <footer>
   <div class="wrap">
     <p><b>The Seattle Pizza Index.</b> A static site: the ranking is computed at build time from a
-    JSON dataset and served as files. The same scoring module runs in your browser, which is how
-    the weight controls re-sort the list without a request to anything. No analytics, no cookies,
-    no tracking.</p>
+    JSON dataset and served as files; the browser runs only the map and the page's own
+    disclosures. No analytics, no cookies, no tracking.</p>
     <p style="margin-top:10px">Rebuilt daily by GitHub Actions from
     <a href="${REPO}" target="_blank" rel="noopener">jackchammons/sites</a>.
     ${ALGORITHM} · dataset v${esc(dataset.dataVersion)} · built ${now.toISOString()}</p>
@@ -342,9 +321,10 @@ tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75
 </footer>
 
 <script>window.__PIZZA__ = ${JSON.stringify({
-  dataset,
-  baseline,
-  evidence: evidenceMap,
+  // Only what the map needs: the ranking is already rendered above.
+  dataset: { restaurants: dataset.restaurants.map(r => ({
+    id: r.id, name: r.name, url: r.url ?? null, status: r.status ?? 'open', locations: r.locations ?? []
+  })) },
   builtAt: now.toISOString()
 }).replace(/</g, '\\u003c')};</script>
 <script src="./leaflet.js"></script>

@@ -13,10 +13,9 @@ export function writeDist(dist, ctx, html) {
   fs.rmSync(dist, { recursive: true, force: true });
   fs.mkdirSync(dist, { recursive: true });
   fs.writeFileSync(path.join(dist, 'index.html'), html);
-  // Every module app.js can reach at runtime, including render.js's own imports.
-  // Missing one is a 404 in the browser and a dead re-ranker; verify.mjs walks
-  // the import graph to catch it.
-  for (const f of ['slice.js', 'render.js', 'locations.js', 'app.js']) {
+  // Every module app.js can reach at runtime. Missing one is a 404 in the
+  // browser; verify.mjs walks the import graph to catch it.
+  for (const f of ['app.js']) {
     fs.copyFileSync(path.join(root, 'src', f), path.join(dist, f));
   }
   fs.copyFileSync(path.join(root, 'src/vendor/leaflet.js'), path.join(dist, 'leaflet.js'));
