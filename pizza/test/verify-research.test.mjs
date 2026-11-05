@@ -177,6 +177,19 @@ test('status: enum and citation enforced', () => {
   failsWith({ status: [{ id: 'delancey', status: 'gone', note: 'confirmed on its site', source: 'https://x.com' }] }, 'status must be');
 });
 
+/* ---- factorSources: citations for a rating already on file ---- */
+test('factorSources: attaches criticism to a rated entry, never to an unrated one', () => {
+  passes({ factorSources: [{ id: 'delancey', sources: ['https://www.thestranger.com/food/delancey-review'], note: NOTE }] });
+  failsWith({ factorSources: [{ id: 'zeeks-pizza', sources: ['https://www.thestranger.com/x'], note: NOTE }] }, 'is not rated');
+  failsWith({ factorSources: [{ id: 'nope', sources: ['https://www.thestranger.com/x'], note: NOTE }] }, 'unknown restaurant id');
+  failsWith({ factorSources: [{ id: 'delancey', sources: [], note: NOTE }] }, 'sources must be 1-4');
+  failsWith({ factorSources: [{ id: 'delancey', sources: ['https://www.yelp.com/biz/delancey'], note: NOTE }] }, 'no source is published criticism');
+  failsWith({ factorSources: [
+    { id: 'delancey', sources: ['https://www.thestranger.com/a'], note: NOTE },
+    { id: 'delancey', sources: ['https://www.thestranger.com/b'], note: NOTE }
+  ] }, 'duplicate factorSources record');
+});
+
 /* ---- links: web presence records ---- */
 test('links: a sourced website + instagram record passes', () => {
   passes({ links: [{ id: 'zeeks-pizza', website: 'https://zeekspizza.com',

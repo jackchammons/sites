@@ -31,7 +31,7 @@ const { restaurants } = JSON.parse(fs.readFileSync(path.join(root, 'data/restaur
 const TYPES = ['discovery', 'locations', 'liveness', 'news', 'rating'];
 /* Dispatch-only tasks: forceable for backfills, never part of the daily
  * rotation (their daily upkeep rides along on the rotating tasks). */
-const DISPATCH_ONLY = ['social', 'census', 'facts', 'coverage'];
+const DISPATCH_ONLY = ['social', 'census', 'facts', 'coverage', 'sources'];
 const forced = (process.argv[2] || 'auto').toLowerCase();
 
 /* Auto mode picks the type whose last SUCCESSFUL pass is oldest, read from
@@ -377,6 +377,40 @@ registration, a review date or a photo. Price tier from its own menu:
 1 = slices and pies under about $20, 2 = pies $20-28, 3 = $28-36, 4 = above.
 Omit an entry you could not ground. Budget: about 2 searches per entry,
 24 in total.`;
+}
+
+if (task === 'sources') {
+  // Dispatch-only backfill of citations for the founding ratings, which were
+  // set editorially with nothing on file. Values are never touched; the
+  // agent attaches the published criticism it finds, and the directory shows
+  // it beside the number. Highest-ranked first, since those are the ratings
+  // a reader is most likely to argue with.
+  const uncited = r => ['craft', 'distinctiveness', 'critical']
+    .every(k => !(r.factors?.[k]?.sources?.length) && !r.factors?.[k]?.source);
+  const list = openField
+    .filter(r => rated(r) && r.factors.craft.setBy === 'editorial' && uncited(r))
+    .sort((a, b) => (b.factors.craft.value + b.factors.critical.value) - (a.factors.craft.value + a.factors.critical.value))
+    .slice(0, 5);
+  worklistSize = list.length;
+  brief = `Your task: find the published criticism behind ratings that are
+already on file, so each carries its sources. Do NOT propose or change
+any rating; report sources only. Cover these, and only these:
+
+${list.map(r => `- id: ${r.id} | ${r.name} | ${r.neighborhood ?? '?'} | site: ${r.url ?? 'unknown'} | rated craft ${r.factors.craft.value}, distinctiveness ${r.factors.distinctiveness.value}, critical ${r.factors.critical.value}`).join('\n')}
+
+For each, find one to four pieces of published writing about that
+specific place -- a review, a substantive roundup entry, a news feature
+-- in real outlets (The Stranger, Seattle Times, Seattle Met, Eater
+Seattle, The Infatuation, neighborhood blogs with a byline). Report a
+"factorSources" record:
+{"id","sources":["<https URL you actually read>", ...],
+ "note":"<one or two sentences on what the coverage says>"}.
+At least one source must be published criticism, not the pizzeria's own
+site, a review aggregator or social media. For every review or story
+you cite, ALSO report it as a "mentions" record (id, title, url,
+source, date, kind) when it is less than two years old. Omit an entry
+you cannot ground in a single credible source; that is a correct
+outcome. Budget: about 3 searches per entry, 15 in total.`;
 }
 
 if (task === 'coverage') {

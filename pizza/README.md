@@ -28,8 +28,10 @@ so the methodology section is always the code's own values.
 **Graded factors** (craft, distinctiveness, critical) are stored once per entry with
 provenance (`setBy`, `source`, `date`) and never overwritten by a script. They have two
 sources, and the directory shows which applies: the founding entries were rated
-editorially when the index launched in August 2026 and carry no cited source; every entry
-added since is rated by the research agent from one to four published sources it read.
+editorially when the index launched in August 2026 with nothing cited, and the `sources`
+task attaches published criticism to those ratings after the fact without changing a
+value; every entry added since is rated by the research agent from one to four published
+sources it read.
 
 **Reputation** has three components, each 0 to 1: longevity (log curve on years open,
 weight 3), review volume (`reviews / (reviews + 500)`, weight 2) and coverage (press
@@ -98,7 +100,7 @@ Node sites). Only `main` deploys.
 Two scheduled workflows. `research.yml` runs a Claude agent on one bounded task per day
 (discovery, locations, liveness, news, rating; the type whose last successful pass is
 oldest goes next), writing proposals to `data/research.json`. Dispatch-only backfill tasks
-(`social`, `census`, `facts`, `coverage`) run from the Actions tab. The agent's write grant is scoped to that one file, a guard step
+(`social`, `census`, `facts`, `coverage`, `sources`) run from the Actions tab. The agent's write grant is scoped to that one file, a guard step
 fails the run if anything else changed, every record is validated by
 `validate-research.js` (a record that fails is dropped with a warning; the rest are
 applied), the accepted records are applied to `restaurants.json`, the dataset is linted,
@@ -108,7 +110,8 @@ then rebuilds every site and deploys.
 What the agent may write: new directory entries, status changes (with the date the
 source states, if any; a closure needs a news report or the pizzeria's own announcement),
 verified locations and official sites, press mentions up to two years old, factor
-proposals for unrated entries only (at least one source must be published criticism), a
+proposals for unrated entries only (at least one source must be published criticism),
+citations for ratings already on file (values never change), a
 note on each unrated entry it could not ground, founding years and price tiers from pages
 that state them, Instagram links, attribute flags and candidate verdicts. It never writes a score. Crowd star ratings were seeded at launch and are never
 refreshed; they are shown as context, and only the review count feeds reputation.

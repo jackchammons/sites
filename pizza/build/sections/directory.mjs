@@ -66,8 +66,11 @@ const detailHtml = r => {
     .filter(k => r.factors?.[k])
     .map(k => {
       const f = r.factors[k];
+      const cited = Boolean(f.sources?.length || f.source);
       return dRow(`${FACTOR_NAME[k]}: <b>${f.value.toFixed(1)}</b> <span class="dd-dim">set ${
-        f.setBy === 'agent' ? 'by the research agent' : 'editorially at launch, no cited source'}${
+        f.setBy === 'agent' ? 'by the research agent'
+          : cited ? `editorially at launch; coverage attached${f.sourcedDate ? ` ${esc(shortDate(f.sourcedDate))}` : ''}`
+          : 'editorially at launch, no cited source'}${
         f.setBy === 'agent' && f.date ? ` ${esc(shortDate(f.date))}` : ''}${
         (f.sources?.length ? f.sources : f.source ? [f.source] : []).length
           ? ` from ${(f.sources?.length ? f.sources : [f.source]).map((u, n) => srcLink(u, n ? `source ${n + 1}` : 'coverage')).join(', ')}` : ''}</span>${
