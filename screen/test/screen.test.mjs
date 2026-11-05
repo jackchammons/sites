@@ -125,3 +125,10 @@ test('resolution-limit matrix reproduces the Cambridge chart', () => {
   const m = s.limitMatrix([20, 100], [0.4 * M, 6 * M], 16 / 9);
   assert.equal(m.length, 2); assert.equal(m[0][1].label, 'HD');
 });
+
+test('verticalEquivalent: SMPTE 30° on 16:9 is a 17.1° tall picture', () => {
+  near(s.verticalEquivalent(30), 17.1, 0.05);
+  near(s.verticalEquivalent(26), 14.8, 0.05);
+  const d = s.dims(65, 16 / 9), dist = s.distanceForAngle(d.width, 30);
+  near(s.vfov(d, dist), s.verticalEquivalent(30), 1e-9);
+});

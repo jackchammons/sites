@@ -12,7 +12,7 @@ import {
   acuityTable, throwDistance, widthAtThrow, lensOffsetInches, footLamberts, nits,
   placement, describeAngle, describeResolution,
   noticeFraction, ppdForFraction, distanceForPpd, averagePpd, pixelDensity, aspectLabel,
-  limitResolution, limitMatrix, subtended,
+  limitResolution, limitMatrix, subtended, verticalEquivalent,
 } from './screen.js';
 
 const $ = id => document.getElementById(id);
@@ -247,15 +247,15 @@ function boot() {
       const f = $('fact-' + k); f.classList.remove('warn', 'good', 'ok'); if (cls) f.classList.add(cls);
     };
     set('size', `${fmtLen(d.width, 'dim')} × ${fmtLen(d.height, 'dim')}`,
-      `width × height; ${n1.format(st.diag)} in is ${n0.format(st.diag * 2.54)} cm`);
+      `${n1.format(st.diag)} in is ${n0.format(st.diag * 2.54)} cm`);
     set('area', fmtArea(d.area), `${n2.format(d.ratio)}:1`);
-    /* Picture heights against the ITU design distance for this many rows. */
-    const heights = st.dist / d.height;
-    const ituFor = res.h >= 4320 ? ITU_STANDARDS[2] : res.h >= 2160 ? ITU_STANDARDS[1] : ITU_STANDARDS[0];
-    const hdH = ITU_STANDARDS[0].heights;
+    /* Graded on the height a 16:9 picture shows at each seating standard,
+       so the grade matches the headline on a 16:9 screen and a scope
+       picture is judged on the height it actually gives. */
+    const vSmpte = verticalEquivalent(SMPTE), vFar = verticalEquivalent(THX_FAR);
     set('vfov', deg(vf),
-      `${n2.format(heights)} picture heights away; ITU designs ${short(res)} viewing for ${ituFor.heights}H${ituFor !== ITU_STANDARDS[0] ? `, HD for ${hdH}H` : ''}`,
-      grade(heights <= ituFor.heights, heights <= hdH));
+      `${n2.format(st.dist / d.height)} picture heights away; SMPTE 30° stands ${deg(vSmpte)} tall on 16:9, THX 26° ${deg(vFar)}`,
+      grade(vf >= vSmpte, vf >= vFar));
 
     const pitch = pixelPitch(d, res);
     const ppd = pixelsPerDegree(pitch, st.dist);
@@ -265,7 +265,7 @@ function boot() {
     const ppd95 = ppdForFraction(0.05);
     const ppdGrade = p => grade(p >= ppd95, p >= 60);
     set('pixel', `${n1.format(ppd)} px/°`,
-      `pixels per degree; ${n2.format(pixelAngle(pitch, st.dist) * 60)}′ per pixel. 60 is 20/20, ${n0.format(ppd95)} satisfies 19 in 20 eyes`,
+      `${n2.format(pixelAngle(pitch, st.dist) * 60)}′ per pixel; 60 is 20/20, ${n0.format(ppd95)} satisfies 19 in 20 eyes`,
       ppdGrade(ppd));
     const imgV = subtended(pitch * res.h, st.dist);
     const avg = averagePpd(res.h, imgV);
@@ -410,7 +410,6 @@ function boot() {
     const anchor = xy > W - m.r - 70 ? 'end' : xy < m.l + 70 ? 'start' : 'middle';
     svg.append(svgEl('text', { x: xy, y: m.t - 8, class: 'you-lbl', 'text-anchor': anchor }, `you · ${fmtLen(st.dist)}`));
     host.append(svg);
-    $('lanes-note').textContent = `${n1.format(st.diag)}-inch ${aspect(st.aspect).id}; distance along the bottom`;
   }
 
   /* ---- eye-limit bar and target distances --------------------------- */
@@ -461,7 +460,6 @@ function boot() {
     hit.addEventListener('pointerleave', () => { tip.hidden = true; });
     svg.append(hit);
     host.append(svg);
-    $('eye-note').textContent = `${short(res)} on ${n1.format(st.diag)} in from ${fmtLen(st.dist)}`;
 
     const targets = [
       { label: '20/20 vision', note: 'one arc-minute per pixel, the textbook limit', ppd: 60 },
@@ -496,7 +494,7 @@ function boot() {
     }).join('')}</tbody>`;
     $('matrix').innerHTML = head + body;
     const mine = limitResolution(d, st.dist);
-    $('matrix-note').textContent = `${aspect(st.aspect).id} pictures; yours: ${mine ? `${mine.label} is enough` : 'beyond 32K'}`;
+    $('matrix-note').textContent = mine ? `${mine.label} is enough for you` : 'beyond 32K for you';
   }
 
   /* ---- table: how far to sit from this screen ---------------------- */
@@ -522,7 +520,6 @@ function boot() {
       <th scope="row">${r.label}${r.note ? `<small>${r.note}</small>` : ''}</th>
       <td>${fmtLen(r.distance)}</td><td>${deg(r.angle)}</td>
       <td>${n2.format(r.distance / st.diag)}</td><td>${n2.format(r.distance / d.height)}</td></tr>`).join('');
-    $('seats-note').textContent = 'nearest first; your seat is highlighted';
   }
 
   /* ---- table: what size for your seat ------------------------------- */
@@ -571,7 +568,6 @@ function boot() {
     const dg = w => n0.format(dims(w * Math.sqrt(1 + 1 / (d.ratio * d.ratio)), d.ratio).diagonal);
     set('width', t1 === t2 ? fmtLen(wNear, 'dim') : `${fmtLen(wNear, 'dim')} – ${fmtLen(wFar, 'dim')}`,
       `if the lens sat at your seat distance (${fmtLen(st.dist)}): a ${dg(wNear)}${t1 === t2 ? '' : `–${dg(wFar)}`} in diagonal`);
-    $('pj-note').textContent = `${n1.format(st.diag)}-inch ${aspect(st.aspect).id}, ${fmtLen(d.width, 'dim')} wide`;
   }
 
   /* ---- placement ---------------------------------------------------- */
@@ -588,9 +584,6 @@ function boot() {
     set('stand', fmtLen(pl.bottomEdge, 'dim'),
       pl.bottomEdge < 0 ? 'below the floor: raise the centre' : `a stand or mount puts the bottom edge here`,
       pl.bottomEdge < 0 ? 'warn' : '');
-    $('place-note').textContent = pl.ok
-      ? `centre ${fmtLen(st.centre, 'dim')} up, eyes at ${fmtLen(st.eye, 'dim')}: comfortable`
-      : `centre ${fmtLen(st.centre, 'dim')} up, eyes at ${fmtLen(st.eye, 'dim')}: ${pl.centre > 0 ? 'too high' : 'too low'} for a long sitting`;
 
     /* Side view, to scale: eye at left, screen at right. */
     const host = $('side-view');
@@ -652,14 +645,14 @@ function boot() {
   $('btn-reset').addEventListener('click', () => {
     units = DEFAULTS.units; mode = DEFAULTS.mode;
     applyUnits(); applyMode(); fill(stateFromDefaults()); compute();
-    $('status').textContent = 'Back to the example room.';
+    $('status').textContent = 'Reset.';
   });
   $('btn-copy').addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText(location.href);
-      $('status').textContent = 'Link copied — it carries every input.';
+      $('status').textContent = 'Link copied.';
     } catch {
-      $('status').textContent = 'Copy the address bar: it carries every input.';
+      $('status').textContent = 'Copy the address bar instead.';
     }
   });
   window.addEventListener('hashchange', () => { fill(readHash()); applyUnits(); applyMode(); compute(); });

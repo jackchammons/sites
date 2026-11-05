@@ -113,6 +113,7 @@ if (data) {
 
 check(/id="boot-error"[^>]*hidden/.test(html), 'the hidden boot-error note is missing');
 check(ids.has('out-total'), 'the headline angle has no colourable wrapper');
+check(html.includes(`${s.verticalEquivalent(30).toFixed(1)}°`) && html.includes(`${s.verticalEquivalent(26).toFixed(1)}°`), 'method copy does not state the vertical grading angles');
 
 if (fails.length) report();
 console.log(`Build verified (${wanted.size} live slots, maths checked).`);
