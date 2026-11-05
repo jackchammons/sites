@@ -1317,7 +1317,7 @@
       },
       "mentions": [],
       "statusNote": "The last remaining Flying Squirrel Pizza location, in Georgetown, closed for good on March 1, 2024 after a decade in business, with no relocation.",
-      "statusChecked": "2026-08-26"
+      "statusChecked": "2026-11-05"
     },
     {
       "id": "proletariat-pizza",
@@ -1462,7 +1462,8 @@
       },
       "mentions": [],
       "instagram": "https://www.instagram.com/ballardpizzaco/",
-      "openedSource": "https://www.seattlemet.com/eat-and-drink/2012/04/first-look-ballard-pizza-company"
+      "openedSource": "https://www.seattlemet.com/eat-and-drink/2012/04/first-look-ballard-pizza-company",
+      "statusChecked": "2026-11-05"
     },
     {
       "id": "zeeks-pizza",
@@ -1618,7 +1619,8 @@
       },
       "mentions": [],
       "instagram": "https://www.instagram.com/zeekspizza/",
-      "openedSource": "https://zeekspizza.com"
+      "openedSource": "https://zeekspizza.com",
+      "statusChecked": "2026-11-05"
     },
     {
       "id": "talaricos",
@@ -1690,7 +1692,8 @@
       "mentions": [],
       "instagram": "https://www.instagram.com/talaricos.pizza/",
       "factsAttempted": "2026-11-05",
-      "factsNote": "Checked talaricospizza.com home page and its /talaricos-about page: no founding year or 'since'/'established' line on either. Searched local coverage (West Seattle Blog, Seattle Met, historylink.org Pizza in Seattle history piece) and found opening coverage but no dated founding year to cite."
+      "factsNote": "Checked talaricospizza.com home page and its /talaricos-about page: no founding year or 'since'/'established' line on either. Searched local coverage (West Seattle Blog, Seattle Met, historylink.org Pizza in Seattle history piece) and found opening coverage but no dated founding year to cite.",
+      "statusChecked": "2026-11-05"
     },
     {
       "id": "hot-mamas-pizza",
@@ -1769,7 +1772,8 @@
         }
       ],
       "instagram": "https://www.instagram.com/hotmamasseattlepizza/",
-      "openedSource": "https://en.wikipedia.org/wiki/Hot_Mama%27s_Pizza"
+      "openedSource": "https://en.wikipedia.org/wiki/Hot_Mama%27s_Pizza",
+      "statusChecked": "2026-11-05"
     },
     {
       "id": "humble-pie",
@@ -4649,7 +4653,7 @@
       "statusSource": "https://www.myballard.com/2026/02/18/bobu-pizza-and-pretzel-drive-thru-now-closed/",
       "statusDate": null,
       "statusDetected": "2026-09-21",
-      "statusChecked": "2026-09-21",
+      "statusChecked": "2026-11-05",
       "attributes": {},
       "locations": [
         {

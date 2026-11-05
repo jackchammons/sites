@@ -1,13 +1,41 @@
 {
-  "updated": "2026-11-05T00:00:00Z",
-  "mentions": [
+  "updated": "2026-11-05T20:00:00Z",
+  "status": [
     {
-      "id": "windy-city-pie",
-      "title": "Windy City to launch $10 Slice and a Beer Happy Hour",
-      "url": "https://phinneywood.com/2025/10/windy-city-to-launch-10-slice-and-a-beer-happy-hour/",
-      "source": "Phinneywood",
-      "date": "2025-10-09",
-      "kind": "mention"
+      "id": "flying-squirrel",
+      "status": "closed",
+      "note": "No working website, social media, or news coverage of a reopening was found; a corroborating third-party listing still shows the pizzeria permanently closed, so the prior closure stands.",
+      "source": "https://www.airbnb.com/things-to-do/places/7395cb22-2bfe-41d3-b54d-4ec9c140f69a"
+    },
+    {
+      "id": "bobu",
+      "status": "closed",
+      "note": "No closure or reopening news was found this pass; directory listings for the 85th St location conflict with each other and are not treated as evidence either way, so the prior closure stands unconfirmed.",
+      "source": "https://www.myballard.com/?p=169246"
+    },
+    {
+      "id": "ballard-pizza-co",
+      "status": "open",
+      "note": "Official site is live with current promotions (e.g. weekly wings/drafts deal) and lists active Ballard and Woodinville locations, with no closure notice.",
+      "source": "https://ballardpizzacompany.com"
+    },
+    {
+      "id": "zeeks-pizza",
+      "status": "open",
+      "note": "Official site is live and describes dine-in and catering across its 17 locations, with no closure notice.",
+      "source": "https://zeekspizza.com"
+    },
+    {
+      "id": "talaricos",
+      "status": "open",
+      "note": "Official site is live with current hours, kitchen hours, address and contact info for the West Seattle location, with no closure notice.",
+      "source": "https://www.talaricospizza.com/"
+    },
+    {
+      "id": "hot-mamas-pizza",
+      "status": "open",
+      "note": "Official site is live with current hours and delivery info, with no closure notice.",
+      "source": "https://www.hot-mamaspizza.com"
     }
   ]
 }
