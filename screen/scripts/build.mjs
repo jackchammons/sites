@@ -236,7 +236,7 @@ const html = `<!doctype html>
     </div>
     <div class="table-wrap">
       <table class="list" aria-label="Screen sizes at your viewing distance">
-        <thead><tr><th>Diagonal</th><th>Picture</th><th>Angle</th><th>Verdict</th><th>Pixels visible</th></tr></thead>
+        <thead><tr><th>Diagonal</th><th>Picture</th><th>Angle</th><th>Verdict</th><th>Pixels</th></tr></thead>
         <tbody id="sizes"></tbody>
       </table>
     </div>

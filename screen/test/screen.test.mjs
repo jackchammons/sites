@@ -82,7 +82,8 @@ test('placement: centre at eye level is 0°, a high mount is flagged', () => {
 });
 
 test('describeAngle covers every band', () => {
-  assert.match(s.describeAngle(55), /front-row/);
+  assert.match(s.describeAngle(65), /front-row/);
+  assert.match(s.describeAngle(55), /best-seat/);
   assert.match(s.describeAngle(40), /best-seat/);
   assert.match(s.describeAngle(33), /SMPTE 30° and THX 36°/);
   assert.match(s.describeAngle(28), /THX 26° and SMPTE 30°/);

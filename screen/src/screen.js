@@ -55,6 +55,10 @@ export const ITU_STANDARDS = [
   { id: 'itu-8k', label: 'ITU-R BT.2020 — UHD 8K', short: 'ITU 8K', heights: 0.75, res: '4320' },
 ];
 
+/* Wider than this and the picture is a front-row experience: past the
+   ITU's 58–61° UHD design angle, which is the widest any standard asks. */
+export const FRONT_ROW = 60;
+
 /* The pre-HD rule of thumb, as a multiple of the diagonal. */
 export const RULE_OF_THUMB = { near: 1.5, far: 2.5 };
 
@@ -183,7 +187,7 @@ export function placement(d, distance, eyeHeight, centreHeight) {
 /* Where an angle lands among the seating standards, as prose. */
 export function describeAngle(angle) {
   const s = ANGLE_STANDARDS;
-  if (angle >= s[0].angle + 10) return `wider than any standard asks — a front-row seat`;
+  if (angle >= FRONT_ROW) return `wider than any standard asks — a front-row seat`;
   if (angle >= s[0].angle) return `at or inside THX’s best-seat ${s[0].angle}°`;
   for (let i = 1; i < s.length; i++) {
     if (angle >= s[i].angle) return `between ${s[i].short} and ${s[i - 1].short}`;

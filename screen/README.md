@@ -47,6 +47,26 @@ copy follows; change a formula and the prose in `build.mjs` must change with it.
 ## Working on it
 
 ```bash
-node --test screen/test/*.test.mjs
+node --test screen/test/*.test.mjs                       # maths: pinned answers + the sweep
 node screen/scripts/build.mjs && node screen/scripts/verify.mjs
+node screen/test/browser-sweep.mjs [--quick]             # the page itself, in Chromium
 ```
+
+Three layers of checks, because the one bug that shipped lived in none of the first two.
+`screen.test.mjs` pins known answers; `sweep.test.mjs` checks the relationships that must
+hold across the whole input range (inverses round-trip, orders are monotonic, independent
+formulas agree, all 56 cells of the Cambridge matrix). Neither sees `app.js`, where the
+grading rules, formatting, parsing and hash handling live — which is where the vertical
+angle was graded against a resolution distance for a week. `browser-sweep.mjs` drives the
+built page through ~330 input states and parses every displayed figure back against an
+independent computation, then checks the cross-fact rules: the headline and vertical
+grades agree on 16:9, the pixel, eye and 20/20 facts agree, the tables' "you" rows carry
+the headline angle, targets read "met" exactly when the seat is past them, and so on. It
+needs Chromium via Playwright, so it runs on the dev box, not in CI; run it before
+touching a rule in `app.js`.
+
+A field the page fills itself (a hash load, a unit switch) is displayed rounded but keeps
+its exact value until edited, so a 36-inch seat does not come back as 35.83 after a trip
+through centimetres. That is the `exact` map in `app.js`; keep it when adding a length
+field.
+

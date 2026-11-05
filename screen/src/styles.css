@@ -168,6 +168,7 @@ table.list tr.here th,table.list tr.here td{background:var(--accent-soft)}
 table.list .pill{display:inline-block;font-size:11px;font-family:var(--mono);padding:1px 7px;border-radius:999px;
   border:1px solid var(--line);color:var(--ink-3);margin-left:6px;vertical-align:1px}
 table.list .pill.on{border-color:var(--good);color:var(--good)}
+table.list .pill.bad{border-color:var(--bad);color:var(--bad)}
 table.list .nil{color:var(--ink-3)}
 
 /* ---- side view ---- */
