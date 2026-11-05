@@ -5,7 +5,7 @@
  * schedule. State round-trips through the URL hash so a set of numbers can
  * be shared; the hash never reaches a server.
  */
-import { describe, amortize, monthlyBreakdown, byYear } from './mortgage.js';
+import { describe, amortize, monthlyBreakdown, byYear, originalLoan } from './mortgage.js';
 
 const $ = id => document.getElementById(id);
 
@@ -36,7 +36,7 @@ function boot() {
   const DEFAULTS = JSON.parse($('defaults').textContent);
   const els = {
     price: $('in-price'), down: $('in-down'), downpct: $('in-downpct'), rate: $('in-rate'),
-    years: $('in-years'), start: $('in-start'), balance: $('in-balance'), maturity: $('in-maturity'), tax: $('in-tax'), ins: $('in-ins'),
+    years: $('in-years'), start: $('in-start'), balance: $('in-balance'), maturity: $('in-maturity'), next: $('in-next'), assumed: $('in-assumed'), tax: $('in-tax'), ins: $('in-ins'),
     hoa: $('in-hoa'), pmi: $('in-pmi'), extra: $('in-extra'), every: $('in-every'),
     taxUnit: $('in-tax-unit'), insUnit: $('in-ins-unit'), escrow: $('in-escrow'), escrowUnit: $('in-escrow-unit'),
   };
@@ -55,14 +55,18 @@ function boot() {
     return new Date(d.getFullYear(), d.getMonth() + 1, 1);
   };
   const ym = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-  const startDate = () => {
-    const m = /^(\d{4})-(\d{2})$/.exec(els.start.value);
-    return m ? new Date(+m[1], +m[2] - 1, 1) : nextMonth();
+  const monthFrom = el => {
+    const m = /^(\d{4})-(\d{2})$/.exec(el.value);
+    return m ? new Date(+m[1], +m[2] - 1, 1) : null;
   };
+  const monthsBetween = (a, b) => (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
+  // Where the schedule starts: the first payment of a new loan, the next
+  // payment of one under way.
+  const startDate = () => monthFrom(progressMode ? els.next : els.start) || nextMonth();
   const monthOf = (n, start) => new Date(start.getFullYear(), start.getMonth() + n - 1, 1);
 
   /* ---- state <-> form <-> hash ------------------------------------- */
-  const KEYS = { price: 'p', down: 'd', balance: 'b', maturity: 'mt', rate: 'r', years: 'y', tax: 't', taxUnit: 'tu', ins: 'i', insUnit: 'iu', escrow: 'w', escrowUnit: 'wu', hoa: 'h', pmi: 'm', extra: 'x', every: 'e', start: 's' };
+  const KEYS = { price: 'p', down: 'd', balance: 'b', next: 'nx', assumed: 'ad', rate: 'r', years: 'y', tax: 't', taxUnit: 'tu', ins: 'i', insUnit: 'iu', escrow: 'w', escrowUnit: 'wu', hoa: 'h', pmi: 'm', extra: 'x', every: 'e', start: 's' };
   let escrowMode = false;
   let progressMode = false;
 
@@ -88,7 +92,9 @@ function boot() {
     els.every.value = String([...els.every.options].some(o => +o.value === +st.extraEvery) ? st.extraEvery : 1);
     els.start.value = st.start || ym(nextMonth());
     els.balance.value = st.balance ?? '';
-    els.maturity.value = st.maturity || '';
+    els.next.value = st.next || ym(nextMonth());
+    els.assumed.value = st.assumed ?? st.downPct;
+    syncMaturity();
     setLoanMode(!!st.progressMode);
   }
 
@@ -117,8 +123,10 @@ function boot() {
     if (s && /^\d{4}-\d{2}$/.test(s)) st.start = s;
     const b = parse(q.get('b') ?? '');
     if (Number.isFinite(b) && b >= 0) st.balance = b;
-    const mt = q.get('mt');
-    if (mt && /^\d{4}-\d{2}$/.test(mt)) st.maturity = mt;
+    const nx = q.get('nx');
+    if (nx && /^\d{4}-\d{2}$/.test(nx)) st.next = nx;
+    const ad = parse(q.get('ad') ?? '');
+    if (Number.isFinite(ad) && ad >= 0 && ad < 100) st.assumed = ad;
     st.progressMode = q.get('lm') === '1';
     return st;
   }
@@ -160,11 +168,12 @@ function boot() {
     };
     const rate = val(els.rate, 'rate');
     if (rate > 30) { els.rate.closest('.field').classList.add('invalid'); bad.push('rate'); }
+    const inf = progressMode ? inferred(val) : null;
     const d = describe({
-      price: val(els.price, 'price'), rate,
+      rate,
       ...(progressMode
-        ? { balance: val(els.balance, 'balance'), months: remainingMonths() }
-        : { down: val(els.down, 'down'), years: +els.years.value }),
+        ? { price: inf.price, balance: val(els.balance, 'balance'), months: inf.left }
+        : { price: val(els.price, 'price'), down: val(els.down, 'down'), years: +els.years.value }),
       // Tax and insurance arrive in whatever unit the picker says; the
       // maths takes dollars per year (or a tax rate, when that is the unit).
       ...taxAndInsurance(val),
@@ -172,19 +181,47 @@ function boot() {
       extraEvery: +els.every.value,
     });
     if (!progressMode) val(els.downpct, 'downpct');
-    if (progressMode && !(remainingMonths() > 0)) { els.maturity.closest('.field').classList.add('invalid'); bad.push('maturity'); }
-    else els.maturity.closest('.field').classList.remove('invalid');
+    if (progressMode) {
+      $('inferred').classList.toggle('invalid', !inf.ok);
+      if (!inf.ok) bad.push('dates');
+      $('inf-price').textContent = inf.ok ? usd(inf.price) : '—';
+      $('inf-note').textContent = inf.ok
+        ? `home price at ${plain.format(inf.assumed)}% down, from an original loan of about ${usd(inf.loan)} with ${inf.paid} of ${inf.n} payments made`
+        : inf.paid < 0 ? 'The next payment is before the first.'
+        : inf.paid >= inf.n ? 'The next payment is after the last one — check the dates and term.'
+        : 'Enter the balance and dates.';
+    }
     return { d, bad };
   }
 
-  /* Payments left, from the next payment month to the maturity month
-     inclusive; NaN when the maturity month is missing or not after it. */
-  function remainingMonths() {
-    const m = /^(\d{4})-(\d{2})$/.exec(els.maturity.value);
-    if (!m) return NaN;
-    const s0 = startDate();
-    const n = (+m[1] - s0.getFullYear()) * 12 + (+m[2] - 1 - s0.getMonth()) + 1;
-    return n > 0 ? n : NaN;
+  /* First and last payment are two views of one fact, given the term:
+     editing either rewrites the other. */
+  function syncMaturity(fromMaturity = false) {
+    const n = (+els.years.value || 30) * 12;
+    if (fromMaturity) {
+      const mt = monthFrom(els.maturity);
+      if (mt) els.start.value = ym(new Date(mt.getFullYear(), mt.getMonth() - n + 1, 1));
+    } else {
+      const s0 = monthFrom(els.start) || nextMonth();
+      els.maturity.value = ym(new Date(s0.getFullYear(), s0.getMonth() + n - 1, 1));
+    }
+  }
+  els.maturity.addEventListener('input', () => syncMaturity(true));
+  els.start.addEventListener('input', () => syncMaturity());
+  els.years.addEventListener('input', () => syncMaturity());
+
+  /* A loan under way: the balance, the term and how far along the loan is
+     give back the original principal, and with an assumed down payment the
+     home price. Assumes payments have been exactly on schedule. */
+  function inferred(val) {
+    const balance = val(els.balance, 'balance');
+    const n = (+els.years.value || 30) * 12;
+    const first = monthFrom(els.start) || nextMonth(), next = monthFrom(els.next) || nextMonth();
+    const paid = monthsBetween(first, next);
+    const assumed = Math.min(99, val(els.assumed, 'assumed'));
+    const loan = originalLoan(balance, num(els.rate) || 0, n, paid);
+    const ok = Number.isFinite(loan);
+    return { ok, n, paid, left: ok ? n - paid : NaN, loan, assumed, price: ok ? loan / (1 - assumed / 100) : 0 };
   }
   const termWord = months => {
     const y = Math.floor(months / 12), mo = months % 12;
@@ -196,10 +233,12 @@ function boot() {
      does not go blank; the next-payment month moves to next month. */
   function setLoanMode(progress) {
     progressMode = progress;
+    $('price-field').hidden = progress;
     $('new-fields').hidden = progress;
     $('progress-fields').hidden = !progress;
-    $('term-field').hidden = progress;
-    $('start-label').textContent = progress ? 'Next payment' : 'First payment';
+    $('maturity-field').hidden = !progress;
+    $('next-field').hidden = !progress;
+    $('term-label').textContent = progress ? 'Original term' : 'Term';
     $('lbl-loan').textContent = progress ? 'Balance' : 'Loan amount';
     $('mode-new').setAttribute('aria-pressed', String(!progress));
     $('mode-progress').setAttribute('aria-pressed', String(progress));
@@ -208,10 +247,9 @@ function boot() {
         const p = num(els.price) || 0, dn = num(els.down) || 0;
         els.balance.value = Math.max(0, Math.round(p - dn));
       }
-      if (!/^\d{4}-\d{2}$/.test(els.maturity.value)) {
-        const s0 = startDate();
-        els.maturity.value = ym(new Date(s0.getFullYear(), s0.getMonth() + (+els.years.value || 30) * 12 - 1, 1));
-      }
+      if (!monthFrom(els.next)) els.next.value = ym(nextMonth());
+      if (els.assumed.value.trim() === '') els.assumed.value = els.downpct.value || 20;
+      syncMaturity();
     }
   }
   $('mode-new').addEventListener('click', () => { setLoanMode(false); render(); writeHash(); });
@@ -284,7 +322,7 @@ function boot() {
     const payoff = fast.months ? monthOf(fast.months, start) : null;
     const set = (k, main, sub = '') => { $('sum-' + k).textContent = main; $('sub-' + k).textContent = sub; };
     set('loan', usd(d.loan), d.inProgress
-      ? (d.price > 0 ? `${plain.format(+(d.loan / d.price * 100).toFixed(1))}% of the home price` : '')
+      ? (d.price > 0 ? `${plain.format(+(d.loan / d.price * 100).toFixed(1))}% of the inferred price` : '')
       : `${plain.format(+d.downPct.toFixed(1))}% down`);
     set('interest', usd(fast.totalInterest),
       d.loan > 0 ? `${plain.format(+(fast.totalInterest / d.loan * 100).toFixed(0))}% of the loan` : '');

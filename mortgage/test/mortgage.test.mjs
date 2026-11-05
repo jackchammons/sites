@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { monthlyPI, describe, amortize, monthlyBreakdown, byYear, needsPMI } from '../src/mortgage.js';
+import { monthlyPI, describe, amortize, monthlyBreakdown, byYear, needsPMI, originalLoan } from '../src/mortgage.js';
 
 const near = (a, b, eps = 0.01) => assert.ok(Math.abs(a - b) <= eps, `${a} != ${b}`);
 
@@ -97,6 +97,20 @@ test('a loan under way: balance and remaining months instead of price and term',
   const n = describe({ price: 300000, down: 60000, rate: 6, years: 15 });
   assert.equal(n.inProgress, false);
   assert.equal(n.months, 180);
+});
+
+test('originalLoan inverts the schedule', () => {
+  const d = describe({ price: 750000, down: 150000, rate: 6.25, years: 30 });
+  const s = amortize(d);
+  // The schedule rounds each month to the cent; projected back to the start
+  // that error grows as the balance shrinks, so the bound widens with k.
+  for (const [k, eps] of [[1, 1], [12, 1], [97, 1], [300, 10], [359, 600]]) {
+    near(originalLoan(s.rows[k - 1].balance, 6.25, 360, k), 600000, eps);
+  }
+  near(originalLoan(600000, 6.25, 360, 0), 600000, 0.001);
+  near(originalLoan(90000, 0, 120, 30), 120000, 0.001);
+  assert.ok(Number.isNaN(originalLoan(1000, 5, 120, 120)));
+  assert.ok(Number.isNaN(originalLoan(1000, 5, 120, -1)));
 });
 
 test('down payment is clamped to the price', () => {

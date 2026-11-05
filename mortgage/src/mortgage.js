@@ -19,6 +19,18 @@ export function monthlyPI(principal, annualRatePct, years) {
 
 const cents = x => Math.round(x * 100) / 100;
 
+/** The original principal of a loan that, over `months` at the given rate,
+ *  has `balance` left after `paid` payments — the amortization formula run
+ *  backwards. Assumes the loan has been paid exactly on schedule. */
+export function originalLoan(balance, annualRatePct, months, paid) {
+  const n = Math.round(months), k = Math.round(paid);
+  if (!(balance >= 0) || !(n > 0) || !(k >= 0) || k >= n) return NaN;
+  const r = annualRatePct / 100 / 12;
+  if (r === 0) return balance * n / (n - k);
+  const g = Math.pow(1 + r, n);
+  return balance * (g - 1) / (g - Math.pow(1 + r, k));
+}
+
 /** Normalise raw inputs into a loan description. Everything optional but
  *  price, down, rate and years defaults to zero. */
 export function describe(input) {
