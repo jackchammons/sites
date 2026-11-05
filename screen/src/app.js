@@ -106,10 +106,8 @@ function boot() {
     $('in-dist-unit').textContent = metric() ? 'm' : 'ft';
     $('in-eye-unit').textContent = metric() ? 'cm' : 'in';
     $('in-centre-unit').textContent = metric() ? 'cm' : 'in';
-    $('in-eye-hint').textContent = metric() ? 'Floor to eye; a sofa is 95–115 cm' : 'Floor to eye; a sofa is 38–46 in';
-    $('in-dist-hint').textContent = metric()
-      ? 'Accepts 2.6, 2.6 m, 260 cm, 8′6″, 8 ft 6 in'
-      : 'Accepts 9, 8′6″, 8 ft 6 in, 2.6 m, 260 cm';
+    $('in-eye-hint').textContent = metric() ? 'A sofa seats eyes at 95–115 cm' : 'A sofa seats eyes at 38–46 in';
+    $('in-dist-hint').textContent = metric() ? '2.6 m, 260 cm or 8′6″ all work' : '8′6″, 8 ft 6 in or 2.6 m all work';
   }
   function applyMode() {
     const pj = mode === 'projector';
