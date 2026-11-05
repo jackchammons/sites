@@ -5841,8 +5841,8 @@
         "roccos": 23,
         "west-of-chicago-pizza-company": 24,
         "stevies-famous": 25,
-        "post-alley-pizza": 26,
-        "hot-mamas-pizza": 27,
+        "hot-mamas-pizza": 26,
+        "post-alley-pizza": 27,
         "moto-pizza": 28,
         "good-shape-pizza": 29,
         "my-friend-dereks": 30,
@@ -5909,8 +5909,8 @@
         "roccos": 77.2,
         "west-of-chicago-pizza-company": 76.7,
         "stevies-famous": 76.6,
+        "hot-mamas-pizza": 76.6,
         "post-alley-pizza": 76.5,
-        "hot-mamas-pizza": 76.1,
         "moto-pizza": 75.8,
         "good-shape-pizza": 75.6,
         "my-friend-dereks": 75.2,
@@ -6152,6 +6152,14 @@
           "value": 7.8,
           "penalty": 0
         },
+        "hot-mamas-pizza": {
+          "reputation": 10,
+          "critical": 7,
+          "craft": 6.9,
+          "distinctiveness": 6.6,
+          "value": 8.4,
+          "penalty": 0.4
+        },
         "post-alley-pizza": {
           "reputation": 10,
           "critical": 7.2,
@@ -6159,14 +6167,6 @@
           "distinctiveness": 6.4,
           "value": 7.6,
           "penalty": 0
-        },
-        "hot-mamas-pizza": {
-          "reputation": 10,
-          "critical": 6.9,
-          "craft": 6.9,
-          "distinctiveness": 6.6,
-          "value": 8.3,
-          "penalty": 0.4
         },
         "moto-pizza": {
           "reputation": 6.9,
