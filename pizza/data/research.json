@@ -1,53 +1,45 @@
 {
-  "updated": "2026-11-05T19:00:00Z",
-  "mentions": [
-    {
-      "id": "pagliacci",
-      "title": "Pagliacci is a classic with reliable pizza that works in a pinch",
-      "url": "https://theinfatuation.com/seattle/reviews/pagliacci-pizza",
-      "source": "The Infatuation",
-      "date": "2026-05-12",
-      "kind": "mention"
-    }
-  ],
+  "updated": "2026-11-05T00:00:00Z",
   "factorSources": [
     {
-      "id": "humble-pie",
+      "id": "proletariat-pizza",
       "sources": [
-        "https://theinfatuation.com/seattle/reviews/humble-pie"
+        "https://www.theinfatuation.com/seattle/reviews/proletariat-pizza",
+        "https://theticket.seattletimes.com/top-picks/the-pepperoni-pizza-proletariat-pizza/"
       ],
-      "note": "The Infatuation (Aimee Rizzo) scores Humble Pie an 8.0, calling the wood-fired pizzas excellent and highlighting the classic margherita and the meat-heavy 'whole hog,' while praising the eco-conscious patio setting next to a chicken coop."
+      "note": "The Infatuation (7.5, 'Good') highlights the prosciutto-and-cracked-egg and chicken pesto pies at this White Center spot; Seattle Times' The Ticket singles out the pepperoni slice, made with Zoe's Meats pepperoni."
     },
     {
-      "id": "big-marios",
+      "id": "roccos",
       "sources": [
-        "https://theinfatuation.com/seattle/reviews/big-marios-pizza",
-        "https://seattlespectator.com/2024/05/29/by-the-slice-pizza-review/"
+        "https://www.theinfatuation.com/seattle/reviews/roccos"
       ],
-      "note": "The Infatuation rates it 7.2, calling it a solid New York-style slice joint with a notably spicy red sauce, good for soaking up a late Capitol Hill night; Seattle Spectator's head-to-head slice comparison scored it lower (6/10), finding the sampled pepperoni slice greasy and soggy despite acceptable crust and flavor."
+      "note": "The Infatuation rates Rocco's 6.8 ('It's Fine'), describing it mainly as a Belltown cocktail bar that turns out New York-style pies, with inconsistent slices and a red sauce that leans too heavily on oregano."
     },
     {
-      "id": "ballard-pizza-co",
+      "id": "talaricos",
       "sources": [
-        "https://www.thestranger.com/food-and-drink/going-out-for-pizza-14330897/",
-        "https://theinfatuation.com/seattle/reviews/ballard-pizza-co"
+        "https://www.theinfatuation.com/seattle/reviews/talaricos",
+        "https://www.seattleweekly.com/?p=52463"
       ],
-      "note": "The Stranger's David Schmader recommends Ballard Pizza Company, writing that its inventive house pies rise to 'destination restaurant' level while custom pies are merely good, 'on par with Piecora's'; The Infatuation similarly calls it one of the closest things to New York-style pizza west of the Mississippi, singling out the rotating daily slices."
+      "note": "The Infatuation describes Talarico's as a casual West Seattle spot for big groups with slices 'bigger than your face'; Seattle Weekly calls it a pizza bar, not a pizzeria, known for oversized, heavily topped $4.95 slices and a sweet marinara best paired with spicy or salty toppings."
     },
     {
-      "id": "slice-box",
+      "id": "zeeks-pizza",
       "sources": [
-        "https://theinfatuation.com/seattle/reviews/slice-box-pizza"
+        "https://archive.seattletimes.com/archive/19940708/1919291/popular-zeeks-pizza-is-a-little-slice-of-heaven"
       ],
-      "note": "The Infatuation scores Slice Box 8.5, praising the New York-style pies' crispy crust and calling the cheese slice 'an instant classic,' with the thick Sicilian pepperoni square singled out as the one to prioritize."
+      "note": "Seattle Times critic John Hinterberger praised the original Zeek's for its fresh-ingredient focus (dough made daily, herbs chopped twice daily, Danish-style whole-milk mozzarella), calling the Frog Belly Green 'a heck of a piece of pizza' despite too much garlic, and was surprised by the Thai-One-On."
     },
     {
-      "id": "pagliacci",
+      "id": "pegasus-pizza",
       "sources": [
-        "https://theinfatuation.com/seattle/reviews/pagliacci-pizza",
-        "https://archive.seattletimes.com/archive/19960404/2322409/is-pagliacci-as-good-as-advertised-si-si"
+        "https://dailyhive.com/seattle/pegasus-pizza-seattle"
       ],
-      "note": "The Infatuation calls Pagliacci 'a classic with reliable pizza that works in a pinch,' valuing its crushed-tomato base for group orders; longtime Seattle Times critic John Hinterberger's 1996 review rated it among the best pizza in Seattle, praising a crust that's 'springy and chewy without being tough or coarse.'"
+      "note": "Daily Hive's feature calls Pegasus Pizza 'a thing of beauty,' praising its generously portioned Greek-style pizza and large pasta plates served with soup or salad and garlic bread."
     }
+  ],
+  "rejected": [
+    "mentions[0]: title missing or too short"
   ]
 }
