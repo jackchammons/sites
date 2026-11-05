@@ -38,6 +38,7 @@ function boot() {
     price: $('in-price'), down: $('in-down'), downpct: $('in-downpct'), rate: $('in-rate'),
     years: $('in-years'), start: $('in-start'), tax: $('in-tax'), ins: $('in-ins'),
     hoa: $('in-hoa'), pmi: $('in-pmi'), extra: $('in-extra'), every: $('in-every'),
+    taxUnit: $('in-tax-unit'), insUnit: $('in-ins-unit'), escrow: $('in-escrow'), escrowUnit: $('in-escrow-unit'),
   };
 
   /* Accept what people type: "$750,000", "750k", "1.2m", "6.25%". */
@@ -61,7 +62,8 @@ function boot() {
   const monthOf = (n, start) => new Date(start.getFullYear(), start.getMonth() + n - 1, 1);
 
   /* ---- state <-> form <-> hash ------------------------------------- */
-  const KEYS = { price: 'p', down: 'd', rate: 'r', years: 'y', tax: 't', ins: 'i', hoa: 'h', pmi: 'm', extra: 'x', every: 'e', start: 's' };
+  const KEYS = { price: 'p', down: 'd', rate: 'r', years: 'y', tax: 't', taxUnit: 'tu', ins: 'i', insUnit: 'iu', escrow: 'w', escrowUnit: 'wu', hoa: 'h', pmi: 'm', extra: 'x', every: 'e', start: 's' };
+  let escrowMode = false;
 
   function fill(st) {
     els.price.value = st.price;
@@ -73,7 +75,12 @@ function boot() {
     }
     els.years.value = String(st.years);
     els.tax.value = st.taxRate;
+    els.taxUnit.value = st.taxUnit;
     els.ins.value = st.insurance;
+    els.insUnit.value = st.insUnit;
+    els.escrow.value = st.escrow;
+    els.escrowUnit.value = st.escrowUnit;
+    setMode(!!st.escrowMode);
     els.hoa.value = st.hoa;
     els.pmi.value = st.pmiRate;
     els.extra.value = st.extra;
@@ -96,6 +103,12 @@ function boot() {
     }
     const e = parse(q.get('e') ?? '');
     if (Number.isFinite(e) && e >= 0) st.extraEvery = e;
+    const w = parse(q.get('w') ?? '');
+    if (Number.isFinite(w) && w >= 0) st.escrow = w;
+    for (const [k, f, ok] of [['tu', 'taxUnit', ['pct', 'yr', 'mo']], ['iu', 'insUnit', ['yr', 'mo']], ['wu', 'escrowUnit', ['mo', 'yr']]]) {
+      if (ok.includes(q.get(k))) st[f] = q.get(k);
+    }
+    st.escrowMode = q.get('em') === '1';
     const s = q.get('s');
     if (s && /^\d{4}-\d{2}$/.test(s)) st.start = s;
     return st;
@@ -104,6 +117,7 @@ function boot() {
   function writeHash() {
     const q = new URLSearchParams();
     for (const [k, short] of Object.entries(KEYS)) q.set(short, els[k].value.trim().replace(/[$,\s]/g, ''));
+    if (escrowMode) q.set('em', '1');
     history.replaceState(null, '', '#' + q.toString());
   }
 
@@ -138,13 +152,46 @@ function boot() {
     if (rate > 30) { els.rate.closest('.field').classList.add('invalid'); bad.push('rate'); }
     const d = describe({
       price: val(els.price, 'price'), down: val(els.down, 'down'), rate,
-      years: +els.years.value, taxRate: val(els.tax, 'tax'), insurance: val(els.ins, 'ins'),
+      years: +els.years.value,
+      // Tax and insurance arrive in whatever unit the picker says; the
+      // maths takes dollars per year (or a tax rate, when that is the unit).
+      ...taxAndInsurance(val),
       hoa: val(els.hoa, 'hoa'), pmiRate: val(els.pmi, 'pmi'), extra: val(els.extra, 'extra'),
       extraEvery: +els.every.value,
     });
     val(els.downpct, 'downpct');
     return { d, bad };
   }
+
+  const perYear = (x, unit) => unit === 'mo' ? x * 12 : x;
+  function taxAndInsurance(val) {
+    if (escrowMode) {
+      return { escrow: perYear(val(els.escrow, 'escrow'), els.escrowUnit.value) };
+    }
+    const t = val(els.tax, 'tax'), tu = els.taxUnit.value;
+    return {
+      ...(tu === 'pct' ? { taxRate: t } : { tax: perYear(t, tu) }),
+      insurance: perYear(val(els.ins, 'ins'), els.insUnit.value),
+    };
+  }
+
+  /* Switching to escrow with nothing entered seeds it from the split
+     figures, so the total does not drop to nothing. */
+  function setMode(escrow) {
+    escrowMode = escrow;
+    $('split-fields').hidden = escrow;
+    $('escrow-fields').hidden = !escrow;
+    $('mode-split').setAttribute('aria-pressed', String(!escrow));
+    $('mode-escrow').setAttribute('aria-pressed', String(escrow));
+    if (escrow && !(num(els.escrow) > 0)) {
+      const p = num(els.price) || 0, t = num(els.tax) || 0, i = num(els.ins) || 0;
+      const tax = els.taxUnit.value === 'pct' ? p * t / 100 : perYear(t, els.taxUnit.value);
+      const yearly = tax + perYear(i, els.insUnit.value);
+      els.escrow.value = Math.round(els.escrowUnit.value === 'mo' ? yearly / 12 : yearly);
+    }
+  }
+  $('mode-split').addEventListener('click', () => { setMode(false); render(); writeHash(); });
+  $('mode-escrow').addEventListener('click', () => { setMode(true); render(); writeHash(); });
 
   const cadenceWord = e => ({ 0: 'once', 3: 'each quarter', 6: 'twice a year', 12: 'each year' })[e] || `every ${e} months`;
 
@@ -154,7 +201,7 @@ function boot() {
     const base = amortize(d, { extra: 0 });
     const fast = d.extra > 0 ? amortize(d) : base;
     const bd = monthlyBreakdown(d);
-    const total = bd.pi + bd.tax + bd.insurance + bd.pmi + bd.hoa;
+    const total = bd.pi + bd.tax + bd.insurance + bd.escrow + bd.pmi + bd.hoa;
     last = { d, base, fast, start };
 
     $('out-total').textContent = bad.length ? '—' : usd(total);
@@ -166,10 +213,12 @@ function boot() {
           : `plus ${usd(d.extra)} extra principal ${cadenceWord(d.extraEvery)}`
         : d.loan > 0 ? `on a ${usd(d.loan)} loan over ${d.years} years` : 'Nothing borrowed, so nothing to repay.';
 
-    for (const k of ['pi', 'tax', 'insurance', 'pmi', 'hoa']) {
+    for (const k of ['pi', 'tax', 'insurance', 'escrow', 'pmi', 'hoa']) {
       const x = bd[k];
       $('bd-' + k).textContent = usd2(x);
       $('row-' + k).classList.toggle('zero', x <= 0);
+      // The rows for the mode not in use are hidden rather than shown at $0.
+      $('row-' + k).hidden = k === 'escrow' ? !escrowMode : (k === 'tax' || k === 'insurance') && escrowMode;
       const seg = $('seg-' + k);
       seg.style.flexGrow = total > 0 ? String(x / total) : '0';
       seg.hidden = x <= 0;

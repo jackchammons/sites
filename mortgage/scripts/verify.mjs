@@ -58,7 +58,7 @@ for (const f of ['app.js', 'mortgage.js']) {
 const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]));
 const literal = [...app.matchAll(/\$\('([^']+)'\)/g)].map(m => m[1]);
 // Prefixed lookups ($('bd-' + k)) are expanded from the parts list in the script.
-const parts = ['pi', 'tax', 'insurance', 'pmi', 'hoa'];
+const parts = ['pi', 'tax', 'insurance', 'escrow', 'pmi', 'hoa'];
 const summary = ['loan', 'interest', 'cost', 'payoff', 'pmiend', 'saved'];
 const wanted = new Set([
   ...literal,
@@ -81,10 +81,16 @@ const near = (a, b, eps, msg) => check(Math.abs(a - b) <= eps, `${msg}: got ${a}
 near(m.monthlyPI(200000, 6, 30), 1199.10, 0.01, '$200k at 6% over 30y');
 near(m.monthlyPI(300000, 4.5, 15), 2294.98, 0.01, '$300k at 4.5% over 15y');
 if (defaults) {
-  for (const k of ['price', 'downPct', 'rate', 'years', 'taxRate', 'insurance', 'hoa', 'pmiRate', 'extra']) {
+  for (const k of ['price', 'downPct', 'rate', 'years', 'taxRate', 'insurance', 'escrow', 'hoa', 'pmiRate', 'extra']) {
     check(Number.isFinite(defaults[k]), `default "${k}" is not a number`);
   }
   check(html.includes(`<option value="${defaults.years}" selected>`), 'default term is not one of the options');
+  for (const [k, u] of [['in-tax', defaults.taxUnit], ['in-ins', defaults.insUnit], ['in-escrow', defaults.escrowUnit]]) {
+    check(new RegExp(`id="${k}-unit"[^>]*>(?:(?!</select>).)*<option value="${u}" selected>`, 's').test(html),
+      `default unit "${u}" is not an option of #${k}-unit`);
+  }
+  const esc = m.monthlyBreakdown(m.describe({ ...defaults, down: 0, escrow: 12000 }));
+  check(esc.tax === 0 && esc.insurance === 0 && esc.escrow === 1000, 'escrow does not replace tax and insurance in the breakdown');
   const d = m.describe({ ...defaults, down: defaults.price * defaults.downPct / 100 });
   const s = m.amortize(d);
   check(s.months === d.years * 12, `default loan schedules ${s.months} months, not ${d.years * 12}`);

@@ -42,10 +42,14 @@ const v = data.inputs;
 const downAmt = Math.round(v.price * v.downPct / 100);
 
 /* A money field: a "$" adornment, a numeric text input, a hint line. */
-const field = ({ id, label, value, pre, post, hint, step = 'any', mode = 'decimal' }) => `
+/* `units` renders a unit select after the input ([[value, label], ...]), in
+   place of the fixed `post` adornment. */
+const field = ({ id, label, value, pre, post, hint, units, unit, step = 'any', mode = 'decimal' }) => `
       <label class="field" for="${id}">
         <span class="lbl">${esc(label)}</span>
-        <span class="box">${pre ? `<i>${esc(pre)}</i>` : ''}<input id="${id}" name="${id}" type="text" inputmode="${mode}" autocomplete="off" spellcheck="false" value="${esc(value)}" data-step="${step}">${post ? `<i>${esc(post)}</i>` : ''}</span>
+        <span class="box">${pre ? `<i>${esc(pre)}</i>` : ''}<input id="${id}" name="${id}" type="text" inputmode="${mode}" autocomplete="off" spellcheck="false" value="${esc(value)}" data-step="${step}">${
+          units ? `<select class="unit" id="${id}-unit" name="${id}-unit" aria-label="${esc(label)} unit">${units.map(([u, l]) => `<option value="${u}"${u === unit ? ' selected' : ''}>${esc(l)}</option>`).join('')}</select>`
+          : post ? `<i>${esc(post)}</i>` : ''}</span>
         ${hint ? `<span class="hint" id="${id}-hint">${hint}</span>` : ''}
       </label>`;
 
@@ -64,12 +68,14 @@ const PARTS = [
   ['pi', 'Principal & interest'],
   ['tax', 'Property tax'],
   ['insurance', 'Home insurance'],
+  ['escrow', 'Tax & insurance (escrow)'],
   ['pmi', 'Mortgage insurance (PMI)'],
   ['hoa', 'HOA dues'],
 ];
-const legend = PARTS.map(([k, label], i) => `
-          <li id="row-${k}" class="s${i + 1}"><span class="sw"></span><span class="nm">${esc(label)}</span><b id="bd-${k}">—</b></li>`).join('');
-const segs = PARTS.map(([k], i) => `<span class="seg s${i + 1}" id="seg-${k}"></span>`).join('');
+const SLOT = { pi: 1, tax: 2, insurance: 3, pmi: 4, hoa: 5, escrow: 6 };
+const legend = PARTS.map(([k, label]) => `
+          <li id="row-${k}" class="s${SLOT[k]}"><span class="sw"></span><span class="nm">${esc(label)}</span><b id="bd-${k}">—</b></li>`).join('');
+const segs = PARTS.map(([k]) => `<span class="seg s${SLOT[k]}" id="seg-${k}"></span>`).join('');
 
 const SUMMARY = [
   ['loan', 'Loan amount'],
@@ -132,10 +138,18 @@ const html = `<!doctype html>
       <span class="box"><input id="in-start" name="in-start" type="month"></span>
     </label>
 
-    <h2>Costs on top</h2>
-    <div class="pair">
-      ${field({ id: 'in-tax', label: 'Property tax', value: v.taxRate, post: '%/yr', hint: 'Of the price' })}
-      ${field({ id: 'in-ins', label: 'Insurance', value: v.insurance, pre: '$', post: '/yr', mode: 'numeric' })}
+    <div class="head h2-row"><h2>Costs on top</h2>
+      <div class="seg-toggle" role="group" aria-label="How tax and insurance are entered">
+        <button type="button" id="mode-split" aria-pressed="${v.escrowMode ? 'false' : 'true'}">Tax + insurance</button>
+        <button type="button" id="mode-escrow" aria-pressed="${v.escrowMode ? 'true' : 'false'}">One escrow amount</button>
+      </div>
+    </div>
+    <div class="pair" id="split-fields"${v.escrowMode ? ' hidden' : ''}>
+      ${field({ id: 'in-tax', label: 'Property tax', value: v.taxRate, units: [['pct', '% of price /yr'], ['yr', '$ /yr'], ['mo', '$ /mo']], unit: v.taxUnit })}
+      ${field({ id: 'in-ins', label: 'Insurance', value: v.insurance, pre: '$', units: [['yr', '/yr'], ['mo', '/mo']], unit: v.insUnit, mode: 'numeric' })}
+    </div>
+    <div id="escrow-fields"${v.escrowMode ? '' : ' hidden'}>
+      ${field({ id: 'in-escrow', label: 'Escrow (tax + insurance)', value: v.escrow, pre: '$', units: [['mo', '/mo'], ['yr', '/yr']], unit: v.escrowUnit, mode: 'numeric', hint: 'The combined figure from a servicer statement or an estimate' })}
     </div>
     <div class="pair">
       ${field({ id: 'in-hoa', label: 'HOA dues', value: v.hoa, pre: '$', post: '/mo', mode: 'numeric' })}
@@ -208,9 +222,12 @@ const html = `<!doctype html>
         <code>r</code> the annual rate ÷ 12 and <code>n</code> the number of monthly payments.
         Each month's interest is the outstanding balance × <code>r</code>, rounded to the cent; the rest of
         the payment is principal. The final payment is trimmed so the balance ends at exactly zero.</p>
-      <p><b>Property tax</b> is the rate × the price ÷ 12 — a stand-in for the assessed value, which is
-        usually close to but not the same as what you pay. <b>Insurance</b> is the yearly premium ÷ 12, and
-        <b>HOA</b> dues are taken as given. Both of those and the tax are held flat; in reality they rise.</p>
+      <p><b>Property tax</b> can be entered as a rate — then it is the rate × the price ÷ 12, a stand-in
+        for the assessed value, which is usually close to but not the same as what you pay — or as a yearly
+        or monthly dollar figure. <b>Insurance</b> is the yearly premium ÷ 12, or a monthly figure as given.
+        If you have one <b>escrow</b> number covering both, as a servicer's statement shows it, enter that
+        instead and it stands in for the two. <b>HOA</b> dues are taken as given. All of these are held flat;
+        in reality they rise.</p>
       <p><b>PMI</b> applies when the loan is more than ${pct(PMI_REQUIRED_LTV)} of the price, at the yearly rate
         × the original loan ÷ 12. It is dropped once the balance falls to ${pct(PMI_CANCEL_LTV)} of the original
         price, the point at which the Homeowners Protection Act requires a lender to cancel it automatically on
