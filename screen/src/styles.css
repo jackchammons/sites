@@ -5,7 +5,7 @@
   color-scheme:light dark;
   --bg:#111318;--panel:#181b22;--panel-2:#1f232c;--line:#2f3440;
   --ink:#eef0f5;--ink-2:#b8bdc9;--ink-3:#858c9a;
-  --accent:#7d8ee8;--accent-soft:rgba(125,142,232,.16);--bad:#e66767;--good:#4fb38b;
+  --accent:#7d8ee8;--accent-soft:rgba(125,142,232,.16);--bad:#e66767;--good:#4fb38b;--ok:#d9a441;
   --s1:#3987e5;--s3:#199e70;--s4:#c98500;
   /* Sequential ramp for the resolution matrix: one hue, dark to light on the
      dark surface, light to dark on the light one; text switches at q5. */
@@ -17,7 +17,7 @@
 @media (prefers-color-scheme:light){
   :root{--bg:#f5f6fa;--panel:#ffffff;--panel-2:#eff1f6;--line:#dadee8;
         --ink:#161a24;--ink-2:#4b5262;--ink-3:#747b8b;
-        --accent:#4a5ccc;--accent-soft:rgba(74,92,204,.1);--bad:#c43b3a;--good:#2f7d5e;
+        --accent:#4a5ccc;--accent-soft:rgba(74,92,204,.1);--bad:#c43b3a;--good:#2f7d5e;--ok:#a8720c;
         --s1:#2a78d6;--s3:#1baf7a;--s4:#eda100;
         --q0:#f1f2f6;--q1:#e6e9f8;--q2:#d2d8f3;--q3:#bcc5ed;--q4:#a3afe4;--q5:#8897d9;--q6:#6d7fcc;--q7:#5366bd;--q8:#3b4da8}
 }
@@ -102,6 +102,9 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .fact dd small{display:block;font-size:11.5px;color:var(--ink-3);margin-top:2px;font-family:var(--sans)}
 .fact.warn dd span{color:var(--bad)}
 .fact.good dd span{color:var(--good)}
+.fact.ok dd span{color:var(--ok)}
+.key{font-weight:600}.key.good{color:var(--good)}.key.ok{color:var(--ok)}.key.warn{color:var(--bad)}
+.total.good span{color:var(--good)} .total.ok span{color:var(--ok)} .total.warn span{color:var(--bad)}
 
 /* ---- lanes chart ---- */
 .chart-panel{padding:16px 18px 12px;position:relative}

@@ -234,48 +234,66 @@ function boot() {
     }
 
     const fov = hfov(d, st.dist), vf = vfov(d, st.dist);
+    /* Three colours throughout: green meets the standard, amber is inside a
+       weaker one, red is outside every published limit. */
+    const SMPTE = ANGLE_STANDARDS.find(s => s.id === 'smpte').angle;
+    const THX_FAR = ANGLE_STANDARDS.find(s => s.id === 'thx-far').angle;
+    const grade = (good, ok) => good ? 'good' : ok ? 'ok' : 'warn';
+    const fovGrade = fov > 70 ? 'ok' : grade(fov >= SMPTE, fov >= THX_FAR);
     $('out-fov').textContent = deg(fov);
     $('out-sub').textContent = `${describeAngle(fov)} — a ${n1.format(st.diag)}-inch ${aspect(st.aspect).id} picture seen from ${fmtLen(st.dist)}.`;
+    $('out-total').className = `total ${fovGrade}`;
 
     const set = (k, main, sub = '', cls = '') => {
       $('sum-' + k).textContent = main; $('sub-' + k).textContent = sub;
-      const f = $('fact-' + k); f.classList.remove('warn', 'good'); if (cls) f.classList.add(cls);
+      const f = $('fact-' + k); f.classList.remove('warn', 'good', 'ok'); if (cls) f.classList.add(cls);
     };
     set('size', `${fmtLen(d.width, 'dim')} × ${fmtLen(d.height, 'dim')}`,
       `width × height; ${n1.format(st.diag)} in is ${n0.format(st.diag * 2.54)} cm`);
     set('area', fmtArea(d.area), `${n2.format(d.ratio)}:1`);
-    set('vfov', deg(vf), `${n2.format(st.dist / d.height)} picture heights away`);
+    /* Picture heights against the ITU design distance for this many rows. */
+    const heights = st.dist / d.height;
+    const ituFor = res.h >= 4320 ? ITU_STANDARDS[2] : res.h >= 2160 ? ITU_STANDARDS[1] : ITU_STANDARDS[0];
+    const hdH = ITU_STANDARDS[0].heights;
+    set('vfov', deg(vf),
+      `${n2.format(heights)} picture heights away; ITU designs ${short(res)} viewing for ${ituFor.heights}H${ituFor !== ITU_STANDARDS[0] ? `, HD for ${hdH}H` : ''}`,
+      grade(heights <= ituFor.heights, heights <= hdH));
 
     const pitch = pixelPitch(d, res);
     const ppd = pixelsPerDegree(pitch, st.dist);
     const dens = pixelDensity(pitch);
     set('density', `${n0.format(dens.ppi)} ppi`,
       `${n3.format(dens.mm)} mm pitch; ${short(res)} is ${aspectLabel(res.w, res.h)}`);
+    const ppd95 = ppdForFraction(0.05);
+    const ppdGrade = p => grade(p >= ppd95, p >= 60);
     set('pixel', `${n1.format(ppd)} px/°`,
-      `pixels per degree; ${n2.format(pixelAngle(pitch, st.dist) * 60)}′ per pixel, and 60 px/° is 20/20`);
+      `pixels per degree; ${n2.format(pixelAngle(pitch, st.dist) * 60)}′ per pixel. 60 is 20/20, ${n0.format(ppd95)} satisfies 19 in 20 eyes`,
+      ppdGrade(ppd));
     const imgV = subtended(pitch * res.h, st.dist);
-    set('avg', `${n1.format(averagePpd(res.h, imgV))} px/°`,
-      `${n0.format(res.h)} rows over ${deg(imgV)}; edge pixels cover less angle`);
+    const avg = averagePpd(res.h, imgV);
+    set('avg', `${n1.format(avg)} px/°`,
+      `${n0.format(res.h)} rows over ${deg(imgV)}; edge pixels cover less angle`, ppdGrade(avg));
     const frac = noticeFraction(ppd);
     const pct = Math.round(frac * 100);
     set('eye', `${pct}% of people`,
       frac < 0.05 ? `could tell this from a perfect display: the Cambridge limit is met` : frac < 0.5 ? `could tell this from a perfect display; most could not` : `could tell this from a perfect display (Cambridge eye-limit model)`,
-      frac < 0.05 ? 'good' : frac > 0.5 ? 'warn' : '');
+      grade(frac < 0.05, frac < 0.5));
 
     const rv = describeResolution(d, res, st.dist);
     if (rv.wasted) {
       set('res', `Past ${fmtLen(rv.limit)}`,
-        `${short(res)} pixels merge beyond ${fmtLen(rv.limit)}; ${rv.lower ? `${short(rv.lower)} would look as sharp from here` : 'you cannot see them from your seat'}`, 'warn');
+        `${short(res)} pixels merge beyond ${fmtLen(rv.limit)}, so none show from your seat${rv.lower ? `; ${short(rv.lower)} would look as sharp` : ''}`, 'good');
     } else {
-      set('res', 'Fully used',
-        `${short(res)} pixels stay distinct out to ${fmtLen(rv.limit)}; you are inside that`, 'good');
+      set('res', `Inside ${fmtLen(rv.limit)}`,
+        `${short(res)} pixels stay distinct to 20/20 eyes out to ${fmtLen(rv.limit)}; from your seat the grid can show`,
+        grade(false, ppd >= 50));
     }
 
     const pl = placement(d, st.dist, st.eye, st.centre);
     const dir = Math.abs(pl.centre) < 0.5 ? 'level' : pl.centre > 0 ? 'up' : 'down';
     set('tilt', dir === 'level' ? 'Level' : `${deg(Math.abs(pl.centre))} ${dir}`,
-      pl.ok ? `within ${PLACEMENT.maxUp}° up / ${PLACEMENT.maxDown}° down` : pl.centre > 0 ? `over ${PLACEMENT.maxUp}°: lower the screen or sit back` : `over ${PLACEMENT.maxDown}° down: raise the screen`,
-      pl.ok ? '' : 'warn');
+      pl.ok ? `within ${PLACEMENT.maxUp}° up / ${PLACEMENT.maxDown}° down${Math.abs(pl.centre) > 5 ? ', but nearer eye level is easier' : ''}` : pl.centre > 0 ? `over ${PLACEMENT.maxUp}°: lower the screen or sit back` : `over ${PLACEMENT.maxDown}° down: raise the screen`,
+      grade(pl.ok && Math.abs(pl.centre) <= 5, pl.ok));
 
     drawLanes();
     drawEye();
@@ -537,7 +555,7 @@ function boot() {
     if (mode !== 'projector') return;
     const set = (k, main, sub = '', cls = '') => {
       $('sum-' + k).textContent = main; $('sub-' + k).textContent = sub;
-      const f = $('fact-' + k); f.classList.remove('warn', 'good'); if (cls) f.classList.add(cls);
+      const f = $('fact-' + k); f.classList.remove('warn', 'good', 'ok'); if (cls) f.classList.add(cls);
     };
     const t1 = Math.min(st.throw1, st.throw2), t2 = Math.max(st.throw1, st.throw2);
     const near = throwDistance(d.width, t1), far = throwDistance(d.width, t2);
@@ -550,7 +568,7 @@ function boot() {
     const fl = footLamberts(st.lumens, st.gain, d);
     set('fl', `${n1.format(fl)} fL`,
       `${n0.format(nits(fl))} cd/m² from ${n0.format(st.lumens)} lm × ${n2.format(st.gain)} gain over ${fmtArea(d.area)}; cinema ${BRIGHTNESS.cinema}, home ≥${BRIGHTNESS.sdrHome}, bright room ~${BRIGHTNESS.bright}`,
-      fl < BRIGHTNESS.cinema ? 'warn' : fl >= BRIGHTNESS.sdrHome ? 'good' : '');
+      fl < BRIGHTNESS.cinema ? 'warn' : fl >= BRIGHTNESS.sdrHome ? 'good' : 'ok');
     const wNear = widthAtThrow(st.dist, t2), wFar = widthAtThrow(st.dist, t1);
     const dg = w => n0.format(dims(w * Math.sqrt(1 + 1 / (d.ratio * d.ratio)), d.ratio).diagonal);
     set('width', t1 === t2 ? fmtLen(wNear, 'dim') : `${fmtLen(wNear, 'dim')} – ${fmtLen(wFar, 'dim')}`,
@@ -563,7 +581,7 @@ function boot() {
     const { st, d } = last;
     const set = (k, main, sub = '', cls = '') => {
       $('sum-' + k).textContent = main; $('sub-' + k).textContent = sub;
-      const f = $('fact-' + k); f.classList.remove('warn', 'good'); if (cls) f.classList.add(cls);
+      const f = $('fact-' + k); f.classList.remove('warn', 'good', 'ok'); if (cls) f.classList.add(cls);
     };
     const updown = a => Math.abs(a) < 0.5 ? 'level' : `${deg(Math.abs(a))} ${a > 0 ? 'up' : 'down'}`;
     set('top', updown(pl.top), `${fmtLen(st.centre + d.height / 2, 'dim')} from the floor`);
