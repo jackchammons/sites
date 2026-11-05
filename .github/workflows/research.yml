@@ -209,6 +209,7 @@ jobs:
              "ratingSkipped":[{"id":"<id from the rating worklist>","note":"<what you searched and found>"}],
              "facts":[{"id":"<entry id>","opened":<year or omit>,"priceIndex":<1-4 or omit>,
                        "source":"<https page that states it>"}],
+             "factsSkipped":[{"id":"<id from the facts worklist>","note":"<what you searched and found>"}],
              "factorSources":[{"id":"<id from the sources worklist>",
                                "sources":["<https you actually read>"],
                                "note":"<what the coverage says>"}],

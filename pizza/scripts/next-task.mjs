@@ -356,9 +356,14 @@ if (task === 'facts') {
   // Dispatch-only backfill of the two plain facts reputation and value read.
   // Rated entries with no founding year first: they carry no reputation
   // score at all until one is on file.
+  // Attempt memory: an entry already searched (factsAttempted) waits a
+  // quarter before it is redrawn, and never-attempted entries go first.
+  const FACTS_RETRY_DAYS = 90;
   const list = openField
-    .filter(r => r.opened == null || r.priceIndex == null)
-    .sort((a, b) => (rated(b) - rated(a)) || ((a.opened == null ? 0 : 1) - (b.opened == null ? 0 : 1)))
+    .filter(r => (r.opened == null || r.priceIndex == null) && daysSince(r.factsAttempted) >= FACTS_RETRY_DAYS)
+    .sort((a, b) => (rated(b) - rated(a))
+      || ((a.opened == null ? 0 : 1) - (b.opened == null ? 0 : 1))
+      || ((Date.parse(a.factsAttempted) || 0) - (Date.parse(b.factsAttempted) || 0)))
     .slice(0, 12);
   worklistSize = list.length;
   brief = `Your task: record two plain facts for these pizzerias -- the year each
@@ -375,8 +380,10 @@ actually states: an "established 2009" line, a "since 1979" in the
 header, an opening story with a date. Never infer a year from a domain
 registration, a review date or a photo. Price tier from its own menu:
 1 = slices and pies under about $20, 2 = pies $20-28, 3 = $28-36, 4 = above.
-Omit an entry you could not ground. Budget: about 2 searches per entry,
-24 in total.`;
+For an entry where no page states either fact, report a "factsSkipped"
+record ({"id","note"}: what you searched and found) so it is not redrawn
+next run; omitting it silently puts it back at the front of the list.
+Budget: about 2 searches per entry, 24 in total.`;
 }
 
 if (task === 'sources') {

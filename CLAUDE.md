@@ -127,7 +127,7 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   out whatever research just committed. Keep that ordering if you change either cron;
   to see a research commit on the site sooner, dispatch `publish.yml` by hand.
 - **Agents stay out of the deploy path.** `research.yml` runs the Claude Code Action to write
-  `pizza/data/research.json` (news, mentions, locations, status, directory, factorRatings, factorSources, ratingSkipped, facts, newAttributes, links, candidateReview), gated behind
+  `pizza/data/research.json` (news, mentions, locations, status, directory, factorRatings, factorSources, ratingSkipped, facts, factsSkipped, newAttributes, links, candidateReview), gated behind
   `CLAUDE_CODE_OAUTH_TOKEN`. `verify-research.mjs` validates it and `apply-research.mjs` then
   applies the validated sections to `restaurants.json`. The agent's write grant is scoped to
   `research.json` (`Edit(pizza/data/research.json)` in `research.yml`) and a guard step fails the
@@ -186,7 +186,8 @@ Use **relative asset paths** (`./app.js`) inside a site so it works under its su
   aggregator or social), `ratingSkipped` (an attempt that found no coverage; the entry waits 90
   days before the rating worklist redraws it), `factorSources` (citations attached to a rating already on file, values untouched — the
   only agent write that touches `factors`, and it appends to `sources` only), `facts` (`opened`/`priceIndex`, fill-gaps-only,
-  with the page that states them), newAttributes, and links. **Records are rejected one at a
+  with the page that states them; `factsSkipped` records an attempt that found no page, so the
+  worklist moves on and retries after 90 days), newAttributes, and links. **Records are rejected one at a
   time**: `verify-research.mjs` drops the records that fail, emits a workflow warning per drop,
   writes the accepted set back to `research.json`, and fails the run only on a structural
   problem (not an object, a section over its cap, a retired channel). A closure citing only a

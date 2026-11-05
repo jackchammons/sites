@@ -159,6 +159,23 @@ for (const it of research.facts ?? []) {
   }
 }
 
+/* factsSkipped: the facts task looked and found no page stating the year or
+ * the tier. Recorded so the worklist moves on; retried after a quarter. */
+for (const it of research.factsSkipped ?? []) {
+  const r = byId.get(it.id);
+  if (!r) continue;
+  r.factsAttempted = today;
+  r.factsNote = it.note;
+  changes++;
+  console.log(`  . ${r.name}: no stated facts found — ${it.note}`);
+}
+/* Any facts record counts as an attempt too, so a partial fill (year found,
+ * tier not) does not keep the entry at the front of the worklist. */
+for (const it of research.facts ?? []) {
+  const r = byId.get(it.id);
+  if (r) r.factsAttempted = today;
+}
+
 /* factorSources: citations attached to a rating that already exists, values
  * untouched. Written for the founding entries, which were rated editorially
  * with nothing on file; the directory then shows the coverage beside the

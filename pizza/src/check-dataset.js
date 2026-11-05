@@ -53,6 +53,7 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
     if (r.openedSource != null && !https(r.openedSource)) bad(id, `openedSource must be https`);
     if (r.priceSource != null && !https(r.priceSource)) bad(id, `priceSource must be https`);
     if (r.ratingAttempted != null && !pastDate(r.ratingAttempted)) bad(id, `ratingAttempted is not a past date`);
+    if (r.factsAttempted != null && !pastDate(r.factsAttempted)) bad(id, `factsAttempted is not a past date`);
     if (r.crowd?.observed != null && !pastDate(r.crowd.observed)) bad(id, `crowd.observed is not a past date`);
     {
     }

@@ -11,7 +11,7 @@ export const KINDS = new Set(['opening', 'closing', 'ranking', 'mention']);
 export const CAPS = { news: 20, locations: 12, directory: 10, status: 10,
                       mentions: 40, newAttributes: 3, factorRatings: 12, links: 20,
                       candidateReview: 15, facts: 20, ratingSkipped: 12,
-                      factorSources: 12 };
+                      factorSources: 12, factsSkipped: 12 };
 export const MAX_AGE_DAYS = 180;
 /* Mentions feed a 24-month coverage window in slice.js; capping them at 180
  * days meant the window could never fill from the loop. */
@@ -59,7 +59,8 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
                      candidateReview: doc.candidateReview ?? [],
                      facts: doc.facts ?? [],
                      ratingSkipped: doc.ratingSkipped ?? [],
-                     factorSources: doc.factorSources ?? [] };
+                     factorSources: doc.factorSources ?? [],
+                     factsSkipped: doc.factsSkipped ?? [] };
   if (Array.isArray(doc.ratings) && doc.ratings.length) {
     fails.push('ratings are no longer accepted: crowd figures are frozen, see CLAUDE.md');
   }
@@ -306,6 +307,17 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
       bad('facts', i, `priceIndex must be 1-4, got ${it.priceIndex}`);
     }
     checkUrl('facts', i, it?.source, 'source');
+  });
+
+  /* ---- factsSkipped: the facts task's memory ----
+   * An entry the agent searched for a founding year or price tier and could
+   * not ground. Without this the worklist redrew the same twelve every run:
+   * the second dispatch filled one entry of twelve. */
+  sections.factsSkipped.forEach((it, i) => {
+    const r = byId.get(it?.id);
+    if (!r) { bad('factsSkipped', i, `unknown restaurant id "${it?.id}"`); return; }
+    if (factsSeen.has(it.id)) bad('factsSkipped', i, `${r.name} is also reported in facts`);
+    checkText('factsSkipped', i, it?.note, 'note', MAX_LEN.note, 10);
   });
 
   /* ---- factorSources: citations for a rating that already exists ----
