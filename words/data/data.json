@@ -1,0 +1,14 @@
+{
+  "title": "Word Counter",
+  "eyebrow": "Galley",
+  "tagline": "Type or paste text and count it as you write: words, characters, letters, lines, sentences, paragraphs, reading time and the words you use most.",
+  "heading": "Count the words before you set the type.",
+  "intro": "Paste or type anything below. The proof marks beside it update as you write, and nothing leaves your browser.",
+  "readingWpm": 238,
+  "speakingWpm": 150,
+  "sample": {
+    "label": "the opening of A Tale of Two Cities",
+    "text": "It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair.\n\nWe had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way. In short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only.\n\nThere were a king with a large jaw and a queen with a plain face, on the throne of England; there were a king with a large jaw and a queen with a fair face, on the throne of France. In both countries it was clearer than crystal to the lords of the State preserves of loaves and fishes, that things in general were settled for ever."
+  },
+  "note": "A word is any run of letters, digits, apostrophes or hyphens. Sentences end at a period, question mark or exclamation mark followed by a space, and a final sentence without one still counts. Paragraphs are separated by blank lines. Reading speed uses the 238 words per minute adult average for silent reading; speaking uses 150."
+}

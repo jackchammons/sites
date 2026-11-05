@@ -18,6 +18,7 @@ on:
       - 'mortgage/**'
       - 'life/**'
       - 'screen/**'
+      - 'words/**'
       - 'scripts/**'
       - 'sites.config.json'
       - '.github/workflows/publish.yml'

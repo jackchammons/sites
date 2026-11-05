@@ -108,6 +108,23 @@
       ],
       "cadence": "Live in your browser",
       "accent": "#5b6fd6"
+    },
+    {
+      "slug": "words",
+      "name": "Word Counter",
+      "emoji": "📝",
+      "tagline": "Type or paste text and count it as you write: words, characters, letters, lines, sentences, paragraphs, reading time and the words you use most.",
+      "dir": "words",
+      "build": [
+        "node",
+        "scripts/build.mjs"
+      ],
+      "verify": [
+        "node",
+        "scripts/verify.mjs"
+      ],
+      "cadence": "Live in your browser",
+      "accent": "#2f5d50"
     }
   ]
 }
