@@ -15,7 +15,7 @@ data/defaults.json     example inputs (the rate is a placeholder, not a quote)
 src/mortgage.js        the maths: payment, schedule, PMI, yearly roll-up
 src/app.js             reads the form, renders figures, chart and table
 src/styles.css
-scripts/build.mjs      renders the form + method copy into OUT_DIR
+scripts/build.mjs      renders the form and output slots into OUT_DIR
 scripts/verify.mjs     deploy gate: ID seam + maths checked on the built copy
 test/mortgage.test.mjs unit tests (node --test)
 ```
