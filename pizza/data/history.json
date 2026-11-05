@@ -5886,7 +5886,7 @@
       "scores": {
         "delancey": 90.2,
         "a-k-pizza": 86.5,
-        "windy-city-pie": 85.9,
+        "windy-city-pie": 86.2,
         "big-marios": 85.9,
         "serious-pie": 85.2,
         "independent-pizzeria": 85,
@@ -5970,10 +5970,10 @@
         },
         "windy-city-pie": {
           "reputation": 8.6,
-          "critical": 9.4,
+          "critical": 9.5,
           "craft": 9.3,
           "distinctiveness": 9.7,
-          "value": 8.4,
+          "value": 8.5,
           "penalty": 3.3
         },
         "big-marios": {
