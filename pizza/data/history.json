@@ -5812,7 +5812,7 @@
     },
     {
       "weekKey": "2026-W45",
-      "date": "2026-11-04",
+      "date": "2026-11-05",
       "week": 45,
       "algorithm": "SLICE v2.1",
       "ranks": {
@@ -5867,8 +5867,8 @@
         "belltown-pizza": 49,
         "in-pizza-we-crust": 50,
         "sopranos-antico": 51,
-        "pazzos-on-eastlake": 52,
-        "south-town-pie": 53,
+        "south-town-pie": 52,
+        "pazzos-on-eastlake": 53,
         "pizza-ritual": 54,
         "coltiva-pizzeria-e-barra": 55,
         "veras-pizza-and-bar": 56,
@@ -5893,10 +5893,10 @@
         "independent-pizzeria": 85,
         "dinos-tomato-pie": 85,
         "tutta-bella": 84.5,
-        "via-tribunali": 84.2,
+        "via-tribunali": 84.1,
         "humble-pie": 84,
         "cornelly": 83.1,
-        "pagliacci": 81.6,
+        "pagliacci": 81.5,
         "veraci-pizza": 80.2,
         "slice-box": 79.7,
         "zeeks-pizza": 79.2,
@@ -5935,8 +5935,8 @@
         "belltown-pizza": 65.4,
         "in-pizza-we-crust": 65.2,
         "sopranos-antico": 65.1,
-        "pazzos-on-eastlake": 64.2,
         "south-town-pie": 64.1,
+        "pazzos-on-eastlake": 64.1,
         "pizza-ritual": 63.7,
         "coltiva-pizzeria-e-barra": 63.3,
         "veras-pizza-and-bar": 61.3,
@@ -5947,7 +5947,7 @@
         "seward-park-pizza": 53.6,
         "jackson-street-pizza-lounge": 47.8,
         "sinners-pizza": 40.3,
-        "mad-pizza": 36.1,
+        "mad-pizza": 36,
         "pizzeria-gabbiano": 82.5,
         "flying-squirrel": 79.9
       },
@@ -6360,20 +6360,20 @@
           "value": 6.3,
           "penalty": 0
         },
-        "pazzos-on-eastlake": {
-          "reputation": 10,
-          "critical": 6,
-          "craft": 6,
-          "distinctiveness": 3.5,
-          "value": 6,
-          "penalty": 0
-        },
         "south-town-pie": {
           "reputation": 0,
           "critical": 6.5,
           "craft": 6,
           "distinctiveness": 7,
           "value": 6.6,
+          "penalty": 0
+        },
+        "pazzos-on-eastlake": {
+          "reputation": 10,
+          "critical": 6,
+          "craft": 6,
+          "distinctiveness": 3.5,
+          "value": 6,
           "penalty": 0
         },
         "pizza-ritual": {
