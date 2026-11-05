@@ -984,17 +984,38 @@
         "craft": {
           "value": 7.7,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://theinfatuation.com/seattle/reviews/pagliacci-pizza",
+            "https://archive.seattletimes.com/archive/19960404/2322409/is-pagliacci-as-good-as-advertised-si-si"
+          ],
+          "source": "https://theinfatuation.com/seattle/reviews/pagliacci-pizza",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation calls Pagliacci 'a classic with reliable pizza that works in a pinch,' valuing its crushed-tomato base for group orders; longtime Seattle Times critic John Hinterberger's 1996 review rated it among the best pizza in Seattle, praising a crust that's 'springy and chewy without being tough or coarse.'"
         },
         "distinctiveness": {
           "value": 6.8,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://theinfatuation.com/seattle/reviews/pagliacci-pizza",
+            "https://archive.seattletimes.com/archive/19960404/2322409/is-pagliacci-as-good-as-advertised-si-si"
+          ],
+          "source": "https://theinfatuation.com/seattle/reviews/pagliacci-pizza",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation calls Pagliacci 'a classic with reliable pizza that works in a pinch,' valuing its crushed-tomato base for group orders; longtime Seattle Times critic John Hinterberger's 1996 review rated it among the best pizza in Seattle, praising a crust that's 'springy and chewy without being tough or coarse.'"
         },
         "critical": {
           "value": 7.6,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://theinfatuation.com/seattle/reviews/pagliacci-pizza",
+            "https://archive.seattletimes.com/archive/19960404/2322409/is-pagliacci-as-good-as-advertised-si-si"
+          ],
+          "source": "https://theinfatuation.com/seattle/reviews/pagliacci-pizza",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation calls Pagliacci 'a classic with reliable pizza that works in a pinch,' valuing its crushed-tomato base for group orders; longtime Seattle Times critic John Hinterberger's 1996 review rated it among the best pizza in Seattle, praising a crust that's 'springy and chewy without being tough or coarse.'"
         }
       },
       "mentions": [
@@ -1011,6 +1032,13 @@
           "source": "MyNorthwest.com",
           "date": "2026-10-02",
           "kind": "opening"
+        },
+        {
+          "url": "https://theinfatuation.com/seattle/reviews/pagliacci-pizza",
+          "title": "Pagliacci is a classic with reliable pizza that works in a pinch",
+          "source": "The Infatuation",
+          "date": "2026-05-12",
+          "kind": "mention"
         }
       ],
       "instagram": "https://www.instagram.com/pagliaccipizza/",
@@ -1187,17 +1215,38 @@
         "craft": {
           "value": 8,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://theinfatuation.com/seattle/reviews/big-marios-pizza",
+            "https://seattlespectator.com/2024/05/29/by-the-slice-pizza-review/"
+          ],
+          "source": "https://theinfatuation.com/seattle/reviews/big-marios-pizza",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation rates it 7.2, calling it a solid New York-style slice joint with a notably spicy red sauce, good for soaking up a late Capitol Hill night; Seattle Spectator's head-to-head slice comparison scored it lower (6/10), finding the sampled pepperoni slice greasy and soggy despite acceptable crust and flavor."
         },
         "distinctiveness": {
           "value": 7.2,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://theinfatuation.com/seattle/reviews/big-marios-pizza",
+            "https://seattlespectator.com/2024/05/29/by-the-slice-pizza-review/"
+          ],
+          "source": "https://theinfatuation.com/seattle/reviews/big-marios-pizza",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation rates it 7.2, calling it a solid New York-style slice joint with a notably spicy red sauce, good for soaking up a late Capitol Hill night; Seattle Spectator's head-to-head slice comparison scored it lower (6/10), finding the sampled pepperoni slice greasy and soggy despite acceptable crust and flavor."
         },
         "critical": {
           "value": 7.9,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://theinfatuation.com/seattle/reviews/big-marios-pizza",
+            "https://seattlespectator.com/2024/05/29/by-the-slice-pizza-review/"
+          ],
+          "source": "https://theinfatuation.com/seattle/reviews/big-marios-pizza",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation rates it 7.2, calling it a solid New York-style slice joint with a notably spicy red sauce, good for soaking up a late Capitol Hill night; Seattle Spectator's head-to-head slice comparison scored it lower (6/10), finding the sampled pepperoni slice greasy and soggy despite acceptable crust and flavor."
         }
       },
       "mentions": [
@@ -1348,17 +1397,38 @@
         "craft": {
           "value": 8.1,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://www.thestranger.com/food-and-drink/going-out-for-pizza-14330897/",
+            "https://theinfatuation.com/seattle/reviews/ballard-pizza-co"
+          ],
+          "source": "https://www.thestranger.com/food-and-drink/going-out-for-pizza-14330897/",
+          "sourcedDate": "2026-11-05",
+          "note": "The Stranger's David Schmader recommends Ballard Pizza Company, writing that its inventive house pies rise to 'destination restaurant' level while custom pies are merely good, 'on par with Piecora's'; The Infatuation similarly calls it one of the closest things to New York-style pizza west of the Mississippi, singling out the rotating daily slices."
         },
         "distinctiveness": {
           "value": 6.8,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://www.thestranger.com/food-and-drink/going-out-for-pizza-14330897/",
+            "https://theinfatuation.com/seattle/reviews/ballard-pizza-co"
+          ],
+          "source": "https://www.thestranger.com/food-and-drink/going-out-for-pizza-14330897/",
+          "sourcedDate": "2026-11-05",
+          "note": "The Stranger's David Schmader recommends Ballard Pizza Company, writing that its inventive house pies rise to 'destination restaurant' level while custom pies are merely good, 'on par with Piecora's'; The Infatuation similarly calls it one of the closest things to New York-style pizza west of the Mississippi, singling out the rotating daily slices."
         },
         "critical": {
           "value": 7.8,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://www.thestranger.com/food-and-drink/going-out-for-pizza-14330897/",
+            "https://theinfatuation.com/seattle/reviews/ballard-pizza-co"
+          ],
+          "source": "https://www.thestranger.com/food-and-drink/going-out-for-pizza-14330897/",
+          "sourcedDate": "2026-11-05",
+          "note": "The Stranger's David Schmader recommends Ballard Pizza Company, writing that its inventive house pies rise to 'destination restaurant' level while custom pies are merely good, 'on par with Piecora's'; The Infatuation similarly calls it one of the closest things to New York-style pizza west of the Mississippi, singling out the rotating daily slices."
         }
       },
       "mentions": [],
@@ -1638,17 +1708,35 @@
         "craft": {
           "value": 8.4,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://theinfatuation.com/seattle/reviews/humble-pie"
+          ],
+          "source": "https://theinfatuation.com/seattle/reviews/humble-pie",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation (Aimee Rizzo) scores Humble Pie an 8.0, calling the wood-fired pizzas excellent and highlighting the classic margherita and the meat-heavy 'whole hog,' while praising the eco-conscious patio setting next to a chicken coop."
         },
         "distinctiveness": {
           "value": 8.6,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://theinfatuation.com/seattle/reviews/humble-pie"
+          ],
+          "source": "https://theinfatuation.com/seattle/reviews/humble-pie",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation (Aimee Rizzo) scores Humble Pie an 8.0, calling the wood-fired pizzas excellent and highlighting the classic margherita and the meat-heavy 'whole hog,' while praising the eco-conscious patio setting next to a chicken coop."
         },
         "critical": {
           "value": 8.2,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://theinfatuation.com/seattle/reviews/humble-pie"
+          ],
+          "source": "https://theinfatuation.com/seattle/reviews/humble-pie",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation (Aimee Rizzo) scores Humble Pie an 8.0, calling the wood-fired pizzas excellent and highlighting the classic margherita and the meat-heavy 'whole hog,' while praising the eco-conscious patio setting next to a chicken coop."
         }
       },
       "mentions": [],
@@ -1834,17 +1922,35 @@
         "craft": {
           "value": 8,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://theinfatuation.com/seattle/reviews/slice-box-pizza"
+          ],
+          "source": "https://theinfatuation.com/seattle/reviews/slice-box-pizza",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation scores Slice Box 8.5, praising the New York-style pies' crispy crust and calling the cheese slice 'an instant classic,' with the thick Sicilian pepperoni square singled out as the one to prioritize."
         },
         "distinctiveness": {
           "value": 8.8,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://theinfatuation.com/seattle/reviews/slice-box-pizza"
+          ],
+          "source": "https://theinfatuation.com/seattle/reviews/slice-box-pizza",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation scores Slice Box 8.5, praising the New York-style pies' crispy crust and calling the cheese slice 'an instant classic,' with the thick Sicilian pepperoni square singled out as the one to prioritize."
         },
         "critical": {
           "value": 7.8,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://theinfatuation.com/seattle/reviews/slice-box-pizza"
+          ],
+          "source": "https://theinfatuation.com/seattle/reviews/slice-box-pizza",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation scores Slice Box 8.5, praising the New York-style pies' crispy crust and calling the cheese slice 'an instant classic,' with the thick Sicilian pepperoni square singled out as the one to prioritize."
         }
       },
       "mentions": [],

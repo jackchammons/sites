@@ -1,43 +1,53 @@
 {
   "updated": "2026-11-05T19:00:00Z",
+  "mentions": [
+    {
+      "id": "pagliacci",
+      "title": "Pagliacci is a classic with reliable pizza that works in a pinch",
+      "url": "https://theinfatuation.com/seattle/reviews/pagliacci-pizza",
+      "source": "The Infatuation",
+      "date": "2026-05-12",
+      "kind": "mention"
+    }
+  ],
   "factorSources": [
     {
-      "id": "serious-pie",
+      "id": "humble-pie",
       "sources": [
-        "https://www.theinfatuation.com/seattle/reviews/serious-pie",
-        "https://mynorthwest.com/local/lets-eat-best-pizza-in-seattle/33623?page=0"
+        "https://theinfatuation.com/seattle/reviews/humble-pie"
       ],
-      "note": "The Infatuation calls the sausage-pepper-provolone pie the standout, with a crisp, chewy crust; Seattle Times restaurant critic Providence Cicero, quoted on MyNorthwest's Let's Eat segment, praised the 'fabulous' salads and said the pie toppings are always inventive."
+      "note": "The Infatuation (Aimee Rizzo) scores Humble Pie an 8.0, calling the wood-fired pizzas excellent and highlighting the classic margherita and the meat-heavy 'whole hog,' while praising the eco-conscious patio setting next to a chicken coop."
     },
     {
-      "id": "independent-pizzeria",
+      "id": "big-marios",
       "sources": [
-        "https://www.thestranger.com/food-and-drink/2011/02/17/6782469/the-spirit-of-the-independent",
-        "https://www.seattleweekly.com/2012/05/24/there-are-three-reasons-why-madison-parks-independent-pizzeria-is-the-last/"
+        "https://theinfatuation.com/seattle/reviews/big-marios-pizza",
+        "https://seattlespectator.com/2024/05/29/by-the-slice-pizza-review/"
       ],
-      "note": "The Stranger profiled the worker-owned Madison Park shop as a tight, open-kitchen neighborhood joint; Seattle Weekly praised its Neapolitan-meets-NYC crust and kid-friendly menu despite the cramped room and slow service from a small staff."
+      "note": "The Infatuation rates it 7.2, calling it a solid New York-style slice joint with a notably spicy red sauce, good for soaking up a late Capitol Hill night; Seattle Spectator's head-to-head slice comparison scored it lower (6/10), finding the sampled pepperoni slice greasy and soggy despite acceptable crust and flavor."
     },
     {
-      "id": "dinos-tomato-pie",
+      "id": "ballard-pizza-co",
       "sources": [
-        "https://www.theinfatuation.com/seattle/reviews/dinos-tomato-pie",
-        "https://www.thestranger.com/food-and-drink/pizza-pie-face-off-searching-for-the-best-slice-in-seattle-25754930/"
+        "https://www.thestranger.com/food-and-drink/going-out-for-pizza-14330897/",
+        "https://theinfatuation.com/seattle/reviews/ballard-pizza-co"
       ],
-      "note": "The Infatuation (8.7) calls the vodka-sauce 'Mr. Pink' pie the standout, with a thick, heavily charred crust; The Stranger's head-to-head slice comparison ranked it first among nine Seattle pizzerias for its square, New Jersey-style slice."
+      "note": "The Stranger's David Schmader recommends Ballard Pizza Company, writing that its inventive house pies rise to 'destination restaurant' level while custom pies are merely good, 'on par with Piecora's'; The Infatuation similarly calls it one of the closest things to New York-style pizza west of the Mississippi, singling out the rotating daily slices."
     },
     {
-      "id": "via-tribunali",
+      "id": "slice-box",
       "sources": [
-        "https://www.theinfatuation.com/seattle/reviews/via-tribunali"
+        "https://theinfatuation.com/seattle/reviews/slice-box-pizza"
       ],
-      "note": "The Infatuation rates it 7.6, calling it a 'middle-tier Neapolitan spot' on Capitol Hill that isn't the neighborhood's top pizza pick but holds its own, recommending the spicy salami pie and a buffalo mozzarella upgrade on the margherita."
+      "note": "The Infatuation scores Slice Box 8.5, praising the New York-style pies' crispy crust and calling the cheese slice 'an instant classic,' with the thick Sicilian pepperoni square singled out as the one to prioritize."
     },
     {
-      "id": "tutta-bella",
+      "id": "pagliacci",
       "sources": [
-        "https://www.theinfatuation.com/seattle/reviews/tutta-bella-neapolitan-pizzeria"
+        "https://theinfatuation.com/seattle/reviews/pagliacci-pizza",
+        "https://archive.seattletimes.com/archive/19960404/2322409/is-pagliacci-as-good-as-advertised-si-si"
       ],
-      "note": "The Infatuation rates it 7.3 and calls the Columbia City location one of the best sit-down meals in the neighborhood, singling out the margherita as the standout pie and noting the crust holds up better to wet toppings with extra oven time."
+      "note": "The Infatuation calls Pagliacci 'a classic with reliable pizza that works in a pinch,' valuing its crushed-tomato base for group orders; longtime Seattle Times critic John Hinterberger's 1996 review rated it among the best pizza in Seattle, praising a crust that's 'springy and chewy without being tough or coarse.'"
     }
   ]
 }
