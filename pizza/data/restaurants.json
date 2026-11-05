@@ -79,7 +79,15 @@
           "note": "The Infatuation says the Phinney Ridge preorder system made 'already outstanding' deep-dish even better and singles out the Meatza's crispy-crusted edges; Seattle Refined/KOMO profiles owner Dave Lichterman's from-scratch dough and signature Meatza and Sweet Pete pies."
         }
       },
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://phinneywood.com/2025/10/windy-city-to-launch-10-slice-and-a-beer-happy-hour/",
+          "title": "Windy City to launch $10 Slice and a Beer Happy Hour",
+          "source": "Phinneywood",
+          "date": "2025-10-09",
+          "kind": "mention"
+        }
+      ],
       "statusChecked": "2026-08-26",
       "instagram": "https://www.instagram.com/windycitypie/"
     },

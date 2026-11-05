@@ -1,29 +1,12 @@
 {
-  "updated": "2026-11-05T12:00:00Z",
-  "factorSources": [
-    {
-      "id": "post-alley-pizza",
-      "sources": [
-        "https://www.theinfatuation.com/seattle/reviews/post-alley-pizza"
-      ],
-      "note": "The Infatuation rates Post Alley Pizza 8.1 ('Great'), praising the charred, chewy NY-style crust and the granulated garlic shaker for slices, which it says it hasn't found at other Seattle slice shops."
-    },
-    {
-      "id": "hot-mamas-pizza",
-      "sources": [
-        "https://www.theinfatuation.com/seattle/reviews/hot-mamas-pizza",
-        "https://seattlespectator.com/2024/05/29/by-the-slice-pizza-review/"
-      ],
-      "note": "The Infatuation rates Hot Mama's 6.1 ('It's Fine'), saying the pesto slice is very good but the red (tomato) slices taste like almost nothing; The Seattle Spectator's by-the-slice review (6.5/10) found the pepperoni slice greasy and structurally weak with a 'disheartening flop,' though it praised the cheese pull and sauce."
-    }
-  ],
+  "updated": "2026-11-05T00:00:00Z",
   "mentions": [
     {
-      "id": "hot-mamas-pizza",
-      "title": "Hot Mama's pesto slice is very good, but ignore the others",
-      "url": "https://www.theinfatuation.com/seattle/reviews/hot-mamas-pizza",
-      "source": "The Infatuation",
-      "date": "2026-05-06",
+      "id": "windy-city-pie",
+      "title": "Windy City to launch $10 Slice and a Beer Happy Hour",
+      "url": "https://phinneywood.com/2025/10/windy-city-to-launch-10-slice-and-a-beer-happy-hour/",
+      "source": "Phinneywood",
+      "date": "2025-10-09",
       "kind": "mention"
     }
   ]
