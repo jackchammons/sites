@@ -418,17 +418,38 @@
         "craft": {
           "value": 8.9,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://www.theinfatuation.com/seattle/reviews/serious-pie",
+            "https://mynorthwest.com/local/lets-eat-best-pizza-in-seattle/33623?page=0"
+          ],
+          "source": "https://www.theinfatuation.com/seattle/reviews/serious-pie",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation calls the sausage-pepper-provolone pie the standout, with a crisp, chewy crust; Seattle Times restaurant critic Providence Cicero, quoted on MyNorthwest's Let's Eat segment, praised the 'fabulous' salads and said the pie toppings are always inventive."
         },
         "distinctiveness": {
           "value": 7.8,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://www.theinfatuation.com/seattle/reviews/serious-pie",
+            "https://mynorthwest.com/local/lets-eat-best-pizza-in-seattle/33623?page=0"
+          ],
+          "source": "https://www.theinfatuation.com/seattle/reviews/serious-pie",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation calls the sausage-pepper-provolone pie the standout, with a crisp, chewy crust; Seattle Times restaurant critic Providence Cicero, quoted on MyNorthwest's Let's Eat segment, praised the 'fabulous' salads and said the pie toppings are always inventive."
         },
         "critical": {
           "value": 8.8,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://www.theinfatuation.com/seattle/reviews/serious-pie",
+            "https://mynorthwest.com/local/lets-eat-best-pizza-in-seattle/33623?page=0"
+          ],
+          "source": "https://www.theinfatuation.com/seattle/reviews/serious-pie",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation calls the sausage-pepper-provolone pie the standout, with a crisp, chewy crust; Seattle Times restaurant critic Providence Cicero, quoted on MyNorthwest's Let's Eat segment, praised the 'fabulous' salads and said the pie toppings are always inventive."
         }
       },
       "mentions": [],
@@ -473,17 +494,38 @@
         "craft": {
           "value": 8.4,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://www.theinfatuation.com/seattle/reviews/dinos-tomato-pie",
+            "https://www.thestranger.com/food-and-drink/pizza-pie-face-off-searching-for-the-best-slice-in-seattle-25754930/"
+          ],
+          "source": "https://www.theinfatuation.com/seattle/reviews/dinos-tomato-pie",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation (8.7) calls the vodka-sauce 'Mr. Pink' pie the standout, with a thick, heavily charred crust; The Stranger's head-to-head slice comparison ranked it first among nine Seattle pizzerias for its square, New Jersey-style slice."
         },
         "distinctiveness": {
           "value": 9,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://www.theinfatuation.com/seattle/reviews/dinos-tomato-pie",
+            "https://www.thestranger.com/food-and-drink/pizza-pie-face-off-searching-for-the-best-slice-in-seattle-25754930/"
+          ],
+          "source": "https://www.theinfatuation.com/seattle/reviews/dinos-tomato-pie",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation (8.7) calls the vodka-sauce 'Mr. Pink' pie the standout, with a thick, heavily charred crust; The Stranger's head-to-head slice comparison ranked it first among nine Seattle pizzerias for its square, New Jersey-style slice."
         },
         "critical": {
           "value": 8.5,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://www.theinfatuation.com/seattle/reviews/dinos-tomato-pie",
+            "https://www.thestranger.com/food-and-drink/pizza-pie-face-off-searching-for-the-best-slice-in-seattle-25754930/"
+          ],
+          "source": "https://www.theinfatuation.com/seattle/reviews/dinos-tomato-pie",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation (8.7) calls the vodka-sauce 'Mr. Pink' pie the standout, with a thick, heavily charred crust; The Stranger's head-to-head slice comparison ranked it first among nine Seattle pizzerias for its square, New Jersey-style slice."
         }
       },
       "mentions": [],
@@ -607,17 +649,38 @@
         "craft": {
           "value": 8.7,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://www.thestranger.com/food-and-drink/2011/02/17/6782469/the-spirit-of-the-independent",
+            "https://www.seattleweekly.com/2012/05/24/there-are-three-reasons-why-madison-parks-independent-pizzeria-is-the-last/"
+          ],
+          "source": "https://www.thestranger.com/food-and-drink/2011/02/17/6782469/the-spirit-of-the-independent",
+          "sourcedDate": "2026-11-05",
+          "note": "The Stranger profiled the worker-owned Madison Park shop as a tight, open-kitchen neighborhood joint; Seattle Weekly praised its Neapolitan-meets-NYC crust and kid-friendly menu despite the cramped room and slow service from a small staff."
         },
         "distinctiveness": {
           "value": 8,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://www.thestranger.com/food-and-drink/2011/02/17/6782469/the-spirit-of-the-independent",
+            "https://www.seattleweekly.com/2012/05/24/there-are-three-reasons-why-madison-parks-independent-pizzeria-is-the-last/"
+          ],
+          "source": "https://www.thestranger.com/food-and-drink/2011/02/17/6782469/the-spirit-of-the-independent",
+          "sourcedDate": "2026-11-05",
+          "note": "The Stranger profiled the worker-owned Madison Park shop as a tight, open-kitchen neighborhood joint; Seattle Weekly praised its Neapolitan-meets-NYC crust and kid-friendly menu despite the cramped room and slow service from a small staff."
         },
         "critical": {
           "value": 8.7,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://www.thestranger.com/food-and-drink/2011/02/17/6782469/the-spirit-of-the-independent",
+            "https://www.seattleweekly.com/2012/05/24/there-are-three-reasons-why-madison-parks-independent-pizzeria-is-the-last/"
+          ],
+          "source": "https://www.thestranger.com/food-and-drink/2011/02/17/6782469/the-spirit-of-the-independent",
+          "sourcedDate": "2026-11-05",
+          "note": "The Stranger profiled the worker-owned Madison Park shop as a tight, open-kitchen neighborhood joint; Seattle Weekly praised its Neapolitan-meets-NYC crust and kid-friendly menu despite the cramped room and slow service from a small staff."
         }
       },
       "mentions": [
@@ -699,17 +762,35 @@
         "craft": {
           "value": 8.4,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://www.theinfatuation.com/seattle/reviews/tutta-bella-neapolitan-pizzeria"
+          ],
+          "source": "https://www.theinfatuation.com/seattle/reviews/tutta-bella-neapolitan-pizzeria",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation rates it 7.3 and calls the Columbia City location one of the best sit-down meals in the neighborhood, singling out the margherita as the standout pie and noting the crust holds up better to wet toppings with extra oven time."
         },
         "distinctiveness": {
           "value": 7,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://www.theinfatuation.com/seattle/reviews/tutta-bella-neapolitan-pizzeria"
+          ],
+          "source": "https://www.theinfatuation.com/seattle/reviews/tutta-bella-neapolitan-pizzeria",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation rates it 7.3 and calls the Columbia City location one of the best sit-down meals in the neighborhood, singling out the margherita as the standout pie and noting the crust holds up better to wet toppings with extra oven time."
         },
         "critical": {
           "value": 8.2,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://www.theinfatuation.com/seattle/reviews/tutta-bella-neapolitan-pizzeria"
+          ],
+          "source": "https://www.theinfatuation.com/seattle/reviews/tutta-bella-neapolitan-pizzeria",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation rates it 7.3 and calls the Columbia City location one of the best sit-down meals in the neighborhood, singling out the margherita as the standout pie and noting the crust holds up better to wet toppings with extra oven time."
         }
       },
       "mentions": [
@@ -1019,17 +1100,35 @@
         "craft": {
           "value": 8.5,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://www.theinfatuation.com/seattle/reviews/via-tribunali"
+          ],
+          "source": "https://www.theinfatuation.com/seattle/reviews/via-tribunali",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation rates it 7.6, calling it a 'middle-tier Neapolitan spot' on Capitol Hill that isn't the neighborhood's top pizza pick but holds its own, recommending the spicy salami pie and a buffalo mozzarella upgrade on the margherita."
         },
         "distinctiveness": {
           "value": 7.4,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://www.theinfatuation.com/seattle/reviews/via-tribunali"
+          ],
+          "source": "https://www.theinfatuation.com/seattle/reviews/via-tribunali",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation rates it 7.6, calling it a 'middle-tier Neapolitan spot' on Capitol Hill that isn't the neighborhood's top pizza pick but holds its own, recommending the spicy salami pie and a buffalo mozzarella upgrade on the margherita."
         },
         "critical": {
           "value": 8.3,
           "setBy": "editorial",
-          "date": "2026-08-26"
+          "date": "2026-08-26",
+          "sources": [
+            "https://www.theinfatuation.com/seattle/reviews/via-tribunali"
+          ],
+          "source": "https://www.theinfatuation.com/seattle/reviews/via-tribunali",
+          "sourcedDate": "2026-11-05",
+          "note": "The Infatuation rates it 7.6, calling it a 'middle-tier Neapolitan spot' on Capitol Hill that isn't the neighborhood's top pizza pick but holds its own, recommending the spicy salami pie and a buffalo mozzarella upgrade on the margherita."
         }
       },
       "mentions": [],

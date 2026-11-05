@@ -1,53 +1,43 @@
 {
-  "updated": "2026-11-05T21:00:00Z",
-  "factsSkipped": [
+  "updated": "2026-11-05T19:00:00Z",
+  "factorSources": [
     {
-      "id": "talaricos",
-      "note": "Checked talaricospizza.com home page and its /talaricos-about page: no founding year or 'since'/'established' line on either. Searched local coverage (West Seattle Blog, Seattle Met, historylink.org Pizza in Seattle history piece) and found opening coverage but no dated founding year to cite."
+      "id": "serious-pie",
+      "sources": [
+        "https://www.theinfatuation.com/seattle/reviews/serious-pie",
+        "https://mynorthwest.com/local/lets-eat-best-pizza-in-seattle/33623?page=0"
+      ],
+      "note": "The Infatuation calls the sausage-pepper-provolone pie the standout, with a crisp, chewy crust; Seattle Times restaurant critic Providence Cicero, quoted on MyNorthwest's Let's Eat segment, praised the 'fabulous' salads and said the pie toppings are always inventive."
     },
     {
-      "id": "my-friend-dereks",
-      "note": "Checked myfrienddereks.com home page and /about: describes the pop-up-to-brick-and-mortar story but states no year. Search (Infatuation, KUOW Seattle Eats) covers the Detroit-style pop-up and Tangletown restaurant without giving an opening year."
+      "id": "independent-pizzeria",
+      "sources": [
+        "https://www.thestranger.com/food-and-drink/2011/02/17/6782469/the-spirit-of-the-independent",
+        "https://www.seattleweekly.com/2012/05/24/there-are-three-reasons-why-madison-parks-independent-pizzeria-is-the-last/"
+      ],
+      "note": "The Stranger profiled the worker-owned Madison Park shop as a tight, open-kitchen neighborhood joint; Seattle Weekly praised its Neapolitan-meets-NYC crust and kid-friendly menu despite the cramped room and slow service from a small staff."
     },
     {
-      "id": "pi-vegan-pizzeria",
-      "note": "Checked pizzapivegan.com home page: only claims 'America's Oldest vegan pizzeria' with no date. Search found a 2015 VegNews piece about an ownership change but no stated founding year."
+      "id": "dinos-tomato-pie",
+      "sources": [
+        "https://www.theinfatuation.com/seattle/reviews/dinos-tomato-pie",
+        "https://www.thestranger.com/food-and-drink/pizza-pie-face-off-searching-for-the-best-slice-in-seattle-25754930/"
+      ],
+      "note": "The Infatuation (8.7) calls the vodka-sauce 'Mr. Pink' pie the standout, with a thick, heavily charred crust; The Stranger's head-to-head slice comparison ranked it first among nine Seattle pizzerias for its square, New Jersey-style slice."
     },
     {
-      "id": "johnny-mos-pizzeria",
-      "note": "Checked johnnymos.com home page and its /our-story page: both describe the two founders' friendship but state no founding year. Search turned up no article with a year either."
+      "id": "via-tribunali",
+      "sources": [
+        "https://www.theinfatuation.com/seattle/reviews/via-tribunali"
+      ],
+      "note": "The Infatuation rates it 7.6, calling it a 'middle-tier Neapolitan spot' on Capitol Hill that isn't the neighborhood's top pizza pick but holds its own, recommending the spicy salami pie and a buffalo mozzarella upgrade on the margherita."
     },
     {
-      "id": "pizza-ritual",
-      "note": "pizzaritual.com returned no readable content on two fetch attempts. Search found a Jan 2026 West Seattle Blog item saying it has been running pop-ups at KBM kitchen 'since summer' (no year given) and no menu with prices; The Infatuation lists only a '$$$$' marker, which is not the pizzeria's own menu."
-    },
-    {
-      "id": "pizzeria-pulcinella",
-      "note": "pulcinellapizza.com failed to load (SSL handshake failure) on two attempts, with and without www. Search turned up conflicting dates: a Feb 2009 DJC item says the Rainier Ave location had 'recently opened', while an Oct 2025 South Seattle Emerald piece describes it as newer, opened summer 2024. Not reporting either given the conflict."
-    },
-    {
-      "id": "dantini-pizza",
-      "note": "Checked dantinipizza.com home page and /menu-1: no founding year stated; the menu is two unreadable image files (Dantini-menu-1.jpg, Dantini-menu-2.jpg), not text prices. The square.site order link returned no content."
-    },
-    {
-      "id": "seward-park-pizza",
-      "note": "sewardparkpizza.com failed to load (SSL handshake failure) on both http and https attempts. Search found only a Cost:'$' rating on a directory aggregator (not the pizzeria's own menu) and no founding year."
-    },
-    {
-      "id": "eymans-pizza",
-      "note": "Checked eymanspizza.com home/about anchor: the only year present is 'Partnered with Slice since 2019', which refers to the online-ordering platform, not the restaurant's founding."
-    },
-    {
-      "id": "good-shape-pizza",
-      "note": "Checked goodshapepizza.com home page: no About/History page exists and no founding year is stated anywhere on the site."
-    },
-    {
-      "id": "jackson-street-pizza-lounge",
-      "note": "Checked jacksonstreetpizzalounge.com home page: the only year present is a '2025' copyright notice in the footer, not an opening date. No About/Our Story page exists."
-    },
-    {
-      "id": "mad-pizza",
-      "note": "Checked madpizza.com/location and madpizza.com/about: no founding year stated on either. The ChowNow ordering page (order.chownow.com/order/6301/locations) returned HTTP 403, so menu prices could not be read."
+      "id": "tutta-bella",
+      "sources": [
+        "https://www.theinfatuation.com/seattle/reviews/tutta-bella-neapolitan-pizzeria"
+      ],
+      "note": "The Infatuation rates it 7.3 and calls the Columbia City location one of the best sit-down meals in the neighborhood, singling out the margherita as the standout pie and noting the crust holds up better to wet toppings with extra oven time."
     }
   ]
 }
