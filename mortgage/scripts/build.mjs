@@ -87,7 +87,7 @@ const SUMMARY = [
 ];
 const summary = SUMMARY.map(([k, label]) => `
         <div class="fact" id="fact-${k}">
-          <dt>${esc(label)}</dt>
+          <dt id="lbl-${k}">${esc(label)}</dt>
           <dd><span id="sum-${k}">—</span><small id="sub-${k}"></small></dd>
         </div>`).join('');
 
@@ -120,23 +120,36 @@ const html = `<!doctype html>
   <div class="grid">
 
   <form class="panel inputs" id="form" autocomplete="off" novalidate>
-    <h2>The loan</h2>
+    <div class="head h2-row"><h2>The loan</h2>
+      <div class="seg-toggle" role="group" aria-label="New loan or one already under way">
+        <button type="button" id="mode-new" aria-pressed="true">New loan</button>
+        <button type="button" id="mode-progress" aria-pressed="false">Already paying</button>
+      </div>
+    </div>
     ${field({ id: 'in-price', label: 'Home price', value: v.price, pre: '$', mode: 'numeric' })}
-    <div class="pair">
+    <div class="pair" id="new-fields">
       ${field({ id: 'in-down', label: 'Down payment', value: downAmt, pre: '$', mode: 'numeric' })}
       ${field({ id: 'in-downpct', label: 'Down %', value: v.downPct, post: '%' })}
     </div>
+    <div class="pair" id="progress-fields" hidden>
+      ${field({ id: 'in-balance', label: 'Current balance', value: '', pre: '$', mode: 'numeric', hint: 'Principal owed today, from a statement' })}
+      <label class="field" for="in-maturity">
+        <span class="lbl">Last payment</span>
+        <span class="box"><input id="in-maturity" name="in-maturity" type="month"></span>
+        <span class="hint">The maturity date on the statement</span>
+      </label>
+    </div>
     <div class="pair">
       ${field({ id: 'in-rate', label: 'Interest rate', value: v.rate, post: '%', hint: 'Fixed, annual' })}
-      <label class="field" for="in-years">
+      <label class="field" for="in-years" id="term-field">
         <span class="lbl">Term</span>
         <span class="box"><select id="in-years" name="in-years">${terms}</select></span>
       </label>
+      <label class="field" for="in-start" id="start-field">
+        <span class="lbl" id="start-label">First payment</span>
+        <span class="box"><input id="in-start" name="in-start" type="month"></span>
+      </label>
     </div>
-    <label class="field" for="in-start">
-      <span class="lbl">First payment</span>
-      <span class="box"><input id="in-start" name="in-start" type="month"></span>
-    </label>
 
     <div class="head h2-row"><h2>Costs on top</h2>
       <div class="seg-toggle" role="group" aria-label="How tax and insurance are entered">
@@ -222,6 +235,12 @@ const html = `<!doctype html>
         <code>r</code> the annual rate ÷ 12 and <code>n</code> the number of monthly payments.
         Each month's interest is the outstanding balance × <code>r</code>, rounded to the cent; the rest of
         the payment is principal. The final payment is trimmed so the balance ends at exactly zero.</p>
+      <p><b>Already paying?</b> Enter the balance owed today, the month of your next payment and the
+        month of the last one (the maturity date on a statement), and the schedule runs from there:
+        <code>P</code> is the balance and <code>n</code> the payments left. That reproduces your payment
+        if the loan is on its original schedule. If you have paid ahead, your real payment is a little
+        higher than shown and the loan ends sooner; if the servicer has recast it, the shown figure is
+        the recast one. Equity, PMI and the tax rate are measured against the home price you enter.</p>
       <p><b>Property tax</b> can be entered as a rate — then it is the rate × the price ÷ 12, a stand-in
         for the assessed value, which is usually close to but not the same as what you pay — or as a yearly
         or monthly dollar figure. <b>Insurance</b> is the yearly premium ÷ 12, or a monthly figure as given.

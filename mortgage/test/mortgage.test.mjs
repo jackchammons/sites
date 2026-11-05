@@ -79,6 +79,26 @@ test('tax as a rate or a dollar figure; escrow replaces tax and insurance', () =
   assert.equal(describe({ price: 1, escrow: 'x' }).escrow, null);
 });
 
+test('a loan under way: balance and remaining months instead of price and term', () => {
+  const d = describe({ price: 500000, balance: 312000, rate: 5, months: 244, down: 999999, years: 30 });
+  assert.equal(d.loan, 312000);
+  assert.equal(d.down, 188000);
+  assert.equal(d.months, 244);
+  assert.ok(d.inProgress);
+  const s = amortize(d);
+  assert.equal(s.months, 244);
+  assert.equal(s.rows.at(-1).balance, 0);
+  near(s.pi, monthlyPI(312000, 5, 244 / 12));
+  // Underwater is allowed; the down payment just reads as nothing.
+  const u = describe({ price: 300000, balance: 320000, rate: 6, months: 120 });
+  assert.equal(u.loan, 320000);
+  assert.equal(u.down, 0);
+  // Without a balance the old shape is unchanged.
+  const n = describe({ price: 300000, down: 60000, rate: 6, years: 15 });
+  assert.equal(n.inProgress, false);
+  assert.equal(n.months, 180);
+});
+
 test('down payment is clamped to the price', () => {
   const d = describe({ price: 100000, down: 250000, rate: 6, years: 30 });
   assert.equal(d.loan, 0);

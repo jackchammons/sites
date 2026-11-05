@@ -23,12 +23,22 @@ const cents = x => Math.round(x * 100) / 100;
  *  price, down, rate and years defaults to zero. */
 export function describe(input) {
   const price = Math.max(0, +input.price || 0);
-  const down = Math.min(price, Math.max(0, +input.down || 0));
-  const loan = price - down;
+  // A loan under way is described by its balance rather than price minus
+  // down payment; the balance may exceed the price (underwater), so it is
+  // not clamped. `down` is then price minus balance, floored at zero.
+  const inProgress = input.balance != null && Number.isFinite(+input.balance);
+  const loan = inProgress ? Math.max(0, +input.balance) : price - Math.min(price, Math.max(0, +input.down || 0));
+  const down = Math.max(0, price - loan);
+  // Term in months: `months` wins (the remaining term of a loan under way),
+  // else whole years.
+  const months = input.months != null && Number.isFinite(+input.months)
+    ? Math.max(1, Math.round(+input.months))
+    : Math.max(1, Math.round(+input.years || 30)) * 12;
   return {
-    price, down, loan,
+    price, down, loan, inProgress,
     rate: Math.max(0, +input.rate || 0),
-    years: Math.max(1, Math.round(+input.years || 30)),
+    months,
+    years: months / 12,
     taxRate: Math.max(0, +input.taxRate || 0),       // % of price per year
     // Property tax as $ per year: given directly, or derived from taxRate.
     tax: input.tax != null && Number.isFinite(+input.tax)
@@ -67,13 +77,13 @@ export function needsPMI(d) {
  * Each row: { n, payment, principal, interest, extra, pmi, balance }.
  */
 export function amortize(d, { extra = d.extra, extraEvery = d.extraEvery ?? 1 } = {}) {
-  const pi = cents(monthlyPI(d.loan, d.rate, d.years));
+  const pi = cents(monthlyPI(d.loan, d.rate, d.months / 12));
   const r = d.rate / 100 / 12;
   const pmiMonthly = needsPMI(d) ? cents(d.loan * d.pmiRate / 100 / 12) : 0;
   const pmiStop = d.price * PMI_CANCEL_LTV;
   const rows = [];
   let bal = d.loan, totalInterest = 0, totalPMI = 0, pmiMonths = 0;
-  const cap = d.years * 12;
+  const cap = d.months;
   for (let n = 1; bal > 0.005 && n <= cap; n++) {
     const interest = cents(bal * r);
     const pmi = pmiMonthly > 0 && bal > pmiStop ? pmiMonthly : 0;
@@ -100,7 +110,7 @@ export function amortize(d, { extra = d.extra, extraEvery = d.extraEvery ?? 1 } 
 /** The first month's bill, split into its parts. Tax and insurance are
  *  either two parts or one escrow part, never both. */
 export function monthlyBreakdown(d) {
-  const pi = cents(monthlyPI(d.loan, d.rate, d.years));
+  const pi = cents(monthlyPI(d.loan, d.rate, d.months / 12));
   return {
     pi,
     tax: d.escrow == null ? cents(d.tax / 12) : 0,

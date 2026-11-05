@@ -36,7 +36,7 @@ function boot() {
   const DEFAULTS = JSON.parse($('defaults').textContent);
   const els = {
     price: $('in-price'), down: $('in-down'), downpct: $('in-downpct'), rate: $('in-rate'),
-    years: $('in-years'), start: $('in-start'), tax: $('in-tax'), ins: $('in-ins'),
+    years: $('in-years'), start: $('in-start'), balance: $('in-balance'), maturity: $('in-maturity'), tax: $('in-tax'), ins: $('in-ins'),
     hoa: $('in-hoa'), pmi: $('in-pmi'), extra: $('in-extra'), every: $('in-every'),
     taxUnit: $('in-tax-unit'), insUnit: $('in-ins-unit'), escrow: $('in-escrow'), escrowUnit: $('in-escrow-unit'),
   };
@@ -62,8 +62,9 @@ function boot() {
   const monthOf = (n, start) => new Date(start.getFullYear(), start.getMonth() + n - 1, 1);
 
   /* ---- state <-> form <-> hash ------------------------------------- */
-  const KEYS = { price: 'p', down: 'd', rate: 'r', years: 'y', tax: 't', taxUnit: 'tu', ins: 'i', insUnit: 'iu', escrow: 'w', escrowUnit: 'wu', hoa: 'h', pmi: 'm', extra: 'x', every: 'e', start: 's' };
+  const KEYS = { price: 'p', down: 'd', balance: 'b', maturity: 'mt', rate: 'r', years: 'y', tax: 't', taxUnit: 'tu', ins: 'i', insUnit: 'iu', escrow: 'w', escrowUnit: 'wu', hoa: 'h', pmi: 'm', extra: 'x', every: 'e', start: 's' };
   let escrowMode = false;
+  let progressMode = false;
 
   function fill(st) {
     els.price.value = st.price;
@@ -86,6 +87,9 @@ function boot() {
     els.extra.value = st.extra;
     els.every.value = String([...els.every.options].some(o => +o.value === +st.extraEvery) ? st.extraEvery : 1);
     els.start.value = st.start || ym(nextMonth());
+    els.balance.value = st.balance ?? '';
+    els.maturity.value = st.maturity || '';
+    setLoanMode(!!st.progressMode);
   }
 
   function fromDefaults() {
@@ -111,6 +115,11 @@ function boot() {
     st.escrowMode = q.get('em') === '1';
     const s = q.get('s');
     if (s && /^\d{4}-\d{2}$/.test(s)) st.start = s;
+    const b = parse(q.get('b') ?? '');
+    if (Number.isFinite(b) && b >= 0) st.balance = b;
+    const mt = q.get('mt');
+    if (mt && /^\d{4}-\d{2}$/.test(mt)) st.maturity = mt;
+    st.progressMode = q.get('lm') === '1';
     return st;
   }
 
@@ -118,6 +127,7 @@ function boot() {
     const q = new URLSearchParams();
     for (const [k, short] of Object.entries(KEYS)) q.set(short, els[k].value.trim().replace(/[$,\s]/g, ''));
     if (escrowMode) q.set('em', '1');
+    if (progressMode) q.set('lm', '1');
     history.replaceState(null, '', '#' + q.toString());
   }
 
@@ -151,17 +161,61 @@ function boot() {
     const rate = val(els.rate, 'rate');
     if (rate > 30) { els.rate.closest('.field').classList.add('invalid'); bad.push('rate'); }
     const d = describe({
-      price: val(els.price, 'price'), down: val(els.down, 'down'), rate,
-      years: +els.years.value,
+      price: val(els.price, 'price'), rate,
+      ...(progressMode
+        ? { balance: val(els.balance, 'balance'), months: remainingMonths() }
+        : { down: val(els.down, 'down'), years: +els.years.value }),
       // Tax and insurance arrive in whatever unit the picker says; the
       // maths takes dollars per year (or a tax rate, when that is the unit).
       ...taxAndInsurance(val),
       hoa: val(els.hoa, 'hoa'), pmiRate: val(els.pmi, 'pmi'), extra: val(els.extra, 'extra'),
       extraEvery: +els.every.value,
     });
-    val(els.downpct, 'downpct');
+    if (!progressMode) val(els.downpct, 'downpct');
+    if (progressMode && !(remainingMonths() > 0)) { els.maturity.closest('.field').classList.add('invalid'); bad.push('maturity'); }
+    else els.maturity.closest('.field').classList.remove('invalid');
     return { d, bad };
   }
+
+  /* Payments left, from the next payment month to the maturity month
+     inclusive; NaN when the maturity month is missing or not after it. */
+  function remainingMonths() {
+    const m = /^(\d{4})-(\d{2})$/.exec(els.maturity.value);
+    if (!m) return NaN;
+    const s0 = startDate();
+    const n = (+m[1] - s0.getFullYear()) * 12 + (+m[2] - 1 - s0.getMonth()) + 1;
+    return n > 0 ? n : NaN;
+  }
+  const termWord = months => {
+    const y = Math.floor(months / 12), mo = months % 12;
+    return [y ? `${y} yr` : '', mo ? `${mo} mo` : ''].filter(Boolean).join(' ') || '0 mo';
+  };
+
+  /* Switching to "already paying" with nothing entered seeds the balance
+     from the new-loan figures and the maturity from the term, so the page
+     does not go blank; the next-payment month moves to next month. */
+  function setLoanMode(progress) {
+    progressMode = progress;
+    $('new-fields').hidden = progress;
+    $('progress-fields').hidden = !progress;
+    $('term-field').hidden = progress;
+    $('start-label').textContent = progress ? 'Next payment' : 'First payment';
+    $('lbl-loan').textContent = progress ? 'Balance' : 'Loan amount';
+    $('mode-new').setAttribute('aria-pressed', String(!progress));
+    $('mode-progress').setAttribute('aria-pressed', String(progress));
+    if (progress) {
+      if (!(num(els.balance) >= 0) || els.balance.value.trim() === '') {
+        const p = num(els.price) || 0, dn = num(els.down) || 0;
+        els.balance.value = Math.max(0, Math.round(p - dn));
+      }
+      if (!/^\d{4}-\d{2}$/.test(els.maturity.value)) {
+        const s0 = startDate();
+        els.maturity.value = ym(new Date(s0.getFullYear(), s0.getMonth() + (+els.years.value || 30) * 12 - 1, 1));
+      }
+    }
+  }
+  $('mode-new').addEventListener('click', () => { setLoanMode(false); render(); writeHash(); });
+  $('mode-progress').addEventListener('click', () => { setLoanMode(true); render(); writeHash(); });
 
   const perYear = (x, unit) => unit === 'mo' ? x * 12 : x;
   function taxAndInsurance(val) {
@@ -211,7 +265,9 @@ function boot() {
         ? d.extraEvery === 1
           ? `plus ${usd(d.extra)} extra principal, ${usd(total + d.extra)} in all`
           : `plus ${usd(d.extra)} extra principal ${cadenceWord(d.extraEvery)}`
-        : d.loan > 0 ? `on a ${usd(d.loan)} loan over ${d.years} years` : 'Nothing borrowed, so nothing to repay.';
+        : d.loan > 0
+          ? d.inProgress ? `on a ${usd(d.loan)} balance, ${termWord(d.months)} to go` : `on a ${usd(d.loan)} loan over ${d.years} years`
+          : 'Nothing borrowed, so nothing to repay.';
 
     for (const k of ['pi', 'tax', 'insurance', 'escrow', 'pmi', 'hoa']) {
       const x = bd[k];
@@ -227,7 +283,9 @@ function boot() {
 
     const payoff = fast.months ? monthOf(fast.months, start) : null;
     const set = (k, main, sub = '') => { $('sum-' + k).textContent = main; $('sub-' + k).textContent = sub; };
-    set('loan', usd(d.loan), `${plain.format(+d.downPct.toFixed(1))}% down`);
+    set('loan', usd(d.loan), d.inProgress
+      ? (d.price > 0 ? `${plain.format(+(d.loan / d.price * 100).toFixed(1))}% of the home price` : '')
+      : `${plain.format(+d.downPct.toFixed(1))}% down`);
     set('interest', usd(fast.totalInterest),
       d.loan > 0 ? `${plain.format(+(fast.totalInterest / d.loan * 100).toFixed(0))}% of the loan` : '');
     const paidAll = d.loan + fast.totalInterest + fast.totalPMI;
@@ -274,7 +332,7 @@ function boot() {
     host.textContent = '';
     $('legend-extra').hidden = fast === base;
     $('legend-balance').textContent = fast === base ? 'Balance' : 'Balance on schedule';
-    $('chart-note').textContent = d.loan > 0 ? `${d.years}-year term` : '';
+    $('chart-note').textContent = d.loan > 0 ? (d.inProgress ? `${termWord(d.months)} left` : `${d.years}-year term`) : '';
     if (!(d.loan > 0) || !base.months) {
       host.innerHTML = '<p class="empty">Nothing borrowed — no balance to chart.</p>';
       return;

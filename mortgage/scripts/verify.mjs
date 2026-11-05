@@ -93,7 +93,9 @@ if (defaults) {
   check(esc.tax === 0 && esc.insurance === 0 && esc.escrow === 1000, 'escrow does not replace tax and insurance in the breakdown');
   const d = m.describe({ ...defaults, down: defaults.price * defaults.downPct / 100 });
   const s = m.amortize(d);
-  check(s.months === d.years * 12, `default loan schedules ${s.months} months, not ${d.years * 12}`);
+  check(s.months === d.months && d.months === defaults.years * 12, `default loan schedules ${s.months} months, not ${defaults.years * 12}`);
+  const prog = m.amortize(m.describe({ ...defaults, balance: 250000, months: 200 }));
+  check(prog.months === 200 && prog.rows.at(-1)?.balance === 0, 'a loan under way does not run its remaining months to zero');
   check(s.rows.at(-1)?.balance === 0, 'default schedule does not end at a zero balance');
   const fast = m.amortize(d, { extra: 500 });
   check(fast.months < s.months && fast.totalInterest < s.totalInterest, 'extra principal saves nothing');

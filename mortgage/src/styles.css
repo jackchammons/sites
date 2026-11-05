@@ -64,7 +64,12 @@ section{margin-top:30px}
 .box:has(select.unit) input{min-width:5ch}
 .inputs .h2-row{margin:20px 0 10px}
 .inputs .h2-row h2{margin:0}
-#split-fields[hidden],#escrow-fields[hidden]{display:none}
+#split-fields[hidden],#escrow-fields[hidden],#new-fields[hidden],#progress-fields[hidden]{display:none}
+.field[hidden]{display:none}
+/* The term select and the start month share one slot beside the rate; the
+   start month moves to its own row only in the new-loan layout. */
+.pair #start-field{grid-column:1 / -1}
+.pair #term-field[hidden]+#start-field{grid-column:auto}
 .box input[type=month]{padding-left:0}
 .hint{display:block;font-size:11.5px;color:var(--ink-3);margin-top:3px}
 .field.invalid .box{border-color:var(--bad)}
@@ -178,6 +183,8 @@ footer p:last-child{margin:0}
   .results{position:static;order:-1}
 }
 @media (max-width:440px){
+  /* A month input needs the full width to show "September 2026". */
+  .pair #term-field[hidden]+#start-field{grid-column:1 / -1}
   .facts{grid-template-columns:1fr}
   .schedule th,.schedule td{padding:7px 9px}
   .inputs,.results{padding-left:16px;padding-right:16px}
