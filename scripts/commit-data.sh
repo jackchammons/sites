@@ -42,17 +42,27 @@ for attempt in 1 2 3; do
     echo "fetch failed on attempt $attempt"; continue
   fi
   if ! git rebase FETCH_HEAD; then
-    # research.json is replaced wholesale by every research run, so two runs
-    # queued back to back (a dispatch pins the ref's SHA at dispatch time, so
-    # the second checks out the pre-first-commit tree) always conflict on it.
-    # The newer run's file is the right one: it is the file this run
-    # validated and applied. Any other conflict is real and aborts the attempt.
+    # Some files are regenerated wholesale by every run that touches them:
+    # research.json by each research pass, buzz.json by each feed sweep,
+    # history.json by each snapshot of the current ISO week. Two runs that
+    # start close together (every run checks out the SHA it was triggered
+    # on, so the second never sees the first's commit) always conflict on
+    # them, and the newer run's copy is the right one: it was built from
+    # the newer fetch, or from the research this run validated. A conflict
+    # anywhere else -- restaurants.json above all, where two runs' edits
+    # must both survive -- is real and aborts the attempt.
     conflicts=$(git diff --name-only --diff-filter=U)
-    if [ -n "$conflicts" ] && [ "$conflicts" = "pizza/data/research.json" ]; then
-      git checkout --theirs -- pizza/data/research.json
-      git add -- pizza/data/research.json
+    regenerated='pizza/data/research.json pizza/data/buzz.json pizza/data/history.json'
+    only_regenerated=yes
+    for f in $conflicts; do
+      case " $regenerated " in *" $f "*) ;; *) only_regenerated=no ;; esac
+    done
+    if [ -n "$conflicts" ] && [ "$only_regenerated" = yes ]; then
+      # During a rebase "theirs" is the commit being replayed: this run's.
+      git checkout --theirs -- $conflicts
+      git add -- $conflicts
       if GIT_EDITOR=true git rebase --continue; then
-        echo "rebase: kept this run's research.json over the previous run's"
+        echo "rebase: kept this run's copy of $(echo $conflicts | tr '\n' ' ')over the previous run's"
       else
         git rebase --abort || true
         echo "rebase onto main failed on attempt $attempt"; continue
