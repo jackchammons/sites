@@ -216,13 +216,22 @@ function boot() {
     const host = $('chart');
     host.textContent = '';
     $('legend-extra').hidden = fast === base;
+    $('legend-balance').textContent = fast === base ? 'Balance' : 'Balance on schedule';
     $('chart-note').textContent = d.loan > 0 ? `${d.years}-year term` : '';
     if (!(d.loan > 0) || !base.months) {
       host.innerHTML = '<p class="empty">Nothing borrowed — no balance to chart.</p>';
       return;
     }
     const W = Math.max(300, host.clientWidth || 640), H = W < 520 ? 220 : 280;
-    const yMax0 = niceMax(d.loan);
+    /* Four series on one axis: the balance (on schedule, and with extra
+       principal when there is any), and the running totals of principal and
+       interest paid under the active schedule. All are dollars on the same
+       scale, which is what lets them share a chart; interest paid can
+       outgrow the loan, so the axis fits whichever is larger. */
+    const running = (sch, key) => { let c = 0; return sch.rows.map(r => (c += key(r))); };
+    const cumP = running(fast, r => r.principal + r.extra);
+    const cumI = running(fast, r => r.interest);
+    const yMax0 = niceMax(Math.max(d.loan, fast.totalInterest));
     const yLabels = [0, 1, 2, 3, 4].map(i => compact.format(yMax0 * i / 4));
     // Size the gutter to the widest tick label: locales differ a lot here
     // ("$600K" vs "600.000 $"), and a fixed gutter clipped the long ones.
@@ -232,7 +241,7 @@ function boot() {
     const yMax = yMax0;
     const X = n => m.l + n / N * iw, Y = b => m.t + ih - b / yMax * ih;
     const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: 'img',
-      'aria-label': 'Remaining loan balance over time' });
+      'aria-label': 'Loan balance, principal paid and interest paid over time' });
 
     const g = svgEl('g', { class: 'grid' });
     for (let i = 0; i <= 4; i++) {
@@ -254,37 +263,45 @@ function boot() {
     }
     svg.append(g);
 
-    const path = s => 'M' + [[0, d.loan], ...s.rows.map(r => [r.n, r.balance])]
-      .map(([n, b]) => `${X(n).toFixed(1)},${Y(b).toFixed(1)}`).join('L');
-    svg.append(svgEl('path', { d: path(base), class: 'line s1' }));
-    if (fast !== base) svg.append(svgEl('path', { d: path(fast), class: 'line s2' }));
+    /* Each series: a value at payment n (0 = before the first), a colour slot
+       and a tooltip label. Balance series fall to zero after payoff; the
+       running totals hold their final value. */
+    const balAt = sch => n => n <= 0 ? d.loan : n > sch.months ? 0 : sch.rows[n - 1].balance;
+    const sumAt = arr => n => n <= 0 ? 0 : arr[Math.min(n, arr.length) - 1];
+    const withExtra = fast !== base;
+    const series = [
+      { cls: 's1', label: withExtra ? 'Balance on schedule' : 'Balance', at: balAt(base) },
+      withExtra && { cls: 's2', label: 'Balance with extra', at: balAt(fast) },
+      { cls: 's3', label: `Principal paid${withExtra ? ' (with extra)' : ''}`, at: sumAt(cumP) },
+      { cls: 's4', label: `Interest paid${withExtra ? ' (with extra)' : ''}`, at: sumAt(cumI) },
+    ].filter(Boolean);
+    for (const sr of series) {
+      const pts = [];
+      for (let n = 0; n <= N; n++) pts.push(`${X(n).toFixed(1)},${Y(sr.at(n)).toFixed(1)}`);
+      svg.append(svgEl('path', { d: 'M' + pts.join('L'), class: `line ${sr.cls}` }));
+    }
 
     const cross = svgEl('line', { class: 'cross', y1: m.t, y2: m.t + ih, x1: -10, x2: -10 });
-    const dot1 = svgEl('circle', { class: 'dot s1', r: 4.5, cx: -10, cy: -10 });
-    const dot2 = svgEl('circle', { class: 'dot s2', r: 4.5, cx: -10, cy: -10 });
-    svg.append(cross, dot1, dot2);
+    svg.append(cross);
+    for (const sr of series) {
+      sr.dot = svgEl('circle', { class: `dot ${sr.cls}`, r: 4.5, cx: -10, cy: -10 });
+      svg.append(sr.dot);
+    }
     const hit = svgEl('rect', { x: m.l, y: m.t, width: iw, height: ih, class: 'hit' });
     svg.append(hit);
     host.append(svg);
 
     const tip = $('tip');
-    const cumInterest = s => { let c = 0; return s.rows.map(r => (c += r.interest)); };
-    const ciBase = cumInterest(base), ciFast = fast === base ? ciBase : cumInterest(fast);
-    const at = (s, n) => n <= 0 ? d.loan : n > s.months ? 0 : s.rows[n - 1].balance;
     const move = ev => {
       const rect = svg.getBoundingClientRect();
       const px = (ev.clientX - rect.left) * (W / rect.width);
       const n = Math.max(1, Math.min(N, Math.round((px - m.l) / iw * N)));
       const x = X(n);
       cross.setAttribute('x1', x); cross.setAttribute('x2', x);
-      dot1.setAttribute('cx', x); dot1.setAttribute('cy', Y(at(base, n)));
-      if (fast !== base) { dot2.setAttribute('cx', x); dot2.setAttribute('cy', Y(at(fast, n))); }
-      const ci = (arr, s) => arr[Math.min(n, s.months) - 1] || 0;
+      for (const sr of series) { sr.dot.setAttribute('cx', x); sr.dot.setAttribute('cy', Y(sr.at(n))); }
       tip.innerHTML =
         `<b>${monthFmt.format(monthOf(n, start))}</b> · payment ${n}` +
-        `<div class="tr s1"><span class="sw"></span>On schedule<em>${usd(at(base, n))}</em></div>` +
-        (fast !== base ? `<div class="tr s2"><span class="sw"></span>With extra<em>${usd(at(fast, n))}</em></div>` : '') +
-        `<div class="tr"><span></span>Interest so far${fast !== base ? ' (with extra)' : ''}<em>${usd(ci(ciFast, fast))}</em></div>`;
+        series.map(sr => `<div class="tr ${sr.cls}"><span class="sw"></span>${sr.label}<em>${usd(sr.at(n))}</em></div>`).join('');
       tip.hidden = false;
       const box = host.getBoundingClientRect();
       const left = (x / W) * box.width;
@@ -292,7 +309,11 @@ function boot() {
       tip.style.left = Math.max(0, Math.min(box.width - tw, left + (left > box.width / 2 ? -tw - 14 : 14))) + 'px';
       tip.style.top = (host.offsetTop + 8) + 'px';
     };
-    const leave = () => { tip.hidden = true; for (const e of [cross, dot1, dot2]) { e.setAttribute('cx', -10); e.setAttribute('x1', -10); e.setAttribute('x2', -10); } };
+    const leave = () => {
+      tip.hidden = true;
+      cross.setAttribute('x1', -10); cross.setAttribute('x2', -10);
+      for (const sr of series) sr.dot.setAttribute('cx', -10);
+    };
     hit.addEventListener('pointermove', move);
     hit.addEventListener('pointerdown', move);
     hit.addEventListener('pointerleave', leave);
