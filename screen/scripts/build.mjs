@@ -125,11 +125,10 @@ const html = `<!doctype html>
 
     <h2>The screen</h2>
     <div class="pair">
-      ${field({ id: 'in-diag', label: 'Diagonal', value: v.diagonal, post: 'in', hint: 'As sold: the corner-to-corner size' })}
+      ${field({ id: 'in-diag', label: 'Diagonal', value: v.diagonal, post: 'in' })}
       ${select({ id: 'in-aspect', label: 'Shape', options: ASPECTS, selected: v.aspect })}
     </div>
-    ${select({ id: 'in-res', label: 'Resolution', options: [...RESOLUTIONS, { id: 'custom', label: 'Custom…' }], selected: v.resolution,
-      hint: 'The panel is scaled to fit inside the picture area' })}
+    ${select({ id: 'in-res', label: 'Resolution', options: [...RESOLUTIONS, { id: 'custom', label: 'Custom…' }], selected: v.resolution })}
     <div id="custom-res" hidden>
       <div class="pair">
         ${field({ id: 'in-resw', label: 'Pixels across', value: v.customW, mode: 'numeric' })}
@@ -142,17 +141,17 @@ const html = `<!doctype html>
     </div>
 
     <h2>The seat</h2>
-    ${field({ id: 'in-dist', label: 'Eyes to screen', value: 9, post: 'ft', hint: 'Accepts 9, 8′6″, 8 ft 6 in, 2.6 m, 260 cm' })}
+    ${field({ id: 'in-dist', label: 'Eyes to screen', value: 9, post: 'ft', hint: '8′6″, 8 ft 6 in or 2.6 m all work' })}
     <div class="pair">
-      ${field({ id: 'in-eye', label: 'Seated eye height', value: v.eyeHeight, post: 'in', hint: 'Floor to eye; a sofa is 38–46 in' })}
-      ${field({ id: 'in-centre', label: 'Screen centre height', value: v.centreHeight, post: 'in', hint: 'Floor to the middle of the picture' })}
+      ${field({ id: 'in-eye', label: 'Seated eye height', value: v.eyeHeight, post: 'in', hint: 'A sofa seats eyes at 38–46 in' })}
+      ${field({ id: 'in-centre', label: 'Screen centre height', value: v.centreHeight, post: 'in' })}
     </div>
 
     <fieldset id="pj-fields" hidden>
       <h2>The projector</h2>
       <div class="pair">
-        ${field({ id: 'in-throw1', label: 'Throw ratio, wide', value: v.throwMin, hint: 'From the lens spec, e.g. 1.2' })}
-        ${field({ id: 'in-throw2', label: 'Throw ratio, tele', value: v.throwMax, hint: 'The other end of the zoom' })}
+        ${field({ id: 'in-throw1', label: 'Throw ratio, wide', value: v.throwMin })}
+        ${field({ id: 'in-throw2', label: 'Throw ratio, tele', value: v.throwMax })}
       </div>
       <div class="pair">
         ${field({ id: 'in-offset', label: 'Lens offset', value: v.lensOffset, post: '%', hint: '% of picture height, lens axis to picture centre' })}
