@@ -12,7 +12,7 @@ import {
   acuityTable, throwDistance, widthAtThrow, lensOffsetInches, footLamberts, nits,
   placement, describeAngle, describeResolution,
   noticeFraction, ppdForFraction, distanceForPpd, averagePpd, pixelDensity, aspectLabel,
-  limitResolution, limitMatrix, subtended, verticalEquivalent,
+  limitResolution, limitMatrix, subtended, verticalEquivalent, FRONT_ROW,
 } from './screen.js';
 
 const $ = id => document.getElementById(id);
@@ -136,15 +136,26 @@ function boot() {
     };
   }
 
+  /* A field written by fill() is displayed rounded (a metric distance to
+     the centimetre). While it still holds that text the exact value is
+     used, so a hash or a unit switch never drifts; the moment the person
+     edits it, what they typed is what counts. */
+  const exact = new Map();
+  const write = (el, text, value) => { el.value = text; exact.set(el.id, { text, value }); };
+  const lengthOf = (el, dflt) => {
+    const e = exact.get(el.id);
+    return e && e.text === el.value ? e.value : parseLength(el.value, dflt);
+  };
+
   function fill(st) {
-    els.diag.value = plain(st.diag, 1);
+    write(els.diag, plain(st.diag, 1), st.diag);
     els.aspect.value = aspect(st.aspect).id;
     els.res.value = st.res === 'custom' ? 'custom' : resolution(st.res).id;
     els.resw.value = Math.round(st.resw); els.resh.value = Math.round(st.resh);
     $('custom-res').hidden = els.res.value !== 'custom';
-    els.dist.value = distField(st.dist);
-    els.eye.value = heightField(st.eye);
-    els.centre.value = heightField(st.centre);
+    write(els.dist, distField(st.dist), st.dist);
+    write(els.eye, heightField(st.eye), st.eye);
+    write(els.centre, heightField(st.centre), st.centre);
     els.throw1.value = st.throw1; els.throw2.value = st.throw2;
     els.offset.value = st.offset; els.lumens.value = st.lumens; els.gain.value = st.gain;
   }
@@ -155,15 +166,15 @@ function boot() {
   function read() {
     bad.clear();
     const hUnit = metric() ? 'cm' : 'in';
-    const diag = parseNum(els.diag.value);
+    const diag = lengthOf(els.diag, 'in');
     const custom = els.res.value === 'custom';
     $('custom-res').hidden = !custom;
     const resw = parseNum(els.resw.value), resh = parseNum(els.resh.value);
     mark(els.resw, !custom || (resw >= 16 && resw <= 100000));
     mark(els.resh, !custom || (resh >= 16 && resh <= 100000));
-    const dist = parseLength(els.dist.value, metric() ? 'm' : 'ft');
-    const eye = parseLength(els.eye.value, hUnit);
-    const centre = parseLength(els.centre.value, hUnit);
+    const dist = lengthOf(els.dist, metric() ? 'm' : 'ft');
+    const eye = lengthOf(els.eye, hUnit);
+    const centre = lengthOf(els.centre, hUnit);
     const throw1 = parseNum(els.throw1.value), throw2 = parseNum(els.throw2.value);
     const offset = (() => { const t = String(els.offset.value).trim().replace(/[%\s]/g, ''); return /^-?\d*\.?\d+$/.test(t) ? +t : NaN; })();
     const lumens = parseNum(els.lumens.value), gain = parseNum(els.gain.value);
@@ -202,7 +213,7 @@ function boot() {
     for (const [k, key] of Object.entries(KEYS)) {
       if (!p.has(key)) continue;
       const raw = p.get(key);
-      if (k === 'aspect') { st[k] = raw; continue; }
+      if (k === 'aspect') { if (ASPECTS.some(a => a.id === raw)) st[k] = raw; continue; }
       if (k === 'res') { st[k] = raw === 'custom' || RESOLUTIONS.some(r => r.id === raw) ? raw : st[k]; continue; }
       const x = +raw;
       if (Number.isFinite(x)) st[k] = x;
@@ -237,7 +248,7 @@ function boot() {
     const SMPTE = ANGLE_STANDARDS.find(s => s.id === 'smpte').angle;
     const THX_FAR = ANGLE_STANDARDS.find(s => s.id === 'thx-far').angle;
     const grade = (good, ok) => good ? 'good' : ok ? 'ok' : 'warn';
-    const fovGrade = fov > 70 ? 'ok' : grade(fov >= SMPTE, fov >= THX_FAR);
+    const fovGrade = fov >= FRONT_ROW ? 'ok' : grade(fov >= SMPTE, fov >= THX_FAR);
     $('out-fov').textContent = deg(fov);
     $('out-sub').textContent = `${describeAngle(fov)} — a ${n1.format(st.diag)}-inch ${aspect(st.aspect).id} picture seen from ${fmtLen(st.dist)}.`;
     $('out-total').className = `total ${fovGrade}`;
@@ -255,7 +266,7 @@ function boot() {
     const vSmpte = verticalEquivalent(SMPTE), vFar = verticalEquivalent(THX_FAR);
     set('vfov', deg(vf),
       `${n2.format(st.dist / d.height)} picture heights away; SMPTE 30° stands ${deg(vSmpte)} tall on 16:9, THX 26° ${deg(vFar)}`,
-      grade(vf >= vSmpte, vf >= vFar));
+      vf >= verticalEquivalent(FRONT_ROW) ? 'ok' : grade(vf >= vSmpte, vf >= vFar));
 
     const pitch = pixelPitch(d, res);
     const ppd = pixelsPerDegree(pitch, st.dist);
@@ -284,7 +295,7 @@ function boot() {
     } else {
       set('res', `Inside ${fmtLen(rv.limit)}`,
         `${short(res)} pixels stay distinct to 20/20 eyes out to ${fmtLen(rv.limit)}; from your seat the grid can show`,
-        grade(false, ppd >= 50));
+        'warn');
     }
 
     const pl = placement(d, st.dist, st.eye, st.centre);
@@ -538,7 +549,7 @@ function boot() {
         <td>${fmtLen(dd.width, 'dim')} × ${fmtLen(dd.height, 'dim')}</td>
         <td>${deg(a)}</td>
         <td class="verdict">${describeAngle(a)}</td>
-        <td>${vis ? `<span class="pill on">${short(res)} visible</span>` : `<span class="nil">merged</span>`}</td></tr>`;
+        <td>${vis ? `<span class="pill bad">grid can show</span>` : `<span class="pill on">hidden</span>`}</td></tr>`;
     }).join('');
     const fit = ANGLE_STANDARDS.map(s => `${n0.format(diagonalForAngle(st.dist, s.angle, ratio))} in for ${s.short}`);
     $('sizes-note').textContent = `from ${fmtLen(st.dist)}: ${fit.join(' · ')}`;
