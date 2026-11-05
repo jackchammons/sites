@@ -56,7 +56,7 @@ for (const f of ['app.js', 'screen.js']) {
    ($('sum-' + k)) are expanded from the slot lists the build renders. */
 const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]));
 const literal = [...app.matchAll(/\$\('([^']+)'\)/g)].map(m => m[1]);
-const facts = ['size', 'area', 'vfov', 'pixel', 'res', 'tilt', 'throw', 'lens', 'fl', 'width', 'top', 'bottom', 'max', 'stand'];
+const facts = ['size', 'area', 'vfov', 'density', 'pixel', 'avg', 'res', 'eye', 'tilt', 'throw', 'lens', 'fl', 'width', 'top', 'bottom', 'max', 'stand'];
 const wanted = new Set([...literal, ...facts.flatMap(k => [`sum-${k}`, `sub-${k}`, `fact-${k}`])]);
 check(literal.length >= 30, `only ${literal.length} literal lookups in app.js — did it change shape?`);
 for (const id of wanted) check(ids.has(id), `app.js looks up #${id}, which the page never renders`);
@@ -86,6 +86,19 @@ for (const st of s.ANGLE_STANDARDS) {
 for (const st of s.ITU_STANDARDS) check(html.includes(`${st.heights}H`), `method copy does not mention ${st.heights}H`);
 check(html.includes(`${s.BRIGHTNESS.cinema} fL`), 'method copy does not state the cinema brightness reference');
 check(html.includes(`${s.PLACEMENT.maxUp}°`), 'method copy does not state the comfort limit');
+/* The Cambridge eye-limit model: its constants must be printed, and the fit
+   must still put the median near 95 px/° and the 95th percentile near 113,
+   which is what reproduces their published matrix. */
+check(html.includes(String(s.EYE_LIMIT.mu)) && html.includes(String(s.EYE_LIMIT.sigma)), 'method copy does not print the eye-limit constants');
+check(html.includes('Nature Communications') && html.includes(s.EYE_LIMIT.paper), 'method copy does not cite the Cambridge paper');
+near(s.ppdForFraction(0.5), 95.4, 0.3, 'median eye limit');
+near(s.ppdForFraction(0.05), 113.4, 0.5, '95th percentile eye limit');
+const M = 100 / 2.54;
+check(s.limitResolution(s.dims(50, 16 / 9), 2 * M)?.label === '4K', 'matrix: 50" at 2 m should be 4K');
+check(s.limitResolution(s.dims(30, 16 / 9), 6 * M)?.label === 'HD', 'matrix: 30" at 6 m should be HD');
+check(s.limitResolution(s.dims(100, 16 / 9), 0.4 * M) === null, 'matrix: 100" at 0.4 m should exceed 32K');
+check(html.includes('<option value="custom">'), 'custom resolution option missing');
+for (const id of ['in-resw', 'in-resh', 'custom-res', 'btn-this', 'eye-bar', 'eye-tip', 'targets', 'matrix']) check(ids.has(id), `#${id} missing`);
 if (data) {
   const v = data.inputs;
   for (const k of ['diagonal', 'distance', 'eyeHeight', 'centreHeight', 'throwMin', 'throwMax', 'lensOffset', 'lumens', 'gain']) {

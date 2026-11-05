@@ -89,3 +89,39 @@ test('describeAngle covers every band', () => {
   assert.match(s.describeAngle(22), /television/);
   assert.match(s.describeAngle(12), /small picture/);
 });
+
+test('Cambridge eye-limit model: median near 95 ppd, 95th percentile near 113', () => {
+  near(s.ppdForFraction(0.5), 95.4, 0.3);
+  near(s.ppdForFraction(0.05), 113.4, 0.5);
+  near(s.noticeFraction(s.ppdForFraction(0.2)), 0.2, 1e-3);
+  near(s.noticeFraction(60), 1, 1e-3);
+  near(s.noticeFraction(300), 0, 1e-3);
+  assert.equal(s.noticeFraction(0), 1);
+  near(s.normalCdf(1.6449), 0.95, 1e-4);
+  near(s.normalInv(0.975), 1.96, 1e-3);
+});
+
+test('distanceForPpd inverts pixelsPerDegree; average ppd is rows over angle', () => {
+  const d = s.dims(65, 16 / 9);
+  const pitch = s.pixelPitch(d, s.resolution('2160'));
+  const dist = s.distanceForPpd(pitch, 90);
+  near(s.pixelsPerDegree(pitch, dist), 90, 1e-6);
+  near(s.averagePpd(2160, 16.8), 128.6, 0.1);
+  near(s.pixelDensity(0.015).ppi, 66.7, 0.1);
+  near(s.pixelDensity(0.015).mm, 0.381, 1e-3);
+  assert.equal(s.aspectLabel(1920, 1080), '16:9');
+  assert.equal(s.aspectLabel(2560, 1080), '64:27');
+});
+
+test('resolution-limit matrix reproduces the Cambridge chart', () => {
+  const M = 100 / 2.54;
+  assert.equal(s.limitResolution(s.dims(50, 16 / 9), 2 * M).label, '4K');
+  assert.equal(s.limitResolution(s.dims(20, 16 / 9), 1 * M).label, '4K');
+  assert.equal(s.limitResolution(s.dims(20, 16 / 9), 0.4 * M).label, '8K');
+  assert.equal(s.limitResolution(s.dims(60, 16 / 9), 0.7 * M).label, '16K');
+  assert.equal(s.limitResolution(s.dims(30, 16 / 9), 6 * M).label, 'HD');
+  assert.equal(s.limitResolution(s.dims(100, 16 / 9), 0.4 * M), null);
+  assert.equal(s.limitResolution(s.dims(80, 16 / 9), 5 * M).label, '2.5K');
+  const m = s.limitMatrix([20, 100], [0.4 * M, 6 * M], 16 / 9);
+  assert.equal(m.length, 2); assert.equal(m[0][1].label, 'HD');
+});

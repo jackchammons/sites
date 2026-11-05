@@ -11,6 +11,17 @@ wall keeps the eye line inside a comfortable band. In projector mode it adds thr
 distance for the lens's zoom range, lens height from the offset, and screen brightness
 in foot-lamberts against the cinema and home targets.
 
+It also carries the calculations from Cambridge's [display resolution
+calculator](https://www.cl.cam.ac.uk/research/rainbow/projects/display_calc/): pixel
+density (ppi and pitch), pixels per degree at the centre and averaged across the picture,
+a custom pixel count (with a button that reads the browser's own screen), the share of
+people who could tell this display from a perfect one (the eye-limit fit from Ashraf,
+Chapiro and Mantiuk, *Nature Communications* 2025, with the distances at which 20/20, the
+median eye and 19 in 20 people stop seeing a difference), and the resolution-limit
+matrix of screen size against seat distance, computed live for the chosen shape and
+units rather than shown as their static image. The unit tests pin the matrix to cells
+read off their published chart.
+
 ## How it is put together
 
 ```

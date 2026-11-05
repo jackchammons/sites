@@ -197,3 +197,87 @@ export function describeResolution(d, res, distance, arcmin = 1) {
     .sort((a, b) => a.w - b.w)[0];
   return { pitch, limit, ppd, wasted: distance > limit, lower };
 }
+
+/* ---- the eye's resolution limit (Cambridge model) ------------------ */
+
+/* Ashraf, Chapiro & Mantiuk, "Resolution limit of the eye — how many
+   pixels can we see?", Nature Communications 16:9086 (2025). Their display
+   calculator fits the per-person foveal achromatic limit as a normal
+   distribution over the cube root of cycles per degree (half the pixels per
+   degree): a display at a given ppd is distinguishable from a perfect one
+   by the share of people whose limit lies above it. */
+export const EYE_LIMIT = {
+  mu: 3.6263, sigma: 0.1309,
+  paper: 'https://doi.org/10.1038/s41467-025-64679-2',
+  calculator: 'https://www.cl.cam.ac.uk/research/rainbow/projects/display_calc/',
+};
+
+export function normalCdf(z) {
+  // Abramowitz & Stegun 7.1.26, good to about 1.5e-7.
+  const x = Math.abs(z) / Math.SQRT2;
+  const t = 1 / (1 + 0.3275911 * x);
+  const poly = t * (0.254829592 + t * (-0.284496736 + t * (1.421413741 + t * (-1.453152027 + t * 1.061405429))));
+  const erf = 1 - poly * Math.exp(-x * x);
+  return 0.5 * (1 + (z < 0 ? -erf : erf));
+}
+export function normalInv(p) {
+  let lo = -8, hi = 8;
+  for (let i = 0; i < 80; i++) {
+    const mid = (lo + hi) / 2;
+    if (normalCdf(mid) < p) lo = mid; else hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+
+/* Share of people who would notice a sharper display than one at `ppd`. */
+export const noticeFraction = ppd =>
+  ppd <= 0 ? 1 : 1 - normalCdf((Math.cbrt(ppd / 2) - EYE_LIMIT.mu) / EYE_LIMIT.sigma);
+
+/* The ppd at which exactly `fraction` of people would still notice. */
+export const ppdForFraction = fraction =>
+  2 * Math.pow(EYE_LIMIT.mu + EYE_LIMIT.sigma * normalInv(1 - fraction), 3);
+
+/* Distance that puts a pixel pitch at `ppd` — the inverse of pixelsPerDegree. */
+export const distanceForPpd = (pitch, ppd) => (pitch / 2) / Math.tan((0.5 / ppd) * DEG);
+
+/* Pixels per degree averaged across the picture: rows over vertical angle.
+   The centre figure is higher because a flat panel's edge pixels are seen
+   obliquely and cover less angle each. */
+export const averagePpd = (rows, vfovDeg) => rows / vfovDeg;
+
+/* Pixel density, both ways people quote it. */
+export const pixelDensity = pitch => ({ ppi: 1 / pitch, mm: pitch * 25.4 });
+
+/* "16:9" from a pixel count, reduced by the greatest common divisor. */
+export function aspectLabel(w, h) {
+  const gcd = (a, b) => (b ? gcd(b, a % b) : a);
+  const g = gcd(Math.round(w), Math.round(h)) || 1;
+  return `${Math.round(w) / g}:${Math.round(h) / g}`;
+}
+
+/* The ladder the resolution-limit matrix climbs. */
+export const MATRIX_RESOLUTIONS = [
+  { id: 'hd', label: 'HD', w: 1280, h: 720 },
+  { id: 'fhd', label: 'Full HD', w: 1920, h: 1080 },
+  { id: 'qhd', label: '2.5K', w: 2560, h: 1440 },
+  { id: '4k', label: '4K', w: 3840, h: 2160 },
+  { id: '5k', label: '5K', w: 5120, h: 2880 },
+  { id: '8k', label: '8K', w: 7680, h: 4320 },
+  { id: '16k', label: '16K', w: 15360, h: 8640 },
+  { id: '32k', label: '32K', w: 30720, h: 17280 },
+];
+
+/* The lowest rung that `fraction` of people or fewer could tell from a
+   perfect display at this size and distance; null if even 32K falls short. */
+export function limitResolution(d, distance, fraction = 0.05) {
+  const need = ppdForFraction(fraction);
+  for (let i = 0; i < MATRIX_RESOLUTIONS.length; i++) {
+    const r = MATRIX_RESOLUTIONS[i];
+    if (pixelsPerDegree(pixelPitch(d, r), distance) >= need) return { ...r, rank: i };
+  }
+  return null;
+}
+
+/* Rows of sizes, columns of distances (inches), each cell a rung or null. */
+export const limitMatrix = (sizes, distances, ratio, fraction = 0.05) =>
+  sizes.map(diag => distances.map(dist => limitResolution(dims(diag, ratio), dist, fraction)));

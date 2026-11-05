@@ -11,6 +11,8 @@ import {
   seatingDistances, ituDistances, pixelPitch, pixelAngle, pixelsPerDegree, acuityDistance,
   acuityTable, throwDistance, widthAtThrow, lensOffsetInches, footLamberts, nits,
   placement, describeAngle, describeResolution,
+  noticeFraction, ppdForFraction, distanceForPpd, averagePpd, pixelDensity, aspectLabel,
+  limitResolution, limitMatrix, subtended,
 } from './screen.js';
 
 const $ = id => document.getElementById(id);
@@ -40,7 +42,7 @@ function boot() {
   const DEFAULTS = DATA.inputs;
 
   const els = {
-    diag: $('in-diag'), aspect: $('in-aspect'), res: $('in-res'), dist: $('in-dist'),
+    diag: $('in-diag'), aspect: $('in-aspect'), res: $('in-res'), resw: $('in-resw'), resh: $('in-resh'), dist: $('in-dist'),
     eye: $('in-eye'), centre: $('in-centre'),
     throw1: $('in-throw1'), throw2: $('in-throw2'), offset: $('in-offset'),
     gain: $('in-gain'), lumens: $('in-lumens'),
@@ -117,14 +119,20 @@ function boot() {
     $('pj-section').hidden = !pj;
   }
 
+  /* The panel in use: a preset, or the custom pixel counts. */
+  const resOf = st => st.res === 'custom'
+    ? { id: 'custom', label: `${n0.format(st.resw)} × ${n0.format(st.resh)} (${aspectLabel(st.resw, st.resh)})`, w: st.resw, h: st.resh }
+    : resolution(st.res);
+  const short = r => r.id === 'custom' ? `${n0.format(r.w)} × ${n0.format(r.h)}` : r.label.replace(/ \(.*$/, '');
+
   /* ---- state <-> form <-> hash ------------------------------------- */
-  const KEYS = { diag: 'd', aspect: 'a', res: 'r', dist: 'v', eye: 'e', centre: 'c',
+  const KEYS = { diag: 'd', aspect: 'a', res: 'r', resw: 'rw', resh: 'rh', dist: 'v', eye: 'e', centre: 'c',
     throw1: 't1', throw2: 't2', offset: 'o', lumens: 'l', gain: 'g' };
 
   function stateFromDefaults() {
     return {
       diag: DEFAULTS.diagonal, aspect: DEFAULTS.aspect, res: DEFAULTS.resolution,
-      dist: DEFAULTS.distance, eye: DEFAULTS.eyeHeight, centre: DEFAULTS.centreHeight,
+      resw: DEFAULTS.customW, resh: DEFAULTS.customH, dist: DEFAULTS.distance, eye: DEFAULTS.eyeHeight, centre: DEFAULTS.centreHeight,
       throw1: DEFAULTS.throwMin, throw2: DEFAULTS.throwMax, offset: DEFAULTS.lensOffset,
       lumens: DEFAULTS.lumens, gain: DEFAULTS.gain,
     };
@@ -133,7 +141,9 @@ function boot() {
   function fill(st) {
     els.diag.value = plain(st.diag, 1);
     els.aspect.value = aspect(st.aspect).id;
-    els.res.value = resolution(st.res).id;
+    els.res.value = st.res === 'custom' ? 'custom' : resolution(st.res).id;
+    els.resw.value = Math.round(st.resw); els.resh.value = Math.round(st.resh);
+    $('custom-res').hidden = els.res.value !== 'custom';
     els.dist.value = distField(st.dist);
     els.eye.value = heightField(st.eye);
     els.centre.value = heightField(st.centre);
@@ -148,6 +158,11 @@ function boot() {
     bad.clear();
     const hUnit = metric() ? 'cm' : 'in';
     const diag = parseNum(els.diag.value);
+    const custom = els.res.value === 'custom';
+    $('custom-res').hidden = !custom;
+    const resw = parseNum(els.resw.value), resh = parseNum(els.resh.value);
+    mark(els.resw, !custom || (resw >= 16 && resw <= 100000));
+    mark(els.resh, !custom || (resh >= 16 && resh <= 100000));
     const dist = parseLength(els.dist.value, metric() ? 'm' : 'ft');
     const eye = parseLength(els.eye.value, hUnit);
     const centre = parseLength(els.centre.value, hUnit);
@@ -165,7 +180,7 @@ function boot() {
     } else {
       for (const el of [els.throw1, els.throw2, els.offset, els.lumens, els.gain]) mark(el, true);
     }
-    return { diag, aspect: els.aspect.value, res: els.res.value, dist, eye, centre,
+    return { diag, aspect: els.aspect.value, res: els.res.value, resw, resh, dist, eye, centre,
       throw1, throw2, offset, lumens, gain };
   }
 
@@ -189,7 +204,8 @@ function boot() {
     for (const [k, key] of Object.entries(KEYS)) {
       if (!p.has(key)) continue;
       const raw = p.get(key);
-      if (k === 'aspect' || k === 'res') { st[k] = raw; continue; }
+      if (k === 'aspect') { st[k] = raw; continue; }
+      if (k === 'res') { st[k] = raw === 'custom' || RESOLUTIONS.some(r => r.id === raw) ? raw : st[k]; continue; }
       const x = +raw;
       if (Number.isFinite(x)) st[k] = x;
     }
@@ -207,7 +223,7 @@ function boot() {
     const st = read();
     const ok = bad.size === 0;
     const d = dims(ok ? st.diag : DEFAULTS.diagonal, aspect(st.aspect).ratio);
-    const res = resolution(st.res);
+    const res = resOf(st);
     last = { st, d, res, ok };
     writeHash(st);
 
@@ -232,11 +248,21 @@ function boot() {
 
     const pitch = pixelPitch(d, res);
     const ppd = pixelsPerDegree(pitch, st.dist);
+    const dens = pixelDensity(pitch);
+    set('density', `${n0.format(dens.ppi)} ppi`,
+      `${n3.format(dens.mm)} mm pitch; ${short(res)} is ${aspectLabel(res.w, res.h)}`);
     set('pixel', `${n1.format(ppd)} px/°`,
-      `${n2.format(pixelAngle(pitch, st.dist) * 60)}′ per pixel at ${metric() ? `${n2.format(pitch * 25.4)} mm` : `${n3.format(pitch)} in`} pitch; 60 px/° is 20/20`);
+      `pixels per degree; ${n2.format(pixelAngle(pitch, st.dist) * 60)}′ per pixel, and 60 px/° is 20/20`);
+    const imgV = subtended(pitch * res.h, st.dist);
+    set('avg', `${n1.format(averagePpd(res.h, imgV))} px/°`,
+      `${n0.format(res.h)} rows over ${deg(imgV)}; edge pixels cover less angle`);
+    const frac = noticeFraction(ppd);
+    const pct = Math.round(frac * 100);
+    set('eye', `${pct}% of people`,
+      frac < 0.05 ? `could tell this from a perfect display: the Cambridge limit is met` : frac < 0.5 ? `could tell this from a perfect display; most could not` : `could tell this from a perfect display (Cambridge eye-limit model)`,
+      frac < 0.05 ? 'good' : frac > 0.5 ? 'warn' : '');
 
     const rv = describeResolution(d, res, st.dist);
-    const short = r => r.label.replace(/ \(.*$/, '');
     if (rv.wasted) {
       set('res', `Past ${fmtLen(rv.limit)}`,
         `${short(res)} pixels merge beyond ${fmtLen(rv.limit)}; ${rv.lower ? `${short(rv.lower)} would look as sharp from here` : 'you cannot see them from your seat'}`, 'warn');
@@ -252,11 +278,21 @@ function boot() {
       pl.ok ? '' : 'warn');
 
     drawLanes();
+    drawEye();
+    drawMatrix();
     drawSeats();
     drawSizes();
     drawProjector();
     drawPlacement(pl);
   }
+
+  /* The acuity table plus the panel in use, when that is a custom one. */
+  const acuityRows = (d, res) => {
+    const rows = acuityTable(d);
+    if (rows.some(r => r.id === res.id)) return rows;
+    const pitch = pixelPitch(d, res);
+    return [...rows, { ...res, pitch, distance: acuityDistance(pitch) }];
+  };
 
   /* ---- lanes chart: where the standards put the seat ---------------- */
   const SVGNS = 'http://www.w3.org/2000/svg';
@@ -283,9 +319,8 @@ function boot() {
     host.textContent = '';
     const seats = seatingDistances(d);
     const at = id => seats.find(s => s.id === id).distance;
-    const acuity = acuityTable(d);
-    const resRows = [...new Set(['1080', '2160', res.id])].map(id => acuity.find(r => r.id === id))
-      .sort((a, b) => b.w - a.w);
+    const acuity = acuityRows(d, res);
+    const resRows = acuity.filter(r => ['1080', '2160', res.id].includes(r.id)).sort((a, b) => b.w - a.w);
     const itu = ituDistances(d);
     const rows = [
       { fam: 's1', label: `THX best seat · ≥${seats[0].angle}°`, from: 0, to: at('thx-best'), open: true, tip: `Within ${fmtLen(at('thx-best'))} the picture fills ${seats[0].angle}° or more.` },
@@ -298,6 +333,8 @@ function boot() {
       ...resRows.map(r => ({
         fam: 's3', label: `${r.label.replace(/ \(.*$/, '')} pixels visible`, from: 0, to: r.distance, open: true,
         tip: `${r.label}: pixels distinct up to ${fmtLen(r.distance)} for 20/20 eyes; beyond that the resolution is not visible.` })),
+      { fam: 's3', label: `${short(res)} · 1 in 20 see sharper`, from: 0, to: distanceForPpd(pixelPitch(d, res), ppdForFraction(0.05)), open: true,
+        tip: `Cambridge eye-limit model: nearer than ${fmtLen(distanceForPpd(pixelPitch(d, res), ppdForFraction(0.05)))}, more than 5% of people could tell ${short(res)} from a perfect display.` },
       { fam: 's4', label: `Rule of thumb · ${RULE_OF_THUMB.near}–${RULE_OF_THUMB.far}× diagonal`, from: st.diag * RULE_OF_THUMB.near, to: st.diag * RULE_OF_THUMB.far,
         tip: `${fmtLen(st.diag * RULE_OF_THUMB.near)} to ${fmtLen(st.diag * RULE_OF_THUMB.far)}: the pre-HD shop-floor rule.` },
     ];
@@ -360,16 +397,106 @@ function boot() {
     $('lanes-note').textContent = `${n1.format(st.diag)}-inch ${aspect(st.aspect).id}; distance along the bottom`;
   }
 
+  /* ---- eye-limit bar and target distances --------------------------- */
+  function drawEye() {
+    const { st, d, res } = last;
+    const host = $('eye-bar');
+    host.textContent = '';
+    const pitch = pixelPitch(d, res);
+    const ppd = pixelsPerDegree(pitch, st.dist);
+    const MAX = 160;
+    const W = Math.max(320, host.clientWidth || 640), H = 64;
+    const m = { l: 8, r: 8, t: 22, b: 20 };
+    const iw = W - m.l - m.r, bh = H - m.t - m.b;
+    const X = p => m.l + Math.min(1, p / MAX) * iw;
+    const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: 'img',
+      'aria-label': 'Share of people who could see a sharper display, by pixels per degree' });
+    const defs = svgEl('defs', {});
+    const grad = svgEl('linearGradient', { id: 'eye-grad', x1: 0, x2: 1, y1: 0, y2: 0 });
+    for (let p = 0; p <= MAX; p += 4) {
+      grad.append(svgEl('stop', { offset: `${(p / MAX * 100).toFixed(1)}%`, 'stop-color': 'var(--accent)', 'stop-opacity': (0.08 + 0.82 * noticeFraction(p)).toFixed(3) }));
+    }
+    defs.append(grad); svg.append(defs);
+    svg.append(svgEl('rect', { x: m.l, y: m.t, width: iw, height: bh, fill: 'url(#eye-grad)', class: 'eye-grad' }));
+    const ax = svgEl('g', { class: 'eye-axis' });
+    for (let p = 0; p <= MAX; p += 20) {
+      ax.append(svgEl('text', { x: X(p), y: H - 4, 'text-anchor': p === 0 ? 'start' : p === MAX ? 'end' : 'middle' }, `${p}${p === MAX ? ' px/°' : ''}`));
+    }
+    svg.append(ax);
+    const xp = X(ppd);
+    svg.append(svgEl('line', { x1: xp, x2: xp, y1: m.t - 6, y2: m.t + bh + 4, class: 'eye-you' }));
+    const anchor = xp > W - 120 ? 'end' : 'start';
+    svg.append(svgEl('text', { x: xp + (anchor === 'end' ? -6 : 6), y: m.t - 9, class: 'eye-pct', 'text-anchor': anchor },
+      `${n1.format(ppd)} px/° · ${Math.round(noticeFraction(ppd) * 100)}% would notice`));
+    const tip = $('eye-tip');
+    const hit = svgEl('rect', { x: m.l, y: m.t, width: iw, height: bh, class: 'hit' });
+    const show = ev => {
+      const rect = svg.getBoundingClientRect();
+      const p = Math.max(0, Math.min(MAX, (ev.clientX - rect.left) * (W / rect.width) - m.l) / iw * MAX);
+      tip.innerHTML = `<b>${n0.format(p)} px/°</b> · ${Math.round(noticeFraction(p) * 100)}% could tell it from a perfect display<br>${fmtLen(distanceForPpd(pitch, Math.max(1, p)))} from this screen`;
+      tip.hidden = false;
+      const box = host.getBoundingClientRect();
+      const left = ev.clientX - box.left, tw = tip.offsetWidth;
+      tip.style.left = Math.max(0, Math.min(box.width - tw, left + (left > box.width / 2 ? -tw - 12 : 12))) + 'px';
+      tip.style.top = (host.offsetTop + H + 4) + 'px';
+    };
+    hit.addEventListener('pointermove', show);
+    hit.addEventListener('pointerdown', show);
+    hit.addEventListener('pointerleave', () => { tip.hidden = true; });
+    svg.append(hit);
+    host.append(svg);
+    $('eye-note').textContent = `${short(res)} on ${n1.format(st.diag)} in from ${fmtLen(st.dist)}`;
+
+    const targets = [
+      { label: '20/20 vision', note: 'one arc-minute per pixel, the textbook limit', ppd: 60 },
+      { label: 'Half of people', note: 'median measured limit, Cambridge 2025', ppd: ppdForFraction(0.5) },
+      { label: '19 in 20 people', note: '95th percentile of the measured limit', ppd: ppdForFraction(0.05) },
+    ];
+    $('targets').innerHTML = targets.map(tg => {
+      const dist = distanceForPpd(pitch, tg.ppd);
+      const met = st.dist >= dist;
+      return `<tr><th scope="row">${tg.label}<small>${tg.note}</small></th><td>${n0.format(tg.ppd)}</td><td>${fmtLen(dist)} or more</td>
+        <td>${met ? `<span class="pill on">met</span>` : `<span class="nil">${fmtLen(dist - st.dist)} closer than that</span>`}</td></tr>`;
+    }).join('');
+  }
+
+  /* ---- resolution matrix -------------------------------------------- */
+  function drawMatrix() {
+    const { st, d } = last;
+    const per = metric() ? 100 / 2.54 : 12;
+    const cols = [...new Set([...(metric() ? DATA.matrixMetres : DATA.matrixFeet).map(u => +(u * per).toFixed(2)), +st.dist.toFixed(2)])].sort((a, b) => a - b);
+    const rows = [...new Set([...DATA.matrixSizes, +st.diag.toFixed(1)])].sort((a, b) => a - b);
+    const cells = limitMatrix(rows, cols, d.ratio);
+    const unit = metric() ? 'm' : 'ft';
+    const colLabel = c => Math.abs(c - st.dist) < 0.01 ? `you · ${fmtLen(c)}` : `${+(c / per).toFixed(2)} ${unit}`;
+    const head = `<thead><tr><th scope="col">size ↓ · seat →</th>${cols.map(c =>
+      `<th scope="col"${Math.abs(c - st.dist) < 0.01 ? ' class="you"' : ''}>${colLabel(c)}</th>`).join('')}</tr></thead>`;
+    const body = `<tbody>${rows.map((diag, i) => {
+      const mine = Math.abs(diag - st.diag) < 0.05;
+      return `<tr><th scope="row"${mine ? ' class="you"' : ''}>${mine ? 'you · ' : ''}${n1.format(diag)} in</th>${cells[i].map((c, j) => {
+        const here = mine && Math.abs(cols[j] - st.dist) < 0.01;
+        return `<td class="q${c ? c.rank + 1 : 0}${here ? ' you' : ''}" title="${n1.format(diag)} in at ${fmtLen(cols[j])}: ${c ? `${c.label} (${n0.format(c.w)} × ${n0.format(c.h)})` : 'more than 32K'}">${c ? c.label : '>32K'}</td>`;
+      }).join('')}</tr>`;
+    }).join('')}</tbody>`;
+    $('matrix').innerHTML = head + body;
+    const mine = limitResolution(d, st.dist);
+    $('matrix-note').textContent = `${aspect(st.aspect).id} pictures; yours: ${mine ? `${mine.label} is enough` : 'beyond 32K'}`;
+  }
+
   /* ---- table: how far to sit from this screen ---------------------- */
   function drawSeats() {
     const { st, d, res } = last;
     const rows = [];
     for (const s of seatingDistances(d)) rows.push({ label: s.label, note: s.note, distance: s.distance, angle: s.angle });
     for (const s of ituDistances(d)) rows.push({ label: s.label, note: `${s.heights} picture heights`, distance: s.distance, angle: s.angle });
-    for (const r of acuityTable(d)) {
+    for (const r of acuityRows(d, res)) {
       if (['1080', '2160', '4320', res.id].includes(r.id)) {
-        rows.push({ label: `${r.label.replace(/ \(.*$/, '')} pixels merge`, note: `one arc-minute per pixel; beyond this ${r.label.replace(/ \(.*$/, '')} is not visible`, distance: r.distance, angle: hfov(d, r.distance) });
+        rows.push({ label: `${short(r)} pixels merge`, note: `one arc-minute per pixel; beyond this ${short(r)} is not visible`, distance: r.distance, angle: hfov(d, r.distance) });
       }
+    }
+    for (const [f, who] of [[0.5, 'half of people'], [0.05, '1 in 20 people']]) {
+      const dist = distanceForPpd(pixelPitch(d, res), ppdForFraction(f));
+      rows.push({ label: `${short(res)} sharp for all but ${who}`, note: `Cambridge eye-limit model, ${n0.format(ppdForFraction(f))} px/°`, distance: dist, angle: hfov(d, dist) });
     }
     rows.push({ label: 'Rule of thumb, near', note: `${RULE_OF_THUMB.near} × diagonal`, distance: st.diag * RULE_OF_THUMB.near, angle: hfov(d, st.diag * RULE_OF_THUMB.near) });
     rows.push({ label: 'Rule of thumb, far', note: `${RULE_OF_THUMB.far} × diagonal`, distance: st.diag * RULE_OF_THUMB.far, angle: hfov(d, st.diag * RULE_OF_THUMB.far) });
@@ -398,7 +525,7 @@ function boot() {
         <td>${fmtLen(dd.width, 'dim')} × ${fmtLen(dd.height, 'dim')}</td>
         <td>${deg(a)}</td>
         <td class="verdict">${describeAngle(a)}</td>
-        <td>${vis ? `<span class="pill on">${res.label.replace(/ \(.*$/, '')} visible</span>` : `<span class="nil">merged</span>`}</td></tr>`;
+        <td>${vis ? `<span class="pill on">${short(res)} visible</span>` : `<span class="nil">merged</span>`}</td></tr>`;
     }).join('');
     const fit = ANGLE_STANDARDS.map(s => `${n0.format(diagonalForAngle(st.dist, s.angle, ratio))} in for ${s.short}`);
     $('sizes-note').textContent = `from ${fmtLen(st.dist)}: ${fit.join(' · ')}`;
@@ -497,6 +624,15 @@ function boot() {
   $('mode-tv').addEventListener('click', () => switchMode('tv'));
   $('mode-pj').addEventListener('click', () => switchMode('projector'));
 
+  $('btn-this').addEventListener('click', () => {
+    const w = Math.round((window.screen?.width || 0) * (window.devicePixelRatio || 1));
+    const h = Math.round((window.screen?.height || 0) * (window.devicePixelRatio || 1));
+    if (!(w > 0 && h > 0)) { $('this-note').textContent = 'The browser did not report a screen size.'; return; }
+    els.res.value = 'custom'; els.resw.value = w; els.resh.value = h;
+    $('custom-res').hidden = false;
+    $('this-note').textContent = `${w} × ${h} as this browser reports it.`;
+    compute();
+  });
   $('btn-reset').addEventListener('click', () => {
     units = DEFAULTS.units; mode = DEFAULTS.mode;
     applyUnits(); applyMode(); fill(stateFromDefaults()); compute();
@@ -511,7 +647,7 @@ function boot() {
     }
   });
   window.addEventListener('hashchange', () => { fill(readHash()); applyUnits(); applyMode(); compute(); });
-  window.addEventListener('resize', () => { if (last && last.ok) { drawLanes(); } });
+  window.addEventListener('resize', () => { if (last && last.ok) { drawLanes(); drawEye(); } });
 
   const start = readHash();
   applyUnits(); applyMode();
