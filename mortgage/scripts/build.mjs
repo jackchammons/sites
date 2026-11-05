@@ -123,29 +123,44 @@ const html = `<!doctype html>
         <button type="button" id="mode-progress" aria-pressed="false">Already paying</button>
       </div>
     </div>
-    ${field({ id: 'in-price', label: 'Home price', value: v.price, pre: '$', mode: 'numeric' })}
+    <div id="price-field">
+      ${field({ id: 'in-price', label: 'Home price', value: v.price, pre: '$', mode: 'numeric' })}
+    </div>
     <div class="pair" id="new-fields">
       ${field({ id: 'in-down', label: 'Down payment', value: downAmt, pre: '$', mode: 'numeric' })}
       ${field({ id: 'in-downpct', label: 'Down %', value: v.downPct, post: '%' })}
     </div>
     <div class="pair" id="progress-fields" hidden>
       ${field({ id: 'in-balance', label: 'Current balance', value: '', pre: '$', mode: 'numeric', hint: 'Principal owed today, from a statement' })}
-      <label class="field" for="in-maturity">
-        <span class="lbl">Last payment</span>
-        <span class="box"><input id="in-maturity" name="in-maturity" type="month"></span>
-        <span class="hint">The maturity date on the statement</span>
-      </label>
+      ${field({ id: 'in-assumed', label: 'Down % (if known)', value: v.downPct, post: '%', hint: 'Sets the inferred price' })}
     </div>
     <div class="pair">
       ${field({ id: 'in-rate', label: 'Interest rate', value: v.rate, post: '%', hint: 'Fixed, annual' })}
       <label class="field" for="in-years" id="term-field">
-        <span class="lbl">Term</span>
+        <span class="lbl" id="term-label">Term</span>
         <span class="box"><select id="in-years" name="in-years">${terms}</select></span>
       </label>
+    </div>
+    <div class="pair" id="date-fields">
       <label class="field" for="in-start" id="start-field">
-        <span class="lbl" id="start-label">First payment</span>
+        <span class="lbl">First payment</span>
         <span class="box"><input id="in-start" name="in-start" type="month"></span>
       </label>
+      <label class="field" for="in-maturity" id="maturity-field" hidden>
+        <span class="lbl">Last payment</span>
+        <span class="box"><input id="in-maturity" name="in-maturity" type="month"></span>
+        <span class="hint">Either date sets the other, from the term</span>
+      </label>
+    </div>
+    <div id="next-field" hidden>
+      <label class="field" for="in-next">
+        <span class="lbl">Next payment</span>
+        <span class="box"><input id="in-next" name="in-next" type="month"></span>
+      </label>
+      <div class="inferred" id="inferred">
+        <span class="lbl">Inferred from the balance</span>
+        <p><b id="inf-price">—</b> <span id="inf-note"></span></p>
+      </div>
     </div>
 
     <div class="head h2-row"><h2>Costs on top</h2>

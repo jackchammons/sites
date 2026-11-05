@@ -94,6 +94,9 @@ if (defaults) {
   const d = m.describe({ ...defaults, down: defaults.price * defaults.downPct / 100 });
   const s = m.amortize(d);
   check(s.months === d.months && d.months === defaults.years * 12, `default loan schedules ${s.months} months, not ${defaults.years * 12}`);
+  const sched = m.amortize(d);
+  check(Math.abs(m.originalLoan(sched.rows[59].balance, defaults.rate, d.months, 60) - d.loan) < 1,
+    'originalLoan does not invert the default schedule');
   const prog = m.amortize(m.describe({ ...defaults, balance: 250000, months: 200 }));
   check(prog.months === 200 && prog.rows.at(-1)?.balance === 0, 'a loan under way does not run its remaining months to zero');
   check(s.rows.at(-1)?.balance === 0, 'default schedule does not end at a zero balance');
