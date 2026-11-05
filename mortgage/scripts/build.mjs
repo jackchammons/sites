@@ -81,7 +81,7 @@ const SUMMARY = [
   ['interest', 'Total interest'],
   ['cost', 'Total of all payments'],
   ['payoff', 'Paid off'],
-  ['pmiend', 'PMI ends'],
+  ['extra', 'Total extra principal'],
   ['saved', 'Extra principal saves'],
 ];
 const summary = SUMMARY.map(([k, label]) => `

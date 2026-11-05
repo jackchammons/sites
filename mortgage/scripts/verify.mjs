@@ -59,7 +59,7 @@ const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]));
 const literal = [...app.matchAll(/\$\('([^']+)'\)/g)].map(m => m[1]);
 // Prefixed lookups ($('bd-' + k)) are expanded from the parts list in the script.
 const parts = ['pi', 'tax', 'insurance', 'escrow', 'pmi', 'hoa'];
-const summary = ['loan', 'interest', 'cost', 'payoff', 'pmiend', 'saved'];
+const summary = ['loan', 'interest', 'cost', 'payoff', 'extra', 'saved'];
 const wanted = new Set([
   ...literal,
   ...parts.flatMap(k => [`bd-${k}`, `row-${k}`, `seg-${k}`]),

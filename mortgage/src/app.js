@@ -282,7 +282,7 @@ function boot() {
   $('mode-split').addEventListener('click', () => { setMode(false); render(); writeHash(); });
   $('mode-escrow').addEventListener('click', () => { setMode(true); render(); writeHash(); });
 
-  const cadenceWord = e => ({ 0: 'once', 3: 'each quarter', 6: 'twice a year', 12: 'each year' })[e] || `every ${e} months`;
+  const cadenceWord = e => ({ 0: 'once', 1: 'each month', 3: 'each quarter', 6: 'twice a year', 12: 'each year' })[e] || `every ${e} months`;
 
   function render() {
     const { d, bad, inf } = read();
@@ -344,12 +344,15 @@ function boot() {
     set('cost', usd(paidAll), 'principal, interest and PMI');
     set('payoff', payoff ? monthFmt.format(payoff) : '—',
       fast.months ? `${Math.floor(fast.months / 12)} yr ${fast.months % 12 ? (fast.months % 12) + ' mo' : ''}`.trim() : '');
-    if (fast.pmiMonths > 0) {
-      set('pmiend', monthFmt.format(monthOf(fast.pmiMonths + 1, start)), `${usd(fast.totalPMI)} paid in total`);
-    } else {
-      set('pmiend', 'None', !(d.loan > 0) ? '' : d.pmiRate > 0 ? (d.inProgress ? 'balance under 80% of the loan' : 'at least 20% down') : 'no PMI rate entered');
-    }
+    $('fact-extra').classList.toggle('muted', !(d.extra > 0));
     $('fact-saved').classList.toggle('muted', !(d.extra > 0));
+    if (d.extra > 0) {
+      const paidExtra = fast.rows.reduce((t, r) => t + r.extra, 0);
+      const times = fast.rows.filter(r => r.extra > 0).length;
+      set('extra', usd(paidExtra), d.extraEvery === 0 ? 'one payment' : `${usd(d.extra)} ${cadenceWord(d.extraEvery).replace(/^each /, 'every ')}, ${times} times`);
+    } else {
+      set('extra', '—', 'add an amount to see it');
+    }
     if (d.extra > 0) {
       const mo = base.months - fast.months;
       set('saved', usd(base.totalInterest - fast.totalInterest + base.totalPMI - fast.totalPMI),
