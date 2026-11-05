@@ -1,63 +1,53 @@
 {
-  "updated": "2026-11-05T20:00:00Z",
-  "mentions": [
+  "updated": "2026-11-05T21:00:00Z",
+  "factsSkipped": [
     {
-      "id": "delancey",
-      "title": "It's nearly impossible to go wrong with pizza at Delancey",
-      "url": "https://www.theinfatuation.com/seattle/reviews/delancey",
-      "source": "The Infatuation",
-      "date": "2025-07-15",
-      "kind": "mention"
+      "id": "talaricos",
+      "note": "Checked talaricospizza.com home page and its /talaricos-about page: no founding year or 'since'/'established' line on either. Searched local coverage (West Seattle Blog, Seattle Met, historylink.org Pizza in Seattle history piece) and found opening coverage but no dated founding year to cite."
     },
     {
-      "id": "cornelly",
-      "title": "Cornelly brings their cult-favorite pizza and pasta to Queen Anne",
-      "url": "https://seattlerefined.com/eat-drink/restaurants-bars/cornelly-seattle-capitol-queen-anne-handmade-pizza-pasta-chicory-caesar-salad-italian-dining-dessert-pnw-eat-drink-foodie",
-      "source": "Seattle Refined",
-      "date": "2025-11-17",
-      "kind": "mention"
-    }
-  ],
-  "factorSources": [
-    {
-      "id": "delancey",
-      "sources": [
-        "https://www.theinfatuation.com/seattle/reviews/delancey",
-        "https://www.thestranger.com/?p=70680"
-      ],
-      "note": "The Infatuation (2025) calls Delancey's wood-fired pies 'nearly impossible to go wrong with,' praising the Sausage Pie's fennel balance while flagging raw onion on the Hot Salami pie; The Stranger's original review of the Pettit/Wizenberg pizzeria calls the crust excellent and says the long wait for a table is worth it."
+      "id": "my-friend-dereks",
+      "note": "Checked myfrienddereks.com home page and /about: describes the pop-up-to-brick-and-mortar story but states no year. Search (Infatuation, KUOW Seattle Eats) covers the Detroit-style pop-up and Tangletown restaurant without giving an opening year."
     },
     {
-      "id": "windy-city-pie",
-      "sources": [
-        "https://www.theinfatuation.com/seattle/reviews/windy-city-pie-1",
-        "https://komonews.com/seattle-refined/chicago-pizza-in-seattle-take-a-bite-of-windy-city-pie"
-      ],
-      "note": "The Infatuation says the Phinney Ridge preorder system made 'already outstanding' deep-dish even better and singles out the Meatza's crispy-crusted edges; Seattle Refined/KOMO profiles owner Dave Lichterman's from-scratch dough and signature Meatza and Sweet Pete pies."
+      "id": "pi-vegan-pizzeria",
+      "note": "Checked pizzapivegan.com home page: only claims 'America's Oldest vegan pizzeria' with no date. Search found a 2015 VegNews piece about an ownership change but no stated founding year."
     },
     {
-      "id": "cornelly",
-      "sources": [
-        "https://www.theinfatuation.com/seattle/reviews/cornelly",
-        "https://seattlerefined.com/eat-drink/restaurants-bars/cornelly-seattle-capitol-queen-anne-handmade-pizza-pasta-chicory-caesar-salad-italian-dining-dessert-pnw-eat-drink-foodie"
-      ],
-      "note": "The Infatuation gives Cornelly's Capitol Hill original a 'Best of the Best' 9.0, calling the Hornet Honey pizza 'a near-perfect pie' and the focaccia 'a tour de force'; Seattle Refined's 2025 feature on the Queen Anne expansion again highlights the Hornet Honey pie and chef Brett Phillips' naturally leavened dough."
+      "id": "johnny-mos-pizzeria",
+      "note": "Checked johnnymos.com home page and its /our-story page: both describe the two founders' friendship but state no founding year. Search turned up no article with a year either."
     },
     {
-      "id": "moto-pizza",
-      "sources": [
-        "https://www.theinfatuation.com/seattle/reviews/moto",
-        "https://seattlerefined.com/eat-drink/highly-sought-moto-pizza-sells-out-months-in-advance-west-seattle"
-      ],
-      "note": "The Infatuation calls Moto's Detroit-style pies excellent 'down to every last crunch of crispy pepperoni edge' and names the Mr. Pig its favorite; Seattle Refined profiles owner Lee Kindell's three-day-fermented 'Betty' sourdough starter and the pre-order demand that sells out months ahead."
+      "id": "pizza-ritual",
+      "note": "pizzaritual.com returned no readable content on two fetch attempts. Search found a Jan 2026 West Seattle Blog item saying it has been running pop-ups at KBM kitchen 'since summer' (no year given) and no menu with prices; The Infatuation lists only a '$$$$' marker, which is not the pizzeria's own menu."
     },
     {
-      "id": "lupo",
-      "sources": [
-        "https://www.theinfatuation.com/seattle/reviews/in-bocca-al-lupo",
-        "https://seattlerefined.com/eat-drink/lupo-is-seattles-hidden-gem-for-flavorful-sourdough-pizzas-fremont-pizza-ice-cream-lupo"
-      ],
-      "note": "The Infatuation calls Lupo's sourdough Neapolitan-style pies and cacio e pepe rigatoni among the best in Seattle; Seattle Refined profiles chef Cam Hanin's naturally leavened dough and three-to-four-ingredient topping philosophy."
+      "id": "pizzeria-pulcinella",
+      "note": "pulcinellapizza.com failed to load (SSL handshake failure) on two attempts, with and without www. Search turned up conflicting dates: a Feb 2009 DJC item says the Rainier Ave location had 'recently opened', while an Oct 2025 South Seattle Emerald piece describes it as newer, opened summer 2024. Not reporting either given the conflict."
+    },
+    {
+      "id": "dantini-pizza",
+      "note": "Checked dantinipizza.com home page and /menu-1: no founding year stated; the menu is two unreadable image files (Dantini-menu-1.jpg, Dantini-menu-2.jpg), not text prices. The square.site order link returned no content."
+    },
+    {
+      "id": "seward-park-pizza",
+      "note": "sewardparkpizza.com failed to load (SSL handshake failure) on both http and https attempts. Search found only a Cost:'$' rating on a directory aggregator (not the pizzeria's own menu) and no founding year."
+    },
+    {
+      "id": "eymans-pizza",
+      "note": "Checked eymanspizza.com home/about anchor: the only year present is 'Partnered with Slice since 2019', which refers to the online-ordering platform, not the restaurant's founding."
+    },
+    {
+      "id": "good-shape-pizza",
+      "note": "Checked goodshapepizza.com home page: no About/History page exists and no founding year is stated anywhere on the site."
+    },
+    {
+      "id": "jackson-street-pizza-lounge",
+      "note": "Checked jacksonstreetpizzalounge.com home page: the only year present is a '2025' copyright notice in the footer, not an opening date. No About/Our Story page exists."
+    },
+    {
+      "id": "mad-pizza",
+      "note": "Checked madpizza.com/location and madpizza.com/about: no founding year stated on either. The ChowNow ordering page (order.chownow.com/order/6301/locations) returned HTTP 403, so menu prices could not be read."
     }
   ]
 }

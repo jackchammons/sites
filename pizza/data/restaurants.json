@@ -1451,7 +1451,9 @@
         }
       },
       "mentions": [],
-      "instagram": "https://www.instagram.com/talaricos.pizza/"
+      "instagram": "https://www.instagram.com/talaricos.pizza/",
+      "factsAttempted": "2026-11-05",
+      "factsNote": "Checked talaricospizza.com home page and its /talaricos-about page: no founding year or 'since'/'established' line on either. Searched local coverage (West Seattle Blog, Seattle Met, historylink.org Pizza in Seattle history piece) and found opening coverage but no dated founding year to cite."
     },
     {
       "id": "hot-mamas-pizza",
@@ -1851,7 +1853,9 @@
       "lastVerified": "2026-08-27",
       "instagram": "https://www.instagram.com/myfrienddereks",
       "priceIndex": 2,
-      "priceSource": "https://myfrienddereks.com/menu"
+      "priceSource": "https://myfrienddereks.com/menu",
+      "factsAttempted": "2026-11-05",
+      "factsNote": "Checked myfrienddereks.com home page and /about: describes the pop-up-to-brick-and-mortar story but states no year. Search (Infatuation, KUOW Seattle Eats) covers the Detroit-style pop-up and Tangletown restaurant without giving an opening year."
     },
     {
       "id": "abecedary",
@@ -2389,7 +2393,9 @@
       "priceIndex": 2,
       "styleGroup": "Creative",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/pivegan/"
+      "instagram": "https://www.instagram.com/pivegan/",
+      "factsAttempted": "2026-11-05",
+      "factsNote": "Checked pizzapivegan.com home page: only claims 'America's Oldest vegan pizzeria' with no date. Search found a 2015 VegNews piece about an ownership change but no stated founding year."
     },
     {
       "id": "mioposto",
@@ -2661,7 +2667,9 @@
       "priceIndex": 2,
       "styleGroup": "Thin crust",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/johnnymospizzeria/"
+      "instagram": "https://www.instagram.com/johnnymospizzeria/",
+      "factsAttempted": "2026-11-05",
+      "factsNote": "Checked johnnymos.com home page and its /our-story page: both describe the two founders' friendship but state no founding year. Search turned up no article with a year either."
     },
     {
       "id": "pazzos-on-eastlake",
@@ -2813,7 +2821,9 @@
       },
       "styleGroup": "Neapolitan",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/pizzaritual/"
+      "instagram": "https://www.instagram.com/pizzaritual/",
+      "factsAttempted": "2026-11-05",
+      "factsNote": "pizzaritual.com returned no readable content on two fetch attempts. Search found a Jan 2026 West Seattle Blog item saying it has been running pop-ups at KBM kitchen 'since summer' (no year given) and no menu with prices; The Infatuation lists only a '$$$$' marker, which is not the pizzeria's own menu."
     },
     {
       "id": "pizzeria-pulcinella",
@@ -2864,7 +2874,9 @@
       "priceIndex": 3,
       "styleGroup": "Neapolitan",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/pizzeriapulcinella/"
+      "instagram": "https://www.instagram.com/pizzeriapulcinella/",
+      "factsAttempted": "2026-11-05",
+      "factsNote": "pulcinellapizza.com failed to load (SSL handshake failure) on two attempts, with and without www. Search turned up conflicting dates: a Feb 2009 DJC item says the Rainier Ave location had 'recently opened', while an Oct 2025 South Seattle Emerald piece describes it as newer, opened summer 2024. Not reporting either given the conflict."
     },
     {
       "id": "romano-pizza-pasta",
@@ -3094,7 +3106,9 @@
       },
       "styleGroup": "Thin crust",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/dantinipizza"
+      "instagram": "https://www.instagram.com/dantinipizza",
+      "factsAttempted": "2026-11-05",
+      "factsNote": "Checked dantinipizza.com home page and /menu-1: no founding year stated; the menu is two unreadable image files (Dantini-menu-1.jpg, Dantini-menu-2.jpg), not text prices. The square.site order link returned no content."
     },
     {
       "id": "a-pizza-mart-first-hill",
@@ -3171,7 +3185,9 @@
       },
       "styleGroup": "Neighborhood",
       "lastVerified": "2026-08-30",
-      "instagram": "https://www.instagram.com/sewardparkpizzacompany/"
+      "instagram": "https://www.instagram.com/sewardparkpizzacompany/",
+      "factsAttempted": "2026-11-05",
+      "factsNote": "sewardparkpizza.com failed to load (SSL handshake failure) on both http and https attempts. Search found only a Cost:'$' rating on a directory aggregator (not the pizzeria's own menu) and no founding year."
     },
     {
       "id": "belltown-pizza",
@@ -3407,7 +3423,9 @@
       },
       "priceIndex": 1,
       "styleGroup": "Neighborhood",
-      "lastVerified": "2026-10-13"
+      "lastVerified": "2026-10-13",
+      "factsAttempted": "2026-11-05",
+      "factsNote": "Checked eymanspizza.com home/about anchor: the only year present is 'Partnered with Slice since 2019', which refers to the online-ordering platform, not the restaurant's founding."
     },
     {
       "id": "georgetown-pizza-arcade",
@@ -3511,7 +3529,9 @@
       },
       "priceIndex": 1,
       "styleGroup": "Pizza bar",
-      "lastVerified": "2026-09-03"
+      "lastVerified": "2026-09-03",
+      "factsAttempted": "2026-11-05",
+      "factsNote": "Checked goodshapepizza.com home page: no About/History page exists and no founding year is stated anywhere on the site."
     },
     {
       "id": "in-pizza-we-crust",
@@ -3641,7 +3661,9 @@
       },
       "priceIndex": 3,
       "styleGroup": "Pizza bar",
-      "lastVerified": "2026-09-18"
+      "lastVerified": "2026-09-18",
+      "factsAttempted": "2026-11-05",
+      "factsNote": "Checked jacksonstreetpizzalounge.com home page: the only year present is a '2025' copyright notice in the footer, not an opening date. No About/Our Story page exists."
     },
     {
       "id": "mad-pizza",
@@ -3692,7 +3714,9 @@
         }
       },
       "styleGroup": "Neighborhood",
-      "lastVerified": "2026-09-03"
+      "lastVerified": "2026-09-03",
+      "factsAttempted": "2026-11-05",
+      "factsNote": "Checked madpizza.com/location and madpizza.com/about: no founding year stated on either. The ChowNow ordering page (order.chownow.com/order/6301/locations) returned HTTP 403, so menu prices could not be read."
     },
     {
       "id": "managers-pizza",
