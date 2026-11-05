@@ -145,7 +145,7 @@ const html = `<!doctype html>
       </div>
     </div>
     <div class="pair" id="split-fields"${v.escrowMode ? ' hidden' : ''}>
-      ${field({ id: 'in-tax', label: 'Property tax', value: v.taxRate, units: [['pct', '% of price /yr'], ['yr', '$ /yr'], ['mo', '$ /mo']], unit: v.taxUnit })}
+      ${field({ id: 'in-tax', label: 'Property tax', value: v.taxRate, units: [['pct', '% /yr'], ['yr', '$ /yr'], ['mo', '$ /mo']], unit: v.taxUnit, hint: '% is of the price' })}
       ${field({ id: 'in-ins', label: 'Insurance', value: v.insurance, pre: '$', units: [['yr', '/yr'], ['mo', '/mo']], unit: v.insUnit, mode: 'numeric' })}
     </div>
     <div id="escrow-fields"${v.escrowMode ? '' : ' hidden'}>

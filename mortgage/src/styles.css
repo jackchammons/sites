@@ -60,7 +60,8 @@ section{margin-top:30px}
 .box select option{background:var(--panel);color:var(--ink)}
 /* The unit picker sits where the "/yr" adornment did: small, muted, no wider
    than its text. */
-.box select.unit{flex:0 0 auto;width:auto;font-size:13px;color:var(--ink-3);padding:9px 0 9px 4px;text-align:right}
+.box select.unit{flex:0 1 auto;width:auto;font-size:13px;color:var(--ink-3);padding:9px 0 9px 4px;text-align:right}
+.box:has(select.unit) input{min-width:5ch}
 .inputs .h2-row{margin:20px 0 10px}
 .inputs .h2-row h2{margin:0}
 #split-fields[hidden],#escrow-fields[hidden]{display:none}
