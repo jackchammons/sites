@@ -646,9 +646,9 @@
       ],
       "locationsVerified": "2026-08-22",
       "locationsSource": "https://theindiepizzeria.com/",
-      "status": "open",
-      "statusSource": null,
-      "statusDate": null,
+      "status": "closed",
+      "statusSource": "https://www.kiro7.com/news/local/beloved-seattle-pizzeria-close-after-more-than-16-years/PP5A3GUJN5GFJDHSQFB3YYPG7M/",
+      "statusDate": "2026-10-16",
       "attributes": {
         "tiny-room": true,
         "limited-hours": true
@@ -708,7 +708,10 @@
         }
       ],
       "instagram": "https://www.instagram.com/independentpizzeria/",
-      "statusChecked": "2026-09-26"
+      "statusChecked": "2026-11-06",
+      "statusPrev": "open",
+      "statusNote": "The Madison Park wood-fired pizzeria closed permanently on Oct. 16, 2026 after more than 16 years; owner Tom Siegel retired and the space is passing to a new operator.",
+      "statusDetected": "2026-11-06"
     },
     {
       "id": "tutta-bella",
