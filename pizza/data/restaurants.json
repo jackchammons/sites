@@ -3629,7 +3629,9 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/castellopizzaandpasta/"
+      "instagram": "https://www.instagram.com/castellopizzaandpasta/",
+      "ratingAttempted": "2026-11-07",
+      "ratingNote": "Searched Castello Pizza & Pasta (Rainier Ave S) plus Eater/Seattle Met/South Seattle Emerald/halal-news combinations, and fetched Seattle Met's 2021 Rainier Valley/Rainier Beach restaurant guide directly -- it covers Pizzeria Pulcinella but does not mention Castello at all. Remaining results were Yelp-via-aggregator, DoorDash and directory listings. No rating proposed; skipped for lack of published criticism."
     },
     {
       "id": "candela-pizza",
@@ -3655,7 +3657,9 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/candelapizza_/"
+      "instagram": "https://www.instagram.com/candelapizza_/",
+      "ratingAttempted": "2026-11-07",
+      "ratingNote": "Searched Candela Pizza (South Seattle pizza truck) plus Eater/Seattle Times/Seattle Met/Infatuation/South Seattle Emerald/West Seattle Blog combinations. Found only SeattleFoodTruck.com and a LiveInEverett promotional profile (owners Octavio and Zully Ortega, truck based in Renton, ~3 months old as of that piece) -- no independent review, roundup entry, or news story. No rating proposed; skipped for lack of published criticism."
     },
     {
       "id": "dudez-woodfired-pizza",
@@ -4207,7 +4211,9 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/seattleolympic/"
+      "instagram": "https://www.instagram.com/seattleolympic/",
+      "ratingAttempted": "2026-11-07",
+      "ratingNote": "Searched Olympic Pizza & Pasta (Roosevelt Way NE, opened 1975 per a Greek-restaurant history archive) plus Eater/Seattle Met/The Stranger/Seattle Times/My Northwest combinations. Found only Birdeye, Sluurpy, OpenTable, MapQuest and Atly listings, plus a non-critical Greek-community history page; no independent critic review or news story about the pizza itself. No rating proposed; skipped for lack of published criticism."
     },
     {
       "id": "modena-pizza-pasta",
@@ -4233,7 +4239,9 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/modenapizzaandpastaa/"
+      "instagram": "https://www.instagram.com/modenapizzaandpastaa/",
+      "ratingAttempted": "2026-11-07",
+      "ratingNote": "Searched Modena Pizza & Pasta (Lake City Way NE) plus Eater/Seattle Met/The Stranger/neighborhood combinations. Found only DoorDash, Toast, MapQuest and Wanderlog listings with mixed crowd reviews (praise for crust, one flavorless-pasta complaint); no independent critic review or news story. No rating proposed; skipped for lack of published criticism."
     },
     {
       "id": "hot-slice-pizza",
@@ -4259,7 +4267,9 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/hotslicepizzasea/"
+      "instagram": "https://www.instagram.com/hotslicepizzasea/",
+      "ratingAttempted": "2026-11-07",
+      "ratingNote": "Searched Hot Slice Pizza (Interbay/Dravus St) plus Eater/Seattle Met/Infatuation/halal-news combinations. Found only Atly, Groupon and aggregator listings describing a halal NY-style slice shop; no critic review, roundup entry, or news coverage turned up anywhere, including halal-food-press searches. No rating proposed; skipped for lack of published criticism."
     },
     {
       "id": "oskars-pizza",
@@ -4513,7 +4523,9 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/seattle_pizza_and_bar/"
+      "instagram": "https://www.instagram.com/seattle_pizza_and_bar/",
+      "ratingAttempted": "2026-11-07",
+      "ratingNote": "Searched Seattle Pizza & Bar (Belltown/Western Ave and South Lake Union/Fairview Ave locations) plus Eater/Seattle Met/Infatuation/Seattle Times/opening-news combinations. Found only Uber Eats, MapQuest and Poyst listings with mixed crowd feedback; no critic review, roundup mention, or opening story in any local outlet. No rating proposed; skipped for lack of published criticism."
     },
     {
       "id": "smoking-monkey-pizza",
