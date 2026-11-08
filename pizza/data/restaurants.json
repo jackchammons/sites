@@ -4955,6 +4955,24 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": []
+    },
+    {
+      "id": "ananas-pizzeria",
+      "name": "Ananas Pizzeria",
+      "neighborhood": "First Hill",
+      "style": "Lao-influenced",
+      "blurb": "A Lao-influenced pizzeria and dive bar on 8th Ave from the Taurus Ox team, pairing cheese and pepperoni slices with a bamboo-shoot-and-honey Lao pie, plus beer, wine and cocktails.",
+      "url": "https://www.ananaspizzeria.com",
+      "status": "open",
+      "statusSource": "https://curiocity.com/ananas-pizzeria-seattle/",
+      "statusDate": null,
+      "statusDetected": "2026-11-08",
+      "statusChecked": "2026-11-08",
+      "attributes": {},
+      "locations": [],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }

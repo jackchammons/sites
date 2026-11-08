@@ -1,29 +1,14 @@
 {
-  "updated": "2026-11-07T00:00:00.000Z",
-  "ratingSkipped": [
+  "updated": "2026-11-08T00:00:00Z",
+  "directory": [
     {
-      "id": "candela-pizza",
-      "note": "Searched Candela Pizza (South Seattle pizza truck) plus Eater/Seattle Times/Seattle Met/Infatuation/South Seattle Emerald/West Seattle Blog combinations. Found only SeattleFoodTruck.com and a LiveInEverett promotional profile (owners Octavio and Zully Ortega, truck based in Renton, ~3 months old as of that piece) -- no independent review, roundup entry, or news story. No rating proposed; skipped for lack of published criticism."
-    },
-    {
-      "id": "hot-slice-pizza",
-      "note": "Searched Hot Slice Pizza (Interbay/Dravus St) plus Eater/Seattle Met/Infatuation/halal-news combinations. Found only Atly, Groupon and aggregator listings describing a halal NY-style slice shop; no critic review, roundup entry, or news coverage turned up anywhere, including halal-food-press searches. No rating proposed; skipped for lack of published criticism."
-    },
-    {
-      "id": "modena-pizza-pasta",
-      "note": "Searched Modena Pizza & Pasta (Lake City Way NE) plus Eater/Seattle Met/The Stranger/neighborhood combinations. Found only DoorDash, Toast, MapQuest and Wanderlog listings with mixed crowd reviews (praise for crust, one flavorless-pasta complaint); no independent critic review or news story. No rating proposed; skipped for lack of published criticism."
-    },
-    {
-      "id": "castello-pizza-pasta",
-      "note": "Searched Castello Pizza & Pasta (Rainier Ave S) plus Eater/Seattle Met/South Seattle Emerald/halal-news combinations, and fetched Seattle Met's 2021 Rainier Valley/Rainier Beach restaurant guide directly -- it covers Pizzeria Pulcinella but does not mention Castello at all. Remaining results were Yelp-via-aggregator, DoorDash and directory listings. No rating proposed; skipped for lack of published criticism."
-    },
-    {
-      "id": "seattle-pizza-bar",
-      "note": "Searched Seattle Pizza & Bar (Belltown/Western Ave and South Lake Union/Fairview Ave locations) plus Eater/Seattle Met/Infatuation/Seattle Times/opening-news combinations. Found only Uber Eats, MapQuest and Poyst listings with mixed crowd feedback; no critic review, roundup mention, or opening story in any local outlet. No rating proposed; skipped for lack of published criticism."
-    },
-    {
-      "id": "olympic-pizza-pasta",
-      "note": "Searched Olympic Pizza & Pasta (Roosevelt Way NE, opened 1975 per a Greek-restaurant history archive) plus Eater/Seattle Met/The Stranger/Seattle Times/My Northwest combinations. Found only Birdeye, Sluurpy, OpenTable, MapQuest and Atly listings, plus a non-critical Greek-community history page; no independent critic review or news story about the pizza itself. No rating proposed; skipped for lack of published criticism."
+      "name": "Ananas Pizzeria",
+      "url": "https://www.ananaspizzeria.com",
+      "neighborhood": "First Hill",
+      "style": "Lao-influenced",
+      "status": "open",
+      "note": "A Lao-influenced pizzeria and dive bar on 8th Ave from the Taurus Ox team, pairing cheese and pepperoni slices with a bamboo-shoot-and-honey Lao pie, plus beer, wine and cocktails.",
+      "source": "https://curiocity.com/ananas-pizzeria-seattle/"
     }
   ]
 }
