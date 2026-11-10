@@ -134,11 +134,15 @@ by the `CLAUDE.md` beside it. The pizza site has a long `pizza/CLAUDE.md` of its
 | `screen` | `screen/` | Node, no deps | TV and projector sizing, computed in the browser. |
 | `words` | `words/` | Node, no deps | A word counter, computed in the browser as the viewer types. |
 
-The browser-computed sites share one pattern: a single module holds the logic
-(`mortgage.js`, `screen.js`, `count.js`, `life.js`), imported by the page's `app.js`, by
-the unit tests, and by `verify.mjs` from the *built* copy. One implementation; never
-fork it. Nothing date-dependent is baked in at build time, because a baked-in figure is
-wrong by however long ago the deploy ran.
+The browser-computed sites share one pattern: the logic lives in modules with no DOM
+in them (`mortgage.js` and `inputs.js`, `screen.js`, `count.js`, `life.js`, `time.js`),
+imported by the page's `app.js`, by the unit tests, and by `verify.mjs` from the *built*
+copy. One implementation of each; never fork it. No figure that depends on the date is
+baked in at build time, because it would be wrong by however long ago the deploy ran.
+
+`screen/` and `words/` also carry a Playwright check for what needs a layout engine
+(`screen/test/browser-sweep.mjs`, `words/test/browser-check.mjs`). They run on a dev
+box, not in CI: run them after changing what those pages draw.
 
 ## Things that will bite you
 

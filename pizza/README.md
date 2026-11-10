@@ -124,6 +124,7 @@ nothing to show, and the nav is built from the sections that rendered.
 The map is not part of first load. `app.js` reveals the map rail and fetches
 `./leaflet.js` when the rail nears the viewport or a directory row asks for its marker; if
 anything in that fails, the rail is removed and the table takes the full width.
+
 Every push to a branch other than `main` runs `ci.yml` (tests, lint, build, verify for the
 Node sites). Only `main` deploys.
 

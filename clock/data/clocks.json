@@ -1,7 +1,7 @@
 {
   "title": "Now",
   "tagline": "The date and time, rendered large.",
-  "note": "Everything on this page is computed in your browser from your device clock and your time zone. Nothing is fetched, stored or sent anywhere.",
+  "note": "Everything on this page is computed in your browser from your device clock and your time zone. Nothing is fetched or sent anywhere; your 12/24-hour and seconds choices are remembered in this browser only.",
   "zones": [
     { "city": "Honolulu",      "region": "Hawaii",        "tz": "Pacific/Honolulu" },
     { "city": "Seattle",       "region": "Washington",    "tz": "America/Los_Angeles" },

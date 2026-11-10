@@ -5,6 +5,9 @@
  * Uint8Array, row-major, 1 = alive. Edges wrap, so a glider that leaves the
  * right side re-enters on the left and the board never empties out at the
  * borders the way a walled grid does.
+ *
+ * It also holds the test for a board that has run out of things to do, so
+ * the gate can run that from the built copy too.
  */
 
 export const DEFAULT_DENSITY = 0.3;
@@ -44,4 +47,40 @@ export function population(grid) {
   let n = 0;
   for (const c of grid.cells) n += c;
   return n;
+}
+
+/* Random soup burns down. Within minutes all that is left is still lifes and
+   a few short-period oscillators, and from then on nothing new can happen:
+   the board repeats for ever. A board in that state is cell for cell what it
+   was SETTLE_PERIOD generations earlier. 60 is a multiple of every period
+   that soup leaves behind in practice: 1 for still lifes, 2 for blinkers,
+   toads and beacons, 3 for the pulsar, 15 for the pentadecathlon, and 4, 5,
+   6 and 12 besides. Anything still travelling is somewhere else after 60
+   generations (a glider is 15 cells along its diagonal), so a board with a
+   glider in flight does not match and is left to run. */
+export const SETTLE_PERIOD = 60;
+
+export function createWatch(period = SETTLE_PERIOD) {
+  return { period, age: 0, cells: null };
+}
+
+/* Call once per generation, after the step. Keeps a copy of the board and,
+   every `period` generations, answers whether the board has come back to
+   that copy before taking the next one. A board of a different size starts
+   the watch again. */
+export function settled(watch, grid) {
+  const { cells } = grid;
+  if (!watch.cells || watch.cells.length !== cells.length) {
+    watch.cells = Uint8Array.from(cells);
+    watch.age = 0;
+    return false;
+  }
+  if (++watch.age < watch.period) return false;
+  let same = true;
+  for (let i = 0; i < cells.length; i++) {
+    if (cells[i] !== watch.cells[i]) { same = false; break; }
+  }
+  watch.cells.set(cells);
+  watch.age = 0;
+  return same;
 }

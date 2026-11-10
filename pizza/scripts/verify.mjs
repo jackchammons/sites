@@ -220,7 +220,9 @@ for (const r of dataset.restaurants) {
   for (const q of [...quoted].sort((a, b) => b.length - a.length)) text = text.split(q).join(' ');
   const leak = LEAK.exec(text);
   check(!leak, leak && `page shows "${leak[0]}" near: ${text.slice(Math.max(0, leak.index - 40), leak.index + 40).replace(/\s+/g, ' ')}`);
-  check(!/=\s*(["'])(?:undefined|null|NaN)\1/.test(html), 'an attribute is literally undefined/null/NaN');
+  // Tested on the markup, where quoted text is escaped: the inline data keeps
+  // its apostrophes, and a name or URL there may spell anything.
+  check(!/=\s*(["'])(?:undefined|null|NaN)\1/.test(markup), 'an attribute is literally undefined/null/NaN');
 }
 
 /* ---------- rankings.json ---------- */

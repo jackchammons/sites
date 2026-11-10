@@ -27,8 +27,10 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
 - `scripts/next-task.mjs` picks and briefs the research agent's daily task;
   `src/validate-research.js` + `scripts/verify-research.mjs` validate what it wrote;
   `scripts/apply-research.mjs` applies it; `src/check-dataset.js` lints the result.
-- Leaflet is vendored in `src/vendor/` and loaded as a plain script, outside the ES
-  import graph, so `verify.mjs` checks it explicitly.
+- Leaflet is vendored in `src/vendor/`. `app.js` fetches it on demand, when the map is
+  about to be seen, from the literal `'./leaflet.js'`. It is outside the ES import
+  graph, so `verify.mjs` checks that literal and that the emitted file is byte-identical
+  to the vendored one.
 
 ## Scoring (SLICE)
 

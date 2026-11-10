@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 /* Post-build checks. Exiting non-zero here blocks the deploy.
  *
- * Two seams can break the page while the build stays happy: the maths
- * (shared by the browser through src/mortgage.js) and the IDs app.js looks
- * up in the rendered markup. Both are checked here against the built output,
- * not the source, since the output is what ships. */
+ * Three seams can break the page while the build stays happy: the maths
+ * (shared by the browser through src/mortgage.js), the reading of typed
+ * numbers and share links (src/inputs.js), and the IDs app.js looks up in
+ * the rendered markup. All are checked here against the built output, not
+ * the source, since the output is what ships. */
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -13,7 +14,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = process.env.OUT_DIR
   ? path.resolve(process.env.OUT_DIR)
-  : path.join(root, '..', 'dist');
+  : path.join(root, '..', 'dist', path.basename(root));
 
 const fails = [];
 const check = (ok, msg) => { if (!ok) fails.push(msg); };
@@ -23,7 +24,7 @@ function report() {
   process.exit(1);
 }
 
-for (const f of ['index.html', 'app.js', 'mortgage.js', 'styles.css', '.nojekyll']) {
+for (const f of ['index.html', 'app.js', 'mortgage.js', 'inputs.js', 'styles.css', '.nojekyll']) {
   check(fs.existsSync(path.join(dist, f)), `missing dist/${f}`);
 }
 if (fails.length) report();
@@ -33,19 +34,25 @@ const app = fs.readFileSync(path.join(dist, 'app.js'), 'utf8');
 
 check(html.length > 6000, `index.html suspiciously small (${html.length} bytes)`);
 check(/<title>[^<]+<\/title>/.test(html), 'missing <title>');
-check(!/undefined|NaN|\[object Object\]/.test(html), 'page contains undefined/NaN/[object Object]');
+/* Visible text only: the inline defaults are JSON, which cannot carry
+   undefined or NaN, and a script is free to contain either word. */
+const text = html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, ' ').replace(/<[^>]+>/g, ' ');
+const leak = /\bundefined\b|\bNaN\b|\[object Object\]/.exec(text);
+check(!leak, leak && `page shows "${leak[0]}" near: ${text.slice(Math.max(0, leak.index - 40), leak.index + 40).replace(/\s+/g, ' ')}`);
+check(!/=\s*(["'])(?:undefined|null|NaN)\1/.test(html), 'an attribute is literally undefined/null/NaN');
 
-/* Served from /mortgage/, so every asset reference must be relative. */
-/* …and must carry a content stamp, or a redeploy leaves viewers running
-   the cached old script against the new page. */
-check(/src="\.\/app\.js\?v=[0-9a-f]{8}"/.test(html), 'script not linked relatively with a cache stamp');
-check(/href="\.\/styles\.css\?v=[0-9a-f]{8}"/.test(html), 'stylesheet not linked relatively with a cache stamp');
-check(/from '\.\/mortgage\.js\?v=[0-9a-f]{8}'/.test(app), 'app.js does not import ./mortgage.js relatively with a cache stamp');
+/* Served from /mortgage/, so every asset reference must be relative. They
+   are plain here: the multi-site build adds the content stamps afterwards. */
+check(/<script type="module" src="\.\/app\.js">/.test(html), 'app.js not linked relatively as a module');
+check(/href="\.\/styles\.css"/.test(html), 'stylesheet not linked relatively');
+for (const dep of ['mortgage.js', 'inputs.js']) {
+  check(app.includes(`from './${dep}'`), `app.js does not import ./${dep} relatively`);
+}
 for (const m of html.matchAll(/(?:href|src)="(\/[^/][^"]*)"/g)) {
   fails.push(`root-relative asset "${m[1]}" will 404 under /mortgage/`);
 }
 
-for (const f of ['app.js', 'mortgage.js']) {
+for (const f of ['app.js', 'mortgage.js', 'inputs.js']) {
   try {
     execFileSync(process.execPath, ['--check', '--input-type=module'],
       { input: fs.readFileSync(path.join(dist, f)), stdio: 'pipe' });
@@ -104,10 +111,37 @@ if (defaults) {
   check(fast.months < s.months && fast.totalInterest < s.totalInterest, 'extra principal saves nothing');
 }
 
+/* What the viewer types and what a link carries, from the built copy: a
+   parser that misreads a locale's decimal comma is off by a factor of a
+   hundred, and a link that does not come back as it was written is a share
+   button that lies. */
+const inp = await import(pathToFileURL(path.join(dist, 'inputs.js')).href);
+for (const [typed, money, want] of [['$450,000', true, 450000], ['750k', true, 750000], ['1.2m', true, 1200000],
+  ['0,92', false, 0.92], ['6.', false, 6], ['6.125', false, 6.125], ['750.000', true, 750000], ['1.234,56', true, 1234.56]]) {
+  const got = inp.parseAmount(typed, { money });
+  check(got === want, `"${typed}" reads as ${got}, expected ${want}`);
+}
+check(Number.isNaN(inp.parseAmount('abc')), 'text that is not a number does not read as NaN');
+check(inp.parseMonth('03/2025') === '2025-03' && inp.parseMonth('2025-13') === null, 'typed months are misread');
+if (defaults) {
+  const choices = {
+    terms: [...html.match(/<select id="in-years"[^>]*>([\s\S]*?)<\/select>/)[1].matchAll(/value="(\d+)"/g)].map(o => +o[1]),
+    cadences: [...html.match(/<select id="in-every"[^>]*>([\s\S]*?)<\/select>/)[1].matchAll(/value="(\d+)"/g)].map(o => +o[1]),
+  };
+  const open = inp.defaultState(defaults, '2026-12');
+  check(inp.encodeState(open, defaults, '2026-12') === '', 'the untouched page writes a hash');
+  const typed = { ...open, price: 437500, down: 50000, downPct: null, rate: 7.125, years: choices.terms[0], start: '2025-03',
+    balance: 380000, next: '2027-01', taxRate: 6900, taxUnit: 'yr', insurance: 150, insUnit: 'mo', escrow: 0, escrowUnit: 'yr',
+    escrowMode: true, hoa: 85, pmiRate: 0.5, extra: 200, extraEvery: choices.cadences.at(-1), progressMode: true };
+  const back = inp.decodeState(inp.encodeState(typed, defaults, '2026-12'), defaults, '2026-12', choices);
+  for (const k of Object.keys(typed)) check(back[k] === typed[k], `share link loses "${k}": wrote ${typed[k]}, read ${back[k]}`);
+  check(inp.decodeState('y=50000', defaults, '2026-12', choices).years === defaults.years, 'a link can ask for a term the page does not offer');
+}
+
 check(/id="boot-error"[^>]*hidden/.test(html), 'the hidden boot-error note is missing');
 for (const id of ['chart', 'chart-legend', 'tip']) {
   check(ids.has(id), `chart slot #${id} missing`);
 }
 
 if (fails.length) report();
-console.log(`Build verified (${wanted.size} live slots, maths checked).`);
+console.log(`Build verified (${wanted.size} live slots, maths and input reading checked).`);

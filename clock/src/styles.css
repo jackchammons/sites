@@ -4,16 +4,19 @@
   color-scheme:light dark;
   --bg:#14100e;--panel:#221c19;--panel-2:#2a2320;--line:#3a302b;
   --ink:#f6efe8;--ink-2:#c8b8ac;--ink-3:#948276;
-  --accent:#d9a441;--accent-soft:rgba(217,164,65,.16);
+  --accent:#d9a441;--accent-ink:#d9a441;--accent-soft:rgba(217,164,65,.16);
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
   --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
 }
 @media (prefers-color-scheme:light){
   :root{--bg:#fbf6ef;--panel:#fffdfa;--panel-2:#f7f1e8;--line:#e2d5c4;
-        --ink:#23180f;--ink-2:#5d4c3e;--ink-3:#8b7767;
-        --accent:#a9701a;--accent-soft:rgba(169,112,26,.12)}
+        --ink:#23180f;--ink-2:#5d4c3e;--ink-3:#75624f;
+        --accent:#a9701a;--accent-ink:#8a5a12;--accent-soft:rgba(169,112,26,.12)}
 }
+/* --accent is for strokes and fills. Small text in the accent hue takes
+   --accent-ink, which on the light palette is the darker of the two: the
+   amber that reads as a bar or a clock hand is too pale for 11px type. */
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
      line-height:1.6;-webkit-font-smoothing:antialiased;
@@ -42,7 +45,7 @@ header{padding:56px 0 34px}
       letter-spacing:-.045em;font-variant-numeric:tabular-nums;
       display:flex;align-items:baseline;gap:.12em;flex-wrap:wrap}
 .time .sec{color:var(--ink-3);font-size:.42em;letter-spacing:-.02em}
-.time .suffix{color:var(--accent);font-size:.26em;letter-spacing:.14em;
+.time .suffix{color:var(--accent-ink);font-size:.26em;letter-spacing:.14em;
               text-transform:uppercase;font-weight:500}
 .date{font-family:var(--serif);font-size:clamp(19px,3.4vw,27px);
       margin:10px 0 0;color:var(--ink);letter-spacing:-.01em}
@@ -56,7 +59,7 @@ header{padding:56px 0 34px}
   background:var(--panel);border:1px solid var(--line);border-radius:999px;
   padding:6px 14px;cursor:pointer;transition:color .15s,border-color .15s,background .15s}
 .controls button:hover{color:var(--ink);border-color:var(--ink-3)}
-.controls button[aria-pressed="true"]{color:var(--accent);border-color:var(--accent);
+.controls button[aria-pressed="true"]{color:var(--accent-ink);border-color:var(--accent);
   background:var(--accent-soft)}
 .controls button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
@@ -110,6 +113,8 @@ section{margin-top:34px}
 .zmeta{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--ink-3);
   display:flex;gap:8px;flex-wrap:wrap}
 .zmeta .off{color:var(--ink-2)}
+/* The viewer's own row is tinted, and --ink-3 is too faint on the tint. */
+.zones li.here .zmeta,.zones li.here .zsuffix{color:var(--ink-2)}
 
 /* Before the script runs there is nothing trustworthy to show, so the live
    regions stay blank rather than flashing a build-time value that is wrong by

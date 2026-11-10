@@ -5,7 +5,8 @@
  * and still show a blank white page. The checks here cover the seams a build
  * never exercises: the script parses, every element it looks up exists, the
  * assets are linked relatively (the site lives under /life/), and the rules
- * engine in the *built* copy actually plays Life. */
+ * engine in the *built* copy actually plays Life and can tell a board that
+ * has settled from one that is still going. */
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -14,7 +15,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = process.env.OUT_DIR
   ? path.resolve(process.env.OUT_DIR)
-  : path.join(root, '..', 'dist');
+  : path.join(root, '..', 'dist', path.basename(root));
 
 const fails = [];
 const check = (ok, msg) => { if (!ok) fails.push(msg); };
@@ -34,13 +35,22 @@ const html = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');
 const app = fs.readFileSync(path.join(dist, 'app.js'), 'utf8');
 
 check(/<title>[^<]+<\/title>/.test(html), 'missing <title>');
-check(!/undefined|NaN|\[object Object\]/.test(html),
-  'page contains undefined/NaN/[object Object]');
+/* Visible text only, which here is the noscript line: one of these words in
+   it is a template that interpolated nothing. Scripts, styles and attribute
+   values are left out, and the second check covers the attributes. */
+const text = html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, ' ').replace(/<[^>]+>/g, ' ');
+const leak = /\bundefined\b|\bNaN\b|\[object Object\]/.exec(text);
+check(!leak, leak && `page shows "${leak[0]}" near: ${text.slice(Math.max(0, leak.index - 40), leak.index + 40).replace(/\s+/g, ' ')}`);
+check(!/=\s*(["'])(?:undefined|null|NaN)\1/.test(html), 'an attribute is literally undefined/null/NaN');
 check(/<script type="module" src="\.\/app\.js">/.test(html), 'app.js not linked relatively as a module');
 for (const m of html.matchAll(/(?:href|src)="(\/[^/][^"]*)"/g)) {
   fails.push(`root-relative asset "${m[1]}" will 404 under /life/`);
 }
 check(/background:#fff/.test(html), 'body background is not white');
+/* The page has no controls, so the label on the canvas is the only place the
+   pause gesture is written down. */
+check(/<canvas id="board" aria-label="[^"]*\bpause\b[^"]*"/.test(html),
+  'the canvas label does not mention how to pause');
 
 for (const f of ['app.js', 'life.js']) {
   try {
@@ -60,6 +70,14 @@ for (const id of wanted) check(ids.has(id), `app.js looks up #${id}, which the p
    a block must hold still, and a glider must come back to itself displaced by
    (1,1) after four generations — including across the wrapped edge. */
 const life = await import(pathToFileURL(path.join(dist, 'life.js')).href);
+/* A module that imports a name its dependency does not export never runs:
+   the page stays a blank white canvas with nothing to say why. */
+for (const [, names] of app.matchAll(/import\s*\{([^}]*)\}\s*from\s*'\.\/life\.js'/g)) {
+  for (const name of names.split(',').map(n => n.trim()).filter(Boolean)) {
+    check(typeof life[name] === 'function', `app.js imports "${name}", which life.js does not export`);
+  }
+}
+report();
 const make = (cols, rows, alive) => {
   const g = life.createGrid(cols, rows);
   for (const [x, y] of alive) g.cells[y * cols + x] = 1;
@@ -88,5 +106,37 @@ const rnd = life.randomize(life.createGrid(200, 100));
 const p = life.population(rnd);
 check(p > 200 * 100 * 0.25 && p < 200 * 100 * 0.35, `random seed density off: ${p} of 20000 alive`);
 
+/* The settled-board test, from the built copy. It has to fire on a board that
+   only repeats, or the page freezes into still lifes and blinkers for good,
+   and it must not fire while anything is still travelling, or a board that
+   is alive gets wiped. `firesBy` steps a board, asking after every generation
+   as app.js does, and returns the generation at which it fired. */
+const firesBy = (g, generations) => {
+  const watch = life.createWatch();
+  let a = g.cells, b = new Uint8Array(a.length);
+  for (let i = 1; i <= generations; i++) {
+    life.step({ ...g, cells: a }, b); [a, b] = [b, a];
+    if (life.settled(watch, { ...g, cells: a })) return i;
+  }
+  return null;
+};
+const P = life.SETTLE_PERIOD;
+check(Number.isInteger(P) && [1, 2, 3, 15].every(n => P % n === 0),
+  `SETTLE_PERIOD is ${P}, which is not a multiple of the periods soup settles into (1, 2, 3, 15)`);
+const blockAndBlinker = make(12, 12, [[1, 1], [2, 1], [1, 2], [2, 2], [6, 7], [7, 7], [8, 7]]);
+check(firesBy(blockAndBlinker, 2 * P + 1) !== null, 'a block and a blinker did not read as settled');
+check(firesBy(make(12, 12, []), 2 * P + 1) !== null, 'an empty board did not read as settled');
+// A row of ten cells becomes the pentadecathlon, the period-15 oscillator.
+const rowOfTen = make(24, 24, Array.from({ length: 10 }, (_, i) => [7 + i, 12]));
+check(firesBy(rowOfTen, 3 * P + 1) !== null, 'a pentadecathlon did not read as settled');
+const loneGlider = life.createGrid(48, 105);
+for (const [x, y] of [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]]) loneGlider.cells[y * 48 + x] = 1;
+check(firesBy(loneGlider, 20 * P) === null, 'a board with a glider in flight read as settled');
+// A change of size is a different board: the watch starts again and does not compare across it.
+const resized = life.createWatch();
+life.settled(resized, make(4, 4, []));
+check(life.settled(resized, make(5, 5, [])) === false && resized.cells.length === 25,
+  'the watch compared boards of different sizes');
+
 report();
-console.log(`Build verified (${wanted.length} live slot, rules pass on blinker, block and glider).`);
+console.log(`Build verified (${wanted.length} live slot, rules pass on blinker, block and glider, settled-board test passes).`);

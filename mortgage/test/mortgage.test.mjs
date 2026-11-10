@@ -58,6 +58,10 @@ test('extra cadence: quarterly, yearly and once', () => {
 
 test('PMI applies only above 80% LTV and stops at 78% of price', () => {
   assert.equal(needsPMI(describe({ price: 400000, down: 80000, rate: 6, years: 30, pmiRate: 0.5 })), false);
+  // Whole-dollar down payments land a few cents either side of 20%; within
+  // a dollar of the line is not over it.
+  assert.equal(needsPMI(describe({ price: 612347, down: 122469, rate: 6, years: 30, pmiRate: 0.5 })), false);
+  assert.equal(needsPMI(describe({ price: 612347, down: 122467, rate: 6, years: 30, pmiRate: 0.5 })), true);
   const d = describe({ price: 400000, down: 20000, rate: 6, years: 30, pmiRate: 0.5 });
   assert.ok(needsPMI(d));
   const s = amortize(d);

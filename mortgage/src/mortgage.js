@@ -78,8 +78,11 @@ export function describe(input) {
 export const PMI_CANCEL_LTV = 0.78;
 export const PMI_REQUIRED_LTV = 0.80;
 
+/* The comparison allows a dollar: the down payment is whole dollars, so 20%
+   of a price that does not divide evenly sits a few cents either side of
+   the line, and "20% down" must not be charged PMI over them. */
 export function needsPMI(d) {
-  return d.price > 0 && d.loan / d.price > PMI_REQUIRED_LTV && d.pmiRate > 0;
+  return d.price > 0 && d.loan > d.price * PMI_REQUIRED_LTV + 1 && d.pmiRate > 0;
 }
 
 /**
