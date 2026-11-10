@@ -3,7 +3,7 @@
   "customDomain": "sites.jackhammons.com",
   "baseUrl": "https://sites.jackhammons.com",
   "title": "jackchammons / sites",
-  "tagline": "Static sites, each built from data by a script and redeployed on a schedule.",
+  "tagline": "Small single-purpose sites: a Seattle pizza ranking rebuilt daily, plus calculators, a clock and other tools that run in your browser.",
   "sites": [
     {
       "slug": "pizza",
@@ -21,25 +21,6 @@
       ],
       "cadence": "Rebuilt daily",
       "accent": "#e14434"
-    },
-    {
-      "slug": "odyssey-seats",
-      "name": "Odyssey 70mm Seat Maps",
-      "emoji": "🎞️",
-      "tagline": "Seat availability for The Odyssey in 70mm at SIFF Cinema Downtown — captured seat maps, percent-sold trend, and sold-out tracking across the engagement.",
-      "dir": "odyssey-seats",
-      "build": [
-        "python",
-        "siff_seatmaps_v5.py"
-      ],
-      "indexFrom": "report.html",
-      "emptyIndex": {
-        "title": "Odyssey 70mm Seat Maps",
-        "heading": "No 70mm screenings currently listed",
-        "body": "The last scheduled capture found nothing to report. This page refreshes automatically when screenings go back on sale."
-      },
-      "cadence": "Refreshed daily",
-      "accent": "#5b8dd6"
     },
     {
       "slug": "clock",

@@ -1,14 +1,30 @@
 name: CI
 
-# Tests, the dataset lint, the Node site builds and their verifiers, on every
-# branch push and pull request. Nothing here deploys: publish.yml is the only
-# workflow allowed to, and it runs on main. This exists because, before it,
-# the first place a broken render was caught was the deploy after the push.
+# The one definition of the checks: unit tests, the shell scripts, the dataset
+# lint, and build-all, which builds and verifies every site in
+# sites.config.json and renders the landing page. Nothing is listed by site, so
+# a new site or test file is covered without an edit here.
+#
+# Runs on every branch push and pull request, and publish.yml calls it before
+# it builds, so main is held to the same checks on every trigger. Nothing here
+# deploys: publish.yml is the only workflow allowed to. No snapshot is written
+# (SNAPSHOT is unset), and the last step fails if the build changed a tracked
+# file.
 on:
   push:
     branches-ignore: [main]
   pull_request:
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        description: Branch, tag or SHA to check. Empty means the commit that triggered the run.
+        type: string
+        required: false
+        default: ''
+
+permissions:
+  contents: read
 
 jobs:
   check:
@@ -17,51 +33,26 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
       - name: Unit tests
-        run: node --test pizza/test/*.test.mjs mortgage/test/*.test.mjs screen/test/*.test.mjs words/test/*.test.mjs
+        run: node --test */test/*.test.mjs
+      # commit-data.sh pushes to main from two workflows; its test runs it
+      # against scratch repositories, so nothing here needs a token or network.
+      - name: Shell scripts
+        run: |
+          bash -n scripts/commit-data.sh
+          bash -n scripts/preflight.sh
+          bash scripts/test/commit-data.test.sh
       - name: Lint the dataset
         run: node pizza/scripts/check-dataset.mjs
-      # Per site rather than build-all: the orchestrator refuses --skip under
-      # CI (a partial dist must never deploy), and the Python site needs a
-      # browser this job has no reason to install. No snapshot is written.
-      - name: Build and verify pizza
-        working-directory: pizza
-        env:
-          OUT_DIR: ${{ github.workspace }}/dist/pizza
-        run: |
-          node scripts/build.mjs
-          node scripts/verify.mjs
-      - name: Build and verify clock
-        working-directory: clock
-        env:
-          OUT_DIR: ${{ github.workspace }}/dist/clock
-        run: |
-          node scripts/build.mjs
-          node scripts/verify.mjs
-      - name: Build and verify mortgage
-        working-directory: mortgage
-        env:
-          OUT_DIR: ${{ github.workspace }}/dist/mortgage
-        run: |
-          node scripts/build.mjs
-          node scripts/verify.mjs
-      - name: Build and verify screen
-        working-directory: screen
-        env:
-          OUT_DIR: ${{ github.workspace }}/dist/screen
-        run: |
-          node scripts/build.mjs
-          node scripts/verify.mjs
-      - name: Build and verify words
-        working-directory: words
-        env:
-          OUT_DIR: ${{ github.workspace }}/dist/words
-        run: |
-          node scripts/build.mjs
-          node scripts/verify.mjs
+      # No flags: the orchestrator refuses --only and --skip under CI, and
+      # every registered site builds without anything this job has to install.
+      - name: Build and verify every site
+        run: node scripts/build-all.mjs
       - name: The build must not touch tracked files
         run: |
           if [ -n "$(git status --porcelain)" ]; then

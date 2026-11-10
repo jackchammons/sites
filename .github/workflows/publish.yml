@@ -5,28 +5,29 @@ name: Publish sites
 # One workflow deploys everything on purpose: a Pages deployment replaces the
 # whole site, so separate per-site workflows would delete each other's output.
 # The cron therefore runs at the fastest cadence any single site needs.
+#
+# Only main deploys. A manual dispatch on another branch runs the checks and
+# the build and stops there: the deploy job is skipped and no data is committed.
 on:
+  # The daily fallback: it publishes on a day when no push and no research run
+  # did, and it is what keeps the feed sweep and the weekly snapshot moving.
   schedule:
-    - cron: '17 13 * * *'    # daily at 13:17 UTC (06:17 Pacific), offset from
-                             # :00 (GitHub delays jobs scheduled on the hour)
+    - cron: '17 13 * * *'    # daily at 13:17 UTC, offset from :00 (GitHub
+                             # delays jobs scheduled on the hour)
+  # Every push to main publishes unless it touches documentation only. No
+  # build reads a Markdown file, docs/ or .claude/.
   push:
     branches: [main]
-    paths:
-      - 'pizza/**'
-      - 'odyssey-seats/**'
-      - 'clock/**'
-      - 'mortgage/**'
-      - 'life/**'
-      - 'screen/**'
-      - 'words/**'
-      - 'scripts/**'
-      - 'sites.config.json'
-      - '.github/workflows/publish.yml'
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - '.claude/**'
   workflow_dispatch:
-  # A research commit is pushed with GITHUB_TOKEN, which never fires a push
-  # event; but a workflow finishing is a first-class event the Actions
-  # service emits, so this is how researched data reaches the site the same
-  # hour instead of on tomorrow's cron (which stays as the fallback).
+  # A finished research run triggers a publish through this event, so
+  # researched data reaches the site the same hour. The research commit itself
+  # cannot do it: a push made with GITHUB_TOKEN never fires a push event, but
+  # a workflow finishing is an event of its own. The name below is matched
+  # against research.yml's `name:`; change them together.
   workflow_run:
     workflows: ["Research pizza buzz"]
     types: [completed]
@@ -36,50 +37,49 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
-    name: Build sites
+  # ci.yml's checks, run on the commit about to be built. A branch push gets
+  # them from ci.yml directly; main gets them here, on every trigger, and the
+  # build does not start unless they pass.
+  check:
+    name: Check
     # A failed research run committed nothing worth publishing.
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
-    runs-on: ubuntu-latest
-    timeout-minutes: 25
     permissions:
-      contents: write   # to commit weekly ranking snapshots
+      contents: read
+    uses: ./.github/workflows/ci.yml
+    with:
+      ref: ${{ github.ref }}
+
+  build:
+    name: Build sites
+    needs: check
+    # The same condition as check, so the two are skipped together.
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write   # the data commit: the buzz sweep, geocoded coordinates
+                        # and the weekly snapshot, on any run that changed one
       pages: write
+    outputs:
+      data_commit: ${{ steps.commit.outcome }}
     steps:
+      # The branch tip, not the commit that triggered the run. Runs are
+      # serialised by the concurrency group, so a queued run starts from the
+      # previous run's data commit and has nothing of its own to conflict with.
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
 
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-chromium-${{ runner.os }}
-
-      - name: Install Python dependencies
-        run: |
-          pip install playwright pillow
-          playwright install --with-deps chromium
-
-      # Data refresh runs before the build and only writes into */data/.
-      # Fail-soft: no network or a bad response leaves the existing data in
-      # place and the build still publishes.
-      - name: Unit tests
-        run: node --test pizza/test/*.test.mjs
-
-      # The dataset is the site's crown jewels; lint it before building so a
-      # bad hand edit or apply bug fails here, not as a rendered symptom.
-      - name: Lint the dataset
-        run: node pizza/scripts/check-dataset.mjs
-
+      # Data refresh runs before the build and only writes into pizza/data/.
+      # Fail-soft: no network, a bad response or a crash in the sweep leaves
+      # the existing data in place and the build still publishes.
       - name: Refresh Seattle pizza buzz
-        run: node pizza/scripts/fetch-buzz.mjs
+        run: node pizza/scripts/fetch-buzz.mjs || echo "::warning::buzz sweep skipped"
 
       # Fills lat/lon for any address that lacks them (one Nominatim request
       # per second, cached into the dataset, so each address geocodes once,
@@ -88,10 +88,17 @@ jobs:
       - name: Geocode new addresses
         run: node pizza/scripts/geocode.mjs || echo "::warning::geocoding skipped"
 
-      # Builds each site into dist/<slug>/, runs its verifier, promotes its
-      # entry page, then renders the landing page. If any site fails, the run
-      # fails and nothing is deployed -- the previous deploy stays live rather
-      # than a half-built site going out.
+      # The dataset is the site's crown jewels; lint it before building so a
+      # bad hand edit or apply bug fails here, not as a rendered symptom. It
+      # runs after the geocoder so the coordinates just written are linted
+      # before the commit step can push them to main.
+      - name: Lint the dataset
+        run: node pizza/scripts/check-dataset.mjs
+
+      # Builds each site into dist/<slug>/ and runs its verifier, then renders
+      # the landing page. If any site fails, the run fails and nothing is
+      # deployed -- the previous deploy stays live rather than a half-built
+      # site going out.
       # SNAPSHOT=1 is what lets the pizza build write this week's standings
       # into data/history.json; every other build (local, CI, the research
       # workflow's gate) leaves the snapshot alone.
@@ -103,9 +110,14 @@ jobs:
       # Persist refreshed data so tomorrow's run can diff against it -- that is
       # what makes the buzz list accumulate and the ▲/▼ markers meaningful.
       # Shares research.yml's commit script: same rebase-retry push, so an
-      # overlap with a research commit retries instead of failing the deploy.
+      # overlap with a research commit retries instead of failing.
+      # The deploy does not wait on it. A commit that cannot be pushed leaves
+      # this job green, so the build above still goes out, and the data-commit
+      # job below turns the run red instead.
       - name: Commit refreshed data
+        id: commit
         if: github.ref == 'refs/heads/main'
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -122,6 +134,8 @@ jobs:
   deploy:
     name: Deploy to Pages
     needs: build
+    # Only main deploys. On any other ref the build above is a rehearsal.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       pages: write
@@ -132,3 +146,19 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # Reports a data commit that did not reach main. It runs beside the deploy
+  # rather than ahead of it: the page built from this run's data is published
+  # either way, and what is lost is the record the next run would have started
+  # from (the buzz sweep, new coordinates, this week's snapshot).
+  data-commit:
+    name: Data commit
+    needs: build
+    if: needs.build.outputs.data_commit == 'failure'
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Report the failed data commit
+        run: |
+          echo "::error::The site was built and its deploy is not blocked, but this run's data commit did not reach main. The reason is in the build job's 'Commit refreshed data' step. The next run regenerates the same files from main."
+          exit 1

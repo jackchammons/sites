@@ -1,31 +1,40 @@
 name: Research pizza buzz
 
-# Uses the Claude Code Action to find Seattle pizza openings and closings the
-# RSS sweep missed, writing them to pizza/data/research.json.
+# Uses the Claude Code Action to research Seattle pizzerias, one task per run
+# (new places, locations, closures, news, ratings), writing what it finds to
+# pizza/data/research.json. Later steps validate that file and apply it to the
+# dataset.
 #
 # Deliberately NOT part of publish.yml:
 #  - an agent must not sit in the deploy path; if it hangs or fails, the site
 #    still publishes on its own schedule
 #  - this workflow never calls deploy-pages. A Pages deploy replaces the whole
 #    site, so publish.yml remains the only workflow allowed to deploy.
-# Its commit to main does NOT trigger publish.yml -- a push made with GITHUB_TOKEN
-# never fires another workflow. The crons are what connect them: this runs at
-# 12:47 UTC and publish.yml's cron at 13:17 UTC picks the commit up half an hour
-# later. Keep that ordering if you change either schedule.
+# Its commit to main fires no push event -- a push made with GITHUB_TOKEN never
+# triggers another workflow. What publishes it is publish.yml's workflow_run
+# trigger, which fires when a run of this workflow finishes and matches it by
+# the `name:` above; change the two together. publish.yml's own cron at 13:17
+# UTC is the daily fallback, and this one runs half an hour earlier so the
+# fallback picks the commit up too.
 #
-# Dormant until a credential exists. Either works:
+# Needs one credential. Either works:
 #   CLAUDE_CODE_OAUTH_TOKEN  bills the subscription's programmatic credit pool
 #                            (generate with `claude setup-token`)
 #   ANTHROPIC_API_KEY        bills metered API credits (Claude Console)
 # Set ONE. If both are present the API key wins the credential chain, so you
-# would pay per token while the subscription allowance sat unused.
+# would pay per token while the subscription allowance sat unused. With
+# neither, the gate step skips the pass and the run stays green.
+#
+# A manual dispatch from a branch is a dry run: the agent runs and its output
+# is validated, applied and built on the runner, but nothing is committed.
+# That is how a change to a brief or to the prompt is tried before it merges.
 on:
   schedule:
-    - cron: '47 12 * * *'   # 30 min before publish.yml, so its commit is picked up
+    - cron: '47 12 * * *'   # 30 min before publish.yml's cron, the fallback publish
   workflow_dispatch:
     inputs:
       task:
-        description: 'Task type (auto rotates by day)'
+        description: 'Task type (auto picks the type whose last successful pass is oldest)'
         type: choice
         default: auto
         options: [auto, discovery, locations, liveness, news, rating, social, census, facts, coverage, sources]
@@ -34,17 +43,23 @@ concurrency:
   group: research
   cancel-in-progress: false
 
+# The one place the agent's model is named. The preflight probes this id and
+# the agent runs it, so a retired or mistyped id fails at the probe.
+env:
+  RESEARCH_MODEL: claude-sonnet-5
+
 jobs:
   research:
     name: Research
     runs-on: ubuntu-latest
-    # 15 minutes was enough when the pass only looked for news. It now also
-    # verifies locations, and a job timeout is unrecoverable in a way a turn
-    # ceiling is not: it kills the runner mid-step, so the file the agent had
-    # already written is lost along with everything downstream of it. Headroom
-    # here costs nothing on a normal run -- the job ends when the work does.
+    # A job timeout is unrecoverable in a way a turn ceiling is not: it kills
+    # the runner mid-step, so the file the agent had already written is lost
+    # along with everything downstream of it. Headroom here costs nothing on a
+    # normal run -- the job ends when the work does.
     timeout-minutes: 25
-    # Skips cleanly when the secret is absent, which is the current state.
+    # Only in the owner's repository, so a fork's copy of the schedule does
+    # nothing. A missing credential is the gate step's business: it skips the
+    # pass and leaves the run green.
     if: ${{ github.repository_owner == 'jackchammons' }}
     permissions:
       contents: write
@@ -79,50 +94,16 @@ jobs:
 
       # The action hides the SDK's output, so an auth or billing failure surfaces
       # only as is_error:true with no cost and no model usage. The probe turns
-      # that into the actual API error before three minutes of retries. Fails
-      # the run only on a definitive rejection (401/403); see the script.
+      # that into the actual API error before three minutes of retries. It
+      # fails the run only on a definitive answer: 401/403 for the credential,
+      # or a 404 for a model id that is unknown or retired. See the script.
       - name: Preflight credential check
         if: steps.gate.outputs.enabled == 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-        run: bash scripts/preflight.sh claude-opus-5
+        run: bash scripts/preflight.sh "$RESEARCH_MODEL"
 
-      # What actually broke the first six runs, found by turning on
-      # show_full_output: the prompt named verify-research.mjs, so the agent
-      # tried to run it, had no Bash tool, was denied four times, and then
-      # stopped to ask a human for approval in an unattended job. Its own result
-      # was is_error:false / stop_reason:end_turn -- it had already done the
-      # work and written the file -- but the action failed the run for
-      # exceeding the turn limit. Never mention a script the agent cannot run.
-      #
-      # Turn budget, measured rather than guessed. The fixed prompt produced a
-      # clean pass -- is_error false, one denial instead of four -- but it took
-      # 55 turns against a ceiling of 50, and the action fails the step for
-      # overrunning even when the agent reports success. So: 80 turns, which is
-      # headroom over both observed passes (45 and 55), and a search budget in
-      # the prompt so the count stays bounded rather than scaling with how much
-      # news happens to exist that day. max-turns is a ceiling, not a target --
-      # a run costs the turns it actually uses.
-      #
-      # continue-on-error below is the other half. An overrun is a bookkeeping
-      # failure, not a research failure: the file is already written. Letting
-      # the step fail soft and having the next step judge the artefact means a
-      # complete pass still lands. That step, not this one, is what turns the
-      # run red -- a missing or stale file still fails the job.
-      #
-      # Crowd ratings are NOT the agent's job, and cannot be. Yelp returns 403
-      # to automated fetching -- business pages and search alike -- and Google's
-      # results carry no rating in the HTML. Three runs burned their whole turn
-      # budget thrashing against that: 12, 28 and 30 turns, never converging.
-      # That is a property of the sources, not something a prompt can fix, and
-      # there is no API path either: a Yelp key was considered and ruled out.
-      # Crowd ratings are therefore frozen at the values in restaurants.json.
-      #
-      # What the agent IS good at is editorial research: openings, closings and
-      # reviews live on news sites that serve their content to anyone. The
-      # broader early runs were finding real stories before they ran out of
-      # turns, so that is what it does now.
       # Fingerprint taken before the agent runs so the check afterwards can tell
       # a real write from an untouched leftover. research.json is committed
       # after a good run -- the build reads it for The Buzz -- so on later runs
@@ -137,14 +118,17 @@ jobs:
             echo "sum=absent" >> "$GITHUB_OUTPUT"
           fi
 
-      # One task per run, rotating by UTC day: discovery, locations, liveness,
-      # news. Each brief is a short explicit worklist, because letting the
-      # agent read the whole dataset and decide for itself costs turns and
-      # context on a decision a sort makes better -- and worklists are sized
-      # from measured timings (an entry whose website is unknown costs about
-      # twice one whose site is on file; run 17 died on exactly that).
-      # A manual dispatch can force a type, which is how the discovery
-      # backfill and per-task testing work.
+      # One task per run: the type whose last successful pass is oldest, out
+      # of discovery, locations, liveness, news and rating. next-task.mjs reads
+      # that from the data commits' subjects, so a failed day is retried next
+      # and a manual dispatch counts. Each brief is a short explicit worklist,
+      # because letting the agent read the whole dataset and decide for itself
+      # costs turns and context on a decision a sort makes better -- and
+      # worklists are sized from measured timings (an entry whose website is
+      # unknown costs about twice one whose site is on file).
+      # A manual dispatch can force a type, including the dispatch-only ones
+      # (social, census, facts, coverage, sources), which is how backfills and
+      # per-task testing work.
       - name: Pick today's task
         id: task
         if: steps.gate.outputs.enabled == 'true'
@@ -154,6 +138,28 @@ jobs:
         if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip == 'true'
         run: echo "::notice::${{ steps.task.outputs.task }} has an empty worklist; the agent was not run."
 
+      # Never mention a script the agent cannot run. The prompt once named
+      # verify-research.mjs: the agent tried to run it, had no Bash tool, and
+      # stopped to ask a human for approval in an unattended job, which is
+      # what failed the first six runs.
+      #
+      # --max-turns is a ceiling, not a target: a run costs the turns it
+      # uses. The action fails the step for overrunning even when the agent
+      # reports success, so the ceiling sits at more than twice a normal pass,
+      # and each brief sets a search budget so the count stays bounded rather
+      # than scaling with how much news happens to exist that day.
+      #
+      # continue-on-error is the other half. An overrun is a bookkeeping
+      # failure, not a research failure: the file is already written. The
+      # checks after this step judge the artefact, and they are what turn the
+      # run red -- a missing or stale file still fails the job.
+      #
+      # Crowd ratings are NOT the agent's job, and cannot be. Yelp returns 403
+      # to automated fetching and Google's results carry no rating in the
+      # HTML; a Yelp API key was considered and ruled out. They stay frozen at
+      # the values in restaurants.json. What the agent is good at is editorial
+      # research: openings, closings and reviews live on news sites that serve
+      # their content to anyone.
       - name: Research and refresh pizza data
         id: agent
         if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
@@ -169,7 +175,7 @@ jobs:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           claude_args: |
             --max-turns 120
-            --model claude-sonnet-5
+            --model ${{ env.RESEARCH_MODEL }}
             --allowedTools "WebSearch,WebFetch,Read,Edit(pizza/data/research.json),Glob,Grep,TodoWrite"
           prompt: |
             ${{ steps.task.outputs.brief }}
@@ -207,6 +213,7 @@ jobs:
                            "source":"<https page you read>",
                            "address":"<street address or omit>"}],
              "ratingSkipped":[{"id":"<id from the rating worklist>","note":"<what you searched and found>"}],
+             "locationsSkipped":[{"id":"<id from the locations worklist>","note":"<what you searched and found>"}],
              "facts":[{"id":"<entry id>","opened":<year or omit>,"priceIndex":<1-4 or omit>,
                        "source":"<https page that states it>"}],
              "factsSkipped":[{"id":"<id from the facts worklist>","note":"<what you searched and found>"}],
@@ -232,8 +239,7 @@ jobs:
             IMPORTANT: do not run any shell command, script or validator. You
             have no Bash tool, and asking for approval stalls this job -- nobody
             is watching it. Write the file and stop. A later workflow step
-            validates it automatically and rejects the whole file if any entry
-            breaks the rules, so write carefully rather than checking:
+            validates it automatically, so write carefully rather than checking:
             - Every claim needs a real https URL you actually opened. Never
               invent a URL, a headline, a date or an address.
             - Dates must be real and not in the future; news within 180 days,
@@ -242,6 +248,8 @@ jobs:
               a review site's "closed" label is a lead, not evidence.
             - Addresses start with a street number and carry a Puget Sound ZIP
               (980xx-985xx).
+            - An entry on the locations worklist that you could not verify
+              goes in locationsSkipped, so the next pass moves on.
             - factorRatings must all be for ids from the rating worklist, carry
               craft, distinctiveness and criticScore inside their bounds, and
               cite 1-4 sources you actually read, at least one of them published
@@ -259,11 +267,14 @@ jobs:
             Write only pizza/data/research.json, never touch restaurants.json
             or any score, and run nothing.
 
-      # The agent's write grant is scoped to research.json; this is the check
-      # that the scope held. Any other change -- the dataset, a gate script, a
-      # workflow, something under .git/ -- fails the run before a line of the
-      # agent-writable tree is executed. Porcelain rather than diff so an
-      # untracked file fails too.
+      # The agent's write grant is scoped to research.json by the Edit() rule
+      # above, and that scope is the primary control. This step checks that it
+      # held for everything git status can see: tracked files, and untracked
+      # files that are not ignored. Any such change -- the dataset, a gate
+      # script, a workflow -- fails the run before a line of the agent-writable
+      # tree is executed. It cannot see a write under .git/ or to an ignored
+      # path (dist/, node_modules/), so it is no defence against one.
+      # Porcelain rather than diff so an untracked file fails too.
       - name: Check the agent changed only research.json
         if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
         run: |
@@ -304,7 +315,11 @@ jobs:
         run: node pizza/scripts/verify-research.mjs
 
       # Only runs once validation passes, so nothing unchecked reaches the
-      # dataset. Touches crowd figures and closure flags only.
+      # dataset. Applies every accepted section: restaurants.json takes the
+      # statuses, locations, directory entries, mentions, links, facts and
+      # factor ratings; news is folded into buzz.json, new attributes into
+      # attributes.json and candidate reviews into candidates.json. Crowd
+      # figures are frozen and nothing here writes them.
       - name: Apply validated research
         if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
         run: node pizza/scripts/apply-research.mjs
@@ -315,9 +330,9 @@ jobs:
         run: node pizza/scripts/check-dataset.mjs
 
       # Render the page from the applied data and run the deploy gate on it,
-      # here, before the commit. A data shape the renderer did not expect (an
-      # entry with no signature, on 2026-08-27) used to land on main and fail
-      # the next three publishes. No snapshot: SNAPSHOT is unset.
+      # here, before the commit. A data shape the renderer did not expect
+      # would otherwise land on main and fail every publish until it was
+      # fixed by hand. No snapshot: SNAPSHOT is unset.
       # verify-research may have rewritten research.json with only the
       # accepted records; that is the file apply read and the one committed.
       - name: Build and verify the page from the applied data
@@ -332,9 +347,11 @@ jobs:
       # commit-data.sh pushes through an explicit GITHUB_TOKEN remote with a
       # rebase-retry loop; the script's comments explain why the persisted
       # checkout credential is dead by this point (the Claude action revokes
-      # its own token in cleanup).
+      # its own token in cleanup). Only on main: a run on any other ref is a
+      # dry run, and the script itself refuses a checkout that is ahead of
+      # main.
       - name: Commit research
-        if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
+        if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true' && github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -342,3 +359,12 @@ jobs:
             "chore(data): research pass (${{ steps.task.outputs.task }}) $(date -u +%Y-%m-%d)" \
             pizza/data/research.json pizza/data/restaurants.json pizza/data/attributes.json \
             pizza/data/candidates.json pizza/data/buzz.json
+
+      # The ref name goes through the environment because a branch name is
+      # text someone else chose, and it would otherwise be pasted into the
+      # script.
+      - name: Dry run, nothing committed
+        if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true' && github.ref != 'refs/heads/main'
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: echo "::notice::Dry run on $REF_NAME, not main. The pass was validated, applied and built on the runner, and nothing was committed."
