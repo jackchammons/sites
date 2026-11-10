@@ -2,12 +2,17 @@
  * methodology, footer). The data-driven sections come in pre-rendered via
  * `sections`; this module owns everything that is mostly prose. */
 import { boardHtml, fieldStats } from '../src/render.js';
-import { FRICTION_CAP, ALGORITHM, MAX_STALENESS_DECAY, STALENESS_PER_WEEK } from '../src/slice.js';
+import {
+  FRICTION_CAP, ALGORITHM, MAX_STALENESS_DECAY, STALENESS_PER_WEEK, DEFAULT_WEIGHTS,
+  REPUTATION_WEIGHTS, LONGEVITY_FULL_YEARS, VOLUME_HALF_REVIEWS, COVERAGE_WINDOW_MONTHS,
+  COVERAGE_FULL_MENTIONS, MENTION_WEIGHT, MENTION_WEIGHT_OTHER, MENTION_HALF_LIFE_MONTHS,
+  CRITICAL_BOOST_SCALE, CRITICAL_BOOST_CAP, PRICE_MULT, PRICE_MULT_UNKNOWN
+} from '../src/slice.js';
 import { esc, nameLink, fmtDate } from './html.mjs';
 import { locationLabel } from '../src/locations.js';
 
 export function pageHtml(ctx, sections) {
-  const { dataset, now, week, scoredAll, ranked, spotlight, history, css, leafletCss } = ctx;
+  const { dataset, now, week, scoredAll, ranked, spotlight, css, leafletCss } = ctx;
   const openRated = scoredAll.filter(r => !r.status || r.status === 'open').length;
   const founding = dataset.restaurants.filter(r => r.factors?.craft?.setBy === 'editorial').length;
   const agentRated = dataset.restaurants.filter(r => r.factors?.craft?.setBy === 'agent').length;
@@ -32,6 +37,24 @@ export function pageHtml(ctx, sections) {
   const { factorCards, frictionRows } = sections.method;
   const field = fieldStats(ctx.allScored);
   const { recordSection, bracketSection, radarSection, buzzSection, directorySection } = sections;
+  /* The nav lists the sections this build rendered. The record, the radar and
+   * the buzz each render nothing when they have nothing to show, and a link to
+   * a section that is not there goes nowhere. */
+  const nav = [
+    ['top-ten', 'Top 10', true],
+    ['record', 'Record', recordSection],
+    ['styles', 'By style', bracketSection],
+    ['radar', 'Radar', radarSection],
+    ['buzz', 'Buzz', buzzSection],
+    ['directory', 'Directory', directorySection],
+    ['methodology', 'Method', true]
+  ].filter(([, , rendered]) => rendered);
+  /* Every constant the methodology prints is read from slice.js, in the form
+   * the copy uses, so the page cannot describe a formula the code has left. */
+  const W = REPUTATION_WEIGHTS;
+  const repShare = DEFAULT_WEIGHTS.reputation;
+  const x2 = n => `×${n.toFixed(2)}`;
+  const kind = k => MENTION_WEIGHT[k].toFixed(MENTION_WEIGHT[k] ? 1 : 0);
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -46,6 +69,8 @@ export function pageHtml(ctx, sections) {
 <meta property="og:site_name" content="jackchammons / sites">
 <meta name="twitter:card" content="summary">
 <link rel="canonical" href="https://sites.jackhammons.com/pizza/">
+<meta name="theme-color" content="#14100e" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fbf6ef" media="(prefers-color-scheme: light)">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍕</text></svg>">
 <style>${leafletCss}
 ${css}</style>
@@ -86,13 +111,7 @@ ${css}</style>
 
 <nav class="site-nav" aria-label="Sections">
   <div class="wrap">
-    <a href="#top-ten">Top 10</a>
-    <a href="#record">Record</a>
-    <a href="#styles">By style</a>
-    <a href="#radar">Radar</a>
-    <a href="#buzz">Buzz</a>
-    <a href="#directory">Directory</a>
-    <a href="#methodology">Method</a>
+    ${nav.map(([id, label]) => `<a href="#${id}">${label}</a>`).join('\n    ')}
   </div>
 </nav>
 
@@ -103,8 +122,8 @@ ${css}</style>
     <div class="eyebrow">The ranking</div>
     <h2 class="sec-h">The Top 10</h2>
     <p class="lede" style="margin:14px 0 8px">
-      The ten highest SLICE scores among ${openRated} rated, open pizzerias. Recomputed every
-      morning; the ▲▼ markers show movement since last week. Click a card to see why it ranks
+      The ten highest SLICE scores among ${openRated} rated, open pizzerias. Recomputed on
+      every build; the ▲▼ markers show movement since last week. Click a card to see why it ranks
       where it does: every input, read against the rest of the rated field.
     </p>
 
@@ -121,8 +140,6 @@ ${radarSection}
 ${buzzSection}
 ${directorySection}
 
-</main>
-
 <section class="section" id="methodology">
   <div class="wrap">
     <div class="eyebrow">Methodology</div>
@@ -130,8 +147,7 @@ ${directorySection}
     <p class="lede" style="margin-top:14px">
       The whole site is computed. A JSON dataset holds the facts; a scoring module (${ALGORITHM})
       turns them into the ranking; a daily pipeline keeps the facts current. Every number on this
-      page comes from that build, and the same scoring code runs in your browser when you change
-      the weights.
+      page comes from that build.
     </p>
 
     <h3 class="method-h">The score</h3>
@@ -156,39 +172,45 @@ ${directorySection}
       run nothing. For ratings, the agent reads what has actually been published about each
       place and proposes craft and distinctiveness on a 0.5 grid plus a critic base, citing one
       to four https sources it read; an entry it cannot ground in real coverage stays unrated. A
-      validator rejects the file if any value is off-grid, unsourced, or would overwrite an
-      existing rating. A rating is set once and never rewritten; what the rotation re-checks is
+      validator checks each proposal on its own: one that is off-grid, unsourced, or would
+      overwrite an existing rating is dropped with a warning, and the rest are applied. A rating
+      is set once and never rewritten; what the rotation re-checks is
       whether a place is open, where it is, and what has been written about it. The computed
       factors below run from the stored values at build time.
     </p>
     <div class="grid2">
       <div class="mcard">
         <h4>Reputation — computed</h4>
-        <p>Three components, each 0–1, weighted 3 : 2 : 1, scored over whichever an entry
+        <p>Three components, each 0–1, weighted ${W.longevity} : ${W.volume} : ${W.coverage}, scored over whichever an entry
         actually has:</p>
-        <pre>longevity = log(1+years) / log(1+15)   capped at 1
-volume    = reviews / (reviews + 500)
-coverage  = press mentions in 24 mo / 6, capped at 1
+        <pre>longevity = log(1+years) / log(1+${LONGEVITY_FULL_YEARS})
+            capped at 1
+volume    = reviews / (reviews + ${VOLUME_HALF_REVIEWS})
+coverage  = mentions in ${COVERAGE_WINDOW_MONTHS} mo / ${COVERAGE_FULL_MENTIONS}
+            capped at 1
 
-reputation = 10 × best weighted mean over
-             the components present, taken
-             best-first (a component counts
-             only if it raises the mean)</pre>
-        <p>Taking the best prefix keeps the factor honest about evidence: a stored review count
-        or a first press mention can lift a score but never lower it. An entry with none of the
-        three on file has no reputation score at all; its 24% is shared by the other four
-        factors rather than scored as zero. The log curve means year two proves more than year
+reputation = 10 × best weighted mean
+             over the components on
+             file, taken best-first</pre>
+        <p>A component counts only if it raises that mean, and the same rule holds one level
+        up. Reputation carries its ${repShare}% only when it is on file <em>and</em> is at or above the
+        weighted mean of the entry's other four factors. When nothing is on file, or when what
+        is on file sits below the other four, reputation carries no weight and the other four
+        share its ${repShare}% in proportion to their own weights. So a founding year, a review count
+        or a first press mention can lift a score but never lower it, and each card says which
+        of the three cases applies. The log curve means year two proves more than year
         twelve. The review <em>count</em> is used, never the star average: how many people rated
         a place is durable, while stored averages go stale.</p>
       </div>
       <div class="mcard">
         <h4>Critical reception — computed</h4>
         <p>A critic base rating, refined by the press coverage the research pass files against
-        the entry. Each story adds a signal by kind — list appearance 1.0, mention 0.4, opening
-        0.3, closing 0, anything else 0.3 — which fades with a 12-month half-life:</p>
-        <pre>boost = min( 1.5, 0.5 × Σ kindWeight × 0.5^(months/12) )
-critical = base + boost</pre>
-        <p>The cap matters: a burst of coverage can lift a score by at most 1.5 points, so press
+        the entry. Each story adds a signal by kind — list appearance ${kind('ranking')}, mention ${kind('mention')}, opening
+        ${kind('opening')}, closing ${kind('closing')}, anything else ${MENTION_WEIGHT_OTHER.toFixed(1)} — which fades with a ${MENTION_HALF_LIFE_MONTHS}-month half-life:</p>
+        <pre>signal   = Σ kind × 0.5^(months / ${MENTION_HALF_LIFE_MONTHS})
+boost    = min( ${CRITICAL_BOOST_CAP.toFixed(1)}, ${CRITICAL_BOOST_SCALE.toFixed(1)} × signal )
+critical = base + boost, capped at 10</pre>
+        <p>The cap matters: a burst of coverage can lift a score by at most ${CRITICAL_BOOST_CAP.toFixed(1)} points, so press
         refines the rating and never replaces it.</p>
       </div>
       <div class="mcard">
@@ -196,8 +218,11 @@ critical = base + boost</pre>
         <p>Quality per dollar. The quality half is the mean of craft and critical reception; the
         price tier scales it:</p>
         <pre>value = (craft + critical) / 2 × tier
-tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75
-      no tier on file ×1.00</pre>
+        capped at 10
+
+tier    $ ${x2(PRICE_MULT[1])}     $$ ${x2(PRICE_MULT[2])}
+        $$$ ${x2(PRICE_MULT[3])}   $$$$ ${x2(PRICE_MULT[4])}
+        none on file ${x2(PRICE_MULT_UNKNOWN)}</pre>
         <p>A cheap great pie outruns its quality score. An expensive one has to be better than
         its price to break even. An entry whose price tier is not yet on file takes the neutral
         multiplier, and its card says so.</p>
@@ -222,8 +247,8 @@ tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75
         <p>Points for the gap between wanting the pizza and eating it, read from each entry's
         attribute flags. Capped at −${FRICTION_CAP.toFixed(1)} so logistics can dent a ranking,
         never decide it.</p>
-        <table class="calc">
-          <thead><tr><th>Condition</th><th class="num">Cost</th></tr></thead>
+        <table class="calc" aria-label="Friction costs">
+          <thead><tr><th scope="col">Condition</th><th scope="col" class="num">Cost</th></tr></thead>
           <tbody>${frictionRows}</tbody>
         </table>
       </div>
@@ -235,22 +260,20 @@ tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75
         alone slides slowly down the board until the rotation checks it again, and the card
         names which check reset the clock.</p>
         <p>Star averages shown on cards are context, not score input; the review <em>count</em>
-        is what reputation reads. Averages are de-noised for display — small samples are pulled
-        toward the Seattle mean of ${dataset.cityMeanRating.toFixed(2)}★ in proportion to how
-        small they are (prior weight ${dataset.priorWeight}). The figures on file were seeded
-        when the index launched and are not refreshed.</p>
+        is what reputation reads. They are printed exactly as stored: the figures on file were
+        seeded when the index launched and are not refreshed.</p>
       </div>
     </div>
 
     <h3 class="method-h">The daily pipeline</h3>
     <p class="method-p">
-      Two scheduled jobs, half an hour apart, keep the dataset moving — and the whole design
+      A daily research pass and a rebuild keep the dataset moving — and the whole design
       assumes any given day can fail without consequence.
     </p>
     <div class="pipe">
       <div class="pipe-stage">
         <span class="pipe-num">01</span>
-        <span class="pipe-when">12:47 UTC</span>
+        <span class="pipe-when">once a day</span>
         <b>Research</b>
         <p>A Claude research agent gets one bounded brief: an explicit worklist, a web-search
         budget, no ability to run anything. It reads pizzerias' own sites and published local
@@ -268,14 +291,16 @@ tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75
         <p>Every proposal is checked before anything is written: an https source on each claim,
         addresses that parse with Puget Sound ZIPs, dates that exist, ratings on the 0.5 grid
         that never overwrite an existing one, no duplicates.</p>
-        <p class="pipe-reject">One bad entry rejects the whole file — the dataset stays exactly
-        as it was, and tomorrow's run starts fresh.</p>
+        <p class="pipe-reject">A record that fails is dropped with a warning; the rest are
+        applied.</p>
       </div>
       <div class="pipe-stage">
         <span class="pipe-num">03</span>
-        <span class="pipe-when">13:17 UTC</span>
+        <span class="pipe-when">when research finishes</span>
         <b>Rebuild</b>
-        <p>The site recomputes from the dataset: feeds swept, validated research merged, every
+        <p>A publish runs when the research pass finishes, and once more each day on its own
+        schedule, so a day without research still updates the page. The site recomputes from
+        the dataset: feeds swept, validated research merged, every
         rated entry re-scored from scratch, the ten highest open entries published. Once per
         ISO week the standings are snapshotted — the ▲▼ markers, the record chart and the
         "why it moved" lines all compare against those.</p>
@@ -309,6 +334,8 @@ tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75
   </div>
 </section>
 
+</main>
+
 <footer>
   <div class="wrap">
     <p><b>The Seattle Pizza Index.</b> A static site: the ranking is computed at build time from a
@@ -316,7 +343,8 @@ tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75
     disclosures. No analytics, no cookies, no tracking.</p>
     <p style="margin-top:10px">Rebuilt daily by GitHub Actions from
     <a href="${REPO}" target="_blank" rel="noopener">jackchammons/sites</a>.
-    ${ALGORITHM} · dataset v${esc(dataset.dataVersion)} · built ${now.toISOString()}</p>
+    ${ALGORITHM} · dataset v${esc(dataset.dataVersion)} · built ${now.toISOString()} ·
+    <a href="../">all sites</a></p>
   </div>
 </footer>
 
@@ -327,7 +355,6 @@ tier: $ ×1.20   $$ ×1.05   $$$ ×0.90   $$$$ ×0.75
   })) },
   builtAt: now.toISOString()
 }).replace(/</g, '\\u003c')};</script>
-<script src="./leaflet.js"></script>
 <script type="module" src="./app.js"></script>
 </body>
 </html>

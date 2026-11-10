@@ -1,5 +1,5 @@
-/* Writes everything a build produces: dist/ (page, modules, vendor assets,
- * rankings.json) and the weekly snapshot in data/history.json. */
+/* Writes everything a build produces: the output directory (page, modules,
+ * vendor assets, rankings.json) and the weekly snapshot in data/history.json. */
 import fs from 'node:fs';
 import path from 'node:path';
 import { DEFAULT_WEIGHTS, ALGORITHM } from '../src/slice.js';
@@ -10,6 +10,15 @@ import { locationLabel } from '../src/locations.js';
 export function writeDist(dist, ctx, html) {
   const { root, dataset, now, week, ranked, allScored, baseline, brackets } = ctx;
   /* ---- emit ---- */
+  // Clearing the target is only safe when it is a previous build or empty: OUT_DIR=. would
+  // otherwise delete this site's source.
+  const holdsSource = dist === root || root.startsWith(dist + path.sep);
+  const foreign = fs.existsSync(dist) && fs.readdirSync(dist).length > 0
+    && !fs.existsSync(path.join(dist, 'index.html'));
+  if (holdsSource || foreign) {
+    console.error(`refusing to clear ${dist}: it is not an empty directory or a previous build`);
+    process.exit(1);
+  }
   fs.rmSync(dist, { recursive: true, force: true });
   fs.mkdirSync(dist, { recursive: true });
   fs.writeFileSync(path.join(dist, 'index.html'), html);
@@ -18,6 +27,7 @@ export function writeDist(dist, ctx, html) {
   for (const f of ['app.js']) {
     fs.copyFileSync(path.join(root, 'src', f), path.join(dist, f));
   }
+  // app.js fetches this one itself, when the map is about to be seen.
   fs.copyFileSync(path.join(root, 'src/vendor/leaflet.js'), path.join(dist, 'leaflet.js'));
   fs.writeFileSync(path.join(dist, '.nojekyll'), '');
   fs.writeFileSync(path.join(dist, 'rankings.json'), JSON.stringify({

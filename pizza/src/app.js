@@ -15,22 +15,35 @@ document.getElementById('board')?.addEventListener('click', e => {
 });
 
 /* ---- Directory map ----
- * Leaflet is loaded as a plain script tag (window.L); if it failed to load, or
- * no location has coordinates yet, the map div collapses and the directory
- * table stands alone. Circle markers avoid Leaflet's image assets entirely.
+ * The map sits ten to twenty screens down, so nothing of it loads with the
+ * page: Leaflet (vendored, ./leaflet.js) is fetched when the rail comes within
+ * a couple of screens of the viewport, or when a directory row asks for its
+ * marker, whichever is first. Tiles follow from there.
+ *
+ * The rail is rendered hidden and revealed here, once there is at least one
+ * point to plot. Everything that can go wrong (the script fails to load,
+ * Leaflet throws on a bad coordinate) ends in dropRail(): the map and its
+ * legend go together and the table takes the full width. None of it can stop
+ * the directory rows or the chart below from being wired up. Circle markers
+ * avoid Leaflet's image assets entirely.
  */
-/* Filled by initMap so the directory rows can focus the map; stays empty when
- * the map never initialised (offline tiles, no coordinates). */
+/* Set while there is a map, or one still to load, so the directory rows can
+ * focus a marker; null when there is no map. */
 const mapApi = { focus: null };
 /* Filled by the directory wiring below, so map markers can focus a row. */
 const dirApi = { expand: null };
 
-(function initMap() {
+(() => {
+  const rail = document.getElementById('map-rail');
   const el = document.getElementById('map');
-  if (!el || typeof window.L === 'undefined') { if (el) el.remove(); return; }
-
-  const topIds = new Set(
-    [...document.querySelectorAll('#board .card')].map(c => c.dataset.id).slice(0, 10));
+  if (!rail || !el) return;
+  const layout = rail.parentElement;
+  const dropRail = why => {
+    if (why) console.warn('Directory map unavailable:', why);
+    mapApi.focus = null;
+    layout.classList.remove('has-map');
+    rail.remove();
+  };
 
   // The index is Seattle-focused: an entry qualifies by having a location
   // inside the city, and the map plots only those. Suburban branches stay in
@@ -38,70 +51,132 @@ const dirApi = { expand: null };
   const inSeattle = loc => /,\s*Seattle,\s*WA/i.test(loc.address ?? '');
   const pts = [];
   const suburban = new Map();
-  for (const r of DATA.dataset.restaurants) {
-    if (r.status === 'closed') continue;
-    for (const loc of r.locations ?? []) {
-      if (!inSeattle(loc)) {
-        suburban.set(r.id, (suburban.get(r.id) ?? 0) + 1);
-        continue;
+  try {
+    for (const r of DATA.dataset.restaurants) {
+      if (r.status === 'closed') continue;
+      for (const loc of r.locations ?? []) {
+        if (!inSeattle(loc)) {
+          suburban.set(r.id, (suburban.get(r.id) ?? 0) + 1);
+          continue;
+        }
+        if (loc.lat == null || loc.lon == null) continue;
+        pts.push({ r, loc });
       }
-      if (loc.lat == null || loc.lon == null) continue;
-      pts.push({ r, loc });
     }
-  }
-  if (!pts.length) { el.remove(); return; }
+  } catch (e) { dropRail(e); return; }
+  if (!pts.length) { dropRail(); return; }
 
-  /* Wheel zoom follows the layout. In the desktop rail the map is sticky
-   * beside the table, and a wheel gesture over it reads as "zoom the map" --
-   * with wheel zoom off it scrolled the page, which looked like the directory
-   * list jumping away. Stacked layouts keep it off, where a map that traps
-   * the wheel mid-page is the worse bug. */
-  const map = L.map(el, { scrollWheelZoom: false });
-  const wideLayout = window.matchMedia('(min-width: 1100px)');
-  const setWheelZoom = () =>
-    wideLayout.matches ? map.scrollWheelZoom.enable() : map.scrollWheelZoom.disable();
-  setWheelZoom();
-  wideLayout.addEventListener?.('change', setWheelZoom);
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(map);
-
-  const color = ({ r }) =>
-    r.status === 'opening' ? '#4a8c46'
-    : topIds.has(r.id) ? '#c8401f'
-    : '#b08968';
-
-  const bounds = [];
-  const markersById = new Map();   // first (usually primary) Seattle marker per entry
-  for (const p of pts) {
-    const { r, loc } = p;
-    const m = L.circleMarker([loc.lat, loc.lon], {
-      radius: topIds.has(r.id) ? 8 : 6,
-      color: '#fff', weight: 1.5,
-      fillColor: color(p), fillOpacity: 0.92
-    }).addTo(map);
-    const name = r.url
-      ? `<a href="${r.url.replace(/"/g, '&quot;')}" target="_blank" rel="noopener">${r.name}</a>`
-      : r.name;
+  /* A popup is built from nodes, and every string from the dataset goes in as
+   * text. Names and addresses are written by a research agent reading the
+   * open web, so they are never parsed as markup; a link is made only from an
+   * http(s) URL. */
+  const popupFor = ({ r, loc }) => {
+    const box = document.createElement('div');
+    box.className = 'map-pop';
+    const title = document.createElement('b');
+    if (/^https?:\/\//i.test(r.url ?? '')) {
+      const a = document.createElement('a');
+      a.href = r.url; a.target = '_blank'; a.rel = 'noopener';
+      a.textContent = r.name;
+      title.append(a);
+    } else {
+      title.textContent = r.name;
+    }
+    const addr = document.createElement('div');
+    addr.className = 'addr';
+    addr.textContent = loc.address + (r.status === 'opening' ? ' · opening soon' : '');
     const outside = suburban.get(r.id);
-    m.bindPopup(`<div class="map-pop"><b>${name}</b>` +
-      `<div class="addr">${loc.address}${r.status === 'opening' ? ' · opening soon' : ''}${
-        outside ? `<br>+ ${outside} location${outside > 1 ? 's' : ''} outside Seattle (see the table)` : ''}</div></div>`);
-    bounds.push([loc.lat, loc.lon]);
-    if (!markersById.has(r.id)) markersById.set(r.id, m);
-    m.on('click', () => { if (dirApi.expand) dirApi.expand(r.id); });
-  }
-
-  map.fitBounds(bounds, { padding: [24, 24] });
-
-  mapApi.focus = id => {
-    const m = markersById.get(id);
-    if (!m) return false;
-    map.setView(m.getLatLng(), Math.max(map.getZoom(), 14));
-    m.openPopup();
-    return true;
+    if (outside) {
+      addr.append(document.createElement('br'),
+        `+ ${outside} location${outside > 1 ? 's' : ''} outside Seattle (see the table)`);
+    }
+    box.append(title, addr);
+    return box;
   };
+
+  const build = () => {
+    const L = window.L;
+    const topIds = new Set(
+      [...document.querySelectorAll('#board .card')].map(c => c.dataset.id).slice(0, 10));
+
+    /* Wheel zoom and dragging follow the layout. In the desktop rail the map
+     * is sticky beside the table, and a wheel or drag gesture over it reads as
+     * "move the map". In the stacked layout the map lies across the page's
+     * scroll path: a map that takes the wheel, or a finger's drag, traps the
+     * reader above the table, so both are off there. With dragging off Leaflet
+     * leaves one-finger panning to the page; pinch zoom, the zoom buttons,
+     * marker taps and row clicks still move the map. */
+    const wideLayout = window.matchMedia('(min-width: 1100px)');
+    const map = L.map(el, { scrollWheelZoom: false, dragging: wideLayout.matches });
+    const setGestures = () => {
+      for (const gesture of [map.scrollWheelZoom, map.dragging]) {
+        if (wideLayout.matches) gesture.enable(); else gesture.disable();
+      }
+    };
+    setGestures();
+    wideLayout.addEventListener?.('change', setGestures);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    const color = ({ r }) =>
+      r.status === 'opening' ? '#4a8c46'
+      : topIds.has(r.id) ? '#c8401f'
+      : '#b08968';
+
+    const bounds = [];
+    const markersById = new Map();   // first (usually primary) Seattle marker per entry
+    for (const p of pts) {
+      const { r, loc } = p;
+      const m = L.circleMarker([loc.lat, loc.lon], {
+        radius: topIds.has(r.id) ? 8 : 6,
+        color: '#fff', weight: 1.5,
+        fillColor: color(p), fillOpacity: 0.92
+      }).addTo(map);
+      m.bindPopup(() => popupFor(p));
+      bounds.push([loc.lat, loc.lon]);
+      if (!markersById.has(r.id)) markersById.set(r.id, m);
+      m.on('click', () => { if (dirApi.expand) dirApi.expand(r.id); });
+    }
+
+    map.fitBounds(bounds, { padding: [24, 24] });
+
+    return id => {
+      const m = markersById.get(id);
+      if (!m) return false;
+      map.setView(m.getLatLng(), Math.max(map.getZoom(), 14));
+      m.openPopup();
+      return true;
+    };
+  };
+
+  /* One load, however it is asked for. Resolves to the focus function, or to
+   * null once the rail has been dropped. */
+  let loading = null;
+  const load = () => loading ??= new Promise(resolve => {
+    const fail = why => { dropRail(why); resolve(null); };
+    const script = document.createElement('script');
+    script.src = './leaflet.js';
+    script.onload = () => { try { resolve(build()); } catch (e) { fail(e); } };
+    script.onerror = () => fail('leaflet.js did not load');
+    document.head.append(script);
+  });
+
+  rail.hidden = false;
+  layout.classList.add('has-map');
+  mapApi.focus = id => { load().then(focus => focus?.(id)); };
+
+  if ('IntersectionObserver' in window) {
+    const near = new IntersectionObserver(entries => {
+      if (!entries.some(e => e.isIntersecting)) return;
+      near.disconnect();
+      load();
+    }, { rootMargin: '1200px 0px' });
+    near.observe(rail);
+  } else {
+    load();
+  }
 })();
 
 /* ---- Directory rows: expand the full record, focus the map ----

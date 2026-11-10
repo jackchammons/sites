@@ -18,9 +18,9 @@
 # schedules and can overlap; a rejected push should retry against the moved
 # head rather than fail a run that did real work.
 #
-# The push carries exactly one commit, the one made here. A checkout that is
-# ahead of main (a workflow dispatched on a branch) is refused rather than
-# pushed, whoever the caller is.
+# The push carries only the commit made here. A checkout that is ahead of main
+# (a workflow dispatched on a branch) is refused rather than pushed, whoever
+# the caller is.
 set -euo pipefail
 
 MSG="$1"; shift
@@ -57,9 +57,10 @@ for attempt in 1 2 3; do
   fi
   # Only the commit made above may reach main. Anything more between main and
   # HEAD means this checkout is not main (a workflow dispatched on a branch),
-  # and the rebase would carry those commits along. Counted before the rebase:
-  # it drops a commit whose changes main already holds, so afterwards a
-  # branch's commit could stand where this run's was.
+  # and the rebase would carry those commits along. The count is taken before
+  # the rebase because a rebase drops a commit whose changes main already
+  # holds: afterwards a branch's commit could stand where this run's was and
+  # still count as one.
   ahead=$(git rev-list --count FETCH_HEAD..HEAD)
   if [ "$ahead" -gt 1 ]; then
     echo "::error::Refusing to push: $ahead commits lie between main and this checkout, and only the one data commit made here may be pushed. This checkout is not main."

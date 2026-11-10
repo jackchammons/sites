@@ -20,7 +20,6 @@ import { fileURLToPath } from 'node:url';
 import { validateRegistry } from './lib/registry.mjs';
 import { checkOutput } from './lib/checks.mjs';
 import { stampDir } from './lib/stamp.mjs';
-import { esc } from './lib/html.mjs';
 
 // SITES_ROOT points the build at another checkout. The tests use it to build a
 // fixture repository with this script instead of a copy of it.
@@ -30,7 +29,7 @@ const root = process.env.SITES_ROOT
 const dist = path.join(root, 'dist');
 
 /* Every failure is one line that names the site and the step, because the run
- * that prints it also carries six other sites' output. Under Actions the same
+ * that prints it also carries every other site's output. Under Actions the
  * line is an annotation, so it shows on the run page without opening the log. */
 const fail = lines => {
   for (const line of [].concat(lines)) {
@@ -94,6 +93,9 @@ if (partial) {
   console.log(`PARTIAL BUILD — skipping ${left.join(', ')}.`);
   console.log('dist/ will be incomplete and must not be deployed.\n');
 }
+
+const esc = s => String(s).replace(/[&<>"']/g, c =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(dist, { recursive: true });
@@ -334,9 +336,9 @@ footer{border-top:1px solid var(--line);padding:28px 0 44px;color:var(--ink-3);f
 </html>
 `;
 
-// The landing page has no verifier, so the two ways a card has gone wrong are
-// checked where it is rendered: a site missing or doubled, and a field that
-// rendered as the word "undefined".
+// The landing page has no verifier of its own, so it is checked where it is
+// rendered: exactly one card per built site, and no field that came out as
+// the word "undefined".
 const cardCount = (html.match(/<a class="card" /g) || []).length;
 const unlisted = built.filter(s => !html.includes(`<a class="card" href="./${esc(s.slug)}/"`));
 if (cardCount !== built.length || unlisted.length) {

@@ -1,4 +1,4 @@
-import { esc, nameLink, shortDate } from '../html.mjs';
+import { esc, nameLink, shortDate, hostOf } from '../html.mjs';
 import { locationLabel } from '../../src/locations.js';
 import { coverageStats } from '../../src/census.js';
 
@@ -8,16 +8,32 @@ export function directorySection(ctx) {
 const STATUS_LABEL = { open: 'Open', opening: 'Opening soon', closed: 'Closed' };
 const scoreById = new Map(allScored.map(r => [r.id, r]));
 
+/* Open entries first, then openings, then closures. Within each, scored
+ * entries follow their published rank, so the table repeats the ranking's own
+ * order, tie-break included, instead of deriving a second one. */
 const directoryEntries = [...dataset.restaurants].sort((a, b) => {
   const orderOf = r => r.status === 'closed' ? 2 : r.status === 'opening' ? 1 : 0;
   if (orderOf(a) !== orderOf(b)) return orderOf(a) - orderOf(b);
-  const sa = scoreById.get(a.id)?.score ?? -1;
-  const sb = scoreById.get(b.id)?.score ?? -1;
-  return sb - sa || a.name.localeCompare(b.name);
+  const ra = scoreById.get(a.id)?.rank ?? Infinity;
+  const rb = scoreById.get(b.id)?.rank ?? Infinity;
+  return ra !== rb ? ra - rb : a.name.localeCompare(b.name, 'en');
 });
 
-const srcLink = (url, text = 'source') =>
+/* A citation reads as the outlet it points to unless the caller has better
+ * text (a headline, a handle). */
+const srcLink = (url, text = hostOf(url)) =>
   `<a href="${esc(url)}" target="_blank" rel="noopener nofollow">${esc(text)}</a>`;
+/* Several citations in a row: a second link to the same outlet is numbered,
+ * so no two links in the list read the same. */
+const srcLinks = urls => {
+  const seen = new Map();
+  return urls.map(u => {
+    const host = hostOf(u);
+    const n = (seen.get(host) ?? 0) + 1;
+    seen.set(host, n);
+    return srcLink(u, n > 1 ? `${host} (${n})` : host);
+  }).join(', ');
+};
 
 /* One block of the expanded record: a label and its rows. Blocks with nothing
  * to say are omitted, so a sparse discovery renders a short honest card. */
@@ -51,14 +67,13 @@ const detailHtml = r => {
     dRow(`${esc(l.address ?? l.neighborhood ?? '')}${l.neighborhood && l.address ? ` <span class="dd-dim">(${esc(l.neighborhood)})</span>` : ''}`));
   if (locs.length && (r.locationsVerified || r.locationsSource)) {
     locs.push(dRow(`<span class="dd-dim">verified ${esc(r.locationsVerified ?? '?')}${
-      r.locationsSource ? ` against ${srcLink(r.locationsSource, 'its own site')}` : ''}</span>`));
+      r.locationsSource ? ` against ${srcLink(r.locationsSource)}` : ''}</span>`));
   }
 
   const facts = [];
   if (r.style) facts.push(dRow(`Style: ${esc(r.style)}${r.styleGroup ? ` <span class="dd-dim">(${esc(r.styleGroup)})</span>` : ''}`));
-  if (r.opened) facts.push(dRow(`Opened: ${esc(String(r.opened))}${r.openedSource ? ` ${srcLink(r.openedSource)}` : ''}`));
-  if (r.priceIndex) facts.push(dRow(`Price: ${'$'.repeat(r.priceIndex)}${r.priceSource ? ` ${srcLink(r.priceSource)}` : ''}`));
-  if (r.lastVerified) facts.push(dRow(`Data last verified: ${esc(shortDate(r.lastVerified))}`));
+  if (r.opened) facts.push(dRow(`Opened: ${esc(String(r.opened))}${r.openedSource ? ` · ${srcLink(r.openedSource)}` : ''}`));
+  if (r.priceIndex) facts.push(dRow(`Price: ${'$'.repeat(r.priceIndex)}${r.priceSource ? ` · ${srcLink(r.priceSource)}` : ''}`));
   if (r.crowd) facts.push(dRow(`<span class="dd-dim">Crowd figures: ${r.crowd.rating.toFixed(1)}★ (context only) across ~${r.crowd.reviews.toLocaleString('en-US')} reviews (the count feeds reputation)${
     r.crowd.observed ? ` · on file from ${esc(shortDate(r.crowd.observed))}` : ''}${r.crowd.source ? `, ${esc(r.crowd.source)}` : ''}</span>`));
 
@@ -73,7 +88,7 @@ const detailHtml = r => {
       : cited ? `editorially at launch; coverage attached${f.sourcedDate ? ` ${esc(shortDate(f.sourcedDate))}` : ''}`
       : 'editorially at launch, no cited source';
     const when = f.setBy === 'agent' && f.date ? ` ${esc(shortDate(f.date))}` : '';
-    const from = cited ? ` from ${srcs.map((u, n) => srcLink(u, n ? `source ${n + 1}` : 'coverage')).join(', ')}` : '';
+    const from = cited ? ` from ${srcLinks(srcs)}` : '';
     return { line: `set ${who}${when}${from}`, note: f.note ?? '' };
   };
   const present = ['craft', 'distinctiveness', 'critical'].filter(k => r.factors?.[k]);
@@ -87,7 +102,10 @@ const detailHtml = r => {
 
   const computed = scored ? [dRow(
     `SLICE <b>${scored.score.toFixed(1)}</b> — ` +
-    Object.entries(scored.factorScores).map(([k, v]) => `${k} ${k === 'reputation' && !scored.reputationDetail.measured ? 'unmeasured' : v.toFixed(1)}`).join(' · ') +
+    Object.entries(scored.factorScores).map(([k, v]) => {
+      const use = k === 'reputation' ? scored.reputationDetail.use : 'counted';
+      return `${k} ${use === 'unmeasured' ? 'unmeasured' : v.toFixed(1)}${use === 'lowers' ? ' (not counted: below the other four)' : ''}`;
+    }).join(' · ') +
     ` · friction −${scored.penaltyApplied.toFixed(1)} · decay −${(scored.stalenessDecay * 100).toFixed(1)}%${
       scored.verified ? ` (last ${scored.verified.source} ${esc(shortDate(scored.verified.date))})` : ''}`
   )] : [dRow(`<span class="dd-dim">Not yet rated — no score until the rating rotation grounds one in published coverage.${
@@ -122,12 +140,12 @@ const dirRow = r => {
     .map(k => dataset.attributeRegistry[k]?.label ?? k);
   return `
         <tr class="dir-row st-${esc(r.status ?? 'open')}" data-id="${esc(r.id)}">
-          <td class="dir-name">
+          <th scope="row" class="dir-name">
             <button class="dir-toggle" aria-expanded="false" aria-controls="dd-${esc(r.id)}"
               aria-label="Show everything on file for ${esc(r.name)}" title="Show everything on file">▸</button>
             ${nameLink(r)}
-            ${scored && scored.rank <= 10 ? `<span class="dir-rank">#${scored.rank}</span>` : ''}${
-              r.status && r.status !== 'open' ? `<span class="dir-st">${esc(STATUS_LABEL[r.status])}</span>` : ''}</td>
+            ${scored && (r.status ?? 'open') === 'open' ? `<span class="dir-rank${scored.rank <= 10 ? ' top' : ''}">#${scored.rank}</span>` : ''}${
+              r.status && r.status !== 'open' ? `<span class="dir-st">${esc(STATUS_LABEL[r.status])}</span>` : ''}</th>
           <td class="dir-where">${esc(locationLabel(r))}${addr.length ? `
             <div class="dir-addr">${addr.slice(0, 3).map(esc).join('<br>')}${addr.length > 3 ? `
             <details class="dir-more"><summary>+ ${addr.length - 3} more</summary>${addr.slice(3).map(esc).join('<br>')}</details>` : ''}</div>` : ''}</td>
@@ -140,6 +158,9 @@ const dirRow = r => {
         <tr class="dir-detail" id="dd-${esc(r.id)}" hidden><td colspan="6">${detailHtml(r)}</td></tr>`;
 };
 
+/* The map rail is rendered hidden: app.js reveals it once it has points to
+ * plot, so a reader without JavaScript gets the table at full width rather
+ * than an empty box and a legend for a map that is not there. */
 const directorySection = `
 <section class="section" id="directory">
   <div class="wrap">
@@ -147,8 +168,8 @@ const directorySection = `
     <h2 class="sec-h">Every pizzeria on file</h2>
     <p class="lede" style="margin-top:14px">
       The full inventory behind the ranking: ${dataset.restaurants.length} entries, maintained by the
-      daily research pass. Rated entries carry their SLICE score, so this is also where ranks 11
-      and up live. Click a row for everything on file about that pizzeria — and to find it on
+      daily research pass. Rated, open entries are listed in rank order with their SLICE score,
+      so this is also where ranks 11 and up live. Click a row for everything on file about that pizzeria — and to find it on
       the map. Entries without a score have not been rated yet.
     </p>
     ${(() => {
@@ -175,17 +196,17 @@ const directorySection = `
     <div class="dir-layout">
       <div class="dir-list">
         <div class="dir-scroll">
-          <table class="dir-table">
+          <table class="dir-table" aria-label="Every pizzeria on file">
             <thead><tr>
-              <th>Pizzeria</th><th>Where</th><th>Style</th><th>Notes</th>
-              <th class="num">SLICE</th><th>Status</th>
+              <th scope="col">Pizzeria</th><th scope="col">Where</th><th scope="col">Style</th><th scope="col">Notes</th>
+              <th scope="col" class="num">SLICE</th><th scope="col">Status</th>
             </tr></thead>
             <tbody id="dir-body">${directoryEntries.map(dirRow).join('')}</tbody>
           </table>
         </div>
       </div>
-      <div class="dir-rail">
-        <div id="map" class="dir-map" aria-label="Map of Seattle pizzerias"></div>
+      <div class="dir-rail" id="map-rail" hidden>
+        <div id="map" class="dir-map" role="region" aria-label="Map of Seattle pizzerias"></div>
         <p class="note dir-map-note">Seattle locations only — red for the top ten, brown for the
         rest of the field, green for places opening soon. Chains' branches outside the city are
         listed in the table, not mapped. Tiles &copy; OpenStreetMap contributors.</p>

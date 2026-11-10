@@ -3,7 +3,7 @@ import { esc } from '../html.mjs';
 import { DEFAULT_WEIGHTS } from '../../src/slice.js';
 
 const FACTOR_COPY = {
-  reputation:      'Standing earned over time: years in business, how many people have reviewed it, and whether the press keeps coming back. Computed from data; with no data on file it carries no weight.',
+  reputation:      'Standing earned over time: years in business, how many people have reviewed it, and whether the press keeps coming back. Computed from data; it carries weight only when it is on file and would not lower the score.',
   critical:        'A critic base rating, lifted a bounded amount by the press coverage the research pass files against the entry.',
   craft:           'The pizza itself: dough, fermentation, bake, and what goes on top. Rated editorially for the founding entries, from cited coverage for the rest.',
   distinctiveness: 'Does it own a lane in this city, or is it a competent copy of someone else? Rated the same two ways as craft.',
@@ -23,7 +23,7 @@ const factorCards = Object.keys(DEFAULT_WEIGHTS).map(k => `
 const frictionRows = Object.entries(dataset.attributeRegistry)
   .filter(([, a]) => a.frictionCost > 0)
   .sort((a, b) => b[1].frictionCost - a[1].frictionCost)
-  .map(([, a]) => `<tr><td>${esc(a.label)}</td><td class="num">−${a.frictionCost.toFixed(1)}</td></tr>`)
+  .map(([, a]) => `<tr><th scope="row">${esc(a.label)}</th><td class="num">−${a.frictionCost.toFixed(1)}</td></tr>`)
   .join('');
   return { factorCards, frictionRows };
 }

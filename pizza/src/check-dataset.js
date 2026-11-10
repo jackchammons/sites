@@ -6,11 +6,21 @@
  *
  * Pure function of (dataset, registry, nowMs); the CLI wrapper does the I/O.
  */
+import { PUGET_SOUND_ZIP, PUGET_SOUND_BOX } from './bounds.js';
 
 const STATUSES = new Set(['open', 'opening', 'closed']);
 const SET_BY = new Set(['editorial', 'agent']);
-const PUGET_SOUND_ZIP = /\b98[0-5]\d{2}\b/;
 const FACTOR_KEYS = ['craft', 'distinctiveness', 'critical'];
+/* The clocks apply-research stamps. Freshness, the worklists and the radar all
+ * read them, so one in the future holds an entry fresh, or out of a worklist,
+ * until that day comes. */
+const STAMPS = ['statusChecked', 'statusDetected', 'locationsVerified', 'locationsAttempted',
+  'ratingAttempted', 'factsAttempted'];
+/* Free text the page prints. The research validator refuses angle brackets in
+ * what the agent writes; this holds a hand edit to the same rule, because the
+ * map popup is assembled from these strings in the browser. */
+const TEXT = ['name', 'neighborhood', 'style', 'styleGroup', 'blurb',
+  'statusNote', 'ratingNote', 'factsNote', 'locationsNote'];
 
 export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
   const fails = [];
@@ -29,6 +39,8 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
     return Number.isFinite(t) && t <= nowMs + 864e5;
   };
 
+  const markup = v => typeof v === 'string' && /[<>]/.test(v);
+
   const ids = new Set();
   for (const r of dataset.restaurants) {
     const id = r?.id ?? '(missing id)';
@@ -37,6 +49,7 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
     ids.add(id);
 
     if (typeof r.name !== 'string' || !r.name.trim()) bad(id, 'name missing');
+    for (const k of TEXT) if (markup(r[k])) bad(id, `${k} contains < or >`);
     if (!STATUSES.has(r.status)) bad(id, `status must be open|opening|closed, got "${r.status}"`);
     if (r.status !== 'open') {
       if (!r.statusSource || !https(r.statusSource)) bad(id, `status "${r.status}" needs an https statusSource`);
@@ -52,11 +65,8 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
     }
     if (r.openedSource != null && !https(r.openedSource)) bad(id, `openedSource must be https`);
     if (r.priceSource != null && !https(r.priceSource)) bad(id, `priceSource must be https`);
-    if (r.ratingAttempted != null && !pastDate(r.ratingAttempted)) bad(id, `ratingAttempted is not a past date`);
-    if (r.factsAttempted != null && !pastDate(r.factsAttempted)) bad(id, `factsAttempted is not a past date`);
+    for (const k of STAMPS) if (r[k] != null && !pastDate(r[k])) bad(id, `${k} is not a past date`);
     if (r.crowd?.observed != null && !pastDate(r.crowd.observed)) bad(id, `crowd.observed is not a past date`);
-    {
-    }
     if (r.url != null && !https(r.url)) bad(id, `url must be https, got "${r.url}"`);
     if (r.instagram != null && !/^https:\/\/(www\.)?instagram\.com\/[A-Za-z0-9._]{2,30}\/?$/.test(r.instagram)) {
       bad(id, `instagram must be an https instagram.com profile URL, got "${r.instagram}"`);
@@ -78,6 +88,7 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
       if (!SET_BY.has(f.setBy)) bad(id, `factors.${k}.setBy must be editorial|agent`);
       if (f.setBy === 'agent' && !(f.source && https(f.source))) bad(id, `factors.${k} is agent-set but carries no https source`);
       if (f.sources != null && !(Array.isArray(f.sources) && f.sources.every(https))) bad(id, `factors.${k}.sources must be https URLs`);
+      if (markup(f.note)) bad(id, `factors.${k}.note contains < or >`);
     }
     if (r.criticScore != null) bad(id, 'legacy top-level criticScore: migrate to factors.critical');
     if (r.opened != null && (typeof r.opened !== 'number' || r.opened < 1900 || r.opened > new Date(nowMs).getUTCFullYear())) {
@@ -94,9 +105,11 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
       const where = `location "${loc?.address ?? '?'}"`;
       if (typeof loc?.neighborhood !== 'string' || !loc.neighborhood.trim()) bad(id, `${where}: neighborhood missing`);
       if (typeof loc?.address !== 'string' || !/^\s*\d/.test(loc.address)) { bad(id, `${where}: not a street address`); continue; }
+      if (markup(loc.address) || markup(loc.neighborhood)) bad(id, `${where}: address or neighborhood contains < or >`);
       if (!PUGET_SOUND_ZIP.test(loc.address)) bad(id, `${where}: no Puget Sound ZIP`);
-      if (loc.lat != null && !(loc.lat > 46.5 && loc.lat < 48.5)) bad(id, `${where}: lat ${loc.lat} outside Puget Sound`);
-      if (loc.lon != null && !(loc.lon > -123.5 && loc.lon < -121.5)) bad(id, `${where}: lon ${loc.lon} outside Puget Sound`);
+      const box = PUGET_SOUND_BOX;
+      if (loc.lat != null && !(loc.lat > box.latMin && loc.lat < box.latMax)) bad(id, `${where}: lat ${loc.lat} outside Puget Sound`);
+      if (loc.lon != null && !(loc.lon > box.lonMin && loc.lon < box.lonMax)) bad(id, `${where}: lon ${loc.lon} outside Puget Sound`);
       const key = loc.address.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
       if (seenAddr.has(key)) bad(id, `${where}: duplicate address`);
       seenAddr.add(key);

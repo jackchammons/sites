@@ -19,10 +19,8 @@ import { ASPECTS, RESOLUTIONS, EYE_LIMIT } from '../src/screen.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
-// The multi-site build sets OUT_DIR to dist/<slug>/; a standalone run writes dist/.
-const dist = process.env.OUT_DIR
-  ? path.resolve(process.env.OUT_DIR)
-  : path.join(root, '..', 'dist');
+// The multi-site build sets OUT_DIR to dist/<slug>/; a standalone run writes the same place.
+const dist = process.env.OUT_DIR ? path.resolve(process.env.OUT_DIR) : path.join(root, '..', 'dist', path.basename(root));
 
 const data = JSON.parse(fs.readFileSync(path.join(root, 'data/defaults.json'), 'utf8'));
 const esc = s => String(s).replace(/[&<>"']/g, c =>
@@ -33,11 +31,14 @@ if (!ASPECTS.some(a => a.id === v.aspect)) throw new Error(`unknown default aspe
 if (!RESOLUTIONS.some(r => r.id === v.resolution)) throw new Error(`unknown default resolution ${v.resolution}`);
 
 /* A text field with optional adornments. The unit adornment gets an id so
-   app.js can swap it when the units change. */
+   app.js can swap it when the units change. `mode` picks the phone keyboard:
+   a decimal keypad has digits and one separator, so it suits a ratio and
+   cannot type the "8 ft 6 in", "2.6 m" or minus sign the length and offset
+   fields accept. Those ask for the full keyboard. */
 const field = ({ id, label, value, pre, post, hint, mode = 'decimal' }) => `
       <label class="field" for="${id}">
         <span class="lbl">${esc(label)}</span>
-        <span class="box">${pre ? `<i>${esc(pre)}</i>` : ''}<input id="${id}" name="${id}" type="text" inputmode="${mode}" autocomplete="off" spellcheck="false" value="${esc(value)}">${post ? `<i id="${id}-unit">${esc(post)}</i>` : ''}</span>
+        <span class="box">${pre ? `<i>${esc(pre)}</i>` : ''}<input id="${id}" name="${id}" type="text" inputmode="${mode}" autocomplete="off" autocapitalize="off" spellcheck="false" value="${esc(value)}">${post ? `<i id="${id}-unit">${esc(post)}</i>` : ''}</span>
         ${hint ? `<span class="hint" id="${id}-hint">${hint}</span>` : ''}
       </label>`;
 
@@ -92,7 +93,16 @@ const html = `<!doctype html>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📐</text></svg>">
 <link rel="stylesheet" href="./styles.css">
 <script type="application/json" id="defaults">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>
-<script type="module" src="./app.js"></script>
+<script>
+/* app.js cannot report its own absence. The note in the page is revealed from
+   here when the module does not arrive (onerror below), when it or its import
+   fails to link (nothing has booted by the load event), and in a browser
+   without modules (nomodule). */
+function bootFailed() { var note = document.getElementById('boot-error'); if (note) note.hidden = false; }
+addEventListener('load', function () { if (!window.__screenBooted) bootFailed(); });
+</script>
+<script nomodule>addEventListener('DOMContentLoaded', bootFailed);</script>
+<script type="module" src="./app.js" onerror="bootFailed()"></script>
 </head>
 <body>
 
@@ -102,7 +112,7 @@ const html = `<!doctype html>
   <p class="lede">${esc(data.tagline)}</p>
 </div></header>
 
-<main><div class="wrap">
+<main id="main"><div class="wrap">
   <p class="boot-error" id="boot-error" hidden>The calculator script did not start, so nothing below will update. Reload the page; if it persists, the browser may be too old for ES modules.</p>
 
   <div class="grid">
@@ -121,7 +131,7 @@ const html = `<!doctype html>
 
     <h2>The screen</h2>
     <div class="pair">
-      ${field({ id: 'in-diag', label: 'Diagonal', value: v.diagonal, post: 'in' })}
+      ${field({ id: 'in-diag', label: 'Diagonal', value: v.diagonal, post: 'in', mode: 'text' })}
       ${select({ id: 'in-aspect', label: 'Shape', options: ASPECTS, selected: v.aspect })}
     </div>
     ${select({ id: 'in-res', label: 'Resolution', options: [...RESOLUTIONS, { id: 'custom', label: 'Custom…' }], selected: v.resolution })}
@@ -137,10 +147,10 @@ const html = `<!doctype html>
     </div>
 
     <h2>The seat</h2>
-    ${field({ id: 'in-dist', label: 'Eyes to screen', value: 9, post: 'ft', hint: '8′6″, 8 ft 6 in or 2.6 m all work' })}
+    ${field({ id: 'in-dist', label: 'Eyes to screen', value: 9, post: 'ft', mode: 'text', hint: '8′6″, 8 ft 6 in or 2.6 m all work' })}
     <div class="pair">
-      ${field({ id: 'in-eye', label: 'Seated eye height', value: v.eyeHeight, post: 'in', hint: 'A sofa seats eyes at 38–46 in' })}
-      ${field({ id: 'in-centre', label: 'Screen centre height', value: v.centreHeight, post: 'in' })}
+      ${field({ id: 'in-eye', label: 'Seated eye height', value: v.eyeHeight, post: 'in', mode: 'text', hint: 'A sofa seats eyes at 38–46 in' })}
+      ${field({ id: 'in-centre', label: 'Screen centre height', value: v.centreHeight, post: 'in', mode: 'text' })}
     </div>
 
     <fieldset id="pj-fields" hidden>
@@ -150,7 +160,7 @@ const html = `<!doctype html>
         ${field({ id: 'in-throw2', label: 'Throw ratio, tele', value: v.throwMax })}
       </div>
       <div class="pair">
-        ${field({ id: 'in-offset', label: 'Lens offset', value: v.lensOffset, post: '%', hint: '% of picture height, lens axis to picture centre' })}
+        ${field({ id: 'in-offset', label: 'Lens offset', value: v.lensOffset, post: '%', mode: 'text', hint: '% of picture height, lens axis to picture centre' })}
         ${field({ id: 'in-gain', label: 'Screen gain', value: v.gain, hint: 'Matte white is 1.0' })}
       </div>
       ${field({ id: 'in-lumens', label: 'Projector output', value: v.lumens, post: 'lm', mode: 'numeric', hint: 'Calibrated lumens are often half the box figure' })}
@@ -159,14 +169,16 @@ const html = `<!doctype html>
     <div class="actions">
       <button type="button" id="btn-copy">Copy link</button>
       <button type="button" class="quiet" id="btn-reset">Reset</button>
-      <span class="status" id="status"></span>
+      <span class="status" id="status" role="status"></span>
     </div>
   </form>
 
-  <section class="panel results" aria-live="polite">
+  <section class="panel results">
     <p class="eyebrow">Horizontal viewing angle</p>
-    <p class="total" id="out-total"><span id="out-fov">—</span><small>of view</small></p>
-    <p class="sub" id="out-sub"></p>
+    <div aria-live="polite" aria-atomic="true">
+      <p class="total" id="out-total"><span id="out-fov">—</span><small>of view</small></p>
+      <p class="sub" id="out-sub"></p>
+    </div>
 
     <dl class="facts">${facts}
     </dl>
@@ -277,6 +289,11 @@ const html = `<!doctype html>
 </html>
 `;
 
+// Clearing the target is only safe when it is a previous build or empty: OUT_DIR=. would
+// otherwise delete this site's source.
+const holdsSource = dist === root || root.startsWith(dist + path.sep);
+const foreign = fs.existsSync(dist) && fs.readdirSync(dist).length > 0 && !fs.existsSync(path.join(dist, 'index.html'));
+if (holdsSource || foreign) { console.error(`refusing to clear ${dist}: it is not an empty directory or a previous build`); process.exit(1); }
 fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(dist, { recursive: true });
 fs.writeFileSync(path.join(dist, 'index.html'), html);

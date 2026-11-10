@@ -1,17 +1,20 @@
 #!/usr/bin/env node
 /*
- * Fills lat/lon for any location that lacks them, using Nominatim.
+ * Fills lat/lon for any Seattle location that lacks them, using Nominatim.
  *
  * Runs in publish.yml before the build; results are cached into
- * restaurants.json and committed by the existing data-refresh step, so each
- * address is geocoded once, ever. Nominatim's usage policy asks for one
- * request per second and an identifying User-Agent, both honoured here.
+ * restaurants.json and committed by the existing data-refresh step, so an
+ * address that resolves is geocoded once, ever. Only Seattle addresses are
+ * looked up: the map plots nothing else, so a suburban branch needs no
+ * coordinates. Nominatim's usage policy asks for one request per second and
+ * an identifying User-Agent, both honoured here.
  * Fail-soft throughout: an address that will not geocode is logged and
  * skipped, and the map simply renders without that marker.
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { inPugetSound, isSeattleAddress } from '../src/bounds.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataPath = path.join(root, 'data/restaurants.json');
@@ -19,9 +22,6 @@ const d = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
 
 const UA = 'seattle-pizza-index/2.0 (https://sites.jackhammons.com/pizza/)';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-
-// Sanity box around Puget Sound; a geocode outside it is a mismatch, not a fact.
-const inRange = (lat, lon) => lat > 46.5 && lat < 48.8 && lon > -123.5 && lon < -121.0;
 
 // Nominatim chokes on suite numbers ("Suite J1", "#102"), on a bare unit
 // between street and city ("41 Dravus St, S10, Seattle"; "1011 Pike St, C,
@@ -37,17 +37,20 @@ const simplify = addr => SPELLINGS
 
 async function lookup(addr) {
   const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=${encodeURIComponent(addr)}`;
-  const res = await fetch(url, { headers: { 'User-Agent': UA } });
+  // A hung connection would otherwise hold the publish run until the job timeout.
+  const res = await fetch(url, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(15000) });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const hit = (await res.json())[0];
-  if (hit && inRange(Number(hit.lat), Number(hit.lon))) return hit;
+  // The box is the one the dataset lint applies (src/bounds.js); a geocode
+  // outside it is a mismatch, not a fact.
+  if (hit && inPugetSound(Number(hit.lat), Number(hit.lon))) return hit;
   return null;
 }
 
 let pending = [];
 for (const r of d.restaurants) {
   for (const loc of r.locations ?? []) {
-    if (loc.lat == null || loc.lon == null) pending.push({ r, loc });
+    if ((loc.lat == null || loc.lon == null) && isSeattleAddress(loc.address)) pending.push({ r, loc });
   }
 }
 if (!pending.length) {

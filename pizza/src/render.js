@@ -1,6 +1,9 @@
 /* Card rendering for the static build. The ranking is computed once at build
  * time and served as HTML; nothing here runs in the browser. */
 import { locationLabel, locationList, locationCount } from './locations.js';
+import {
+  DEFAULT_WEIGHTS, FRICTION_CAP, CRITICAL_BOOST_CAP, STALENESS_PER_WEEK, MAX_STALENESS_DECAY
+} from './slice.js';
 
 export const PILLAR_META = {
   reputation:      { label: 'Reputation',         color: 'var(--tomato)', icon: '🏛️',
@@ -32,6 +35,9 @@ export const esc = s => String(s).replace(/[&<>"']/g, c =>
 
 const n1 = n => n.toFixed(1);
 const signed = n => (n >= 0 ? '+' : '−') + Math.abs(n).toFixed(1);
+const pct = (n, digits) => `${(n * 100).toFixed(digits)}%`;
+const DECAY_RULE = `${pct(STALENESS_PER_WEEK, 1)} a week`;
+const DECAY_CAP = pct(MAX_STALENESS_DECAY, 0);
 
 function deltaHtml(r) {
   const t = 'Movement vs. last week’s published ranking';
@@ -65,10 +71,14 @@ const toneOf = diff => diff >= BAND ? 'pos' : diff <= -BAND ? 'neg' : 'mid';
 const tag = (tone, text) => `<span class="tone t-${tone}">${text}</span>`;
 const vsField = (v, m) => tag(toneOf(v - m), `${signed(v - m)} vs field`);
 
+/* Reputation has three states, and the card says which one applies: counted
+ * at its weight; nothing on file; or on file and shown but left out, because
+ * it sits below the entry's other factors and counting it would lower the
+ * score. The last two share the weight among the other four. */
 function reputationRows(r, field) {
   const d = r.reputationDetail;
-  if (!d.measured) {
-    return [`<tr class="sub"><td colspan="5">${tag('mid', 'no data')} No founding year, review count or press on file, so reputation carries no weight for this entry and the other four factors share its ${Math.round(r.weightShares.reputation || 0) || 24}%.</td></tr>`];
+  if (d.use === 'unmeasured') {
+    return [`<tr class="sub"><td colspan="5">${tag('mid', 'no data')} No founding year, review count or press on file, so reputation carries no weight for this entry and the other four factors share its ${DEFAULT_WEIGHTS.reputation}%.</td></tr>`];
   }
   const names = { longevity: 'Longevity', volume: 'Review volume', coverage: 'Press coverage' };
   const rows = d.parts.map(p => {
@@ -79,8 +89,11 @@ function reputationRows(r, field) {
   });
   const missing = ['longevity', 'volume', 'coverage'].filter(k => !d.parts.some(p => p.key === k));
   if (missing.length) {
-    const what = { longevity: 'no founding year', volume: 'no review count', coverage: 'no press in 24 months' };
+    const what = { longevity: 'no founding year', volume: 'no review count', coverage: 'no press' };
     rows.push(`<tr class="sub"><td colspan="5">${tag('mid', 'no data')} ${missing.map(k => what[k]).join(', ')} on file; the factor is read from what is</td></tr>`);
+  }
+  if (d.use === 'lowers') {
+    rows.push(`<tr class="sub"><td colspan="5">${tag('mid', 'not counted')} At ${n1(d.value)}/10 reputation is below the ${n1(d.othersMean)} weighted mean of this entry's other four factors, so counting it would lower the score. It is shown but carries no weight, and the other four share its ${DEFAULT_WEIGHTS.reputation}%.</td></tr>`);
   }
   return rows;
 }
@@ -91,7 +104,7 @@ function criticalRows(r, field) {
   return [
     `<tr class="sub"><td colspan="5">${vsField(d.base, field.criticBase)} Critic base ${n1(d.base)}/10, the graded rating; the field averages ${n1(field.criticBase)}</td></tr>`,
     d.boost > 0
-      ? `<tr class="sub"><td colspan="5">${tag('pos', `+${n1(d.boost)}`)} Press boost from ${recent} cited mention${recent === 1 ? '' : 's'}, recency-weighted and capped at +1.5</td></tr>`
+      ? `<tr class="sub"><td colspan="5">${tag('pos', `+${n1(d.boost)}`)} Press boost from ${recent} cited mention${recent === 1 ? '' : 's'}, recency-weighted and capped at +${n1(CRITICAL_BOOST_CAP)}</td></tr>`
       : `<tr class="sub"><td colspan="5">${tag('mid', '+0.0')} No press boost: ${recent ? 'the mentions on file are too old to count' : 'no cited coverage on file'}</td></tr>`
   ];
 }
@@ -106,7 +119,7 @@ function valueRows(r) {
 
 function whyLine(r, field) {
   const diffs = Object.keys(PILLAR_META)
-    .filter(k => k !== 'reputation' || r.reputationDetail.measured)
+    .filter(k => k !== 'reputation' || r.reputationDetail.use === 'counted')
     .map(k => ({ k, d: r.factorScores[k] - field.means[k] }));
   const up = diffs.filter(x => x.d >= BAND).sort((a, b) => b.d - a.d);
   const down = diffs.filter(x => x.d <= -BAND).sort((a, b) => a.d - b.d);
@@ -118,7 +131,8 @@ function whyLine(r, field) {
   const drags = [];
   if (r.penaltyApplied > 0) drags.push(`friction costs it ${n1(r.penaltyApplied)} points`);
   if (r.stalenessDecay >= 0.02) drags.push(`freshness decay takes ${(r.stalenessDecay * 100).toFixed(1)}%`);
-  if (!r.reputationDetail.measured) drags.push('reputation is unmeasured, so its weight goes to the other four');
+  if (r.reputationDetail.use === 'unmeasured') drags.push('reputation is unmeasured, so its weight goes to the other four');
+  if (r.reputationDetail.use === 'lowers') drags.push('reputation is below its other factors, so it is left out and its weight goes to the other four');
   const dragLine = drags.length ? ` ${drags[0][0].toUpperCase()}${drags.join('; ').slice(1)}.` : '';
   return `<b>Why #${r.rank}:</b> ${parts.join('; ')}.${dragLine}`;
 }
@@ -152,36 +166,36 @@ export function cardHtml(r, field) {
     value: valueRows(r)
   };
   const rows = Object.keys(PILLAR_META).map(k => {
-    const measured = k !== 'reputation' || r.reputationDetail.measured;
+    const use = k === 'reputation' ? r.reputationDetail.use : 'counted';
     const v = r.factorScores[k];
     return `
         <tr class="fac">
-          <td><span class="swatch" style="background:${PILLAR_META[k].color}"></span>${PILLAR_META[k].label}</td>
-          <td class="num">${measured ? n1(v) : '—'}</td>
+          <th scope="row"><span class="swatch" style="background:${PILLAR_META[k].color}"></span>${PILLAR_META[k].label}</th>
+          <td class="num">${use === 'unmeasured' ? '—' : n1(v)}</td>
           <td class="num dim">${n1(field.means[k])}</td>
-          <td class="num">${measured ? vsField(v, field.means[k]) : tag('mid', 'unmeasured')}</td>
+          <td class="num">${use === 'counted' ? vsField(v, field.means[k]) : tag('mid', use === 'lowers' ? 'not counted' : 'unmeasured')}</td>
           <td class="num">${Math.round(r.weightShares[k])}% → <b>${n1(r.contributions[k])}</b></td>
         </tr>${(subRows[k] ?? []).join('')}`;
   }).join('');
 
   const frictionRows = r.penaltyApplied > 0 ? `
-        <tr class="fac"><td>Friction${r.frictionDetail.raw > r.frictionDetail.applied ? ' (capped at 6.0)' : ''}</td>
+        <tr class="fac"><th scope="row">Friction${r.frictionDetail.raw > r.frictionDetail.applied ? ` (capped at ${n1(FRICTION_CAP)})` : ''}</th>
           <td class="num">—</td><td class="num dim">—</td>
           <td class="num">${tag('neg', `−${n1(r.penaltyApplied)}`)}</td><td class="num"><b>−${n1(r.penaltyApplied)}</b></td></tr>` +
         (r.frictionDetail.items || []).map(a =>
           `<tr class="sub"><td colspan="5">${tag('neg', `−${a.cost.toFixed(1)}`)} ${esc(a.label)}</td></tr>`).join('')
     : `
-        <tr class="fac"><td>Friction</td><td class="num">—</td><td class="num dim">—</td>
+        <tr class="fac"><th scope="row">Friction</th><td class="num">—</td><td class="num dim">—</td>
           <td class="num">${tag('pos', 'none')}</td><td class="num"><b>−0.0</b></td></tr>`;
 
   const decayTone = r.stalenessDecay === 0 ? 'pos' : r.stalenessDecay < 0.02 ? 'mid' : 'neg';
   const decayRow = `
-        <tr class="fac"><td>Freshness</td><td class="num">—</td><td class="num dim">—</td>
+        <tr class="fac"><th scope="row">Freshness</th><td class="num">—</td><td class="num dim">—</td>
           <td class="num">${tag(decayTone, r.stalenessDecay === 0 ? 'current' : `−${(r.stalenessDecay * 100).toFixed(1)}%`)}</td>
           <td class="num"><b>×${(1 - r.stalenessDecay).toFixed(3)}</b></td></tr>
         <tr class="sub"><td colspan="5">${r.verified
-          ? `Last verified by a ${esc(r.verified.source)} on ${esc(r.verified.date)}; decay runs 0.2% a week from there, capped at 6%`
-          : 'Never verified, so decay sits at the 6% cap'}</td></tr>`;
+          ? `Last verified by a ${esc(r.verified.source)} on ${esc(r.verified.date)}; decay runs ${DECAY_RULE} from there, capped at ${DECAY_CAP}`
+          : `Never verified, so decay sits at the ${DECAY_CAP} cap`}</td></tr>`;
 
   return `
     <article class="card${r.rank <= 3 ? ' top' : ''}" data-id="${esc(r.id)}">
@@ -211,13 +225,13 @@ export function cardHtml(r, field) {
         <div class="mathbody">
           <p class="whyline">${whyLine(r, field)}</p>
           <p class="legend"><span class="tone t-pos">green</span> helps the score against the field · <span class="tone t-mid">amber</span> about average, or no data · <span class="tone t-neg">red</span> holds it back</p>
-          <table class="calc">
-            <thead><tr><th>Input</th><th class="num">Here</th><th class="num">Field</th><th class="num">Read</th><th class="num"><span class="wide">Weight → </span>points</th></tr></thead>
+          <table class="calc" aria-label="Score inputs for ${esc(r.name)}">
+            <thead><tr><th scope="col">Input</th><th scope="col" class="num">Here</th><th scope="col" class="num">Field</th><th scope="col" class="num">Read</th><th scope="col" class="num"><span class="wide">Weight → </span>points</th></tr></thead>
             <tbody>
               ${rows}
               ${frictionRows}
               ${decayRow}
-              <tr class="sum"><td>SLICE score</td><td class="num"></td><td class="num dim"></td><td class="num"></td><td class="num">${n1(r.score)}</td></tr>
+              <tr class="sum"><th scope="row">SLICE score</th><td class="num"></td><td class="num dim"></td><td class="num"></td><td class="num">${n1(r.score)}</td></tr>
             </tbody>
           </table>${r.crowd ? `
           <p class="note">Star average shown for context only: ${r.crowd.rating.toFixed(1)}★ across

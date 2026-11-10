@@ -6,8 +6,8 @@
  * shared as a link; nothing is sent anywhere.
  */
 import {
-  ASPECTS, RESOLUTIONS, ANGLE_STANDARDS, ITU_STANDARDS, RULE_OF_THUMB, BRIGHTNESS, PLACEMENT,
-  aspect, resolution, dims, hfov, vfov, distanceForAngle, diagonalForAngle,
+  ASPECTS, RESOLUTIONS, ANGLE_STANDARDS, RULE_OF_THUMB, BRIGHTNESS, PLACEMENT,
+  aspect, resolution, dims, hfov, vfov, diagonalForWidth, diagonalForAngle,
   seatingDistances, ituDistances, pixelPitch, pixelAngle, pixelsPerDegree, acuityDistance,
   acuityTable, throwDistance, widthAtThrow, lensOffsetInches, footLamberts, nits,
   placement, describeAngle, describeResolution,
@@ -53,26 +53,52 @@ function boot() {
   let mode = DEFAULTS.mode;         // 'tv' | 'projector'
   const metric = () => units === 'metric';
 
+  /* A number as it is typed: "8", "8.5", ".5", and "8." on the way to "8.5",
+     which must not flash the field invalid between two keystrokes. */
+  const NUM = String.raw`(\d+\.?\d*|\.\d+)`;
+  const UNIT = '(ft|feet|foot|in|inch|inches|cm|mm|m)';
+  const ONE = new RegExp(`^${NUM} ?${UNIT}?$`);
+  /* Feet then inches: the two numbers need a unit or a space between them,
+     or "8.5.5" would read as 8.5 ft and half an inch. */
+  const TWO = new RegExp(`^${NUM}(?: ?${UNIT} ?| )${NUM} ?(?:in|inch|inches)?$`);
+  const DECIMAL = new RegExp(`^(-?)${NUM}$`);
+  const PER = { ft: 12, feet: 12, foot: 12, in: 1, inch: 1, inches: 1, cm: 1 / 2.54, mm: 1 / 25.4, m: 100 / 2.54 };
+
   /* A length as people write it, to inches. `dflt` is the unit a bare
-     number means. "8′6″", "8 ft 6 in", "8.5", "2.6 m", "260 cm" all work. */
+     number means. "8′6″", "8 ft 6 in", "8.5", "2.6 m", "260 cm" all work.
+     A comma is a decimal point ("2,6 m") except where it could as well be
+     grouping thousands: "1,000 cm" is ten metres to one reader and one
+     centimetre to another, so it is refused rather than guessed. */
   function parseLength(s, dflt) {
     let t = String(s).trim().toLowerCase()
-      .replace(/[′’']/g, ' ft ').replace(/[″”“"]/g, ' in ')
-      .replace(/,/g, '.').replace(/\s+/g, ' ').trim();
-    const m = t.match(/^(\d*\.?\d+) ?(ft|feet|foot|in|inch|inches|cm|mm|m)?(?: ?(\d*\.?\d+) ?(in|inch|inches)?)?$/);
-    if (!m) return NaN;
-    const a = +m[1], u = m[2], b = m[3] != null ? +m[3] : null;
-    if (b != null) {
-      if (u && !/^f/.test(u)) return NaN;      // "6 in 3" means nothing
-      return a * 12 + b;
+      .replace(/[′’']/g, ' ft ').replace(/[″”“"]/g, ' in ');
+    if (/,\d{3}(?!\d)/.test(t)) return NaN;
+    t = t.replace(/,/g, '.').replace(/\s+/g, ' ').trim();
+    const two = t.match(TWO);
+    if (two) {
+      if (two[2] && !/^f/.test(two[2])) return NaN;      // "6 in 3" means nothing
+      return +two[1] * 12 + +two[3];
     }
-    const unit = u || dflt;
-    const per = { ft: 12, feet: 12, foot: 12, in: 1, inch: 1, inches: 1, cm: 1 / 2.54, mm: 1 / 25.4, m: 100 / 2.54 }[unit];
-    return a * per;
+    const one = t.match(ONE);
+    return one ? +one[1] * PER[one[2] || dflt] : NaN;
   }
-  const parseNum = s => {
-    const t = String(s).trim().replace(/[%,\s]/g, '');
-    return /^\d*\.?\d+$/.test(t) ? +t : NaN;
+  /* A ratio, a gain or a percentage. Half the world writes 1,2 and a phone's
+     decimal keypad there offers nothing else, so one comma is the decimal
+     point; it is never dropped as a thousands separator, which would turn a
+     1,2 throw into 12. Only the lens offset can be negative. */
+  const parseDecimal = (s, signed = false) => {
+    const t = String(s).trim().replace(/[%\s]/g, '').replace(',', '.');
+    const m = t.match(DECIMAL);
+    return m && (signed || !m[1]) ? +t : NaN;
+  };
+  /* A whole number: lumens or a pixel count. Plain digits, or thousands
+     grouped the way anyone writes them ("2,000", "2.000", "2 000"). Anything
+     else with a separator ("2,5", "1.50") could be a decimal or a slip, and
+     is invalid rather than guessed. */
+  const parseCount = s => {
+    const t = String(s).trim();
+    if (/^\d+$/.test(t)) return +t;
+    return /^[1-9]\d{0,2}([.,\s\u00a0\u202f])\d{3}(?:\1\d{3})*$/.test(t) ? +t.replace(/\D/g, '') : NaN;
   };
 
   /* Lengths for display. kind 'dist' is a room distance, 'dim' a picture
@@ -95,9 +121,14 @@ function boot() {
   /* What to put in a field so it reads back the same. Field values never
      go through Intl: a locale that writes "3,66" would be parsed as 366. */
   const plain = (x, digits) => String(+x.toFixed(digits));
-  const distField = inches => metric()
-    ? plain(inches * 2.54 / 100, 2)
-    : (inches % 12 === 0 ? String(inches / 12) : `${Math.floor(inches / 12)} ft ${plain(inches % 12, 1)} in`);
+  const distField = inches => {
+    if (metric()) return plain(inches * 2.54 / 100, 2);
+    /* The inches are rounded before they are split off, so 11.97 carries
+       into the feet instead of reading "9 ft 12 in". */
+    let ft = Math.floor(inches / 12), rem = +(inches - ft * 12).toFixed(1);
+    if (rem === 12) { ft += 1; rem = 0; }
+    return rem ? `${ft} ft ${rem} in` : String(ft);
+  };
   const heightField = inches => metric() ? plain(inches * 2.54, 1) : plain(inches, 1);
 
   function applyUnits() {
@@ -157,11 +188,15 @@ function boot() {
     write(els.eye, heightField(st.eye), st.eye);
     write(els.centre, heightField(st.centre), st.centre);
     els.throw1.value = st.throw1; els.throw2.value = st.throw2;
-    els.offset.value = st.offset; els.lumens.value = st.lumens; els.gain.value = st.gain;
+    els.offset.value = st.offset; els.lumens.value = Math.round(st.lumens); els.gain.value = st.gain;
   }
 
   const bad = new Set();
-  const mark = (el, ok) => { el.closest('.field').classList.toggle('invalid', !ok); if (!ok) bad.add(el.id); };
+  const mark = (el, ok) => {
+    el.closest('.field').classList.toggle('invalid', !ok);
+    if (ok) el.removeAttribute('aria-invalid'); else { el.setAttribute('aria-invalid', 'true'); bad.add(el.id); }
+  };
+  const labelOf = el => el.closest('.field').querySelector('.lbl').textContent;
 
   function read() {
     bad.clear();
@@ -169,15 +204,15 @@ function boot() {
     const diag = lengthOf(els.diag, 'in');
     const custom = els.res.value === 'custom';
     $('custom-res').hidden = !custom;
-    const resw = parseNum(els.resw.value), resh = parseNum(els.resh.value);
+    const resw = parseCount(els.resw.value), resh = parseCount(els.resh.value);
     mark(els.resw, !custom || (resw >= 16 && resw <= 100000));
     mark(els.resh, !custom || (resh >= 16 && resh <= 100000));
     const dist = lengthOf(els.dist, metric() ? 'm' : 'ft');
     const eye = lengthOf(els.eye, hUnit);
     const centre = lengthOf(els.centre, hUnit);
-    const throw1 = parseNum(els.throw1.value), throw2 = parseNum(els.throw2.value);
-    const offset = (() => { const t = String(els.offset.value).trim().replace(/[%\s]/g, ''); return /^-?\d*\.?\d+$/.test(t) ? +t : NaN; })();
-    const lumens = parseNum(els.lumens.value), gain = parseNum(els.gain.value);
+    const throw1 = parseDecimal(els.throw1.value), throw2 = parseDecimal(els.throw2.value);
+    const offset = parseDecimal(els.offset.value, true);
+    const lumens = parseCount(els.lumens.value), gain = parseDecimal(els.gain.value);
     mark(els.diag, diag > 0 && diag < 1000);
     mark(els.dist, dist > 0 && dist < 12000);
     mark(els.eye, eye >= 0 && eye < 2400);
@@ -236,9 +271,15 @@ function boot() {
     last = { st, d, res, ok };
     writeHash(st);
 
+    /* Nothing below can be computed from a field that does not read, so
+       nothing on the page may pass for current: the headline loses its figure
+       and its grade, and everything else is dimmed until the next good read. */
+    $('main').classList.toggle('stale', !ok);
     if (!ok) {
+      const names = Object.values(els).filter(el => bad.has(el.id)).map(el => `“${labelOf(el)}”`);
       $('out-fov').textContent = '—';
-      $('out-sub').textContent = 'Check the highlighted field.';
+      $('out-total').className = 'total';
+      $('out-sub').textContent = `Check ${names.length > 1 ? `${names.slice(0, -1).join(', ')} and ${names.at(-1)}` : names[0]}.`;
       return;
     }
 
@@ -412,7 +453,7 @@ function boot() {
       };
       hit.addEventListener('pointermove', show);
       hit.addEventListener('pointerdown', show);
-      hit.addEventListener('pointerleave', () => { tip.hidden = true; });
+      hit.addEventListener('pointerleave', ev => { if (ev.pointerType !== 'touch') tip.hidden = true; });
       svg.append(hit);
     });
 
@@ -451,9 +492,9 @@ function boot() {
     svg.append(ax);
     const xp = X(ppd);
     svg.append(svgEl('line', { x1: xp, x2: xp, y1: m.t - 6, y2: m.t + bh + 4, class: 'eye-you' }));
-    const anchor = xp > W - 120 ? 'end' : 'start';
-    svg.append(svgEl('text', { x: xp + (anchor === 'end' ? -6 : 6), y: m.t - 9, class: 'eye-pct', 'text-anchor': anchor },
-      `${n1.format(ppd)} px/° · ${Math.round(noticeFraction(ppd) * 100)}% would notice`));
+    const label = svgEl('text', { x: xp + 6, y: m.t - 9, class: 'eye-pct', 'text-anchor': 'start' },
+      `${n1.format(ppd)} px/° · ${Math.round(noticeFraction(ppd) * 100)}% would notice`);
+    svg.append(label);
     const tip = $('eye-tip');
     const hit = svgEl('rect', { x: m.l, y: m.t, width: iw, height: bh, class: 'hit' });
     const show = ev => {
@@ -468,9 +509,25 @@ function boot() {
     };
     hit.addEventListener('pointermove', show);
     hit.addEventListener('pointerdown', show);
-    hit.addEventListener('pointerleave', () => { tip.hidden = true; });
+    hit.addEventListener('pointerleave', ev => { if (ev.pointerType !== 'touch') tip.hidden = true; });
     svg.append(hit);
     host.append(svg);
+
+    /* Both of these need the text's real width, which exists only once the
+       chart is in the page. The marker's label goes right of the marker when
+       it fits there, left when it fits there, and otherwise as near the
+       marker as the edges allow; it sits above the bar, so it can cross the
+       marker line. An axis figure that would run into the last one, which
+       carries the unit, is dropped. */
+    const lw = label.getComputedTextLength();
+    if (xp + 6 + lw <= W - m.r) label.setAttribute('x', xp + 6);
+    else if (xp - 6 - lw >= m.l) label.setAttribute('x', xp - 6 - lw);
+    else label.setAttribute('x', Math.max(m.l, Math.min(W - m.r - lw, xp + 6)));
+    const ticks = [...ax.children];
+    const unitLeft = W - m.r - ticks.at(-1).getComputedTextLength();
+    for (const tick of ticks.slice(1, -1)) {
+      if (+tick.getAttribute('x') + tick.getComputedTextLength() / 2 + 4 > unitLeft) tick.remove();
+    }
 
     const targets = [
       { label: '20/20 vision', note: 'one arc-minute per pixel, the textbook limit', ppd: 60 },
@@ -537,15 +594,18 @@ function boot() {
   function drawSizes() {
     const { st, d, res } = last;
     const ratio = d.ratio;
-    const sizes = [...new Set([...DATA.sizes, Math.round(st.diag)])].sort((a, b) => a - b);
-    const limitAt = diag => acuityDistance(pixelPitch(dims(diag, ratio), res));
+    /* The viewer's own size joins the list as it is, to the tenth the
+       headline prints: a 54.6-inch panel is not a 55. Its row is computed
+       from the exact picture, so it agrees with every figure above it. */
+    const mine = +st.diag.toFixed(1);
+    const sizes = [...new Set([...DATA.sizes, mine])].sort((a, b) => a - b);
     $('sizes').innerHTML = sizes.map(diag => {
-      const dd = dims(diag, ratio);
+      const here = diag === mine;
+      const dd = here ? d : dims(diag, ratio);
       const a = hfov(dd, st.dist);
-      const vis = st.dist <= limitAt(diag);
-      const here = diag === Math.round(st.diag);
+      const vis = st.dist <= acuityDistance(pixelPitch(dd, res));
       return `<tr${here ? ' class="here"' : ''}>
-        <th scope="row">${n0.format(diag)} in${here ? '<span class="pill on">yours</span>' : ''}</th>
+        <th scope="row">${n1.format(diag)} in${here ? '<span class="pill on">yours</span>' : ''}</th>
         <td>${fmtLen(dd.width, 'dim')} × ${fmtLen(dd.height, 'dim')}</td>
         <td>${deg(a)}</td>
         <td class="verdict">${describeAngle(a)}</td>
@@ -576,7 +636,7 @@ function boot() {
       `${n0.format(nits(fl))} cd/m² from ${n0.format(st.lumens)} lm × ${n2.format(st.gain)} gain over ${fmtArea(d.area)}; cinema ${BRIGHTNESS.cinema}, home ≥${BRIGHTNESS.sdrHome}, bright room ~${BRIGHTNESS.bright}`,
       fl < BRIGHTNESS.cinema ? 'warn' : fl >= BRIGHTNESS.sdrHome ? 'good' : 'ok');
     const wNear = widthAtThrow(st.dist, t2), wFar = widthAtThrow(st.dist, t1);
-    const dg = w => n0.format(dims(w * Math.sqrt(1 + 1 / (d.ratio * d.ratio)), d.ratio).diagonal);
+    const dg = w => n0.format(diagonalForWidth(w, d.ratio));
     set('width', t1 === t2 ? fmtLen(wNear, 'dim') : `${fmtLen(wNear, 'dim')} – ${fmtLen(wFar, 'dim')}`,
       `if the lens sat at your seat distance (${fmtLen(st.dist)}): a ${dg(wNear)}${t1 === t2 ? '' : `–${dg(wFar)}`} in diagonal`);
   }
@@ -635,7 +695,11 @@ function boot() {
     const st = last && last.ok ? last.st : read();
     units = u;
     applyUnits();
-    fill(st);
+    /* Only the room lengths are written in the unit. One that did not read
+       keeps the text the person left in it, since there is nothing to convert. */
+    for (const [el, k, text] of [[els.dist, 'dist', distField], [els.eye, 'eye', heightField], [els.centre, 'centre', heightField]]) {
+      if (Number.isFinite(st[k])) write(el, text(st[k]), st[k]);
+    }
     compute();
   };
   $('unit-imperial').addEventListener('click', () => switchUnits('imperial'));
@@ -666,6 +730,11 @@ function boot() {
       $('status').textContent = 'Copy the address bar instead.';
     }
   });
+  /* A finger has no hover to end, so a tapped tooltip stays (pointerleave
+     ignores touch above) until the next press anywhere. Capturing puts this
+     ahead of a chart's own handler, which then shows the tooltip for the
+     place pressed. */
+  document.addEventListener('pointerdown', () => { $('tip').hidden = true; $('eye-tip').hidden = true; }, true);
   window.addEventListener('hashchange', () => { fill(readHash()); applyUnits(); applyMode(); compute(); });
   window.addEventListener('resize', () => { if (last && last.ok) { drawLanes(); drawEye(); } });
 
@@ -673,4 +742,7 @@ function boot() {
   applyUnits(); applyMode();
   fill(start);
   compute();
+  /* The page's own load check reads this to tell a script that ran from one
+     that never arrived or never linked. */
+  window.__screenBooted = true;
 }

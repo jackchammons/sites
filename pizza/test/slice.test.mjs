@@ -1,8 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import {
   reputationFactor, criticalFactor, valueFactor, frictionPenalty, stalenessDecay,
-  verifiedDate, scoreOne, rank, splitTiers, byRank, isRated, shrinkRating,
+  verifiedDate, scoreOne, rank, splitTiers, byRank, isRated,
   DEFAULT_WEIGHTS, FRICTION_CAP, CRITICAL_BOOST_CAP, MAX_STALENESS_DECAY, PRICE_MULT
 } from '../src/slice.js';
 
@@ -42,6 +43,7 @@ test('an unmeasured reputation carries no weight; the other factors share it', (
   const r = entry({ opened: undefined, crowd: undefined, mentions: [] });
   const s = scoreOne(r, { now: NOW, registry: {} });
   assert.equal(s.reputationDetail.measured, false);
+  assert.equal(s.reputationDetail.use, 'unmeasured');
   assert.equal(s.weightShares.reputation, 0);
   assert.equal(s.contributions.reputation, 0);
   const others = Object.entries(s.weightShares).filter(([k]) => k !== 'reputation').map(([, v]) => v);
@@ -52,6 +54,106 @@ test('an unmeasured reputation carries no weight; the other factors share it', (
   assert.ok(known.score >= s.score);
   // ...and must not be zeroed: it scores as the mean of what it has.
   assert.ok(s.base > 70, `base ${s.base}`);
+});
+
+test('a reputation below the other four factors is reported but carries no weight', () => {
+  const opts = { now: NOW, registry: {} };
+  const bare = scoreOne(entry({ opened: undefined, crowd: undefined, mentions: [] }), opts);
+  // Opened this year: longevity is on file and worth 0.0.
+  const young = scoreOne(entry({ opened: NOW.getUTCFullYear(), crowd: undefined, mentions: [] }), opts);
+  assert.equal(young.reputationDetail.measured, true);
+  assert.equal(young.reputationDetail.use, 'lowers');
+  assert.equal(young.factorScores.reputation, 0);
+  assert.ok(young.reputationDetail.othersMean > 7);
+  assert.equal(young.weightShares.reputation, 0);
+  assert.equal(young.contributions.reputation, 0);
+  assert.equal(young.score, bare.score, 'scores exactly as if nothing were on file');
+  const shares = Object.values(young.weightShares).reduce((a, b) => a + b, 0);
+  assert.ok(Math.abs(shares - 100) < 1e-9);
+
+  // A reputation above the others counts at its full weight.
+  const old = scoreOne(entry({ opened: 1990, crowd: undefined, mentions: [] }), opts);
+  assert.equal(old.reputationDetail.use, 'counted');
+  assert.equal(old.weightShares.reputation, DEFAULT_WEIGHTS.reputation);
+  assert.ok(old.score > bare.score);
+
+  // Exactly level with the others: counting it changes nothing, so it counts.
+  const level = scoreOne({ ...entry({ opened: 1990 }),
+    factors: { craft: { value: 10 }, distinctiveness: { value: 10 }, critical: { value: 10 } }, priceIndex: 1 }, opts);
+  assert.equal(level.reputationDetail.use, 'counted');
+});
+
+/* The page promises that evidence can lift a score and never lower it. Each
+ * kind of evidence the pipeline files is added to each entry in turn. */
+const DAY = 864e5;
+const evidenceSteps = now => {
+  const iso = ms => new Date(ms).toISOString().slice(0, 10);
+  const mention = (ms, kind) => ({ date: iso(ms), kind, url: 'https://press.example/a', source: 'Press', title: 'A story' });
+  const year = now.getUTCFullYear();
+  const add = (r, m) => ({ ...r, mentions: [...(r.mentions ?? []), m] });
+  return [
+    ['a fresh mention', r => add(r, mention(now - 4 * DAY, 'mention'))],
+    ['a fresh list appearance', r => add(r, mention(now - 4 * DAY, 'ranking'))],
+    ['a three-year-old mention', r => add(r, mention(now - 3 * 365 * DAY, 'mention'))],
+    ['a founding year of this year', r => typeof r.opened === 'number' ? null : { ...r, opened: year }],
+    ['a founding year thirty years back', r => typeof r.opened === 'number' ? null : { ...r, opened: year - 30 }],
+    ['a review count of 5', r => typeof r.crowd?.reviews === 'number' ? null : { ...r, crowd: { ...r.crowd, reviews: 5 } }],
+    ['a review count of 5000', r => typeof r.crowd?.reviews === 'number' ? null : { ...r, crowd: { ...r.crowd, reviews: 5000 } }]
+  ];
+};
+const assertMonotone = (entries, opts) => {
+  let checked = 0;
+  for (const r of entries) {
+    const before = scoreOne(r, opts).score;
+    for (const [what, step] of evidenceSteps(opts.now)) {
+      const next = step(r);
+      if (!next) continue;
+      const after = scoreOne(next, opts).score;
+      assert.ok(after >= before, `${r.name}: ${what} moved the score ${before} -> ${after}`);
+      checked++;
+    }
+  }
+  return checked;
+};
+
+test('the score is monotone in evidence across a spread of entries', () => {
+  const graded = (craft, distinctiveness, critical) =>
+    ({ craft: { value: craft }, distinctiveness: { value: distinctiveness }, critical: { value: critical } });
+  const year = NOW.getUTCFullYear();
+  const oldPress = [{ date: '2022-01-10', kind: 'ranking' }];
+  const freshPress = [{ date: '2026-08-01', kind: 'mention' }, { date: '2026-07-01', kind: 'ranking' }];
+  const entries = [];
+  for (const [g, factors] of [['strong', graded(9, 9, 9.5)], ['middling', graded(7, 6.5, 7)], ['weak', graded(3, 2.5, 3)]]) {
+    for (const [h, history] of Object.entries({
+      'nothing on file': { opened: undefined, crowd: undefined, mentions: [] },
+      'opened this year': { opened: year, crowd: undefined, mentions: [] },
+      'opened last year': { opened: year - 1, crowd: undefined, mentions: [] },
+      'open forty years': { opened: year - 40, crowd: undefined, mentions: [] },
+      'a few reviews only': { opened: undefined, crowd: { rating: 4.5, reviews: 12 }, mentions: [] },
+      'many reviews only': { opened: undefined, crowd: { rating: 4.5, reviews: 4000 }, mentions: [] },
+      'stale press only': { opened: undefined, crowd: undefined, mentions: oldPress },
+      'fresh press only': { opened: undefined, crowd: undefined, mentions: freshPress },
+      'everything on file': { opened: year - 6, crowd: { rating: 4.4, reviews: 900 }, mentions: freshPress }
+    })) {
+      for (const priceIndex of [1, 4, undefined]) {
+        entries.push(entry({ name: `${g}, ${h}, tier ${priceIndex}`, factors, priceIndex, ...history }));
+      }
+    }
+  }
+  const registry = { 'cash-only': { label: 'Cash only', frictionCost: 1 } };
+  entries.push(entry({ name: 'with friction', opened: undefined, attributes: { 'cash-only': true } }));
+  const checked = assertMonotone(entries, { now: NOW, registry });
+  assert.ok(checked > 300, `only ${checked} steps exercised`);
+});
+
+test('the score is monotone in evidence for every rated entry in the dataset', () => {
+  const read = f => JSON.parse(fs.readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8'));
+  const registry = read('attributes.json');
+  const rated = read('restaurants.json').restaurants.filter(isRated);
+  assert.ok(rated.length >= 10);
+  for (const now of [new Date(), new Date('2026-11-10T12:00:00Z'), new Date('2028-03-01T00:00:00Z')]) {
+    assertMonotone(rated, { now, registry });
+  }
 });
 
 test('the freshness clock is the newest verification of any kind', () => {
@@ -105,13 +207,6 @@ test('staleness decay is bounded and unverified data takes the max', () => {
   assert.equal(stalenessDecay(null, NOW), MAX_STALENESS_DECAY);
   assert.ok(Math.abs(stalenessDecay('2026-08-29', NOW) - 0.002 / 7) < 1e-9); // one day
   assert.equal(stalenessDecay('2020-01-01', NOW), MAX_STALENESS_DECAY);
-});
-
-test('shrinkRating pulls small samples toward the mean', () => {
-  const small = shrinkRating(4.9, 80, 4.3, 500);
-  const big = shrinkRating(4.7, 4000, 4.3, 500);
-  assert.ok(Math.abs(small - 4.3) < Math.abs(4.9 - 4.3));
-  assert.ok(Math.abs(big - 4.7) < 0.05);
 });
 
 function entry(over = {}) {
@@ -174,4 +269,17 @@ test('splitTiers holds anything not open out of the top, whatever it scores', ()
   assert.ok(!top.some(r => r.id === 'closed-great'));
   assert.ok(bench.some(r => r.id === 'closed-great'));
   assert.deepEqual(top.map(r => r.rank), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+});
+
+test('a rated entry that is "opening" is held after the whole open field', () => {
+  // A pizzeria closed for a move is truthfully "opening"; it keeps its score
+  // and gives up its place, and the open entries below it close ranks.
+  const scored = [
+    { id: 'moving', name: 'M', status: 'opening', score: 95 },
+    ...Array.from({ length: 12 }, (_, i) => ({ id: 'p' + i, name: 'P' + i, status: 'open', score: 90 - i }))
+  ];
+  const { top, bench } = splitTiers(scored, 10);
+  assert.deepEqual(top.map(r => r.id), scored.slice(1, 11).map(r => r.id));
+  assert.deepEqual(bench.map(r => r.id), ['p10', 'p11', 'moving']);
+  assert.equal(bench.at(-1).rank, 13);
 });

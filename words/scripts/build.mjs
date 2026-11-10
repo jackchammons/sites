@@ -14,10 +14,10 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
-// The multi-site build sets OUT_DIR to dist/<slug>/; a standalone run writes dist/.
+// The multi-site build sets OUT_DIR to dist/<slug>/; a standalone run writes the same place.
 const dist = process.env.OUT_DIR
   ? path.resolve(process.env.OUT_DIR)
-  : path.join(root, '..', 'dist');
+  : path.join(root, '..', 'dist', path.basename(root));
 
 const data = JSON.parse(fs.readFileSync(path.join(root, 'data/data.json'), 'utf8'));
 const esc = s => String(s).replace(/[&<>"']/g, c =>
@@ -52,8 +52,6 @@ const config = JSON.stringify({
   sample: data.sample,
 }).replace(/</g, '\\u003c');
 
-const built = new Date().toISOString();
-
 const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -85,7 +83,7 @@ const html = `<!doctype html>
         <div class="buttons">
           <button type="button" id="paste-btn">Paste</button>
           <button type="button" id="sample-btn">Load sample</button>
-          <button type="button" id="clear-btn" class="primary">Clear</button>
+          <button type="button" id="clear-btn">Clear</button>
         </div>
       </div>
       <textarea id="text" spellcheck="true" placeholder="Start typing, or paste a draft here…"></textarea>
@@ -107,13 +105,22 @@ const html = `<!doctype html>
 
   <footer>
     <p>${esc(data.note)}</p>
-    <p>Page built ${esc(built)} · <a href="../">all sites</a></p>
+    <p><a href="../">all sites</a></p>
   </footer>
 </div>
 </body>
 </html>
 `;
 
+// Clearing the target is only safe when it is a previous build or empty: OUT_DIR=. would
+// otherwise delete this site's source.
+const holdsSource = dist === root || root.startsWith(dist + path.sep);
+const foreign = fs.existsSync(dist) && fs.readdirSync(dist).length > 0
+  && !fs.existsSync(path.join(dist, 'index.html'));
+if (holdsSource || foreign) {
+  console.error(`refusing to clear ${dist}: it is not an empty directory or a previous build`);
+  process.exit(1);
+}
 fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(dist, { recursive: true });
 fs.writeFileSync(path.join(dist, 'index.html'), html);

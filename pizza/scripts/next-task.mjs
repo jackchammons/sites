@@ -4,9 +4,10 @@
  *   task=<type>
  *   brief<<EOF ... EOF     the task-specific half of the agent prompt
  *
- * Four task types rotate by UTC day, so a week covers every kind of upkeep
- * roughly twice. Passing a type as argv[2] forces it (used by manual
- * dispatches and the discovery backfill); "auto" rotates.
+ * Five task types rotate. "auto" picks the one whose last successful pass is
+ * oldest among those with work to do, so five days cover every kind of
+ * upkeep. Passing a type as argv[2] forces it (used by manual dispatches and
+ * the backfills).
  *
  *   discovery   find Seattle pizzerias not yet on file
  *   locations   verify branches + website against the pizzeria's own site
@@ -17,6 +18,9 @@
  *
  * The brief is task data; the fixed rules (run nothing, schema, validation)
  * live in research.yml so no task can drop them.
+ *
+ * pickTask and buildTask are pure and exported for the tests; the file reads,
+ * the git log and the output lines all happen in the CLI block at the end.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -26,43 +30,62 @@ import { locationWorklist } from '../src/locations.js';
 import { isRated } from '../src/slice.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const { restaurants } = JSON.parse(fs.readFileSync(path.join(root, 'data/restaurants.json'), 'utf8'));
 
-const TYPES = ['discovery', 'locations', 'liveness', 'news', 'rating'];
+export const TYPES = ['discovery', 'locations', 'liveness', 'news', 'rating'];
 /* Dispatch-only tasks: forceable for backfills, never part of the daily
  * rotation (their daily upkeep rides along on the rotating tasks). */
-const DISPATCH_ONLY = ['social', 'census', 'facts', 'coverage', 'sources'];
-const forced = (process.argv[2] || 'auto').toLowerCase();
+export const DISPATCH_ONLY = ['social', 'census', 'facts', 'coverage', 'sources'];
 
-/* Auto mode picks the type whose last SUCCESSFUL pass is oldest, read from
- * the commit subjects the research workflow writes. A calendar rotation
- * skipped a type for five days whenever its day failed, and a manual
- * dispatch never counted. Falls back to the calendar when git is unavailable
- * (a shallow checkout, or a test). */
-function lastSuccess(type) {
+const DAY = 864e5;
+const daysSince = (iso, now) => iso ? (now - Date.parse(iso)) / DAY : Infinity;
+
+/* The newest successful pass of each rotating type, from `git log` output
+ * formatted as "<committer date>\t<subject>" per line. Only the subject the
+ * research workflow writes counts: a commit that merely quotes one in its
+ * body, or reverts one, is not a pass. A type with no pass on record is 0. */
+export function lastSuccessFromLog(log) {
+  const last = Object.fromEntries(TYPES.map(t => [t, 0]));
+  for (const line of String(log).split('\n')) {
+    const [when, subject = ''] = line.split('\t');
+    const type = /^chore\(data\): research pass \((\w+)\)/.exec(subject)?.[1];
+    if (Object.hasOwn(last, type ?? '')) last[type] = Math.max(last[type], Date.parse(when) || 0);
+  }
+  return last;
+}
+
+/* Returns null when the history cannot answer: git is missing, this is not a
+ * repository, or the checkout is shallow (its log is truncated, so "no pass
+ * on record" would be read off commits that were never fetched). */
+function readLastSuccess() {
   try {
-    const out = execFileSync('git', ['log', '-n1', '--format=%cI', '--grep', `research pass (${type})`],
-      { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
-    return out ? Date.parse(out) : 0;
+    const git = args => execFileSync('git', args,
+      { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+    if (git(['rev-parse', '--is-shallow-repository']).trim() !== 'false') return null;
+    return lastSuccessFromLog(git(['log', '--format=%cI%x09%s', '--fixed-strings', '--grep', 'research pass (']));
   } catch { return null; }
 }
-function pickByAge() {
-  const ages = TYPES.map(t => [t, lastSuccess(t)]);
-  if (ages.some(([, a]) => a === null)) return TYPES[Math.floor(Date.now() / 864e5) % TYPES.length];
-  ages.sort((a, b) => a[1] - b[1] || TYPES.indexOf(a[0]) - TYPES.indexOf(b[0]));
-  return ages[0][0];
+
+/* Which task runs. A forced type is returned as given, empty worklist or not.
+ * Auto mode walks the rotating types from the one whose last SUCCESSFUL pass
+ * is oldest and takes the first that has work: a calendar rotation skipped a
+ * type for five days whenever its day failed, and a manual dispatch never
+ * counted. An empty worklist is passed over because a skipped run commits
+ * nothing, so the same type would stay oldest and be picked every day. With
+ * no usable history (lastSuccess null) the order starts from the UTC day
+ * instead. discovery and news have no worklist and always qualify. */
+export function pickTask(forced, lastSuccess, hasWork = () => true, dayIndex = Math.floor(Date.now() / DAY)) {
+  if ([...TYPES, ...DISPATCH_ONLY].includes(forced)) return forced;
+  const order = lastSuccess
+    ? [...TYPES].sort((a, b) => (lastSuccess[a] ?? 0) - (lastSuccess[b] ?? 0) || TYPES.indexOf(a) - TYPES.indexOf(b))
+    : TYPES.map((_, i) => TYPES[(dayIndex + i) % TYPES.length]);
+  return order.find(hasWork) ?? order[0];
 }
-const task = [...TYPES, ...DISPATCH_ONLY].includes(forced) ? forced : pickByAge();
 
-const openField = restaurants.filter(r => r.status !== 'closed');
-const DAY = 864e5;
-const daysSince = iso => iso ? (Date.now() - Date.parse(iso)) / DAY : Infinity;
-const rated = r => Boolean(r.factors?.craft && r.factors?.distinctiveness && r.factors?.critical);
+/* Each builder returns { brief, worklistSize }. worklistSize is null for a
+ * task with no worklist and 0 when there is nothing to hand the agent. */
+const BUILDERS = {};
 
-let brief = '';
-let worklistSize = null;   // set by tasks with a worklist; 0 means skip the agent
-
-if (task === 'discovery') {
+BUILDERS.discovery = ({ restaurants }) => {
   const names = restaurants.map(r => r.name).sort().join('; ');
 
   // News-driven searching finds newsworthy places and dries up fast. Each run
@@ -84,7 +107,7 @@ if (task === 'discovery') {
   const sparse = HOODS.filter(h => !covered.has(h.toLowerCase()));
   const focus = sparse.sort(() => Math.random() - 0.5).slice(0, 5);
 
-  brief = `Your task: find pizzerias inside Seattle city limits that are not yet on file.
+  const brief = `Your task: find pizzerias inside Seattle city limits that are not yet on file.
 
 Already on file (do NOT propose any of these, under any spelling):
 ${names}
@@ -108,20 +131,24 @@ serving), note (one sentence on what it is), source (the page you read),
 and address when published. At most 10 entries and 12 web searches. Fewer
 real finds beat a padded list; an empty directory array is a valid result
 if the city has nothing new.`;
-}
+  return { brief, worklistSize: null };
+};
 
-if (task === 'locations') {
-  const locList = locationWorklist(openField).slice(0, 5);
-  worklistSize = locList.length;
+BUILDERS.locations = ({ openField, now }) => {
+  const locList = locationWorklist(openField, now).slice(0, 5);
   const rows = locList.map(r => {
+    // An address that arrived with a discovery is on file but nobody has read
+    // it off the pizzeria's own site yet, so it carries no verification date.
     const state = r.neighborhoodIsPlaceholder
       ? `PLACEHOLDER, stored as "${r.neighborhood}" — find every branch`
       : (r.locations ?? []).length
-        ? `${r.locations.length} site(s) verified ${r.locationsVerified}`
+        ? (r.locationsVerified
+            ? `${r.locations.length} site(s) verified ${r.locationsVerified}`
+            : 'address on file, never verified')
         : `UNVERIFIED, stored as "${r.neighborhood}"`;
     return `- id: ${r.id} | ${r.name} | site: ${r.url ?? 'unknown, search for it'} | ${state}`;
   }).join('\n');
-  brief = `Your task: verify where these pizzerias actually are. Verify these,
+  const brief = `Your task: verify where these pizzerias actually are. Verify these,
 and only these:
 
 ${rows}
@@ -132,8 +159,10 @@ worklist says the site is unknown, search for the official site first;
 never use a directory, aggregator, delivery app or review site as the
 source, and never guess a domain from the name (several plausible ones
 are wrong, and one lapsed domain now serves a gambling site). If you
-cannot find an official page, omit that entry — a wrong address is worse
-than a missing one.
+cannot find an official page, report no address for that entry — a wrong
+address is worse than a missing one — and report it as a
+"locationsSkipped" record ({"id","note"}: what you searched and what you
+found) so it is not redrawn next pass.
 
 Report every branch that is open now, with its homepage. Branches outside
 the Puget Sound region do not belong. While you are on a pizzeria's own
@@ -146,12 +175,14 @@ or its menu shows prices, also report a "facts" record ({"id","opened",
 "priceIndex" (1 cheap slices .. 4 expensive),"source": the page that
 states it}). Only what the page states; never infer a year.
 
-Write the "locations" section (plus "links" and "facts" records where you
-saw them). Budget: one or two page fetches per pizzeria plus at most 5
-searches.`;
-}
+Write the "locations" section, and a "locationsSkipped" record for every
+worklist entry you could not verify (plus "links" and "facts" records
+where you saw them). Budget: one or two page fetches per pizzeria plus at
+most 5 searches.`;
+  return { brief, worklistSize: locList.length };
+};
 
-if (task === 'liveness') {
+BUILDERS.liveness = ({ restaurants, now }) => {
   /* Age of the last check first. The old tier-first sort let the one
    * "opening" entry and the three no-website entries take four of six slots
    * on every pass (16 of 24 slots over two weeks) while three top-ten entries
@@ -160,9 +191,9 @@ if (task === 'liveness') {
    * within the last quarter gets one re-confirmation. */
   const MIN_REVISIT = 14, RECONFIRM_CLOSED = 90;
   const pool = restaurants.filter(r => r.status !== 'closed'
-    || (daysSince(r.statusDetected) < RECONFIRM_CLOSED && r.statusChecked === r.statusDetected));
+    || (daysSince(r.statusDetected, now) < RECONFIRM_CLOSED && r.statusChecked === r.statusDetected));
   const byNeed = [...pool].sort((a, b) => {
-    const fresh = r => daysSince(r.statusChecked) < MIN_REVISIT ? 1 : 0;
+    const fresh = r => daysSince(r.statusChecked, now) < MIN_REVISIT ? 1 : 0;
     if (fresh(a) !== fresh(b)) return fresh(a) - fresh(b);
     const ord = r => r.status === 'closed' ? 0 : r.status === 'opening' ? 1 : r.url ? 3 : 2;
     if (!fresh(a) && ord(a) !== ord(b) && (ord(a) === 0 || ord(b) === 0)) return ord(a) - ord(b);
@@ -170,12 +201,11 @@ if (task === 'liveness') {
     return age(a) - age(b) || ord(a) - ord(b);
   });
   const list = byNeed.slice(0, 6);
-  worklistSize = list.length;
   const rows = list.map(r =>
     `- id: ${r.id} | ${r.name} | site: ${r.url ?? 'none on file'} | currently: ${r.status}${
       r.status === 'closed' ? ' (re-confirm the closure, or reopen it with evidence)' : ''}${
       r.statusChecked ? ` (checked ${r.statusChecked})` : ' (never checked)'}`).join('\n');
-  brief = `Your task: confirm whether these pizzerias are still operating.
+  const brief = `Your task: confirm whether these pizzerias are still operating.
 Check these, and only these:
 
 ${rows}
@@ -190,9 +220,10 @@ pizzeria's own announcement, or its site gone plus a corroborating
 source. Review-site labels alone ("Yelp says closed") are a lead, not
 evidence — chase the lead or leave the status as it is.
 Budget: at most 12 searches and 2 fetches per entry.`;
-}
+  return { brief, worklistSize: list.length };
+};
 
-if (task === 'rating') {
+BUILDERS.rating = ({ restaurants, openField, now }) => {
   // Mentions-first: entries with cited coverage on file are the ones a rating
   // can actually be grounded in, and Roma Roma arrives with three.
   // Only places actually open: a pizzeria that has not opened its doors has
@@ -206,16 +237,15 @@ if (task === 'rating') {
   // the oldest attempts.
   const RETRY_DAYS = 90;
   const unrated = openField
-    .filter(r => r.status !== 'opening' && !isRated(r) && daysSince(r.ratingAttempted) >= RETRY_DAYS)
+    .filter(r => r.status !== 'opening' && !isRated(r) && daysSince(r.ratingAttempted, now) >= RETRY_DAYS)
     .map(r => [r, Math.random()])
     .sort((a, b) => ((b[0].mentions?.length ?? 0) - (a[0].mentions?.length ?? 0))
       || ((Date.parse(a[0].ratingAttempted) || 0) - (Date.parse(b[0].ratingAttempted) || 0))
       || (a[1] - b[1]))
     .map(([r]) => r)
     .slice(0, 6);
-  worklistSize = unrated.length;
   const styleGroups = [...new Set(restaurants.map(r => r.styleGroup).filter(Boolean))].sort();
-  brief = `Your task: rate pizzerias that are in the directory but not yet in
+  const brief = `Your task: rate pizzerias that are in the directory but not yet in
 the ranking, so they can compete. Rate these, and only these:
 
 ${unrated.map(r => `- id: ${r.id} | ${r.name} | ${r.neighborhood ?? '?'} | site: ${r.url ?? 'unknown'}${r.mentions?.length ? ` | ${r.mentions.length} cited mention(s) on file` : ''}`).join('\n')}
@@ -257,9 +287,10 @@ but unrated, you may rate it too, under exactly the same standard --
 one proposal per pizzeria, at most 12 in total.
 
 Budget: about 3 searches per entry, 18 total. Write the file and stop.`;
-}
+  return { brief, worklistSize: unrated.length };
+};
 
-if (task === 'social') {
+BUILDERS.social = ({ openField }) => {
   // Dispatch-only backfill: fill in Instagram profiles, and best-available
   // links for entries with no website on file. Cheap lookups, so the worklist
   // runs bigger than the fact-verification tasks. Closed entries are excluded:
@@ -274,8 +305,7 @@ if (task === 'social') {
     .sort(() => Math.random() - 0.5)
     .sort((a, b) => (a.url ? 1 : 0) - (b.url ? 1 : 0))
     .slice(0, 15);
-  worklistSize = worklist.length;
-  brief = `Your task: record each pizzeria's web presence — its Instagram
+  const brief = `Your task: record each pizzeria's web presence — its Instagram
 profile, and an official website for any entry missing one. Cover these,
 and only these:
 
@@ -301,21 +331,17 @@ For each, report a "links" record. The rules that matter:
 
 Write the "links" section only. Budget: about 2 searches per entry,
 25 in total.`;
-}
+  return { brief, worklistSize: worklist.length };
+};
 
-if (task === 'census') {
+BUILDERS.census = ({ restaurants, candidates }) => {
   // Dispatch-only: drain the registry-seeded candidates queue. Candidates come
   // from King County food-permit data (and OSM when reachable) -- they are
   // leads, and every one either joins through the validated directory channel
   // or gets a recorded verdict so it stops re-entering worklists.
-  const candPath = path.join(root, 'data/candidates.json');
-  const cands = fs.existsSync(candPath)
-    ? JSON.parse(fs.readFileSync(candPath, 'utf8')).candidates.filter(c => c.status === 'pending')
-    : [];
-  const worklist = cands.slice(0, 10);
-  worklistSize = worklist.length;
+  const worklist = candidates.filter(c => c.status === 'pending').slice(0, 10);
   const names = restaurants.map(r => r.name).sort().join('; ');
-  brief = `Your task: verify candidate pizzerias found in King County
+  const brief = `Your task: verify candidate pizzerias found in King County
 food-business permit data, so the real ones can join the directory.
 Verify these, and only these:
 
@@ -350,9 +376,10 @@ A permit proves a kitchen exists, not that it belongs in a pizza index —
 be choosy on pizza-forward, and lean on each place's own site or real
 local coverage, not review aggregators. Budget: 2-3 searches per
 candidate, 25 in total.`;
-}
+  return { brief, worklistSize: worklist.length };
+};
 
-if (task === 'facts') {
+BUILDERS.facts = ({ openField, now }) => {
   // Dispatch-only backfill of the two plain facts reputation and value read.
   // Rated entries with no founding year first: they carry no reputation
   // score at all until one is on file.
@@ -360,13 +387,12 @@ if (task === 'facts') {
   // quarter before it is redrawn, and never-attempted entries go first.
   const FACTS_RETRY_DAYS = 90;
   const list = openField
-    .filter(r => (r.opened == null || r.priceIndex == null) && daysSince(r.factsAttempted) >= FACTS_RETRY_DAYS)
-    .sort((a, b) => (rated(b) - rated(a))
+    .filter(r => (r.opened == null || r.priceIndex == null) && daysSince(r.factsAttempted, now) >= FACTS_RETRY_DAYS)
+    .sort((a, b) => (isRated(b) - isRated(a))
       || ((a.opened == null ? 0 : 1) - (b.opened == null ? 0 : 1))
       || ((Date.parse(a.factsAttempted) || 0) - (Date.parse(b.factsAttempted) || 0)))
     .slice(0, 12);
-  worklistSize = list.length;
-  brief = `Your task: record two plain facts for these pizzerias -- the year each
+  const brief = `Your task: record two plain facts for these pizzerias -- the year each
 opened and its price tier -- from pages that state them. Cover these,
 and only these:
 
@@ -384,9 +410,10 @@ For an entry where no page states either fact, report a "factsSkipped"
 record ({"id","note"}: what you searched and found) so it is not redrawn
 next run; omitting it silently puts it back at the front of the list.
 Budget: about 2 searches per entry, 24 in total.`;
-}
+  return { brief, worklistSize: list.length };
+};
 
-if (task === 'sources') {
+BUILDERS.sources = ({ openField }) => {
   // Dispatch-only backfill of citations for the founding ratings, which were
   // set editorially with nothing on file. Values are never touched; the
   // agent attaches the published criticism it finds, and the directory shows
@@ -395,11 +422,10 @@ if (task === 'sources') {
   const uncited = r => ['craft', 'distinctiveness', 'critical']
     .every(k => !(r.factors?.[k]?.sources?.length) && !r.factors?.[k]?.source);
   const list = openField
-    .filter(r => rated(r) && r.factors.craft.setBy === 'editorial' && uncited(r))
+    .filter(r => isRated(r) && r.factors.craft.setBy === 'editorial' && uncited(r))
     .sort((a, b) => (b.factors.craft.value + b.factors.critical.value) - (a.factors.craft.value + a.factors.critical.value))
     .slice(0, 5);
-  worklistSize = list.length;
-  brief = `Your task: find the published criticism behind ratings that are
+  const brief = `Your task: find the published criticism behind ratings that are
 already on file, so each carries its sources. Do NOT propose or change
 any rating; report sources only. Cover these, and only these:
 
@@ -418,19 +444,19 @@ you cite, ALSO report it as a "mentions" record (id, title, url,
 source, date, kind) when it is less than two years old. Omit an entry
 you cannot ground in a single credible source; that is a correct
 outcome. Budget: about 3 searches per entry, 15 in total.`;
-}
+  return { brief, worklistSize: list.length };
+};
 
-if (task === 'coverage') {
+BUILDERS.coverage = ({ openField }) => {
   // Dispatch-only backfill of press mentions. The ranking reads a 24-month
   // window and the critical boost fades over 12; the daily news task looks
   // 30 days back, so the window can only fill from here. Fewest mentions
   // first, rated entries before unrated.
   const list = openField
     .filter(r => r.status !== 'opening')
-    .sort((a, b) => ((a.mentions?.length ?? 0) - (b.mentions?.length ?? 0)) || (rated(b) - rated(a)))
+    .sort((a, b) => ((a.mentions?.length ?? 0) - (b.mentions?.length ?? 0)) || (isRated(b) - isRated(a)))
     .slice(0, 10);
-  worklistSize = list.length;
-  brief = `Your task: find published coverage from the last two years of these
+  const brief = `Your task: find published coverage from the last two years of these
 pizzerias and connect it to their entries. Cover these, and only these:
 
 ${list.map(r => `- id: ${r.id} | ${r.name} | ${r.neighborhood ?? '?'} | ${r.mentions?.length ?? 0} mention(s) on file`).join('\n')}
@@ -443,11 +469,12 @@ record: {"id","title","url","source","date","kind": opening|closing|
 ranking|mention}. The story must name the pizzeria; a citywide piece
 that does not is not a mention. Dates up to 730 days old are accepted.
 At most 4 mentions per entry. Budget: 2 searches per entry, 20 in total.`;
-}
+  return { brief, worklistSize: list.length };
+};
 
-if (task === 'news') {
+BUILDERS.news = ({ restaurants }) => {
   const ids = restaurants.map(r => `${r.id} = ${r.name}`).join('\n');
-  brief = `Your task: find Seattle pizzeria news from the last 30 days that is
+  const brief = `Your task: find Seattle pizzeria news from the last 30 days that is
 not already covered, and connect coverage to the entries on file.
 
 Read pizza/data/buzz.json first to see what the automated feed sweep
@@ -462,13 +489,46 @@ ${ids}
 
 Budget: at most 12 web searches in total. A short honest file is a good
 result on a quiet day.`;
+  return { brief, worklistSize: null };
+};
+
+/* The brief and worklist size for one task type, from the dataset alone.
+ * `candidates` is the census queue; only the census task reads it. */
+export function buildTask(type, restaurants, { now = Date.now(), candidates = [] } = {}) {
+  const openField = restaurants.filter(r => r.status !== 'closed');
+  return BUILDERS[type]({ restaurants, openField, now, candidates });
 }
 
-/* An empty worklist is a run that would pay for nothing: the workflow skips
- * the agent step when skip=true and the day's slot goes to the next type. */
-const skip = worklistSize === 0;
-const out = process.env.GITHUB_OUTPUT;
-const lines = `task=${task}\nskip=${skip}\nbrief<<TASK_BRIEF_EOF\n${brief}\nTASK_BRIEF_EOF\n`;
-if (out) fs.appendFileSync(out, lines);
-else process.stdout.write(lines);
-console.error(`task: ${task}${skip ? ' (empty worklist — skipping the agent)' : worklistSize != null ? ` (${worklistSize} in worklist)` : ''}`);
+if (process.argv[1] && fileURLToPath(import.meta.url) === fs.realpathSync(process.argv[1])) {
+  const { restaurants } = JSON.parse(fs.readFileSync(path.join(root, 'data/restaurants.json'), 'utf8'));
+  const candPath = path.join(root, 'data/candidates.json');
+  const candidates = fs.existsSync(candPath) ? JSON.parse(fs.readFileSync(candPath, 'utf8')).candidates : [];
+  const forced = (process.argv[2] || 'auto').toLowerCase();
+
+  // Built at most once per type: two of the worklists are shuffled, so the
+  // one the picker saw must be the one the brief prints.
+  const built = new Map();
+  const build = type => {
+    if (!built.has(type)) built.set(type, buildTask(type, restaurants, { candidates }));
+    return built.get(type);
+  };
+  const hasWork = type => {
+    const some = build(type).worklistSize !== 0;
+    if (!some) console.error(`passing over ${type}: empty worklist`);
+    return some;
+  };
+  // The history only matters to auto mode, so a forced type does not read it.
+  const isForced = [...TYPES, ...DISPATCH_ONLY].includes(forced);
+  const task = pickTask(forced, isForced ? null : readLastSuccess(), hasWork);
+  const { brief, worklistSize } = build(task);
+
+  /* An empty worklist is a run that would pay for nothing, so the workflow
+   * skips the agent step when skip=true. Only a forced type can get here with
+   * one: auto mode has already passed over every type with nothing to do. */
+  const skip = worklistSize === 0;
+  const out = process.env.GITHUB_OUTPUT;
+  const lines = `task=${task}\nskip=${skip}\nbrief<<TASK_BRIEF_EOF\n${brief}\nTASK_BRIEF_EOF\n`;
+  if (out) fs.appendFileSync(out, lines);
+  else process.stdout.write(lines);
+  console.error(`task: ${task}${skip ? ' (empty worklist — skipping the agent)' : worklistSize != null ? ` (${worklistSize} in worklist)` : ''}`);
+}

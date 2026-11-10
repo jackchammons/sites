@@ -50,10 +50,12 @@ export function bumpChart(snaps, entriesById) {
     `<text class="week-lab" x="${x(i)}" y="${padT - 12}" text-anchor="middle">W${String(w.week).padStart(2, '0')}</text>`).join('');
 
   // A formula change is drawn as a rule between the two columns, so a line
-  // that stops there reads as a re-scoring, not a pizzeria falling out.
+  // that stops there reads as a re-scoring, not a pizzeria falling out. The
+  // label is the version alone: changes in consecutive weeks are one column
+  // apart, and the full name runs into its neighbour.
   const changes = weeks.map((w, i) => i > 0 && w.algorithm && weeks[i - 1].algorithm && w.algorithm !== weeks[i - 1].algorithm
     ? `<g class="method-change"><line x1="${(x(i - 1) + x(i)) / 2}" y1="${padT - 6}" x2="${(x(i - 1) + x(i)) / 2}" y2="${padT + rowH * 9 + 10}" stroke="var(--ink-3)" stroke-dasharray="4 4"/>` +
-      `<text class="week-lab" x="${(x(i - 1) + x(i)) / 2}" y="${padT + rowH * 9 + 22}" text-anchor="middle" fill="var(--ink-3)" font-size="9">↑ ${esc(w.algorithm)}</text></g>` : '').join('');
+      `<text class="week-lab" x="${(x(i - 1) + x(i)) / 2}" y="${padT + rowH * 9 + 22}" text-anchor="middle" fill="var(--ink-3)" font-size="9">↑ ${esc(w.algorithm.replace(/^SLICE\s+/, ''))}<title>Scoring method changed to ${esc(w.algorithm)}</title></text></g>` : '').join('');
 
   const series = order.map(id => {
     const hue = colorOf(id);
@@ -89,10 +91,10 @@ export function bumpChart(snaps, entriesById) {
 
   const table = `
     <details class="chart-table"><summary>The same record as a table</summary>
-      <div class="chart-table-x"><table>
-        <thead><tr><th>#</th>${standings.map(sw => `<th>${sw.week}</th>`).join('')}</tr></thead>
+      <div class="chart-table-x"><table aria-label="Top ten by week">
+        <thead><tr><th scope="col">#</th>${standings.map(sw => `<th scope="col">${sw.week}</th>`).join('')}</tr></thead>
         <tbody>${Array.from({ length: 10 }, (_, i) =>
-          `<tr><td>${i + 1}</td>${standings.map(sw => `<td>${esc(sw.names[i] ?? '')}</td>`).join('')}</tr>`).join('')}
+          `<tr><th scope="row">${i + 1}</th>${standings.map(sw => `<td>${esc(sw.names[i] ?? '')}</td>`).join('')}</tr>`).join('')}
         </tbody>
       </table></div>
     </details>`;

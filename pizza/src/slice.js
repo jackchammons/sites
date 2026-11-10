@@ -1,5 +1,5 @@
 /*
- * THE SLICE SCORE, v2.1
+ * THE SLICE SCORE, v2.2
  * ---------------------
  * A 0-100 rating for pizzerias, computed the same way for every entry.
  *
@@ -8,7 +8,8 @@
  * Five factors. Three are computed from data the daily pipeline maintains,
  * two are editorial ratings stored with provenance:
  *
- *   reputation       computed   longevity + review volume + sustained coverage
+ *   reputation       computed   longevity + review volume + sustained coverage;
+ *                               counted only where it does not lower the score
  *   critical         computed   critic base rating + recency-weighted coverage
  *   craft            editorial  dough, bake, toppings -- the pizza itself
  *   distinctiveness  editorial  whether it owns a lane in this city
@@ -23,7 +24,7 @@
  * record chart and the movement evidence can tell a re-scoring from a real
  * move (v1 -> v2 on 2026-08-26 was read as three pizzerias falling out of the
  * ten; it was the formula). */
-export const ALGORITHM = 'SLICE v2.1';
+export const ALGORITHM = 'SLICE v2.2';
 
 export const DEFAULT_WEIGHTS = {
   reputation: 24,
@@ -40,27 +41,12 @@ export const STALENESS_PER_WEEK = 0.002;
 const clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
 const round = n => Math.round(n * 10) / 10;
 
-/* ---------- crowd-rating context (display only) ----------
- * Star averages are shown where the dataset has them, never scored directly:
- * the platforms that hold them block automated reads, so they cannot be kept
- * current. The review COUNT does feed reputation -- how many people have
- * bothered to rate a place is a durable fact even when the average is stale.
- *
- * Shown ratings are de-noised by Bayesian shrinkage toward the city mean:
- *   adjusted = (v / (v + m)) * R + (m / (v + m)) * C
- */
-export function shrinkRating(rating, reviews, cityMean, priorWeight) {
-  const v = Math.max(0, reviews);
-  const w = v / (v + priorWeight);
-  return w * rating + (1 - w) * cityMean;
-}
-
-export function confidence(reviews, priorWeight) {
-  const v = Math.max(0, reviews);
-  return v / (v + priorWeight);
-}
-
-/* ---------- computed factors ---------- */
+/* ---------- computed factors ----------
+ * Crowd star averages are shown where the dataset has them, exactly as stored,
+ * and never scored: the platforms that hold them block automated reads, so
+ * they cannot be kept current. The review COUNT does feed reputation -- how
+ * many people have bothered to rate a place is a durable fact even when the
+ * average is stale. */
 
 /* Reputation: has this place earned standing over time?
  *
@@ -68,10 +54,12 @@ export function confidence(reviews, priorWeight) {
  * components it has: a pizzeria with no stored review count is not punished
  * with a zero for data nobody collected.
  *
- *   longevity  (x3)  log-curve on years open; ~15 years earns full marks.
- *                    log1p because year 2 proves more than year 12.
- *   volume     (x2)  review count v -> v / (v + 500). The count, not the stars.
- *   coverage   (x1)  press mentions in the last 24 months -> /6, capped.
+ *   longevity  (x3)  log-curve on years open; LONGEVITY_FULL_YEARS earns
+ *                    full marks. log1p because year 2 proves more than year 12.
+ *   volume     (x2)  review count v -> v / (v + VOLUME_HALF_REVIEWS). The
+ *                    count, not the stars.
+ *   coverage   (x1)  press mentions in the last COVERAGE_WINDOW_MONTHS,
+ *                    over COVERAGE_FULL_MENTIONS, capped.
  *
  * Combination is monotone in added evidence: the factor is the best weighted
  * mean over any non-empty subset of the present components (components sorted
@@ -80,30 +68,39 @@ export function confidence(reviews, priorWeight) {
  * press mention pulled a full-marks longevity DOWN -- so collecting data cost
  * points. Under this rule a component counts only when it raises the factor.
  *
- * With no component at all the factor is unmeasured (`measured: false`), and
- * scoreOne drops its weight so the other four factors share it. It is not
- * scored as zero: 29 of 52 rated entries had reputation 0.0 for want of a
- * founding year, and that, not quality, decided the published ten.
+ * With no component at all the factor is unmeasured (`measured: false`). It is
+ * not scored as zero: 29 of 52 rated entries had reputation 0.0 for want of a
+ * founding year, and that, not quality, decided the published ten. scoreOne
+ * decides whether a measured reputation carries weight.
+ *
+ * The page prints these constants from here, so the methodology cannot drift
+ * from the code.
  */
 export const REPUTATION_WEIGHTS = { longevity: 3, volume: 2, coverage: 1 };
+export const LONGEVITY_FULL_YEARS = 15;
+export const VOLUME_HALF_REVIEWS = 500;
+export const COVERAGE_WINDOW_MONTHS = 24;
+export const COVERAGE_FULL_MENTIONS = 6;
+
+const MONTH_MS = 30.44 * 864e5;
 
 export function reputationFactor(r, now) {
   const parts = [];
   if (typeof r.opened === 'number') {
     const years = Math.max(0, now.getUTCFullYear() - r.opened);
     parts.push({ key: 'longevity', w: REPUTATION_WEIGHTS.longevity,
-                 x: clamp(Math.log1p(years) / Math.log1p(15), 0, 1), note: `${years} yr` });
+                 x: clamp(Math.log1p(years) / Math.log1p(LONGEVITY_FULL_YEARS), 0, 1), note: `${years} yr` });
   }
   if (r.crowd && typeof r.crowd.reviews === 'number') {
     parts.push({ key: 'volume', w: REPUTATION_WEIGHTS.volume,
-                 x: r.crowd.reviews / (r.crowd.reviews + 500), note: `${r.crowd.reviews} reviews` });
+                 x: r.crowd.reviews / (r.crowd.reviews + VOLUME_HALF_REVIEWS), note: `${r.crowd.reviews} reviews` });
   }
   const mentions = r.mentions ?? [];
   if (mentions.length) {
-    const cutoff = now.getTime() - 24 * 30.44 * 864e5;
+    const cutoff = now.getTime() - COVERAGE_WINDOW_MONTHS * MONTH_MS;
     const recent = mentions.filter(m => Date.parse(m.date) > cutoff).length;
     parts.push({ key: 'coverage', w: REPUTATION_WEIGHTS.coverage,
-                 x: clamp(recent / 6, 0, 1), note: `${recent} in 24 mo` });
+                 x: clamp(recent / COVERAGE_FULL_MENTIONS, 0, 1), note: `${recent} in ${COVERAGE_WINDOW_MONTHS} mo` });
   }
   if (!parts.length) return { value: 0, parts, measured: false, counted: [] };
 
@@ -121,22 +118,27 @@ export function reputationFactor(r, now) {
 }
 
 /* Critical reception: the critic base rating, refined -- never replaced -- by
- * what has been written since. Each press mention adds by kind and fades with
- * a 12-month half-life; the total boost is capped at +1.5 so a burst of
- * coverage can lift a score, not fabricate one.
+ * what has been written since. Each press mention adds by kind (a kind the
+ * table does not name takes MENTION_WEIGHT_OTHER) and fades with a half-life
+ * of MENTION_HALF_LIFE_MONTHS; the summed signal is scaled by
+ * CRITICAL_BOOST_SCALE and the boost capped at CRITICAL_BOOST_CAP, so a burst
+ * of coverage can lift a score, not fabricate one.
  */
 export const MENTION_WEIGHT = { ranking: 1.0, mention: 0.4, opening: 0.3, closing: 0 };
+export const MENTION_WEIGHT_OTHER = 0.3;
+export const MENTION_HALF_LIFE_MONTHS = 12;
+export const CRITICAL_BOOST_SCALE = 0.5;
 export const CRITICAL_BOOST_CAP = 1.5;
 
 export function criticalFactor(r, now) {
   const base = clamp(r.factors?.critical?.value ?? 0, 0, 10);
   let signal = 0;
   for (const m of r.mentions ?? []) {
-    const months = (now.getTime() - Date.parse(m.date)) / (30.44 * 864e5);
+    const months = (now.getTime() - Date.parse(m.date)) / MONTH_MS;
     if (!isFinite(months) || months < 0) continue;
-    signal += (MENTION_WEIGHT[m.kind] ?? 0.3) * Math.pow(0.5, months / 12);
+    signal += (MENTION_WEIGHT[m.kind] ?? MENTION_WEIGHT_OTHER) * Math.pow(0.5, months / MENTION_HALF_LIFE_MONTHS);
   }
-  const boost = Math.min(CRITICAL_BOOST_CAP, 0.5 * signal);
+  const boost = Math.min(CRITICAL_BOOST_CAP, CRITICAL_BOOST_SCALE * signal);
   return { value: clamp(base + boost, 0, 10), base, boost: round(boost) };
 }
 
@@ -144,12 +146,14 @@ export function criticalFactor(r, now) {
  * and critical reception; the price tier scales it:
  *   $ x1.20   $$ x1.05   $$$ x0.90   $$$$ x0.75
  * A cheap great pie outruns its quality score; an expensive one has to be
- * better than its price to break even.
+ * better than its price to break even. An entry with no tier on file takes
+ * PRICE_MULT_UNKNOWN.
  */
 export const PRICE_MULT = [null, 1.20, 1.05, 0.90, 0.75];
+export const PRICE_MULT_UNKNOWN = 1;
 
 export function valueFactor(quality10, priceIndex) {
-  const mult = PRICE_MULT[priceIndex] ?? 1;
+  const mult = PRICE_MULT[priceIndex] ?? PRICE_MULT_UNKNOWN;
   return { value: clamp(quality10 * mult, 0, 10), quality: round(quality10), mult };
 }
 
@@ -210,12 +214,29 @@ export function isRated(r) {
   return Boolean(r.factors?.craft && r.factors?.distinctiveness && r.factors?.critical);
 }
 
-/* Score one entry, returning every intermediate value for display. */
-export function scoreOne(r, opts) {
+/* Score one entry, returning every intermediate value for display.
+ *
+ * Reputation carries its weight only when it is measured and counting it does
+ * not lower the score: when its value is below the weighted mean of the other
+ * four factors, its weight is dropped exactly as for an unmeasured entry and
+ * the other four share it. The second half is what keeps the score monotone
+ * in evidence. With the unmeasured rule alone, an entry with nothing on file
+ * has its 24% shared out, and the first press mention or founding year filed
+ * for it becomes a low reputation at full weight: a top-ten entry lost up to
+ * 16 points for having been written about. The base is the larger of M (the
+ * other four's weighted mean) and the mean with reputation in it, which rises
+ * with both, so a new mention, founding year or review count can lift a score
+ * and never lower it.
+ *
+ * `reputationDetail.use` says which case applied, so a card can explain itself:
+ *   'counted'     in the score at its full weight
+ *   'unmeasured'  nothing on file
+ *   'lowers'      on file and shown, but below the entry's other factors
+ */
+export function scoreOne(r, opts = {}) {
   const {
     weights = DEFAULT_WEIGHTS,
     registry = {},
-    cityMean, priorWeight,
     now = new Date(),
     applyFriction = true,
     applyFreshness = true
@@ -235,11 +256,21 @@ export function scoreOne(r, opts) {
     value: val.value
   };
 
-  // An unmeasured reputation carries no weight: the other four factors share
-  // it, as the methodology promises. Everything else normalises so the
-  // contributions sum toward 100 whatever weights the reader sets.
+  // The weighted mean of the other four factors, 0..10: the level reputation
+  // has to reach before counting it helps.
+  let ow = 0, os = 0;
+  for (const key of Object.keys(factorScores)) {
+    if (key === 'reputation') continue;
+    ow += weights[key] ?? 0;
+    os += (weights[key] ?? 0) * factorScores[key];
+  }
+  const othersMean = ow ? os / ow : 0;
+  const use = !rep.measured ? 'unmeasured' : rep.value < othersMean ? 'lowers' : 'counted';
+
+  // The shares renormalise over the weights still in play, so the
+  // contributions of a perfect entry sum to 100 in every case.
   const effective = { ...weights };
-  if (!rep.measured) effective.reputation = 0;
+  if (use !== 'counted') effective.reputation = 0;
   const totalWeight = Object.values(effective).reduce((a, b) => a + b, 0) || 1;
   const contributions = {};
   const weightShares = {};
@@ -258,22 +289,14 @@ export function scoreOne(r, opts) {
   const decay = applyFreshness ? stalenessDecay(verified?.date, now) : 0;
   const score = Math.max(0, (base - penalty) * (1 - decay));
 
-  const crowdContext = r.crowd
-    ? {
-        adjusted: shrinkRating(r.crowd.rating, r.crowd.reviews, cityMean, priorWeight),
-        confidence: confidence(r.crowd.reviews, priorWeight)
-      }
-    : null;
-
   return {
     ...r,
     factorScores,
     contributions,
     weightShares,
-    reputationDetail: rep,
+    reputationDetail: { ...rep, use, othersMean },
     criticalDetail: crit,
     valueDetail: val,
-    crowdContext,
     frictionDetail: fric,
     penaltyApplied: penalty,
     verified,
@@ -294,12 +317,10 @@ export const byRank = (a, b) =>
 
 /* Score and sort the rated field. */
 export function rank(dataset, opts = {}) {
-  const cityMean = dataset.cityMeanRating;
-  const priorWeight = dataset.priorWeight;
   const registry = dataset.attributeRegistry ?? {};
   const scored = dataset.restaurants
     .filter(isRated)
-    .map(r => scoreOne(r, { cityMean, priorWeight, registry, ...opts }));
+    .map(r => scoreOne(r, { registry, ...opts }));
   scored.sort(byRank);
   return scored.map((r, i) => ({ ...r, rank: i + 1 }));
 }

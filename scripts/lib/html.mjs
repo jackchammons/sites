@@ -4,9 +4,6 @@
  * so this is a tokenizer over well-formed markup, not a parser for the web.
  */
 
-export const esc = s => String(s).replace(/[&<>"']/g, c =>
-  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-
 const unesc = s => s.replace(/&(amp|lt|gt|quot|#39);/g, (m, n) =>
   ({ amp: '&', lt: '<', gt: '>', quot: '"', '#39': "'" }[n]));
 

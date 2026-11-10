@@ -57,7 +57,8 @@ export function checkOutput(out) {
       const target = path.resolve(from, file);
       // A path that leaves the site points at a sibling or the landing page,
       // which may not be built yet; only this site's own files are checked.
-      if (path.relative(out, target).startsWith('..')) return true;
+      const rel = path.relative(out, target);
+      if (rel === '..' || rel.startsWith('..' + path.sep)) return true;
       return fs.existsSync(target);
     }));
   }

@@ -28,6 +28,7 @@ name: Research pizza buzz
 # A manual dispatch from a branch is a dry run: the agent runs and its output
 # is validated, applied and built on the runner, but nothing is committed.
 # That is how a change to a brief or to the prompt is tried before it merges.
+# The run finishing still fires publish.yml, which publishes main as usual.
 on:
   schedule:
     - cron: '47 12 * * *'   # 30 min before publish.yml's cron, the fallback publish
@@ -44,7 +45,7 @@ concurrency:
   cancel-in-progress: false
 
 # The one place the agent's model is named. The preflight probes this id and
-# the agent runs it, so a retired or mistyped id fails at the probe.
+# the agent runs it, so what the probe reports is about the model in use.
 env:
   RESEARCH_MODEL: claude-sonnet-5
 

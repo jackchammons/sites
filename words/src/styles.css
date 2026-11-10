@@ -1,5 +1,6 @@
 /* Word Counter — a typesetter's galley sheet (the text) beside a column of
-   proof marks (the stats). Stacks to one column under 760px. */
+   proof marks (the stats). Stacks to one column under 760px, where the word
+   count becomes a slim bar pinned above the text. */
 :root {
   --bg: #f3efe6;
   --sheet: #fbf9f4;
@@ -52,7 +53,6 @@ h1 {
 header p { margin: 0; color: var(--ink-soft); max-width: 60ch; }
 
 .galley { display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 1.5rem; align-items: start; }
-@media (max-width: 760px) { .galley { grid-template-columns: minmax(0, 1fr); } }
 
 .sheet { display: grid; gap: .6rem; min-width: 0; }
 .toolbar { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; justify-content: space-between; }
@@ -63,7 +63,6 @@ button {
   border: 1px solid var(--rule); background: var(--sheet); color: var(--ink);
   border-radius: 4px; padding: .4rem .8rem;
 }
-button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 button:hover { border-color: var(--accent); }
 button:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 textarea {
@@ -84,24 +83,46 @@ textarea::placeholder { color: var(--ink-soft); opacity: .7; }
 .lede .n { font-family: var(--display); font-size: 3.2rem; line-height: 1; font-weight: 700; font-variant-numeric: tabular-nums; }
 .lede .l { font-family: var(--mono); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; opacity: .85; }
 
-.marks { border-top: 2px solid var(--ink); display: grid; margin: 0; }
+/* One column on a phone. The stats column dissolves into the galley so the word
+   count can be lifted above the text box and pinned to the top of the screen,
+   where it stays in view while the keyboard covers everything below the box.
+   A flex column, because a sticky grid item cannot travel outside its own row.
+   The box is shorter for the same reason: it and the count fit above a keyboard. */
+@media (max-width: 760px) {
+  html { scroll-padding-top: 3.5rem; }
+  .galley { display: flex; flex-direction: column; align-items: stretch; gap: 1rem; }
+  .proof { display: contents; }
+  .lede {
+    order: -1; position: sticky; top: 0; z-index: 1;
+    display: flex; align-items: baseline; gap: .5rem; padding: .5rem .9rem;
+    border-radius: 0 0 6px 6px; box-shadow: 0 6px 14px -10px rgba(0, 0, 0, .5);
+  }
+  .lede .n { font-size: 1.6rem; }
+  textarea { min-height: 40vh; }
+}
+
+.marks { border-top: 2px solid var(--ink); display: grid; grid-template-columns: minmax(0, 1fr); margin: 0; }
 .mark {
   display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
   padding: .55rem 0; border-bottom: 1px solid var(--rule);
 }
-.mark dt { margin: 0; color: var(--ink-soft); font-size: .95rem; }
+.mark dt { margin: 0; color: var(--ink-soft); font-size: .95rem; flex: none; }
 .mark dd { margin: 0; font-family: var(--mono); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* The one value the viewer's text sets the length of. It breaks wherever it
+   must, so a URL or a long compound wraps inside the column instead of
+   widening the page. */
+#s-longest { min-width: 0; white-space: normal; overflow-wrap: anywhere; text-align: right; }
 .marks h2 {
   font-family: var(--mono); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase;
   color: var(--ink-soft); margin: 1.1rem 0 .25rem; font-weight: 600;
 }
 .marks h2:first-child { margin-top: .75rem; }
 
-.freq { display: grid; gap: .35rem; }
-.freq-row { display: grid; grid-template-columns: 1fr auto; gap: .5rem; align-items: center; font-size: .95rem; }
+.freq { display: grid; grid-template-columns: minmax(0, 1fr); gap: .35rem; }
+.freq-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem; align-items: center; font-size: .95rem; }
 .freq-row .bar { grid-column: 1 / -1; height: 4px; background: var(--tint); border-radius: 2px; overflow: hidden; }
 .freq-row .bar i { display: block; height: 100%; background: var(--accent); }
-.freq-row .w { font-family: var(--mono); min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.freq-row .w { font-family: var(--mono); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .freq-row .c { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--ink-soft); }
 .freq-empty { color: var(--ink-soft); font-size: .9rem; font-style: italic; }
 

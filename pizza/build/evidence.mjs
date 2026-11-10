@@ -1,4 +1,5 @@
 import { esc } from './html.mjs';
+import { STALENESS_PER_WEEK } from '../src/slice.js';
 
 /* ---- why an entry moved ----
  * The weekly delta says THAT a card moved; this names the mechanism behind it,
@@ -9,7 +10,12 @@ import { esc } from './html.mjs';
  *   - freshness decay (score slides while nothing is re-verified) or its reset
  *   - displacement (the honest "entries around it moved")
  * A bare score delta is never the story: every line names a cause or names
- * displacement. */
+ * displacement.
+ *
+ * Freshness is read from `r.verified`, the date and check scoreOne ran the
+ * decay from, so this line and the card's own freshness row cannot name
+ * different dates. A liveness or locations pass resets the clock as surely
+ * as a rating does. */
 export const FACTOR_LABEL = { reputation: 'reputation', critical: 'critical reception',
   craft: 'craft', distinctiveness: 'distinctiveness', value: 'value' };
 
@@ -77,6 +83,8 @@ export function evidenceFor(r, previous, now, algorithm) {
       // Value is derived from craft and critical; explaining it separately when
       // a parent already moved would double-count one cause.
       if (k === 'value' && (has('craft') || has('critical'))) continue;
+      // A reputation that carries no weight cannot be why a score rose.
+      if (k === 'reputation' && d > 0 && r.reputationDetail && r.reputationDetail.use !== 'counted') continue;
       if (freshlyRated.includes(k)) {
         bits.push(`re-rated: ${FACTOR_LABEL[k]} ${(r.factorScores[k] - d).toFixed(1)} → ${r.factorScores[k].toFixed(1)}${citeRating()}`);
       } else if (k === 'critical' && d > 0 && recent.length) {
@@ -121,10 +129,11 @@ export function evidenceFor(r, previous, now, algorithm) {
     const prevScore = previous?.scores?.[r.id];
     const drift = prevScore != null ? r.score - prevScore : null;
     let cause;
+    const v = r.verified;
     if (drift != null && drift <= -0.1 && (r.stalenessDecay ?? 0) > 0) {
-      cause = `freshness decay — nothing re-verified since ${esc(r.lastVerified ?? 'the dataset date')}; a score slides 0.2% a week until the rotation re-checks it`;
-    } else if (drift != null && drift >= 0.1 && r.lastVerified && daysAgo(r.lastVerified) < RERATE_WINDOW_DAYS) {
-      cause = `re-verified ${esc(r.lastVerified)}, which resets its freshness decay`;
+      cause = `freshness decay — ${v ? `nothing re-verified since the ${esc(v.source)} on ${esc(v.date)}` : 'never verified'}; a score slides ${(STALENESS_PER_WEEK * 100).toFixed(1)}% a week until the rotation re-checks it`;
+    } else if (drift != null && drift >= 0.1 && v && daysAgo(v.date) < RERATE_WINDOW_DAYS) {
+      cause = `re-verified by a ${esc(v.source)} on ${esc(v.date)}, which resets its freshness decay`;
     } else if (drift != null && drift >= 0.1 && recent.length) {
       const m = recent[0];
       cited.add(m.url);

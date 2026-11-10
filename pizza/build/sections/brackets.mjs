@@ -1,8 +1,7 @@
-import { esc, nameLink, shortDate } from '../html.mjs';
+import { esc, nameLink } from '../html.mjs';
 import { locationLabel } from '../../src/locations.js';
 
 export function bracketsSection(ctx) {
-  const { dataset, now, ranked, restScored, allScored, scoredAll, buzz, entriesById, week, weekKey, history } = ctx;
   const { brackets } = ctx;
 const bracketCard = ({ group, list }) => {
   const w = list[0];
