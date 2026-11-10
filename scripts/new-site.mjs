@@ -5,8 +5,9 @@
  *   node scripts/new-site.mjs <slug> "Name" "One-sentence tagline" [emoji]
  *
  * Creates <slug>/ with a working build + verify that already honour the
- * OUT_DIR contract and a short README, and registers the site in three files:
- * sites.config.json and the site tables in README.md and CLAUDE.md. The
+ * OUT_DIR contract, a short README and a CLAUDE.md that loads it, and
+ * registers the site in three files: sites.config.json and the site tables
+ * in README.md and CLAUDE.md. The
  * generated site builds and deploys as-is, so you can confirm the pipeline end
  * to end before writing any real content.
  */
@@ -232,6 +233,11 @@ fs.writeFileSync(path.join(dir, 'README.md'), [
   '',
 ].join('\n'));
 
+// A session working in this directory gets the README loaded for it, so the
+// README is the one place the site's rules are written down.
+fs.writeFileSync(path.join(dir, 'CLAUDE.md'),
+  'The rules for this site are in README.md in this directory. Read it before editing anything here.\n\n@README.md\n');
+
 config.sites.push({
   slug, name, emoji, tagline, dir: slug,
   build: ['node', 'scripts/build.mjs'],
@@ -296,6 +302,7 @@ console.log(`Scaffolded ${slug}/ and registered it.
   ${slug}/scripts/build.mjs     rendering  (writes to OUT_DIR)
   ${slug}/scripts/verify.mjs    deploy gate
   ${slug}/README.md             what the site is and how to work on it
+  ${slug}/CLAUDE.md             loads the README for a session working here
 
 Registered in three files:
   + sites.config.json

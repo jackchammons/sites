@@ -28,7 +28,7 @@ name: Research pizza buzz
 # A manual dispatch from a branch is a dry run: the agent runs and its output
 # is validated, applied and built on the runner, but nothing is committed.
 # That is how a change to a brief or to the prompt is tried before it merges.
-# The run finishing still fires publish.yml, which publishes main as usual.
+# publish.yml listens only for runs on main, so a dry run publishes nothing.
 on:
   schedule:
     - cron: '47 12 * * *'   # 30 min before publish.yml's cron, the fallback publish
@@ -68,8 +68,11 @@ jobs:
     steps:
       # Full history: next-task.mjs picks the day's task by the age of each
       # type's last successful pass, read from the data commits' subjects.
+      # The branch tip rather than the commit that triggered the run, so a run
+      # queued behind another sees the pass that one just committed.
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.ref }}
           fetch-depth: 0
 
       - uses: actions/setup-node@v4
@@ -120,9 +123,10 @@ jobs:
           fi
 
       # One task per run: the type whose last successful pass is oldest, out
-      # of discovery, locations, liveness, news and rating. next-task.mjs reads
-      # that from the data commits' subjects, so a failed day is retried next
-      # and a manual dispatch counts. Each brief is a short explicit worklist,
+      # of discovery, locations, liveness, news and rating, passing over any
+      # whose worklist is empty. next-task.mjs reads the dates from the data
+      # commits' subjects, so a failed day is retried next and a manual
+      # dispatch counts. Each brief is a short explicit worklist,
       # because letting the agent read the whole dataset and decide for itself
       # costs turns and context on a decision a sort makes better -- and
       # worklists are sized from measured timings (an entry whose website is
@@ -135,6 +139,8 @@ jobs:
         if: steps.gate.outputs.enabled == 'true'
         run: node pizza/scripts/next-task.mjs "${{ inputs.task || 'auto' }}"
 
+      # Only a forced type can come back empty; auto has already moved on to
+      # the next type that has work.
       - name: Nothing to research today
         if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip == 'true'
         run: echo "::notice::${{ steps.task.outputs.task }} has an empty worklist; the agent was not run."

@@ -27,10 +27,12 @@ on:
   # researched data reaches the site the same hour. The research commit itself
   # cannot do it: a push made with GITHUB_TOKEN never fires a push event, but
   # a workflow finishing is an event of its own. The name below is matched
-  # against research.yml's `name:`; change them together.
+  # against research.yml's `name:`; change them together. Runs on main only:
+  # a research run dispatched from a branch is a dry run that commits nothing.
   workflow_run:
     workflows: ["Research pizza buzz"]
     types: [completed]
+    branches: [main]
 
 concurrency:
   group: pages
@@ -81,10 +83,11 @@ jobs:
       - name: Refresh Seattle pizza buzz
         run: node pizza/scripts/fetch-buzz.mjs || echo "::warning::buzz sweep skipped"
 
-      # Fills lat/lon for any address that lacks them (one Nominatim request
-      # per second, cached into the dataset, so each address geocodes once,
-      # ever). Fail-soft: an address that will not geocode is skipped and the
-      # map renders without that marker.
+      # Fills lat/lon for any Seattle address that lacks them, the only ones
+      # the map plots (one Nominatim request per second, cached into the
+      # dataset, so an address is looked up until it resolves and never
+      # again). Fail-soft: an address that will not geocode is skipped and
+      # the map renders without that marker.
       - name: Geocode new addresses
         run: node pizza/scripts/geocode.mjs || echo "::warning::geocoding skipped"
 

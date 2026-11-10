@@ -131,6 +131,7 @@ test('the two doc tables gain a row and the workflow is left alone', t => {
   assert.ok(readme.startsWith(`# ${NAME}\n\n${TAGLINE}\n`));
   assert.ok(readme.includes('https://sites.example.com/rain-log/'));
   assert.ok(readme.includes('node rain-log/scripts/build.mjs               # writes dist/rain-log/'));
+  assert.ok(read(root, 'rain-log/CLAUDE.md').includes('\n@README.md\n'));
 });
 
 test('the CLAUDE.md row lands after the last one when the notes run long', t => {

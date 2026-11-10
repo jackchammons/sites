@@ -1,9 +1,24 @@
 # CLAUDE.md
 
 Static sites published together at **https://sites.jackhammons.com/**.
-Each site lives in a top-level directory and is served at `/<slug>/`.
+Each site lives in a top-level directory and is served at `/<slug>/`. Every site is
+plain Node with no dependencies. This file holds the rules that apply to the whole
+repo; each site's own rules are in its directory (see Sites below).
 
-## Adding a site (start here)
+## Check your work
+
+```bash
+node --test */test/*.test.mjs            # every unit test
+bash scripts/test/commit-data.test.sh    # the data-commit script, against scratch repos
+node pizza/scripts/check-dataset.mjs     # lint the pizza dataset
+node scripts/build-all.mjs               # build, verify, check and stamp every site -> dist/
+```
+
+This is what `ci.yml` runs on every branch push and what `publish.yml` runs before it
+builds for a deploy, so if it passes here the deploy gate passes. Node is 22 on a dev
+box and 24 in the workflows.
+
+## Adding a site
 
 ```bash
 node scripts/new-site.mjs <slug> "Name" "One-sentence tagline" [emoji] \
@@ -11,68 +26,84 @@ node scripts/new-site.mjs <slug> "Name" "One-sentence tagline" [emoji] \
 node scripts/build-all.mjs --only <slug>
 ```
 
-The scaffolder creates `<slug>/` with a build and verify that already honour the
-`OUT_DIR` contract, seeds `data/data.json`, and registers the site. What it generates
-builds and deploys as-is — run `build-all` once to confirm the pipeline before writing
-real content, then replace the data and the rendering in `<slug>/scripts/build.mjs`.
+The scaffolder creates `<slug>/` with a build and verify that honour the `OUT_DIR`
+contract, a README and a CLAUDE.md, seeds `data/data.json`, and registers the site in
+three files: `sites.config.json`, the README table and the Sites table below. What it
+generates builds and deploys as it stands; run `build-all` once to confirm the pipeline,
+then replace the data and the rendering in `<slug>/scripts/build.mjs`.
 
-Registering a site touches four files and the scaffolder patches all of them:
-`sites.config.json`, the `paths:` filter in `publish.yml`, the README table and the
-Sites table below. The doc tables are anchored on patterns that drift as they are
-edited, so a patch that misses warns and names what to add by hand — read its output
-rather than assuming silence means success.
-
-A site that isn't Node (see `odyssey-seats/`, which is Python) needs its own directory
-and a `build` command in the registry; the scaffolder only covers the Node case.
+The two doc tables are found by row shape, so a table that has drifted produces a
+warning naming the row to add by hand. Read the scaffolder's output. No workflow lists
+sites by name, so there is nothing to register there.
 
 ## Build
 
-```bash
-node scripts/build-all.mjs    # all sites -> dist/
-```
+`sites.config.json` is the registry. `build-all.mjs` validates it, then for each entry:
 
-`sites.config.json` is the registry. For each entry, `build-all.mjs` runs the site's
-`build` command with **`cwd` = the site's directory** and **`OUT_DIR` = `dist/<slug>/`**,
-then its `verify` command, then renders the landing page at `dist/index.html` — which
-includes a client-side search over each site's name, tagline, slug and cadence.
+1. runs the site's `build` with **`cwd` = the site's directory** and **`OUT_DIR` =
+   `dist/<slug>/`**;
+2. runs its `verify`;
+3. applies the checks every site must pass: `index.html` exists and has a title, no
+   `src` or `href` starts with `/` (it would 404 under `/<slug>/`; link to the index
+   with `../`), and every local file the HTML references was emitted;
+4. stamps every local script and stylesheet URL with a content hash (`./app.js?v=…`),
+   including import specifiers inside emitted scripts.
 
-`--only <slug>` and `--skip <slug>` narrow the run while iterating — `--skip
-odyssey-seats` is how you build anything at all on a machine without Playwright and
-Pillow, since one site's failure fails the whole run. Both are refused when `CI` is set:
-a Pages deploy replaces the entire site, so uploading a partial `dist/` would delete the
-sites left out.
+Then it renders the landing page (with a client-side search over each site's name,
+tagline, slug and cadence), `404.html`, `robots.txt`, `sitemap.xml`, `.nojekyll` and
+`CNAME`. If anything fails for any site the run exits non-zero with one line naming the
+site and the step.
 
-A single site can be built alone while iterating:
+`--only <slug>` and `--skip <slug>` narrow the run while iterating. Both are refused
+when `CI` is set: a Pages deploy replaces the entire site, so uploading a partial
+`dist/` would delete the sites left out.
 
-```bash
-node pizza/scripts/build.mjs                              # -> dist/
-OUT_DIR=/tmp/out python3 odyssey-seats/siff_seatmaps_v5.py --report-only
-```
+A site can be built alone: `node <slug>/scripts/build.mjs` writes `dist/<slug>/`.
+A site's `verify.mjs` expects that unstamped output, so do not point it at a
+`dist/<slug>/` that `build-all` has already stamped.
+
+## The OUT_DIR contract
+
+A site's build writes a complete static site into `OUT_DIR`, and into `dist/<slug>/`
+when the variable is unset. It clears the target first, and refuses to when the target
+holds the site's own source or is a non-empty directory that is not a previous build.
+
+Inside a site, reference assets by plain relative path (`./app.js`, `./styles.css`,
+`from './maths.js'`). Sites never version their own asset URLs: `build-all` does it,
+after verify. Pages serves everything with `max-age=600` and a page and its scripts
+expire separately, so without the stamp a returning visitor can pair new HTML with an
+old cached script and the page breaks on load.
 
 ## Publishing
 
-**Only `main` deploys.** `publish.yml` builds and uploads to Pages on a push to `main`
-(filtered by `paths:`), on its 13:17 UTC cron, and on manual dispatch. Work pushed to a
-branch publishes nothing, and nothing reports that: a change that looks finished but is
-invisible on the domain is almost always still sitting on a branch. Say what is merged,
-not what is written.
+**Only `main` deploys.** `publish.yml` runs on every push to `main` that is not
+documentation-only (`**/*.md`, `docs/**`, `.claude/**`), on its 13:17 UTC cron, on manual
+dispatch, and when a research run on `main` finishes. It has four jobs: `check` (calls
+`ci.yml`), `build`, `deploy`, and `data-commit`. Work pushed to a branch publishes
+nothing, and nothing reports that: a change that looks finished but is invisible on the
+domain is almost always still sitting on a branch. Say what is merged, not what is
+written.
 
 ```bash
-git checkout main && git merge <branch> && git push origin main   # this is what deploys
+git fetch origin && git checkout main && git pull --ff-only origin main
+git merge <branch> && git push origin main        # this is what deploys
 curl -s -o /dev/null -w '%{http_code}\n' https://sites.jackhammons.com/<slug>/
 ```
 
-Pages serves the new build about a minute after the run goes green — poll for the 200
-rather than reporting a merge as a deploy. Two things worth knowing before you push:
-the run rebuilds **every** site, so a site you cannot build locally can still fail the
-deploy for the one you changed; and `paths:` lists each site directory by name, so a
-slug missing from that list never redeploys, silently.
+Pull first: the workflows commit `pizza/data/*.json` to `main` every day, so a local
+`main` is usually behind, and those files should never be hand-edited on a stale
+checkout. Pages serves the new build about a minute after the run goes green; poll for
+the 200 rather than reporting a merge as a deploy. The run rebuilds **every** site, so a
+site you did not touch can still fail the deploy for the one you changed.
+
+Scheduled runs start hours late in practice (the 13:17 UTC cron has started between
+18:00 and 23:00 UTC). Nothing may depend on the time of day a workflow runs.
 
 ## Checking a site in a browser
 
 These pages are finished by the browser, so a build that verifies clean can still be
 visibly broken. Look at the page. Chromium and Playwright are installed
-(`PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers` — never run `playwright install`).
+(`PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers`; never run `playwright install`).
 
 ```bash
 node scripts/build-all.mjs --only <slug>
@@ -81,216 +112,61 @@ cd dist && python3 -m http.server 8099 &      # serve it: file:// hides subpath 
 
 Drive it with `require('/opt/node22/lib/node_modules/playwright')` against
 `http://localhost:8099/<slug>/`, and vary the context: `colorScheme` (both palettes are
-defined), `locale`, `timezoneId`. That is not thoroughness for its own sake — it is how
-the clock's `Intl` crash on an `en-US@posix` locale tag was found, which no build check
-would have caught.
+defined), `locale`, `timezoneId`, a phone-width viewport. That is how the clock's `Intl`
+crash on an `en-US@posix` locale tag was found, which no build check would have caught.
 
 The browser cannot reach the public internet from here. Outbound HTTPS goes through the
 agent proxy and Chromium is not configured for it, so `page.goto` on a live URL fails
 with `ERR_CONNECTION_RESET` while `curl` on the same URL returns 200. To check what is
 actually deployed, `curl` the files down and serve them locally.
 
-## The OUT_DIR contract
-
-A site's build script must write a complete static site into `OUT_DIR`, defaulting to its
-own local dir when the variable is unset. Optional config fields cover common cases:
-
-- `indexFrom` — promote this file to `index.html` if the build doesn't emit one directly.
-- `emptyIndex` — render a styled placeholder if the build legitimately produced nothing
-  (e.g. a scraper found no data). Only applies when the build **succeeded**.
-
-Use **relative asset paths** (`./app.js`) inside a site so it works under its subpath.
-
 ## Sites
 
-| Slug | Dir | Stack | Notes |
+Read a site's `README.md` before editing it: it holds that site's rules and is loaded
+by the `CLAUDE.md` beside it. The pizza site has a long `pizza/CLAUDE.md` of its own.
+
+| Slug | Dir | Stack | What it is |
 |---|---|---|---|
-| `pizza` | `pizza/` | Node, no deps | `src/slice.js` is the ranking algorithm, run at build time only; the page has no reader re-weighting (removed by request — every card explains its inputs instead). `verify.mjs` gates the deploy. `fetch-buzz.mjs` (keyless) refreshes `data/` before the build and fails soft. Graded factors are write-once with provenance — never overwrite them from a script. |
-| `odyssey-seats` | `odyssey-seats/` | Python, Playwright + Pillow | Scrapes SIFF's **dedicated 70mm page** (`MAIN_URL`), so every showtime found is 70mm and there is no date filter to maintain. Writes `report.html`, promoted to `index.html`. Needs `pip install playwright pillow` + `playwright install chromium`. |
-| `clock` | `clock/` | Node, no deps | Nothing time-dependent is rendered at build time — a baked-in figure would be wrong by however long ago the deploy ran. `build.mjs` emits a shell of ID'd slots and `src/app.js` fills every one from the viewer's device clock and Intl zone data. `verify.mjs` checks that each `$('...')` lookup in the script matches an `id` in the markup, since a typo there breaks only the browser. |
-| `mortgage` | `mortgage/` | Node, no deps | Computed entirely in the browser. `src/mortgage.js` is the maths, imported by `app.js`, `test/mortgage.test.mjs` and `verify.mjs` (which runs it from the *built* copy) — one implementation, don't fork it. Defaults live in `data/defaults.json` and are inlined as JSON; the rate there is an example, not a quote, and the page says so. Nothing date-dependent is baked in: the start month defaults to the viewer's next month. Inputs round-trip through the URL hash. There is no method section on the page (removed on request); the maths is documented only in `src/mortgage.js` comments and the tests. |
-| `life` | `life/` | Node, no deps | Conway's Game of Life on a full-viewport canvas: white page, grey grid, black tiles. Nothing is decided at build time; `build.mjs` emits one empty canvas and `src/app.js` seeds at random on load and steps at 10 generations/s. `src/life.js` is the rules (torus wrap), imported by both `app.js` and `verify.mjs` (which runs it from the *built* copy against a blinker, block and glider) — one implementation, don't fork it. Resize keeps the cells that still fit; only new territory is reseeded. |
-| `screen` | `screen/` | Node, no deps | TV/projector sizing, computed in the browser. `src/screen.js` holds the maths and every standard as a constant (THX/SMPTE angles, ITU picture heights, brightness targets, comfort angles), imported by `app.js`, `test/screen.test.mjs` and `verify.mjs` (which runs it from the *built* copy) — one implementation, don't fork it. There is no method section on the page (removed on request); the footer credits the Cambridge paper and the maths is documented only in `src/screen.js` comments and the tests. Lengths are inches internally and in the URL hash; field values must never go through `Intl` (a locale's `3,66` reads back as 366). The lanes chart lays labels beside bands on wide screens and above them under 560px. The eye-limit model (`EYE_LIMIT`, `noticeFraction`, `limitResolution`) is the fit from Cambridge's display calculator (Ashraf, Chapiro & Mantiuk 2025); `test/screen.test.mjs` pins it to cells of their published matrix, so a change that moves the median off ~95 px/° or the 95th percentile off ~113 fails the build. **The grading rules live in `app.js`, which no unit test sees**: `test/browser-sweep.mjs` (Playwright, dev box only) drives the built page through ~330 states and checks every shown figure and colour plus cross-fact consistency (headline and vertical grades agree on 16:9; pixel, eye and 20/20 facts agree; table "you" rows match the headline). Run it before changing a rule — the vertical angle was graded against the ITU 1.5H resolution distance for a week and could never turn green. Fields the page fills itself keep their exact value (`exact` map) until edited, so hash loads and unit switches do not drift. |
-| `words` | `words/` | Node, no deps | A word counter, computed entirely in the browser as the viewer types. `src/count.js` holds the counting rules (what a word, sentence, paragraph and line are; stop words; reading and speaking rates), imported by `app.js`, `test/count.test.mjs` and `verify.mjs` (which runs it from the *built* copy against known text) — one implementation, don't fork it. `build.mjs` renders a shell of ID'd slots from a `MARKS` list and inlines `data/data.json` (sample passage, rates) as JSON; every `s-*` slot must be filled by `app.js` and the verifier checks both directions. Characters are code points, not UTF-16 units. The page opens with the sample passage so it is not blank; the footer restates the counting rules in plain words, so a change to a rule in `count.js` needs the `note` in `data.json` changed with it. |
+| `pizza` | `pizza/` | Node, no deps | Seattle pizzerias ranked by a published method, rebuilt daily from data a research agent maintains. |
+| `clock` | `clock/` | Node, no deps | A live clock; the build emits a shell and the browser fills every figure. |
+| `mortgage` | `mortgage/` | Node, no deps | A mortgage calculator computed entirely in the browser. |
+| `life` | `life/` | Node, no deps | Conway's Game of Life on a full-viewport canvas. |
+| `screen` | `screen/` | Node, no deps | TV and projector sizing, computed in the browser. |
+| `words` | `words/` | Node, no deps | A word counter, computed in the browser as the viewer types. |
+
+The browser-computed sites share one pattern: a single module holds the logic
+(`mortgage.js`, `screen.js`, `count.js`, `life.js`), imported by the page's `app.js`, by
+the unit tests, and by `verify.mjs` from the *built* copy. One implementation; never
+fork it. Nothing date-dependent is baked in at build time, because a baked-in figure is
+wrong by however long ago the deploy ran.
 
 ## Things that will bite you
 
-- **Pushing to a branch publishes nothing.** Only `main` deploys — see Publishing above.
-  Verify with a `curl` against the live URL before calling a site shipped: `clock/` was
-  built, verified and pushed to a branch, and reported as done while the domain 404'd.
+- **Pushing to a branch publishes nothing.** Only `main` deploys. Verify with a `curl`
+  against the live URL before calling a site shipped: `clock/` was built, verified and
+  pushed to a branch, and reported as done while the domain 404'd.
 - **A Pages deploy replaces the entire site.** Never add a second workflow that calls
-  `deploy-pages` — it would delete the other sites' output. `publish.yml` is the only
-  workflow allowed to deploy. `research.yml` exists alongside it and only commits data.
-  Its commit does **not** trigger `publish.yml`: a push made with `GITHUB_TOKEN` never
-  fires another workflow, which is GitHub's anti-recursion rule and not something a
-  `paths:` filter can work around. The cadence is what connects them -- `research.yml`
-  runs at 12:47 UTC and `publish.yml`'s cron at 13:17 UTC, half an hour later, checking
-  out whatever research just committed. Keep that ordering if you change either cron;
-  to see a research commit on the site sooner, dispatch `publish.yml` by hand.
-- **Agents stay out of the deploy path.** `research.yml` runs the Claude Code Action to write
-  `pizza/data/research.json` (news, mentions, locations, status, directory, factorRatings, factorSources, ratingSkipped, facts, factsSkipped, newAttributes, links, candidateReview), gated behind
-  `CLAUDE_CODE_OAUTH_TOKEN`. `verify-research.mjs` validates it and `apply-research.mjs` then
-  applies the validated sections to `restaurants.json`. The agent's write grant is scoped to
-  `research.json` (`Edit(pizza/data/research.json)` in `research.yml`) and a guard step fails the
-  run if `git status` shows any other path, so the gate is a control, not a prompt sentence.
-  `research.yml` also builds and verifies the page before committing, so a data shape the
-  renderer cannot handle turns the research run red instead of the next three publishes. If it hangs or fails, the site still publishes.
-- **SLICE v2: three factors are computed, two are editorial.** Reputation (longevity ×3,
-  review volume ×2, coverage ×1, combined as the best weighted mean over the components present
-  so added evidence never lowers it; with no component the factor is unmeasured and its weight is
-  shared by the other four), critical reception
-  (critic base + recency-weighted mention boost capped at +1.5) and value ((craft+critical)/2
-  × price multiplier) derive at build time in `slice.js` — never store them. Craft and
-  distinctiveness live in `factors` with provenance (`setBy`, `source`, `date`). The
-  methodology section publishes every constant; change a formula and the page copy in
-  `build.mjs` must change with it.
-- **Two dates on a status.** `statusDate` is when a status took effect, as the source reports
-  it, and stays `null` when the source does not say; `statusDetected` is the day the pass
-  recorded it. Only `statusDate` is ever printed as "since" or as a closure year; the radar
-  labels a dated-by-detection closure as "closure reported". Writing the detection day into
-  `statusDate` published a March 2024 closure as a 2026 one.
-- **Freshness is the newest verification of any kind.** `verifiedDate()` in `slice.js` reads
-  `statusChecked`, `locationsVerified`, `lastVerified` and the graded factors' dates; decay
-  runs from the newest. Before this, only the rating apply wrote the clock, so the founding
-  entries decayed to the cap and nothing could reset them.
-- **Snapshots carry `algorithm`.** `ALGORITHM` in `slice.js` is stamped on every weekly snapshot;
-  bump it when a formula changes. The record chart draws a rule at a change and the evidence
-  line says "the scoring method changed" instead of inventing a cause. Only `publish.yml`
-  writes the snapshot (`SNAPSHOT=1`); a local or CI build must not move the baseline.
-- **`ci.yml` runs tests, lint, build and verify on every non-main push.** Push a branch before
-  merging; a red CI there is the check `main` never had.
-- **The top ten is computed, not stored.** `splitTiers()` publishes the ten highest-scoring
-  entries with `status: "open"`; anything else is held out whatever it scores. There is no
-  bench: ranks 11+ render in the directory table. `isRated()` decides who competes — craft +
-  distinctiveness + criticScore present.
-- **The rating task is how discoveries join the ranking.** `factorRatings` proposals carry
-  craft, distinctiveness AND criticScore (all three are required by `isRated()` — the older
-  `factors` path writes only the first two and can never make an entry rankable), plus
-  opened/priceIndex/styleGroup when derivable, with 1–4 read sources. The validator refuses
-  proposals for already-rated entries; ratings are never overwritten by the agent. An unrated
-  entry with no findable critical coverage is a deliberate terminal state, not a bug.
-- **Seattle is the inclusion rule.** An entry qualifies by having at least one location
-  inside Seattle city limits (the discovery brief enforces it). Suburban branches of a
-  qualifying chain are kept in `locations[]` and listed in the directory, but the map plots
-  Seattle addresses only — matched by `, Seattle, WA` in the address string.
-- **One database, three statuses.** `restaurants.json` holds every pizzeria on file:
-  `open`, `opening` (the radar), `closed` (struck through in the directory, held out of the
-  ranking, listed under recently-closed for six months). `attributes` is a flexible flag map;
-  its registry (`data/attributes.json`) carries label + frictionCost per key, and the agent
-  can add new keys through the validated `newAttributes` section.
-- **What the agent may write, all through verify-research.mjs → apply-research.mjs:**
-  locations (+homepage), status changes (citation required; review-site labels are a lead,
-  not evidence), new directory entries (fuzzy-name dedup blocks variants like "Zeeks Pizza
-  Co"), mentions (feed reputation and the critical boost), factor proposals (0–10 in 0.5
-  steps, FILL GAPS ONLY — the validator rejects any overwrite of an existing rating — and
-  need at least one source that is published criticism, not the pizzeria's own site, an
-  aggregator or social), `ratingSkipped` (an attempt that found no coverage; the entry waits 90
-  days before the rating worklist redraws it), `factorSources` (citations attached to a rating already on file, values untouched — the
-  only agent write that touches `factors`, and it appends to `sources` only), `facts` (`opened`/`priceIndex`, fill-gaps-only,
-  with the page that states them; `factsSkipped` records an attempt that found no page, so the
-  worklist moves on and retries after 90 days), newAttributes, and links. **Records are rejected one at a
-  time**: `verify-research.mjs` drops the records that fail, emits a workflow warning per drop,
-  writes the accepted set back to `research.json`, and fails the run only on a structural
-  problem (not an object, a section over its cap, a retired channel). A closure citing only a
-  review site or listing is one of the rejected shapes.
-- **`links` is the one channel for web presence.** `{id, website?, instagram?, source}`:
-  instagram must be a real `https://instagram.com/<handle>` profile URL the agent saw
-  linked or named somewhere (never guessed — plausible handles are fan pages and
-  namesakes); it is updatable on apply. `website` fills `url` only when the entry has
-  none — the locations pass owns correcting an existing official site — and for a place
-  with no site of its own it carries the best canonical link (often the Instagram).
-  `nameLink()` renders `url ?? instagram`, so a backfilled entry is always clickable.
-- **The agent runs one task per day**, picked by `next-task.mjs` as the type whose last
-  successful pass is oldest (read from the `chore(data): research pass (<type>)` commit
-  subjects; `research.yml` checks out full history for this), so a failed day is retried
-  next and a dispatch counts: discovery, locations, liveness, news, rating. The locations
-  brief also collects Instagram links and `facts` from the official sites it is already
-  reading; the rating brief files every review it cites as a mention. A manual dispatch can
-  force a type via the workflow's `task` input — including the dispatch-only `social`
-  (Instagram/website backfill), `census` (candidates-queue verification), `facts` (founding
-  year and price tier for entries missing them) and `coverage` (mentions up to 24 months
-  back, fewest-first) and `sources` (published criticism attached to the founding
-  ratings, five per run, values never changed) tasks, never in the rotation — which is how backfills work. A task
-  whose worklist is empty sets `skip=true` and the agent step does not run.
-- **Liveness is ordered by age of last check.** Never-checked first, then oldest; the
-  preference for openings and no-site entries applies only past a 14-day revisit window, and a
-  closure recorded in the last 90 days is re-confirmed once. The old tier-first sort pinned
-  the same four entries into four of six slots on every pass. Briefs are code (in `next-task.mjs`); the fixed rules and
-  schema live in `research.yml` so no task can drop them.
-- **The candidates queue is the discovery funnel's registry top.**
-  `data/candidates.json` is seeded by `scripts/fetch-candidates.mjs` from King County
-  food-establishment permit data (Socrata `r878-4sxa`; every operating restaurant holds
-  a permit — ground truth for "exists", including places with no web presence) plus
-  OpenStreetMap via Overpass when reachable. Candidates are LEADS, never entries: the
-  `census` task verifies each through the normal `directory` channel, or records why it
-  does not belong via `candidateReview` ({name (exact worklist name), verdict
-  closed|chain|not-pizza|duplicate|unverifiable, note, source?}) so resolved ghosts stop
-  re-entering worklists; same-name candidates are branches and one record covers them
-  all. Resolutions survive seed refreshes; anything matching a dataset entry
-  auto-promotes (pure logic in `src/census.js`, tested). The directory publishes the
-  coverage numbers (verified / pending / chains-excluded) and the inclusion rule:
-  pizza-forward, Seattle location, national chains excluded by policy. Refresh the seed
-  with `node pizza/scripts/fetch-candidates.mjs` when the queue runs dry.
-- **Crowd STAR ratings stay frozen; review counts are used.** Yelp 403s automated reads and
-  no API key is in use, so the stored star figures cannot refresh and are display-only. The
-  review COUNT does feed reputation — a count is durable in a way an average is not. Do not
-  reintroduce a star-rating pipeline; three runs burned their budget rediscovering the 403.
-- **Locations carry lat/lon once geocoded.** `geocode.mjs` (publish.yml) fills them via
-  Nominatim at 1 req/sec, cached forever; `apply-research.mjs` preserves coordinates for
-  unchanged addresses when a location set is re-verified. Leaflet is vendored in
-  `pizza/src/vendor/` and loads as a plain script tag — it is outside the ES import graph,
-  so verify.mjs checks it explicitly.
-- **Set exactly one research credential.** `research.yml` accepts either
-  `CLAUDE_CODE_OAUTH_TOKEN` (subscription pool, from `claude setup-token`) or
-  `ANTHROPIC_API_KEY` (metered API credits). If both are set the API key wins the credential
-  chain, so you pay per token while the subscription allowance goes unused — the gate step
-  emits a workflow warning when it sees both.
-- **The research agent works; here is what it took.** Six runs failed on the turn ceiling
-  (12, 28, 30, 30, 45, 55) and four blind tunes fixed none of them. `show_full_output`
-  found it in one run: the prompt named `verify-research.mjs`, so the agent tried to run
-  it, had no `Bash` tool, was denied four times and stopped to ask a human for approval in
-  an unattended job. **Never mention a script the agent cannot run.** Three things keep it
-  green now — the prompt says to run nothing and that a later step validates; a 15-search
-  budget bounds the turns, which otherwise scaled with how much news existed that day; and
-  the agent step is `continue-on-error` with the *next* step deciding the run, so an
-  overrun cannot discard a file that was already written. A clean pass is ~3 minutes and
-  $0.62 to $1.07 of plan allowance (21 to 48 turns, measured Sep 2026).
-- **Two things the first green run then exposed**, both worth knowing before touching this
-  path. `build.mjs` read `research.items` while the agent writes `research.news`, so every
-  researched story was validated, committed and silently dropped — the candidates half kept
-  working, which is what hid it. And a research commit does **not** trigger `publish.yml`:
-  a push made with `GITHUB_TOKEN` never fires another workflow. That commit step also needs
-  an explicit token, because the Claude action revokes the one `checkout` persisted.
-  The daily site update still does not depend on the agent — `fetch-buzz.mjs` in
-  `publish.yml` is keyless and is what keeps the buzz section current on its own.
-- **Locations are verified data; `neighborhood` is not.** `locations[]` on each restaurant
-  is written only by `apply-research.mjs`, from an agent pass that read the pizzeria's own
-  locations page, and carries a street address per branch. `neighborhood` is the original
-  editorial string and stays as the fallback until a real set lands. Three entries stored
-  placeholders there ("Multiple locations", "Citywide"), flagged with
-  `neighborhoodIsPlaceholder` so the locations worklist in `next-task.mjs` puts them first and the page shows
-  "Several locations" instead of pretending they are neighborhoods. Never render
-  `r.neighborhood` directly — use `locationLabel(r)` from `src/locations.js`, which is what
-  the static build calls.
-- **Addresses are the one factual field an agent may write.** They are published by the
-  business itself on a page that serves to anyone, so they are checkable — unlike crowd
-  ratings (403, frozen) and pillar scores (editorial, no script writes them). The validator
-  rejects an address that does not start with a street number, is outside Washington or the
-  Seattle metro, or repeats a branch. The agent verifies five per run, worst first, so all
-  25 are covered in five days and the budget stays bounded.
+  `deploy-pages`; it would delete the other sites' output. `publish.yml` is the only
+  workflow allowed to deploy.
 - **If any site's build fails, the whole run fails and nothing deploys.** This is
-  deliberate: the previous deploy stays live instead of publishing a half-built site.
+  deliberate: the previous deploy stays live instead of a half-built site.
+- **`ci.yml` is the one definition of the checks**, and it lists no site or test file by
+  name. It runs on every branch push; `publish.yml` calls it as its `check` job, so
+  nothing deploys from `main` unless the same checks pass in that run.
+- **Data commits are off the deploy's critical path.** The build job commits refreshed
+  pizza data with `scripts/commit-data.sh`. If that push fails the site still deploys
+  and the `data-commit` job turns the run red. The script pushes only the one commit it
+  makes and refuses a checkout that is ahead of `main`.
+- **Only `main` commits data or deploys.** A manual dispatch of `publish.yml` on a branch
+  runs the checks and the build and stops. A manual dispatch of `research.yml` on a
+  branch is a dry run that commits nothing and triggers no publish.
+- **Third-party text must not be able to fail the deploy.** Feed headlines and
+  agent-written notes reach the pizza page daily. Verifiers test visible text for
+  `undefined`/`NaN`, never raw bytes: a news URL contains those letters often enough.
 - **Enabling Pages cannot be automated.** A workflow's `GITHUB_TOKEN` is refused on the
-  Pages *create* API (`Resource not accessible by integration`) regardless of repo
-  visibility, and the Claude GitHub App has no Administration or Pages permission. It is
-  a one-time manual step per repo — which is the reason sites live here as subdirectories
-  instead of in separate repos.
+  Pages *create* API regardless of repo visibility, and the Claude GitHub App has no
+  Administration or Pages permission. It is a one-time manual step per repo, which is
+  the reason sites live here as subdirectories instead of in separate repos.
 - **One custom domain per repo.** A `CNAME` applies to the whole Pages site, not per
-  subdirectory. See README for the workaround.
-- **Don't commit `dist/`** — it's generated and gitignored.
-- SIFF lists this film on two pages, digital and 70mm. If the seat-map site goes empty,
-  check `MAIN_URL` still resolves before assuming the engagement ended — the pages were
-  split once already and the old code silently matched nothing for weeks.
-- Weekly data snapshots (`*/data/history.json`) are keyed by ISO week, so the daily
-  workflow overwrites the current week rather than appending. Don't switch that back to
-  date keys — and it keeps working if the cron changes again.
+  subdirectory. `build-all` writes it from `customDomain` in the registry.
+- **Don't commit `dist/`.** It is generated and gitignored.
