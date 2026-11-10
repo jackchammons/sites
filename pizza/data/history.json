@@ -6484,36 +6484,36 @@
     },
     {
       "weekKey": "2026-W46",
-      "date": "2026-11-09",
+      "date": "2026-11-10",
       "week": 46,
       "algorithm": "SLICE v2.1",
       "ranks": {
         "delancey": 1,
-        "a-k-pizza": 2,
-        "windy-city-pie": 3,
+        "windy-city-pie": 2,
+        "a-k-pizza": 3,
         "big-marios": 4,
-        "serious-pie": 5,
-        "dinos-tomato-pie": 6,
-        "tutta-bella": 7,
-        "via-tribunali": 8,
-        "humble-pie": 9,
+        "humble-pie": 5,
+        "serious-pie": 6,
+        "dinos-tomato-pie": 7,
+        "tutta-bella": 8,
+        "via-tribunali": 9,
         "cornelly": 10,
         "proletariat-pizza": 11,
         "ballard-pizza-co": 12,
         "pagliacci": 13,
-        "zeeks-pizza": 14,
-        "veraci-pizza": 15,
-        "slice-box": 16,
-        "talaricos": 17,
-        "lupo": 18,
-        "pizzeria-22": 19,
-        "pegasus-pizza": 20,
-        "hot-mamas-pizza": 21,
-        "mioposto": 22,
-        "roccos": 23,
-        "west-of-chicago-pizza-company": 24,
-        "stevies-famous": 25,
-        "post-alley-pizza": 26,
+        "slice-box": 14,
+        "zeeks-pizza": 15,
+        "veraci-pizza": 16,
+        "pegasus-pizza": 17,
+        "talaricos": 18,
+        "roccos": 19,
+        "lupo": 20,
+        "pizzeria-22": 21,
+        "post-alley-pizza": 22,
+        "hot-mamas-pizza": 23,
+        "mioposto": 24,
+        "west-of-chicago-pizza-company": 25,
+        "stevies-famous": 26,
         "moto-pizza": 27,
         "good-shape-pizza": 28,
         "my-friend-dereks": 29,
@@ -6557,32 +6557,32 @@
       },
       "scores": {
         "delancey": 90.1,
-        "a-k-pizza": 86.4,
-        "windy-city-pie": 86.1,
+        "windy-city-pie": 88,
+        "a-k-pizza": 86.3,
         "big-marios": 85.8,
+        "humble-pie": 85.7,
         "serious-pie": 85.1,
         "dinos-tomato-pie": 84.9,
-        "tutta-bella": 84.4,
+        "tutta-bella": 84.3,
         "via-tribunali": 84,
-        "humble-pie": 83.9,
         "cornelly": 83.3,
         "proletariat-pizza": 83,
         "ballard-pizza-co": 82.2,
         "pagliacci": 81.9,
+        "slice-box": 81.3,
         "zeeks-pizza": 80.7,
-        "veraci-pizza": 80.1,
-        "slice-box": 79.6,
-        "talaricos": 78.9,
+        "veraci-pizza": 80,
+        "pegasus-pizza": 79.9,
+        "talaricos": 78.8,
+        "roccos": 78.7,
         "lupo": 78.6,
         "pizzeria-22": 78.4,
-        "pegasus-pizza": 78.2,
-        "hot-mamas-pizza": 78.1,
+        "post-alley-pizza": 78.1,
+        "hot-mamas-pizza": 78,
         "mioposto": 77.7,
-        "roccos": 77.1,
         "west-of-chicago-pizza-company": 76.6,
-        "stevies-famous": 76.5,
-        "post-alley-pizza": 76.4,
-        "moto-pizza": 75.7,
+        "stevies-famous": 76.4,
+        "moto-pizza": 75.6,
         "good-shape-pizza": 75.5,
         "my-friend-dereks": 75.1,
         "cornuto-pizzeria": 74.4,
@@ -6606,7 +6606,7 @@
         "belltown-pizza": 65.3,
         "in-pizza-we-crust": 65.1,
         "sopranos-antico": 65,
-        "pazzos-on-eastlake": 64.1,
+        "pazzos-on-eastlake": 64,
         "pizza-ritual": 63.6,
         "coltiva-pizzeria-e-barra": 63.2,
         "veras-pizza-and-bar": 61.2,
@@ -6619,8 +6619,8 @@
         "sinners-pizza": 40.2,
         "mad-pizza": 36,
         "breezy-town-pizza": 86.4,
-        "independent-pizzeria": 85.9,
-        "pizzeria-gabbiano": 82.4,
+        "independent-pizzeria": 85.8,
+        "pizzeria-gabbiano": 82.3,
         "flying-squirrel": 81.4
       },
       "factors": {
@@ -6632,14 +6632,6 @@
           "value": 8.7,
           "penalty": 1.8
         },
-        "a-k-pizza": {
-          "reputation": 0,
-          "critical": 8.9,
-          "craft": 8.5,
-          "distinctiveness": 8.5,
-          "value": 8.7,
-          "penalty": 0
-        },
         "windy-city-pie": {
           "reputation": 8.6,
           "critical": 9.5,
@@ -6648,6 +6640,14 @@
           "value": 8.5,
           "penalty": 3.3
         },
+        "a-k-pizza": {
+          "reputation": 0,
+          "critical": 8.9,
+          "craft": 8.5,
+          "distinctiveness": 8.5,
+          "value": 8.7,
+          "penalty": 0
+        },
         "big-marios": {
           "reputation": 10,
           "critical": 8.2,
@@ -6655,6 +6655,14 @@
           "distinctiveness": 7.2,
           "value": 9.7,
           "penalty": 0.4
+        },
+        "humble-pie": {
+          "reputation": 9.5,
+          "critical": 8.2,
+          "craft": 8.4,
+          "distinctiveness": 8.6,
+          "value": 8.7,
+          "penalty": 1.3
         },
         "serious-pie": {
           "reputation": 10,
@@ -6688,14 +6696,6 @@
           "value": 7.6,
           "penalty": 0
         },
-        "humble-pie": {
-          "reputation": 9.5,
-          "critical": 8.2,
-          "craft": 8.4,
-          "distinctiveness": 8.6,
-          "value": 8.7,
-          "penalty": 1.3
-        },
         "cornelly": {
           "reputation": 7,
           "critical": 9.4,
@@ -6728,6 +6728,14 @@
           "value": 8.3,
           "penalty": 0
         },
+        "slice-box": {
+          "reputation": 8.3,
+          "critical": 7.8,
+          "craft": 8,
+          "distinctiveness": 8.8,
+          "value": 8.3,
+          "penalty": 0.8
+        },
         "zeeks-pizza": {
           "reputation": 10,
           "critical": 7.2,
@@ -6744,13 +6752,13 @@
           "value": 7.9,
           "penalty": 0
         },
-        "slice-box": {
-          "reputation": 8.3,
-          "critical": 7.8,
-          "craft": 8,
-          "distinctiveness": 8.8,
-          "value": 8.3,
-          "penalty": 0.8
+        "pegasus-pizza": {
+          "reputation": 10,
+          "critical": 7.3,
+          "craft": 7.4,
+          "distinctiveness": 7,
+          "value": 7.7,
+          "penalty": 0
         },
         "talaricos": {
           "reputation": 0,
@@ -6758,6 +6766,14 @@
           "craft": 7.5,
           "distinctiveness": 8.2,
           "value": 8.9,
+          "penalty": 0.4
+        },
+        "roccos": {
+          "reputation": 9.3,
+          "critical": 7.5,
+          "craft": 7.6,
+          "distinctiveness": 7,
+          "value": 7.9,
           "penalty": 0.4
         },
         "lupo": {
@@ -6776,12 +6792,12 @@
           "value": 7.9,
           "penalty": 0
         },
-        "pegasus-pizza": {
+        "post-alley-pizza": {
           "reputation": 10,
-          "critical": 7.3,
-          "craft": 7.4,
-          "distinctiveness": 7,
-          "value": 7.7,
+          "critical": 7.2,
+          "craft": 7.3,
+          "distinctiveness": 6.4,
+          "value": 7.6,
           "penalty": 0
         },
         "hot-mamas-pizza": {
@@ -6800,14 +6816,6 @@
           "value": 7.5,
           "penalty": 0
         },
-        "roccos": {
-          "reputation": 9.3,
-          "critical": 7.5,
-          "craft": 7.6,
-          "distinctiveness": 7,
-          "value": 7.9,
-          "penalty": 0.4
-        },
         "west-of-chicago-pizza-company": {
           "reputation": 0,
           "critical": 7.5,
@@ -6822,14 +6830,6 @@
           "craft": 7.5,
           "distinctiveness": 7,
           "value": 7.8,
-          "penalty": 0
-        },
-        "post-alley-pizza": {
-          "reputation": 10,
-          "critical": 7.2,
-          "craft": 7.3,
-          "distinctiveness": 6.4,
-          "value": 7.6,
           "penalty": 0
         },
         "moto-pizza": {
