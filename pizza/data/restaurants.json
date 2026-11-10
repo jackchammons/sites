@@ -88,7 +88,7 @@
           "kind": "mention"
         }
       ],
-      "statusChecked": "2026-08-26",
+      "statusChecked": "2026-11-10",
       "instagram": "https://www.instagram.com/windycitypie/"
     },
     {
@@ -1845,7 +1845,8 @@
       },
       "mentions": [],
       "instagram": "https://www.instagram.com/humblepie_seattle/",
-      "openedSource": "https://dailyhive.com/seattle/seattle-humble-pie-pizza"
+      "openedSource": "https://dailyhive.com/seattle/seattle-humble-pie-pizza",
+      "statusChecked": "2026-11-10"
     },
     {
       "id": "pizzeria-gabbiano",
@@ -1953,7 +1954,8 @@
       },
       "mentions": [],
       "instagram": "https://www.instagram.com/postalleypizza/",
-      "openedSource": "https://en.wikipedia.org/wiki/Post_Alley_Pizza"
+      "openedSource": "https://en.wikipedia.org/wiki/Post_Alley_Pizza",
+      "statusChecked": "2026-11-10"
     },
     {
       "id": "pegasus-pizza",
@@ -2027,7 +2029,8 @@
         }
       ],
       "instagram": "https://www.instagram.com/pegasuspizzaseattle",
-      "openedSource": "https://www.westsideseattle.com/node/39072"
+      "openedSource": "https://www.westsideseattle.com/node/39072",
+      "statusChecked": "2026-11-10"
     },
     {
       "id": "slice-box",
@@ -2095,7 +2098,8 @@
       },
       "mentions": [],
       "instagram": "https://www.instagram.com/sliceboxpizza_sodo/",
-      "openedSource": "https://seattlemag.com/food-and-culture/serious-wave-new-pizza-restaurants-has-hit-seattle-recently/"
+      "openedSource": "https://seattlemag.com/food-and-culture/serious-wave-new-pizza-restaurants-has-hit-seattle-recently/",
+      "statusChecked": "2026-11-10"
     },
     {
       "id": "roccos",
@@ -2163,7 +2167,8 @@
       },
       "mentions": [],
       "instagram": "https://www.instagram.com/roccos_seattle/",
-      "openedSource": "https://www.roccosseattle.com"
+      "openedSource": "https://www.roccosseattle.com",
+      "statusChecked": "2026-11-10"
     },
     {
       "id": "my-friend-dereks",
