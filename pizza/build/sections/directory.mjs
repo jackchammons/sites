@@ -1,6 +1,7 @@
 import { esc, nameLink, shortDate, srcLink, srcLinks } from '../html.mjs';
 import { locationLabel } from '../../src/locations.js';
 import { coverageStats } from '../../src/census.js';
+import { isLaunchRating } from '../../src/slice.js';
 
 export function directorySection(ctx) {
   const { dataset, allScored, candidates } = ctx;
@@ -66,14 +67,15 @@ const detailHtml = r => {
    * line, instead of the same paragraph three times. Factors whose provenance
    * differs fall back to a row each.
    *
-   * A date and an author are printed only for a factor the agent set: there
-   * the date is the day the rating was read from the sources beside it. Any
-   * other factor shows the sources on file for it, if there are any, and
-   * nothing about how or when its value was arrived at. */
+   * A date and an author are printed only for a rating the agent set: there
+   * the date is the day the rating was read from the sources beside it. A
+   * launch rating shows the sources on file for it, if there are any, and
+   * nothing about how or when its values were arrived at. */
+  const agentSet = !isLaunchRating(r);
   const provenanceOf = f => {
     const srcs = f.sources?.length ? f.sources : f.source ? [f.source] : [];
     const from = srcs.length ? srcLinks(srcs) : '';
-    const set = f.setBy === 'agent'
+    const set = agentSet
       ? `set by the research agent${f.date ? ` ${esc(shortDate(f.date))}` : ''}${from ? ` from ${from}` : ''}`
       : '';
     return {

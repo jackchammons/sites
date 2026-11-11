@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { evidenceFor } from '../build/evidence.mjs';
+import { applyResearch } from '../scripts/apply-research.mjs';
+import { rank, isLaunchRating } from '../src/slice.js';
 
 const NOW = new Date('2026-08-30T12:00:00Z');
 const FS = { reputation: 8.0, critical: 7.0, craft: 7.0, distinctiveness: 7.0, value: 7.0 };
@@ -68,6 +70,7 @@ test('a rating the agent replaced inside the snapshot gap reads as re-rated, wit
   // The same entry after a pass replaced all three factors two days ago.
   const sources = ['https://rev.example/review', 'https://paper.example/roundup', 'https://rev.example/second'];
   const after = entry({
+    verified: { date: '2026-08-28', source: 'rating' },
     factorScores: { ...FS, craft: 8.0, distinctiveness: 8.5, critical: 8.5 },
     factors: graded({ setBy: 'agent', date: '2026-08-28', source: sources[0], sources, note: 'What the coverage says.' },
       [8.0, 8.5, 8.5])
@@ -83,6 +86,9 @@ test('a rating the agent replaced inside the snapshot gap reads as re-rated, wit
   assert.match(html, />rev\.example<\/a>, .*>rev\.example \(2\)<\/a>/);
   assert.ok(!html.includes(attached));
   assert.doesNotMatch(html, /editorial|launch/i);
+  // The pass stamped the entry verified, and the line owns that reset too.
+  assert.match(html, /; the new rating also resets its freshness decay$/);
+  assert.doesNotMatch(html, /re-verified/);
 
   // A rating the agent set before the gap is not this week's news.
   const settled = entry({
@@ -90,6 +96,61 @@ test('a rating the agent replaced inside the snapshot gap reads as re-rated, wit
     factors: graded({ setBy: 'agent', date: '2026-08-10', source: sources[0], sources }, [7, 7, 7])
   });
   assert.doesNotMatch(evidenceFor(settled, snap({ scores: { x: 76 } }), NOW), /re-rated/);
+});
+
+/* The same story through the pipeline's own write path: a launch rating as the
+ * data holds one, last week's snapshot of it, and applyResearch replacing it. */
+const launchEntry = () => {
+  const provenance = { setBy: 'editorial', date: '2026-06-01', source: 'https://old.example/attached',
+    sources: ['https://old.example/attached'], sourcedDate: '2026-08-20', note: 'What the attached coverage said.' };
+  return { id: 'x', name: 'Ex Pies', status: 'open', statusChecked: '2026-06-20', mentions: [], attributes: {},
+    factors: { craft: { value: 9, ...provenance }, distinctiveness: { value: 9, ...provenance }, critical: { value: 9, ...provenance } } };
+};
+const SOURCES = ['https://rev.example/review', 'https://paper.example/roundup'];
+const rerate = values => {
+  const dataset = { restaurants: [launchEntry()], attributeRegistry: {} };
+  const [was] = rank(dataset, { now: new Date('2026-08-23T12:00:00Z') });
+  const previous = snap({ scores: { x: was.score }, factors: { x: { ...was.factorScores, penalty: was.penaltyApplied } } });
+  applyResearch({ factorRatings: [{ id: 'x', craft: values[0], distinctiveness: values[1], criticScore: values[2],
+    sources: SOURCES, note: 'What the coverage the agent read says.' }] }, { dataset }, '2026-08-28');
+  const [now] = rank(dataset, { now: NOW });
+  return { was, now, previous, entry: dataset.restaurants[0] };
+};
+
+test('a launch rating the pipeline replaced reads as re-rated on the card, sources and reset included', () => {
+  const { was, now, previous, entry: stored } = rerate([8, 8.5, 8.5]);
+  assert.equal(isLaunchRating(stored), false);
+  // The pass stamped the entry verified, so the decay runs from the rating.
+  assert.deepEqual(now.verified, { date: '2026-08-28', source: 'rating' });
+  assert.ok(now.stalenessDecay < was.stalenessDecay);
+  const html = evidenceFor({ ...now, rank: 6, previousRank: 4 }, previous, NOW);
+  assert.match(html, /^<b>Why it moved:<\/b> re-rated: /);
+  assert.match(html, /re-rated: craft 9\.0 → 8\.0/);
+  assert.match(html, /re-rated: distinctiveness 9\.0 → 8\.5/);
+  assert.match(html, /re-rated: critical reception 9\.0 → 8\.5/);
+  for (const url of SOURCES) assert.equal(html.split(`href="${url}"`).length - 1, 1, `${url} is linked once`);
+  assert.match(html, /the new rating also resets its freshness decay/);
+  assert.doesNotMatch(html, /re-verified|old\.example|editorial|launch/i);
+});
+
+test('a re-rating that lands on the values already on file still explains the rise it causes', () => {
+  const { was, now, previous } = rerate([9, 9, 9]);
+  assert.ok(now.score - was.score >= 0.1, 'the score rose on the reset alone');
+  const html = evidenceFor({ ...now, rank: 4, previousRank: 6 }, previous, NOW);
+  assert.match(html, /re-rated on 2026-08-28 from .*rev\.example<\/a>, .*paper\.example<\/a> with its values unchanged, which resets its freshness decay/);
+  assert.doesNotMatch(html, /re-verified|entries around it/);
+});
+
+test('a launch rating with a citation attached this week is not a re-rating', () => {
+  const dataset = { restaurants: [launchEntry()], attributeRegistry: {} };
+  const [was] = rank(dataset, { now: new Date('2026-08-23T12:00:00Z') });
+  const previous = snap({ scores: { x: was.score }, factors: { x: { ...was.factorScores, penalty: was.penaltyApplied } } });
+  applyResearch({ factorSources: [{ id: 'x', sources: ['https://rev.example/review'], note: 'What the coverage the agent read says.' }] },
+    { dataset }, '2026-08-28');
+  const [now] = rank(dataset, { now: NOW });
+  assert.equal(isLaunchRating(dataset.restaurants[0]), true);
+  const html = evidenceFor({ ...now, rank: 6, previousRank: 4 }, previous, NOW);
+  assert.doesNotMatch(html, /re-rated|rev\.example/);
 });
 
 test('an entry new to the ten after a re-rating cites each source once', () => {

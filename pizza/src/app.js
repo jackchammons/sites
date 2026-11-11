@@ -197,13 +197,37 @@ const dirApi = { expand: null };
     const btn = row.querySelector('.dir-toggle');
     if (btn) btn.setAttribute('aria-expanded', String(open));
   };
+
+  /* In the stacked layout the map is pinned over the top of the list, and the
+   * table header sticks under the map, so the header's sticky offset plus its
+   * height is where the visible list begins, at any screen height. */
+  const stacked = window.matchMedia('(max-width: 1099px)');
+  const head = body.parentElement.querySelector('thead th');
+  const listTop = () => head ? (parseFloat(getComputedStyle(head).top) || 0) + head.getBoundingClientRect().height : 0;
+  /* Bring a row into view. Beside the map, that is the middle of the screen.
+   * Under a pinned map the middle of the screen can be behind the map, so the
+   * row and its open record are centred in the list's own area instead, or
+   * the row is put at the top of it when the record is longer than the room. */
+  const reveal = row => {
+    if (!stacked.matches) { row.scrollIntoView({ block: 'center' }); return; }
+    const top = listTop();
+    const record = row.nextElementSibling;
+    const height = row.offsetHeight + (record && !record.hidden ? record.offsetHeight : 0);
+    const spare = Math.max(0, window.innerHeight - top - height);
+    // Rounded down, so a fraction of a pixel never tucks the row under the header.
+    window.scrollBy({ top: Math.floor(row.getBoundingClientRect().top - top - spare / 2) });
+  };
   const expand = (id, { fromMap = false } = {}) => {
     for (const d of body.querySelectorAll('.dir-detail:not([hidden])')) {
       if (d.id !== 'dd-' + id) setOne(d.id.slice(3), false);
     }
     setOne(id, true);
-    if (fromMap) rowOf(id)?.scrollIntoView({ block: 'center' });
-    else if (mapApi.focus) mapApi.focus(id);
+    const row = rowOf(id);
+    if (fromMap) { if (row) reveal(row); return; }
+    // Closing the record above a tapped row pulls the row up the page, and
+    // under a pinned map it must not come to rest behind the map.
+    if (row && stacked.matches && row.getBoundingClientRect().top < listTop()) reveal(row);
+    if (mapApi.focus) mapApi.focus(id);
   };
   dirApi.expand = id => expand(id, { fromMap: true });
 
