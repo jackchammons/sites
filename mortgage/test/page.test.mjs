@@ -366,29 +366,36 @@ test('one loan entered as new and as a loan under way with its price: the same P
   // Counted by month, then back to the yearly view the checks read.
   const byMonth = read => { click('view-month'); const got = read(tableRows()); click('view-year'); return got; };
   const pmiRows = () => byMonth(rows => rows.filter(r => r[4] !== '—').length);
-  for (const [dp, months] of [[5, 132], [15, 72], [25, 0]]) {
+  for (const [dp, months] of [[5, 132], [15, 72], [20, 0], [25, 0]]) {
     const fresh = { ...FIVE_DOWN, dp };
     go(hashOf(fresh));
     holds(fresh);
-    const asNew = { cost: num($('sum-cost').textContent), pmi: $('bd-pmi').textContent, months: pmiRows(), balance: byMonth(rows => num(rows[23][5])) };
+    const asNew = { cost: num($('sum-cost').textContent), pmi: $('bd-pmi').textContent, months: pmiRows(), balances: byMonth(rows => rows.map(r => num(r[5]))) };
     assert.equal(asNew.months, months, `${dp}% down as a new loan`);
 
-    // 24 payments in, with the balance a statement would show and the price.
-    const under = { ...UNDER_WAY, b: asNew.balance, op: 750000, r: 6.25, s: '2024-12', nx: '2026-12', m: 0.5 };
-    go(hashOf(under));
-    holds(under);
-    assert.equal(pmiRows(), Math.max(0, months - 24), `${dp}% down: PMI months still ahead`);
-    assert.ok(Math.abs(num($('bd-pmi').textContent) - num(asNew.pmi)) <= 0.011, `${dp}% down: PMI ${$('bd-pmi').textContent} against ${asNew.pmi}`);
-    const whole = num($('sum-cost').textContent);
-    assert.ok(Math.abs(whole - asNew.cost) <= 5, `${dp}% down: whole-loan cost ${whole} against ${asNew.cost} as a new loan`);
-    // The 24 months of PMI already paid are in that figure.
-    const paidPmi = whole - num($('sub-cost').textContent) - (expected(under).original - under.b) - expected(under).past.reduce((t, r) => t + r.interest, 0);
-    assert.ok(Math.abs(paidPmi - (months ? 24 * num(asNew.pmi) : 0)) <= 1.5, `${dp}% down: PMI already paid comes to ${paidPmi}`);
+    /* 24 payments in, and 133 (past the end of any PMI, and far enough for
+       the inferred loan to come back a dollar or two off what it was), with
+       the balance a statement would show and the price. */
+    for (const paid of [24, 133]) {
+      const under = { ...UNDER_WAY, b: asNew.balances[paid - 1], op: 750000, r: 6.25, s: fresh.s, nx: addMonths(fresh.s, paid), m: 0.5 };
+      const at = `${dp}% down, ${paid} payments in`;
+      go(hashOf(under));
+      holds(under);
+      assert.equal(pmiRows(), Math.max(0, months - paid), `${at}: PMI months still ahead`);
+      const due = paid < months ? num(asNew.pmi) : 0;
+      assert.ok(Math.abs(num($('bd-pmi').textContent) - due) <= 0.011, `${at}: PMI ${$('bd-pmi').textContent} against ${due}`);
+      const whole = num($('sum-cost').textContent);
+      assert.ok(Math.abs(whole - asNew.cost) <= 5, `${at}: whole-loan cost ${whole} against ${asNew.cost} as a new loan`);
+      // The PMI already paid is in that figure: every month of it, and no more.
+      const e = expected(under);
+      const paidPmi = whole - num($('sub-cost').textContent) - (e.original - under.b) - e.past.reduce((t, r) => t + r.interest, 0);
+      assert.ok(Math.abs(paidPmi - Math.min(paid, months) * num(asNew.pmi)) <= 2, `${at}: PMI already paid comes to ${paidPmi}`);
 
-    // Take the price away and the loan amount stands in for it again.
-    type('in-origprice', '');
-    holds({ ...under, op: undefined }, '', TYPED);
-    assert.ok(pmiRows() > 0, 'measured against the loan amount, PMI is still being charged');
+      // Take the price away and the loan amount stands in for it again.
+      type('in-origprice', '');
+      holds({ ...under, op: undefined }, '', TYPED);
+      assert.equal(pmiRows() > 0, paid === 24, `${at}: measured against the loan amount, PMI runs until 78% of that`);
+    }
   }
   go('#');
 });
