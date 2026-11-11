@@ -6550,10 +6550,10 @@
         "sinners-pizza": 60,
         "jackson-street-pizza-lounge": 61,
         "mad-pizza": 62,
-        "breezy-town-pizza": 63,
-        "independent-pizzeria": 64,
-        "pizzeria-gabbiano": 65,
-        "flying-squirrel": 66
+        "pizzeria-gabbiano": 63,
+        "flying-squirrel": 64,
+        "independent-pizzeria": 65,
+        "breezy-town-pizza": 66
       },
       "scores": {
         "delancey": 87.6,
@@ -6618,10 +6618,10 @@
         "sinners-pizza": 52.9,
         "jackson-street-pizza-lounge": 47.7,
         "mad-pizza": 36,
-        "breezy-town-pizza": 86.3,
-        "independent-pizzeria": 85.8,
-        "pizzeria-gabbiano": 82.3,
-        "flying-squirrel": 81.4
+        "pizzeria-gabbiano": 85.1,
+        "flying-squirrel": 81.4,
+        "independent-pizzeria": 71.9,
+        "breezy-town-pizza": 69.4
       },
       "factors": {
         "delancey": {
@@ -7120,28 +7120,12 @@
           "value": 3.8,
           "penalty": 0
         },
-        "breezy-town-pizza": {
-          "reputation": 0,
-          "critical": 9,
-          "craft": 9,
-          "distinctiveness": 9.3,
-          "value": 8.1,
-          "penalty": 2.3
-        },
-        "independent-pizzeria": {
-          "reputation": 10,
-          "critical": 8.7,
-          "craft": 8.7,
-          "distinctiveness": 8,
-          "value": 7.8,
-          "penalty": 1.5
-        },
         "pizzeria-gabbiano": {
           "reputation": 0,
-          "critical": 8.2,
-          "craft": 8.4,
-          "distinctiveness": 8.8,
-          "value": 8.7,
+          "critical": 8.5,
+          "craft": 8.5,
+          "distinctiveness": 8.5,
+          "value": 8.9,
           "penalty": 0.8
         },
         "flying-squirrel": {
@@ -7151,6 +7135,22 @@
           "distinctiveness": 8,
           "value": 8.5,
           "penalty": 0
+        },
+        "independent-pizzeria": {
+          "reputation": 10,
+          "critical": 7,
+          "craft": 7,
+          "distinctiveness": 5.5,
+          "value": 6.3,
+          "penalty": 1.5
+        },
+        "breezy-town-pizza": {
+          "reputation": 0,
+          "critical": 7.5,
+          "craft": 7,
+          "distinctiveness": 7.5,
+          "value": 6.5,
+          "penalty": 2.3
         }
       }
     }
