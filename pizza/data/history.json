@@ -6601,8 +6601,8 @@
         "pizzeria-la-rocca": 67.6,
         "south-town-pie": 67.3,
         "elemental-pizza": 67.3,
-        "oskars-pizza": 66.6,
-        "roma-roma": 66.3,
+        "oskars-pizza": 66.5,
+        "roma-roma": 66.2,
         "belltown-pizza": 65.3,
         "in-pizza-we-crust": 65.1,
         "sopranos-antico": 64.9,
@@ -6618,7 +6618,7 @@
         "sinners-pizza": 52.9,
         "jackson-street-pizza-lounge": 47.7,
         "mad-pizza": 36,
-        "breezy-town-pizza": 86.4,
+        "breezy-town-pizza": 86.3,
         "independent-pizzeria": 85.8,
         "pizzeria-gabbiano": 82.3,
         "flying-squirrel": 81.4
@@ -6994,7 +6994,7 @@
         },
         "roma-roma": {
           "reputation": 6.7,
-          "critical": 7.2,
+          "critical": 7.1,
           "craft": 6.5,
           "distinctiveness": 6.5,
           "value": 6.8,
