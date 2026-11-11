@@ -17,6 +17,12 @@ name: Research pizza buzz
 # UTC is the daily fallback, and this one runs half an hour earlier so the
 # fallback picks the commit up too.
 #
+# Two jobs, so the agent never shares a runner with a token that can write.
+# `agent` reads untrusted web pages; it runs with a read-only token and its
+# only product is research.json, handed over as an artifact. `apply` starts
+# from a fresh checkout, takes that one file, validates it, applies it and
+# commits. Nothing else the agent did to its own runner crosses over.
+#
 # Needs one credential. Either works:
 #   CLAUDE_CODE_OAUTH_TOKEN  bills the subscription's programmatic credit pool
 #                            (generate with `claude setup-token`)
@@ -50,7 +56,7 @@ env:
   RESEARCH_MODEL: claude-sonnet-5
 
 jobs:
-  research:
+  agent:
     name: Research
     runs-on: ubuntu-latest
     # A job timeout is unrecoverable in a way a turn ceiling is not: it kills
@@ -62,18 +68,26 @@ jobs:
     # nothing. A missing credential is the gate step's business: it skips the
     # pass and leaves the run green.
     if: ${{ github.repository_owner == 'jackchammons' }}
+    # Read-only, and no id-token: the action is handed this job's own token
+    # below, so it has no reason to exchange an OIDC token for a GitHub App
+    # token that can write.
     permissions:
-      contents: write
-      id-token: write
+      contents: read
+    outputs:
+      # 'success' only when a fresh research.json was uploaded for apply.
+      handoff: ${{ steps.handoff.outcome }}
+      task: ${{ steps.task.outputs.task }}
     steps:
       # Full history: next-task.mjs picks the day's task by the age of each
       # type's last successful pass, read from the data commits' subjects.
       # The branch tip rather than the commit that triggered the run, so a run
       # queued behind another sees the pass that one just committed.
+      # No persisted credential: nothing in this job pushes.
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
           fetch-depth: 0
+          persist-credentials: false
 
       - uses: actions/setup-node@v4
         with:
@@ -171,7 +185,9 @@ jobs:
         id: agent
         if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
         continue-on-error: true
-        uses: anthropics/claude-code-action@v1
+        # Pinned to a commit so a change in how the action treats permission
+        # rules or tokens cannot arrive unannounced. v1 as of 2026-11-10.
+        uses: anthropics/claude-code-action@4fa93a88de49bbef68b10eb15aabedf28ca0e1ed
         with:
           # Whichever secret exists; the empty one is ignored by the action.
           # The write grant is path-scoped: Claude Code honours Edit(path) rules
@@ -180,9 +196,16 @@ jobs:
           # checkout. The guard step below is the second half of the same rule.
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # This job's read-only token, so the action does not mint its own.
+          github_token: ${{ github.token }}
+          # --setting-sources user keeps the repository's CLAUDE.md files and
+          # .claude/settings.json out of the agent's context: they are written
+          # for sessions that can run the scripts they name, and the prompt
+          # below is complete without them.
           claude_args: |
             --max-turns 120
             --model ${{ env.RESEARCH_MODEL }}
+            --setting-sources user
             --allowedTools "WebSearch,WebFetch,Read,Edit(pizza/data/research.json),Glob,Grep,TodoWrite"
           prompt: |
             ${{ steps.task.outputs.brief }}
@@ -280,7 +303,8 @@ jobs:
       # files that are not ignored. Any such change -- the dataset, a gate
       # script, a workflow -- fails the run before a line of the agent-writable
       # tree is executed. It cannot see a write under .git/ or to an ignored
-      # path (dist/, node_modules/), so it is no defence against one.
+      # path (dist/, node_modules/). Those stay behind on this runner: only
+      # research.json is handed to the apply job.
       # Porcelain rather than diff so an untracked file fails too.
       - name: Check the agent changed only research.json
         if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
@@ -313,12 +337,64 @@ jobs:
                  "Validating the file on its merits."
           fi
 
-      - name: Unit tests
+      # The one thing that leaves this runner. The apply job starts from a
+      # fresh checkout and takes only this file.
+      - name: Hand research.json to the apply job
+        id: handoff
         if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: research
+          path: pizza/data/research.json
+          if-no-files-found: error
+          retention-days: 7
+
+  apply:
+    name: Validate and apply
+    needs: agent
+    # Runs only when the agent job uploaded a fresh file. A day with no
+    # credential or an empty forced worklist ends after the agent job, green.
+    if: needs.agent.outputs.handoff == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Take research.json from the agent job
+        uses: actions/download-artifact@v4
+        with:
+          name: research
+          path: pizza/data
+
+      # The file is the only thing that crossed from a runner that read the
+      # open web, and from here on it is data: checked for shape before
+      # anything parses it, then validated record by record.
+      - name: Check the file is a plain, modest JSON file
+        run: |
+          f=pizza/data/research.json
+          if [ -L "$f" ] || [ ! -f "$f" ]; then
+            echo "::error::$f is missing or not a regular file."; exit 1
+          fi
+          size=$(wc -c < "$f")
+          if [ "$size" -gt 2000000 ]; then
+            echo "::error::$f is $size bytes; a research pass writes a few kilobytes."; exit 1
+          fi
+          if [ -n "$(git status --porcelain --untracked-files=all | grep -v ' pizza/data/research.json$' || true)" ]; then
+            echo "::error::The artifact carried more than research.json:"; git status --porcelain --untracked-files=all; exit 1
+          fi
+
+      - name: Unit tests
         run: node --test pizza/test/*.test.mjs
 
       - name: Validate the agent's output
-        if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
         run: node pizza/scripts/verify-research.mjs
 
       # Only runs once validation passes, so nothing unchecked reaches the
@@ -328,12 +404,10 @@ jobs:
       # attributes.json and candidate reviews into candidates.json. Crowd
       # figures are frozen and nothing here writes them.
       - name: Apply validated research
-        if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
         run: node pizza/scripts/apply-research.mjs
 
       # A bad apply must fail this run, not poison main for the next build.
       - name: Lint the dataset after apply
-        if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
         run: node pizza/scripts/check-dataset.mjs
 
       # Render the page from the applied data and run the deploy gate on it,
@@ -343,7 +417,6 @@ jobs:
       # verify-research may have rewritten research.json with only the
       # accepted records; that is the file apply read and the one committed.
       - name: Build and verify the page from the applied data
-        if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
         working-directory: pizza
         env:
           OUT_DIR: /tmp/pizza-gate
@@ -352,18 +425,18 @@ jobs:
           node scripts/verify.mjs
 
       # commit-data.sh pushes through an explicit GITHUB_TOKEN remote with a
-      # rebase-retry loop; the script's comments explain why the persisted
-      # checkout credential is dead by this point (the Claude action revokes
-      # its own token in cleanup). Only on main: a run on any other ref is a
-      # dry run, and the script itself refuses a checkout that is ahead of
-      # main.
+      # rebase-retry loop, so a publish run committing at the same moment is
+      # rebased over rather than lost. Only on main: a run on any other ref
+      # is a dry run, and the script itself refuses a checkout that is ahead
+      # of main.
       - name: Commit research
-        if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TASK: ${{ needs.agent.outputs.task }}
         run: |
           bash scripts/commit-data.sh \
-            "chore(data): research pass (${{ steps.task.outputs.task }}) $(date -u +%Y-%m-%d)" \
+            "chore(data): research pass ($TASK) $(date -u +%Y-%m-%d)" \
             pizza/data/research.json pizza/data/restaurants.json pizza/data/attributes.json \
             pizza/data/candidates.json pizza/data/buzz.json
 
@@ -371,7 +444,7 @@ jobs:
       # text someone else chose, and it would otherwise be pasted into the
       # script.
       - name: Dry run, nothing committed
-        if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true' && github.ref != 'refs/heads/main'
+        if: github.ref != 'refs/heads/main'
         env:
           REF_NAME: ${{ github.ref_name }}
         run: echo "::notice::Dry run on $REF_NAME, not main. The pass was validated, applied and built on the runner, and nothing was committed."
