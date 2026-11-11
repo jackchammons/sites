@@ -190,6 +190,10 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   date, is dropped at merge (`staleOpening`). That also drops a real story about an
   established pizzeria opening a new branch; those reach the page only when the research
   `news` task files them.
+- **Under 1100px the map is pinned and its rail has no box.** `.dir-rail` is
+  `display: contents` there, so `.dir-pin` can stick inside the layout while the
+  entries scroll beneath it. Observe or measure `#map` or `.dir-pin`, never `#map-rail`,
+  and set no `display` on `.dir-rail` without `.has-map` (it is rendered `hidden`).
 - **Headlines and agent notes are third-party text.** They must never be able to fail
   `verify.mjs` or reach the page unescaped, in the static HTML or in a map popup.
 - **`verify.mjs` checks what it claims.** When adding a check, prove it by mutating a

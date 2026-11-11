@@ -123,6 +123,12 @@ const dirApi = { expand: null };
       : topIds.has(r.id) ? '#c8401f'
       : '#b08968';
 
+    /* Leaflet pans a popup into the map, to within a margin of its edges. The
+     * stacked map is narrow enough that a popup brought in from the left ends
+     * up under the zoom buttons, so there the left margin is the width the
+     * buttons take. Read each time a popup opens, so it follows the layout. */
+    const popupInset = { get x() { return wideLayout.matches ? 5 : 50; }, y: 5 };
+
     const bounds = [];
     const markersById = new Map();   // first (usually primary) Seattle marker per entry
     for (const p of pts) {
@@ -132,7 +138,7 @@ const dirApi = { expand: null };
         color: '#fff', weight: 1.5,
         fillColor: color(p), fillOpacity: 0.92
       }).addTo(map);
-      m.bindPopup(() => popupFor(p));
+      m.bindPopup(() => popupFor(p), { autoPanPaddingTopLeft: popupInset });
       bounds.push([loc.lat, loc.lon]);
       if (!markersById.has(r.id)) markersById.set(r.id, m);
       m.on('click', () => { if (dirApi.expand) dirApi.expand(r.id); });
@@ -200,10 +206,18 @@ const dirApi = { expand: null };
 
   /* In the stacked layout the map is pinned over the top of the list, and the
    * table header sticks under the map, so the header's sticky offset plus its
-   * height is where the visible list begins, at any screen height. */
+   * height is where the visible list begins, at any screen height. A browser
+   * that will not report the offset as a length gets the header's bottom edge
+   * as it stands: the same line once the header is stuck, lower before then,
+   * and never one that hides the row. */
   const stacked = window.matchMedia('(max-width: 1099px)');
   const head = body.parentElement.querySelector('thead th');
-  const listTop = () => head ? (parseFloat(getComputedStyle(head).top) || 0) + head.getBoundingClientRect().height : 0;
+  const listTop = () => {
+    if (!head) return 0;
+    const box = head.getBoundingClientRect();
+    const offset = parseFloat(getComputedStyle(head).top);
+    return Number.isFinite(offset) ? offset + box.height : box.bottom;
+  };
   /* Bring a row into view. Beside the map, that is the middle of the screen.
    * Under a pinned map the middle of the screen can be behind the map, so the
    * row and its open record are centred in the list's own area instead, or

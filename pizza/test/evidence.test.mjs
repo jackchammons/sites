@@ -153,6 +153,18 @@ test('a launch rating with a citation attached this week is not a re-rating', ()
   assert.doesNotMatch(html, /re-rated|rev\.example/);
 });
 
+test('a launch rating new to the ten is not said to be rated from the citation attached to it', () => {
+  const [scored] = rank({ restaurants: [launchEntry()], attributeRegistry: {} }, { now: NOW });
+  const html = evidenceFor({ ...scored, rank: 9, previousRank: null }, snap(), NOW);
+  assert.match(html, /New to the ten/);
+  assert.doesNotMatch(html, /rated from|old\.example/);
+  // Even with a date inside the gap, a launch rating's factors are not a re-rating.
+  const dated = launchEntry();
+  for (const k of Object.keys(dated.factors)) dated.factors[k].date = '2026-08-28';
+  const [fresh] = rank({ restaurants: [dated], attributeRegistry: {} }, { now: NOW });
+  assert.doesNotMatch(evidenceFor({ ...fresh, rank: 5, previousRank: 7 }, snap({ scores: { x: 70 } }), NOW), /re-rated/);
+});
+
 test('an entry new to the ten after a re-rating cites each source once', () => {
   const src = 'https://rev.example/review';
   const provenance = { setBy: 'agent', date: '2026-08-28', source: src, sources: [src] };

@@ -355,7 +355,9 @@ places to start, not the limit of what you may read. The ratings on file
 are deliberately not shown. Do not look them up, in
 pizza/data/restaurants.json or on the published index: a number read off
 the old rating is not a new one. Rate each place from the coverage as if
-it had never been rated.
+it had never been rated. The note you write is published under the entry
+as the rating's provenance: it describes what the coverage says, and
+never mentions an earlier rating or that this is a re-rating.
 
 An entry marked closed is rated the same way, from what was published
 while it was open. No site is listed for it, because a closed pizzeria's

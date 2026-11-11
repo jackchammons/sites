@@ -543,6 +543,15 @@ footer p { max-width: 72ch; }
   .dir-layout.has-map .dir-map { height: var(--map-h); }
   .dir-layout.has-map .dir-map-note { order: 1; margin-top: 0; }
   .dir-layout.has-map .dir-table thead th { top: calc(47px + var(--map-h) + 8px); }
+  /* A popup has to fit beside the zoom buttons, which app.js keeps it clear
+     of: the map is the wrap's 94vw, less the buttons' 50px, the 5px Leaflet
+     leaves at the far edge and the 44px of margin and 4px of slack around a
+     popup's text. */
+  .dir-layout.has-map .map-pop { max-width: calc(94vw - 104px); }
+  /* A control behind the map counts as on screen, so focus moving up the list
+     by keyboard would stop there unseen. The margin is the map, its wrapper's
+     strip and the header, so the browser scrolls the control clear of them. */
+  .dir-layout.has-map .dir-list :is(a, button, summary) { scroll-margin-top: calc(47px + var(--map-h) + 8px + 44px); }
 }
 .dir-scroll { margin-top: 22px; border: 1px solid var(--line); border-radius: var(--radius); }
 .dir-table { width: 100%; border-collapse: collapse; font-size: 13px; }

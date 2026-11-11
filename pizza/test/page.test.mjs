@@ -118,6 +118,10 @@ test('the map rail is rendered hidden and the page does not load Leaflet itself'
   const html = page(context());
   assert.match(html, /<div class="dir-rail" id="map-rail" hidden>/);
   assert.match(html, /<div id="map" class="dir-map" role="region" aria-label="[^"]+">/);
+  // The map alone is in the wrapper that gets pinned; the legend follows it,
+  // still inside the rail, so it is hidden and dropped with the map.
+  const rail = html.match(/<div class="dir-rail"[\s\S]*?<\/p>\s*<\/div>/)[0];
+  assert.match(rail, /<div class="dir-pin">\s*<div id="map"[^>]*><\/div>\s*<\/div>\s*<p class="note dir-map-note">/);
   assert.doesNotMatch(html, /<script[^>]+leaflet/);
   assert.match(html, /<script type="module" src="\.\/app\.js"><\/script>/);
 });

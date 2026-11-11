@@ -247,6 +247,54 @@ const near = (text, m) => text.slice(Math.max(0, m.index - 40), m.index + 40).re
   check(!hit, hit && `page describes a hand-set rating ("${hit[0]}") near: ${near(text, hit)}`);
 }
 
+/* ---------- the pinned map ---------- */
+
+/* Under 1100px the map is pinned below the nav while the list scrolls beneath
+ * it. How that looks takes a layout engine, and is checked in Chromium on a
+ * dev box; these are the parts a reading of the output can hold, each of
+ * which has a quiet way to break on a phone and nowhere else. */
+{
+  const sheet = (html.match(/<style>([\s\S]*?)<\/style>/)?.[1] ?? '').replace(/\/\*[\s\S]*?\*\//g, '');
+  // The contents of every block that opens with `prelude`, nested blocks included.
+  const blocksOf = prelude => {
+    const out = [];
+    for (let at = sheet.indexOf(prelude); at !== -1; at = sheet.indexOf(prelude, at + 1)) {
+      const open = sheet.indexOf('{', at);
+      let depth = 1, i = open + 1;
+      for (; i < sheet.length && depth; i++) depth += sheet[i] === '{' ? 1 : sheet[i] === '}' ? -1 : 0;
+      out.push(sheet.slice(open + 1, i - 1));
+    }
+    return out;
+  };
+  const stacked = blocksOf('@media (max-width: 1099px)').join('\n');
+  const declared = selector => stacked.match(
+    new RegExp(`(?:^|[{};])\\s*${selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^}]*)\\}`))?.[1] ?? '';
+
+  check(/position:\s*sticky/.test(declared('.dir-layout.has-map .dir-pin')),
+    'under 1100px the map wrapper (.dir-pin) is not sticky; the map scrolls away from the list');
+  // A sticky box holds only inside its parent, so the wrapper has to be laid
+  // out as a child of the layout, not of the rail.
+  check(/display:\s*contents/.test(declared('.dir-layout.has-map .dir-rail')),
+    'under 1100px the rail keeps its own box, so the pinned map cannot outlast it');
+  // app.js finds where the visible list begins from the header's sticky offset.
+  check(/top:[^;]*var\(--map-h\)/.test(declared('.dir-layout.has-map .dir-table thead th')),
+    'under 1100px the table header does not stick below the pinned map');
+  // The rail is rendered hidden. An author rule that gives it a display value
+  // beats the hidden attribute, so every one has to wait for .has-map.
+  for (const [, selectors, body] of sheet.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    if (!/(?:^|;)\s*display\s*:/.test(body)) continue;
+    for (const sel of selectors.split(',').map(x => x.trim())) {
+      check(!/\.dir-rail$/.test(sel) || sel.includes('.has-map'),
+        `"${sel}" sets display on the map rail without .has-map; a reader without JavaScript gets an empty pinned box`);
+    }
+  }
+  check(/<div class="dir-rail" id="map-rail" hidden>\s*<div class="dir-pin">\s*<div id="map"[^>]*><\/div>\s*<\/div>\s*<p class="note dir-map-note">/.test(html),
+    'the map rail is not hidden > wrapper > map, with the legend after the wrapper; the legend would be pinned with the map, or the rail shown without one');
+  // With no box of its own under 1100px, the rail never intersects anything.
+  check(!/\.observe\(\s*rail\s*\)/.test(appJs),
+    'app.js waits for the rail to near the viewport before loading the map; on a phone that never happens');
+}
+
 /* ---------- rankings.json ---------- */
 
 const api = JSON.parse(fs.readFileSync(path.join(dist, 'rankings.json'), 'utf8'));

@@ -273,7 +273,7 @@ tier    $ ${x2(PRICE_MULT[1])}     $$ ${x2(PRICE_MULT[2])}
         coverage and writes a single file of proposals — facts with sources, never scores
         applied directly.</p>
         <div class="pipe-rota" aria-label="Task rotation">
-          <span>discovery</span><span>locations</span><span>liveness</span><span>news</span><span>rating</span>
+          <span>discovery</span><span>locations</span><span>liveness</span><span>news</span><span>rating</span><span>census</span>
         </div>
         <p class="pipe-sub">one task per day, rotating — a week covers every kind of upkeep</p>
       </div>
