@@ -7,7 +7,12 @@ const NOW = Date.parse('2026-08-30T00:00:00Z');
 const dataset = { restaurants: [
   { id: 'delancey', name: 'Delancey', status: 'open',
     locations: [{ neighborhood: 'Ballard', address: '1415 NW 70th St, Seattle, WA 98117' }],
-    factors: { craft: { value: 9.6 }, distinctiveness: { value: 8.6 }, critical: { value: 9.6 } } },
+    factors: { craft: { value: 9.6, setBy: 'agent' }, distinctiveness: { value: 8.6, setBy: 'agent' },
+               critical: { value: 9.6, setBy: 'agent' } } },
+  // Rated by hand at launch: the one kind of rating a proposal may replace.
+  { id: 'launch-pie', name: 'Launch Pie', status: 'open', url: 'https://launchpie.example/',
+    factors: { craft: { value: 9.3, setBy: 'editorial' }, distinctiveness: { value: 8.7, setBy: 'editorial' },
+               critical: { value: 9.1, setBy: 'editorial' } } },
   { id: 'zeeks-pizza', name: 'Zeeks Pizza', status: 'open' },
   { id: 'roma-roma', name: 'Roma Roma', status: 'open' },
   { id: 'old-slice', name: 'Old Slice', status: 'closed',
@@ -168,9 +173,17 @@ test('facts: fill-gap records for opened and priceIndex', () => {
   failsWith({ facts: [{ id: 'nope', opened: 2000, source: 'https://x.com' }] }, 'unknown restaurant id');
 });
 
-test('ratingSkipped: records an attempt on an unrated entry only', () => {
+test('ratingSkipped: records an attempt on an unrated entry or a launch rating, never on an agent rating', () => {
   passes({ ratingSkipped: [{ id: 'roma-roma', note: 'no published review found' }] });
+  passes({ ratingSkipped: [{ id: 'launch-pie', note: 'no published review found' }] });
   failsWith({ ratingSkipped: [{ id: 'delancey', note: 'no published review found' }] }, 'already rated');
+  // proposed and skipped in one file is a contradiction, for a launch rating as for an unrated entry
+  for (const id of ['roma-roma', 'launch-pie']) {
+    const { fails, accepted } = run({ ...rating({ id }), ratingSkipped: [{ id, note: 'no published review found' }] });
+    assert.equal(fails.length, 1);
+    assert.match(fails[0], /ratingSkipped\[0\]: .* is also proposed in factorRatings/);
+    assert.deepEqual([accepted.factorRatings.length, accepted.ratingSkipped.length], [1, 0]);
+  }
 });
 
 /* ---- locationsSkipped: the locations task's memory ---- */
@@ -402,6 +415,31 @@ test('factorRatings: sources must include published criticism', () => {
   passes(rating({ sources: ['https://www.yelp.com/biz/roma-roma', 'https://seattlemet.com/review'] }));
 });
 
+test('factorRatings: a launch rating may be replaced, under every rule a first rating is held to', () => {
+  const launch = over => rating({ id: 'launch-pie', ...over });
+  passes(launch({}));
+  assert.equal(run(launch({})).accepted.factorRatings[0].id, 'launch-pie');
+  passes(launch({ opened: 2012, priceIndex: 3, styleGroup: 'Neapolitan' }));
+  failsWith(launch({ craft: 7.3 }), '0.5 steps');
+  failsWith(launch({ criticScore: 11 }), 'criticScore');
+  failsWith(launch({ sources: [] }), 'sources');
+  failsWith(launch({ sources: ['https://www.yelp.com/biz/launch-pie'] }), 'no source is published criticism');
+  // its own site is not criticism of it
+  failsWith(launch({ sources: ['https://launchpie.example/press'] }), 'no source is published criticism');
+  failsWith(launch({ note: 'too short' }), 'note missing or too short');
+  failsWith({ factorRatings: [launch({}).factorRatings[0], launch({}).factorRatings[0]] }, 'duplicate proposal');
+});
+
+test('factorRatings: a rating the agent set is refused, whatever the proposal says', () => {
+  const { fails, accepted } = run(rating({ id: 'delancey' }));
+  assert.deepEqual(fails, ['factorRatings[0]: Delancey is already rated; ratings are never overwritten']);
+  assert.deepEqual(accepted.factorRatings, []);
+  // one hand-set factor left beside the agent's makes it a launch rating again
+  const mixed = { restaurants: [{ id: 'mixed-pie', name: 'Mixed Pie', status: 'open', factors: {
+    craft: { value: 8, setBy: 'agent' }, distinctiveness: { value: 7, setBy: 'editorial' }, critical: { value: 8, setBy: 'agent' } } }] };
+  assert.deepEqual(validateResearch(rating({ id: 'mixed-pie' }), mixed, NOW).fails, []);
+});
+
 test('factorRatings: never overwrites, never off-grid, always sourced', () => {
   failsWith(rating({ id: 'delancey' }), 'already rated');
   failsWith(rating({ craft: 7.3 }), '0.5 steps');
@@ -463,6 +501,14 @@ test('factorSources: attaches criticism to a rated entry, never to an unrated on
     { id: 'delancey', sources: ['https://www.thestranger.com/a'], note: NOTE },
     { id: 'delancey', sources: ['https://www.thestranger.com/b'], note: NOTE }
   ] }, 'duplicate factorSources record');
+});
+
+test('factorSources: still attach to a launch rating, but not beside a proposal that replaces it', () => {
+  const cite = { id: 'launch-pie', sources: ['https://www.thestranger.com/food/launch-pie-review'], note: NOTE };
+  passes({ factorSources: [cite] });
+  const { fails, accepted } = run({ ...rating({ id: 'launch-pie' }), factorSources: [cite] });
+  assert.deepEqual(fails, ['factorSources[0]: Launch Pie is also proposed in factorRatings']);
+  assert.deepEqual([accepted.factorRatings.length, accepted.factorSources.length], [1, 0]);
 });
 
 /* ---- links: web presence records ---- */

@@ -1,11 +1,12 @@
-import { esc } from './html.mjs';
-import { STALENESS_PER_WEEK } from '../src/slice.js';
+import { esc, srcLinks } from './html.mjs';
+import { STALENESS_PER_WEEK, isLaunchRating } from '../src/slice.js';
 
 /* ---- why an entry moved ----
  * The weekly delta says THAT a card moved; this names the mechanism behind it,
  * linked to the source that caused it. Signals, in order of strength:
  *   - factor diffs against last week's snapshot (when that snapshot has them)
- *   - a fresh re-rating (a graded factor whose provenance date is this week)
+ *   - a fresh re-rating (a graded factor whose provenance date is this week),
+ *     which also restarts the freshness clock
  *   - recent press mentions, phrased by kind (list, mention, opening)
  *   - freshness decay (score slides while nothing is re-verified) or its reset
  *   - displacement (the honest "entries around it moved")
@@ -22,6 +23,10 @@ export const FACTOR_LABEL = { reputation: 'reputation', critical: 'critical rece
 const GRADED = ['craft', 'distinctiveness', 'critical'];
 const MENTION_WINDOW_DAYS = 21;   // matches the visible "recent press" horizon
 const RERATE_WINDOW_DAYS = 9;     // a provenance date inside the last snapshot gap
+
+/* What a graded factor was read from: the list a current pass files, or the
+ * single source an earlier one did. */
+const sourcesOf = f => f.sources?.length ? f.sources : f.source ? [f.source] : [];
 
 const link = (url, text) => `<a href="${esc(url)}" target="_blank" rel="noopener nofollow">${esc(text)}</a>`;
 
@@ -54,23 +59,36 @@ export function evidenceFor(r, previous, now, algorithm) {
     .sort((a, b) => (kindRank[a.kind] ?? 9) - (kindRank[b.kind] ?? 9)
       || Date.parse(b.date) - Date.parse(a.date));
 
-  // A factor the AGENT graded within the last snapshot gap is a re-rating this
-  // week. Editorial factors are excluded: the schema migration stamped them all
-  // with one date, so date-recency alone proves nothing about them.
+  // A graded factor the agent dated inside the last snapshot gap is a re-rating
+  // this week: that date is the day the research pass applied the rating, and
+  // the sources beside it are what it was read from. A launch rating's date
+  // means neither, so its factors never count.
+  const agentSet = !isLaunchRating(r);
   const freshlyRated = GRADED.filter(k => {
     const f = r.factors?.[k];
-    return f?.setBy === 'agent' && f.date && daysAgo(f.date) < RERATE_WINDOW_DAYS;
+    return agentSet && f?.date && daysAgo(f.date) < RERATE_WINDOW_DAYS;
   });
 
   const bits = [];
   const cited = new Set();
   const fmtD = d => `${d > 0 ? '+' : '−'}${Math.abs(d).toFixed(1)}`;
-  const citeRating = () => {
-    const src = freshlyRated.map(k => r.factors[k]).find(f => f.source && !cited.has(f.source));
-    if (!src) return '';
-    cited.add(src.source);
-    return ` — from ${link(src.source, 'published coverage')}`;
+  // Every source the re-rating was read from, each linked once: the three
+  // factors of one pass share their sources, so the first line carries them.
+  const ratingSources = () => {
+    const urls = [...new Set(freshlyRated.flatMap(k => sourcesOf(r.factors[k])))].filter(u => !cited.has(u));
+    for (const u of urls) cited.add(u);
+    return srcLinks(urls);
   };
+  const citeRating = () => {
+    const from = ratingSources();
+    return from ? ` — from ${from}` : '';
+  };
+  // A pass that rates an entry stamps it verified that day, so the decay runs
+  // from the rating. That reset is the re-rating's doing and is said so,
+  // instead of being left to read as an unexplained "re-verified".
+  const v = r.verified;
+  const ratingResetsDecay = freshlyRated.length > 0 && v?.source === 'rating' && daysAgo(v.date) < RERATE_WINDOW_DAYS;
+  let rerated = false;
 
   const pf = previous?.factors?.[r.id];
   if (pf) {
@@ -86,6 +104,7 @@ export function evidenceFor(r, previous, now, algorithm) {
       // A reputation that carries no weight cannot be why a score rose.
       if (k === 'reputation' && d > 0 && r.reputationDetail && r.reputationDetail.use !== 'counted') continue;
       if (freshlyRated.includes(k)) {
+        rerated = true;
         bits.push(`re-rated: ${FACTOR_LABEL[k]} ${(r.factorScores[k] - d).toFixed(1)} → ${r.factorScores[k].toFixed(1)}${citeRating()}`);
       } else if (k === 'critical' && d > 0 && recent.length) {
         const m = recent[0];
@@ -107,9 +126,11 @@ export function evidenceFor(r, previous, now, algorithm) {
     // Older snapshots carry no factor breakdowns; a fresh provenance date still
     // pins the cause. A brand-new entry skips this — its "rated from" line
     // below already tells that story.
+    rerated = true;
     bits.push(`re-rated this week: ${freshlyRated.map(k =>
       `${FACTOR_LABEL[k]} ${r.factorScores[k].toFixed(1)}`).join(', ')}${citeRating()}`);
   }
+  if (rerated && ratingResetsDecay) bits.push('the new rating also resets its freshness decay');
 
   // Computed after every branch has claimed its citations, so a story that
   // already explains a line never repeats in the tail.
@@ -120,7 +141,7 @@ export function evidenceFor(r, previous, now, algorithm) {
   };
 
   if (isNew) {
-    const graded = GRADED.map(k => r.factors?.[k]).find(f => f?.setBy === 'agent' && f.source);
+    const graded = agentSet && GRADED.map(k => r.factors?.[k]).find(f => f?.source && !cited.has(f.source));
     const src = graded ? ` · rated from ${link(graded.source, 'published coverage')}` : '';
     return `<b>New to the ten:</b> ${bits.length ? bits.join('; ') : 'first week with a score high enough'}${src}${tail()}`;
   }
@@ -129,9 +150,12 @@ export function evidenceFor(r, previous, now, algorithm) {
     const prevScore = previous?.scores?.[r.id];
     const drift = prevScore != null ? r.score - prevScore : null;
     let cause;
-    const v = r.verified;
     if (drift != null && drift <= -0.1 && (r.stalenessDecay ?? 0) > 0) {
       cause = `freshness decay — ${v ? `nothing re-verified since the ${esc(v.source)} on ${esc(v.date)}` : 'never verified'}; a score slides ${(STALENESS_PER_WEEK * 100).toFixed(1)}% a week until the rotation re-checks it`;
+    } else if (drift != null && drift >= 0.1 && ratingResetsDecay) {
+      // Re-rated to the values it already had: the rise is the clock alone.
+      const from = ratingSources();
+      cause = `re-rated on ${esc(v.date)}${from ? ` from ${from}` : ''} with its values unchanged, which resets its freshness decay`;
     } else if (drift != null && drift >= 0.1 && v && daysAgo(v.date) < RERATE_WINDOW_DAYS) {
       cause = `re-verified by a ${esc(v.source)} on ${esc(v.date)}, which resets its freshness decay`;
     } else if (drift != null && drift >= 0.1 && recent.length) {

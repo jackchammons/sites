@@ -5,8 +5,8 @@ import { DEFAULT_WEIGHTS } from '../../src/slice.js';
 const FACTOR_COPY = {
   reputation:      'Standing earned over time: years in business, how many people have reviewed it, and whether the press keeps coming back. Computed from data; it carries weight only when it is on file and would not lower the score.',
   critical:        'A critic base rating, lifted a bounded amount by the press coverage the research pass files against the entry.',
-  craft:           'The pizza itself: dough, fermentation, bake, and what goes on top. Rated editorially for the founding entries, from cited coverage for the rest.',
-  distinctiveness: 'Does it own a lane in this city, or is it a competent copy of someone else? Rated the same two ways as craft.',
+  craft:           'The pizza itself: dough, fermentation, bake, and what goes on top. Graded by the research agent from published coverage, with the sources it read.',
+  distinctiveness: 'Does it own a lane in this city, or is it a competent copy of someone else? Graded the same way as craft.',
   value:           'Quality delivered per dollar: the craft and reception scores, scaled by the price tier. Computed.'
 };
 

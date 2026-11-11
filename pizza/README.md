@@ -27,13 +27,13 @@ Every weight, cap and constant the methodology section prints is an export of
 a formula the code has left. A new constant in a formula is exported and printed, never
 typed into the copy.
 
-**Graded factors** (craft, distinctiveness, critical) are stored once per entry with
-provenance (`setBy`, `source`, `date`) and never overwritten by a script. They have two
-sources, and the directory shows which applies: the founding entries were rated
-editorially when the index launched in August 2026 with nothing cited, and the `sources`
-task attaches published criticism to those ratings after the fact without changing a
-value; every entry added since is rated by the research agent from one to four published
-sources it read.
+**Graded factors** (craft, distinctiveness, critical) are set by the research agent from
+published coverage and stored per entry with provenance (`setBy`, `source`, `sources`,
+`note`, `date`): the one to four sources the agent read and the day the pass applied the
+rating. `validate-research.js` refuses a rating with no published criticism behind it (a
+review, a roundup or a news story; the pizzeria's own site, an aggregator or a social post
+may be cited beside one, never alone), and a rating the agent has set is never overwritten
+by a script. The directory prints each rating with its sources.
 
 **Reputation** has three components, each 0 to 1: longevity (log curve on years open,
 weight 3), review volume (`reviews / (reviews + 500)`, weight 2) and coverage (press
@@ -119,12 +119,28 @@ methodology is outside `<main>`; the chart's newest column, the cards and the he
 the visible text shows `undefined`, `NaN` or `[object Object]`; or two adjacent open
 entries in `rankings.json` are out of score order. Text quoted from the data files
 (headlines, notes) is exempt from the `undefined` check, so a headline cannot stop a
-deploy. The record, radar and buzz sections are optional: each renders nothing when it has
-nothing to show, and the nav is built from the sections that rendered.
+deploy. It also fails when the page's own copy describes a rating as set by hand or
+dates one to the index's launch (`editorial`, `founding entr…`, `at launch`,
+`launched in`), with the same exemption for quoted data, and when the pinned map's rules
+below have come apart. The record, radar and buzz sections are optional: each renders
+nothing when it has nothing to show, and the nav is built from the sections that rendered.
 
 The map is not part of first load. `app.js` reveals the map rail and fetches
-`./leaflet.js` when the rail nears the viewport or a directory row asks for its marker; if
+`./leaflet.js` when the map nears the viewport or a directory row asks for its marker; if
 anything in that fails, the rail is removed and the table takes the full width.
+
+At 1100px and wider the map is a sticky rail beside the table. Under 1100px it is pinned
+below the nav for as long as the directory list is on screen, a third of the viewport
+high, and the rows scroll beneath it; it leaves with the last row. The pinned box is
+`.dir-pin`, laid out as a child of `.dir-layout` because the rail has no box of its own
+there (`display: contents`); the legend sits outside it, after the list. All of those rules hang off
+`.has-map`, which `app.js` sets, so a reader without JavaScript never gets an empty
+pinned box. A row tap focuses the marker; a marker tap brings its row into the part of
+the screen below the map, which `app.js` finds from the table header's sticky offset. A
+drag on the map pans it in both layouts; the wheel zooms it only in the desktop rail.
+`verify.mjs` holds the static half of this (the sticky rule, the rail's `display`, the
+header's offset, the markup, what `app.js` observes); the rest needs a layout engine, so
+after changing what the directory draws, look at it in Chromium at a phone width.
 
 Every push to a branch other than `main` runs `ci.yml` (tests, lint, build, verify for the
 Node sites). Only `main` deploys.
@@ -137,7 +153,7 @@ is oldest goes next, passing over any with an empty worklist), writing proposals
 `data/research.json`. `census` has work only while `data/candidates.json` holds pending
 candidates, so it takes a day when a seed refresh turns up a new food permit and is
 passed over otherwise. Dispatch-only backfill tasks (`social`, `facts`, `coverage`,
-`sources`) run from the Actions tab. The agent's write grant is scoped to that one file, a guard step
+`sources`, `rerate`) run from the Actions tab. The agent's write grant is scoped to that one file, a guard step
 fails the run if anything else changed, every record is validated by
 `validate-research.js` (a record that fails is dropped with a warning; the rest are
 applied), the accepted records are applied to `restaurants.json`, the dataset is linted,
@@ -161,8 +177,9 @@ for locations, 90 for the others.
 
 What the agent may write: new directory entries, status changes (with the date the
 source states, if any), verified locations and official sites, press mentions up to two
-years old, factor proposals for unrated entries only (at least one source must be
-published criticism), citations for ratings already on file (values never change), a
+years old, factor proposals (at least one source must be published criticism, and never
+over a rating the agent has already set), citations for ratings already on file (values
+never change), a
 note on each worklist entry it could not resolve, founding years and price tiers from
 pages that state them, Instagram links and candidate verdicts. It never writes a score
 and never sets an attribute flag: the flags and their friction costs in

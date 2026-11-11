@@ -130,6 +130,31 @@ export function classify(title) {
   return 'mention';
 }
 
+/* An opening story that cannot be one: every entry it is tagged to is on file
+ * as closed, or as having opened OPENING_STALE_YEARS or more calendar years
+ * before the story's date. Google News re-dates old articles, and a headline
+ * from the year a pizzeria opened then arrives stamped this month: "Independent
+ * Pizzeria Opens in Madison Park" was filed under November 2026 for a place
+ * that opened in 2010 and had closed three weeks earlier. The date on the item
+ * cannot be trusted, but what is on file about the pizzeria can.
+ *
+ * A story tagged to no entry is left alone, and so is one that names any
+ * entry it could be about: most opening stories are for places not yet on
+ * file. The rule cannot tell a re-dated article from a true report that an
+ * established pizzeria has opened another branch, and drops both; a branch
+ * opening reaches the page through the research pass's news channel, which
+ * this never touches. `byId` maps an entry id to its record. */
+export const OPENING_STALE_YEARS = 2;
+export function staleOpening(item, byId) {
+  if (item.kind !== 'opening' || !item.mentions?.length) return false;
+  const year = new Date(item.published).getUTCFullYear();
+  return item.mentions.every(id => {
+    const r = byId.get(id);
+    return r != null && (r.status === 'closed'
+      || (typeof r.opened === 'number' && year - r.opened >= OPENING_STALE_YEARS));
+  });
+}
+
 /* The stored list after a sweep: what the feeds just returned plus what was
  * already on file, newest first, one item per headline, inside the window.
  *
@@ -138,11 +163,14 @@ export function classify(title) {
  * every sweep. Stored feed items are read again under today's rules, so a
  * widened block list or a corrected label reaches the stories already on the
  * page; items the research pass filed (`via: 'research'`) went through its
- * own gate and are kept as they are. */
+ * own gate and are kept as they are. An opening story that cannot be one
+ * (staleOpening) is dropped, fetched or stored, once it has its label and
+ * its tags. */
 export function mergeBuzz(fetched, prior, restaurants, nowMs = Date.now()) {
   const norm = s => s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
   const cutoff = nowMs - KEEP_DAYS * 864e5;
   const fromFeed = i => ({ kind: classify(i.title), mentions: mentionMatch(i.title, restaurants) });
+  const byId = new Map(restaurants.map(r => [r.id, r]));
 
   const fresh = fetched
     .filter(i => Number.isFinite(Date.parse(i.date)))
@@ -150,10 +178,12 @@ export function mergeBuzz(fetched, prior, restaurants, nowMs = Date.now()) {
       title: i.title, url: i.link, source: i.source || 'Unknown',
       published: new Date(Date.parse(i.date)).toISOString(),
       ...fromFeed(i)
-    }));
+    }))
+    .filter(i => !staleOpening(i, byId));
   const kept = prior
     .filter(i => i.via === 'research' || relevant(i))
-    .map(i => i.via === 'research' ? i : { ...i, ...fromFeed(i) });
+    .map(i => i.via === 'research' ? i : { ...i, ...fromFeed(i) })
+    .filter(i => i.via === 'research' || !staleOpening(i, byId));
 
   const seen = new Set();
   return [...fresh, ...kept]

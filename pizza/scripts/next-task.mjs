@@ -30,15 +30,17 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { locationWorklist } from '../src/locations.js';
-import { isRated } from '../src/slice.js';
+import { isRated, isLaunchRating } from '../src/slice.js';
 import { hostOf } from '../src/validate-research.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 export const TYPES = ['discovery', 'locations', 'liveness', 'news', 'rating', 'census'];
 /* Dispatch-only tasks: forceable for backfills, never part of the daily
- * rotation (their daily upkeep rides along on the rotating tasks). */
-export const DISPATCH_ONLY = ['social', 'facts', 'coverage', 'sources'];
+ * rotation (their daily upkeep rides along on the rotating tasks). rerate
+ * has no upkeep to ride along: it replaces the launch ratings, and once the
+ * last one is gone its worklist is empty for good. */
+export const DISPATCH_ONLY = ['social', 'facts', 'coverage', 'sources', 'rerate'];
 
 const DAY = 864e5;
 const daysSince = (iso, now) => iso ? (now - Date.parse(iso)) / DAY : Infinity;
@@ -236,34 +238,13 @@ Budget: at most 12 searches and 2 fetches per entry.`;
   return { brief, worklistSize: list.length };
 };
 
-BUILDERS.rating = ({ restaurants, openField, now }) => {
-  // Mentions-first: entries with cited coverage on file are the ones a rating
-  // can actually be grounded in, and Roma Roma arrives with three.
-  // Only places actually open: a pizzeria that has not opened its doors has
-  // no pies for anyone to have written about, and cannot rank anyway.
-  // Mentions-first, then shuffled: an entry the agent skipped for want of
-  // coverage should not monopolise the front of every future worklist while
-  // others have never been attempted at all.
-  // Attempt memory: an entry the agent already searched and could not ground
-  // (ratingAttempted) waits a quarter before it is drawn again. Never-attempted
-  // entries with cited coverage go first, then the never-attempted rest, then
-  // the oldest attempts.
-  const RETRY_DAYS = 90;
-  const unrated = openField
-    .filter(r => r.status !== 'opening' && !isRated(r) && daysSince(r.ratingAttempted, now) >= RETRY_DAYS)
-    .map(r => [r, Math.random()])
-    .sort((a, b) => ((b[0].mentions?.length ?? 0) - (a[0].mentions?.length ?? 0))
-      || ((Date.parse(a[0].ratingAttempted) || 0) - (Date.parse(b[0].ratingAttempted) || 0))
-      || (a[1] - b[1]))
-    .map(([r]) => r)
-    .slice(0, 6);
+/* The standard a rating is held to: what to read, the fields of a
+ * factorRatings proposal, the criticism rule and the mentions that go with
+ * it. The rating and rerate briefs both print it from here, so a rating that
+ * replaces a launch rating is graded exactly as one that fills a gap. */
+const ratingStandard = restaurants => {
   const styleGroups = [...new Set(restaurants.map(r => r.styleGroup).filter(Boolean))].sort();
-  const brief = `Your task: rate pizzerias that are in the directory but not yet in
-the ranking, so they can compete. Rate these, and only these:
-
-${unrated.map(r => `- id: ${r.id} | ${r.name} | ${r.neighborhood ?? '?'} | site: ${r.url ?? 'unknown'}${r.mentions?.length ? ` | ${r.mentions.length} cited mention(s) on file` : ''}`).join('\n')}
-
-For each one, read what has actually been published about it -- reviews,
+  return `For each one, read what has actually been published about it -- reviews,
 neighborhood-blog writeups, substantive roundup entries in real outlets --
 plus its own website and menu. Then propose a "factorRatings" entry
 grounded in that coverage:
@@ -288,7 +269,36 @@ or social media; those may be cited alongside but never alone.
 
 For every review or story you cite, ALSO report it as a "mentions"
 record (id, title, url, source, date, kind) so the coverage counts
-toward the entry's record; coverage up to two years old counts.
+toward the entry's record; coverage up to two years old counts.`;
+};
+
+BUILDERS.rating = ({ restaurants, openField, now }) => {
+  // Mentions-first: entries with cited coverage on file are the ones a rating
+  // can actually be grounded in, and Roma Roma arrives with three.
+  // Only places actually open: a pizzeria that has not opened its doors has
+  // no pies for anyone to have written about, and cannot rank anyway.
+  // Mentions-first, then shuffled: an entry the agent skipped for want of
+  // coverage should not monopolise the front of every future worklist while
+  // others have never been attempted at all.
+  // Attempt memory: an entry the agent already searched and could not ground
+  // (ratingAttempted) waits a quarter before it is drawn again. Never-attempted
+  // entries with cited coverage go first, then the never-attempted rest, then
+  // the oldest attempts.
+  const RETRY_DAYS = 90;
+  const unrated = openField
+    .filter(r => r.status !== 'opening' && !isRated(r) && daysSince(r.ratingAttempted, now) >= RETRY_DAYS)
+    .map(r => [r, Math.random()])
+    .sort((a, b) => ((b[0].mentions?.length ?? 0) - (a[0].mentions?.length ?? 0))
+      || ((Date.parse(a[0].ratingAttempted) || 0) - (Date.parse(b[0].ratingAttempted) || 0))
+      || (a[1] - b[1]))
+    .map(([r]) => r)
+    .slice(0, 6);
+  const brief = `Your task: rate pizzerias that are in the directory but not yet in
+the ranking, so they can compete. Rate these, and only these:
+
+${unrated.map(r => `- id: ${r.id} | ${r.name} | ${r.neighborhood ?? '?'} | site: ${r.url ?? 'unknown'}${r.mentions?.length ? ` | ${r.mentions.length} cited mention(s) on file` : ''}`).join('\n')}
+
+${ratingStandard(restaurants)}
 
 Skip any entry you cannot ground in at least one credible published
 source about that specific place -- no rating is far better than an
@@ -301,6 +311,70 @@ one proposal per pizzeria, at most 12 in total.
 
 Budget: about 3 searches per entry, 18 total. Write the file and stop.`;
   return { brief, worklistSize: unrated.length };
+};
+
+BUILDERS.rerate = ({ restaurants, now }) => {
+  // Dispatch-only: replace the launch ratings (isLaunchRating in slice.js)
+  // with ratings read from published coverage, through the same factorRatings
+  // channel and under the same standard as any other rating.
+  // Closed entries are on the list: a closed pizzeria is out of the ranking,
+  // but its rating is still printed in the directory. Open ones go first
+  // because theirs decide the published ten, then entries with sources on
+  // file, since those have somewhere to start; the id settles the rest, so a
+  // dry run and the real pass that follows it draw the same list.
+  // Attempt memory: an entry the agent could not ground (ratingAttempted)
+  // waits a quarter before it is drawn again, as on the rating task. One
+  // that was re-rated is no longer a launch rating and never comes back.
+  // The row does not print the values on file. A rating proposed by someone
+  // who has just read the old one is an adjustment of it, not a reading of
+  // the coverage.
+  const RETRY_DAYS = 90;
+  const onFile = r => [...new Set(['craft', 'distinctiveness', 'critical']
+    .flatMap(k => r.factors[k].sources ?? (r.factors[k].source ? [r.factors[k].source] : [])))];
+  const closed = r => r.status === 'closed' ? 1 : 0;
+  const list = restaurants
+    .filter(r => isLaunchRating(r) && daysSince(r.ratingAttempted, now) >= RETRY_DAYS)
+    .sort((a, b) => (closed(a) - closed(b))
+      || ((onFile(a).length ? 0 : 1) - (onFile(b).length ? 0 : 1))
+      || ((a.id > b.id) - (a.id < b.id)))
+    .slice(0, 7);
+  // A closed pizzeria's site is not offered: its domain may have lapsed to
+  // someone else since (one pizzeria's old domain now serves a gambling site).
+  const row = r => `- id: ${r.id} | ${r.name} | ${r.neighborhood ?? '?'} | ${
+    closed(r) ? 'closed' : `site: ${r.url ?? 'unknown'}`} | ${
+    onFile(r).length ? `on file: ${onFile(r).slice(0, 4).join(' ')}` : 'no sources on file'}`;
+  const brief = `Your task: re-rate pizzerias that are already in the ranking. The
+ratings they carry were entered by hand when the index launched; each is
+to be derived afresh from what has been published about the place.
+Re-rate these, and only these (they are your rating worklist):
+
+${list.map(row).join('\n')}
+
+The URLs in a row are published coverage already on file for that entry:
+places to start, not the limit of what you may read. The ratings on file
+are deliberately not shown. Do not look them up, in
+pizza/data/restaurants.json or on the published index: a number read off
+the old rating is not a new one. Rate each place from the coverage as if
+it had never been rated. The note you write is published under the entry
+as the rating's provenance: it describes what the coverage says, and
+never mentions an earlier rating or that this is a re-rating.
+
+An entry marked closed is rated the same way, from what was published
+while it was open. No site is listed for it, because a closed pizzeria's
+domain may since have passed to someone else; do not go looking for one.
+
+${ratingStandard(restaurants)}
+
+Skip any entry you cannot ground in at least one credible published
+source about that specific place -- no rating is far better than an
+invented one, and a skipped entry is a correct outcome. Report each
+skipped entry as a "ratingSkipped" record ({"id","note"}: what you
+searched and what you found) so it is not redrawn next pass. One
+proposal per pizzeria.
+
+Budget: about 2 searches or fetches per entry, 14 in total. Write the
+file and stop.`;
+  return { brief, worklistSize: list.length };
 };
 
 BUILDERS.social = ({ openField, now }) => {
@@ -439,15 +513,18 @@ Budget: about 2 searches per entry, 24 in total.`;
 };
 
 BUILDERS.sources = ({ openField }) => {
-  // Dispatch-only backfill of citations for the founding ratings, which were
-  // set editorially with nothing on file. Values are never touched; the
-  // agent attaches the published criticism it finds, and the directory shows
-  // it beside the number. Highest-ranked first, since those are the ratings
-  // a reader is most likely to argue with.
+  // Dispatch-only backfill of citations for launch ratings (isLaunchRating in
+  // slice.js), which were typed in with nothing on file. Values are never
+  // touched; the agent attaches the published criticism it finds, and the
+  // directory shows it beside the number. The rerate task replaces those
+  // ratings outright, and starts from what this one attached; once it has
+  // been through them all there is no launch rating left to cite and this
+  // worklist is empty. Highest-ranked first, since those are the ratings a
+  // reader is most likely to argue with.
   const uncited = r => ['craft', 'distinctiveness', 'critical']
     .every(k => !(r.factors?.[k]?.sources?.length) && !r.factors?.[k]?.source);
   const list = openField
-    .filter(r => isRated(r) && r.factors.craft.setBy === 'editorial' && uncited(r))
+    .filter(r => isLaunchRating(r) && uncited(r))
     .sort((a, b) => (b.factors.craft.value + b.factors.critical.value) - (a.factors.craft.value + a.factors.critical.value))
     .slice(0, 5);
   const brief = `Your task: find the published criticism behind ratings that are

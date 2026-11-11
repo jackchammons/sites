@@ -13,6 +13,13 @@ const NOW = Date.parse('2026-11-10T12:00:00Z');
 const day = n => Date.parse(`2026-11-${String(n).padStart(2, '0')}T12:00:00Z`);
 
 const RATED = { craft: { value: 8 }, distinctiveness: { value: 7 }, critical: { value: 8 } };
+/* A launch rating, typed in by hand, and a rating the agent read from coverage.
+ * The launch values are ones no brief prints for any other reason. */
+const graded = (setBy, sources) => Object.fromEntries([['craft', 9.3], ['distinctiveness', 8.7], ['critical', 9.1]]
+  .map(([k, value]) => [k, { value, setBy, date: '2026-08-26', note: 'A NOTE ON FILE',
+    ...(sources?.length ? { source: sources[0], sources } : {}) }]));
+const launch = (...sources) => graded('editorial', sources);
+const AGENT = graded('agent', ['https://www.thestranger.com/a-review']);
 const entry = (id, over = {}) => ({ id, name: id.replace(/-/g, ' '), status: 'open', neighborhood: 'Ballard',
   url: `https://${id}.example`, locations: [], mentions: [], ...over });
 
@@ -38,7 +45,7 @@ test('rotation: the oldest type is passed over when its worklist is empty', () =
 
 test('rotation: census rotates with the daily types, and the backfills stay dispatch-only', () => {
   assert.deepEqual(TYPES, ['discovery', 'locations', 'liveness', 'news', 'rating', 'census']);
-  assert.deepEqual(DISPATCH_ONLY, ['social', 'facts', 'coverage', 'sources']);
+  assert.deepEqual(DISPATCH_ONLY, ['social', 'facts', 'coverage', 'sources', 'rerate']);
   // Every backfill has a worklist today, and auto mode still never draws one.
   const none = Object.fromEntries(TYPES.map(t => [t, 0]));
   for (let d = 0; d < 12; d++) {
@@ -225,6 +232,108 @@ test('a pass that resolves nothing can report its whole worklist: every skipped 
   assert.equal(size('social'), 15);
 });
 
+/* ---- rerate: replacing the launch ratings ---- */
+test('rerate: launch ratings only; open first, then sources on file, then id; closed entries included', () => {
+  const rs = [
+    entry('z-closed-cited', { status: 'closed', factors: launch('https://www.thestranger.com/z') }),
+    entry('b-open-uncited', { factors: launch() }),
+    entry('c-open-cited', { factors: launch('https://www.thestranger.com/c') }),
+    entry('a-closed-uncited', { status: 'closed', factors: launch() }),
+    entry('a-open-cited', { factors: launch('https://www.thestranger.com/a') }),
+    // one hand-set factor beside two of the agent's is still a launch rating
+    entry('d-open-mixed', { factors: { ...AGENT, craft: launch().craft } }),
+    entry('agent-rated', { factors: AGENT }),
+    entry('unrated'),
+    entry('half-rated', { factors: { craft: launch().craft } })
+  ];
+  for (const order of [rs, [...rs].reverse()]) {
+    const { brief, worklistSize } = buildTask('rerate', order, { now: NOW });
+    assert.equal(worklistSize, 6);
+    assert.deepEqual(ids(brief), ['a-open-cited', 'c-open-cited', 'd-open-mixed', 'b-open-uncited', 'z-closed-cited', 'a-closed-uncited']);
+  }
+});
+
+test('rerate: seven a pass, and an attempt rests the entry for 90 days', () => {
+  const many = Array.from({ length: 10 }, (_, i) => entry(`pie-${i}`, { factors: launch() }));
+  const first = buildTask('rerate', many, { now: NOW });
+  assert.equal(first.worklistSize, 7);
+  assert.deepEqual(ids(first.brief), ['pie-0', 'pie-1', 'pie-2', 'pie-3', 'pie-4', 'pie-5', 'pie-6']);
+  // a pass that grounds nothing, or everything, fits the sections it reports in
+  assert.ok(first.worklistSize <= CAPS.ratingSkipped && first.worklistSize <= CAPS.factorRatings);
+
+  const rs = [
+    entry('tried-yesterday', { factors: launch(), ratingAttempted: '2026-11-09' }),
+    entry('tried-89-days-ago', { factors: launch(), ratingAttempted: '2026-08-13' }),
+    entry('tried-90-days-ago', { factors: launch(), ratingAttempted: '2026-08-12T12:00:00Z' }),
+    entry('never-tried', { factors: launch() })
+  ];
+  assert.deepEqual(ids(buildTask('rerate', rs, { now: NOW }).brief), ['never-tried', 'tried-90-days-ago']);
+  assert.equal(buildTask('rerate', rs.slice(0, 2), { now: NOW }).worklistSize, 0);
+  // once the agent has rated an entry it is off the list for good
+  assert.equal(buildTask('rerate', [entry('done', { factors: AGENT, ratingAttempted: '2026-01-01' })], { now: NOW }).worklistSize, 0);
+});
+
+test('rerate brief: lists the sources on file to start from and never the rating being replaced', () => {
+  const rs = [
+    entry('cited', { factors: launch('https://www.theinfatuation.com/seattle/reviews/cited', 'https://www.thestranger.com/cited') }),
+    entry('many-cited', { factors: { ...launch('https://x.example/1', 'https://x.example/2', 'https://x.example/3'),
+      critical: launch('https://x.example/3', 'https://x.example/4', 'https://x.example/5').critical } }),
+    entry('single-source', { factors: Object.fromEntries(Object.entries(launch()).map(([k, f]) =>
+      [k, { ...f, source: 'https://x.example/only' }])) }),
+    entry('uncited', { factors: launch() }),
+    entry('gone-pie', { status: 'closed', factors: launch('https://www.seattlemet.com/gone') })
+  ];
+  const { brief } = buildTask('rerate', rs, { now: NOW });
+  assert.match(brief, /^- id: cited \| cited \| Ballard \| site: https:\/\/cited\.example \| on file: https:\/\/www\.theinfatuation\.com\/seattle\/reviews\/cited https:\/\/www\.thestranger\.com\/cited$/m);
+  // one list per entry across its three factors, each URL once, four at most
+  assert.match(brief, /^- id: many-cited \| .* \| on file: https:\/\/x\.example\/1 https:\/\/x\.example\/2 https:\/\/x\.example\/3 https:\/\/x\.example\/4$/m);
+  assert.match(brief, /^- id: single-source \| .* \| on file: https:\/\/x\.example\/only$/m);
+  assert.match(brief, /^- id: uncited \| uncited \| Ballard \| site: https:\/\/uncited\.example \| no sources on file$/m);
+  // a closed entry is marked, and its site is not offered
+  assert.match(brief, /^- id: gone-pie \| gone pie \| Ballard \| closed \| on file: https:\/\/www\.seattlemet\.com\/gone$/m);
+  assert.doesNotMatch(brief, /gone-pie\.example/);
+  // nothing of the rating on file: no value, no provenance, no note
+  assert.doesNotMatch(brief, /9\.3|8\.7|9\.1|editorial|2026-08-26|A NOTE ON FILE/);
+  assert.match(brief, /already in the ranking/);
+  assert.match(brief, /derived afresh from what has been published/);
+  assert.match(brief, /about 2 searches or fetches per entry/);
+});
+
+test('rerate brief: holds a rating to the standard the rating brief sets, word for word', () => {
+  const rs = [entry('to-rate', { styleGroup: 'Roman' }), entry('to-rerate', { factors: launch(), styleGroup: 'Neapolitan' })];
+  const standard = brief => /\nFor each one, read [\s\S]*two years old counts\.\n/.exec(brief)?.[0];
+  const rating = buildTask('rating', rs, { now: NOW }).brief;
+  const rerate = buildTask('rerate', rs, { now: NOW }).brief;
+  assert.ok(standard(rating).length > 1000);
+  assert.equal(standard(rerate), standard(rating));
+  for (const part of ['- craft: ', '- distinctiveness: ', '- criticScore: ', '- opened: ', '- priceIndex: ',
+    '- styleGroup: ', 'Neapolitan; Roman', '- sources: 1-4 https URLs', '- note: ',
+    'At least one source must be published criticism', 'ALSO report it as a "mentions"']) {
+    assert.ok(standard(rerate).includes(part), part);
+  }
+  for (const brief of [rating, rerate]) {
+    assert.match(brief, /Skip any entry you cannot ground in at least one credible published\nsource/);
+    assert.match(brief, /"ratingSkipped" record \(\{"id","note"\}/);
+  }
+});
+
+test('rerate is dispatch-only: auto never draws it, whatever it has to do', () => {
+  const rs = [entry('to-rerate', { factors: launch() })];
+  const hasWork = t => buildTask(t, rs, { now: NOW }).worklistSize !== 0;
+  assert.equal(hasWork('rerate'), true);
+  assert.ok(!TYPES.includes('rerate'));
+  const none = Object.fromEntries(TYPES.map(t => [t, 0]));
+  for (let d = 0; d < 12; d++) {
+    assert.notEqual(pickTask('auto', none, hasWork, d), 'rerate');
+    assert.notEqual(pickTask('auto', null, hasWork, d), 'rerate');
+    // nothing else to do anywhere still does not fall through to it
+    assert.notEqual(pickTask('auto', none, t => t === 'rerate', d), 'rerate');
+  }
+  assert.equal(pickTask('rerate', none, () => false), 'rerate');
+  // a rerate pass on record does not enter the rotation's history either
+  assert.deepEqual(lastSuccessFromLog('2026-11-12T12:50:00+00:00\tchore(data): research pass (rerate) 2026-11-12'), none);
+});
+
 /* ---- the liveness brief ---- */
 test('liveness brief: shows the account on file and says which post URLs count for a closure', () => {
   const rs = [
@@ -277,6 +386,10 @@ test('CLI: writes task, skip and a delimited brief to GITHUB_OUTPUT', () => {
     execFileSync(process.execPath, [script, 'news'], { env: { ...process.env, GITHUB_OUTPUT: out }, stdio: 'ignore' });
     const text = fs.readFileSync(out, 'utf8');
     assert.match(text, /^task=news\nskip=false\nbrief<<TASK_BRIEF_EOF\nYour task: [\s\S]+\nTASK_BRIEF_EOF\n$/);
+    // A dispatch-only type is taken as given. Whether it has work depends on the data.
+    fs.rmSync(out);
+    execFileSync(process.execPath, [script, 'rerate'], { env: { ...process.env, GITHUB_OUTPUT: out }, stdio: 'ignore' });
+    assert.match(fs.readFileSync(out, 'utf8'), /^task=rerate\nskip=(true|false)\nbrief<<TASK_BRIEF_EOF\nYour task: re-rate [\s\S]+\nTASK_BRIEF_EOF\n$/);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }

@@ -9,7 +9,7 @@
 import { PUGET_SOUND_ZIP, PUGET_SOUND_ZIP_LABEL } from './bounds.js';
 import { normName } from './census.js';
 import { streetKey } from './locations.js';
-import { isRated } from './slice.js';
+import { isRated, isLaunchRating } from './slice.js';
 
 export const KINDS = new Set(['opening', 'closing', 'ranking', 'mention']);
 /* A `…Skipped` section must be able to hold a whole worklist, since a pass
@@ -202,8 +202,8 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
   /* ---- locations ----
    * Addresses are the one factual field an agent may write into the dataset,
    * because the business publishes them itself on a page that serves to anyone.
-   * That makes them checkable, which crowd ratings (403) and pillar scores
-   * (editorial) are not. These checks exist to catch a plausible invention: a
+   * That makes them checkable, which crowd ratings (403) and graded factors
+   * (a judgement) are not. These checks exist to catch a plausible invention: a
    * street address that is not one, a branch in another metro, the same branch
    * listed twice.
    */
@@ -326,11 +326,14 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
 
   /* Values bounded and stepped so a typo cannot smuggle in a 47. */
   const validFactorValue = v => typeof v === 'number' && v >= 0 && v <= 10 && Math.round(v * 2) === v * 2;
-  /* factorRatings: the full proposal that makes an unrated entry rankable.
-   * Stricter than `factors` because it grants entry to the ladder: values
-   * bounded, an already-rated entry is refused outright, and every proposal
-   * carries the sources it was read from. */
+  /* factorRatings: the full proposal that makes an unrated entry rankable, or
+   * replaces a launch rating (isLaunchRating in slice.js) with one read from
+   * published coverage. Stricter than `factors` because it grants entry to
+   * the ladder: values bounded, an entry the agent has already rated is
+   * refused outright, and every proposal carries the sources it was read
+   * from. */
   const thisYear = new Date(nowMs).getUTCFullYear();
+  const agentRated = r => isRated(r) && !isLaunchRating(r);
 
   const ratingSeen = new Set();
   sections.factorRatings.forEach((it, i) => {
@@ -338,7 +341,7 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
     if (!r) { bad('factorRatings', i, `unknown restaurant id "${it?.id}"`); return; }
     if (ratingSeen.has(it.id)) { bad('factorRatings', i, `duplicate proposal for "${it.id}"`); return; }
     ratingSeen.add(it.id);
-    if (isRated(r)) { bad('factorRatings', i, `${r.name} is already rated; ratings are never overwritten`); return; }
+    if (agentRated(r)) { bad('factorRatings', i, `${r.name} is already rated; ratings are never overwritten`); return; }
     for (const k of ['craft', 'distinctiveness']) {
       if (!validFactorValue(it?.[k])) bad('factorRatings', i, `${k} must be 0-10 in 0.5 steps, got ${it?.[k]}`);
     }
@@ -372,13 +375,15 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
     checkText('factorRatings', i, it?.note, 'note', MAX_LEN.note, 20);
   });
 
-  /* ---- ratingSkipped: the rating task's memory ----
+  /* ---- ratingSkipped: the rating and rerate tasks' memory ----
    * An entry the agent looked for coverage on and could not ground. Recorded
-   * so the worklist stops redrawing the same no-coverage entries. */
+   * so the worklist stops redrawing the same no-coverage entries. Accepted
+   * for the entries a proposal is accepted for: an unrated one, or one whose
+   * launch rating the rerate task could not replace. */
   sections.ratingSkipped.forEach((it, i) => {
     const r = byId.get(it?.id);
     if (!r) { bad('ratingSkipped', i, `unknown restaurant id "${it?.id}"`); return; }
-    if (isRated(r)) bad('ratingSkipped', i, `${r.name} is already rated`);
+    if (agentRated(r)) bad('ratingSkipped', i, `${r.name} is already rated`);
     if (ratingSeen.has(it.id)) bad('ratingSkipped', i, `${r.name} is also proposed in factorRatings`);
     checkText('ratingSkipped', i, it?.note, 'note', MAX_LEN.note, 10);
   });
@@ -437,12 +442,14 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
   }
 
   /* ---- factorSources: citations for a rating that already exists ----
-   * The founding entries were rated editorially with no source on file. This
-   * channel attaches published criticism to such a rating without touching
-   * its values: the apply step appends to every graded factor's sources and
-   * writes nothing else. Only already-rated entries qualify, and the same
-   * criticism rule as factorRatings applies (own site, aggregators and
-   * social may ride along but never stand alone). */
+   * A launch rating was typed in with no source on file. This channel
+   * attaches published criticism to a rating without touching its values:
+   * the apply step appends to every graded factor's sources and writes
+   * nothing else. It leaves a launch rating a launch rating; replacing one
+   * is the rerate task's job, through factorRatings. Only already-rated
+   * entries qualify, and the same criticism rule as factorRatings applies
+   * (own site, aggregators and social may ride along but never stand
+   * alone). */
   const sourcesSeen = new Set();
   sections.factorSources.forEach((it, i) => {
     const r = byId.get(it?.id);

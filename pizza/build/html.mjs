@@ -22,6 +22,22 @@ export const hostOf = url => {
   catch { return 'source'; }
 };
 
+/* A citation reads as the outlet it points to unless the caller has better
+ * text (a headline, a handle). */
+export const srcLink = (url, text = hostOf(url)) =>
+  `<a href="${esc(url)}" target="_blank" rel="noopener nofollow">${esc(text)}</a>`;
+/* Several citations in a row: a second link to the same outlet is numbered,
+ * so no two links in the list read the same. */
+export const srcLinks = urls => {
+  const seen = new Map();
+  return urls.map(u => {
+    const host = hostOf(u);
+    const n = (seen.get(host) ?? 0) + 1;
+    seen.set(host, n);
+    return srcLink(u, n > 1 ? `${host} (${n})` : host);
+  }).join(', ');
+};
+
 /* A pizzeria name, linked to its best web presence: the official site when one
  * is on file, its Instagram otherwise. Used everywhere a name appears outside
  * the ranked cards, so the rule holds across the page. */

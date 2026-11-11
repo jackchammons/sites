@@ -34,10 +34,17 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
 
 ## Scoring (SLICE)
 
-- **Three factors are computed, two are editorial.** Reputation, critical reception and
+- **Three factors are computed, two are graded.** Reputation, critical reception and
   value derive at build time in `slice.js`; never store them. Craft and distinctiveness
-  live in `factors` with provenance (`setBy`, `source`, `date`) and are write-once:
-  never overwrite them from a script.
+  (and the critic base) live in `factors` with provenance (`setBy`, `source`, `sources`,
+  `note`, `date`), graded by the research agent from published coverage. A rating the
+  agent set is write-once: never overwrite it from a script.
+- **Every rating comes from the research agent.** The index launched with 25 ratings
+  typed in by hand (`setBy: "editorial"`). `isLaunchRating()` in `slice.js` names them,
+  and they are the one thing a validated `factorRatings` proposal may replace, whole.
+  The dispatch-only `rerate` task works through them; once none is left, `rerate` and
+  `sources` have empty worklists and `editorial` can leave `check-dataset.js`. The page
+  never describes a rating as editorial or founding, and `verify.mjs` gates on that.
 - **Reputation can lift a score and never lower it.** It combines longevity ×3, review
   volume ×2 and coverage ×1 as the best weighted mean over the components present, so
   an added component never lowers the factor. The factor is then counted only when it
@@ -128,7 +135,7 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   commit subjects, so a failed day is retried and a dispatch counts). Census has work
   only when the candidates queue has something pending. A forced type (the workflow's
   `task` input) runs as given, including the dispatch-only ones: `social`, `facts`,
-  `coverage`, `sources`. Only a forced type can come back `skip=true`.
+  `coverage`, `sources`, `rerate`. Only a forced type can come back `skip=true`.
 - **Every worklist needs attempt memory.** A task that redraws the entries it could not
   resolve stalls: locations verified nothing for three passes that way. Rating, facts,
   locations, coverage and social each have a `…Skipped` section the agent fills for
@@ -150,12 +157,16 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   fail, emits a warning per drop, writes the accepted set back to `research.json`, and
   fails the run only on a structural problem. Unknown top-level keys are ignored with a
   warning. Free text and addresses may not contain `<` or `>`.
-- **Ratings fill gaps only.** `factorRatings` proposals carry craft, distinctiveness and
-  criticScore (all three, or the entry can never rank), 0–10 in 0.5 steps, with 1–4 read
-  sources of which at least one is published criticism. The validator refuses a proposal
-  for an already-rated entry. `factorSources` attaches citations to a rating on file and
-  never changes a value. An unrated entry with no findable coverage is a deliberate
-  terminal state.
+- **Ratings fill gaps, and replace launch ratings.** `factorRatings` proposals carry
+  craft, distinctiveness and criticScore (all three, or the entry can never rank), 0–10
+  in 0.5 steps, with 1–4 read sources of which at least one is published criticism. The
+  validator refuses a proposal for an entry the agent has already rated. On a launch
+  rating the apply step replaces all three graded factors with nothing of the old object
+  kept, and leaves `opened`, `priceIndex` and `styleGroup` fill-gaps-only; `rerate`
+  draws 7 per pass and never shows the agent the values on file. A `ratingSkipped`
+  record for a launch rating stamps `ratingAttempted` and leaves the rating for a person
+  to review. `factorSources` attaches citations and never changes a value. An unrated
+  entry with no findable coverage is a deliberate terminal state.
 - **The candidates queue is the discovery funnel's top.** `data/candidates.json` is
   seeded by `scripts/fetch-candidates.mjs` from King County food-permit data. Candidates
   are leads, never entries: the `census` task verifies each through the `directory`
@@ -174,6 +185,15 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   every publish build, rewrites `data/buzz.json` only when the list of stories changed
   (`updated` is the last sweep that changed it), and exits 0 on any failure. It is what
   keeps the buzz section current without the agent.
+- **Google News re-dates old articles.** A feed story labelled opening whose every tagged
+  entry is on file as closed, or as opened two or more calendar years before the story's
+  date, is dropped at merge (`staleOpening`). That also drops a real story about an
+  established pizzeria opening a new branch; those reach the page only when the research
+  `news` task files them.
+- **Under 1100px the map is pinned and its rail has no box.** `.dir-rail` is
+  `display: contents` there, so `.dir-pin` can stick inside the layout while the
+  entries scroll beneath it. Observe or measure `#map` or `.dir-pin`, never `#map-rail`,
+  and set no `display` on `.dir-rail` without `.has-map` (it is rendered `hidden`).
 - **Headlines and agent notes are third-party text.** They must never be able to fail
   `verify.mjs` or reach the page unescaped, in the static HTML or in a map popup.
 - **`verify.mjs` checks what it claims.** When adding a check, prove it by mutating a

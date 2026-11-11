@@ -191,18 +191,21 @@ for (const r of dataset.restaurants) {
   check(markup.includes(esc(r.name)), `"${r.name}" missing from the page`);
 }
 
-/* A template that printed a missing value shows as one of these words in the
- * visible text. Text the page quotes from the data files may contain them
- * honestly -- a headline can say a closing date is "still undefined" -- and a
- * headline must not be able to stop a deploy, so every data string that
- * contains one is taken out of the text before the test. A field whose whole
- * value is one of the words is still a hit: that is a broken record, shown. */
-{
-  const LEAK = /\bundefined\b|\bNaN\b|\[object Object\]/;
+/* The page's visible text, for a test that looks for words the templates must
+ * never print. Text the page quotes from the data files may contain such a
+ * word honestly -- a headline can say a closing date is "still undefined" --
+ * and a headline must not be able to stop a deploy, so every data string that
+ * contains one is taken out of the text first. A field whose whole value is
+ * one of the words is left in: printed, that is a template showing a raw
+ * field. */
+const dataFiles = ['restaurants.json', 'attributes.json', 'buzz.json', 'research.json']
+  .filter(f => fs.existsSync(path.join(root, 'data', f))).map(readJson);
+const textWithoutQuoted = words => {
+  const whole = new RegExp(`^\\s*(?:${words.source})\\s*$`, words.flags);
   const quoted = new Set();
   const collect = v => {
     if (typeof v === 'string') {
-      if (!LEAK.test(v) || /^\s*(?:undefined|NaN|\[object Object\])\s*$/.test(v)) return;
+      if (!words.test(v) || whole.test(v)) return;
       quoted.add(esc(v));
       // A URL is shown as its host, or without its scheme.
       if (/^https?:\/\//i.test(v)) {
@@ -213,16 +216,83 @@ for (const r of dataset.restaurants) {
       Object.values(v).forEach(collect);
     }
   };
-  for (const f of ['restaurants.json', 'attributes.json', 'buzz.json', 'research.json']) {
-    if (fs.existsSync(path.join(root, 'data', f))) collect(readJson(f));
-  }
+  dataFiles.forEach(collect);
   let text = markup.replace(/<[^>]+>/g, ' ');
   for (const q of [...quoted].sort((a, b) => b.length - a.length)) text = text.split(q).join(' ');
+  return text;
+};
+const near = (text, m) => text.slice(Math.max(0, m.index - 40), m.index + 40).replace(/\s+/g, ' ');
+
+/* A template that printed a missing value shows as one of these words in the
+ * visible text. */
+{
+  const LEAK = /\bundefined\b|\bNaN\b|\[object Object\]/;
+  const text = textWithoutQuoted(LEAK);
   const leak = LEAK.exec(text);
-  check(!leak, leak && `page shows "${leak[0]}" near: ${text.slice(Math.max(0, leak.index - 40), leak.index + 40).replace(/\s+/g, ' ')}`);
+  check(!leak, leak && `page shows "${leak[0]}" near: ${near(text, leak)}`);
   // Tested on the markup, where quoted text is escaped: the inline data keeps
   // its apostrophes, and a name or URL there may spell anything.
   check(!/=\s*(["'])(?:undefined|null|NaN)\1/.test(markup), 'an attribute is literally undefined/null/NaN');
+}
+
+/* Every rating is described one way: read by the research agent from published
+ * coverage. The page's own copy never says a rating was typed in by hand or
+ * dates one to the index's launch. A factor's `setBy` is one of these words
+ * whole, so it is not taken out as quoted text, and a template that printed
+ * the raw field is caught as well. */
+{
+  const HAND_RATED = /editorial|founding entr|at launch|launched in/i;
+  const text = textWithoutQuoted(HAND_RATED);
+  const hit = HAND_RATED.exec(text);
+  check(!hit, hit && `page describes a hand-set rating ("${hit[0]}") near: ${near(text, hit)}`);
+}
+
+/* ---------- the pinned map ---------- */
+
+/* Under 1100px the map is pinned below the nav while the list scrolls beneath
+ * it. How that looks takes a layout engine, and is checked in Chromium on a
+ * dev box; these are the parts a reading of the output can hold, each of
+ * which has a quiet way to break on a phone and nowhere else. */
+{
+  const sheet = (html.match(/<style>([\s\S]*?)<\/style>/)?.[1] ?? '').replace(/\/\*[\s\S]*?\*\//g, '');
+  // The contents of every block that opens with `prelude`, nested blocks included.
+  const blocksOf = prelude => {
+    const out = [];
+    for (let at = sheet.indexOf(prelude); at !== -1; at = sheet.indexOf(prelude, at + 1)) {
+      const open = sheet.indexOf('{', at);
+      let depth = 1, i = open + 1;
+      for (; i < sheet.length && depth; i++) depth += sheet[i] === '{' ? 1 : sheet[i] === '}' ? -1 : 0;
+      out.push(sheet.slice(open + 1, i - 1));
+    }
+    return out;
+  };
+  const stacked = blocksOf('@media (max-width: 1099px)').join('\n');
+  const declared = selector => stacked.match(
+    new RegExp(`(?:^|[{};])\\s*${selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^}]*)\\}`))?.[1] ?? '';
+
+  check(/position:\s*sticky/.test(declared('.dir-layout.has-map .dir-pin')),
+    'under 1100px the map wrapper (.dir-pin) is not sticky; the map scrolls away from the list');
+  // A sticky box holds only inside its parent, so the wrapper has to be laid
+  // out as a child of the layout, not of the rail.
+  check(/display:\s*contents/.test(declared('.dir-layout.has-map .dir-rail')),
+    'under 1100px the rail keeps its own box, so the pinned map cannot outlast it');
+  // app.js finds where the visible list begins from the header's sticky offset.
+  check(/top:[^;]*var\(--map-h\)/.test(declared('.dir-layout.has-map .dir-table thead th')),
+    'under 1100px the table header does not stick below the pinned map');
+  // The rail is rendered hidden. An author rule that gives it a display value
+  // beats the hidden attribute, so every one has to wait for .has-map.
+  for (const [, selectors, body] of sheet.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    if (!/(?:^|;)\s*display\s*:/.test(body)) continue;
+    for (const sel of selectors.split(',').map(x => x.trim())) {
+      check(!/\.dir-rail$/.test(sel) || sel.includes('.has-map'),
+        `"${sel}" sets display on the map rail without .has-map; a reader without JavaScript gets an empty pinned box`);
+    }
+  }
+  check(/<div class="dir-rail" id="map-rail" hidden>\s*<div class="dir-pin">\s*<div id="map"[^>]*><\/div>\s*<\/div>\s*<p class="note dir-map-note">/.test(html),
+    'the map rail is not hidden > wrapper > map, with the legend after the wrapper; the legend would be pinned with the map, or the rail shown without one');
+  // With no box of its own under 1100px, the rail never intersects anything.
+  check(!/\.observe\(\s*rail\s*\)/.test(appJs),
+    'app.js waits for the rail to near the viewport before loading the map; on a phone that never happens');
 }
 
 /* ---------- rankings.json ---------- */

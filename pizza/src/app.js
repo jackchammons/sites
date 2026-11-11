@@ -99,22 +99,20 @@ const dirApi = { expand: null };
     const topIds = new Set(
       [...document.querySelectorAll('#board .card')].map(c => c.dataset.id).slice(0, 10));
 
-    /* Wheel zoom and dragging follow the layout. In the desktop rail the map
-     * is sticky beside the table, and a wheel or drag gesture over it reads as
-     * "move the map". In the stacked layout the map lies across the page's
-     * scroll path: a map that takes the wheel, or a finger's drag, traps the
-     * reader above the table, so both are off there. With dragging off Leaflet
-     * leaves one-finger panning to the page; pinch zoom, the zoom buttons,
-     * marker taps and row clicks still move the map. */
+    /* A drag on the map always moves the map; wheel zoom follows the layout.
+     * In the desktop rail the map is beside the table, and a wheel over it
+     * reads as "zoom the map". In the stacked layout the map is pinned across
+     * the top of the page while the list scrolls beneath it, so the pointer
+     * comes to rest on it just by scrolling: a map that took the wheel there
+     * would stop the page. A finger is different. The pinned map leaves two
+     * thirds of the screen to scroll the page with, so a drag that starts on
+     * the map is meant for the map, and Leaflet takes it; one that starts on
+     * the list scrolls the page. */
     const wideLayout = window.matchMedia('(min-width: 1100px)');
-    const map = L.map(el, { scrollWheelZoom: false, dragging: wideLayout.matches });
-    const setGestures = () => {
-      for (const gesture of [map.scrollWheelZoom, map.dragging]) {
-        if (wideLayout.matches) gesture.enable(); else gesture.disable();
-      }
-    };
-    setGestures();
-    wideLayout.addEventListener?.('change', setGestures);
+    const map = L.map(el, { scrollWheelZoom: wideLayout.matches });
+    wideLayout.addEventListener?.('change', () => {
+      if (wideLayout.matches) map.scrollWheelZoom.enable(); else map.scrollWheelZoom.disable();
+    });
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -125,6 +123,12 @@ const dirApi = { expand: null };
       : topIds.has(r.id) ? '#c8401f'
       : '#b08968';
 
+    /* Leaflet pans a popup into the map, to within a margin of its edges. The
+     * stacked map is narrow enough that a popup brought in from the left ends
+     * up under the zoom buttons, so there the left margin is the width the
+     * buttons take. Read each time a popup opens, so it follows the layout. */
+    const popupInset = { get x() { return wideLayout.matches ? 5 : 50; }, y: 5 };
+
     const bounds = [];
     const markersById = new Map();   // first (usually primary) Seattle marker per entry
     for (const p of pts) {
@@ -134,7 +138,7 @@ const dirApi = { expand: null };
         color: '#fff', weight: 1.5,
         fillColor: color(p), fillOpacity: 0.92
       }).addTo(map);
-      m.bindPopup(() => popupFor(p));
+      m.bindPopup(() => popupFor(p), { autoPanPaddingTopLeft: popupInset });
       bounds.push([loc.lat, loc.lon]);
       if (!markersById.has(r.id)) markersById.set(r.id, m);
       m.on('click', () => { if (dirApi.expand) dirApi.expand(r.id); });
@@ -173,7 +177,9 @@ const dirApi = { expand: null };
       near.disconnect();
       load();
     }, { rootMargin: '1200px 0px' });
-    near.observe(rail);
+    // The map, not the rail: in the stacked layout the rail has no box of its
+    // own (display: contents), and an element without one never intersects.
+    near.observe(el);
   } else {
     load();
   }
@@ -197,13 +203,45 @@ const dirApi = { expand: null };
     const btn = row.querySelector('.dir-toggle');
     if (btn) btn.setAttribute('aria-expanded', String(open));
   };
+
+  /* In the stacked layout the map is pinned over the top of the list, and the
+   * table header sticks under the map, so the header's sticky offset plus its
+   * height is where the visible list begins, at any screen height. A browser
+   * that will not report the offset as a length gets the header's bottom edge
+   * as it stands: the same line once the header is stuck, lower before then,
+   * and never one that hides the row. */
+  const stacked = window.matchMedia('(max-width: 1099px)');
+  const head = body.parentElement.querySelector('thead th');
+  const listTop = () => {
+    if (!head) return 0;
+    const box = head.getBoundingClientRect();
+    const offset = parseFloat(getComputedStyle(head).top);
+    return Number.isFinite(offset) ? offset + box.height : box.bottom;
+  };
+  /* Bring a row into view. Beside the map, that is the middle of the screen.
+   * Under a pinned map the middle of the screen can be behind the map, so the
+   * row and its open record are centred in the list's own area instead, or
+   * the row is put at the top of it when the record is longer than the room. */
+  const reveal = row => {
+    if (!stacked.matches) { row.scrollIntoView({ block: 'center' }); return; }
+    const top = listTop();
+    const record = row.nextElementSibling;
+    const height = row.offsetHeight + (record && !record.hidden ? record.offsetHeight : 0);
+    const spare = Math.max(0, window.innerHeight - top - height);
+    // Rounded down, so a fraction of a pixel never tucks the row under the header.
+    window.scrollBy({ top: Math.floor(row.getBoundingClientRect().top - top - spare / 2) });
+  };
   const expand = (id, { fromMap = false } = {}) => {
     for (const d of body.querySelectorAll('.dir-detail:not([hidden])')) {
       if (d.id !== 'dd-' + id) setOne(d.id.slice(3), false);
     }
     setOne(id, true);
-    if (fromMap) rowOf(id)?.scrollIntoView({ block: 'center' });
-    else if (mapApi.focus) mapApi.focus(id);
+    const row = rowOf(id);
+    if (fromMap) { if (row) reveal(row); return; }
+    // Closing the record above a tapped row pulls the row up the page, and
+    // under a pinned map it must not come to rest behind the map.
+    if (row && stacked.matches && row.getBoundingClientRect().top < listTop()) reveal(row);
+    if (mapApi.focus) mapApi.focus(id);
   };
   dirApi.expand = id => expand(id, { fromMap: true });
 

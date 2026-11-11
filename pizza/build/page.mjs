@@ -14,10 +14,6 @@ import { locationLabel } from '../src/locations.js';
 export function pageHtml(ctx, sections) {
   const { dataset, now, week, scoredAll, ranked, spotlight, css, leafletCss } = ctx;
   const openRated = scoredAll.filter(r => !r.status || r.status === 'open').length;
-  const founding = dataset.restaurants.filter(r => r.factors?.craft?.setBy === 'editorial').length;
-  const agentRated = dataset.restaurants.filter(r => r.factors?.craft?.setBy === 'agent').length;
-  const foundingCited = dataset.restaurants.filter(r => r.factors?.craft?.setBy === 'editorial'
-    && (r.factors.craft.sources?.length || r.factors.craft.source)).length;
   const capWeeks = Math.round(MAX_STALENESS_DECAY / STALENESS_PER_WEEK);
   const REPO = 'https://github.com/jackchammons/sites';
   /* Rendered twice: in the hero beside the lede on wide screens, and under
@@ -162,20 +158,18 @@ ${directorySection}
 
     <h3 class="method-h">Where the factor values come from</h3>
     <p class="method-p">
-      The three graded factors have two sources, and the directory says which applies to each
-      entry. The ${founding} founding entries were rated editorially when the index launched in
-      August 2026, with nothing cited at the time; a backfill task has since attached published
-      coverage to ${foundingCited} of them, values untouched, and the rest say so plainly. The
-      ${agentRated} entries added since are
-      rated by a research agent. Each day the research job assembles a worklist and hands it to
-      a Claude agent as an explicit brief: these ids, this search budget, write one JSON file,
-      run nothing. For ratings, the agent reads what has actually been published about each
-      place and proposes craft and distinctiveness on a 0.5 grid plus a critic base, citing one
-      to four https sources it read; an entry it cannot ground in real coverage stays unrated. A
-      validator checks each proposal on its own: one that is off-grid, unsourced, or would
-      overwrite an existing rating is dropped with a warning, and the rest are applied. A rating
-      is set once and never rewritten; what the rotation re-checks is
-      whether a place is open, where it is, and what has been written about it. The computed
+      The three graded factors (craft, distinctiveness and the critic base) are set by a research
+      agent from published coverage, and each is stored with the sources it read and the date it
+      was set; an entry's record in the directory shows them. Each day the research job assembles
+      a worklist and hands it to a Claude agent as an explicit brief: these ids, this search
+      budget, write one JSON file, run nothing. For ratings, the agent reads what has actually
+      been published about each place and proposes craft and distinctiveness on a 0.5 grid plus a
+      critic base, citing one to four https sources it read; an entry it cannot ground in real
+      coverage stays unrated. A validator checks each proposal on its own: one that is off-grid,
+      has no published criticism behind it, or would overwrite a rating the agent has already set
+      is dropped with a warning, and the rest are applied. Once the agent has set a rating it is
+      never rewritten; what the rotation re-checks is whether a place is open, where it is, and
+      what has been written about it. The computed
       factors below run from the stored values at build time.
     </p>
     <div class="grid2">
@@ -230,13 +224,12 @@ tier    $ ${x2(PRICE_MULT[1])}     $$ ${x2(PRICE_MULT[2])}
       <div class="mcard">
         <h4>Craft &amp; Distinctiveness — graded</h4>
         <p>The two factors that require judgment: how good the pizza itself is, and whether the
-        place owns a lane in this city. Both are stored with who set them and when; for
-        agent-rated entries, with the coverage they were read from. The founding entries' values
-        are editorial; where coverage has been attached after the fact the directory links it,
-        and where none is on file it says so. The research agent may propose these factors for
-        unrated entries only, from cited critical coverage, and may attach sources to an
-        existing rating but never change its value. The
-        weights are published above.</p>
+        place owns a lane in this city. The research agent sets both from published coverage,
+        and each is stored with the sources it read and the date; the directory links those
+        sources under the entry. A rating needs published criticism behind it: a review, a
+        roundup or a news story. The pizzeria's own site, a review aggregator or a social post
+        may be cited beside one but never alone, and the validator refuses a rating with no
+        published criticism among its sources. The weights are published above.</p>
       </div>
     </div>
 
@@ -280,7 +273,7 @@ tier    $ ${x2(PRICE_MULT[1])}     $$ ${x2(PRICE_MULT[2])}
         coverage and writes a single file of proposals — facts with sources, never scores
         applied directly.</p>
         <div class="pipe-rota" aria-label="Task rotation">
-          <span>discovery</span><span>locations</span><span>liveness</span><span>news</span><span>rating</span>
+          <span>discovery</span><span>locations</span><span>liveness</span><span>news</span><span>rating</span><span>census</span>
         </div>
         <p class="pipe-sub">one task per day, rotating — a week covers every kind of upkeep</p>
       </div>
@@ -290,7 +283,7 @@ tier    $ ${x2(PRICE_MULT[1])}     $$ ${x2(PRICE_MULT[2])}
         <b><span class="pipe-tick">✓</span> Validation</b>
         <p>Every proposal is checked before anything is written: an https source on each claim,
         addresses that parse with Puget Sound ZIPs, dates that exist, ratings on the 0.5 grid
-        that never overwrite an existing one, no duplicates.</p>
+        with published criticism behind them, no duplicates.</p>
         <p class="pipe-reject">A record that fails is dropped with a warning; the rest are
         applied.</p>
       </div>
@@ -319,7 +312,7 @@ tier    $ ${x2(PRICE_MULT[1])}     $$ ${x2(PRICE_MULT[2])}
       The result is eventual consistency, on purpose. No single run is load-bearing: a failed
       research pass costs a day and a failed build leaves the last good site standing. The
       facts the rotation re-checks are an entry's status, its addresses and its coverage; a
-      rating is set once, with its provenance, and stays. Freshness decay makes the waiting
+      rating the agent has set stays, with its sources. Freshness decay makes the waiting
       visible: an entry nobody has re-checked slowly costs score until the rotation comes back
       around.
     </p>

@@ -41,6 +41,14 @@ test('agent-set factors must cite a source', () => {
     distinctiveness: { value: 7, setBy: 'editorial', date: '2026-08-01' } } }), 'no https source');
 });
 
+test('a launch rating lints clean with no source; a rating set by anyone else does not', () => {
+  const factors = setBy => Object.fromEntries(['craft', 'distinctiveness', 'critical']
+    .map(k => [k, { value: 8, setBy, date: '2026-08-26' }]));
+  assert.deepEqual(checkDataset(base({ factors: factors('editorial') }), registry, NOW), []);
+  failsWith(base({ factors: factors('launch') }), 'setBy must be editorial|agent');
+  failsWith(base({ factors: factors(undefined) }), 'setBy must be editorial|agent');
+});
+
 test('closed entries need a citation and a date', () => {
   failsWith(base({ status: 'closed' }), 'https statusSource');
   failsWith(base({ status: 'closed', statusSource: 'https://x.com', statusDate: '2033-01-01' }), 'statusDate');

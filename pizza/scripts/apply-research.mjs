@@ -6,24 +6,28 @@
  * verified locations, discovered directory entries, mention records, links,
  * plain facts, proposed factor ratings and the attempt stamps that rest a
  * worklist entry. Crowd figures are frozen -- their sources block automated
- * reads and no API key path is in use -- and pillar scores are editorial, so no
- * script writes either. The attribute registry (data/attributes.json) is
- * maintained by hand: a flag moves a score, and nothing here writes one.
+ * reads and no API key path is in use -- so no script writes them. The graded
+ * factors are written from a validated factorRatings proposal and from
+ * nothing else: once for an unrated entry, and once more to replace a launch
+ * rating (isLaunchRating in slice.js). A rating the agent set is never
+ * overwritten. The attribute registry (data/attributes.json) is maintained by
+ * hand: a flag moves a score, and nothing here writes one.
  *
  * applyResearch() is the whole of the logic and touches no file or clock, so
  * the tests drive it directly; the CLI block at the end reads the data files,
  * calls it once and writes back whichever of them changed.
  *
- * Locations are the exception that proves the rule: a pizzeria publishes its own
- * addresses on a page that serves to anyone, so they are checkable in a way a
- * rating behind a 403 or an editorial judgement is not.
+ * Locations are replaced on every verification where a rating is not: a
+ * pizzeria publishes its own addresses on a page that serves to anyone, so they
+ * are checkable in a way a crowd figure behind a 403 or a graded judgement is
+ * not.
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { matchEntry } from '../src/census.js';
 import { normUrl, normTitle } from '../src/match.js';
-import { isRated } from '../src/slice.js';
+import { isRated, isLaunchRating } from '../src/slice.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -37,6 +41,9 @@ export function applyResearch(research, data, today, log = () => {}) {
   const byId = new Map(dataset.restaurants.map(r => [r.id, r]));
   let changes = 0;
   let buzzChanged = false, candidatesChanged = false;
+  // The one kind of rating no proposal may touch: all three graded factors on
+  // file, every one of them set by the agent.
+  const agentRated = r => isRated(r) && !isLaunchRating(r);
 
   /* status: liveness confirmations. A confirmation with no change still
    * advances statusChecked, which is what rotates the audit worklist.
@@ -123,20 +130,27 @@ export function applyResearch(research, data, today, log = () => {}) {
     log(`  ~ ${r.name}: mention from ${it.source}`);
   }
 
-  /* factorRatings: the proposal that makes an unrated entry rankable. Applied
-   * only to entries still missing a rating -- editorial and prior agent ratings
-   * are never overwritten -- with provenance on every factor and lastVerified
-   * set to today, since the entry was just researched. */
-  let ratedNow = 0;
+  /* factorRatings: the proposal that makes an unrated entry rankable, or
+   * replaces a launch rating. A rating the agent set is never overwritten.
+   * Provenance goes on every factor and lastVerified is set to today, since
+   * the entry was just researched.
+   *
+   * A launch rating is replaced whole: each graded factor becomes a new
+   * object, so no value, source or date from the hand-typed rating survives
+   * beside the agent's. The plain facts that ride along (opened, priceIndex,
+   * styleGroup) fill gaps only in both cases. */
+  let ratedNow = 0, reratedNow = 0;
   for (const it of research.factorRatings ?? []) {
     const r = byId.get(it.id);
     if (!r) continue;
-    if (isRated(r)) continue;
+    if (agentRated(r)) continue;
+    const launch = isLaunchRating(r);
+    const was = launch ? ['craft', 'distinctiveness', 'critical'].map(k => r.factors[k].value) : null;
     const src = (it.sources ?? [])[0];
     const sources = (it.sources ?? []).slice(0, 4);
     r.factors = r.factors ?? {};
     for (const k of ['craft', 'distinctiveness']) {
-      if (!r.factors[k]) r.factors[k] = { value: it[k], setBy: 'agent', source: src, sources, note: it.note, date: today };
+      if (launch || !r.factors[k]) r.factors[k] = { value: it[k], setBy: 'agent', source: src, sources, note: it.note, date: today };
     }
     // The proposal schema says criticScore; it lands as factors.critical so all
     // three graded factors share one shape and one provenance rule.
@@ -146,20 +160,26 @@ export function applyResearch(research, data, today, log = () => {}) {
     if (it.priceIndex != null && r.priceIndex == null) r.priceIndex = it.priceIndex;
     if (it.styleGroup && !r.styleGroup) r.styleGroup = it.styleGroup.trim();
     r.lastVerified = today;
-    ratedNow++;
+    if (launch) reratedNow++; else ratedNow++;
     changes++;
-    log(`  # ${r.name}: rated — craft ${it.craft}, distinctiveness ${it.distinctiveness}, critic ${it.criticScore} (${src})`);
+    log(launch
+      ? `  # ${r.name}: re-rated — craft ${was[0]} -> ${it.craft}, distinctiveness ${was[1]} -> ${it.distinctiveness}, critic ${was[2]} -> ${it.criticScore} (${src})`
+      : `  # ${r.name}: rated — craft ${it.craft}, distinctiveness ${it.distinctiveness}, critic ${it.criticScore} (${src})`);
   }
 
   /* ratingSkipped: the rating task tried and found no coverage. Recorded so the
-   * worklist moves on; the entry is retried after a quarter. */
+   * worklist moves on; the entry is retried after a quarter. For a launch
+   * rating the rerate task could not replace, the rating stays as it is: the
+   * stamp rests the entry, and the note is what a person reviewing it reads. */
   for (const it of research.ratingSkipped ?? []) {
     const r = byId.get(it.id);
-    if (!r || isRated(r)) continue;
+    if (!r || agentRated(r)) continue;
     r.ratingAttempted = today;
     r.ratingNote = it.note;
     changes++;
-    log(`  . ${r.name}: no coverage found — ${it.note}`);
+    log(isLaunchRating(r)
+      ? `  . ${r.name}: not re-rated, launch rating kept — ${it.note}`
+      : `  . ${r.name}: no coverage found — ${it.note}`);
   }
 
   /* facts: founding year and price tier, fill-gaps-only. The two plain facts
@@ -195,11 +215,11 @@ export function applyResearch(research, data, today, log = () => {}) {
   }
 
   /* factorSources: citations attached to a rating that already exists, values
-   * untouched. Written for the founding entries, which were rated editorially
-   * with nothing on file; the directory then shows the coverage beside the
-   * number. Appends to every graded factor's sources, deduplicated by URL;
-   * the freshness clock is not reset, since nothing about the place was
-   * verified. */
+   * untouched. Written for launch ratings, which were typed in with nothing
+   * on file; the directory then shows the coverage beside the number until
+   * the rerate task replaces the rating itself. Appends to every graded
+   * factor's sources, deduplicated by URL; the freshness clock is not reset,
+   * since nothing about the place was verified. */
   for (const it of research.factorSources ?? []) {
     const r = byId.get(it.id);
     if (!r || !isRated(r)) continue;
@@ -376,7 +396,7 @@ export function applyResearch(research, data, today, log = () => {}) {
   }
 
   if (changes || located) dataset.dataVersion = today.slice(0, 7).replace('-', '.');
-  return { changes, located, ratedNow, buzzChanged, candidatesChanged };
+  return { changes, located, ratedNow, reratedNow, buzzChanged, candidatesChanged };
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === fs.realpathSync(process.argv[1])) {
@@ -402,5 +422,5 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === fs.realpathSync(proces
     if (fs.readFileSync(file('restaurants.json'), 'utf8') !== out) fs.writeFileSync(file('restaurants.json'), out);
   }
 
-  console.log(`\napplied: ${done.changes} change(s), ${done.located} location set(s) verified. ${done.ratedNow} newly rated.`);
+  console.log(`\napplied: ${done.changes} change(s), ${done.located} location set(s) verified. ${done.ratedNow} newly rated, ${done.reratedNow} re-rated.`);
 }

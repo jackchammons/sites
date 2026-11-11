@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {
   reputationFactor, criticalFactor, valueFactor, frictionPenalty, stalenessDecay,
-  verifiedDate, scoreOne, rank, splitTiers, byRank, isRated,
+  verifiedDate, scoreOne, rank, splitTiers, byRank, isRated, isLaunchRating,
   DEFAULT_WEIGHTS, FRICTION_CAP, CRITICAL_BOOST_CAP, MAX_STALENESS_DECAY, PRICE_MULT
 } from '../src/slice.js';
 
@@ -223,6 +223,21 @@ test('isRated requires craft, distinctiveness and a critic base', () => {
   assert.ok(isRated(entry()));
   assert.ok(!isRated(entry({ factors: { craft: { value: 8 }, distinctiveness: { value: 7 } } })));
   assert.ok(!isRated(entry({ factors: { craft: { value: 8 }, critical: { value: 8 } } })));
+});
+
+test('isLaunchRating: a rated entry with any graded factor the agent did not set', () => {
+  const by = (craft, distinctiveness, critical) => entry({ factors: {
+    craft: { value: 8, setBy: craft }, distinctiveness: { value: 7, setBy: distinctiveness },
+    critical: { value: 8, setBy: critical } } });
+  assert.equal(isLaunchRating(by('editorial', 'editorial', 'editorial')), true);
+  assert.equal(isLaunchRating(by('agent', 'agent', 'agent')), false);
+  // one hand-set factor is enough, whichever it is, and so is one with no provenance at all
+  assert.equal(isLaunchRating(by('agent', 'editorial', 'agent')), true);
+  assert.equal(isLaunchRating(by('agent', 'agent', 'editorial')), true);
+  assert.equal(isLaunchRating(by('agent', 'agent', undefined)), true);
+  // an entry that is not rated has no rating to call a launch rating
+  assert.equal(isLaunchRating(entry({ factors: { craft: { value: 8, setBy: 'editorial' } } })), false);
+  assert.equal(isLaunchRating(entry({ factors: undefined })), false);
 });
 
 test('a perfect entry scores 100 before deductions', () => {
