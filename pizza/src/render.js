@@ -78,18 +78,18 @@ const vsField = (v, m) => tag(toneOf(v - m), `${signed(v - m)} vs field`);
 function reputationRows(r, field) {
   const d = r.reputationDetail;
   if (d.use === 'unmeasured') {
-    return [`<tr class="sub"><td colspan="5">${tag('mid', 'no data')} No founding year, review count or press on file, so reputation carries no weight for this entry and the other four factors share its ${DEFAULT_WEIGHTS.reputation}%.</td></tr>`];
+    return [`<tr class="sub"><td colspan="5">${tag('mid', 'no data')} No founding year or press on file, so reputation carries no weight for this entry and the other four factors share its ${DEFAULT_WEIGHTS.reputation}%.</td></tr>`];
   }
-  const names = { longevity: 'Longevity', volume: 'Review volume', coverage: 'Press coverage' };
+  const names = { longevity: 'Longevity', coverage: 'Press coverage' };
   const rows = d.parts.map(p => {
     const counted = d.counted.includes(p.key);
     const tone = p.x >= 0.6 ? 'pos' : p.x >= 0.3 ? 'mid' : 'neg';
     return `<tr class="sub"><td colspan="5">${tag(counted ? tone : 'mid', counted ? `${(p.x * 10).toFixed(1)}/10` : 'not counted')} ${names[p.key]}: ${esc(p.note)}${
       counted ? '' : ' — on file but below the level of the rest, so it would lower the mean and is left out'}</td></tr>`;
   });
-  const missing = ['longevity', 'volume', 'coverage'].filter(k => !d.parts.some(p => p.key === k));
+  const missing = ['longevity', 'coverage'].filter(k => !d.parts.some(p => p.key === k));
   if (missing.length) {
-    const what = { longevity: 'no founding year', volume: 'no review count', coverage: 'no press' };
+    const what = { longevity: 'no founding year', coverage: 'no press' };
     rows.push(`<tr class="sub"><td colspan="5">${tag('mid', 'no data')} ${missing.map(k => what[k]).join(', ')} on file; the factor is read from what is</td></tr>`);
   }
   if (d.use === 'lowers') {
@@ -233,11 +233,7 @@ export function cardHtml(r, field) {
               ${decayRow}
               <tr class="sum"><th scope="row">SLICE score</th><td class="num"></td><td class="num dim"></td><td class="num"></td><td class="num">${n1(r.score)}</td></tr>
             </tbody>
-          </table>${r.crowd ? `
-          <p class="note">Star average shown for context only: ${r.crowd.rating.toFixed(1)}★ across
-            ~${r.crowd.reviews.toLocaleString('en-US')} reviews; the review count is what reputation reads.
-            Figures on file ${esc(r.crowd.observed ? `from ${r.crowd.observed}` : 'since the index launched')}${
-              r.crowd.source ? `, ${esc(r.crowd.source)}` : ''}.</p>` : ''}
+          </table>
         </div>
       </details>
     </article>`;

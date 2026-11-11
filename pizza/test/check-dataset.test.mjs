@@ -6,7 +6,7 @@ const NOW = Date.parse('2026-08-30T00:00:00Z');
 const registry = { 'sells-out': { label: 'Sells out', frictionCost: 1.5 } };
 
 const base = over => ({
-  city: 'Seattle', dataVersion: '2026.08', cityMeanRating: 4.3, priorWeight: 500,
+  city: 'Seattle', dataVersion: '2026.08',
   restaurants: [{
     id: 'good-pie', name: 'Good Pie', status: 'open', url: 'https://goodpie.com',
     factors: { craft: { value: 8, setBy: 'editorial', date: '2026-08-01' },
@@ -29,11 +29,9 @@ test('a well-formed dataset passes', () => {
   assert.deepEqual(checkDataset(base(), registry, NOW), []);
 });
 
-test('the header needs a city and a data version, and nothing the scoring left behind', () => {
-  const { cityMeanRating, priorWeight, ...lean } = base();
-  assert.deepEqual(checkDataset(lean, registry, NOW), []);
-  failsWith({ ...lean, city: undefined }, 'dataset.city missing');
-  failsWith({ ...lean, dataVersion: undefined }, 'dataset.dataVersion missing');
+test('the header needs a city and a data version', () => {
+  failsWith({ ...base(), city: undefined }, 'dataset.city missing');
+  failsWith({ ...base(), dataVersion: undefined }, 'dataset.dataVersion missing');
 });
 
 test('agent-set factors must cite a source', () => {
@@ -62,11 +60,17 @@ test('coordinates outside Puget Sound fail', () => {
   failsWith(base({ locations: [{ neighborhood: 'X', address: '1 Main St, Seattle, WA 98117', lat: 40.7, lon: -74 }] }), 'lat');
 });
 
-test('out-of-range and legacy values fail: criticScore, priceIndex, crowd, opened', () => {
+test('out-of-range and legacy values fail: criticScore, priceIndex, opened', () => {
   failsWith(base({ criticScore: 8 }), 'legacy top-level criticScore');
   failsWith(base({ priceIndex: 9 }), 'priceIndex');
-  failsWith(base({ crowd: { rating: 6, reviews: 10 } }), 'crowd.rating');
   failsWith(base({ opened: 1850 }), 'opened');
+});
+
+test('an entry may not carry crowd figures, whatever they hold', () => {
+  const refused = 'good-pie: crowd figures are not part of the dataset';
+  for (const crowd of [{ rating: 4.5, reviews: 1200 }, { reviews: 1200 }, { rating: 4.5 }, {}, null]) {
+    assert.deepEqual(checkDataset(base({ crowd }), registry, NOW), [refused], JSON.stringify(crowd));
+  }
 });
 
 test('duplicate ids and non-https urls fail', () => {

@@ -1,8 +1,6 @@
 {
   "city": "Seattle, WA",
   "dataVersion": "2026.11",
-  "cityMeanRating": 4.3,
-  "priorWeight": 500,
   "notes": "Craft, distinctiveness and the critic base are 0-10 ratings stored with provenance. The founding entries were rated editorially when the index launched (August 2026) and carry no cited source; entries added since are rated by the research agent from published coverage, with the sources stored. Crowd star ratings were seeded at launch, are never refreshed and are displayed only; the review count feeds reputation. Locations marked verified were read from the pizzeria's own site on the date recorded.",
   "restaurants": [
     {
@@ -14,12 +12,6 @@
       "blurb": "Started as a clandestine SoDo parking-lot handoff: call ahead, text on arrival, trade cash for a deep pan pie. Now a proper Phinney Ridge dining room where your pizza is walked to the table like a bottle of Barolo. The bake is engineered — a buttery biscuit-crumb base, a tomato layer with real acid, and a cheese wall that shatters. It also bakes the sourdough-base Breezy Town pie, Tuesday to Thursday in limited numbers, since that sibling's Beacon Hill room closed.",
       "url": "https://windycitypie.com",
       "opened": 2016,
-      "crowd": {
-        "rating": 4.6,
-        "reviews": 2400,
-        "observed": "2026-08-22",
-        "source": "seeded when the index launched; platform not recorded, never refreshed"
-      },
       "priceIndex": 3,
       "lastVerified": "2026-08-01",
       "styleGroup": "Chicago pan",
@@ -100,12 +92,6 @@
       "blurb": "The pie that recalibrated Seattle's expectations in 2009 and still sets the floor for everyone else. Brandon Pettit's dough ferments for days on local wheat, then goes into a wood oven that leaves leopard char without sacrificing the fold. The crocodile-hide underside is the whole argument.",
       "url": "https://www.delanceyseattle.com",
       "opened": 2009,
-      "crowd": {
-        "rating": 4.4,
-        "reviews": 1900,
-        "observed": "2026-08-22",
-        "source": "seeded when the index launched; platform not recorded, never refreshed"
-      },
       "priceIndex": 3,
       "lastVerified": "2026-08-01",
       "styleGroup": "Wood-fired",
@@ -185,12 +171,6 @@
       "blurb": "The Delancey brain trust pointed at the farmers market. Pizza is the backbone but the kitchen behaves like a full restaurant — charred brassicas, whipped ricotta, whatever the week gave them. It is the most convincing case in the city that a pizzeria can also be a serious vegetable restaurant.",
       "url": "https://www.cornellyseattle.com",
       "opened": 2020,
-      "crowd": {
-        "rating": 4.5,
-        "reviews": 900,
-        "observed": "2026-08-22",
-        "source": "seeded when the index launched; platform not recorded, never refreshed"
-      },
       "priceIndex": 3,
       "lastVerified": "2026-08-01",
       "styleGroup": "Wood-fired",
@@ -276,12 +256,6 @@
       "blurb": "The hardest reservation in Seattle pizza and it isn't close — drops sell out in minutes and the waitlist has become part of the folklore. What arrives justifies more of the hype than it has any right to: a tall, airy, crunchy-bottomed pan pie built with real precision.",
       "url": "https://motopizza.com/",
       "opened": 2021,
-      "crowd": {
-        "rating": 4.7,
-        "reviews": 1100,
-        "observed": "2026-08-22",
-        "source": "seeded when the index launched; platform not recorded, never refreshed"
-      },
       "priceIndex": 4,
       "lastVerified": "2026-08-01",
       "styleGroup": "Detroit pan",
@@ -385,12 +359,6 @@
       "blurb": "Tom Douglas's applewood-fired room has been packing communal tables since 2006 and remains the most reliable pizza in the core. The crust runs thin and aggressively blistered; the topping list stays short and Pacific Northwest-literate. Still the default answer when someone visiting asks.",
       "url": "https://www.seriouspieseattle.com/",
       "opened": 2006,
-      "crowd": {
-        "rating": 4.4,
-        "reviews": 3800,
-        "observed": "2026-08-22",
-        "source": "seeded when the index launched; platform not recorded, never refreshed"
-      },
       "priceIndex": 3,
       "lastVerified": "2026-08-01",
       "styleGroup": "Thin crust",
@@ -473,12 +441,6 @@
       "blurb": "A love letter to New Jersey pizza parlors, right down to the bar-forward room and the sauce ladled over the cheese. The squares are thin, crackly and built for a beer at 11pm. Nothing else in Seattle is doing this style with this much conviction.",
       "url": "https://www.dinostomatopie.com",
       "opened": 2016,
-      "crowd": {
-        "rating": 4.3,
-        "reviews": 1500,
-        "observed": "2026-08-22",
-        "source": "seeded when the index launched; platform not recorded, never refreshed"
-      },
       "priceIndex": 2,
       "lastVerified": "2026-08-01",
       "styleGroup": "Tavern square",
@@ -550,12 +512,6 @@
       "blurb": "A small, tightly-run room where the dough is naturally leavened and the toppings change on the kitchen's whim. The bake sits in the sweet spot between Neapolitan softness and a crust with actual structure — you can pick up a slice without it surrendering.",
       "url": "https://www.lupofremont.com/",
       "opened": 2021,
-      "crowd": {
-        "rating": 4.6,
-        "reviews": 650,
-        "observed": "2026-08-22",
-        "source": "seeded when the index launched; platform not recorded, never refreshed"
-      },
       "priceIndex": 3,
       "lastVerified": "2026-08-01",
       "styleGroup": "Wood-fired",
@@ -627,12 +583,6 @@
       "blurb": "Barely bigger than a living room, a few blocks from Lake Washington. The wood oven runs hot, the pies come out fast and thin, and the whole operation is an argument for doing one thing at a scale you can actually control. Long a critics' quiet favorite.",
       "url": "https://theindependentpizzeria.com",
       "opened": 2010,
-      "crowd": {
-        "rating": 4.4,
-        "reviews": 700,
-        "observed": "2026-08-22",
-        "source": "seeded when the index launched; platform not recorded, never refreshed"
-      },
       "priceIndex": 3,
       "lastVerified": "2026-08-01",
       "styleGroup": "Wood-fired",
@@ -722,12 +672,6 @@
       "blurb": "Washington's first VPN-certified pizzeria and the reason a generation of Seattleites knows what a true Neapolitan pie is supposed to taste like. It is textbook by design: soppressata piccante, San Marzano, fior di latte, a soft and soupy center. Consistent across every location, which is its own achievement.",
       "url": "https://tuttabella.com",
       "opened": 2004,
-      "crowd": {
-        "rating": 4.3,
-        "reviews": 5200,
-        "observed": "2026-08-22",
-        "source": "seeded when the index launched; platform not recorded, never refreshed"
-      },
       "priceIndex": 2,
       "lastVerified": "2026-08-01",
       "styleGroup": "Neapolitan",
@@ -832,12 +776,6 @@
       "blurb": "The civic baseline. Since 1979 Pagliacci has been the pizza Seattle actually eats — a reliable slice on a corner in nearly every neighborhood, seasonal specials that are better than they need to be, and a delivery operation that borders on infrastructure. Not the city's best pie. Comfortably its most important.",
       "url": "https://www.pagliacci.com",
       "opened": 1979,
-      "crowd": {
-        "rating": 4.2,
-        "reviews": 7600,
-        "observed": "2026-08-22",
-        "source": "seeded when the index launched; platform not recorded, never refreshed"
-      },
       "priceIndex": 2,
       "lastVerified": "2026-08-01",
       "styleGroup": "By the slice",
@@ -1065,7 +1003,6 @@
       "blurb": "Windy City Pie's sibling, which ran inside Beacon Hill's Clock-Out Lounge: the same engineered pan bake and caramelised cheese edge on a sourdough base, in a room where a punk show might be starting. The lounge's kitchen is now Stevie's Famous. The Breezy Town pie lives on as a limited Tuesday-to-Thursday bake at Windy City Pie.",
       "url": null,
       "opened": null,
-      "crowd": null,
       "priceIndex": 3,
       "lastVerified": null,
       "locations": [],
@@ -1112,7 +1049,6 @@
       "blurb": "One of the city's original Neapolitan rooms, dark and wood-fired and stubbornly consistent. Where Tutta Bella made the style legible to Seattle, Via Tribunali kept it moody and Italian.",
       "url": "https://www.viatribunali.com/",
       "opened": 2004,
-      "crowd": null,
       "priceIndex": 3,
       "lastVerified": null,
       "locations": [
@@ -1185,7 +1121,6 @@
       "blurb": "The default Capitol Hill late-night slice, and a genuinely good New York pie rather than a merely convenient one. Thin, foldable, greasy in the correct way.",
       "url": "https://bigmariosnewyorkpizza.com/",
       "opened": 2010,
-      "crowd": null,
       "priceIndex": 1,
       "lastVerified": null,
       "locations": [
@@ -1290,7 +1225,6 @@
       "blurb": "A neighbourhood parlour that treats the topping list as a place to have ideas, using organic ingredients without making a religion of it. Cosy, unpretentious and reliably interesting.",
       "url": null,
       "opened": null,
-      "crowd": null,
       "priceIndex": 2,
       "lastVerified": null,
       "locations": [],
@@ -1332,7 +1266,6 @@
       "blurb": "Unfussy, generous and beloved locally in a way the downtown lists rarely register. The kind of place that anchors a neighbourhood rather than a listicle.",
       "url": "https://proletariatpizza.com",
       "opened": 2009,
-      "crowd": null,
       "priceIndex": 1,
       "lastVerified": null,
       "locations": [
@@ -1402,7 +1335,6 @@
       "blurb": "A chef-driven take on the counter slice: better sourcing than the format demands, executed at volume. Proof that a slice shop can be serious without being precious.",
       "url": "https://ballardpizzacompany.com",
       "opened": 2012,
-      "crowd": null,
       "priceIndex": 2,
       "lastVerified": null,
       "locations": [
@@ -1478,7 +1410,6 @@
       "blurb": "A local chain that built its identity on combinations other kitchens would refuse. Not the city's best crust, but a genuine Seattle institution with more conviction than its size suggests.",
       "url": "https://zeekspizza.com",
       "opened": 1993,
-      "crowd": null,
       "priceIndex": 2,
       "lastVerified": null,
       "locations": [
@@ -1635,7 +1566,6 @@
       "blurb": "West Seattle's answer to the late-night question, famous for slices that genuinely require two hands. The spectacle is the point, but the pie underneath holds up.",
       "url": "https://www.talaricospizza.com/",
       "opened": null,
-      "crowd": null,
       "priceIndex": 1,
       "lastVerified": null,
       "locations": [
@@ -1708,7 +1638,6 @@
       "blurb": "No ambition beyond feeding Capitol Hill quickly and cheaply, executed without cynicism. The value benchmark every other slice in the city is measured against.",
       "url": "https://www.hot-mamaspizza.com",
       "opened": 1995,
-      "crowd": null,
       "priceIndex": 1,
       "lastVerified": null,
       "locations": [
@@ -1788,7 +1717,6 @@
       "blurb": "A walled garden, a wood oven and a menu that leans on what is growing outside. More an argument about how to eat pizza than a competitor on crust alone.",
       "url": "https://humblepieseattle.com",
       "opened": 2013,
-      "crowd": null,
       "priceIndex": 2,
       "lastVerified": null,
       "locations": [
@@ -1858,7 +1786,6 @@
       "blurb": "The only kitchen in the city making a serious case for the Roman style — crisper, flatter and drier than the Neapolitan orthodoxy that surrounds it.",
       "url": null,
       "opened": null,
-      "crowd": null,
       "priceIndex": 2,
       "lastVerified": null,
       "locations": [],
@@ -1900,7 +1827,6 @@
       "blurb": "Geography is half the appeal, but the pie is better than a tourist corridor requires. A reliable slice in the one part of town where that is hardest to find.",
       "url": "https://www.postalley.pizza/",
       "opened": 1997,
-      "crowd": null,
       "priceIndex": 2,
       "lastVerified": null,
       "locations": [
@@ -1967,7 +1893,6 @@
       "blurb": "An Alki institution where the setting and the sunset do real work. Recently changed hands, which makes its next year worth watching closely.",
       "url": "https://pegasuspizzaseattle.com/",
       "opened": 1984,
-      "crowd": null,
       "priceIndex": 2,
       "lastVerified": null,
       "locations": [
@@ -2042,7 +1967,6 @@
       "blurb": "Georgetown-appropriate: weird on purpose, occasionally brilliant, never boring. The bench entry most likely to either climb sharply or stay exactly where it is.",
       "url": "https://www.sliceboxpizza.com",
       "opened": 2017,
-      "crowd": null,
       "priceIndex": 2,
       "lastVerified": null,
       "locations": [
@@ -2111,7 +2035,6 @@
       "blurb": "Belltown's late-night anchor, doing volume without the pie collapsing into an afterthought. The bar is the draw; the pizza is why you stay.",
       "url": "https://www.roccosseattle.com",
       "opened": 2014,
-      "crowd": null,
       "priceIndex": 2,
       "lastVerified": null,
       "locations": [

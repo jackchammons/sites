@@ -59,8 +59,6 @@ const detailHtml = r => {
   if (r.style) facts.push(dRow(`Style: ${esc(r.style)}${r.styleGroup ? ` <span class="dd-dim">(${esc(r.styleGroup)})</span>` : ''}`));
   if (r.opened) facts.push(dRow(`Opened: ${esc(String(r.opened))}${r.openedSource ? ` · ${srcLink(r.openedSource)}` : ''}`));
   if (r.priceIndex) facts.push(dRow(`Price: ${'$'.repeat(r.priceIndex)}${r.priceSource ? ` · ${srcLink(r.priceSource)}` : ''}`));
-  if (r.crowd) facts.push(dRow(`<span class="dd-dim">Crowd figures: ${r.crowd.rating.toFixed(1)}★ (context only) across ~${r.crowd.reviews.toLocaleString('en-US')} reviews (the count feeds reputation)${
-    r.crowd.observed ? ` · on file from ${esc(shortDate(r.crowd.observed))}` : ''}${r.crowd.source ? `, ${esc(r.crowd.source)}` : ''}</span>`));
 
   /* The three graded factors usually share one provenance (one agent pass, one
    * note, the same sources), so it is printed once with the three values on a
@@ -185,7 +183,7 @@ const directorySection = `
     <p class="note" style="margin-top:10px; max-width:110ch">
       Inclusion rule: a pizza-forward place with a location inside Seattle city limits.
       National chains (Domino's, Pizza Hut, MOD, and the like) are excluded by policy — this is
-      an index of Seattle's own pizzerias. The pending queue is seeded from King County
+      an index of Seattle's own pizzerias. The pending queue is drawn from King County
       food-business permit data; a candidate is listed only after the research pass verifies
       it is real, open, and actually about pizza.
     </p>`;

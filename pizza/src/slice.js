@@ -1,5 +1,5 @@
 /*
- * THE SLICE SCORE, v2.2
+ * THE SLICE SCORE, v2.3
  * ---------------------
  * A 0-100 rating for pizzerias, computed the same way for every entry.
  *
@@ -9,7 +9,7 @@
  * two are graded by the research agent from published coverage and stored
  * with provenance:
  *
- *   reputation       computed   longevity + review volume + sustained coverage;
+ *   reputation       computed   longevity + sustained coverage;
  *                               counted only where it does not lower the score
  *   critical         computed   critic base rating + recency-weighted coverage
  *   craft            graded     dough, bake, toppings -- the pizza itself
@@ -25,7 +25,7 @@
  * record chart and the movement evidence can tell a re-scoring from a real
  * move (v1 -> v2 on 2026-08-26 was read as three pizzerias falling out of the
  * ten; it was the formula). */
-export const ALGORITHM = 'SLICE v2.2';
+export const ALGORITHM = 'SLICE v2.3';
 
 export const DEFAULT_WEIGHTS = {
   reputation: 24,
@@ -42,32 +42,25 @@ export const STALENESS_PER_WEEK = 0.002;
 const clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
 const round = n => Math.round(n * 10) / 10;
 
-/* ---------- computed factors ----------
- * Crowd star averages are shown where the dataset has them, exactly as stored,
- * and never scored: the platforms that hold them block automated reads, so
- * they cannot be kept current. The review COUNT does feed reputation -- how
- * many people have bothered to rate a place is a durable fact even when the
- * average is stale. */
+/* ---------- computed factors ---------- */
 
 /* Reputation: has this place earned standing over time?
  *
- * Three components, each 0..1, with fixed weights. An entry is scored on the
- * components it has: a pizzeria with no stored review count is not punished
+ * Two components, each 0..1, with fixed weights. An entry is scored on the
+ * components it has: a pizzeria with no founding year on file is not punished
  * with a zero for data nobody collected.
  *
  *   longevity  (x3)  log-curve on years open; LONGEVITY_FULL_YEARS earns
  *                    full marks. log1p because year 2 proves more than year 12.
- *   volume     (x2)  review count v -> v / (v + VOLUME_HALF_REVIEWS). The
- *                    count, not the stars.
  *   coverage   (x1)  press mentions in the last COVERAGE_WINDOW_MONTHS,
  *                    over COVERAGE_FULL_MENTIONS, capped.
  *
  * Combination is monotone in added evidence: the factor is the best weighted
  * mean over any non-empty subset of the present components (components sorted
  * by their score, best prefix wins). A plain weighted mean punished the
- * entries the pipeline knew most about -- a stored review count or a first
- * press mention pulled a full-marks longevity DOWN -- so collecting data cost
- * points. Under this rule a component counts only when it raises the factor.
+ * entries the pipeline knew most about -- a first press mention pulled a
+ * full-marks longevity DOWN -- so collecting data cost points. Under this
+ * rule a component counts only when it raises the factor.
  *
  * With no component at all the factor is unmeasured (`measured: false`). It is
  * not scored as zero: 29 of 52 rated entries had reputation 0.0 for want of a
@@ -77,9 +70,8 @@ const round = n => Math.round(n * 10) / 10;
  * The page prints these constants from here, so the methodology cannot drift
  * from the code.
  */
-export const REPUTATION_WEIGHTS = { longevity: 3, volume: 2, coverage: 1 };
+export const REPUTATION_WEIGHTS = { longevity: 3, coverage: 1 };
 export const LONGEVITY_FULL_YEARS = 15;
-export const VOLUME_HALF_REVIEWS = 500;
 export const COVERAGE_WINDOW_MONTHS = 24;
 export const COVERAGE_FULL_MENTIONS = 6;
 
@@ -91,10 +83,6 @@ export function reputationFactor(r, now) {
     const years = Math.max(0, now.getUTCFullYear() - r.opened);
     parts.push({ key: 'longevity', w: REPUTATION_WEIGHTS.longevity,
                  x: clamp(Math.log1p(years) / Math.log1p(LONGEVITY_FULL_YEARS), 0, 1), note: `${years} yr` });
-  }
-  if (r.crowd && typeof r.crowd.reviews === 'number') {
-    parts.push({ key: 'volume', w: REPUTATION_WEIGHTS.volume,
-                 x: r.crowd.reviews / (r.crowd.reviews + VOLUME_HALF_REVIEWS), note: `${r.crowd.reviews} reviews` });
   }
   const mentions = r.mentions ?? [];
   if (mentions.length) {
@@ -237,8 +225,8 @@ export function isLaunchRating(r) {
  * for it becomes a low reputation at full weight: a top-ten entry lost up to
  * 16 points for having been written about. The base is the larger of M (the
  * other four's weighted mean) and the mean with reputation in it, which rises
- * with both, so a new mention, founding year or review count can lift a score
- * and never lower it.
+ * with both, so a new mention or founding year can lift a score and never
+ * lower it.
  *
  * `reputationDetail.use` says which case applied, so a card can explain itself:
  *   'counted'     in the score at its full weight

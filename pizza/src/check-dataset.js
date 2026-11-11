@@ -69,7 +69,6 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
     if (r.openedSource != null && !https(r.openedSource)) bad(id, `openedSource must be https`);
     if (r.priceSource != null && !https(r.priceSource)) bad(id, `priceSource must be https`);
     for (const k of STAMPS) if (r[k] != null && !pastDate(r[k])) bad(id, `${k} is not a past date`);
-    if (r.crowd?.observed != null && !pastDate(r.crowd.observed)) bad(id, `crowd.observed is not a past date`);
     if (r.url != null && !https(r.url)) bad(id, `url must be https, got "${r.url}"`);
     if (r.instagram != null && !/^https:\/\/(www\.)?instagram\.com\/[A-Za-z0-9._]{2,30}\/?$/.test(r.instagram)) {
       bad(id, `instagram must be an https instagram.com profile URL, got "${r.instagram}"`);
@@ -98,10 +97,11 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
       bad(id, `opened is not a plausible year: ${r.opened}`);
     }
     if (r.priceIndex != null && ![1, 2, 3, 4].includes(r.priceIndex)) bad(id, `priceIndex must be 1-4: ${r.priceIndex}`);
-    if (r.crowd != null) {
-      if (!(r.crowd.rating >= 1 && r.crowd.rating <= 5)) bad(id, `crowd.rating out of range: ${r.crowd.rating}`);
-      if (!(r.crowd.reviews >= 0)) bad(id, `crowd.reviews out of range: ${r.crowd.reviews}`);
-    }
+    // A star average or a review count cannot be kept current: the platforms
+    // that hold them refuse automated reads. An entry that carried one would
+    // hold a figure nothing can re-check, so the key itself is refused, empty
+    // or not.
+    if (r.crowd !== undefined) bad(id, 'crowd figures are not part of the dataset');
 
     const seenAddr = new Set();
     for (const loc of r.locations ?? []) {
