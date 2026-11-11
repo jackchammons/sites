@@ -2,8 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { parseFeed, splitSource, relevant, classify, mergeBuzz, FEEDS, KEEP_DAYS, MAX_ITEMS }
-  from '../scripts/fetch-buzz.mjs';
+import { parseFeed, splitSource, relevant, classify, mergeBuzz, staleOpening, FEEDS, KEEP_DAYS, MAX_ITEMS,
+  OPENING_STALE_YEARS } from '../scripts/fetch-buzz.mjs';
 
 const script = fileURLToPath(new URL('../scripts/fetch-buzz.mjs', import.meta.url));
 const NOW = Date.parse('2026-11-10T12:00:00Z');
@@ -104,6 +104,73 @@ test('merge: a sweep that finds nothing new returns the list it was given', () =
     fetched('Moto Pizza opens a Belltown shop in Seattle', '2026-11-09T00:00:00Z')
   ], first, restaurants, NOW + 864e5);
   assert.equal(JSON.stringify(again), JSON.stringify(first));
+});
+
+/* ---- an opening story that cannot be one ---- */
+const field = [
+  { id: 'independent-pizzeria', name: 'Independent Pizzeria', status: 'closed', opened: 2010 },
+  { id: 'gone-pie', name: 'Gone Pie', status: 'closed' },
+  { id: 'old-guard', name: 'Old Guard Pizza', status: 'open', opened: 2024 },
+  { id: 'last-year', name: 'Last Year Pizza', status: 'open', opened: 2025 },
+  { id: 'brand-new', name: 'Brand New Pizza', status: 'open', opened: 2026 },
+  { id: 'no-year', name: 'No Year Pizza', status: 'open' },
+  { id: 'on-the-radar', name: 'Radar Pizza', status: 'opening' }
+];
+
+test('merge: an opening story for a pizzeria on file as closed, or as open for years, is dropped', () => {
+  const titles = items => items.map(i => i.title);
+  // The story as it arrived: an old article, re-dated to last week by the feed.
+  const redated = 'Independent Pizzeria Opens in Madison Park';
+  assert.deepEqual(mergeBuzz([fetched(redated, '2026-11-05T10:09:59Z', { source: 'Seattle Met' })], [], field, NOW), []);
+  assert.deepEqual(mergeBuzz([], [stored(redated, '2026-11-05T10:09:59.000Z',
+    { source: 'Seattle Met', kind: 'opening', mentions: ['independent-pizzeria'] })], field, NOW), []);
+
+  const opening = name => `${name} opens a second Seattle shop`;
+  const merged = mergeBuzz(
+    [fetched(opening('Gone Pie'), '2026-11-09T00:00:00Z'), fetched(opening('Old Guard Pizza'), '2026-11-08T00:00:00Z'),
+     fetched(opening('Last Year Pizza'), '2026-11-07T00:00:00Z'), fetched(opening('Brand New Pizza'), '2026-11-06T00:00:00Z')],
+    [stored(opening('No Year Pizza'), '2026-11-05T00:00:00.000Z'), stored(opening('Radar Pizza'), '2026-11-04T00:00:00.000Z'),
+     stored('A new pizzeria opens in Seattle this weekend', '2026-11-03T00:00:00.000Z')],
+    field, NOW);
+  assert.deepEqual(titles(merged), [opening('Last Year Pizza'), opening('Brand New Pizza'), opening('No Year Pizza'),
+    opening('Radar Pizza'), 'A new pizzeria opens in Seattle this weekend']);
+  assert.ok(merged.every(i => i.kind === 'opening'));
+});
+
+test('merge: only the opening label is doubted, and never a story the research pass filed', () => {
+  const merged = mergeBuzz(
+    [fetched('Independent Pizzeria closes in Madison Park after 16 years', '2026-11-09T00:00:00Z'),
+     fetched('Independent Pizzeria is the best pizza in Seattle, ranked', '2026-11-08T00:00:00Z'),
+     fetched('Seattle remembers Independent Pizzeria', '2026-11-07T00:00:00Z')],
+    [stored('Independent Pizzeria Opens in Madison Park', '2026-11-05T00:00:00.000Z',
+      { kind: 'opening', mentions: ['independent-pizzeria'], via: 'research' })],
+    field, NOW);
+  assert.deepEqual(merged.map(i => [i.kind, i.mentions, i.via]), [
+    ['closing', ['independent-pizzeria'], undefined], ['ranking', ['independent-pizzeria'], undefined],
+    ['mention', ['independent-pizzeria'], undefined], ['opening', ['independent-pizzeria'], 'research']]);
+});
+
+test('staleOpening: every entry the story names must be unable to be opening', () => {
+  const byId = new Map(field.map(r => [r.id, r]));
+  const story = (mentions, over = {}) => ({ title: 'x', kind: 'opening', published: '2026-11-05T00:00:00.000Z', mentions, ...over });
+  assert.equal(OPENING_STALE_YEARS, 2);
+  assert.equal(staleOpening(story(['independent-pizzeria']), byId), true);
+  assert.equal(staleOpening(story(['gone-pie']), byId), true);
+  assert.equal(staleOpening(story(['old-guard']), byId), true);
+  assert.equal(staleOpening(story(['gone-pie', 'old-guard']), byId), true);
+  // the year is the story's, not today's: a 2025 story about a 2024 opening is one year on
+  assert.equal(staleOpening(story(['old-guard'], { published: '2025-12-31T23:00:00.000Z' }), byId), false);
+  assert.equal(staleOpening(story(['last-year']), byId), false);
+  assert.equal(staleOpening(story(['last-year'], { published: '2027-01-01T00:00:00.000Z' }), byId), true);
+  // a new place opening in a closed one's space, or beside an old one, is still an opening
+  assert.equal(staleOpening(story(['independent-pizzeria', 'brand-new']), byId), false);
+  assert.equal(staleOpening(story(['old-guard', 'no-year']), byId), false);
+  // nothing on file to contradict the label
+  assert.equal(staleOpening(story([]), byId), false);
+  assert.equal(staleOpening(story(undefined), byId), false);
+  assert.equal(staleOpening(story(['not-on-file']), byId), false);
+  assert.equal(staleOpening(story(['on-the-radar']), byId), false);
+  assert.equal(staleOpening(story(['independent-pizzeria'], { kind: 'closing' }), byId), false);
 });
 
 /* ---- labels ---- */

@@ -1,4 +1,4 @@
-import { esc, nameLink, shortDate, hostOf } from '../html.mjs';
+import { esc, nameLink, shortDate, srcLink, srcLinks } from '../html.mjs';
 import { locationLabel } from '../../src/locations.js';
 import { coverageStats } from '../../src/census.js';
 
@@ -18,22 +18,6 @@ const directoryEntries = [...dataset.restaurants].sort((a, b) => {
   const rb = scoreById.get(b.id)?.rank ?? Infinity;
   return ra !== rb ? ra - rb : a.name.localeCompare(b.name, 'en');
 });
-
-/* A citation reads as the outlet it points to unless the caller has better
- * text (a headline, a handle). */
-const srcLink = (url, text = hostOf(url)) =>
-  `<a href="${esc(url)}" target="_blank" rel="noopener nofollow">${esc(text)}</a>`;
-/* Several citations in a row: a second link to the same outlet is numbered,
- * so no two links in the list read the same. */
-const srcLinks = urls => {
-  const seen = new Map();
-  return urls.map(u => {
-    const host = hostOf(u);
-    const n = (seen.get(host) ?? 0) + 1;
-    seen.set(host, n);
-    return srcLink(u, n > 1 ? `${host} (${n})` : host);
-  }).join(', ');
-};
 
 /* One block of the expanded record: a label and its rows. Blocks with nothing
  * to say are omitted, so a sparse discovery renders a short honest card. */
@@ -80,25 +64,34 @@ const detailHtml = r => {
   /* The three graded factors usually share one provenance (one agent pass, one
    * note, the same sources), so it is printed once with the three values on a
    * line, instead of the same paragraph three times. Factors whose provenance
-   * differs fall back to a row each. */
+   * differs fall back to a row each.
+   *
+   * A date and an author are printed only for a factor the agent set: there
+   * the date is the day the rating was read from the sources beside it. Any
+   * other factor shows the sources on file for it, if there are any, and
+   * nothing about how or when its value was arrived at. */
   const provenanceOf = f => {
     const srcs = f.sources?.length ? f.sources : f.source ? [f.source] : [];
-    const cited = srcs.length > 0;
-    const who = f.setBy === 'agent' ? 'by the research agent'
-      : cited ? `editorially at launch; coverage attached${f.sourcedDate ? ` ${esc(shortDate(f.sourcedDate))}` : ''}`
-      : 'editorially at launch, no cited source';
-    const when = f.setBy === 'agent' && f.date ? ` ${esc(shortDate(f.date))}` : '';
-    const from = cited ? ` from ${srcLinks(srcs)}` : '';
-    return { line: `set ${who}${when}${from}`, note: f.note ?? '' };
+    const from = srcs.length ? srcLinks(srcs) : '';
+    const set = f.setBy === 'agent'
+      ? `set by the research agent${f.date ? ` ${esc(shortDate(f.date))}` : ''}${from ? ` from ${from}` : ''}`
+      : '';
+    return {
+      line: set || (from && `sources on file: ${from}`),
+      all: set ? `All three ${set}` : from && `Sources on file for all three: ${from}`,
+      note: f.note ?? ''
+    };
   };
   const present = ['craft', 'distinctiveness', 'critical'].filter(k => r.factors?.[k]);
   const provs = present.map(k => provenanceOf(r.factors[k]));
   const shared = present.length > 1 && provs.every(p => p.line === provs[0].line && p.note === provs[0].note);
+  const noteHtml = p => p.note ? `<div class="dd-note">${esc(p.note)}</div>` : '';
   const graded = shared
     ? [dRow(`${present.map(k => `${FACTOR_NAME[k]}: <b>${r.factors[k].value.toFixed(1)}</b>`).join(' <span class="dd-dim">·</span> ')}`),
-       dRow(`<span class="dd-dim">All three ${provs[0].line}</span>${provs[0].note ? `<div class="dd-note">${esc(provs[0].note)}</div>` : ''}`)]
-    : present.map((k, i) => dRow(`${FACTOR_NAME[k]}: <b>${r.factors[k].value.toFixed(1)}</b> <span class="dd-dim">${provs[i].line}</span>${
-        provs[i].note ? `<div class="dd-note">${esc(provs[i].note)}</div>` : ''}`));
+       ...(provs[0].all || provs[0].note
+         ? [dRow(`${provs[0].all ? `<span class="dd-dim">${provs[0].all}</span>` : ''}${noteHtml(provs[0])}`)] : [])]
+    : present.map((k, i) => dRow(`${FACTOR_NAME[k]}: <b>${r.factors[k].value.toFixed(1)}</b>${
+        provs[i].line ? ` <span class="dd-dim">${provs[i].line}</span>` : ''}${noteHtml(provs[i])}`));
 
   const computed = scored ? [dRow(
     `SLICE <b>${scored.score.toFixed(1)}</b> — ` +
@@ -160,7 +153,9 @@ const dirRow = r => {
 
 /* The map rail is rendered hidden: app.js reveals it once it has points to
  * plot, so a reader without JavaScript gets the table at full width rather
- * than an empty box and a legend for a map that is not there. */
+ * than an empty box and a legend for a map that is not there. The map has a
+ * wrapper of its own because under 1100px the wrapper is pinned while the
+ * list scrolls; the legend sits outside it, so it is never pinned too. */
 const directorySection = `
 <section class="section" id="directory">
   <div class="wrap">
@@ -206,7 +201,9 @@ const directorySection = `
         </div>
       </div>
       <div class="dir-rail" id="map-rail" hidden>
-        <div id="map" class="dir-map" role="region" aria-label="Map of Seattle pizzerias"></div>
+        <div class="dir-pin">
+          <div id="map" class="dir-map" role="region" aria-label="Map of Seattle pizzerias"></div>
+        </div>
         <p class="note dir-map-note">Seattle locations only — red for the top ten, brown for the
         rest of the field, green for places opening soon. Chains' branches outside the city are
         listed in the table, not mapped. Tiles &copy; OpenStreetMap contributors.</p>

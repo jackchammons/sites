@@ -491,13 +491,13 @@ footer p { max-width: 72ch; }
 
 
 /* ---- Directory ---- */
-/* Stacked (map first) on narrow screens; on a wide one the table takes the
-   left column and the map rides beside it as a sticky rail, so clicking a row
-   can focus its marker without scrolling. The rail is in the markup hidden;
-   app.js reveals it and sets .has-map once there is a map to show, so without
-   one the table keeps the full width. */
+/* On a wide screen the table takes the left column and the map rides beside it
+   as a sticky rail, so clicking a row can focus its marker without scrolling.
+   Under 1100px the two stack and the map is pinned instead (below). The rail
+   is in the markup hidden; app.js reveals it and sets .has-map once there is
+   a map to show, so without one the table keeps the full width. */
 .dir-layout { display: flex; flex-direction: column; gap: 22px; margin-top: 22px; }
-.dir-rail { order: -1; min-width: 0; }
+.dir-rail { min-width: 0; }
 .dir-list { min-width: 0; }
 .dir-layout .dir-scroll, .dir-layout .dir-map { margin-top: 0; }
 @media (min-width: 1100px) {
@@ -506,12 +506,43 @@ footer p { max-width: 72ch; }
     gap: 22px; align-items: start;
   }
   /* Below the sticky nav, not under it: the same offset anchors scroll to. */
-  .dir-rail { order: 0; position: sticky; top: 64px; }
+  .dir-rail { position: sticky; top: 64px; }
   .dir-rail .dir-map { height: min(72vh, 640px); }
   /* The table shares the row with the map: tighter cells so all six columns
      sit inside the column without resting in a scrolled-off state. */
   .dir-table { font-size: 12.5px; }
   .dir-table td, .dir-table th { padding: 9px 9px; }
+}
+/* Stacked, the map is pinned under the nav for as long as the list is on
+   screen and the rows scroll beneath it, so a row and its marker can be seen
+   together. A sticky box stays put only inside its parent, so the pinned box
+   has to be a child of the layout: the rail gives up its own box and its two
+   children become the layout's. The map's wrapper goes first and sticks; the
+   legend goes after the list and scrolls away with it. When the layout's last
+   line passes, the wrapper leaves with it.
+
+   Everything here hangs off .has-map. A display value on the bare rail would
+   override its hidden attribute and pin an empty box for a reader without
+   JavaScript.
+
+   The wrapper is opaque and as wide as the list, so no row shows beside the
+   map's round corners or in the strip under it. Its offset is the least the
+   nav can measure (a 44px link, its 2px underline, the 1px rule): where larger
+   text makes the nav taller it overlaps the wrapper, and at no size is there a
+   slit between them. The map is a third of the small viewport, the one
+   measured with the browser's bars showing, so it does not resize as they
+   hide. The table header sticks under the wrapper instead of under the nav. */
+@media (max-width: 1099px) {
+  .dir-layout.has-map { --map-h: max(150px, 33vh); }
+  @supports (height: 1svh) { .dir-layout.has-map { --map-h: max(150px, 33svh); } }
+  .dir-layout.has-map .dir-rail { display: contents; }
+  .dir-layout.has-map .dir-pin {
+    order: -1; position: sticky; top: 47px; z-index: 2;
+    padding-bottom: 8px; background: var(--bg);
+  }
+  .dir-layout.has-map .dir-map { height: var(--map-h); }
+  .dir-layout.has-map .dir-map-note { order: 1; margin-top: 0; }
+  .dir-layout.has-map .dir-table thead th { top: calc(47px + var(--map-h) + 8px); }
 }
 .dir-scroll { margin-top: 22px; border: 1px solid var(--line); border-radius: var(--radius); }
 .dir-table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -637,7 +668,6 @@ a.buzz-tag:hover { border-color: var(--tomato); color: var(--tomato-2); }
 .map-pop { font: 13px/1.5 system-ui, sans-serif; }
 .map-pop b a { color: inherit; }
 .map-pop .addr { font-size: 11.5px; color: #666; margin-top: 2px; }
-@media (max-width: 700px) { .dir-map { height: 320px; } }
 
 
 /* ---- Desktop: the sections use the width ---- */

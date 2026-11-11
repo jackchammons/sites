@@ -9,6 +9,9 @@
 import { PUGET_SOUND_ZIP, PUGET_SOUND_BOX } from './bounds.js';
 
 const STATUSES = new Set(['open', 'opening', 'closed']);
+/* 'editorial' marks a launch rating (isLaunchRating in slice.js). It stays
+ * valid for as long as the data holds one: the rerate task replaces them a
+ * few per pass, and the lint runs between passes. */
 const SET_BY = new Set(['editorial', 'agent']);
 const FACTOR_KEYS = ['craft', 'distinctiveness', 'critical'];
 /* The clocks apply-research stamps. Freshness, the worklists and the radar all

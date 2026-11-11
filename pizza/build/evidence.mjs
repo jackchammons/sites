@@ -1,4 +1,4 @@
-import { esc } from './html.mjs';
+import { esc, srcLinks } from './html.mjs';
 import { STALENESS_PER_WEEK } from '../src/slice.js';
 
 /* ---- why an entry moved ----
@@ -22,6 +22,10 @@ export const FACTOR_LABEL = { reputation: 'reputation', critical: 'critical rece
 const GRADED = ['craft', 'distinctiveness', 'critical'];
 const MENTION_WINDOW_DAYS = 21;   // matches the visible "recent press" horizon
 const RERATE_WINDOW_DAYS = 9;     // a provenance date inside the last snapshot gap
+
+/* What a graded factor was read from: the list a current pass files, or the
+ * single source an earlier one did. */
+const sourcesOf = f => f.sources?.length ? f.sources : f.source ? [f.source] : [];
 
 const link = (url, text) => `<a href="${esc(url)}" target="_blank" rel="noopener nofollow">${esc(text)}</a>`;
 
@@ -54,9 +58,10 @@ export function evidenceFor(r, previous, now, algorithm) {
     .sort((a, b) => (kindRank[a.kind] ?? 9) - (kindRank[b.kind] ?? 9)
       || Date.parse(b.date) - Date.parse(a.date));
 
-  // A factor the AGENT graded within the last snapshot gap is a re-rating this
-  // week. Editorial factors are excluded: the schema migration stamped them all
-  // with one date, so date-recency alone proves nothing about them.
+  // A graded factor the agent dated inside the last snapshot gap is a re-rating
+  // this week: that date is the day the research pass applied the rating, and
+  // the sources beside it are what it was read from. Only an agent-set factor
+  // carries a date that means this, so no other counts.
   const freshlyRated = GRADED.filter(k => {
     const f = r.factors?.[k];
     return f?.setBy === 'agent' && f.date && daysAgo(f.date) < RERATE_WINDOW_DAYS;
@@ -65,11 +70,13 @@ export function evidenceFor(r, previous, now, algorithm) {
   const bits = [];
   const cited = new Set();
   const fmtD = d => `${d > 0 ? '+' : '−'}${Math.abs(d).toFixed(1)}`;
+  // Every source the re-rating was read from, each linked once: the three
+  // factors of one pass share their sources, so the first line carries them.
   const citeRating = () => {
-    const src = freshlyRated.map(k => r.factors[k]).find(f => f.source && !cited.has(f.source));
-    if (!src) return '';
-    cited.add(src.source);
-    return ` — from ${link(src.source, 'published coverage')}`;
+    const urls = [...new Set(freshlyRated.flatMap(k => sourcesOf(r.factors[k])))].filter(u => !cited.has(u));
+    if (!urls.length) return '';
+    for (const u of urls) cited.add(u);
+    return ` — from ${srcLinks(urls)}`;
   };
 
   const pf = previous?.factors?.[r.id];
@@ -120,7 +127,7 @@ export function evidenceFor(r, previous, now, algorithm) {
   };
 
   if (isNew) {
-    const graded = GRADED.map(k => r.factors?.[k]).find(f => f?.setBy === 'agent' && f.source);
+    const graded = GRADED.map(k => r.factors?.[k]).find(f => f?.setBy === 'agent' && f.source && !cited.has(f.source));
     const src = graded ? ` · rated from ${link(graded.source, 'published coverage')}` : '';
     return `<b>New to the ten:</b> ${bits.length ? bits.join('; ') : 'first week with a score high enough'}${src}${tail()}`;
   }

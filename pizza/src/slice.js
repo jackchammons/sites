@@ -6,13 +6,14 @@
  *   SLICE = (weighted factor base - friction penalty) x freshness factor
  *
  * Five factors. Three are computed from data the daily pipeline maintains,
- * two are editorial ratings stored with provenance:
+ * two are graded by the research agent from published coverage and stored
+ * with provenance:
  *
  *   reputation       computed   longevity + review volume + sustained coverage;
  *                               counted only where it does not lower the score
  *   critical         computed   critic base rating + recency-weighted coverage
- *   craft            editorial  dough, bake, toppings -- the pizza itself
- *   distinctiveness  editorial  whether it owns a lane in this city
+ *   craft            graded     dough, bake, toppings -- the pizza itself
+ *   distinctiveness  graded     whether it owns a lane in this city
  *   value            computed   quality delivered per price tier
  *
  * Plain ES module with no Node or DOM dependencies, run by the build and the
@@ -212,6 +213,17 @@ export function stalenessDecay(lastVerified, now) {
  * Everything else about it can be sparse; the computed factors handle gaps. */
 export function isRated(r) {
   return Boolean(r.factors?.craft && r.factors?.distinctiveness && r.factors?.critical);
+}
+
+/* A launch rating: a rated entry with a graded factor the research agent did
+ * not set. The index opened with 25 entries whose three graded factors were
+ * typed in by hand (`setBy: "editorial"`); every other rating was read by the
+ * agent from published coverage and carries the sources it was read from. A
+ * launch rating is the one kind a factorRatings proposal may replace, and the
+ * rerate task exists to replace each of them. One factor is enough to make an
+ * entry one: a rating is replaced whole, never factor by factor. */
+export function isLaunchRating(r) {
+  return isRated(r) && ['craft', 'distinctiveness', 'critical'].some(k => r.factors[k].setBy !== 'agent');
 }
 
 /* Score one entry, returning every intermediate value for display.

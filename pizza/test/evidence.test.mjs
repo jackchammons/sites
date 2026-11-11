@@ -47,6 +47,64 @@ test('a fresh provenance date reads as a re-rating even without snapshot factors
   assert.match(html, /https:\/\/rev\.example\/a/);
 });
 
+test('a rating the agent replaced inside the snapshot gap reads as re-rated, with its sources', () => {
+  const prev = snap({ factors: { x: { ...FS, craft: 9.0, distinctiveness: 9.5, critical: 9.0, penalty: 0 } } });
+  const graded = (provenance, [craft, distinctiveness, critical]) => ({
+    craft: { value: craft, ...provenance },
+    distinctiveness: { value: distinctiveness, ...provenance },
+    critical: { value: critical, ...provenance }
+  });
+
+  // Hand-set, with an old date and a citation attached this week: the values
+  // are last week's, and attaching a source is not a rating.
+  const attached = 'https://old.example/attached';
+  const before = entry({
+    factorScores: { ...FS, craft: 9.0, distinctiveness: 9.5, critical: 9.0 },
+    factors: graded({ setBy: 'editorial', date: '2026-08-01', source: attached, sources: [attached], sourcedDate: '2026-08-28' },
+      [9.0, 9.5, 9.0])
+  });
+  assert.doesNotMatch(evidenceFor(before, prev, NOW), /re-rated/);
+
+  // The same entry after a pass replaced all three factors two days ago.
+  const sources = ['https://rev.example/review', 'https://paper.example/roundup', 'https://rev.example/second'];
+  const after = entry({
+    factorScores: { ...FS, craft: 8.0, distinctiveness: 8.5, critical: 8.5 },
+    factors: graded({ setBy: 'agent', date: '2026-08-28', source: sources[0], sources, note: 'What the coverage says.' },
+      [8.0, 8.5, 8.5])
+  });
+  const html = evidenceFor(after, prev, NOW);
+  assert.match(html, /re-rated: craft 9\.0 → 8\.0/);
+  assert.match(html, /re-rated: distinctiveness 9\.5 → 8\.5/);
+  assert.match(html, /re-rated: critical reception 9\.0 → 8\.5/);
+  for (const url of sources) {
+    assert.equal(html.split(`href="${url}"`).length - 1, 1, `${url} is linked once`);
+  }
+  // Two links to one outlet do not read the same.
+  assert.match(html, />rev\.example<\/a>, .*>rev\.example \(2\)<\/a>/);
+  assert.ok(!html.includes(attached));
+  assert.doesNotMatch(html, /editorial|launch/i);
+
+  // A rating the agent set before the gap is not this week's news.
+  const settled = entry({
+    factorScores: { ...FS },
+    factors: graded({ setBy: 'agent', date: '2026-08-10', source: sources[0], sources }, [7, 7, 7])
+  });
+  assert.doesNotMatch(evidenceFor(settled, snap({ scores: { x: 76 } }), NOW), /re-rated/);
+});
+
+test('an entry new to the ten after a re-rating cites each source once', () => {
+  const src = 'https://rev.example/review';
+  const provenance = { setBy: 'agent', date: '2026-08-28', source: src, sources: [src] };
+  const r = entry({
+    previousRank: null,
+    factorScores: { ...FS, craft: 8.0 },
+    factors: { craft: { value: 8, ...provenance }, distinctiveness: { value: 7, ...provenance }, critical: { value: 7, ...provenance } }
+  });
+  const html = evidenceFor(r, snap({ factors: { x: { ...FS, penalty: 0 } } }), NOW);
+  assert.match(html, /New to the ten:<\/b> re-rated: craft 7\.0 → 8\.0/);
+  assert.equal(html.split(`href="${src}"`).length - 1, 1);
+});
+
 test('a fall with active decay and no other cause is attributed to freshness', () => {
   const r = entry({ score: 79.5, stalenessDecay: 0.012, verified: { date: '2026-03-01', source: 'rating' } });
   const html = evidenceFor(r, snap({ scores: { x: 80.2 } }), NOW);

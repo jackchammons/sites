@@ -191,18 +191,21 @@ for (const r of dataset.restaurants) {
   check(markup.includes(esc(r.name)), `"${r.name}" missing from the page`);
 }
 
-/* A template that printed a missing value shows as one of these words in the
- * visible text. Text the page quotes from the data files may contain them
- * honestly -- a headline can say a closing date is "still undefined" -- and a
- * headline must not be able to stop a deploy, so every data string that
- * contains one is taken out of the text before the test. A field whose whole
- * value is one of the words is still a hit: that is a broken record, shown. */
-{
-  const LEAK = /\bundefined\b|\bNaN\b|\[object Object\]/;
+/* The page's visible text, for a test that looks for words the templates must
+ * never print. Text the page quotes from the data files may contain such a
+ * word honestly -- a headline can say a closing date is "still undefined" --
+ * and a headline must not be able to stop a deploy, so every data string that
+ * contains one is taken out of the text first. A field whose whole value is
+ * one of the words is left in: printed, that is a template showing a raw
+ * field. */
+const dataFiles = ['restaurants.json', 'attributes.json', 'buzz.json', 'research.json']
+  .filter(f => fs.existsSync(path.join(root, 'data', f))).map(readJson);
+const textWithoutQuoted = words => {
+  const whole = new RegExp(`^\\s*(?:${words.source})\\s*$`, words.flags);
   const quoted = new Set();
   const collect = v => {
     if (typeof v === 'string') {
-      if (!LEAK.test(v) || /^\s*(?:undefined|NaN|\[object Object\])\s*$/.test(v)) return;
+      if (!words.test(v) || whole.test(v)) return;
       quoted.add(esc(v));
       // A URL is shown as its host, or without its scheme.
       if (/^https?:\/\//i.test(v)) {
@@ -213,16 +216,35 @@ for (const r of dataset.restaurants) {
       Object.values(v).forEach(collect);
     }
   };
-  for (const f of ['restaurants.json', 'attributes.json', 'buzz.json', 'research.json']) {
-    if (fs.existsSync(path.join(root, 'data', f))) collect(readJson(f));
-  }
+  dataFiles.forEach(collect);
   let text = markup.replace(/<[^>]+>/g, ' ');
   for (const q of [...quoted].sort((a, b) => b.length - a.length)) text = text.split(q).join(' ');
+  return text;
+};
+const near = (text, m) => text.slice(Math.max(0, m.index - 40), m.index + 40).replace(/\s+/g, ' ');
+
+/* A template that printed a missing value shows as one of these words in the
+ * visible text. */
+{
+  const LEAK = /\bundefined\b|\bNaN\b|\[object Object\]/;
+  const text = textWithoutQuoted(LEAK);
   const leak = LEAK.exec(text);
-  check(!leak, leak && `page shows "${leak[0]}" near: ${text.slice(Math.max(0, leak.index - 40), leak.index + 40).replace(/\s+/g, ' ')}`);
+  check(!leak, leak && `page shows "${leak[0]}" near: ${near(text, leak)}`);
   // Tested on the markup, where quoted text is escaped: the inline data keeps
   // its apostrophes, and a name or URL there may spell anything.
   check(!/=\s*(["'])(?:undefined|null|NaN)\1/.test(markup), 'an attribute is literally undefined/null/NaN');
+}
+
+/* Every rating is described one way: read by the research agent from published
+ * coverage. The page's own copy never says a rating was typed in by hand or
+ * dates one to the index's launch. A factor's `setBy` is one of these words
+ * whole, so it is not taken out as quoted text, and a template that printed
+ * the raw field is caught as well. */
+{
+  const HAND_RATED = /editorial|founding entr|at launch|launched in/i;
+  const text = textWithoutQuoted(HAND_RATED);
+  const hit = HAND_RATED.exec(text);
+  check(!hit, hit && `page describes a hand-set rating ("${hit[0]}") near: ${near(text, hit)}`);
 }
 
 /* ---------- rankings.json ---------- */

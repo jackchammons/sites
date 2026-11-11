@@ -99,22 +99,20 @@ const dirApi = { expand: null };
     const topIds = new Set(
       [...document.querySelectorAll('#board .card')].map(c => c.dataset.id).slice(0, 10));
 
-    /* Wheel zoom and dragging follow the layout. In the desktop rail the map
-     * is sticky beside the table, and a wheel or drag gesture over it reads as
-     * "move the map". In the stacked layout the map lies across the page's
-     * scroll path: a map that takes the wheel, or a finger's drag, traps the
-     * reader above the table, so both are off there. With dragging off Leaflet
-     * leaves one-finger panning to the page; pinch zoom, the zoom buttons,
-     * marker taps and row clicks still move the map. */
+    /* A drag on the map always moves the map; wheel zoom follows the layout.
+     * In the desktop rail the map is beside the table, and a wheel over it
+     * reads as "zoom the map". In the stacked layout the map is pinned across
+     * the top of the page while the list scrolls beneath it, so the pointer
+     * comes to rest on it just by scrolling: a map that took the wheel there
+     * would stop the page. A finger is different. The pinned map leaves two
+     * thirds of the screen to scroll the page with, so a drag that starts on
+     * the map is meant for the map, and Leaflet takes it; one that starts on
+     * the list scrolls the page. */
     const wideLayout = window.matchMedia('(min-width: 1100px)');
-    const map = L.map(el, { scrollWheelZoom: false, dragging: wideLayout.matches });
-    const setGestures = () => {
-      for (const gesture of [map.scrollWheelZoom, map.dragging]) {
-        if (wideLayout.matches) gesture.enable(); else gesture.disable();
-      }
-    };
-    setGestures();
-    wideLayout.addEventListener?.('change', setGestures);
+    const map = L.map(el, { scrollWheelZoom: wideLayout.matches });
+    wideLayout.addEventListener?.('change', () => {
+      if (wideLayout.matches) map.scrollWheelZoom.enable(); else map.scrollWheelZoom.disable();
+    });
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -173,7 +171,9 @@ const dirApi = { expand: null };
       near.disconnect();
       load();
     }, { rootMargin: '1200px 0px' });
-    near.observe(rail);
+    // The map, not the rail: in the stacked layout the rail has no box of its
+    // own (display: contents), and an element without one never intersects.
+    near.observe(el);
   } else {
     load();
   }

@@ -193,6 +193,35 @@ test('a citation link reads as the outlet\'s hostname', () => {
   assert.doesNotMatch(directorySection(context()), />(source|coverage|its own site)<\/a>/);
 });
 
+test('the page describes every rating one way, and a rating the agent has not set by its sources alone', () => {
+  const with3 = provenance => ({
+    craft: { value: 8, ...provenance }, distinctiveness: { value: 8.5, ...provenance }, critical: { value: 7.5, ...provenance }
+  });
+  const read = ['https://www.rev.example/review', 'https://paper.example/roundup'];
+  const list = restaurants();
+  const set = (id, provenance) => { list.find(r => r.id === id).factors = with3(provenance); };
+  set('p0', { setBy: 'agent', date: '2026-08-27', source: read[0], sources: read, note: 'What the coverage says.' });
+  set('p1', { setBy: 'editorial', date: '2026-08-26', source: read[0], sources: read, sourcedDate: '2026-11-05', note: 'What was attached.' });
+  set('p2', { setBy: 'editorial', date: '2026-08-26' });
+  const ctx = context({ dataset: { city: 'Seattle', dataVersion: 'test', restaurants: list, attributeRegistry: {} } });
+  const html = page(ctx);
+  const record = id => html.match(new RegExp(`<tr class="dir-detail" id="dd-${id}"[\\s\\S]*?</tr>`))[0];
+  const graded = id => record(id).match(/<div class="dd-label">Graded factors<\/div>([\s\S]*?)<\/div>\s*<div class="dd-block">/)[1]
+    .replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+
+  assert.equal(graded('p0'),
+    'Craft: 8.0 · Distinctiveness: 8.5 · Critical base: 7.5 All three set by the research agent Aug 27, 2026 from rev.example , paper.example What the coverage says.');
+  // Its sources, and neither who set it nor either of its dates.
+  assert.equal(graded('p1'),
+    'Craft: 8.0 · Distinctiveness: 8.5 · Critical base: 7.5 Sources on file for all three: rev.example , paper.example What was attached.');
+  assert.equal(graded('p2'), 'Craft: 8.0 · Distinctiveness: 8.5 · Critical base: 7.5');
+  for (const url of read) assert.ok(record('p1').includes(`href="${url}"`));
+
+  const text = html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, ' ').replace(/<[^>]+>/g, ' ');
+  assert.doesNotMatch(text, /editorial|founding entr|at launch|launched in/i);
+  assert.match(text, /The three graded factors \(craft, distinctiveness and the critic base\) are set by a research\s+agent from published coverage/);
+});
+
 test('the build refuses to clear a directory that is not a build output', () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
   const build = dir => spawnSync(process.execPath, [path.join(root, 'scripts/build.mjs')],
