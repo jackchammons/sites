@@ -634,9 +634,9 @@ function boot() {
     const { st, d, res } = last;
     if (mode !== 'projector') return;
     /* Every figure here is for the image the panel lights, the one the pixel
-       facts describe. On a picture of another shape that is narrower or
-       shorter than the picture, and the fact it changes says so, wherever the
-       two sizes read differently. */
+       facts describe. On a picture of another shape it is narrower or shorter
+       than the picture, and each fact that changes says so wherever the two
+       sizes print differently. */
     const lit = litImage(d, res);
     const dim = x => fmtLen(x, 'dim');
     const narrower = dim(lit.width) !== dim(d.width), shorter = dim(lit.height) !== dim(d.height);

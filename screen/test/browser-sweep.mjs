@@ -252,9 +252,9 @@ async function layout() {
     }
     /* The word that names each grade is on the page beside its figure: drawn,
        inside its fact, in the figure's colour, clear of the figure and of the
-       line beneath wherever it wraps to. A fact with no grade shows none. One
-       room with every grade in it, and a projector whose panel is not the
-       picture's shape, which has the longest lines. */
+       line beneath wherever it wraps to. A fact with no grade shows none.
+       Between them these rooms show every grade; the last is a projector whose
+       panel is not the picture's shape, which has the longest lines. */
     for (const hash of ['#d=43&a=16:9&r=1080&v=40&e=42&c=75&u=i&m=tv', '#d=65&a=16:9&r=2160&v=108&u=i&m=tv', '#d=100&a=16:9&r=custom&rw=2560&rh=1080&v=120&m=pj&l=400&o=-20&c=20&u=m']) {
       const where = { scheme, width, hash };
       await p2.evaluate(h => { location.hash = h; }, hash);
