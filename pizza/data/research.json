@@ -1,5 +1,104 @@
 {
-  "updated": "2026-11-11T12:00:00Z",
-  "news": [],
-  "mentions": []
+  "updated": "2026-11-11T00:00:00Z",
+  "factorRatings": [
+    {
+      "id": "ballard-pizza-co",
+      "craft": 6.5,
+      "distinctiveness": 5.5,
+      "criticScore": 6.5,
+      "priceIndex": 2,
+      "styleGroup": "Neighborhood",
+      "sources": [
+        "https://www.thestranger.com/food-and-drink/going-out-for-pizza-14330897/",
+        "https://theinfatuation.com/seattle/reviews/ballard-pizza-co"
+      ],
+      "note": "The Stranger found the custom pies merely on par with other Seattle pizzerias but singled out house specialty pies -- the pepperoni-pineapple-jalapeño Staple & Fancy, the mushroom-and-sage Funghi -- as worth the trip; The Infatuation praises the daily rotating slices as near NY-caliber, calling the place 'awesome.'"
+    },
+    {
+      "id": "big-marios",
+      "craft": 5.5,
+      "distinctiveness": 4.5,
+      "criticScore": 6,
+      "priceIndex": 1,
+      "styleGroup": "By the slice",
+      "sources": [
+        "https://theinfatuation.com/seattle/reviews/big-marios-pizza",
+        "https://seattlespectator.com/2024/05/29/by-the-slice-pizza-review/"
+      ],
+      "note": "The Infatuation calls it a decent, unspectacular NY-style slice joint good for a late-night pepperoni slice; Seattle Spectator's by-the-slice roundup dinged it for a greasy, soggy base despite a crunchier-than-average crust."
+    },
+    {
+      "id": "cornelly",
+      "craft": 8.5,
+      "distinctiveness": 7.5,
+      "criticScore": 8.5,
+      "opened": 2020,
+      "priceIndex": 2,
+      "styleGroup": "Creative",
+      "sources": [
+        "https://www.theinfatuation.com/seattle/reviews/cornelly",
+        "https://seattlerefined.com/eat-drink/restaurants-bars/cornelly-seattle-capitol-queen-anne-handmade-pizza-pasta-chicory-caesar-salad-italian-dining-dessert-pnw-eat-drink-foodie"
+      ],
+      "note": "The Infatuation rates it among the city's best, praising crunchy-but-not-burnt crusts and calling its 3 Cheese pie 'the greatest white pizza in town'; Seattle Refined highlights the naturally leavened dough and handmade pasta since the Capitol Hill original opened in 2020."
+    },
+    {
+      "id": "delancey",
+      "craft": 9,
+      "distinctiveness": 8,
+      "criticScore": 9,
+      "priceIndex": 2,
+      "styleGroup": "Wood-fired",
+      "sources": [
+        "https://www.theinfatuation.com/seattle/reviews/delancey",
+        "https://www.thestranger.com/?p=70680"
+      ],
+      "note": "The Infatuation calls it 'as close to perfect as a restaurant gets,' and The Stranger describes an apple-wood-fired crust that's blackened and bubbly at the edge yet thin and pliant at the center, built from a wetter, saltier dough than most Seattle pizzerias use."
+    },
+    {
+      "id": "dinos-tomato-pie",
+      "craft": 9,
+      "distinctiveness": 7.5,
+      "criticScore": 8.5,
+      "priceIndex": 1,
+      "styleGroup": "Detroit pan",
+      "sources": [
+        "https://www.theinfatuation.com/seattle/reviews/dinos-tomato-pie",
+        "https://www.thestranger.com/food-and-drink/pizza-pie-face-off-searching-for-the-best-slice-in-seattle-25754930/"
+      ],
+      "note": "The Infatuation praises a thick, crunchy crust charred nearly black on the bottom, and The Stranger's slice face-off named it the city's top pick for New Jersey-style square Sicilian slices with crispy, golden-brown cheese edges."
+    },
+    {
+      "id": "hot-mamas-pizza",
+      "craft": 5,
+      "distinctiveness": 4,
+      "criticScore": 5.5,
+      "priceIndex": 1,
+      "styleGroup": "By the slice",
+      "sources": [
+        "https://www.theinfatuation.com/seattle/reviews/hot-mamas-pizza",
+        "https://seattlespectator.com/2024/05/29/by-the-slice-pizza-review/"
+      ],
+      "note": "The Infatuation rates it a middling 'it's fine,' saying only the pesto slice is worth ordering while the red slices taste of 'pretty much nothing'; Seattle Spectator likewise found the slice greasy and structurally weak, though praised its six-inch cheese pull."
+    },
+    {
+      "id": "humble-pie",
+      "craft": 7.5,
+      "distinctiveness": 6.5,
+      "criticScore": 8,
+      "priceIndex": 2,
+      "styleGroup": "Creative",
+      "sources": [
+        "https://theinfatuation.com/seattle/reviews/humble-pie"
+      ],
+      "note": "The Infatuation calls the pizzas excellent and the setting 'as Pacific Northwest as it gets,' citing the margherita, a hearty whole hog pie, and a smoked eggplant pie for vegetarians, with eggs from an on-site chicken coop topping the arugula pie."
+    }
+  ],
+  "rejected": [
+    "mentions[0]: date is older than 730 days",
+    "mentions[1]: date is older than 730 days",
+    "mentions[2]: date is older than 730 days",
+    "mentions[3]: date is older than 730 days",
+    "mentions[4]: date is older than 730 days",
+    "mentions[5]: date is older than 730 days"
+  ]
 }
