@@ -1,5 +1,48 @@
 {
-  "updated": "2026-11-11T12:00:00Z",
-  "news": [],
-  "mentions": []
+  "updated": "2026-11-11T00:00:00Z",
+  "factorRatings": [
+    {
+      "id": "independent-pizzeria",
+      "craft": 7,
+      "distinctiveness": 5.5,
+      "criticScore": 7,
+      "priceIndex": 2,
+      "styleGroup": "Neighborhood",
+      "sources": [
+        "https://www.thestranger.com/food-and-drink/2011/02/17/6782469/the-spirit-of-the-independent",
+        "https://www.seattleweekly.com/2012/05/24/there-are-three-reasons-why-madison-parks-independent-pizzeria-is-the-last/"
+      ],
+      "note": "The Stranger (2011) and Seattle Weekly (2012) both describe a thin, Neapolitan-meets-NYC crust with big blackened bubbles at the edges, built up with quality ingredients like Mama Lil's peppers, Fra' Mani sausage, and chevre, and call it a dependable, kid-friendly neighborhood spot by the Madison Park beach despite cramped seating and slow service."
+    },
+    {
+      "id": "breezy-town-pizza",
+      "craft": 7,
+      "distinctiveness": 7.5,
+      "criticScore": 7.5,
+      "styleGroup": "Chicago pan",
+      "sources": [
+        "https://www.seattlemet.com/eat-and-drink/2019/05/the-best-restaurants-in-the-south-end-right-now"
+      ],
+      "note": "Seattle Met's 2019 South End roundup describes Breezy Town, the Clock-Out Lounge spinoff of Windy City Pie, baking deep-dish-style pies on a tangy sourdough crust that splits the difference between Chicago and Detroit styles, recommending the double-meat 'Pepperoni Paint Job' and praising its 'bizarre and wonderful' experimental specials."
+    },
+    {
+      "id": "pizzeria-gabbiano",
+      "craft": 8.5,
+      "distinctiveness": 8.5,
+      "criticScore": 8.5,
+      "priceIndex": 1,
+      "styleGroup": "Roman",
+      "sources": [
+        "https://www.thestranger.com/food-and-drink/2014/09/17/20608023/pizzeria-gabbiano-rules"
+      ],
+      "note": "The Stranger's 2014 review calls chef Mike Easton's weekday-lunch-only Roman-style pizza al taglio 'extremely good': a naturally fermented, focaccia-like crust re-baked to order after topping, sold by weight at $32/kg (a filling lunch under $10), with combinations like mortadella-pistachio-pesto and chanterelle-lobster-aioli that the writer says each topped the last."
+    }
+  ],
+  "rejected": [
+    "mentions[0]: date is older than 730 days",
+    "mentions[1]: date is older than 730 days",
+    "mentions[2]: date is older than 730 days",
+    "mentions[3]: date is older than 730 days",
+    "ratingSkipped[0]: note is longer than 600 characters"
+  ]
 }
