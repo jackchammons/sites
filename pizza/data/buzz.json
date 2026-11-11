@@ -1,6 +1,6 @@
 {
-  "updated": "2026-11-10T20:28:01.858Z",
-  "sources": 4,
+  "updated": "2026-11-11T00:06:17.439Z",
+  "sources": 3,
   "items": [
     {
       "title": "A.K. Pizza is hard to get—and even harder to beat - Review - Seattle",
@@ -63,14 +63,6 @@
       "mentions": []
     },
     {
-      "title": "WA pizza chain takes over former MOD Pizza space at Tacoma Mall",
-      "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTFAxWlZidDJKZnIzeWtnTFQzaFpqMkhYY25laHUxMUFlYjc2RmFOWDNrbmdCQlZCVm9Kcy1UMkFNSUtmOERGV1dmNjVaSDE0bHRuY2ZadGtQcmVsRXFpSVZKdXhoU1dsSkQ3c045OGtpSQ?oc=5",
-      "source": "MyNorthwest.com",
-      "published": "2026-10-14T21:00:49.000Z",
-      "kind": "mention",
-      "mentions": []
-    },
-    {
       "title": "I planned on eating every pizza in Seattle. My esophagus intervened",
       "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9JemVPMjFLYWpra0FjaVlCWF9NMmFZODNpMHRjRG1RdXNmcGFocFFwQWRJUV9Da29rN2pjOF91STZQWWVXbE9FNklsb1hEemcteUtjdWhiTnRvZWFjc3liazlISmtyM0x1QmNLYw?oc=5",
       "source": "It's a Shanda",
@@ -97,38 +89,6 @@
       "mentions": []
     },
     {
-      "title": "Seattle-based MOD Pizza debuts limited-time 'Abbott Elementary' Philly pizza",
-      "url": "https://news.google.com/rss/articles/CBMijwJBVV95cUxOcUZBSXRydG1fQzZqaFhoVjFYem04QXJKWlM0Z3ZaZHIzeUNRQnBSdzEwSFRNb1J3M1l4RUFzVXB3N1BZYXQzdWpKOVFPeWNobGI2MVBJWlN6c3hudHBmLTVmbUJ0aUZJWDFoWEJxZU5kN1QzVUxOcVBRLVlOTmNDTTNPTTBzSktod0dWT04zRW1MckkzTkNfR3F3YzAyc3FCd2liMXNlTFA4MFFJVXUwZWlHaDBKMkh2VDUyLV9PbzMwQlA3MHdWdTZZcDhHN1JUUmY3dWcyNWZqajlPLUNTRG11TWlSNGdBUGNXMHdsQzlvM2hRbEVxeFVtTy12N1dVc1pBT18tTEVuVlgtZFpj?oc=5",
-      "source": "Seattle Refined",
-      "published": "2026-10-07T21:46:54.000Z",
-      "kind": "mention",
-      "mentions": []
-    },
-    {
-      "title": "Seattle-based MOD Pizza has limited-time 'Abbott Elementary'-inspired Philly pizza",
-      "url": "https://news.google.com/rss/articles/CBMiiAJBVV95cUxOLWRNRVlKYjZYREtUdG5SMGpWd1UwWUNkbkdPckhMTTl3VGJsV0dnRjJLQkNZM0VmWlBTb3RqVkFTZVhqa3E5ZHRjb0N1cVlqUk5EbFVIQWJXYTB5dFBoempCY2otem5wZVZNaVByRjBOdzJOM05BUlU4emVzaHZZaElUdU1wcTNLTUdKRjQyZ2lSWkFtX1RFUlhTZVg0S3JkTkRVeTFMUjJkRkx2UTRscldncURIc0lTMWJPZVp4VnYzeXFzWndzQ3lMcW5rWHZyMUgzMDh4U0VPVTM2cWFOdTFwSklzOWNOeWV2TzR6MGJsaldVWExrNzd6VWFZSzhPWnJOUjc1cGM?oc=5",
-      "source": "KOMO",
-      "published": "2026-10-07T21:44:03.000Z",
-      "kind": "mention",
-      "mentions": []
-    },
-    {
-      "title": "Decades-old frozen pizza brand ends production, leaving fans nostalgic",
-      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQdS1hcFBPNGxKTmxVOURkaUl0UUVCLTRxbUJYMUZGcDBGelFHc0Zhb1FOb0tlbzNJT2hEMGxpZ1RHRFlBbjIyVnh3N054SlFfVGVzTEhqTjcwbU95VFF5VDRzaEtiUUNRNXY2YkoyUXdWSHlRT1VfdV9Pd0dRNUZiUmlxSTJRRkhGNHRqOGJUY2prVnFxTW1uZ3B1WldvY0pxUUxtRzJn?oc=5",
-      "source": "FOX 13 Seattle",
-      "published": "2026-10-07T07:00:00.000Z",
-      "kind": "mention",
-      "mentions": []
-    },
-    {
-      "title": "Seattle's MOD Pizza Bakes a Cheesesteak Pie to Toast Abbott Elementary's Return",
-      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPVE5uM0drTHI0LTJScGkzYmZKeTBLbWRaQlRaQ0hxMjB4emdGX2EwS1BzR2lzdi1IMzVPeENQR09GVUxFb0dYU1ZvNnBKWUR5cTAtTmxaRWZodmIzbXNvVkNqcHI3bTVKak1tcFVOR1puREFpYXFuZXJKU0ZkMlVud2J0dWlBaEYyaFRySF91aUo5eHlteU02Q2hvaEtkN3k4Mk5JY2xFczRLM2twUnc?oc=5",
-      "source": "Hoodline",
-      "published": "2026-10-07T07:00:00.000Z",
-      "kind": "mention",
-      "mentions": []
-    },
-    {
       "title": "Welcome to Seattle Pizza Month",
       "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE5IbXY1NF9lRlpRamtkWnd1bnRjNWljbUhaa0RRWXBpdmNtRFhIU0dzdTFZX0Z0UDZCd19JcEhTalRQazNsUkZQOS1XS21wX0hucXRvWFpGUVlZcGZqOVdzM2VWeVJkdHkyZ1V3blRn?oc=5",
       "source": "It's a Shanda",
@@ -141,7 +101,7 @@
       "url": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxObFp1cHEzU3gxcFVJQVg5Sm55bnhXUXVaanhoM0ZPNFZfRm4yZFZTNjdPVTlvcjVGZHVFU25qVTM2dVJSRGZzRElNMkVLZW9tYS1fbkhuX1U5THFnVW1VYkFCWXFCMEhtTzBqWkpjMG9qWUgxdnhyZXhnVWxOaHlPSE03eGNaV0E2ZXBXMnlCbWI5ZGppSlA0bk9oaG5CdXpqS3AzanVTZzBiWUY5YjB2UEhTa0Q0Vnp1OGhUdlU0OVo3QzFkUkFvbWw1WHBhNkxNMkZMTVVkVVVVaHPSAe8BQVVfeXFMTVRnV3VDdVhpcEdUVU14ZWNQTVJnaGJGdFpvOFVDajJIalU5V0kxODFydzNkaTRpUDZCUlFfM1ExNEdKc2ptdjRzM3ZaU3F0QmVEcEtHS1V3VGVKTzVwLXdzWHNzWkloeEsyWFFHUHVRS2ZDU0IzamY4RDVQTDhaTERfOTF2VExUVmh6QmNPaS1PWUNCVlVrNzJVelN0VERuX29mZXFBeVg5OVdfRkpoeEN5dk9TMThUdVhXS0VHNWJBMEZJa05hb3NEd0tMbXJlVGxSQmMzWTkzWHhrVkdaVG9xT29CREZLdDVGeDdIMG8?oc=5",
       "source": "KIRO 7 News Seattle",
       "published": "2026-10-02T11:37:34.000Z",
-      "kind": "opening",
+      "kind": "mention",
       "mentions": []
     },
     {
@@ -157,7 +117,7 @@
       "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPczZFc1ZlTG1RZk5Fcm9XSHhIZDctYy1JTzdjTnAxdGwwWFpZdmJ6Q1lDYy1TYXNWRDNhblVIREw1NGxmNWFDblVkdXNmS3RuZmV3UmoxLWJraTBIV3d6Z01ZMkRybkZiYjNNdEktQ2p4U090c0tIRlNXd1dGbkpXb0F5M1pZWGdEakdMRHg1ckhpb0IxVHJiNjRzOWItN0ZuNXRsS2pkcGlKLUx2V0k3clpn?oc=5",
       "source": "The Seattle Times",
       "published": "2026-10-01T13:00:00.000Z",
-      "kind": "opening",
+      "kind": "mention",
       "mentions": []
     },
     {
@@ -165,7 +125,7 @@
       "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNMmlEUmVLcUJ5TFItV0Z2LTRweTZrWDliSm5qWU8zejlZYThPWkd4by1BTzFuRmgwaDBRM1AxZnVfbDR6WDBMbFZYWk1ISlRTX0RLRFl0eEpNTEhTbXlQUWNLOHFNbzVodTJwRHNEVTlyMEZfT3VLNk9hdHNjaHNuRHJQQ0ZYUldMUDF0a1lOMnpPLXNnRGh1RXo0aWo3aVhxX3NmbVBLeVZTLVM0anc1MWt0MEUtbkRGUWNpS28zWENvdw?oc=5",
       "source": "whatnow.com",
       "published": "2026-09-24T08:09:33.000Z",
-      "kind": "mention",
+      "kind": "closing",
       "mentions": []
     },
     {
@@ -197,7 +157,7 @@
       "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNY2lNdEtBbzRyUHRPMlpmY05XSVEzSDFsems2NEFsZEZ5UThXeWxndlotWFA2X2ZWUHI2NXpfREkxcmcycjM0aGFGNk44b2VkaU1yMk9KS2Q4dFl3b1k4Z2lDSjhSc3V1Z3lwamFKX3Ytak1XT1dUWENjVlgwcmF2OGhVUEhhUkpwS2kyNmxQZVJmZjZKR1lkam9DTXZGelNNanBOamkzVTZpSUhxb2U0X1g2VGVucEk?oc=5",
       "source": "The Seattle Times",
       "published": "2026-09-22T07:00:00.000Z",
-      "kind": "mention",
+      "kind": "closing",
       "mentions": [
         "tutta-bella"
       ]
@@ -208,7 +168,9 @@
       "source": "theinfatuation.com",
       "published": "2026-09-09T21:55:03.000Z",
       "kind": "mention",
-      "mentions": []
+      "mentions": [
+        "starlas"
+      ]
     },
     {
       "title": "On National Cheese Pizza Day, the classic proves it never needed toppings",
@@ -266,14 +228,6 @@
       "source": "The Business Journals",
       "published": "2026-07-30T07:00:00.000Z",
       "kind": "mention",
-      "mentions": []
-    },
-    {
-      "title": "Pizza chain to close up to 50 locations as sales slump",
-      "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTFA2aS1PZzhSSWJvN1dJTnhuWm45Y0Mzd2VWYUFzZEY3cXkzZ2JlczFkc0VpZ2FXNTZPZ0lac21QUWtodWV4VDVJRVRESlFFNFBPSmZ2bk0xbDFoUjY4NDE3Qml2OTUyUGFoS3Npbk9xUlR1aW5vUXdFSA?oc=5",
-      "source": "FOX 13 Seattle",
-      "published": "2026-07-16T07:00:00.000Z",
-      "kind": "closing",
       "mentions": []
     }
   ]
