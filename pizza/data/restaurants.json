@@ -620,7 +620,7 @@
         "source": "seeded when the index launched; platform not recorded, never refreshed"
       },
       "priceIndex": 3,
-      "lastVerified": "2026-08-01",
+      "lastVerified": "2026-11-11",
       "styleGroup": "Wood-fired",
       "locations": [
         {
@@ -641,40 +641,37 @@
       },
       "factors": {
         "craft": {
-          "value": 8.7,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.thestranger.com/food-and-drink/2011/02/17/6782469/the-spirit-of-the-independent",
           "sources": [
             "https://www.thestranger.com/food-and-drink/2011/02/17/6782469/the-spirit-of-the-independent",
             "https://www.seattleweekly.com/2012/05/24/there-are-three-reasons-why-madison-parks-independent-pizzeria-is-the-last/"
           ],
-          "source": "https://www.thestranger.com/food-and-drink/2011/02/17/6782469/the-spirit-of-the-independent",
-          "sourcedDate": "2026-11-05",
-          "note": "The Stranger profiled the worker-owned Madison Park shop as a tight, open-kitchen neighborhood joint; Seattle Weekly praised its Neapolitan-meets-NYC crust and kid-friendly menu despite the cramped room and slow service from a small staff."
+          "note": "The Stranger (2011) and Seattle Weekly (2012) both describe a thin, Neapolitan-meets-NYC crust with big blackened bubbles at the edges, built up with quality ingredients like Mama Lil's peppers, Fra' Mani sausage, and chevre, and call it a dependable, kid-friendly neighborhood spot by the Madison Park beach despite cramped seating and slow service.",
+          "date": "2026-11-11"
         },
         "distinctiveness": {
-          "value": 8,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.thestranger.com/food-and-drink/2011/02/17/6782469/the-spirit-of-the-independent",
           "sources": [
             "https://www.thestranger.com/food-and-drink/2011/02/17/6782469/the-spirit-of-the-independent",
             "https://www.seattleweekly.com/2012/05/24/there-are-three-reasons-why-madison-parks-independent-pizzeria-is-the-last/"
           ],
-          "source": "https://www.thestranger.com/food-and-drink/2011/02/17/6782469/the-spirit-of-the-independent",
-          "sourcedDate": "2026-11-05",
-          "note": "The Stranger profiled the worker-owned Madison Park shop as a tight, open-kitchen neighborhood joint; Seattle Weekly praised its Neapolitan-meets-NYC crust and kid-friendly menu despite the cramped room and slow service from a small staff."
+          "note": "The Stranger (2011) and Seattle Weekly (2012) both describe a thin, Neapolitan-meets-NYC crust with big blackened bubbles at the edges, built up with quality ingredients like Mama Lil's peppers, Fra' Mani sausage, and chevre, and call it a dependable, kid-friendly neighborhood spot by the Madison Park beach despite cramped seating and slow service.",
+          "date": "2026-11-11"
         },
         "critical": {
-          "value": 8.7,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.thestranger.com/food-and-drink/2011/02/17/6782469/the-spirit-of-the-independent",
           "sources": [
             "https://www.thestranger.com/food-and-drink/2011/02/17/6782469/the-spirit-of-the-independent",
             "https://www.seattleweekly.com/2012/05/24/there-are-three-reasons-why-madison-parks-independent-pizzeria-is-the-last/"
           ],
-          "source": "https://www.thestranger.com/food-and-drink/2011/02/17/6782469/the-spirit-of-the-independent",
-          "sourcedDate": "2026-11-05",
-          "note": "The Stranger profiled the worker-owned Madison Park shop as a tight, open-kitchen neighborhood joint; Seattle Weekly praised its Neapolitan-meets-NYC crust and kid-friendly menu despite the cramped room and slow service from a small staff."
+          "note": "The Stranger (2011) and Seattle Weekly (2012) both describe a thin, Neapolitan-meets-NYC crust with big blackened bubbles at the edges, built up with quality ingredients like Mama Lil's peppers, Fra' Mani sausage, and chevre, and call it a dependable, kid-friendly neighborhood spot by the Madison Park beach despite cramped seating and slow service.",
+          "date": "2026-11-11"
         }
       },
       "mentions": [
@@ -697,7 +694,8 @@
       "statusChecked": "2026-11-06",
       "statusPrev": "open",
       "statusNote": "The Madison Park wood-fired pizzeria closed permanently on Oct. 16, 2026 after more than 16 years; owner Tom Siegel retired and the space is passing to a new operator.",
-      "statusDetected": "2026-11-06"
+      "statusDetected": "2026-11-06",
+      "ratingAttempted": "2026-11-11"
     },
     {
       "id": "tutta-bella",
@@ -1049,7 +1047,7 @@
       "opened": null,
       "crowd": null,
       "priceIndex": 3,
-      "lastVerified": null,
+      "lastVerified": "2026-11-11",
       "locations": [],
       "locationsVerified": null,
       "locationsSource": null,
@@ -1062,19 +1060,34 @@
       },
       "factors": {
         "craft": {
-          "value": 9,
-          "setBy": "editorial",
-          "date": "2026-08-26"
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/eat-and-drink/2019/05/the-best-restaurants-in-the-south-end-right-now",
+          "sources": [
+            "https://www.seattlemet.com/eat-and-drink/2019/05/the-best-restaurants-in-the-south-end-right-now"
+          ],
+          "note": "Seattle Met's 2019 South End roundup describes Breezy Town, the Clock-Out Lounge spinoff of Windy City Pie, baking deep-dish-style pies on a tangy sourdough crust that splits the difference between Chicago and Detroit styles, recommending the double-meat 'Pepperoni Paint Job' and praising its 'bizarre and wonderful' experimental specials.",
+          "date": "2026-11-11"
         },
         "distinctiveness": {
-          "value": 9.3,
-          "setBy": "editorial",
-          "date": "2026-08-26"
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/eat-and-drink/2019/05/the-best-restaurants-in-the-south-end-right-now",
+          "sources": [
+            "https://www.seattlemet.com/eat-and-drink/2019/05/the-best-restaurants-in-the-south-end-right-now"
+          ],
+          "note": "Seattle Met's 2019 South End roundup describes Breezy Town, the Clock-Out Lounge spinoff of Windy City Pie, baking deep-dish-style pies on a tangy sourdough crust that splits the difference between Chicago and Detroit styles, recommending the double-meat 'Pepperoni Paint Job' and praising its 'bizarre and wonderful' experimental specials.",
+          "date": "2026-11-11"
         },
         "critical": {
-          "value": 9,
-          "setBy": "editorial",
-          "date": "2026-08-26"
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/eat-and-drink/2019/05/the-best-restaurants-in-the-south-end-right-now",
+          "sources": [
+            "https://www.seattlemet.com/eat-and-drink/2019/05/the-best-restaurants-in-the-south-end-right-now"
+          ],
+          "note": "Seattle Met's 2019 South End roundup describes Breezy Town, the Clock-Out Lounge spinoff of Windy City Pie, baking deep-dish-style pies on a tangy sourdough crust that splits the difference between Chicago and Detroit styles, recommending the double-meat 'Pepperoni Paint Job' and praising its 'bizarre and wonderful' experimental specials.",
+          "date": "2026-11-11"
         }
       },
       "mentions": [],
@@ -1082,7 +1095,8 @@
       "statusChecked": "2026-11-05",
       "statusPrev": "open",
       "statusDetected": "2026-11-05",
-      "statusNote": "The Clock-Out Lounge's own site now links its pizza menu to Stevie's Famous, and The Infatuation lists Breezy Town as permanently closed. The sourdough pan pie survives as a Tuesday-to-Thursday item at Windy City Pie."
+      "statusNote": "The Clock-Out Lounge's own site now links its pizza menu to Stevie's Famous, and The Infatuation lists Breezy Town as permanently closed. The sourdough pan pie survives as a Tuesday-to-Thursday item at Windy City Pie.",
+      "ratingAttempted": "2026-11-11"
     },
     {
       "id": "via-tribunali",
@@ -1826,7 +1840,7 @@
       "opened": null,
       "crowd": null,
       "priceIndex": 2,
-      "lastVerified": null,
+      "lastVerified": "2026-11-11",
       "locations": [],
       "locationsVerified": null,
       "locationsSource": null,
@@ -1839,22 +1853,38 @@
       },
       "factors": {
         "craft": {
-          "value": 8.4,
-          "setBy": "editorial",
-          "date": "2026-08-26"
+          "value": 8.5,
+          "setBy": "agent",
+          "source": "https://www.thestranger.com/food-and-drink/2014/09/17/20608023/pizzeria-gabbiano-rules",
+          "sources": [
+            "https://www.thestranger.com/food-and-drink/2014/09/17/20608023/pizzeria-gabbiano-rules"
+          ],
+          "note": "The Stranger's 2014 review calls chef Mike Easton's weekday-lunch-only Roman-style pizza al taglio 'extremely good': a naturally fermented, focaccia-like crust re-baked to order after topping, sold by weight at $32/kg (a filling lunch under $10), with combinations like mortadella-pistachio-pesto and chanterelle-lobster-aioli that the writer says each topped the last.",
+          "date": "2026-11-11"
         },
         "distinctiveness": {
-          "value": 8.8,
-          "setBy": "editorial",
-          "date": "2026-08-26"
+          "value": 8.5,
+          "setBy": "agent",
+          "source": "https://www.thestranger.com/food-and-drink/2014/09/17/20608023/pizzeria-gabbiano-rules",
+          "sources": [
+            "https://www.thestranger.com/food-and-drink/2014/09/17/20608023/pizzeria-gabbiano-rules"
+          ],
+          "note": "The Stranger's 2014 review calls chef Mike Easton's weekday-lunch-only Roman-style pizza al taglio 'extremely good': a naturally fermented, focaccia-like crust re-baked to order after topping, sold by weight at $32/kg (a filling lunch under $10), with combinations like mortadella-pistachio-pesto and chanterelle-lobster-aioli that the writer says each topped the last.",
+          "date": "2026-11-11"
         },
         "critical": {
-          "value": 8.2,
-          "setBy": "editorial",
-          "date": "2026-08-26"
+          "value": 8.5,
+          "setBy": "agent",
+          "source": "https://www.thestranger.com/food-and-drink/2014/09/17/20608023/pizzeria-gabbiano-rules",
+          "sources": [
+            "https://www.thestranger.com/food-and-drink/2014/09/17/20608023/pizzeria-gabbiano-rules"
+          ],
+          "note": "The Stranger's 2014 review calls chef Mike Easton's weekday-lunch-only Roman-style pizza al taglio 'extremely good': a naturally fermented, focaccia-like crust re-baked to order after topping, sold by weight at $32/kg (a filling lunch under $10), with combinations like mortadella-pistachio-pesto and chanterelle-lobster-aioli that the writer says each topped the last.",
+          "date": "2026-11-11"
         }
       },
-      "mentions": []
+      "mentions": [],
+      "ratingAttempted": "2026-11-11"
     },
     {
       "id": "post-alley-pizza",
