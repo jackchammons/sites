@@ -6,7 +6,7 @@
  * be shared; the hash never reaches a server. How a typed number, a typed
  * month and that hash are read lives in src/inputs.js, tested the same way.
  */
-import { describe, amortize, monthlyBreakdown, byYear, originalLoan } from './mortgage.js';
+import { describe, amortize, monthlyBreakdown, byYear, originalLoan, originalLoanMargin, pastPayments } from './mortgage.js';
 import { parseAmount, parseMonth, convertUnit, downFromPct, downPctOf, defaultState, encodeState, decodeState } from './inputs.js';
 
 const $ = id => document.getElementById(id);
@@ -38,12 +38,13 @@ function boot() {
   const DEFAULTS = JSON.parse($('defaults').textContent);
   const els = {
     price: $('in-price'), down: $('in-down'), downpct: $('in-downpct'), rate: $('in-rate'),
-    years: $('in-years'), start: $('in-start'), balance: $('in-balance'), maturity: $('in-maturity'), next: $('in-next'), tax: $('in-tax'), ins: $('in-ins'),
+    years: $('in-years'), start: $('in-start'), balance: $('in-balance'), maturity: $('in-maturity'), next: $('in-next'),
+    origPrice: $('in-origprice'), tax: $('in-tax'), ins: $('in-ins'),
     hoa: $('in-hoa'), pmi: $('in-pmi'), extra: $('in-extra'), every: $('in-every'),
     taxUnit: $('in-tax-unit'), insUnit: $('in-ins-unit'), escrow: $('in-escrow'), escrowUnit: $('in-escrow-unit'),
   };
   const TYPED = [els.price, els.down, els.downpct, els.balance, els.rate, els.start, els.maturity, els.next,
-    els.tax, els.ins, els.escrow, els.hoa, els.pmi, els.extra];
+    els.origPrice, els.tax, els.ins, els.escrow, els.hoa, els.pmi, els.extra];
   // What a share link may ask for: the options the two selects offer.
   const optionsOf = sel => [...sel.options].map(o => +o.value);
   const CHOICES = { terms: optionsOf(els.years), cadences: optionsOf(els.every) };
@@ -51,7 +52,7 @@ function boot() {
   /* Reading a field. Dollar fields take "750.000" as thousands; a rate or a
      percentage never does (6.125 is a rate). Property tax is whichever its
      unit says. */
-  const MONEY = new Set([els.price, els.down, els.balance, els.ins, els.escrow, els.hoa, els.extra]);
+  const MONEY = new Set([els.price, els.down, els.balance, els.origPrice, els.ins, els.escrow, els.hoa, els.extra]);
   const UNIT_SELECT = new Map([[els.tax, els.taxUnit], [els.ins, els.insUnit], [els.escrow, els.escrowUnit]]);
   // The unit the number beside each select is in; it trails the select for
   // the moment between the viewer picking a unit and the number converting.
@@ -84,14 +85,62 @@ function boot() {
   };
   const monthsBetween = (a, b) => (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
   const monthOf = (n, start) => new Date(start.getFullYear(), start.getMonth() + n - 1, 1);
+  const MONTHS = [els.start, els.maturity, els.next];
   // Where the month is a text box, tidy what was typed ("3/2025") into the
   // form the page writes itself once the viewer leaves the field.
-  for (const el of [els.start, els.maturity, els.next]) {
+  for (const el of MONTHS) {
     el.addEventListener('change', () => {
       const m = parseMonth(el.value);
       if (m && el.value !== m) el.value = m;
     });
   }
+  /* A browser with no month picker keeps type=month as a text box, and says
+     so by not letting the type stick. There each month field gets a month
+     select and a year box instead. The field itself stays in the page,
+     hidden, as the one place a month is read from: the two controls write
+     the same YYYY-MM text into it and announce the edit as its own, so
+     nothing that reads a month knows which kind of browser this is. */
+  const standIns = new Map();
+  const probe = document.createElement('input');
+  probe.setAttribute('type', 'month');
+  if (probe.type !== 'month') {
+    const monthName = new Intl.DateTimeFormat(locale, { month: 'short', timeZone: 'UTC' });
+    for (const el of MONTHS) {
+      const label = el.closest('.field').querySelector('.lbl');
+      const sel = document.createElement('select');
+      sel.id = `${el.id}-month`;
+      sel.setAttribute('aria-label', `${label.textContent}, month`);
+      for (let mo = 1; mo <= 12; mo++) {
+        const o = document.createElement('option');
+        o.value = String(mo).padStart(2, '0');
+        o.textContent = monthName.format(new Date(Date.UTC(2001, mo - 1, 1)));
+        sel.append(o);
+      }
+      const year = document.createElement('input');
+      year.id = `${el.id}-year`;
+      year.type = 'number';
+      for (const [k, v] of [['min', 1900], ['max', 2200], ['step', 1], ['inputmode', 'numeric'], ['placeholder', 'Year'],
+        ['aria-label', `${label.textContent}, year`]]) year.setAttribute(k, v);
+      // Half an answer (a month and no year yet) is no month at all.
+      const write = () => {
+        el.value = parseMonth(`${year.value}-${sel.value}`) || '';
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+      };
+      sel.addEventListener('input', write);
+      year.addEventListener('input', write);
+      el.hidden = true;
+      el.after(sel, year);
+      label.htmlFor = sel.id;
+      standIns.set(el, [sel, year]);
+    }
+  }
+  // Every month the page writes goes through here, so the select and year
+  // box show it too.
+  const putMonth = (el, text) => {
+    el.value = text;
+    const [sel, year] = standIns.get(el) || [];
+    if (sel) { sel.value = text.slice(5); year.value = text.slice(0, 4); }
+  };
 
   /* ---- state <-> form <-> hash ------------------------------------- */
   let escrowMode = false;
@@ -124,9 +173,10 @@ function boot() {
     els.pmi.value = st.pmiRate;
     put(els.extra, st.extra);
     els.every.value = String(st.extraEvery);
-    els.start.value = st.start;
+    putMonth(els.start, st.start);
     if (st.balance == null) els.balance.value = ''; else put(els.balance, st.balance);
-    els.next.value = st.next;
+    if (st.origPrice == null) els.origPrice.value = ''; else put(els.origPrice, st.origPrice);
+    putMonth(els.next, st.next);
     syncMaturity();
     setLoanMode(!!st.progressMode);
     // After the loan mode, which decides what a tax percentage is taken of.
@@ -144,7 +194,7 @@ function boot() {
       price: num(els.price),
       down: downBy === 'usd' ? num(els.down) : null,
       downPct: downBy === 'pct' ? num(els.downpct) : null,
-      balance: num(els.balance), rate: num(els.rate), years: +els.years.value,
+      balance: num(els.balance), origPrice: num(els.origPrice), rate: num(els.rate), years: +els.years.value,
       start: month(els.start), next: month(els.next),
       taxRate: num(els.tax), taxUnit: els.taxUnit.value,
       insurance: num(els.ins), insUnit: els.insUnit.value,
@@ -203,7 +253,7 @@ function boot() {
     };
     const month = el => {
       const d = monthFrom(el);
-      if (!d) flag(el, 'enter a month as YYYY-MM.');
+      if (!d) flag(el, standIns.size ? 'choose the month and enter the year.' : 'enter a month as YYYY-MM.');
       return d;
     };
 
@@ -214,11 +264,13 @@ function boot() {
       const balance = val(els.balance), first = month(els.start);
       month(els.maturity);
       start = month(els.next);
-      inf = inferred(balance, rate, first, start);
+      const price = givenPrice();
+      if (price != null && !(price > 0)) flag(els.origPrice, 'enter the price, or leave it empty.');
+      inf = inferred(balance, rate, first, start, price);
       if (inf.paid < 0) flag(els.next, 'it is before the first payment.');
       else if (inf.paid >= inf.n) flag(els.next, 'it is after the last payment; check the dates and the term.');
       else if (!inf.ok && !problems.size) flag(els.balance, 'the loan amount cannot be worked out from it.');
-      loan = { price: inf.price, balance, months: inf.left };
+      loan = { price: inf.price, balance, months: inf.left, original: inf.loan, originalMargin: originalLoanMargin(rate, inf.n, inf.paid) };
     } else {
       loan = { price: val(els.price), down: val(els.down), years: +els.years.value };
       val(els.downpct);
@@ -236,16 +288,28 @@ function boot() {
     for (const el of TYPED) {
       const bad = problems.has(el);
       el.closest('.field').classList.toggle('invalid', bad);
-      if (bad) el.setAttribute('aria-invalid', 'true'); else el.removeAttribute('aria-invalid');
       // The message is in the headline's sub-line; an invalid field points at it.
       const about = [ABOUT.get(el), bad && 'out-sub'].filter(Boolean).join(' ');
-      if (about) el.setAttribute('aria-describedby', about); else el.removeAttribute('aria-describedby');
+      // A month's select and year box are what a reader meets, so they carry it.
+      for (const c of standIns.get(el) || [el]) {
+        if (bad) c.setAttribute('aria-invalid', 'true'); else c.removeAttribute('aria-invalid');
+        if (about) c.setAttribute('aria-describedby', about); else c.removeAttribute('aria-describedby');
+      }
     }
+    /* What the two percentages are percentages of. A loan under way has no
+       price unless the viewer gives one, and the loan amount stands in. */
+    const priced = inf && inf.priced;
+    $('in-tax-hint').textContent = !inf ? '% is of the price' : priced ? '% is of the original price' : '% is of the loan amount';
+    $('in-pmi-hint').textContent = !inf ? 'Charged under 20% down; 0 if none'
+      : priced ? '% of the original loan. Charged if that was over 80% of the price, until the balance is 78% of the price; 0 if none'
+      : '% of the original loan, until the balance is 78% of it; 0 if none';
     if (inf) {
       $('inferred').classList.toggle('invalid', !inf.ok);
-      $('inf-price').textContent = inf.ok ? usd(inf.price) : '—';
+      $('inf-price').textContent = inf.ok ? usd(inf.loan) : '—';
       $('inf-note').textContent = inf.ok
-        ? `original loan amount, with ${inf.paid} of ${inf.n} payments made; tax and PMI are measured against it`
+        ? `original loan amount, with ${inf.paid} of ${inf.n} payments made`
+          + (!priced ? '; tax and PMI are measured against it'
+            : inf.price > 0 ? `; ${plain.format(+(inf.loan / inf.price * 100).toFixed(1))}% of the price` : '')
         : inf.paid < 0 ? 'The next payment is before the first.'
         : inf.paid >= inf.n ? 'The next payment is after the last one — check the dates and term.'
         : 'Enter the balance and dates.';
@@ -259,10 +323,10 @@ function boot() {
     const n = +els.years.value * 12;
     if (fromMaturity) {
       const mt = monthFrom(els.maturity);
-      if (mt) els.start.value = ym(new Date(mt.getFullYear(), mt.getMonth() - n + 1, 1));
+      if (mt) putMonth(els.start, ym(new Date(mt.getFullYear(), mt.getMonth() - n + 1, 1)));
     } else {
       const s0 = monthFrom(els.start);
-      if (s0) els.maturity.value = ym(new Date(s0.getFullYear(), s0.getMonth() + n - 1, 1));
+      if (s0) putMonth(els.maturity, ym(new Date(s0.getFullYear(), s0.getMonth() + n - 1, 1)));
     }
   }
   els.maturity.addEventListener('input', () => syncMaturity(true));
@@ -270,15 +334,20 @@ function boot() {
   els.years.addEventListener('input', () => syncMaturity());
 
   /* A loan under way: the balance, the term and how far along the loan is
-     give back the original principal, which stands in for the home price
-     wherever one is needed. Assumes payments have been exactly on schedule.
-     `first` and `next` are the two payment months, or null when unreadable. */
-  function inferred(balance, rate, first, next) {
+     give back the original principal. Assumes payments have been exactly on
+     schedule. `first` and `next` are the two payment months, or null when
+     unreadable. `price` is the original home price when the viewer gave
+     one; without it the original principal stands in for the price wherever
+     one is needed. */
+  function inferred(balance, rate, first, next, price) {
     const n = +els.years.value * 12;
     const paid = first && next ? monthsBetween(first, next) : NaN;
     const loan = originalLoan(balance, rate, n, paid);
-    return { ok: Number.isFinite(loan), n, paid, left: n - paid, loan, price: loan };
+    return { ok: Number.isFinite(loan), n, paid, left: n - paid, loan, priced: price != null, price: price ?? loan };
   }
+  // The optional price of a loan under way: null while the field is empty,
+  // which is an answer ("not given") and not a mistake.
+  const givenPrice = () => els.origPrice.value.trim() ? num(els.origPrice) : null;
   const termWord = months => {
     const y = Math.floor(months / 12), mo = months % 12;
     return [y ? `${y} yr` : '', mo ? `${mo} mo` : ''].filter(Boolean).join(' ') || '0 mo';
@@ -296,8 +365,6 @@ function boot() {
     $('next-field').hidden = !progress;
     $('term-label').textContent = progress ? 'Original term' : 'Term';
     $('lbl-loan').textContent = progress ? 'Balance' : 'Loan amount';
-    $('in-tax-hint').textContent = progress ? '% is of the loan amount' : '% is of the price';
-    $('in-pmi-hint').textContent = progress ? 'Charged while over 80% of the loan amount; 0 if none' : 'Charged under 20% down; 0 if none';
     $('mode-new').setAttribute('aria-pressed', String(!progress));
     $('mode-progress').setAttribute('aria-pressed', String(progress));
     if (progress) {
@@ -305,7 +372,7 @@ function boot() {
         const p = num(els.price) || 0, dn = num(els.down) || 0;
         els.balance.value = Math.max(0, Math.round(p - dn));
       }
-      if (!monthFrom(els.next)) els.next.value = ym(nextMonth());
+      if (!monthFrom(els.next)) putMonth(els.next, ym(nextMonth()));
       syncMaturity();
     }
   }
@@ -324,9 +391,9 @@ function boot() {
     };
   }
   // What a tax percentage is a percentage of: the price, or for a loan under
-  // way the inferred loan that stands in for it.
+  // way the price given for it, or else the inferred loan that stands in.
   const taxBase = () => progressMode
-    ? inferred(num(els.balance), num(els.rate), monthFrom(els.start), monthFrom(els.next)).price
+    ? inferred(num(els.balance), num(els.rate), monthFrom(els.start), monthFrom(els.next), givenPrice()).price
     : num(els.price);
 
   /* Picking another unit restates the same cost in it (0.92% of the price
@@ -401,12 +468,13 @@ function boot() {
     const fast = d.extra > 0 ? amortize(d) : base;
     /* What the chart draws. A new loan: the schedule as is. A loan under
        way: the whole original term, with the elapsed payments reconstructed
-       on schedule from the inferred original loan and the rest being the
-       real schedule from today's balance, so the two halves meet at the
-       balance the viewer typed. */
+       on schedule from the inferred original loan (PMI included, by the
+       rule the payments ahead follow) and the rest being the real schedule
+       from today's balance, so the two halves meet at the balance the
+       viewer typed. */
     let chart = { start, loan0: d.loan, baseRows: base.rows, fastRows: fast.rows, note: d.loan > 0 ? `${d.years}-year term` : '' };
     if (d.inProgress && inf.paid > 0) {
-      const hist = amortize(describe({ price: inf.loan, down: 0, rate: d.rate, months: inf.n }), { extra: 0 }).rows.slice(0, inf.paid);
+      const hist = pastPayments(d, inf.paid);
       const shift = rows => rows.map(r => ({ ...r, n: r.n + inf.paid }));
       chart = {
         start: monthFrom(els.start), loan0: inf.loan, hist,
@@ -453,7 +521,7 @@ function boot() {
       pmi: sumOf(hist, r => r.pmi) + fast.totalPMI,
     } : null;
     set('loan', usd(d.loan), d.inProgress
-      ? (life ? `balance today, ${plain.format(+(d.loan / chart.loan0 * 100).toFixed(1))}% of the ${usd(chart.loan0)} loan` : d.price > 0 ? `${plain.format(+(d.loan / d.price * 100).toFixed(1))}% of the original loan` : '')
+      ? (life ? `balance today, ${plain.format(+(d.loan / chart.loan0 * 100).toFixed(1))}% of the ${usd(chart.loan0)} loan` : d.original > 0 ? `${plain.format(+(d.loan / d.original * 100).toFixed(1))}% of the original loan` : '')
       : `${plain.format(+d.downPct.toFixed(1))}% down`);
     if (life) {
       set('interest', usd(life.interest), `whole loan · ${usd(fast.totalInterest)} still to pay`);

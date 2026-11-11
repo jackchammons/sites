@@ -20,7 +20,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import * as s from '../src/screen.js';
-import { states, hashOf, checkState, FACTS, FIELDS, TYPING_ROOM, TYPED, CARRY } from './page-checks.mjs';
+import { states, hashOf, checkState, checkShown, FACTS, FIELDS, SHOWN, TYPING_ROOM, TYPED, CARRY } from './page-checks.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -144,8 +144,8 @@ const rows = (id, attr = '') => [...$(id).innerHTML.matchAll(/<tr([^>]*)>([\s\S]
 function snapshot() {
   return {
     boot: $('boot-error').hidden, stale: $('main').classList.contains('stale'),
-    fov: $('out-fov').textContent, fovCls: gradeOf($('out-total')), sub: $('out-sub').textContent,
-    facts: Object.fromEntries(FACTS.map(k => [k, { cls: gradeOf($('fact-' + k)), main: $('sum-' + k).textContent, sub: $('sub-' + k).textContent }])),
+    fov: $('out-fov').textContent, fovCls: gradeOf($('out-total')), fovWord: $('out-grade').textContent, sub: $('out-sub').textContent,
+    facts: Object.fromEntries(FACTS.map(k => [k, { cls: gradeOf($('fact-' + k)), word: $('grade-' + k).textContent, main: $('sum-' + k).textContent, sub: $('sub-' + k).textContent }])),
     fields: Object.fromEntries(FIELDS.map(id => [id, String($(id).value)])),
     pjHidden: $('pj-section').hidden,
     you: find($('lanes'), 'you-lbl')[0]?.textContent,
@@ -188,6 +188,15 @@ test(`every room in the sweep's grid shows what the maths says (${GRID.length} r
   done();
 });
 
+test('rooms with their answers written out show exactly those', () => {
+  const { check, done } = collector();
+  for (const [st, facts] of SHOWN) {
+    go(hashOf(st));
+    checkShown(snapshot(), st, facts, check);
+  }
+  done();
+});
+
 test('what a person types is read as they meant it, or refused', () => {
   const { check, done } = collector();
   for (const [id, key, cases] of TYPED) {
@@ -214,6 +223,7 @@ test('an invalid field leaves nothing stale presented as current, and recovers',
   type('in-dist', 'abc');
   assert.equal($('out-fov').textContent, '—');
   assert.equal($('out-total').className, 'total', 'the headline keeps no grade colour');
+  assert.equal($('out-grade').textContent, '', 'and no grade word');
   assert.equal($('main').classList.contains('stale'), true);
   assert.equal($('out-sub').textContent, 'Check “Eyes to screen”.');
   assert.equal($('in-dist').getAttribute('aria-invalid'), 'true');
@@ -243,6 +253,7 @@ test('an invalid field leaves nothing stale presented as current, and recovers',
   const p = snapshot();
   assert.equal(p.stale, false);
   assert.equal(p.fovCls, 'good');
+  assert.equal(p.fovWord, 'meets');
   assert.doesNotMatch(p.sub, /^Check/);
   assert.equal($('in-dist').getAttribute('aria-invalid'), null);
   assert.equal(invalid('in-dist'), false);

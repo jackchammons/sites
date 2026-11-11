@@ -96,6 +96,7 @@ const UNITS = { taxUnit: ['pct', 'yr', 'mo'], insUnit: ['yr', 'mo'], escrowUnit:
    both walk this table, so a field cannot be written and not read back. */
 export const HASH_KEYS = [
   ['p', 'price', 'num'], ['d', 'down', 'num'], ['dp', 'downPct', 'pct'], ['b', 'balance', 'num'],
+  ['op', 'origPrice', 'num'],
   ['r', 'rate', 'num'], ['y', 'years', 'term'], ['s', 'start', 'month'], ['nx', 'next', 'month'],
   ['t', 'taxRate', 'num'], ['tu', 'taxUnit', 'unit'], ['i', 'insurance', 'num'], ['iu', 'insUnit', 'unit'],
   ['w', 'escrow', 'num'], ['wu', 'escrowUnit', 'unit'], ['h', 'hoa', 'num'], ['m', 'pmiRate', 'num'],
@@ -105,13 +106,13 @@ export const HASH_KEYS = [
 /**
  * The state the page opens with: data/defaults.json plus the fields that
  * have no fixed default. The down payment is a percentage until dollars are
- * typed (exactly one of `down` and `downPct` is set), the balance is unset,
- * and both months are `nextMonth` ("YYYY-MM"), which the caller reads from
- * the viewer's clock.
+ * typed (exactly one of `down` and `downPct` is set), the balance and the
+ * original price of a loan under way are unset, and both months are
+ * `nextMonth` ("YYYY-MM"), which the caller reads from the viewer's clock.
  */
 export function defaultState(defaults, nextMonth) {
   return {
-    ...defaults, down: null, balance: null, start: nextMonth, next: nextMonth,
+    ...defaults, down: null, balance: null, origPrice: null, start: nextMonth, next: nextMonth,
     escrowMode: !!defaults.escrowMode, progressMode: false,
   };
 }

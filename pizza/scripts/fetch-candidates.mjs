@@ -16,9 +16,26 @@
  * one through the validated `directory` channel before it can join the site.
  * Existing resolutions (promoted/rejected/chain) survive a refresh.
  *
- * Run by hand (or a dispatch) when the queue needs topping up:
- *   node pizza/scripts/fetch-candidates.mjs
- * Fail-soft per source: one registry being down still refreshes from the other.
+ *   node pizza/scripts/fetch-candidates.mjs                    refresh at once
+ *   node pizza/scripts/fetch-candidates.mjs --max-age-days=30  only if the last
+ *                                                              refresh is older
+ *
+ * The second form is the one a workflow runs on every pass: inside the window
+ * it returns before any request is made, so the registries are asked about
+ * once a month however often it is called.
+ *
+ * Nothing here is worth a failed run. A source that is down is skipped and the
+ * other still refreshes the queue; if neither answers, or anything else goes
+ * wrong, candidates.json is left exactly as it was and the exit code is 0.
+ *
+ * The file carries two stamps. `updated` is the last refresh that changed a
+ * candidate, and the candidates are rewritten only then. `checked` is the last
+ * refresh in which the permit register answered, changed or not, and is what
+ * --max-age-days reads: without it a refresh that found nothing new would
+ * leave no trace, and the next run would ask the registries all over again.
+ *
+ * The row handling and the stamps are pure and exported for the tests; the
+ * requests and the file write happen in the CLI block at the end.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -27,34 +44,31 @@ import { mergeCandidates } from '../src/census.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outPath = path.join(root, 'data/candidates.json');
-const dataset = JSON.parse(fs.readFileSync(path.join(root, 'data/restaurants.json'), 'utf8'));
 
-const INSPECTION_CUTOFF_MONTHS = 30;
+const UA = 'Mozilla/5.0 (compatible; SeattlePizzaIndex/1.0; +https://sites.jackhammons.com/pizza/)';
+/* Per request. The refresh runs inside a workflow job with its own deadline
+ * and a commit still to make, so the worst case has to stay small: one
+ * register request and three Overpass mirrors come to 100 seconds. */
+const TIMEOUT_MS = 25_000;
+export const INSPECTION_CUTOFF_MONTHS = 30;
 
 const title = s => String(s).toLowerCase().replace(/\b[a-z]/g, c => c.toUpperCase())
   .replace(/\bLlc\b/g, 'LLC').trim();
 
-async function fromKingCounty() {
-  // Inspection rows, newest first, name-filtered server-side; deduped to one
-  // candidate per business_id client-side, keeping the latest inspection date.
-  const url = 'https://data.kingcounty.gov/resource/r878-4sxa.json'
-    + '?$select=business_id,name,address,city,zip_code,inspection_date,inspection_closed_business'
-    + '&$where=' + encodeURIComponent(
-      "city = 'SEATTLE' AND (upper(name) like '%PIZZ%' OR upper(name) like '%SLICE%')")
-    + '&$order=inspection_date DESC&$limit=20000';
-  const res = await fetch(url, { headers: { accept: 'application/json' } });
-  if (!res.ok) throw new Error(`Socrata HTTP ${res.status}`);
-  const rows = await res.json();
+/* Inspection rows, newest first, to one candidate per business. */
+export function kingCountyCandidates(rows, nowMs = Date.now()) {
+  // An error from Socrata is a JSON object, not a list of rows.
+  if (!Array.isArray(rows)) throw new Error('Socrata answered with something that is not a list of rows');
   const seen = new Map();
   for (const row of rows) {
-    const id = row.business_id ?? `${row.name}|${row.address}`;
+    const id = row?.business_id ?? `${row?.name}|${row?.address}`;
     if (seen.has(id)) continue;   // rows are newest-first, so first wins = latest inspection
     seen.set(id, row);
   }
-  const cutoff = Date.now() - INSPECTION_CUTOFF_MONTHS * 30 * 864e5;
+  const cutoff = nowMs - INSPECTION_CUTOFF_MONTHS * 30 * 864e5;
   const out = [];
   for (const row of seen.values()) {
-    if (!row.name || !row.address) continue;
+    if (!row?.name || !row.address) continue;
     if (Date.parse(row.inspection_date) < cutoff) continue;
     // The health department knows about closures before anyone else does.
     if (row.inspection_closed_business === 'Yes') continue;
@@ -70,34 +84,10 @@ async function fromKingCounty() {
   return out;
 }
 
-async function fromOverpass() {
-  const q = `[out:json][timeout:60];
-area["name"="Seattle"]["boundary"="administrative"]["admin_level"="8"]->.sea;
-( node["cuisine"~"pizza"](area.sea);
-  way["cuisine"~"pizza"](area.sea); );
-out center tags;`;
-  // Mirrors tried in order: Overpass instances rate-limit and block ranges
-  // unpredictably, and a seed refresh should survive any one of them sulking.
-  const MIRRORS = ['https://overpass-api.de/api/interpreter',
-                   'https://overpass.kumi.systems/api/interpreter',
-                   'https://overpass.private.coffee/api/interpreter'];
-  let json = null, lastErr = null;
-  for (const url of MIRRORS) {
-    try {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'content-type': 'application/x-www-form-urlencoded' },
-        body: 'data=' + encodeURIComponent(q),
-        signal: AbortSignal.timeout(70_000)
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      json = await res.json();
-      break;
-    } catch (e) { lastErr = e; }
-  }
-  if (!json) throw new Error(`all Overpass mirrors failed (${lastErr?.message})`);
+/* Overpass elements to candidates; an element with no name is no lead. */
+export function overpassCandidates(json) {
   const out = [];
-  for (const el of json.elements ?? []) {
+  for (const el of json?.elements ?? []) {
     const t = el.tags ?? {};
     if (!t.name) continue;
     const lat = el.lat ?? el.center?.lat, lon = el.lon ?? el.center?.lon;
@@ -115,34 +105,149 @@ out center tags;`;
   return out;
 }
 
-const existing = fs.existsSync(outPath)
-  ? JSON.parse(fs.readFileSync(outPath, 'utf8')).candidates
-  : [];
-
-const incoming = [];
-for (const [label, fn] of [['kc-health', fromKingCounty], ['osm', fromOverpass]]) {
-  try {
-    const rows = await fn();
-    console.log(`  ${label}: ${rows.length} candidate row(s)`);
-    incoming.push(...rows);
-  } catch (e) {
-    console.warn(`  ! ${label} failed (${e.message}) — continuing without it`);
+/* The one option: --max-age-days=N, N a number of days from 0 up. Anything
+ * else is refused rather than guessed at, since a mistyped flag would
+ * otherwise mean a request to both registries on every run. */
+export function parseArgs(argv) {
+  let maxAgeDays = null;
+  for (const arg of argv) {
+    const m = /^--max-age-days=(\d+(?:\.\d+)?)$/.exec(arg);
+    if (!m) throw new Error(`unrecognised argument "${arg}" (the only option is --max-age-days=N)`);
+    maxAgeDays = Number(m[1]);
   }
+  return { maxAgeDays };
 }
 
-if (!incoming.length && !existing.length) {
-  console.error('No sources reachable and no stored queue; nothing written.');
-  process.exit(1);
+/* Days since the registries were last read. A file written before `checked`
+ * existed has only `updated`, which was then stamped on every refresh. */
+export function seedAgeDays(file, nowMs = Date.now()) {
+  const t = Date.parse(file?.checked ?? file?.updated);
+  return Number.isFinite(t) ? (nowMs - t) / 864e5 : Infinity;
 }
 
-const candidates = mergeCandidates(existing, incoming, dataset.restaurants);
-const stats = {};
-for (const c of candidates) stats[c.status] = (stats[c.status] ?? 0) + 1;
+/* The file after a refresh, and whether it needs writing at all.
+ *
+ * `merged` is the queue with this refresh folded in. The comparison ignores
+ * order: the apply step resolves candidates in place, which leaves the list
+ * out of the merge's sort order without changing any candidate. When nothing
+ * changed the stored list is kept byte for byte and only `checked` moves, and
+ * that only if the permit register answered. With the register down there is
+ * nothing to stamp, so the next run tries again. */
+export function nextSeed(prior, merged, nowIso, registerAnswered) {
+  const canon = list => JSON.stringify([...list].sort((a, b) => a.key < b.key ? -1 : a.key > b.key ? 1 : 0));
+  const before = prior?.candidates ?? [];
+  const changed = canon(merged) !== canon(before);
+  const checked = registerAnswered ? nowIso : prior?.checked;
+  return {
+    changed,
+    write: changed || registerAnswered,
+    file: {
+      updated: changed ? nowIso : prior?.updated ?? nowIso,
+      ...(checked ? { checked } : {}),
+      cutoffMonths: INSPECTION_CUTOFF_MONTHS,
+      candidates: changed ? merged : before
+    }
+  };
+}
 
-fs.writeFileSync(outPath, JSON.stringify({
-  updated: new Date().toISOString(),
-  cutoffMonths: INSPECTION_CUTOFF_MONTHS,
-  candidates
-}, null, 2) + '\n');
-console.log(`candidates.json: ${candidates.length} candidate(s) — ${
-  Object.entries(stats).map(([k, v]) => `${v} ${k}`).join(', ')}`);
+async function getJson(url, init = {}) {
+  const res = await fetch(url, { ...init,
+    headers: { 'user-agent': UA, accept: 'application/json', ...init.headers },
+    signal: AbortSignal.timeout(TIMEOUT_MS) });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+async function fromKingCounty() {
+  // Name-filtered and ordered server-side; deduped to businesses client-side.
+  const url = 'https://data.kingcounty.gov/resource/r878-4sxa.json'
+    + '?$select=business_id,name,address,city,zip_code,inspection_date,inspection_closed_business'
+    + '&$where=' + encodeURIComponent(
+      "city = 'SEATTLE' AND (upper(name) like '%PIZZ%' OR upper(name) like '%SLICE%')")
+    + '&$order=inspection_date DESC&$limit=20000';
+  return kingCountyCandidates(await getJson(url));
+}
+
+async function fromOverpass() {
+  const q = `[out:json][timeout:20];
+area["name"="Seattle"]["boundary"="administrative"]["admin_level"="8"]->.sea;
+( node["cuisine"~"pizza"](area.sea);
+  way["cuisine"~"pizza"](area.sea); );
+out center tags;`;
+  // Mirrors tried in order: Overpass instances rate-limit and block ranges
+  // unpredictably, and a seed refresh should survive any one of them sulking.
+  const MIRRORS = ['https://overpass-api.de/api/interpreter',
+                   'https://overpass.kumi.systems/api/interpreter',
+                   'https://overpass.private.coffee/api/interpreter'];
+  let lastErr = null;
+  for (const url of MIRRORS) {
+    try {
+      return overpassCandidates(await getJson(url, {
+        method: 'POST',
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        body: 'data=' + encodeURIComponent(q)
+      }));
+    } catch (e) { lastErr = e; }
+  }
+  throw new Error(`all Overpass mirrors failed (${lastErr?.message})`);
+}
+
+async function refresh(argv) {
+  const { maxAgeDays } = parseArgs(argv);
+  const prior = fs.existsSync(outPath)
+    ? JSON.parse(fs.readFileSync(outPath, 'utf8'))
+    : { candidates: [] };
+
+  const age = seedAgeDays(prior);
+  if (maxAgeDays != null && age < maxAgeDays) {
+    console.log(`candidates.json was refreshed ${age.toFixed(1)} day(s) ago, inside the ${maxAgeDays}-day window; nothing requested.`);
+    return;
+  }
+
+  const dataset = JSON.parse(fs.readFileSync(path.join(root, 'data/restaurants.json'), 'utf8'));
+  const incoming = [];
+  const answered = new Set();
+  for (const [label, fn] of [['kc-health', fromKingCounty], ['osm', fromOverpass]]) {
+    try {
+      const rows = await fn();
+      // Both registries always hold Seattle pizzerias, so an answer with none
+      // is a changed dataset or an error page, not an empty city.
+      if (!rows.length) throw new Error('answered, but with no rows');
+      console.log(`  ${label}: ${rows.length} candidate row(s)`);
+      incoming.push(...rows);
+      answered.add(label);
+    } catch (e) {
+      console.warn(`  ! ${label} failed (${e.message}) — continuing without it`);
+    }
+  }
+
+  if (!answered.size) {
+    console.warn('No source answered; candidates.json left as it was.');
+    console.log('::warning title=candidates seed not refreshed::Neither King County nor Overpass answered, so the candidates queue was not refreshed. It is tried again on the next run.');
+    return;
+  }
+
+  const merged = mergeCandidates(prior.candidates ?? [], incoming, dataset.restaurants);
+  const next = nextSeed(prior, merged, new Date().toISOString(), answered.has('kc-health'));
+  const stats = {};
+  for (const c of next.file.candidates) stats[c.status] = (stats[c.status] ?? 0) + 1;
+  const summary = `${next.file.candidates.length} candidate(s) — ${
+    Object.entries(stats).map(([k, v]) => `${v} ${k}`).join(', ')}`;
+
+  if (!next.write) {
+    console.log(`candidates.json: ${summary}; nothing changed and the permit register did not answer, file left as it was.`);
+    return;
+  }
+  fs.writeFileSync(outPath, JSON.stringify(next.file, null, 2) + '\n');
+  console.log(`candidates.json: ${summary}${next.changed ? '' : '; nothing changed, refresh date stamped'}`);
+}
+
+if (process.argv[1] && fileURLToPath(import.meta.url) === fs.realpathSync(process.argv[1])) {
+  // A seed refresh rides along on a research pass, and nothing in it is worth
+  // failing that pass: an error anywhere is reported and the run carries on
+  // with the candidates.json already on file.
+  await refresh(process.argv.slice(2)).catch(e => {
+    console.warn(`Candidates refresh abandoned; keeping the existing candidates.json unchanged.\n${e.stack ?? e}`);
+    console.log(`::warning title=candidates refresh abandoned::${String(e.message ?? e).split('\n')[0]}`);
+  });
+}

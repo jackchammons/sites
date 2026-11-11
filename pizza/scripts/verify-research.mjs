@@ -26,15 +26,13 @@ try { doc = JSON.parse(fs.readFileSync(file, 'utf8')); }
 catch (e) { console.error(`research.json is not valid JSON: ${e.message}`); process.exit(1); }
 
 const dataset = JSON.parse(fs.readFileSync(path.join(root, 'data/restaurants.json'), 'utf8'));
-const registryPath = path.join(root, 'data/attributes.json');
-const registry = fs.existsSync(registryPath) ? JSON.parse(fs.readFileSync(registryPath, 'utf8')) : {};
 
 const candidatesPath = path.join(root, 'data/candidates.json');
 const candidates = fs.existsSync(candidatesPath)
   ? JSON.parse(fs.readFileSync(candidatesPath, 'utf8')).candidates
   : null;
 
-const { fails, fatal, accepted, unknown } = validateResearch(doc, dataset, registry, Date.now(),
+const { fails, fatal, accepted, unknown } = validateResearch(doc, dataset, Date.now(),
   candidates ? { candidates } : {});
 
 if (fatal) {

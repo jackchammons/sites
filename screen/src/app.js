@@ -9,7 +9,7 @@ import {
   ASPECTS, RESOLUTIONS, ANGLE_STANDARDS, RULE_OF_THUMB, BRIGHTNESS, PLACEMENT,
   aspect, resolution, dims, hfov, vfov, diagonalForWidth, diagonalForAngle,
   seatingDistances, ituDistances, pixelPitch, pixelAngle, pixelsPerDegree, acuityDistance,
-  acuityTable, throwDistance, widthAtThrow, lensOffsetInches, footLamberts, nits,
+  acuityTable, litImage, throwDistance, widthAtThrow, lensOffsetInches, footLamberts, nits,
   placement, describeAngle, describeResolution,
   noticeFraction, ppdForFraction, distanceForPpd, averagePpd, pixelDensity, aspectLabel,
   limitResolution, limitMatrix, subtended, verticalEquivalent, FRONT_ROW,
@@ -263,6 +263,24 @@ function boot() {
   /* ---- compute + render -------------------------------------------- */
   let last = null;
 
+  /* A grade reaches the reader twice, as a colour and as a word beside the
+     figure, because the colour alone says nothing to an eye that cannot tell
+     red from green or to a screen reader. One word per grade, whatever the
+     fact: it meets the limit the fact is graded on, it is marginal (inside a
+     weaker limit only), or it fails every one. This is the only place either
+     is written, so they cannot disagree: no grade clears both. */
+  const GRADE_WORDS = { good: 'meets', ok: 'marginal', warn: 'fails' };
+  const showGrade = (box, word, cls) => {
+    const says = Object.hasOwn(GRADE_WORDS, cls) ? GRADE_WORDS[cls] : '';
+    box.classList.remove(...Object.keys(GRADE_WORDS));
+    if (says) box.classList.add(cls);
+    word.textContent = says;
+  };
+  const set = (k, main, sub = '', cls = '') => {
+    $('sum-' + k).textContent = main; $('sub-' + k).textContent = sub;
+    showGrade($('fact-' + k), $('grade-' + k), cls);
+  };
+
   function compute() {
     const st = read();
     const ok = bad.size === 0;
@@ -278,7 +296,7 @@ function boot() {
     if (!ok) {
       const names = Object.values(els).filter(el => bad.has(el.id)).map(el => `“${labelOf(el)}”`);
       $('out-fov').textContent = '—';
-      $('out-total').className = 'total';
+      showGrade($('out-total'), $('out-grade'), '');
       $('out-sub').textContent = `Check ${names.length > 1 ? `${names.slice(0, -1).join(', ')} and ${names.at(-1)}` : names[0]}.`;
       return;
     }
@@ -292,12 +310,8 @@ function boot() {
     const fovGrade = fov >= FRONT_ROW ? 'ok' : grade(fov >= SMPTE, fov >= THX_FAR);
     $('out-fov').textContent = deg(fov);
     $('out-sub').textContent = `${describeAngle(fov)} — a ${n1.format(st.diag)}-inch ${aspect(st.aspect).id} picture seen from ${fmtLen(st.dist)}.`;
-    $('out-total').className = `total ${fovGrade}`;
+    showGrade($('out-total'), $('out-grade'), fovGrade);
 
-    const set = (k, main, sub = '', cls = '') => {
-      $('sum-' + k).textContent = main; $('sub-' + k).textContent = sub;
-      const f = $('fact-' + k); f.classList.remove('warn', 'good', 'ok'); if (cls) f.classList.add(cls);
-    };
     set('size', `${fmtLen(d.width, 'dim')} × ${fmtLen(d.height, 'dim')}`,
       `${n1.format(st.diag)} in is ${n0.format(st.diag * 2.54)} cm`);
     set('area', fmtArea(d.area), `${n2.format(d.ratio)}:1`);
@@ -617,37 +631,41 @@ function boot() {
 
   /* ---- projector ---------------------------------------------------- */
   function drawProjector() {
-    const { st, d } = last;
+    const { st, d, res } = last;
     if (mode !== 'projector') return;
-    const set = (k, main, sub = '', cls = '') => {
-      $('sum-' + k).textContent = main; $('sub-' + k).textContent = sub;
-      const f = $('fact-' + k); f.classList.remove('warn', 'good', 'ok'); if (cls) f.classList.add(cls);
-    };
+    /* Every figure here is for the image the panel lights, the one the pixel
+       facts describe. On a picture of another shape that is narrower or
+       shorter than the picture, and the fact it changes says so, wherever the
+       two sizes read differently. */
+    const lit = litImage(d, res);
+    const dim = x => fmtLen(x, 'dim');
+    const narrower = dim(lit.width) !== dim(d.width), shorter = dim(lit.height) !== dim(d.height);
+    const panel = `the ${aspectLabel(res.w, res.h)} panel`;
     const t1 = Math.min(st.throw1, st.throw2), t2 = Math.max(st.throw1, st.throw2);
-    const near = throwDistance(d.width, t1), far = throwDistance(d.width, t2);
+    const near = throwDistance(lit.width, t1), far = throwDistance(lit.width, t2);
+    const at = `at throw ${n2.format(t1)}${t1 === t2 ? '' : `–${n2.format(t2)}`}`;
     set('throw', t1 === t2 ? fmtLen(near) : `${fmtLen(near)} – ${fmtLen(far)}`,
-      `lens to screen for a ${fmtLen(d.width, 'dim')}-wide picture at throw ${n2.format(t1)}${t1 === t2 ? '' : `–${n2.format(t2)}`}`);
-    const off = lensOffsetInches(d, st.offset);
+      narrower ? `lens to screen for the ${dim(lit.width)}-wide lit image ${at}: ${panel} fills the height of the ${dim(d.width)}-wide picture`
+        : `lens to screen for a ${dim(d.width)}-wide picture ${at}`);
+    const off = lensOffsetInches(lit, st.offset);
     const lensH = st.centre - off;
     set('lens', fmtLen(lensH, 'dim'),
-      `from the floor: ${fmtLen(Math.abs(off), 'dim')} ${off >= 0 ? 'below' : 'above'} the picture centre at ${n0.format(st.offset)}% offset${st.offset >= 0 ? '' : ' (ceiling mount, inverted)'}`);
-    const fl = footLamberts(st.lumens, st.gain, d);
+      `from the floor: ${dim(Math.abs(off))} ${off >= 0 ? 'below' : 'above'} the picture centre at ${n0.format(st.offset)}% offset${shorter ? ` of the ${dim(lit.height)} lit height: ${panel} fills the width of the ${dim(d.height)}-tall picture` : ''}${st.offset >= 0 ? '' : ' (ceiling mount, inverted)'}`);
+    const fl = footLamberts(st.lumens, st.gain, lit);
     set('fl', `${n1.format(fl)} fL`,
-      `${n0.format(nits(fl))} cd/m² from ${n0.format(st.lumens)} lm × ${n2.format(st.gain)} gain over ${fmtArea(d.area)}; cinema ${BRIGHTNESS.cinema}, home ≥${BRIGHTNESS.sdrHome}, bright room ~${BRIGHTNESS.bright}`,
+      `${n0.format(nits(fl))} cd/m² from ${n0.format(st.lumens)} lm × ${n2.format(st.gain)} gain over ${narrower || shorter ? `the ${fmtArea(lit.area)} lit (${dim(lit.width)} × ${dim(lit.height)}: ${panel} fills the ${lit.fills})` : fmtArea(lit.area)}; cinema ${BRIGHTNESS.cinema}, home ≥${BRIGHTNESS.sdrHome}, bright room ~${BRIGHTNESS.bright}`,
       fl < BRIGHTNESS.cinema ? 'warn' : fl >= BRIGHTNESS.sdrHome ? 'good' : 'ok');
+    /* The other way round: the image this lens throws from the seat, and the
+       diagonal of the picture that image would light in the same way. */
     const wNear = widthAtThrow(st.dist, t2), wFar = widthAtThrow(st.dist, t1);
-    const dg = w => n0.format(diagonalForWidth(w, d.ratio));
-    set('width', t1 === t2 ? fmtLen(wNear, 'dim') : `${fmtLen(wNear, 'dim')} – ${fmtLen(wFar, 'dim')}`,
-      `if the lens sat at your seat distance (${fmtLen(st.dist)}): a ${dg(wNear)}${t1 === t2 ? '' : `–${dg(wFar)}`} in diagonal`);
+    const dg = w => n0.format(diagonalForWidth(w * (d.width / lit.width), d.ratio));
+    set('width', t1 === t2 ? dim(wNear) : `${dim(wNear)} – ${dim(wFar)}`,
+      `if the lens sat at your seat distance (${fmtLen(st.dist)}): ${narrower ? 'filling the height of ' : ''}a ${dg(wNear)}${t1 === t2 ? '' : `–${dg(wFar)}`} in diagonal`);
   }
 
   /* ---- placement ---------------------------------------------------- */
   function drawPlacement(pl) {
     const { st, d } = last;
-    const set = (k, main, sub = '', cls = '') => {
-      $('sum-' + k).textContent = main; $('sub-' + k).textContent = sub;
-      const f = $('fact-' + k); f.classList.remove('warn', 'good', 'ok'); if (cls) f.classList.add(cls);
-    };
     const updown = a => Math.abs(a) < 0.5 ? 'level' : `${deg(Math.abs(a))} ${a > 0 ? 'up' : 'down'}`;
     set('top', updown(pl.top), `${fmtLen(st.centre + d.height / 2, 'dim')} from the floor`);
     set('bottom', updown(pl.bottom), `${fmtLen(pl.bottomEdge, 'dim')} from the floor`);

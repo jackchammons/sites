@@ -2,10 +2,12 @@
   "title": "Mortgage Calculator",
   "tagline": "What the house actually costs per month, and over the life of the loan.",
   "note": "The starting figures are an example, not a quote: the rate in particular is a placeholder, so put in the one a lender actually offered you.",
+  "rateAsOf": "2026-11-05",
+  "rateSource": "Freddie Mac weekly 30-year fixed average (FRED series MORTGAGE30US), 7.18 that week, taken to the nearest quarter point",
   "inputs": {
     "price": 750000,
     "downPct": 20,
-    "rate": 6.25,
+    "rate": 7.25,
     "years": 30,
     "taxRate": 0.92,
     "taxUnit": "pct",

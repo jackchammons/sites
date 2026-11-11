@@ -87,6 +87,20 @@ for (const k of slots) check(filled.has(k), `the page renders slot "${k}", which
 for (const k of new Set([...slots, ...filled])) {
   for (const id of [`sum-${k}`, `sub-${k}`, `fact-${k}`]) check(ids.has(id), `app.js fills slot "${k}", but the page has no #${id}`);
 }
+/* A grade is a colour class and a word, and a fact must not be able to get
+   the first without the second. Every fact, and the headline, has a slot for
+   the word; and one function in the script adds the class and writes the word
+   together, with no other statement able to add a class or replace a class
+   list. Whether each grade is the right one is test/page.test.mjs's job. */
+for (const k of slots) check(new RegExp(`<span id="sum-${k}">[^<]*</span> <span class="grade" id="grade-${k}"></span>`).test(html), `fact "${k}" has no slot for its grade word`);
+check(/<p class="total" id="out-total">.*<span class="grade" id="out-grade"><\/span><\/p>/.test(html), 'the headline has no slot for its grade word');
+const grader = app.match(/const showGrade = \(box, word, cls\) => \{\n([\s\S]*?)\n  \};/);
+check(grader, 'app.js has no showGrade(box, word, cls) to check');
+if (grader) {
+  check(/box\.classList\.add\(cls\)/.test(grader[1]) && /word\.textContent = /.test(grader[1]), 'showGrade no longer sets the grade class and the grade word together');
+  check(/\$\('fact-' \+ k\), \$\('grade-' \+ k\)/.test(app) && /\$\('out-total'\), \$\('out-grade'\)/.test(app), 'a grade is shown without its word slot');
+}
+check([...app.matchAll(/classList\.add\(/g)].length === 1 && !/\bclassName\b/.test(app), 'app.js sets a class outside showGrade, where a grade could be coloured without its word');
 for (const k of ['in-dist', 'in-eye', 'in-centre']) check(ids.has(`${k}-unit`), `unit adornment #${k}-unit missing`);
 for (const k of ['in-dist', 'in-eye']) check(ids.has(`${k}-hint`), `hint #${k}-hint missing`);
 /* An invalid field is named by the label around it. */

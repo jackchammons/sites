@@ -12,16 +12,19 @@ import { streetKey } from './locations.js';
 import { isRated } from './slice.js';
 
 export const KINDS = new Set(['opening', 'closing', 'ranking', 'mention']);
+/* A `…Skipped` section must be able to hold a whole worklist, since a pass
+ * that resolves nothing reports every entry: the social worklist is 15. */
 export const CAPS = { news: 20, locations: 12, directory: 10, status: 10,
-                      mentions: 40, newAttributes: 3, factorRatings: 12, links: 20,
+                      mentions: 40, factorRatings: 12, links: 20,
                       candidateReview: 15, facts: 20, ratingSkipped: 12,
-                      factorSources: 12, factsSkipped: 12, locationsSkipped: 12 };
+                      factorSources: 12, factsSkipped: 12, locationsSkipped: 12,
+                      coverageSkipped: 12, socialSkipped: 15 };
 export const MAX_AGE_DAYS = 180;
 /* Mentions feed a 24-month coverage window in slice.js; capping them at 180
  * days meant the window could never fill from the loop. */
 export const MENTION_MAX_AGE_DAYS = 730;
 export const MAX_LEN = { name: 80, note: 600, title: 200, address: 200,
-                         style: 120, source: 80, label: 40, url: 2000 };
+                         style: 120, source: 80, url: 2000 };
 /* The most entries one news story may be tied to. */
 export const MAX_STORY_MENTIONS = 40;
 /* Top-level keys that are not sections but belong in the file: the agent's
@@ -31,15 +34,63 @@ const OTHER_KEYS = ['updated', 'rejected', 'ignored', 'items', 'ratings'];
 
 /* Hosts that are not published criticism: aggregators, social, ordering and
  * reference sites. A rating resting ONLY on these (or on the pizzeria's own
- * site) is refused; a closure citing only one of these is a lead, not evidence. */
+ * site) is refused; a closure citing only one of these is a lead, not evidence
+ * (the one exception is the pizzeria's own account, isOwnAccount below). */
 export const NON_CRITICISM_HOSTS = ['yelp.com', 'tripadvisor.com', 'happycow.net', 'onebite.app',
   'google.com', 'maps.google.com', 'wikipedia.org', 'facebook.com', 'instagram.com', 'doordash.com',
   'grubhub.com', 'ubereats.com', 'toasttab.com', 'squareup.com', 'restaurantji.com', 'foursquare.com',
   'zomato.com', 'opentable.com', 'resy.com'];
 export const hostOf = u => { try { return new URL(u).hostname.replace(/^www\./, '').toLowerCase(); } catch { return ''; } };
+
+/* The name a host is registered under, with subdomains and the public suffix
+ * taken off: "m.yelp.com", "yelp.ca" and "yelp.co.uk" are all "yelp". The
+ * list above is matched on this name, because each of those sites answers on
+ * a domain per country, and yelp.ca is no better evidence than yelp.com. No
+ * suffix list is needed for that: the last label is the suffix, and so is a
+ * "co"/"com"-style label in front of a two-letter country code. */
+const COUNTRY_SECOND_LEVEL = new Set(['co', 'com', 'net', 'org', 'ne', 'or']);
+export const registrableName = host => {
+  const labels = String(host).toLowerCase().split('.').filter(Boolean);
+  const suffix = labels.pop() ?? '';
+  if (suffix.length === 2 && labels.length > 1 && COUNTRY_SECOND_LEVEL.has(labels.at(-1))) labels.pop();
+  return labels.at(-1) ?? '';
+};
+const NON_CRITICISM_NAMES = new Set(NON_CRITICISM_HOSTS.map(registrableName));
 export const isNonCriticism = (u, own = []) => {
   const h = hostOf(u);
-  return !h || NON_CRITICISM_HOSTS.some(d => h === d || h.endsWith('.' + d)) || own.includes(h);
+  return !h || NON_CRITICISM_NAMES.has(registrableName(h)) || own.includes(h);
+};
+
+/* A closure announced by the pizzeria itself, on the Instagram or Facebook
+ * account on file for it. That is where a small pizzeria says goodbye, often
+ * weeks before any outlet reports it, so the social hosts cannot be refused
+ * outright for closures the way they are as criticism.
+ *
+ * A URL counts only when it names the account: the profile itself, or
+ * anything under it (instagram.com/<handle>/, /<handle>/p/<id>/,
+ * /<handle>/reel/<id>/, facebook.com/<page>/posts/<id>). A bare
+ * instagram.com/p/<id>/ or facebook.com/permalink.php?… names no account,
+ * so nothing ties it to the entry and it stays a lead. So does a story
+ * (instagram.com/stories/<handle>/…): it is gone in a day and cannot be
+ * cited. The account on file is the first path segment of the entry's
+ * `instagram`, or of its `url` when that is itself a profile on one of the
+ * two platforms (an entry with no website is filed that way).
+ *
+ * The platforms are matched by exact host here, not by registrable name:
+ * refusing a look-alike domain is safe, accepting one is not. */
+const ACCOUNT_NAME = /^[a-z0-9._]{2,50}$/;
+const NOT_AN_ACCOUNT = new Set(['p', 'reel', 'reels', 'tv', 'stories', 'explore', 'accounts', 'share',
+  'pages', 'groups', 'events', 'watch', 'people', 'photo', 'photos', 'posts', 'videos', 'story', 'login']);
+const accountOf = u => {
+  const host = hostOf(u).replace(/^(m|mobile)\./, '');
+  if (host !== 'instagram.com' && host !== 'facebook.com') return null;
+  const first = (new URL(u).pathname.split('/').filter(Boolean)[0] ?? '').toLowerCase();
+  if (!ACCOUNT_NAME.test(first) || first.endsWith('.php') || NOT_AN_ACCOUNT.has(first)) return null;
+  return `${host}/${first}`;
+};
+export const isOwnAccount = (u, entry) => {
+  const account = accountOf(u);
+  return account != null && [entry?.url, entry?.instagram].some(own => own && accountOf(own) === account);
 };
 
 /* Returns { fails, sections, fatal, accepted, unknown }. `fails` is every
@@ -49,7 +100,7 @@ export const isNonCriticism = (u, own = []) => {
  * record, not the run. `unknown` names the top-level keys that are no section
  * at all: a misspelt section ("statuses", "factorRating") is never applied,
  * and the caller has to say so rather than report a clean, empty pass. */
-export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now(), extra = {}) {
+export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
   const fails = [];
   const badIdx = {};
   // A message may quote the value it refuses, and that value has no bound yet.
@@ -69,7 +120,6 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
   const sections = { news,
                      locations: doc.locations ?? [], directory: doc.directory ?? [],
                      status: doc.status ?? [], mentions: doc.mentions ?? [],
-                     newAttributes: doc.newAttributes ?? [],
                      factorRatings: doc.factorRatings ?? [],
                      links: doc.links ?? [],
                      candidateReview: doc.candidateReview ?? [],
@@ -77,7 +127,9 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
                      ratingSkipped: doc.ratingSkipped ?? [],
                      factorSources: doc.factorSources ?? [],
                      factsSkipped: doc.factsSkipped ?? [],
-                     locationsSkipped: doc.locationsSkipped ?? [] };
+                     locationsSkipped: doc.locationsSkipped ?? [],
+                     coverageSkipped: doc.coverageSkipped ?? [],
+                     socialSkipped: doc.socialSkipped ?? [] };
   if (Array.isArray(doc.ratings) && doc.ratings.length) {
     fails.push('ratings are no longer accepted: crowd figures are frozen, see CLAUDE.md');
   }
@@ -245,9 +297,14 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
     checkText('status', i, it?.note, 'note', MAX_LEN.note, 10);
     checkUrl('status', i, it?.source, 'source');
     // A closure removes an entry from the ranking and from every worklist; a
-    // review-site label or a listing is a lead, not evidence of one.
-    if (it?.status === 'closed' && isNonCriticism(it?.source)) {
-      bad('status', i, `a closure needs a news report or the pizzeria's own announcement, not ${hostOf(it?.source) || 'that source'}`);
+    // review-site label or a listing is a lead, not evidence of one. The
+    // pizzeria's own site is no aggregator and passes as any news page does;
+    // its own social account passes when the URL names that account.
+    if (it?.status === 'closed' && isNonCriticism(it?.source) && !isOwnAccount(it?.source, byId.get(it?.id))) {
+      const host = hostOf(it?.source);
+      bad('status', i, `a closure needs a news report or the pizzeria's own announcement, not ${host || 'that source'}`
+        + (/(^|\.)(instagram|facebook)\.com$/.test(host)
+          ? ' (a post counts only when its URL carries the account on file for the entry, as in instagram.com/<handle>/p/<id>/)' : ''));
     }
     // The date a status took effect, as the source reports it. A closure found
     // late is still a closure that happened years ago, so no staleness cap.
@@ -367,6 +424,18 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
     checkText('locationsSkipped', i, it?.note, 'note', MAX_LEN.note, 10);
   });
 
+  /* ---- coverageSkipped, socialSkipped: the two backfills' memory ----
+   * A worklist entry the coverage task found no new press for, or the social
+   * task found no profile or site for. Both worklists are drawn by what is
+   * missing, so without a record of the attempt the entries nothing can be
+   * found for are the ones every later pass is handed again. */
+  for (const sec of ['coverageSkipped', 'socialSkipped']) {
+    sections[sec].forEach((it, i) => {
+      if (!byId.has(it?.id)) { bad(sec, i, `unknown restaurant id "${it?.id}"`); return; }
+      checkText(sec, i, it?.note, 'note', MAX_LEN.note, 10);
+    });
+  }
+
   /* ---- factorSources: citations for a rating that already exists ----
    * The founding entries were rated editorially with no source on file. This
    * channel attaches published criticism to such a rating without touching
@@ -447,18 +516,6 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
       try { new URL(it.source); } catch { plain = false; }
       if (!plain) bad('candidateReview', i, `source is not a valid URL: ${it.source}`);
     }
-  });
-
-  /* ---- newAttributes: registry additions ---- */
-  sections.newAttributes.forEach((it, i) => {
-    if (!/^[a-z][a-z0-9-]{2,30}$/.test(it?.key ?? '')) bad('newAttributes', i, `key must be kebab-case, got "${it?.key}"`);
-    else if (registry[it.key]) bad('newAttributes', i, `"${it.key}" already exists in the registry`);
-    checkText('newAttributes', i, it?.label, 'label', MAX_LEN.label, 1);
-    if (it?.frictionCost != null && !(typeof it.frictionCost === 'number' && it.frictionCost >= 0 && it.frictionCost <= 2.5)) {
-      bad('newAttributes', i, `frictionCost must be 0-2.5, got ${it?.frictionCost}`);
-    }
-    if (!Array.isArray(it?.entries) || !it.entries.length) bad('newAttributes', i, 'entries[] must name at least one id the flag applies to');
-    else for (const id of it.entries) if (!byId.has(id)) bad('newAttributes', i, `entries names unknown id "${id}"`);
   });
 
   const accepted = Object.fromEntries(Object.entries(sections).map(([k, arr]) =>

@@ -50,6 +50,8 @@ const select = ({ id, label, options, selected, hint }) => `
         ${hint ? `<span class="hint">${hint}</span>` : ''}
       </label>`;
 
+/* Each fact has a slot for its figure, one for the word that names its grade
+   (empty for a fact that is not graded) and one for the line beneath. */
 const FACTS = [
   ['size', 'Picture'],
   ['area', 'Area'],
@@ -64,7 +66,7 @@ const FACTS = [
 const facts = FACTS.map(([k, label]) => `
         <div class="fact" id="fact-${k}">
           <dt>${esc(label)}</dt>
-          <dd><span id="sum-${k}">—</span><small id="sub-${k}"></small></dd>
+          <dd><span id="sum-${k}">—</span> <span class="grade" id="grade-${k}"></span><small id="sub-${k}"></small></dd>
         </div>`).join('');
 
 const PJ = [
@@ -76,7 +78,7 @@ const PJ = [
 const pjFacts = PJ.map(([k, label]) => `
         <div class="fact" id="fact-${k}">
           <dt>${esc(label)}</dt>
-          <dd><span id="sum-${k}">—</span><small id="sub-${k}"></small></dd>
+          <dd><span id="sum-${k}">—</span> <span class="grade" id="grade-${k}"></span><small id="sub-${k}"></small></dd>
         </div>`).join('');
 
 const built = new Date().toISOString();
@@ -176,7 +178,7 @@ addEventListener('load', function () { if (!window.__screenBooted) bootFailed();
   <section class="panel results">
     <p class="eyebrow">Horizontal viewing angle</p>
     <div aria-live="polite" aria-atomic="true">
-      <p class="total" id="out-total"><span id="out-fov">—</span><small>of view</small></p>
+      <p class="total" id="out-total"><span id="out-fov">—</span><small>of view</small> <span class="grade" id="out-grade"></span></p>
       <p class="sub" id="out-sub"></p>
     </div>
 
@@ -267,10 +269,10 @@ addEventListener('load', function () { if (!window.__screenBooted) bootFailed();
     <div class="side" style="padding:0 20px 20px">
       <div>
         <dl class="facts" style="margin-top:12px">
-          <div class="fact" id="fact-top"><dt>Top of picture</dt><dd><span id="sum-top">—</span><small id="sub-top"></small></dd></div>
-          <div class="fact" id="fact-bottom"><dt>Bottom of picture</dt><dd><span id="sum-bottom">—</span><small id="sub-bottom"></small></dd></div>
-          <div class="fact" id="fact-max"><dt>Highest comfortable centre</dt><dd><span id="sum-max">—</span><small id="sub-max"></small></dd></div>
-          <div class="fact" id="fact-stand"><dt>Bottom edge from floor</dt><dd><span id="sum-stand">—</span><small id="sub-stand"></small></dd></div>
+          <div class="fact" id="fact-top"><dt>Top of picture</dt><dd><span id="sum-top">—</span> <span class="grade" id="grade-top"></span><small id="sub-top"></small></dd></div>
+          <div class="fact" id="fact-bottom"><dt>Bottom of picture</dt><dd><span id="sum-bottom">—</span> <span class="grade" id="grade-bottom"></span><small id="sub-bottom"></small></dd></div>
+          <div class="fact" id="fact-max"><dt>Highest comfortable centre</dt><dd><span id="sum-max">—</span> <span class="grade" id="grade-max"></span><small id="sub-max"></small></dd></div>
+          <div class="fact" id="fact-stand"><dt>Bottom edge from floor</dt><dd><span id="sum-stand">—</span> <span class="grade" id="grade-stand"></span><small id="sub-stand"></small></dd></div>
         </dl>
       </div>
       <div id="side-view" aria-label="Side view of the seat and screen"></div>

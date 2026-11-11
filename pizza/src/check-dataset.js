@@ -15,18 +15,18 @@ const FACTOR_KEYS = ['craft', 'distinctiveness', 'critical'];
  * read them, so one in the future holds an entry fresh, or out of a worklist,
  * until that day comes. */
 const STAMPS = ['statusChecked', 'statusDetected', 'locationsVerified', 'locationsAttempted',
-  'ratingAttempted', 'factsAttempted'];
+  'ratingAttempted', 'factsAttempted', 'coverageAttempted', 'socialAttempted'];
 /* Free text the page prints. The research validator refuses angle brackets in
  * what the agent writes; this holds a hand edit to the same rule, because the
  * map popup is assembled from these strings in the browser. */
 const TEXT = ['name', 'neighborhood', 'style', 'styleGroup', 'blurb',
-  'statusNote', 'ratingNote', 'factsNote', 'locationsNote'];
+  'statusNote', 'ratingNote', 'factsNote', 'locationsNote', 'coverageNote', 'socialNote'];
 
 export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
   const fails = [];
   const bad = (id, msg) => fails.push(`${id}: ${msg}`);
 
-  for (const k of ['city', 'dataVersion', 'cityMeanRating', 'priorWeight']) {
+  for (const k of ['city', 'dataVersion']) {
     if (dataset?.[k] == null) fails.push(`dataset.${k} missing`);
   }
   if (!Array.isArray(dataset?.restaurants)) {
@@ -73,9 +73,9 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
     }
     if (r.lastVerified != null && !pastDate(r.lastVerified)) bad(id, `lastVerified is not a past date: "${r.lastVerified}"`);
 
-    // Every flag an entry carries must exist in the registry: the same apply
-    // step that sets a new flag also writes its registry row, so a missing row
-    // is a write that went wrong, not a style choice.
+    // Every flag an entry carries must exist in the registry. Both are edited
+    // by hand, and a flag with no row would score at a default cost and print
+    // its raw key as its label.
     for (const k of Object.keys(r.attributes ?? {})) {
       if (!registry[k]) bad(id, `attribute "${k}" is not in the registry`);
     }

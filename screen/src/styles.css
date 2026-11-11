@@ -5,7 +5,7 @@
   color-scheme:light dark;
   --bg:#111318;--panel:#181b22;--panel-2:#1f232c;--line:#2f3440;
   --ink:#eef0f5;--ink-2:#b8bdc9;--ink-3:#858c9a;
-  --accent:#7d8ee8;--accent-soft:rgba(125,142,232,.16);--bad:#e66767;--good:#4fb38b;--ok:#d9a441;
+  --accent:#7d8ee8;--accent-soft:rgba(125,142,232,.16);--bad:#ea7474;--good:#4fb38b;--ok:#d9a441;
   --s1:#3987e5;--s3:#199e70;--s4:#c98500;
   /* Sequential ramp for the resolution matrix: one hue, dark to light on the
      dark surface, light to dark on the light one. The text flips where it
@@ -107,6 +107,13 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .fact.good dd span{color:var(--good)}
 .fact.ok dd span{color:var(--ok)}
 .total.good span{color:var(--good)} .total.ok span{color:var(--ok)} .total.warn span{color:var(--bad)}
+/* The word that names a grade, beside the figure and in its colour, for a
+   reader the colour does not reach. A fact with no grade leaves it empty and
+   it takes no room. */
+.grade{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0;line-height:16px;
+  padding:0 7px;border:1px solid;border-radius:999px;vertical-align:2px;white-space:nowrap}
+.grade:empty{display:none}
+.total .grade{font-size:12px;line-height:18px;vertical-align:.3em}
 /* While a field does not read, every figure outside the headline is the last room's. */
 .stale .results .facts,.stale .panel:not(.inputs):not(.results){opacity:.45}
 
@@ -160,7 +167,7 @@ table.list{width:100%;border-collapse:collapse;font-size:13.5px;font-variant-num
 table.list th,table.list td{padding:9px 14px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
 table.list thead th{background:var(--panel);font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
   text-transform:uppercase;color:var(--ink-3);font-weight:500}
-table.list th:first-child,table.list td:first-child{text-align:left}
+table.list th:first-child{text-align:left}
 table.list tbody th{font-weight:500;text-align:left}
 table.list tbody th small{display:block;color:var(--ink-3);font-size:11.5px;font-weight:400;white-space:normal;max-width:34ch}
 table.list tr:last-child td,table.list tr:last-child th{border-bottom:0}

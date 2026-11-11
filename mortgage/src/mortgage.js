@@ -31,6 +31,20 @@ export function originalLoan(balance, annualRatePct, months, paid) {
   return balance * (g - 1) / (g - Math.pow(1 + r, k));
 }
 
+/** How far originalLoan() may be from what the loan really started at, in
+ *  dollars. The balance it works from is a statement figure: up to a dollar
+ *  off as typed, and up to a cent further from the formula for every month
+ *  paid, because the payment and each month's interest are rounded to the
+ *  cent. Run backwards, that error grows by the factor the balance does. */
+export function originalLoanMargin(annualRatePct, months, paid) {
+  const n = Math.round(months), k = Math.round(paid);
+  if (!(n > 0) || !(k >= 0) || k >= n) return NaN;
+  const r = annualRatePct / 100 / 12;
+  if (r === 0) return (1 + 0.01 * k) * n / (n - k);
+  const g = Math.pow(1 + r, n), gk = Math.pow(1 + r, k);
+  return (1 + 0.01 * (gk - 1) / r) * (g - 1) / (g - gk);
+}
+
 /** Normalise raw inputs into a loan description. Everything optional but
  *  price, down, rate and years defaults to zero. */
 export function describe(input) {
@@ -51,6 +65,13 @@ export function describe(input) {
     rate: Math.max(0, +input.rate || 0),
     months,
     years: months / 12,
+    // What the loan started at, which PMI is charged on. A new loan starts
+    // at its loan amount; a loan under way says so with `original`, and
+    // without it is treated as starting at today's balance.
+    original: inProgress && input.original != null && Number.isFinite(+input.original)
+      ? Math.max(0, +input.original) : loan,
+    // Dollars that figure may be out by when it was inferred, not entered.
+    originalMargin: Math.max(0, +input.originalMargin || 0),
     taxRate: Math.max(0, +input.taxRate || 0),       // % of price per year
     // Property tax as $ per year: given directly, or derived from taxRate.
     tax: input.tax != null && Number.isFinite(+input.tax)
@@ -62,7 +83,7 @@ export function describe(input) {
     // two are entered separately.
     escrow: input.escrow != null && Number.isFinite(+input.escrow) ? Math.max(0, +input.escrow) : null,
     hoa: Math.max(0, +input.hoa || 0),               // $ per month
-    pmiRate: Math.max(0, +input.pmiRate || 0),       // % of loan per year
+    pmiRate: Math.max(0, +input.pmiRate || 0),       // % of the original loan per year
     extra: Math.max(0, +input.extra || 0),           // $ extra principal per payment
     // Every how many months the extra is paid: 1 monthly, 3 quarterly,
     // 12 yearly. 0 means once, with the first payment.
@@ -71,18 +92,31 @@ export function describe(input) {
   };
 }
 
-/* PMI is charged while the balance is above 78% of the original price —
-   the point at which the Homeowners Protection Act makes lenders cancel it
-   automatically on a conventional loan. (A borrower may ask at 80%; the
-   calculator assumes nobody asks.) */
+/* PMI is decided once, at the start of the loan: it is owed when the
+   original loan is over 80% of the price, as a yearly percentage of that
+   original loan, and is charged until the balance is down to 78% of the
+   original price, the point at which the Homeowners Protection Act makes
+   lenders cancel it automatically on a conventional loan. (A borrower may ask
+   at 80%; the calculator assumes nobody asks.) A loan under way follows the
+   same rule from its own original loan, so the payments still ahead carry
+   what the same loan would have carried had it been entered as new. */
 export const PMI_CANCEL_LTV = 0.78;
 export const PMI_REQUIRED_LTV = 0.80;
 
 /* The comparison allows a dollar: the down payment is whole dollars, so 20%
    of a price that does not divide evenly sits a few cents either side of
-   the line, and "20% down" must not be charged PMI over them. */
+   the line, and "20% down" must not be charged PMI over them. An original
+   loan that was inferred is allowed its margin as well, for the same
+   reason: a loan that started at exactly 80% comes back a few dollars
+   either side of it. */
 export function needsPMI(d) {
-  return d.price > 0 && d.loan > d.price * PMI_REQUIRED_LTV + 1 && d.pmiRate > 0;
+  return d.price > 0 && d.original > d.price * PMI_REQUIRED_LTV + 1 + d.originalMargin && d.pmiRate > 0;
+}
+
+/** PMI in a month that opens with `balance` owed: the flat monthly charge,
+ *  or nothing once the balance has reached the cancellation point. */
+export function pmiDue(d, balance) {
+  return needsPMI(d) && balance > d.price * PMI_CANCEL_LTV ? cents(d.original * d.pmiRate / 100 / 12) : 0;
 }
 
 /**
@@ -94,14 +128,12 @@ export function needsPMI(d) {
 export function amortize(d, { extra = d.extra, extraEvery = d.extraEvery ?? 1 } = {}) {
   const pi = cents(monthlyPI(d.loan, d.rate, d.months / 12));
   const r = d.rate / 100 / 12;
-  const pmiMonthly = needsPMI(d) ? cents(d.loan * d.pmiRate / 100 / 12) : 0;
-  const pmiStop = d.price * PMI_CANCEL_LTV;
   const rows = [];
   let bal = d.loan, totalInterest = 0, totalPMI = 0, pmiMonths = 0;
   const cap = d.months;
   for (let n = 1; bal > 0.005 && n <= cap; n++) {
     const interest = cents(bal * r);
-    const pmi = pmiMonthly > 0 && bal > pmiStop ? pmiMonthly : 0;
+    const pmi = pmiDue(d, bal);
     let principal = cents(pi - interest);
     // Final scheduled month: whatever float drift remains is cleared here.
     if (n === cap) principal = bal;
@@ -122,6 +154,21 @@ export function amortize(d, { extra = d.extra, extraEvery = d.extraEvery ?? 1 } 
   };
 }
 
+/**
+ * The payments already made on a loan under way, as rows of the same shape
+ * as amortize(): the loan as it was taken out (`d.original` over the whole
+ * term, `paid` months longer than what is left), run on schedule for its
+ * first `paid` payments. PMI is charged in them by the rule the payments
+ * ahead follow, so the two halves add up to what the same loan costs when it
+ * is entered as new. Extra principal is not part of it: the balance the
+ * viewer typed already reflects whatever was paid.
+ */
+export function pastPayments(d, paid) {
+  const k = Math.max(0, Math.round(paid) || 0);
+  if (!k) return [];
+  return amortize({ ...d, loan: d.original, months: d.months + k }, { extra: 0 }).rows.slice(0, k);
+}
+
 /** The first month's bill, split into its parts. Tax and insurance are
  *  either two parts or one escrow part, never both. */
 export function monthlyBreakdown(d) {
@@ -131,7 +178,7 @@ export function monthlyBreakdown(d) {
     tax: d.escrow == null ? cents(d.tax / 12) : 0,
     insurance: d.escrow == null ? cents(d.insurance / 12) : 0,
     escrow: d.escrow == null ? 0 : cents(d.escrow / 12),
-    pmi: needsPMI(d) ? cents(d.loan * d.pmiRate / 100 / 12) : 0,
+    pmi: pmiDue(d, d.loan),
     hoa: cents(d.hoa),
   };
 }

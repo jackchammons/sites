@@ -21,7 +21,7 @@ import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as s from '../src/screen.js';
-import { states as grid, hashOf, checkState, num, FACTS, FIELDS, TYPING_ROOM, TYPED } from './page-checks.mjs';
+import { states as grid, hashOf, checkState, checkShown, num, FACTS, FIELDS, SHOWN, TYPING_ROOM, TYPED } from './page-checks.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = process.env.OUT_DIR ? path.resolve(process.env.OUT_DIR) : path.join(root, '..', 'dist', path.basename(root));
@@ -67,11 +67,11 @@ const check = (ok, msg, st) => { checks++; if (!ok) failures.push(`${JSON.string
 async function readPage() {
   return page.evaluate(({ FACTS, FIELDS }) => {
     const $ = id => document.getElementById(id);
-    const fact = k => ({ cls: ($('fact-' + k).className.match(/good|ok|warn/) || [''])[0], main: $('sum-' + k).textContent, sub: $('sub-' + k).textContent });
+    const fact = k => ({ cls: ($('fact-' + k).className.match(/good|ok|warn/) || [''])[0], word: $('grade-' + k).textContent, main: $('sum-' + k).textContent, sub: $('sub-' + k).textContent });
     const rows = sel => [...document.querySelectorAll(sel)].map(tr => [...tr.children].map(td => td.textContent.trim()));
     return {
       boot: $('boot-error').hidden, stale: $('main').classList.contains('stale'),
-      fov: $('out-fov').textContent, fovCls: ($('out-total').className.match(/good|ok|warn/) || [''])[0], sub: $('out-sub').textContent,
+      fov: $('out-fov').textContent, fovCls: ($('out-total').className.match(/good|ok|warn/) || [''])[0], fovWord: $('out-grade').textContent, sub: $('out-sub').textContent,
       facts: Object.fromEntries(FACTS.map(k => [k, fact(k)])),
       fields: Object.fromEntries(FIELDS.map(id => [id, $(id).value])),
       pjHidden: $('pj-section').hidden,
@@ -95,6 +95,11 @@ for (const st of states) {
   checkState(await readPage(), st, check);
   check(pageErrors.length === 0, `page errors: ${pageErrors.join(' | ')}`, st);
   pageErrors.length = 0;
+}
+for (const [st, facts] of SHOWN) {
+  await page.evaluate(h => { location.hash = h; }, hashOf(st));
+  await page.waitForTimeout(40);
+  checkShown(await readPage(), st, facts, check);
 }
 
 /* ---- interactions ---------------------------------------------------- */
@@ -132,6 +137,7 @@ async function interact() {
   check((await page.textContent('#out-sub')) === 'Check “Diagonal”.', `the message should name the field: "${await page.textContent('#out-sub')}"`, {});
   check(await page.$eval('#in-diag', e => e.closest('.field').classList.contains('invalid') && e.getAttribute('aria-invalid') === 'true'), 'invalid field flagged', {});
   check((await page.$eval('#out-fov', e => getComputedStyle(e).color)) !== green, 'the blank headline is still drawn in a grade colour', {});
+  check(await page.$eval('#out-grade', e => e.textContent === '' && e.getBoundingClientRect().width === 0), 'the blank headline still carries a grade word', {});
   const dimmed = await page.$$eval('.results .facts, #lanes, #eye-bar, #targets, #matrix, #seats, #sizes, #side-view', els => els.map(e => {
     let o = 1; for (let n = e; n; n = n.parentElement) o *= +getComputedStyle(n).opacity; return o;
   }));

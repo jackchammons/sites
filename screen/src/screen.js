@@ -158,6 +158,22 @@ export function acuityTable(d, arcmin = 1) {
 
 /* ---- projector ----------------------------------------------------- */
 
+/* The image a projector's panel lights on the picture: every panel pixel at
+   the pitch pixelPitch gives it, so a panel of another shape fills one
+   dimension and leaves the other short (a 16:9 panel on a 2.39:1 screen
+   fills the height and lights three quarters of the width). Throw distance,
+   brightness and lens offset belong to this image, not to the screen
+   material around it. `fills` names the dimension it reaches edge to edge,
+   or 'both'; a dimension it fills is the picture's own figure, exactly, so a
+   panel of the picture's shape changes nothing. */
+export function litImage(d, res) {
+  const pitch = pixelPitch(d, res);
+  const fit = (lit, full) => Math.abs(lit - full) <= full * 1e-9 ? full : lit;
+  const width = fit(pitch * res.w, d.width), height = fit(pitch * res.h, d.height);
+  const fills = width !== d.width ? 'height' : height !== d.height ? 'width' : 'both';
+  return { width, height, area: width * height, fills };
+}
+
 /* Throw distance for an image width: ratio = distance / width. */
 export const throwDistance = (width, ratio) => width * ratio;
 export const widthAtThrow = (distance, ratio) => distance / ratio;

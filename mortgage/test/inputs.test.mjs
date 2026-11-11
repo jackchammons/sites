@@ -164,7 +164,7 @@ test('an untouched page has no hash, and the hash of a few edits is only those e
 test('every field survives the link, in both loan modes and both escrow modes', () => {
   // A second value for each field, different from its default.
   const other = {
-    price: 437500, down: 50000, downPct: 11.5, balance: 381234.56, rate: 7.125, years: 15,
+    price: 437500, down: 50000, downPct: 11.5, balance: 381234.56, origPrice: 512345.5, rate: 7.125, years: 15,
     start: '2024-03', next: '2027-01', taxRate: 6431.17, taxUnit: 'yr', insurance: 150, insUnit: 'mo',
     escrow: 725.5, escrowUnit: 'yr', hoa: 85, pmiRate: 0.5, extra: 200, extraEvery: 0,
   };
@@ -196,6 +196,18 @@ test('an escrow of 0 survives; an escrow the link never gave is left for the pag
   assert.equal(decodeState('em=1', DEFAULTS, NEXT, CHOICES).escrow, null);
   assert.equal(decodeState('em=1&w=0', DEFAULTS, NEXT, CHOICES).escrow, 0);
   assert.equal(decodeState('', DEFAULTS, NEXT, CHOICES).escrow, DEFAULTS.escrow);
+});
+
+test('the original price of a loan under way is carried only when one was given', () => {
+  const under = { ...open(), progressMode: true, balance: 695265 };
+  assert.ok(!/(^|&)op=/.test(encodeState(under, DEFAULTS, NEXT)));
+  assert.equal(roundTrip(under).origPrice, null);
+  assert.match(encodeState({ ...under, origPrice: 750000 }, DEFAULTS, NEXT), /(^|&)op=750000(&|$)/);
+  assert.equal(roundTrip({ ...under, origPrice: 750000 }).origPrice, 750000);
+  assert.equal(decodeState('op=750k', DEFAULTS, NEXT, CHOICES).origPrice, 750000);
+  for (const op of ['', 'abc', '-1']) assert.equal(decodeState(`lm=1&op=${op}`, DEFAULTS, NEXT, CHOICES).origPrice, null, `op=${op}`);
+  // An empty field is NaN to the form and is left out like any unread one.
+  assert.ok(!/(^|&)op=/.test(encodeState({ ...under, origPrice: NaN }, DEFAULTS, NEXT)));
 });
 
 test('an untouched start month stays relative to whoever opens the link', () => {

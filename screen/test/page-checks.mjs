@@ -9,13 +9,15 @@
  * computation from src/screen.js, and a set of cross-fact rules is checked
  * that must hold whatever the inputs: the headline and vertical grades agree
  * on 16:9, the pixel, eye and 20/20 facts agree with each other, the tables'
- * "you" rows agree with the headline, and so on.
+ * "you" rows agree with the headline, every grade is spelled out in a word
+ * that matches its colour, and so on.
  *
  * A snapshot is plain data, however the runner collects it:
  *   boot                 the boot-error note is hidden
  *   stale                the page is marked as not current
- *   fov, fovCls, sub     the headline figure, its grade class, the prose
- *   facts[k]             { main, sub, cls } for each fact slot
+ *   fov, fovCls, fovWord, sub   the headline figure, its grade class, its
+ *                        grade word, the prose
+ *   facts[k]             { main, sub, cls, word } for each fact slot
  *   fields[id]           the text in each form field
  *   pjHidden             the projector section is hidden
  *   you, eyeLabel        the lanes marker label and the eye-bar label
@@ -54,6 +56,23 @@ export function states(quick = false) {
   for (const d of quick ? [54.6] : [23.8, 31.5, 54.6, 64.5]) for (const [v, u] of [[36, 'i'], [108, 'm']]) {
     out.push({ d, v, a: '16:9', r: '2160', rw: 2560, rh: 1080, e: 42, c: 42, u, m: 'tv', t1: 1.2, t2: 1.5, o: 50, l: 2000, g: 1 });
   }
+  /* Projectors whose panel is not the shape of the picture. A narrower panel
+     fills the height and a wider one the width, and throw, brightness and
+     lens height must all describe the image that leaves lit. The first is a
+     16:9 projector on a scope screen, the commonest such room. */
+  const pj = { rw: 2560, rh: 1080, e: 42, c: 42, u: 'i', m: 'pj', t1: 1.2, t2: 1.5, o: 50, l: 2000, g: 1 };
+  out.push(
+    { ...pj, d: 120, a: '2.39', r: '1080', v: 144, t1: 1.5, t2: 1.5 },
+    { ...pj, d: 100, a: '16:9', r: 'custom', v: 120, o: -20, c: 60 },
+    { ...pj, d: 100, a: '4:3', r: '1080', v: 120, u: 'm', o: 100, l: 1500, g: 1.3 },
+  );
+  if (!quick) out.push(
+    { ...pj, d: 120, a: '2.39', r: '2160', v: 144, u: 'm', o: -20, c: 60, l: 3000, g: 1.3 },
+    { ...pj, d: 135, a: '2.35', r: 'dci4k', v: 180, o: 0, l: 3000 },
+    { ...pj, d: 92, a: '16:9', r: 'dci4k', v: 108, c: 50, l: 1500, g: 0.8 },
+    { ...pj, d: 150, a: '21:9', r: 'custom', rw: 3440, rh: 1440, v: 180, u: 'm', t1: 0.8, t2: 1, o: 100, c: 60, l: 3000 },
+    { ...pj, d: 110, a: '1.85', r: '2160', v: 132, t1: 1.5, t2: 2.1, l: 400 },
+  );
   return out;
 }
 
@@ -64,6 +83,12 @@ const resOf = st => st.r === 'custom' ? { id: 'custom', w: st.rw, h: st.rh } : s
 const SMPTE = 30, THX_FAR = 26;
 const grade = (good, ok) => good ? 'good' : ok ? 'ok' : 'warn';
 const ppd95 = s.ppdForFraction(0.05);
+/* The word each grade is spelled out in, and the facts that are graded in
+   every room. "stand" is graded only when the picture runs below the floor;
+   the rest never are, and must show no word. */
+const WORDS = { good: 'meets', ok: 'marginal', warn: 'fails', '': '' };
+const GRADED = ['vfov', 'pixel', 'avg', 'res', 'eye', 'tilt', 'fl'];
+const PJ_FACTS = ['throw', 'lens', 'fl', 'width'];
 
 /* Parse a displayed length back to inches. */
 export function parseLen(text) {
@@ -97,8 +122,20 @@ export function checkState(p, st, check) {
     check(!/NaN|undefined|Infinity/.test(text), `field #${id} holds "${text}"`, st);
   }
   check(!/ ft 12(\.0)? in/.test(p.fields['in-dist']), `distance field reads "${p.fields['in-dist']}"`, st);
-  for (const k of FACTS) if (st.m === 'pj' || !['throw', 'lens', 'fl', 'width'].includes(k)) {
+  for (const k of FACTS) if (st.m === 'pj' || !PJ_FACTS.includes(k)) {
     check(p.facts[k].main !== '' && p.facts[k].main !== '—', `fact "${k}" is not filled`, st);
+  }
+
+  /* A grade is never colour alone: the word beside the figure is the one for
+     its grade class, and a fact without a grade has neither. */
+  check(p.fovCls !== '' && p.fovWord === WORDS[p.fovCls], `headline is graded "${p.fovCls}" and says "${p.fovWord}"`, st);
+  for (const k of FACTS) {
+    const f = p.facts[k];
+    check(f.word === WORDS[f.cls], `fact "${k}" is graded "${f.cls}" and says "${f.word}"`, st);
+    if (st.m !== 'pj' && PJ_FACTS.includes(k)) continue;
+    if (GRADED.includes(k)) check(f.cls !== '', `fact "${k}" shows no grade`, st);
+    else if (k === 'stand') check(f.cls === (pl.bottomEdge < 0 ? 'warn' : ''), `stand grade "${f.cls}" with the bottom edge at ${pl.bottomEdge.toFixed(1)}`, st);
+    else check(f.cls === '' && f.word === '', `fact "${k}" is not graded, and shows "${f.cls}" "${f.word}"`, st);
   }
 
   // Headline
@@ -213,26 +250,100 @@ export function checkState(p, st, check) {
   // Projector
   check(p.pjHidden === (st.m !== 'pj'), 'projector section visibility', st);
   if (st.m === 'pj') {
+    /* The image the panel lights, from the two shapes alone (the page gets
+       there through the pixel pitch): a panel narrower than the picture
+       fills its height, a wider one its width. Every projector figure is for
+       that image. */
+    const panel = res.w / res.h;
+    const lit = Math.abs(panel / d.ratio - 1) < 1e-9 ? { w: d.width, h: d.height, fills: '' }
+      : panel < d.ratio ? { w: d.height * panel, h: d.height, fills: 'height' } : { w: d.width, h: d.width / panel, fills: 'width' };
     const t1 = Math.min(st.t1, st.t2), t2 = Math.max(st.t1, st.t2);
     const parts = p.facts.throw.main.split('–').map(t => parseLen(t.trim()));
-    close(parts[0], d.width * t1, lenTol(p.facts.throw.main), 'throw near');
-    close(parts[parts.length - 1], d.width * t2, lenTol(p.facts.throw.main), 'throw far');
-    close(parseLen(p.facts.lens.main), st.c - d.height * st.o / 100, lenTol(p.facts.lens.main), 'lens height');
-    const fl = s.footLamberts(st.l, st.g, d);
+    close(parts[0], lit.w * t1, lenTol(p.facts.throw.main), 'throw near');
+    close(parts[parts.length - 1], lit.w * t2, lenTol(p.facts.throw.main), 'throw far');
+    close(parseLen(p.facts.lens.main), st.c - lit.h * st.o / 100, lenTol(p.facts.lens.main), 'lens height');
+    const fl = st.l * st.g / (lit.w * lit.h / 144);
     close(num(p.facts.fl.main), fl, 0.051, 'foot-lamberts');
     check(p.facts.fl.cls === (fl < s.BRIGHTNESS.cinema ? 'warn' : fl >= s.BRIGHTNESS.sdrHome ? 'good' : 'ok'), `fL grade ${p.facts.fl.cls} at ${fl.toFixed(1)}`, st);
     const wp = p.facts.width.main.split('–').map(t => parseLen(t.trim()));
     close(wp[0], st.v / t2, lenTol(p.facts.width.main), 'image width near');
-    // "a 96–120 in diagonal": the diagonals those widths make at this shape.
+    /* "a 96–120 in diagonal": the picture of this shape that an image of
+       that width lights the same way, so it is the inverse of the throw. */
     const dg = p.facts.width.sub.match(/a ([\d,]+)(?:–([\d,]+))? in diagonal/);
     check(!!dg, `image width sub "${p.facts.width.sub}"`, st);
-    if (dg) close(num(dg[1]), s.diagonalForWidth(st.v / t2, d.ratio), 0.51, 'image diagonal near');
+    if (dg) close(num(dg[1]), s.diagonalForWidth(st.v / t2 * d.width / lit.w, d.ratio), 0.51, 'image diagonal near');
+
+    /* Where the lit image is not the picture, the fact it changes says which
+       dimension the panel fills and how big the lit image is; where it is the
+       picture, nothing mentions one. A difference too small to print either
+       way (under a tenth of an inch) may go unsaid. */
+    const { throw: thr, lens, fl: bright, width } = p.facts;
+    const LEN = String.raw`([\d.,]+ (?:in|cm))`;
+    const said = (text, re, pairs, what) => {
+      const m = text.match(re);
+      check(!!m, `${what} does not describe the lit image: "${text}"`, st);
+      if (m) pairs.forEach((want, i) => close(parseLen(m[i + 1]), want, lenTol(m[i + 1]), `${what}, length ${i + 1}`));
+    };
+    const narrower = d.width - lit.w > 0.1, shorter = d.height - lit.h > 0.1;
+    if (narrower) {
+      said(thr.sub, new RegExp(`for the ${LEN}-wide lit image at throw .* panel fills the height of the ${LEN}-wide picture$`), [lit.w, d.width], 'throw');
+      check(width.sub.includes('filling the height of a '), `image width sub "${width.sub}"`, st);
+    }
+    if (shorter) said(lens.sub, new RegExp(`offset of the ${LEN} lit height: .* panel fills the width of the ${LEN}-tall picture`), [lit.h, d.height], 'lens height');
+    if (narrower || shorter) {
+      said(bright.sub, new RegExp(`over the [\\d.,]+ (?:ft²|m²) lit \\(${LEN} × ${LEN}: the \\S+ panel fills the ${lit.fills}\\)`), [lit.w, lit.h], 'brightness');
+      const area = bright.sub.match(/over the ([\d.,]+) (ft²|m²) lit/);
+      if (area) close(num(area[1]), area[2] === 'm²' ? lit.w * lit.h * 0.00064516 : lit.w * lit.h / 144, area[2] === 'm²' ? 0.006 : 0.06, 'lit area');
+    }
+    if (!lit.fills) {
+      for (const [k, f] of Object.entries({ throw: thr, lens, fl: bright, width })) check(!/\blit\b|fill/.test(f.sub), `${k} speaks of a lit image when the panel is the picture's shape: "${f.sub}"`, st);
+      said(thr.sub, new RegExp(`^lens to screen for a ${LEN}-wide picture at throw `), [d.width], 'throw');
+    }
   }
 
   // The hash round-trips every input
   for (const [k, v] of Object.entries(st)) {
     const got = new URLSearchParams(p.hash.slice(1)).get(k);
     check(got !== null && (isNaN(+v) ? got === String(v) : Math.abs(+got - +v) < 1e-6), `hash lost ${k}=${v} (got ${got})`, st);
+  }
+}
+
+/* ---- rooms with their answers written out --------------------------- */
+
+/* [room, { fact: [figure, grade word, a phrase of the line beneath] }], in
+   en-US. The first is the room the lit-image rule comes from: a 120-inch
+   2.39:1 screen is 46.3 in tall, a 1080p panel filling that height lights
+   46.32 × 16 / 9 = 82.3 in of its 110.7 in width, a 1.5 throw of that is
+   123.5 in, and 2,000 lm over 82.34 × 46.32 / 144 = 26.5 ft² is 75.5 fL.
+   The second panel is wider than its picture; the third is the picture's
+   shape, where the figures are the picture's own. */
+const LIT = { e: 42, c: 42, u: 'i', m: 'pj', rw: 2560, rh: 1080, o: 50, l: 2000, g: 1 };
+export const SHOWN = [
+  [{ ...LIT, d: 120, a: '2.39', r: '1080', v: 144, t1: 1.5, t2: 1.5 }, {
+    size: ['110.7 in × 46.3 in', '', ''],
+    throw: ['10 ft 4 in', '', 'lens to screen for the 82.3 in-wide lit image at throw 1.5: the 16:9 panel fills the height of the 110.7 in-wide picture'],
+    lens: ['18.8 in', '', 'from the floor: 23.2 in below the picture centre at 50% offset'],
+    fl: ['75.5 fL', 'meets', 'over the 26.5 ft² lit (82.3 in × 46.3 in: the 16:9 panel fills the height); cinema 14'],
+    width: ['96 in', '', 'if the lens sat at your seat distance (12 ft): filling the height of a 140 in diagonal'],
+  }],
+  [{ ...LIT, d: 100, a: '16:9', r: 'custom', v: 120, t1: 1.2, t2: 1.5, o: -20, c: 60 }, {
+    throw: ['8 ft 9 in – 10 ft 11 in', '', 'lens to screen for a 87.2 in-wide picture at throw 1.2–1.5'],
+    lens: ['67.4 in', '', '7.4 in above the picture centre at -20% offset of the 36.8 in lit height: the 64:27 panel fills the width of the 49 in-tall picture (ceiling mount, inverted)'],
+    fl: ['89.9 fL', 'meets', 'over the 22.3 ft² lit (87.2 in × 36.8 in: the 64:27 panel fills the width); cinema 14'],
+    width: ['80 in – 100 in', '', 'if the lens sat at your seat distance (10 ft): a 92–115 in diagonal'],
+  }],
+  [{ ...LIT, d: 100, a: '16:9', r: '2160', v: 120, t1: 1.2, t2: 1.5, l: 400 }, {
+    throw: ['8 ft 9 in – 10 ft 11 in', '', 'lens to screen for a 87.2 in-wide picture at throw 1.2–1.5'],
+    lens: ['17.5 in', '', 'from the floor: 24.5 in below the picture centre at 50% offset'],
+    fl: ['13.5 fL', 'fails', '46 cd/m² from 400 lm × 1 gain over 29.7 ft²; cinema 14, home ≥16, bright room ~30'],
+    width: ['80 in – 100 in', '', 'if the lens sat at your seat distance (10 ft): a 92–115 in diagonal'],
+    vfov: ['23.1°', 'meets', ''],
+  }],
+];
+export function checkShown(p, st, facts, check) {
+  for (const [k, [main, word, sub]] of Object.entries(facts)) {
+    const f = p.facts[k];
+    check(f.main === main && f.word === word && f.sub.includes(sub), `fact "${k}" shows "${f.main}" "${f.word}" "${f.sub}", expected "${main}" "${word}" "…${sub}…"`, st);
   }
 }
 
