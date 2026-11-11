@@ -6486,7 +6486,7 @@
       "weekKey": "2026-W46",
       "date": "2026-11-11",
       "week": 46,
-      "algorithm": "SLICE v2.2",
+      "algorithm": "SLICE v2.3",
       "ranks": {
         "delancey": 1,
         "a-k-pizza": 2,
@@ -6551,9 +6551,8 @@
         "jackson-street-pizza-lounge": 61,
         "mad-pizza": 62,
         "pizzeria-gabbiano": 63,
-        "flying-squirrel": 64,
-        "independent-pizzeria": 65,
-        "breezy-town-pizza": 66
+        "independent-pizzeria": 64,
+        "breezy-town-pizza": 65
       },
       "scores": {
         "delancey": 87.6,
@@ -6619,7 +6618,6 @@
         "jackson-street-pizza-lounge": 47.7,
         "mad-pizza": 36,
         "pizzeria-gabbiano": 85.1,
-        "flying-squirrel": 81.4,
         "independent-pizzeria": 71.9,
         "breezy-town-pizza": 69.4
       },
@@ -6777,7 +6775,7 @@
           "penalty": 1.5
         },
         "moto-pizza": {
-          "reputation": 6.9,
+          "reputation": 6.5,
           "critical": 8.7,
           "craft": 8.5,
           "distinctiveness": 8.5,
@@ -7127,14 +7125,6 @@
           "distinctiveness": 8.5,
           "value": 8.9,
           "penalty": 0.8
-        },
-        "flying-squirrel": {
-          "reputation": 0,
-          "critical": 8,
-          "craft": 8.2,
-          "distinctiveness": 8,
-          "value": 8.5,
-          "penalty": 0
         },
         "independent-pizzeria": {
           "reputation": 10,
