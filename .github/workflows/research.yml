@@ -52,9 +52,12 @@ concurrency:
 
 # The one place the agent's model is named. To try another, change it on a
 # branch and dispatch this workflow from that branch: the run is a dry run,
-# and its log prints the turns and cost to compare.
+# and its log prints the turns and cost to compare. Compare what was found
+# as well: on 2026-11-11 claude-sonnet-5-5 ran the news task in 8 turns and
+# filed nothing, where this model took 27 turns on the same data and filed a
+# closure and two mentions.
 env:
-  RESEARCH_MODEL: claude-sonnet-5-5
+  RESEARCH_MODEL: claude-sonnet-5
 
 jobs:
   agent:
