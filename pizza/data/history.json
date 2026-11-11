@@ -6488,47 +6488,47 @@
       "week": 46,
       "algorithm": "SLICE v2.2",
       "ranks": {
-        "windy-city-pie": 1,
-        "delancey": 2,
-        "a-k-pizza": 3,
-        "serious-pie": 4,
-        "dinos-tomato-pie": 5,
-        "tutta-bella": 6,
-        "via-tribunali": 7,
-        "post-alley-pizza": 8,
-        "proletariat-pizza": 9,
-        "slice-box": 10,
-        "zeeks-pizza": 11,
-        "cornelly": 12,
-        "veraci-pizza": 13,
-        "humble-pie": 14,
-        "talaricos": 15,
-        "sacro-bosco-pizza-wine": 16,
-        "pizzeria-22": 17,
-        "mioposto": 18,
-        "west-of-chicago-pizza-company": 19,
-        "stevies-famous": 20,
-        "pizza-by-ruffin": 21,
-        "lupo": 22,
-        "moto-pizza": 23,
-        "good-shape-pizza": 24,
-        "my-friend-dereks": 25,
-        "pagliacci": 26,
-        "cornuto-pizzeria": 27,
-        "pi-vegan-pizzeria": 28,
-        "oxbow": 29,
-        "world-pizza": 30,
-        "razzis-pizzeria": 31,
-        "dantini-pizza": 32,
-        "ballard-pizza-co": 33,
-        "pizzeria-pulcinella": 34,
-        "good-luck-bread": 35,
-        "un-po-tipsy": 36,
-        "roccos": 37,
-        "smoking-monkey-pizza": 38,
-        "sunny-hill": 39,
-        "big-marios": 40,
-        "pizzeria-la-rocca": 41,
+        "delancey": 1,
+        "a-k-pizza": 2,
+        "dinos-tomato-pie": 3,
+        "post-alley-pizza": 4,
+        "proletariat-pizza": 5,
+        "windy-city-pie": 6,
+        "cornelly": 7,
+        "veraci-pizza": 8,
+        "slice-box": 9,
+        "humble-pie": 10,
+        "sacro-bosco-pizza-wine": 11,
+        "pizzeria-22": 12,
+        "mioposto": 13,
+        "serious-pie": 14,
+        "tutta-bella": 15,
+        "west-of-chicago-pizza-company": 16,
+        "stevies-famous": 17,
+        "pizza-by-ruffin": 18,
+        "lupo": 19,
+        "moto-pizza": 20,
+        "good-shape-pizza": 21,
+        "my-friend-dereks": 22,
+        "pagliacci": 23,
+        "cornuto-pizzeria": 24,
+        "via-tribunali": 25,
+        "pi-vegan-pizzeria": 26,
+        "oxbow": 27,
+        "zeeks-pizza": 28,
+        "world-pizza": 29,
+        "razzis-pizzeria": 30,
+        "dantini-pizza": 31,
+        "ballard-pizza-co": 32,
+        "pizzeria-pulcinella": 33,
+        "good-luck-bread": 34,
+        "un-po-tipsy": 35,
+        "roccos": 36,
+        "smoking-monkey-pizza": 37,
+        "sunny-hill": 38,
+        "big-marios": 39,
+        "pizzeria-la-rocca": 40,
+        "talaricos": 41,
         "south-town-pie": 42,
         "elemental-pizza": 43,
         "oskars-pizza": 44,
@@ -6556,24 +6556,21 @@
         "flying-squirrel": 66
       },
       "scores": {
-        "windy-city-pie": 89.4,
         "delancey": 87.6,
         "a-k-pizza": 86.3,
-        "serious-pie": 85.1,
         "dinos-tomato-pie": 85.1,
-        "tutta-bella": 84.3,
-        "via-tribunali": 84,
         "post-alley-pizza": 82.6,
         "proletariat-pizza": 82.5,
-        "slice-box": 81.3,
-        "zeeks-pizza": 80.6,
+        "windy-city-pie": 80.4,
         "cornelly": 80.4,
         "veraci-pizza": 80,
+        "slice-box": 79.5,
         "humble-pie": 78.9,
-        "talaricos": 78.8,
         "sacro-bosco-pizza-wine": 78.7,
         "pizzeria-22": 78.4,
         "mioposto": 77.7,
+        "serious-pie": 77.7,
+        "tutta-bella": 76.9,
         "west-of-chicago-pizza-company": 76.5,
         "stevies-famous": 76.4,
         "pizza-by-ruffin": 76,
@@ -6583,13 +6580,15 @@
         "my-friend-dereks": 75,
         "pagliacci": 74.5,
         "cornuto-pizzeria": 74.4,
+        "via-tribunali": 74,
         "pi-vegan-pizzeria": 73.8,
         "oxbow": 73.3,
+        "zeeks-pizza": 73,
         "world-pizza": 72.6,
         "razzis-pizzeria": 72.4,
         "dantini-pizza": 72.3,
         "ballard-pizza-co": 71.5,
-        "pizzeria-pulcinella": 71.4,
+        "pizzeria-pulcinella": 71.3,
         "good-luck-bread": 70.8,
         "un-po-tipsy": 69.7,
         "roccos": 69.6,
@@ -6597,6 +6596,7 @@
         "sunny-hill": 68.7,
         "big-marios": 68.1,
         "pizzeria-la-rocca": 67.6,
+        "talaricos": 67.3,
         "south-town-pie": 67.3,
         "elemental-pizza": 67.2,
         "oskars-pizza": 66.5,
@@ -6624,14 +6624,6 @@
         "flying-squirrel": 81.4
       },
       "factors": {
-        "windy-city-pie": {
-          "reputation": 8.6,
-          "critical": 9.5,
-          "craft": 9.3,
-          "distinctiveness": 9.7,
-          "value": 8.5,
-          "penalty": 3.3
-        },
         "delancey": {
           "reputation": 10,
           "critical": 9.1,
@@ -6648,14 +6640,6 @@
           "value": 8.7,
           "penalty": 0
         },
-        "serious-pie": {
-          "reputation": 10,
-          "critical": 8.8,
-          "craft": 8.9,
-          "distinctiveness": 7.8,
-          "value": 8,
-          "penalty": 1.2
-        },
         "dinos-tomato-pie": {
           "reputation": 8.6,
           "critical": 8.5,
@@ -6663,22 +6647,6 @@
           "distinctiveness": 7.5,
           "value": 9.2,
           "penalty": 0.4
-        },
-        "tutta-bella": {
-          "reputation": 10,
-          "critical": 8.2,
-          "craft": 8.4,
-          "distinctiveness": 7,
-          "value": 8.7,
-          "penalty": 0
-        },
-        "via-tribunali": {
-          "reputation": 10,
-          "critical": 8.3,
-          "craft": 8.5,
-          "distinctiveness": 7.4,
-          "value": 7.6,
-          "penalty": 0
         },
         "post-alley-pizza": {
           "reputation": 10,
@@ -6696,21 +6664,13 @@
           "value": 9,
           "penalty": 0
         },
-        "slice-box": {
-          "reputation": 8.3,
-          "critical": 7.8,
-          "craft": 8,
-          "distinctiveness": 8.8,
-          "value": 8.3,
-          "penalty": 0.8
-        },
-        "zeeks-pizza": {
-          "reputation": 10,
-          "critical": 7.2,
-          "craft": 7.5,
-          "distinctiveness": 7.6,
+        "windy-city-pie": {
+          "reputation": 8.6,
+          "critical": 8.7,
+          "craft": 8.5,
+          "distinctiveness": 8,
           "value": 7.7,
-          "penalty": 0
+          "penalty": 3.3
         },
         "cornelly": {
           "reputation": 7,
@@ -6728,6 +6688,14 @@
           "value": 7.9,
           "penalty": 0
         },
+        "slice-box": {
+          "reputation": 8.3,
+          "critical": 8.5,
+          "craft": 8,
+          "distinctiveness": 6.5,
+          "value": 8.7,
+          "penalty": 0.8
+        },
         "humble-pie": {
           "reputation": 9.5,
           "critical": 8,
@@ -6735,14 +6703,6 @@
           "distinctiveness": 6.5,
           "value": 8.1,
           "penalty": 1.3
-        },
-        "talaricos": {
-          "reputation": 0,
-          "critical": 7.4,
-          "craft": 7.5,
-          "distinctiveness": 8.2,
-          "value": 8.9,
-          "penalty": 0.4
         },
         "sacro-bosco-pizza-wine": {
           "reputation": 2.5,
@@ -6765,6 +6725,22 @@
           "critical": 7.5,
           "craft": 7.5,
           "distinctiveness": 6.5,
+          "value": 7.5,
+          "penalty": 0
+        },
+        "serious-pie": {
+          "reputation": 10,
+          "critical": 7.5,
+          "craft": 7.5,
+          "distinctiveness": 7,
+          "value": 6.8,
+          "penalty": 1.2
+        },
+        "tutta-bella": {
+          "reputation": 10,
+          "critical": 7.3,
+          "craft": 7,
+          "distinctiveness": 6,
           "value": 7.5,
           "penalty": 0
         },
@@ -6840,6 +6816,14 @@
           "value": 7.5,
           "penalty": 0
         },
+        "via-tribunali": {
+          "reputation": 10,
+          "critical": 7.6,
+          "craft": 6.5,
+          "distinctiveness": 5.5,
+          "value": 6.3,
+          "penalty": 0
+        },
         "pi-vegan-pizzeria": {
           "reputation": 0,
           "critical": 7.5,
@@ -6854,6 +6838,14 @@
           "craft": 7.5,
           "distinctiveness": 7,
           "value": 7.5,
+          "penalty": 0
+        },
+        "zeeks-pizza": {
+          "reputation": 10,
+          "critical": 6.5,
+          "craft": 6.5,
+          "distinctiveness": 6,
+          "value": 6.8,
           "penalty": 0
         },
         "world-pizza": {
@@ -6951,6 +6943,14 @@
           "distinctiveness": 6.5,
           "value": 6.5,
           "penalty": 0
+        },
+        "talaricos": {
+          "reputation": 0,
+          "critical": 6.5,
+          "craft": 6.5,
+          "distinctiveness": 6.5,
+          "value": 7.8,
+          "penalty": 0.4
         },
         "south-town-pie": {
           "reputation": 7.9,
