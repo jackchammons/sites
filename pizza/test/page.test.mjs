@@ -224,7 +224,7 @@ test('the page describes every rating one way, and a rating the agent has not se
   for (const url of read) assert.ok(record('p1').includes(`href="${url}"`));
 
   const text = html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, ' ').replace(/<[^>]+>/g, ' ');
-  assert.doesNotMatch(text, /editorial|founding entr|at launch|launched in/i);
+  assert.doesNotMatch(text, /editorial|founding entr|at launch|launched in|index launched|seeded/i);
   assert.match(text, /The three graded factors \(craft, distinctiveness and the critic base\) are set by a research\s+agent from published coverage/);
 });
 

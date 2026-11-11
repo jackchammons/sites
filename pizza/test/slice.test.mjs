@@ -40,7 +40,7 @@ test('reputation is monotone: added evidence never lowers it', () => {
   // a component that raises the mean is counted
   const press = Array.from({ length: 6 }, () => ({ date: '2026-08-01' }));
   const young = reputationFactor({ opened: 2025, mentions: press }, NOW);
-  assert.ok(young.counted.includes('coverage'));
+  assert.deepEqual(young.counted, ['coverage']);
   assert.ok(young.value > reputationFactor({ opened: 2025 }, NOW).value);
 });
 

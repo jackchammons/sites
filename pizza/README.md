@@ -8,7 +8,7 @@ Every number on the page is computed at build time from `data/restaurants.json` 
 scoring module in `src/slice.js`. Each ranked card opens to show every input behind its
 score, read against the rest of the rated field; the browser runs only the map.
 
-## The score (SLICE v2.2)
+## The score (SLICE v2.3)
 
 ```
 SLICE = ( Σ factorᵢ ÷ 10 × weightᵢ − min(friction, 6.0) ) × (1 − decay)
@@ -16,7 +16,7 @@ SLICE = ( Σ factorᵢ ÷ 10 × weightᵢ − min(friction, 6.0) ) × (1 − dec
 
 | Factor | Weight | How it is set |
 |---|---|---|
-| Reputation | 24% | Computed: longevity, review count and press coverage; counted only where it does not lower the score (see below) |
+| Reputation | 24% | Computed: longevity and press coverage; counted only where it does not lower the score (see below) |
 | Critical reception | 24% | Graded critic base, lifted up to +1.5 by press the research pass files |
 | Craft | 18% | Graded |
 | Distinctiveness | 18% | Graded |
@@ -35,19 +35,19 @@ review, a roundup or a news story; the pizzeria's own site, an aggregator or a s
 may be cited beside one, never alone), and a rating the agent has set is never overwritten
 by a script. The directory prints each rating with its sources.
 
-**Reputation** has three components, each 0 to 1: longevity (log curve on years open,
-weight 3), review volume (`reviews / (reviews + 500)`, weight 2) and coverage (press
-mentions in 24 months / 6, weight 1). They combine as the best weighted mean over any
-prefix of the components sorted best-first, so adding evidence can lift the factor but
-never lower it.
+**Reputation** has two components, each 0 to 1: longevity (log curve on years open,
+weight 3) and coverage (press mentions in 24 months / 6, weight 1). They combine as the
+best weighted mean over any prefix of the components sorted best-first, so adding
+evidence can lift the factor but never lower it. With both on file that mean is the
+higher of the two: the lower one would only pull it down, so it is left out.
 
 The same rule holds one level up, in `scoreOne()`: reputation carries its 24% only when
 it is measured **and** at or above the weighted mean of the entry's other four factors.
 With no component on file, or with a reputation below the other four, its weight is
 dropped and the other four share it in proportion to their own weights. The score is
-therefore monotone in evidence: a new press mention, founding year or review count can
-raise it and never lower it (`test/slice.test.mjs` checks this for fixtures and for every
-rated entry in the dataset). `reputationDetail.use` records which case applied
+therefore monotone in evidence: a new press mention or founding year can raise it and
+never lower it (`test/slice.test.mjs` checks this for fixtures and for every rated entry
+in the dataset). `reputationDetail.use` records which case applied
 (`counted`, `unmeasured`, `lowers`) and each card says so.
 
 **Value** multiplies the mean of craft and critical by the price tier: $ ×1.20, $$ ×1.05,
@@ -119,10 +119,10 @@ methodology is outside `<main>`; the chart's newest column, the cards and the he
 the visible text shows `undefined`, `NaN` or `[object Object]`; or two adjacent open
 entries in `rankings.json` are out of score order. Text quoted from the data files
 (headlines, notes) is exempt from the `undefined` check, so a headline cannot stop a
-deploy. It also fails when the page's own copy describes a rating as set by hand or
-dates one to the index's launch (`editorial`, `founding entr…`, `at launch`,
-`launched in`), with the same exemption for quoted data, and when the pinned map's rules
-below have come apart. The record, radar and buzz sections are optional: each renders
+deploy. It also fails when the page's own copy describes a rating as set by hand, dates
+one to the index's launch or calls anything seeded (`editorial`, `founding entr…`,
+`at launch`, `launched in`, `index launched`, `seeded`), with the same exemption for
+quoted data, and when the pinned map's rules below have come apart. The record, radar and buzz sections are optional: each renders
 nothing when it has nothing to show, and the nav is built from the sections that rendered.
 
 The map is not part of first load. `app.js` reveals the map rail and fetches
@@ -183,9 +183,10 @@ never change), a
 note on each worklist entry it could not resolve, founding years and price tiers from
 pages that state them, Instagram links and candidate verdicts. It never writes a score
 and never sets an attribute flag: the flags and their friction costs in
-`data/attributes.json` move scores, so they are edited by hand. Crowd star ratings were
-seeded at launch and are never refreshed; they are shown as context, and only the review
-count feeds reputation.
+`data/attributes.json` move scores, so they are edited by hand. The dataset holds no
+crowd figures: Yelp answers 403 to automated reads and no API key is in use, so there is
+no star average or review count to score or show, and `check-dataset.js` refuses an
+entry that carries a `crowd` key.
 
 A closure needs a news report or the pizzeria's own announcement. Review sites,
 aggregators, ordering pages and social hosts are refused as its source, on any of their

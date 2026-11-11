@@ -185,8 +185,9 @@ coverage  = mentions in ${COVERAGE_WINDOW_MONTHS} mo / ${COVERAGE_FULL_MENTIONS}
 reputation = 10 × best weighted mean
              over the components on
              file, taken best-first</pre>
-        <p>A component counts only if it raises that mean, and the same rule holds one level
-        up. Reputation carries its ${repShare}% only when it is on file <em>and</em> is at or above the
+        <p>A component counts only if it raises that mean, so with both on file the factor is
+        the higher of the two. The same rule holds one level up.
+        Reputation carries its ${repShare}% only when it is on file <em>and</em> is at or above the
         weighted mean of the entry's other four factors. When nothing is on file, or when what
         is on file sits below the other four, reputation carries no weight and the other four
         share its ${repShare}% in proportion to their own weights. So a founding year or a first
