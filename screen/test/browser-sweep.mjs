@@ -1,26 +1,30 @@
 #!/usr/bin/env node
-/* Drive the BUILT page through a grid of inputs and check what it shows.
+/* Drive the BUILT page in Chromium through a grid of inputs and check what
+ * it shows.
  *
- * The unit tests cover the maths module; this covers the page script, where
- * the grading rules, formatting, parsing and hash handling live — and where
- * the vertical-angle grade was wrong for weeks without a test noticing.
- * Every displayed figure is parsed back and compared with an independent
- * computation, and a set of cross-fact rules is checked that must hold
- * whatever the inputs: the headline and vertical grades agree on 16:9, the
- * pixel, eye and 20/20 facts agree with each other, the tables' "you" rows
- * agree with the headline, and so on.
+ * The unit tests cover the maths module; the page script, where the grading
+ * rules, formatting, parsing and hash handling live, is covered twice. The
+ * rooms and what each must show are in page-checks.mjs, and page.test.mjs
+ * runs them in Node against a stand-in DOM on every push. This runs the same
+ * checks in a real browser, and adds what only a layout engine can answer:
+ * that labels stay inside their charts at every width, that nothing overflows
+ * a phone, that both colour schemes and awkward locales render, that a touch
+ * keeps its tooltip, and that the page says so when its script fails to load.
  *
  * Needs Chromium via Playwright (installed on the dev box, not in CI):
  *   node scripts/build.mjs && node test/browser-sweep.mjs [--quick]
+ * OUT_DIR names the build to drive, as it does for build.mjs and verify.mjs;
+ * the sweep only reads it.
  */
 import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as s from '../src/screen.js';
+import { states as grid, hashOf, checkState, num, FACTS, FIELDS, TYPING_ROOM, TYPED } from './page-checks.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const dist = process.env.OUT_DIR ? path.resolve(process.env.OUT_DIR) : path.join(root, '..', 'dist');
+const dist = process.env.OUT_DIR ? path.resolve(process.env.OUT_DIR) : path.join(root, '..', 'dist', path.basename(root));
 if (!fs.existsSync(path.join(dist, 'index.html'))) { console.error(`no build at ${dist}; run scripts/build.mjs first`); process.exit(2); }
 const quick = process.argv.includes('--quick');
 
@@ -45,44 +49,7 @@ const server = http.createServer((req, res) => {
 await new Promise(r => server.listen(0, r));
 const base = `http://localhost:${server.address().port}/`;
 
-/* ---- the grid ------------------------------------------------------- */
-const SIZES = quick ? [43, 65, 120] : [24, 43, 65, 85, 120, 200];
-const DISTS = quick ? [48, 108, 240] : [36, 72, 108, 180, 300];
-const ASPECTS = ['16:9', '2.39', '4:3'];
-const RES = ['1080', '2160', 'custom'];
-const states = [];
-for (const d of SIZES) for (const v of DISTS) for (const a of ASPECTS) for (const r of RES) {
-  states.push({ d, v, a, r, rw: 2560, rh: 1080, e: 42, c: 42, u: 'i', m: 'tv', t1: 1.2, t2: 1.5, o: 50, l: 2000, g: 1 });
-}
-// Metric and projector variants, with placement and brightness spread out.
-let seed = 7;
-const rnd = () => (seed = (seed * 48271) % 2147483647) / 2147483647;
-const pick = arr => arr[Math.floor(rnd() * arr.length)];
-for (let i = 0; i < (quick ? 15 : 60); i++) {
-  states.push({ d: pick(SIZES), v: pick(DISTS), a: pick(ASPECTS), r: pick(RES), rw: pick([1920, 2560, 3440, 5120]), rh: pick([1080, 1440, 2160]),
-    e: pick([24, 42, 60]), c: pick([30, 42, 60, 90, 120]), u: pick(['i', 'm']), m: pick(['tv', 'pj']),
-    t1: pick([0.8, 1.2, 1.5]), t2: pick([1.0, 1.5, 2.1]), o: pick([-20, 0, 50, 100]), l: pick([400, 1500, 3000]), g: pick([0.8, 1, 1.3]) });
-}
-
-/* ---- expectations, computed here, not in the page ------------------ */
-const resOf = st => st.r === 'custom' ? { id: 'custom', w: st.rw, h: st.rh } : s.resolution(st.r);
-const SMPTE = 30, THX_FAR = 26;
-const grade = (good, ok) => good ? 'good' : ok ? 'ok' : 'warn';
-const ppd95 = s.ppdForFraction(0.05);
-
-/* Parse a displayed length back to inches. */
-function parseLen(text, metric) {
-  const t = text.replace(/,/g, '');
-  let m;
-  if ((m = t.match(/(-?[\d.]+) ft(?: ([\d.]+) in)?/))) return +m[1] * 12 + (m[2] ? +m[2] : 0);
-  if ((m = t.match(/(-?[\d.]+) in\b/))) return +m[1];
-  if ((m = t.match(/(-?[\d.]+) m\b/))) return +m[1] * 100 / 2.54;
-  if ((m = t.match(/(-?[\d.]+) cm\b/))) return +m[1] / 2.54;
-  throw new Error(`cannot parse length "${text}"`);
-}
-/* How coarse the display is at that magnitude, in inches. */
-const lenTol = (text) => / ft/.test(text) ? 0.51 : / in\b/.test(text) ? 0.06 : / m\b/.test(text) ? 0.21 : /\.\d cm/.test(text) ? 0.03 : 0.21;
-const num = text => +text.replace(/,/g, '').match(/-?[\d.]+/)[0];
+const states = grid(quick);
 
 /* ---- run ------------------------------------------------------------ */
 const browser = await chromium.launch();
@@ -96,19 +63,17 @@ await page.waitForTimeout(200);
 const failures = [];
 let checks = 0;
 const check = (ok, msg, st) => { checks++; if (!ok) failures.push(`${JSON.stringify(st)} :: ${msg}`); };
-const close = (a, b, tol, msg, st) => check(Math.abs(a - b) <= tol, `${msg}: shown ${a}, expected ${b}`, st);
-
-const hashOf = st => '#' + Object.entries(st).map(([k, v]) => `${k}=${v}`).join('&');
 
 async function readPage() {
-  return page.evaluate(() => {
+  return page.evaluate(({ FACTS, FIELDS }) => {
     const $ = id => document.getElementById(id);
     const fact = k => ({ cls: ($('fact-' + k).className.match(/good|ok|warn/) || [''])[0], main: $('sum-' + k).textContent, sub: $('sub-' + k).textContent });
     const rows = sel => [...document.querySelectorAll(sel)].map(tr => [...tr.children].map(td => td.textContent.trim()));
     return {
-      boot: $('boot-error').hidden,
+      boot: $('boot-error').hidden, stale: $('main').classList.contains('stale'),
       fov: $('out-fov').textContent, fovCls: ($('out-total').className.match(/good|ok|warn/) || [''])[0], sub: $('out-sub').textContent,
-      facts: Object.fromEntries(['size', 'area', 'vfov', 'density', 'pixel', 'avg', 'res', 'eye', 'tilt', 'throw', 'lens', 'fl', 'width', 'top', 'bottom', 'max', 'stand'].map(k => [k, fact(k)])),
+      facts: Object.fromEntries(FACTS.map(k => [k, fact(k)])),
+      fields: Object.fromEntries(FIELDS.map(id => [id, $(id).value])),
       pjHidden: $('pj-section').hidden,
       you: [...document.querySelectorAll('#lanes text.you-lbl')].map(t => t.textContent)[0],
       eyeLabel: [...document.querySelectorAll('#eye-bar text.eye-pct')].map(t => t.textContent)[0],
@@ -118,205 +83,102 @@ async function readPage() {
       sizesHere: rows('#sizes tr.here')[0],
       matrixNote: $('matrix-note').textContent,
       matrixYou: document.querySelector('#matrix td.you')?.textContent,
-      matrixRow: [...document.querySelectorAll('#matrix tbody tr')].find(tr => tr.querySelector('th.you'))?.querySelectorAll('td').length,
       hash: location.hash,
       lanes: [...document.querySelectorAll('#lanes rect.band')].length,
     };
-  });
+  }, { FACTS, FIELDS });
 }
 
 for (const st of states) {
   await page.evaluate(h => { location.hash = h; }, hashOf(st));
   await page.waitForTimeout(40);
-  const p = await readPage();
-  const metric = st.u === 'm';
-  const d = s.dims(st.d, s.aspect(st.a).ratio);
-  const res = resOf(st);
-  const fov = s.hfov(d, st.v), vf = s.vfov(d, st.v);
-  const pitch = s.pixelPitch(d, res);
-  const ppd = s.pixelsPerDegree(pitch, st.v);
-  const limit = s.acuityDistance(pitch);
-  const frac = s.noticeFraction(ppd);
-  const pl = s.placement(d, st.v, st.e, st.c);
-
-  check(p.boot, 'boot error shown', st);
+  checkState(await readPage(), st, check);
   check(pageErrors.length === 0, `page errors: ${pageErrors.join(' | ')}`, st);
   pageErrors.length = 0;
-
-  // Headline
-  close(num(p.fov), fov, 0.051, 'headline angle', st);
-  const fovGrade = fov >= s.FRONT_ROW ? 'ok' : grade(fov >= SMPTE, fov >= THX_FAR);
-  check(p.fovCls === fovGrade, `headline grade ${p.fovCls}, expected ${fovGrade} at ${fov.toFixed(1)}°`, st);
-  check(p.sub.includes(s.describeAngle(fov).slice(0, 20)), `headline prose "${p.sub}"`, st);
-  // Prose and colour must agree: red ⟺ the prose calls it a television or small.
-  const prose = s.describeAngle(fov);
-  check((fovGrade === 'warn') === /television|small picture/.test(prose), `prose/grade disagree: ${fovGrade} vs "${prose}"`, st);
-
-  // Picture
-  const [w, h] = p.facts.size.main.split('×').map(t => parseLen(t.trim(), metric));
-  close(w, d.width, lenTol(p.facts.size.main), 'width', st);
-  close(h, d.height, lenTol(p.facts.size.main), 'height', st);
-  close(num(p.facts.area.main), metric ? d.area * 0.00064516 : d.area / 144, metric ? 0.006 : 0.06, 'area', st);
-
-  // Vertical angle: value, grade, and agreement with the headline on 16:9
-  close(num(p.facts.vfov.main), vf, 0.051, 'vertical angle', st);
-  const vGrade = vf >= s.verticalEquivalent(s.FRONT_ROW) ? 'ok' : grade(vf >= s.verticalEquivalent(SMPTE), vf >= s.verticalEquivalent(THX_FAR));
-  check(p.facts.vfov.cls === vGrade, `vertical grade ${p.facts.vfov.cls}, expected ${vGrade}`, st);
-  if (st.a === '16:9') check(p.facts.vfov.cls === p.fovCls, `on 16:9 the vertical grade (${p.facts.vfov.cls}) must match the headline (${p.fovCls})`, st);
-  close(num(p.facts.vfov.sub), st.v / d.height, 0.006, 'picture heights', st);
-
-  // Pixels
-  close(num(p.facts.density.main), 1 / pitch, 0.51, 'ppi', st);
-  close(num(p.facts.pixel.main), ppd, 0.051, 'ppd centre', st);
-  const ppdGrade = x => grade(x >= ppd95, x >= 60);
-  check(p.facts.pixel.cls === ppdGrade(ppd), `ppd grade ${p.facts.pixel.cls}, expected ${ppdGrade(ppd)} at ${ppd.toFixed(1)}`, st);
-  const imgV = s.subtended(pitch * res.h, st.v);
-  close(num(p.facts.avg.main), res.h / imgV, 0.051, 'ppd average', st);
-  check(p.facts.avg.cls === ppdGrade(res.h / imgV), 'avg grade', st);
-  close(num(p.facts.eye.main), Math.round(frac * 100), 0.5, 'eye percent', st);
-  check(p.facts.eye.cls === grade(frac < 0.05, frac < 0.5), `eye grade ${p.facts.eye.cls}`, st);
-  check((p.facts.eye.cls === 'good') === (p.facts.pixel.cls === 'good'), 'eye good ⟺ pixel good', st);
-  const wasted = st.v > limit;
-  check(/^(Past|Inside) /.test(p.facts.res.main) && p.facts.res.main.startsWith(wasted ? 'Past' : 'Inside'), `20/20 fact "${p.facts.res.main}" vs wasted=${wasted}`, st);
-  close(parseLen(p.facts.res.main, metric), limit, lenTol(p.facts.res.main), '20/20 limit distance', st);
-  check(p.facts.res.cls === (wasted ? 'good' : 'warn'), `20/20 grade ${p.facts.res.cls}`, st);
-  if (Math.abs(ppd - 60) > 0.2) check((p.facts.res.cls === 'good') === (p.facts.pixel.cls !== 'warn'), '20/20 green ⟺ ppd not red', st);
-
-  // Eye line
-  const tiltGrade = grade(pl.ok && Math.abs(pl.centre) <= 5, pl.ok);
-  check(p.facts.tilt.cls === tiltGrade, `tilt grade ${p.facts.tilt.cls}, expected ${tiltGrade} at ${pl.centre.toFixed(1)}°`, st);
-  if (Math.abs(pl.centre) >= 0.5) close(num(p.facts.tilt.main), Math.abs(pl.centre), 0.051, 'tilt angle', st);
-  else check(p.facts.tilt.main === 'Level', 'level', st);
-
-  // Lanes + eye bar
-  close(parseLen(p.you, metric), st.v, lenTol(p.you), 'lanes marker', st);
-  check(p.lanes >= 9, `only ${p.lanes} lane bands`, st);
-  close(num(p.eyeLabel), ppd, 0.051, 'eye-bar ppd', st);
-
-  // Targets: met ⟺ seat at or beyond the distance shown
-  const TARGET_PPD = [60, s.ppdForFraction(0.5), s.ppdForFraction(0.05)];
-  check(p.targets.length === 3, `${p.targets.length} target rows`, st);
-  p.targets.forEach((row, i) => {
-    const dist = parseLen(row[2], metric);
-    const want = s.distanceForPpd(pitch, TARGET_PPD[i]);
-    close(num(row[1]), TARGET_PPD[i], 0.51, `target ${i} ppd`, st);
-    close(dist, want, lenTol(row[2]), `target ${i} distance`, st);
-    check((row[3] === 'met') === (st.v >= want), `target ${i}: "${row[3]}" with seat ${st.v} vs ${want.toFixed(1)}`, st);
-  });
-
-  // Seats table: the "Your seat" row carries the headline angle; sorted by distance
-  const mine = p.seats.find(r => r[0].startsWith('Your seat'));
-  check(!!mine, 'no Your seat row', st);
-  if (mine) { close(num(mine[2]), fov, 0.051, 'seats row angle', st); close(num(mine[3]), st.v / st.d, 0.006, 'seats × diagonal', st); }
-  const dists = p.seats.map(r => parseLen(r[1], metric));
-  check(dists.every((x, i) => i === 0 || x >= dists[i - 1] - 0.6), 'seats sorted', st);
-  /* The angle is computed from the exact distance, the distance is shown
-     rounded: accept any angle the rounding interval could produce. */
-  for (const r of p.seats) if (!r[0].startsWith('Your seat')) {
-    const shown = parseLen(r[1], metric), tol = lenTol(r[1]);
-    const lo = s.hfov(d, shown + tol), hi = s.hfov(d, Math.max(0.1, shown - tol));
-    check(num(r[2]) >= lo - 0.06 && num(r[2]) <= hi + 0.06, `seats angle for ${r[0].split('\n')[0]}: ${num(r[2])} outside [${lo.toFixed(2)}, ${hi.toFixed(2)}]`, st);
-  }
-
-  // Sizes table: the "yours" row agrees with the headline; pill agrees with the 20/20 fact
-  check(!!p.sizesHere, 'no yours row', st);
-  if (p.sizesHere) {
-    close(num(p.sizesHere[2]), fov, 0.06, 'sizes row angle', st);
-    check((p.sizesHere[4] === 'hidden') === wasted, `sizes pill "${p.sizesHere[4]}" vs wasted=${wasted}`, st);
-    check(p.sizesHere[3] === s.describeAngle(fov), 'sizes verdict', st);
-  }
-  for (const r of p.sizes) {
-    const dd = s.dims(num(r[0]), d.ratio);
-    close(num(r[2]), s.hfov(dd, st.v), 0.06, `sizes angle for ${r[0]}`, st);
-    check((r[4] === 'hidden') === (st.v > s.acuityDistance(s.pixelPitch(dd, res))), `sizes pill for ${r[0]}`, st);
-  }
-
-  // Matrix: the highlighted cell is the model's answer and the note says so
-  const lim = s.limitResolution(d, st.v);
-  check(p.matrixYou === (lim ? lim.label : '>32K'), `matrix you cell "${p.matrixYou}" vs ${lim ? lim.label : '>32K'}`, st);
-  check(p.matrixNote.startsWith(lim ? lim.label : 'beyond 32K'), `matrix note "${p.matrixNote}"`, st);
-
-  // Placement facts
-  close(parseLen(p.facts.top.sub, metric), st.c + d.height / 2, lenTol(p.facts.top.sub), 'top height', st);
-  close(parseLen(p.facts.bottom.sub, metric), st.c - d.height / 2, lenTol(p.facts.bottom.sub), 'bottom height', st);
-  close(parseLen(p.facts.max.main, metric), pl.maxCentre, lenTol(p.facts.max.main), 'max centre', st);
-  close(parseLen(p.facts.stand.main, metric), pl.bottomEdge, lenTol(p.facts.stand.main), 'stand', st);
-  if (Math.abs(pl.top) >= 0.5) close(num(p.facts.top.main), Math.abs(pl.top), 0.051, 'top angle', st);
-
-  // Projector
-  check(p.pjHidden === (st.m !== 'pj'), 'projector section visibility', st);
-  if (st.m === 'pj') {
-    const t1 = Math.min(st.t1, st.t2), t2 = Math.max(st.t1, st.t2);
-    const parts = p.facts.throw.main.split('–').map(t => parseLen(t.trim(), metric));
-    close(parts[0], d.width * t1, lenTol(p.facts.throw.main), 'throw near', st);
-    close(parts[parts.length - 1], d.width * t2, lenTol(p.facts.throw.main), 'throw far', st);
-    close(parseLen(p.facts.lens.main, metric), st.c - d.height * st.o / 100, lenTol(p.facts.lens.main), 'lens height', st);
-    const fl = s.footLamberts(st.l, st.g, d);
-    close(num(p.facts.fl.main), fl, 0.051, 'foot-lamberts', st);
-    check(p.facts.fl.cls === (fl < s.BRIGHTNESS.cinema ? 'warn' : fl >= s.BRIGHTNESS.sdrHome ? 'good' : 'ok'), `fL grade ${p.facts.fl.cls} at ${fl.toFixed(1)}`, st);
-    const wp = p.facts.width.main.split('–').map(t => parseLen(t.trim(), metric));
-    close(wp[0], st.v / t2, lenTol(p.facts.width.main), 'image width near', st);
-  }
-
-  // The hash round-trips every input
-  for (const [k, v] of Object.entries(st)) {
-    const got = new URLSearchParams(p.hash.slice(1)).get(k);
-    check(got !== null && (isNaN(+v) ? got === String(v) : Math.abs(+got - +v) < 1e-6), `hash lost ${k}=${v} (got ${got})`, st);
-  }
 }
 
 /* ---- interactions ---------------------------------------------------- */
+const hashGet = async k => new URLSearchParams((await page.evaluate(() => location.hash)).slice(1)).get(k);
+const settle = () => page.waitForTimeout(90);        // the form debounces typing by 60 ms
+
 async function interact() {
+  // Everything a person may type is read as they meant it, or refused.
+  for (const [id, key, cases] of TYPED) {
+    await page.evaluate(h => { location.hash = h; }, hashOf(TYPING_ROOM));
+    await page.waitForTimeout(40);
+    for (const [typed, want] of cases) {
+      await page.fill('#' + id, typed); await settle();
+      const flagged = await page.$eval('#' + id, e => e.closest('.field').classList.contains('invalid') && e.getAttribute('aria-invalid') === 'true');
+      const stale = await page.$eval('#main', e => e.classList.contains('stale'));
+      if (want === null) check(flagged && stale, `typing "${typed}" in #${id} should be refused`, { typed });
+      else {
+        const got = await hashGet(key);
+        check(!flagged && !stale && Math.abs(+got - want) < 0.001, `typing "${typed}" in #${id} stored ${key}=${got}, expected ${want}`, { typed });
+      }
+    }
+  }
+
   const st = { d: 65, a: '16:9', r: '2160', v: 108, e: 42, c: 42, u: 'i', m: 'tv' };
   await page.evaluate(h => { location.hash = h; }, hashOf(st));
   await page.waitForTimeout(40);
   const fovBefore = num(await page.textContent('#out-fov'));
 
-  // Typed lengths in every accepted form give the same answer.
-  for (const [typed, inches] of [["8'6\"", 102], ['8 ft 6 in', 102], ['8ft 6', 102], ['8.5', 102], ['2.6 m', 102.36], ['260 cm', 102.36], ['102 in', 102], ['2,6 m', 102.36]]) {
-    await page.fill('#in-dist', typed); await page.waitForTimeout(120);
-    const got = new URLSearchParams((await page.evaluate(() => location.hash)).slice(1)).get('v');
-    check(Math.abs(+got - inches) < 0.01, `typing "${typed}" stored v=${got}, expected ${inches}`, { typed });
-  }
-  // Diagonal with a unit
-  for (const [typed, inches] of [['65', 65], ['65"', 65], ['65 in', 65], ['165 cm', 64.96]]) {
-    await page.fill('#in-diag', typed); await page.waitForTimeout(120);
-    const got = new URLSearchParams((await page.evaluate(() => location.hash)).slice(1)).get('d');
-    check(Math.abs(+got - inches) < 0.01, `diagonal "${typed}" stored d=${got}`, { typed });
-  }
-  // Invalid input shows a dash and names the field; recovery works.
-  await page.fill('#in-diag', 'big'); await page.waitForTimeout(120);
+  /* An invalid field: the headline loses its figure and its colour, the
+     message names the field, the rest of the page is dimmed, and a unit
+     switch leaves the unread text alone. Then it recovers. */
+  const green = await page.$eval('#sum-res', e => getComputedStyle(e).color);
+  await page.fill('#in-diag', 'big'); await settle();
   check((await page.textContent('#out-fov')) === '—', 'invalid diagonal should blank the headline', {});
-  check(await page.$eval('#in-diag', e => e.closest('.field').classList.contains('invalid')), 'invalid field flagged', {});
-  await page.fill('#in-diag', '65'); await page.waitForTimeout(120);
-  check(Math.abs(num(await page.textContent('#out-fov')) - s.hfov(s.dims(65, 16 / 9), 102.36)) < 0.06, 'recovers after invalid', {});
+  check((await page.textContent('#out-sub')) === 'Check “Diagonal”.', `the message should name the field: "${await page.textContent('#out-sub')}"`, {});
+  check(await page.$eval('#in-diag', e => e.closest('.field').classList.contains('invalid') && e.getAttribute('aria-invalid') === 'true'), 'invalid field flagged', {});
+  check((await page.$eval('#out-fov', e => getComputedStyle(e).color)) !== green, 'the blank headline is still drawn in a grade colour', {});
+  const dimmed = await page.$$eval('.results .facts, #lanes, #eye-bar, #targets, #matrix, #seats, #sizes, #side-view', els => els.map(e => {
+    let o = 1; for (let n = e; n; n = n.parentElement) o *= +getComputedStyle(n).opacity; return o;
+  }));
+  check(dimmed.every(o => o < 0.6) && dimmed.every(o => o > 0.3), `stale figures should be dimmed once: opacities ${dimmed.join(', ')}`, {});
+  check((await page.$eval('.inputs', e => getComputedStyle(e).opacity)) === '1', 'the form itself stays at full strength', {});
+  await page.click('#unit-metric'); await settle();
+  check((await page.inputValue('#in-diag')) === 'big' && (await page.inputValue('#in-dist')) === '2.74', 'a unit switch converts what parsed and leaves the rest', {});
+  for (const id of FIELDS) check(!/NaN/.test(await page.inputValue('#' + id)), `#${id} holds NaN after a unit switch`, {});
+  await page.click('#unit-imperial'); await settle();
+  check((await page.inputValue('#in-diag')) === 'big' && (await page.inputValue('#in-dist')) === '9', 'and back again', {});
+  await page.fill('#in-diag', '65'); await settle();
+  check(Math.abs(num(await page.textContent('#out-fov')) - fovBefore) < 0.06, 'recovers after invalid', {});
+  check(!(await page.$eval('#main', e => e.classList.contains('stale'))) && (await page.$eval('#in-diag', e => e.getAttribute('aria-invalid'))) === null, 'recovery clears the stale mark', {});
+
+  // Typing a decimal one key at a time never passes through an invalid state.
+  await page.fill('#in-dist', '');
+  for (const key of '8.5') {
+    await page.type('#in-dist', key); await settle();
+    check(!(await page.$eval('#main', e => e.classList.contains('stale'))), `typing 8.5 flashed invalid at "${await page.inputValue('#in-dist')}"`, {});
+  }
 
   // Unit toggle round-trips within rounding and switches every adornment.
-  await page.fill('#in-dist', '9'); await page.waitForTimeout(120);
-  await page.click('#unit-metric'); await page.waitForTimeout(120);
+  await page.fill('#in-dist', '9'); await settle();
+  await page.click('#unit-metric'); await settle();
   check((await page.textContent('#in-dist-unit')) === 'm' && (await page.textContent('#in-eye-unit')) === 'cm', 'metric adornments', {});
   check(/cm/.test(await page.textContent('#sum-size')), 'metric picture', {});
-  const vMetric = +new URLSearchParams((await page.evaluate(() => location.hash)).slice(1)).get('v');
+  const vMetric = +(await hashGet('v'));
   check(Math.abs(vMetric - 108) < 0.25, `distance after metric switch ${vMetric}`, {});
-  await page.click('#unit-imperial'); await page.waitForTimeout(120);
-  const vBack = +new URLSearchParams((await page.evaluate(() => location.hash)).slice(1)).get('v');
+  await page.click('#unit-imperial'); await settle();
+  const vBack = +(await hashGet('v'));
   check(Math.abs(vBack - 108) < 0.6, `distance after switching back ${vBack}`, {});
   check(Math.abs(num(await page.textContent('#out-fov')) - fovBefore) < 0.06, 'headline survives a unit round-trip', {});
 
   // Custom resolution and the "this screen" button.
-  await page.selectOption('#in-res', 'custom'); await page.waitForTimeout(120);
+  await page.selectOption('#in-res', 'custom'); await settle();
   check(!(await page.$eval('#custom-res', e => e.hidden)), 'custom fields appear', {});
-  await page.fill('#in-resw', '3440'); await page.fill('#in-resh', '1440'); await page.waitForTimeout(120);
-  check(/3,440 × 1,440/.test(await page.textContent('#sub-density')) || /3440 × 1440/.test(await page.textContent('#sub-density')), 'custom panel named', {});
-  await page.click('#btn-this'); await page.waitForTimeout(120);
+  await page.fill('#in-resw', '3440'); await page.fill('#in-resh', '1440'); await settle();
+  check(/3,440 × 1,440/.test(await page.textContent('#sub-density')), 'custom panel named', {});
+  await page.click('#btn-this'); await settle();
   check((await page.inputValue('#in-resw')) === '1280' && (await page.inputValue('#in-resh')) === '900', 'this-screen fills the viewport pixels', {});
-  await page.selectOption('#in-res', '2160'); await page.waitForTimeout(120);
+  await page.selectOption('#in-res', '2160'); await settle();
   check(await page.$eval('#custom-res', e => e.hidden), 'custom fields hide again', {});
 
   // Projector mode shows the section; reset restores the example.
-  await page.click('#mode-pj'); await page.waitForTimeout(120);
+  await page.click('#mode-pj'); await settle();
   check(!(await page.$eval('#pj-section', e => e.hidden)), 'projector section shows', {});
-  await page.click('#btn-reset'); await page.waitForTimeout(120);
+  await page.click('#btn-reset'); await settle();
   const after = new URLSearchParams((await page.evaluate(() => location.hash)).slice(1));
   check(after.get('d') === '65' && after.get('v') === '108' && after.get('m') === 'tv' && after.get('r') === '2160', `reset hash ${after}`, {});
 
@@ -333,10 +195,105 @@ async function interact() {
     await p2.goto(base + '#d=77&a=2.39&r=custom&rw=5120&rh=2160&v=130&u=m&m=pj'); await p2.waitForTimeout(250);
     check(errs.length === 0 && (await p2.$eval('#boot-error', e => e.hidden)), `${scheme}/${locale}: ${errs.join(' | ')}`, {});
     check(!(await p2.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)), `${scheme}/${locale}: horizontal overflow at phone width`, {});
+    if (locale === 'de-DE') {
+      /* The page prints a German reader's figures with a comma; the same
+         figures typed back must be the same figures. */
+      check(/at throw 1,2–1,5/.test(await p2.textContent('#sub-throw')), `de-DE prints "${await p2.textContent('#sub-throw')}"`, {});
+      for (const [id, typed, key, want] of [['in-throw1', '1,2', 't1', 1.2], ['in-throw2', '1,5', 't2', 1.5], ['in-gain', '1,3', 'g', 1.3], ['in-lumens', '2.000', 'l', 2000], ['in-dist', '3,66', 'v', 144.094]]) {
+        await p2.fill('#' + id, typed); await p2.waitForTimeout(90);
+        const got = new URLSearchParams((await p2.evaluate(() => location.hash)).slice(1)).get(key);
+        check(Math.abs(+got - want) < 0.001, `de-DE: typing "${typed}" in #${id} stored ${key}=${got}, expected ${want}`, {});
+      }
+      check(/at throw 1,2–1,5/.test(await p2.textContent('#sub-throw')) && !(await p2.$eval('#main', e => e.classList.contains('stale'))), 'de-DE: the figures typed back are the figures printed', {});
+    }
     await c2.close();
   }
 }
 await interact();
+
+/* ---- what only a layout engine can answer ---------------------------- */
+async function layout() {
+  /* The eye-bar label and the lanes marker label stay inside their charts,
+     and axis figures do not run into each other, at every width and
+     wherever the marker falls. */
+  const SEATS = quick ? [44, 84, 108] : [12, 44, 60, 72, 84, 108, 116, 150, 300];
+  for (const scheme of quick ? ['light'] : ['light', 'dark']) for (const width of quick ? [390, 768, 1280] : [320, 390, 660, 768, 900, 1060, 1280]) {
+    const c2 = await browser.newContext({ colorScheme: scheme, locale: 'en-US', viewport: { width, height: 900 } });
+    const p2 = await c2.newPage(); const errs = [];
+    p2.on('pageerror', e => errs.push(e.message));
+    p2.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
+    await p2.goto(base); await p2.waitForTimeout(150);
+    for (const v of SEATS) {
+      const where = { scheme, width, v };
+      await p2.evaluate(h => { location.hash = h; }, `#d=65&a=16:9&r=2160&v=${v}&u=i&m=tv`);
+      await p2.waitForTimeout(40);
+      const m = await p2.evaluate(() => {
+        const inside = sel => {
+          const t = document.querySelector(sel), a = t.getBoundingClientRect(), b = t.ownerSVGElement.getBoundingClientRect();
+          return { text: t.textContent, left: a.left - b.left, right: b.right - a.right };
+        };
+        const ticks = [...document.querySelectorAll('#eye-bar .eye-axis text')].map(t => t.getBoundingClientRect()).map(r => [r.left, r.right]);
+        const lanes = [...document.querySelectorAll('#lanes text.tick')].map(t => t.getBoundingClientRect()).map(r => [r.left, r.right]);
+        return { eye: inside('#eye-bar .eye-pct'), you: inside('#lanes .you-lbl'), ticks, lanes,
+          overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth };
+      });
+      check(m.eye.left >= -0.5 && m.eye.right >= -0.5, `eye-bar label "${m.eye.text}" is cut off (${m.eye.left.toFixed(1)} px left, ${m.eye.right.toFixed(1)} px right to spare)`, where);
+      check(m.you.left >= -0.5 && m.you.right >= -0.5, `lanes marker label "${m.you.text}" is cut off`, where);
+      check(m.ticks.every(([lo], i) => i === 0 || lo >= m.ticks[i - 1][1] + 1), 'eye-bar axis figures overlap', where);
+      check(m.ticks.length >= 8, `only ${m.ticks.length} eye-bar axis figures`, where);
+      check(m.lanes.every(([lo], i) => i === 0 || lo >= m.lanes[i - 1][1]), 'lanes axis figures overlap', where);
+      check(!m.overflow, 'the page scrolls sideways', where);
+    }
+    // Nine facts in two columns: the ninth takes the whole row, leaving no empty cell.
+    const facts = await p2.$eval('.results .facts', e => { const kids = [...e.children].map(k => k.getBoundingClientRect()); const box = e.getBoundingClientRect();
+      return { last: kids.at(-1).width, first: kids[0].width, box: box.width }; });
+    check(facts.last >= facts.box - 4, `the last fact is ${facts.last}px of a ${facts.box}px grid`, { scheme, width });
+    check(errs.length === 0, `errors: ${errs.join(' | ')}`, { scheme, width });
+    await c2.close();
+  }
+
+  /* A touch has no hover to end: a tapped tooltip stays up until the next
+     tap somewhere else. */
+  const touch = await browser.newContext({ locale: 'en-US', viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  const tp = await touch.newPage();
+  await tp.goto(base); await tp.waitForTimeout(200);
+  for (const [chart, tip] of [['#eye-bar', '#eye-tip'], ['#lanes', '#tip']]) {
+    await tp.locator(`${chart} rect.hit`).first().scrollIntoViewIfNeeded();
+    await tp.tap(`${chart} rect.hit >> nth=0`); await tp.waitForTimeout(150);
+    check(!(await tp.$eval(tip, e => e.hidden)) && (await tp.textContent(tip)).length > 10, `${tip} should still be showing after a tap`, {});
+    const box = await tp.$eval(tip, e => { const r = e.getBoundingClientRect(); return { left: r.left, right: innerWidth - r.right }; });
+    check(box.left >= 0 && box.right >= 0, `${tip} leaves the screen`, {});
+    await tp.tap('h1', { force: true }).catch(() => tp.tap('header')); await tp.waitForTimeout(100);
+    check(await tp.$eval(tip, e => e.hidden), `${tip} should close on a tap elsewhere`, {});
+  }
+  await touch.close();
+
+  /* The page admits it when its script did not start: a file that never
+     arrived, and an import the other file does not export. */
+  const breakages = [
+    ['app.js does not arrive', r => r.request().url().includes('/app.js') ? r.abort() : r.continue()],
+    ['screen.js does not arrive', r => r.request().url().includes('/screen.js') ? r.abort() : r.continue()],
+    ['app.js imports a name screen.js lacks', async r => {
+      if (!r.request().url().includes('/app.js')) return r.continue();
+      const body = fs.readFileSync(path.join(dist, 'app.js'), 'utf8').replace('import {', 'import { notExported,');
+      return r.fulfill({ contentType: 'text/javascript', body });
+    }],
+    ['app.js throws while booting', async r => {
+      if (!r.request().url().includes('/app.js')) return r.continue();
+      const body = fs.readFileSync(path.join(dist, 'app.js'), 'utf8').replace('function boot() {', 'function boot() { null.x;');
+      return r.fulfill({ contentType: 'text/javascript', body });
+    }],
+  ];
+  for (const [name, handler] of breakages) {
+    const c2 = await browser.newContext({ locale: 'en-US' });
+    const p2 = await c2.newPage();
+    await p2.route('**/*.js*', handler);
+    await p2.goto(base); await p2.waitForTimeout(300);
+    check(await p2.$eval('#boot-error', e => !e.hidden && e.getBoundingClientRect().height > 0), `no boot-error note when ${name}`, {});
+    await c2.close();
+  }
+}
+await layout();
 
 await browser.close();
 server.close();

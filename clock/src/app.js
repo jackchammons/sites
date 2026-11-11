@@ -1,15 +1,28 @@
 /* Now — the live half of the page.
  *
- * A classic script, no modules and no imports: everything here reads the
- * device clock and the browser's own time zone database through Intl. The
- * build renders the page shell and the city rows; this fills in every number
- * on it and keeps them moving.
+ * Everything here reads the device clock and the browser's own time zone
+ * database through Intl. The build renders the page shell and the city rows;
+ * this fills in every number on it and keeps them moving. The arithmetic
+ * behind the numbers is in time.js, where the tests can reach it.
  */
+import {
+  pad, plural, isoWeek, dayOfYear, daysInYear, daysLeftInMonth, daysLeftInYear, progress,
+  offsetLabel, isoLocal, relativeOffset, seasonNote, wall, offsetMinutes, sameZone, dayBand
+} from './time.js';
+
 (function () {
   'use strict';
 
-  var $ = function (id) { return document.getElementById(id); };
-  var pad = function (n) { return n < 10 ? '0' + n : String(n); };
+  /* A slot the markup does not have is a broken page, not something to paint
+     around. Every miss is noted here and the boot at the bottom refuses to
+     start on any, so the visitor is told instead of shown a dash that never
+     fills in. */
+  var missing = [];
+  var $ = function (id) {
+    var el = document.getElementById(id);
+    if (!el) missing.push(id);
+    return el;
+  };
   /* Not every tag a browser reports is one Intl accepts: a machine with
      LANG=en_US@posix hands over "en-US@posix", which throws a RangeError and
      would otherwise take the whole clock down. Use the first tag that
@@ -21,8 +34,9 @@
     }
     return 'en-US';
   })();
-  var reduceMotion = window.matchMedia
-    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Asked each time rather than once, so a change to the setting takes effect.
+  var motion = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  function reducedMotion() { return !!(motion && motion.matches); }
 
   /* ---- preferences -------------------------------------------------- */
   /* localStorage can throw outright in a locked-down browser, so every
@@ -58,49 +72,18 @@
     catch (e) { return 'UTC'; }
   })();
 
-  var partsCache = {};
-  function partsFmt(tz) {
-    if (!partsCache[tz]) {
-      partsCache[tz] = new Intl.DateTimeFormat('en-US', {
-        timeZone: tz, hourCycle: 'h23',
-        year: 'numeric', month: '2-digit', day: '2-digit',
-        hour: '2-digit', minute: '2-digit', second: '2-digit'
-      });
-    }
-    return partsCache[tz];
-  }
-
-  /* Wall-clock fields for an instant in some zone. Reading them back through
-     Date.UTC is also how the offset is derived below, which avoids depending
-     on `timeZoneName: 'shortOffset'` being available. */
-  function wall(date, tz) {
-    var p = {};
-    var list = partsFmt(tz).formatToParts(date);
-    for (var i = 0; i < list.length; i++) p[list[i].type] = list[i].value;
-    var hour = +p.hour;
-    if (hour === 24) hour = 0;           // some engines emit 24 for midnight
-    return {
-      year: +p.year, month: +p.month, day: +p.day,
-      hour: hour, minute: +p.minute, second: +p.second
-    };
-  }
-
-  function offsetMinutes(date, tz) {
-    var w = wall(date, tz);
-    var asUTC = Date.UTC(w.year, w.month - 1, w.day, w.hour, w.minute, w.second);
-    return Math.round((asUTC - Math.floor(date.getTime() / 1000) * 1000) / 60000);
-  }
-
-  function offsetLabel(mins) {
-    var sign = mins < 0 ? '−' : '+';       // real minus sign, not a hyphen
-    var a = Math.abs(mins);
-    return 'UTC' + sign + pad(Math.floor(a / 60)) + ':' + pad(a % 60);
-  }
-
-  function longZoneName(date, tz) {
+  /* Built once: constructing a formatter costs far more than using it, and
+     paint() runs every second. */
+  var fmtZoneName = (function () {
     try {
-      var list = new Intl.DateTimeFormat(locale, { timeZone: tz, timeZoneName: 'long' })
-        .formatToParts(date);
+      return new Intl.DateTimeFormat(locale, { timeZone: localZone, timeZoneName: 'long' });
+    } catch (e) { return null; }
+  })();
+
+  function longZoneName(date) {
+    if (!fmtZoneName) return '';
+    try {
+      var list = fmtZoneName.formatToParts(date);
       for (var i = 0; i < list.length; i++) {
         if (list[i].type === 'timeZoneName') return list[i].value;
       }
@@ -108,56 +91,39 @@
     return '';
   }
 
-  /* ---- calendar helpers ---------------------------------------------- */
-  var DAY = 86400000;
-  var startOfDay = function (d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); };
-
-  function isoWeek(d) {
-    // Thursday of the current ISO week decides which year the week belongs to.
-    var t = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-    var dow = (t.getDay() + 6) % 7;                  // Monday = 0
-    t.setDate(t.getDate() - dow + 3);
-    var firstThursday = new Date(t.getFullYear(), 0, 4);
-    var fdow = (firstThursday.getDay() + 6) % 7;
-    firstThursday.setDate(firstThursday.getDate() - fdow + 3);
-    var week = 1 + Math.round((t - firstThursday) / (7 * DAY));
-    return { year: t.getFullYear(), week: week };
-  }
-
-  function startOfWeek(d) {
-    var t = startOfDay(d);
-    t.setDate(t.getDate() - ((t.getDay() + 6) % 7));
-    return t;
-  }
-
-  /* Spans are measured between local midnights rather than in fixed 24-hour
-     blocks, so a 23- or 25-hour DST day still reads 0% at midnight and 100%
-     at the next one. */
-  function span(from, to, now) {
-    var total = to - from;
-    return { pct: Math.min(1, Math.max(0, (now - from) / total)), left: to - now };
-  }
-
-  function plural(n, word) { return n + ' ' + word + (n === 1 ? '' : 's'); }
-
   /* ---- DOM ------------------------------------------------------------ */
   var elTime = $('time-hm'), elSec = $('time-sec'), elSuffix = $('time-suffix');
   var elDate = $('date'), elZone = $('zone');
   var hands = { hour: $('hand-hour'), minute: $('hand-minute'), second: $('hand-second') };
+  /* One slot per key, looked up by prefix. build.mjs renders the slots from
+     its own lists; verify.mjs reads these two and the prefixes used with each,
+     and checks every prefix-key id against the markup in both directions. Keep
+     them as plain literals so it can. */
+  var FACT_KEYS = ['iso', 'utc', 'unix', 'tz', 'offset', 'week', 'doy', 'quarter'];
+  var BAR_KEYS = ['day', 'week', 'month', 'year'];
   var facts = {};
-  ['iso', 'utc', 'unix', 'tz', 'offset', 'week', 'doy', 'quarter'].forEach(function (k) {
+  FACT_KEYS.forEach(function (k) {
     facts[k] = { value: $('fact-' + k), note: $('note-' + k) };
   });
-  var bars = ['day', 'week', 'month', 'year'].map(function (k) {
+  var bars = BAR_KEYS.map(function (k) {
     return { key: k, pct: $('pct-' + k), fill: $('fill-' + k), rest: $('rest-' + k),
              track: $('track-' + k) };
   });
   var zoneRows = [].slice.call(document.querySelectorAll('.zones li'));
+  /* The viewer's own row, decided once. The names are compared as the browser
+     files them, not as strings: Chromium calls India Asia/Calcutta and the
+     row is configured as Asia/Kolkata. */
+  var zoneHere = zoneRows.map(function (row) { return sameZone(row.dataset.tz, localZone); });
 
   var fmtDate = new Intl.DateTimeFormat(locale,
     { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  // The sentence around it is English, so the month name is too — a locale
+  // month dropped mid-sentence reads as a glitch.
+  var fmtMonth = new Intl.DateTimeFormat('en-US', { month: 'long' });
 
-  function setText(el, text) { if (el && el.textContent !== text) el.textContent = text; }
+  /* No allowance for a missing element: a null here throws, and the loop
+     turns that into the boot-error note rather than a slot left blank. */
+  function setText(el, text) { if (el.textContent !== text) el.textContent = text; }
 
   /* ---- painting ------------------------------------------------------- */
   function paint(now) {
@@ -173,15 +139,11 @@
     setText(elDate, fmtDate.format(now));
 
     var offMins = -now.getTimezoneOffset();
-    var long = longZoneName(now, localZone);
+    var long = longZoneName(now);
     setText(elZone, localZone + (long ? ' · ' + long : '') + ' · ' + offsetLabel(offMins));
 
     /* facts */
-    var offForIso = (offMins < 0 ? '-' : '+')
-      + pad(Math.floor(Math.abs(offMins) / 60)) + ':' + pad(Math.abs(offMins) % 60);
-    setText(facts.iso.value,
-      now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate())
-      + 'T' + pad(h) + ':' + pad(m) + ':' + pad(s) + offForIso);
+    setText(facts.iso.value, isoLocal(now));
     setText(facts.iso.note, 'sortable, and unambiguous anywhere');
     setText(facts.utc.value, now.toISOString().slice(11, 19) + 'Z');
     setText(facts.utc.note, now.toISOString().slice(0, 10));
@@ -191,65 +153,50 @@
     setText(facts.tz.note, long || 'as reported by your browser');
     setText(facts.offset.value, offsetLabel(offMins));
 
-    // A zone is on summer time now if its offset differs from its January one
-    // (or its July one, south of the equator).
     var jan = offsetMinutes(new Date(now.getFullYear(), 0, 1), localZone);
     var jul = offsetMinutes(new Date(now.getFullYear(), 6, 1), localZone);
-    setText(facts.offset.note, jan === jul
-      ? 'no seasonal change here'
-      : (offMins === Math.max(jan, jul) ? 'summer time in effect' : 'standard time'));
+    setText(facts.offset.note, seasonNote(offMins, jan, jul));
 
     var wk = isoWeek(now);
     setText(facts.week.value, wk.year + '-W' + pad(wk.week));
     setText(facts.week.note, 'day ' + (((now.getDay() + 6) % 7) + 1) + ' of 7');
 
-    var yearStart = new Date(now.getFullYear(), 0, 1);
-    var doy = Math.round((startOfDay(now) - yearStart) / DAY) + 1;
-    var yearEnd = new Date(now.getFullYear() + 1, 0, 1);
-    var daysInYear = Math.round((yearEnd - yearStart) / DAY);
-    setText(facts.doy.value, doy + ' of ' + daysInYear);
-    // Whole days after today, so this cannot contradict the year bar below,
-    // which counts the remainder of today too.
-    setText(facts.doy.note, plural(daysInYear - doy, 'day') + ' after today');
+    var doy = dayOfYear(now);
+    var inYear = daysInYear(now.getFullYear());
+    setText(facts.doy.value, doy + ' of ' + inYear);
+    // Whole days after today. The year bar below counts today as well, so it
+    // reads exactly one more than this at every moment of the day.
+    setText(facts.doy.note, plural(inYear - doy, 'day') + ' after today');
 
     var q = Math.floor(now.getMonth() / 3) + 1;
     setText(facts.quarter.value, 'Q' + q + ' ' + now.getFullYear());
     setText(facts.quarter.note, ['Jan–Mar', 'Apr–Jun', 'Jul–Sep', 'Oct–Dec'][q - 1]);
 
     /* progress */
-    var monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-    var weekStart = startOfWeek(now);
-    var ranges = {
-      day: span(startOfDay(now), new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1), now),
-      week: span(weekStart, new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate() + 7), now),
-      month: span(monthStart, new Date(now.getFullYear(), now.getMonth() + 1, 1), now),
-      year: span(yearStart, yearEnd, now)
-    };
-    // The sentence around it is English, so the month name is too — a locale
-    // month dropped mid-sentence reads as a glitch.
-    var monthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(now);
+    var ranges = progress(now);
     bars.forEach(function (bar) {
       var r = ranges[bar.key];
       var pct = r.pct * 100;
       setText(bar.pct, pct.toFixed(1) + '%');
       bar.fill.style.width = pct.toFixed(2) + '%';
-      if (bar.track) bar.track.setAttribute('aria-valuenow', pct.toFixed(0));
+      bar.track.setAttribute('aria-valuenow', pct.toFixed(0));
       var mins = Math.floor(r.left / 60000);
       var rest;
       if (bar.key === 'day') {
         rest = Math.floor(mins / 60) + 'h ' + pad(mins % 60) + 'm left today';
       } else if (bar.key === 'week') {
         rest = Math.floor(mins / 1440) + 'd ' + (Math.floor(mins / 60) % 24) + 'h left this week';
+      } else if (bar.key === 'month') {
+        rest = plural(daysLeftInMonth(now), 'day') + ' left in ' + fmtMonth.format(now);
       } else {
-        rest = plural(Math.ceil(r.left / DAY), 'day') + ' left in '
-          + (bar.key === 'month' ? monthName : String(now.getFullYear()));
+        rest = plural(daysLeftInYear(now), 'day') + ' left in ' + now.getFullYear();
       }
       setText(bar.rest, rest);
     });
 
     /* world clocks */
     var localDay = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
-    zoneRows.forEach(function (row) {
+    zoneRows.forEach(function (row, i) {
       var tz = row.dataset.tz;
       var w, off;
       try { w = wall(now, tz); off = offsetMinutes(now, tz); }
@@ -262,22 +209,16 @@
       setText(suffix, prefs.h12 ? (w.hour < 12 ? 'am' : 'pm') : '');
       suffix.hidden = !prefs.h12;
 
-      var delta = (off - offMins) / 60;
-      var rel = delta === 0 ? 'same time'
-        : (delta > 0 ? '+' : '−') + (Math.abs(delta) % 1 ? Math.abs(delta).toFixed(1) : Math.abs(delta)) + 'h';
-      setText(row.querySelector('.off'), rel);
+      setText(row.querySelector('.off'), relativeOffset(off - offMins));
 
       var thereDay = w.year * 10000 + w.month * 100 + w.day;
       setText(row.querySelector('.dayrel'),
         thereDay === localDay ? '' : (thereDay > localDay ? 'tomorrow' : 'yesterday'));
 
-      // Rough daylight banding, from the local hour alone — a hint, not a
-      // sunrise table.
       var dot = row.querySelector('.dot');
-      var band = w.hour >= 7 && w.hour < 18 ? 'day'
-        : (w.hour >= 18 && w.hour < 21) || (w.hour >= 5 && w.hour < 7) ? 'dusk' : 'night';
+      var band = dayBand(w.hour);
       if (dot.className !== 'dot ' + band) dot.className = 'dot ' + band;
-      row.classList.toggle('here', tz === localZone);
+      row.classList.toggle('here', zoneHere[i]);
     });
 
     document.title = (prefs.h12 ? String(display) : pad(display)) + ':' + pad(m)
@@ -287,8 +228,10 @@
     for (var i = 0; i < pending.length; i++) pending[i].classList.remove('pending');
   }
 
+  /* The hands sweep between seconds only while the frame loop below is
+     running; stepped from the timer they land exactly on the second. */
   function turnHands(now) {
-    var ms = reduceMotion ? 0 : now.getMilliseconds();
+    var ms = sweeping ? now.getMilliseconds() : 0;
     var s = now.getSeconds() + ms / 1000;
     var m = now.getMinutes() + s / 60;
     var h = (now.getHours() % 12) + m / 60;
@@ -298,53 +241,92 @@
   }
 
   /* ---- controls -------------------------------------------------------- */
+  /* Each button keeps its label and says whether it is on through
+     aria-pressed, so "12-hour, pressed" means the same thing to a screen
+     reader as the highlighted pill does on screen. */
   function syncControls() {
-    var f = $('toggle-format'), c = $('toggle-seconds');
-    f.setAttribute('aria-pressed', prefs.h12 ? 'true' : 'false');
-    f.textContent = prefs.h12 ? '12-hour' : '24-hour';
-    c.setAttribute('aria-pressed', prefs.seconds ? 'true' : 'false');
+    $('toggle-format').setAttribute('aria-pressed', prefs.h12 ? 'true' : 'false');
+    $('toggle-seconds').setAttribute('aria-pressed', prefs.seconds ? 'true' : 'false');
   }
 
-  $('toggle-format').addEventListener('click', function () {
-    prefs.h12 = !prefs.h12;
-    store.set('h12', prefs.h12);
-    syncControls();
-    paint(new Date());
-  });
-  $('toggle-seconds').addEventListener('click', function () {
-    prefs.seconds = !prefs.seconds;
-    store.set('seconds', prefs.seconds);
-    syncControls();
-    paint(new Date());
-  });
+  function bindControls() {
+    $('toggle-format').addEventListener('click', function () {
+      prefs.h12 = !prefs.h12;
+      store.set('h12', prefs.h12);
+      syncControls();
+      paint(new Date());
+    });
+    $('toggle-seconds').addEventListener('click', function () {
+      prefs.seconds = !prefs.seconds;
+      store.set('seconds', prefs.seconds);
+      syncControls();
+      paint(new Date());
+    });
+  }
 
   /* ---- loop ------------------------------------------------------------ */
+  var running = true;
+  var timer = 0;
+  var sweeping = false;
+
   /* Every live figure starts hidden, so a script that dies leaves a page of
      nothing rather than an obviously broken clock. Say so instead. */
   function fail(err) {
     running = false;
+    clearTimeout(timer);
     var note = $('boot-error');
     if (note) note.hidden = false;
     if (window.console && console.error) console.error('clock stopped:', err);
   }
 
-  var running = true;
-  var lastSecond = -1;
-  function frame() {
+  /* The figures change once a second, so they are painted from a timer aimed
+     at the next second boundary. A timer keeps firing in a background tab,
+     throttled but never stopped, and that is what keeps the time in the tab
+     title right while the page itself is out of sight. Animation frames stop
+     there altogether. */
+  function tick() {
     if (!running) return;
     try {
       var now = new Date();
-      turnHands(now);
-      var s = Math.floor(now.getTime() / 1000);
-      if (s !== lastSecond) { lastSecond = s; paint(now); }
+      paint(now);
+      if (!sweeping) turnHands(now);
     } catch (e) { fail(e); return; }
-    requestAnimationFrame(frame);
+    timer = setTimeout(tick, 1000 - (Date.now() % 1000));
+  }
+
+  /* Animation frames are for the sweep of the hands and nothing else, and
+     only for a viewer who has not asked for less motion. */
+  function sweep() {
+    if (!running || reducedMotion()) { sweeping = false; return; }
+    try { turnHands(new Date()); } catch (e) { fail(e); return; }
+    requestAnimationFrame(sweep);
+  }
+
+  function startSweep() {
+    if (sweeping || !running || reducedMotion()) return;
+    sweeping = true;
+    requestAnimationFrame(sweep);
+  }
+
+  // A throttled background tab can be most of a minute behind when it returns.
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden || !running) return;
+    clearTimeout(timer);
+    tick();
+  });
+
+  // Turning the setting off restarts the sweep; turning it on stops it above.
+  if (motion) {
+    if (motion.addEventListener) motion.addEventListener('change', startSweep);
+    else if (motion.addListener) motion.addListener(startSweep);
   }
 
   try {
+    if (missing.length) throw new Error('the page has no #' + missing.join(', #'));
     $('controls').hidden = false;
+    bindControls();
     syncControls();
-    paint(new Date());
-    requestAnimationFrame(frame);
+    tick();
+    startSweep();
   } catch (e) { fail(e); }
 })();

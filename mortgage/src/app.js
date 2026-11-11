@@ -3,9 +3,11 @@
  * Reads the form, runs src/mortgage.js (the same module the tests and the
  * deploy gate use), and writes every figure, the balance chart and the
  * schedule. State round-trips through the URL hash so a set of numbers can
- * be shared; the hash never reaches a server.
+ * be shared; the hash never reaches a server. How a typed number, a typed
+ * month and that hash are read lives in src/inputs.js, tested the same way.
  */
 import { describe, amortize, monthlyBreakdown, byYear, originalLoan } from './mortgage.js';
+import { parseAmount, parseMonth, convertUnit, downFromPct, downPctOf, defaultState, encodeState, decodeState } from './inputs.js';
 
 const $ = id => document.getElementById(id);
 
@@ -40,15 +42,36 @@ function boot() {
     hoa: $('in-hoa'), pmi: $('in-pmi'), extra: $('in-extra'), every: $('in-every'),
     taxUnit: $('in-tax-unit'), insUnit: $('in-ins-unit'), escrow: $('in-escrow'), escrowUnit: $('in-escrow-unit'),
   };
+  const TYPED = [els.price, els.down, els.downpct, els.balance, els.rate, els.start, els.maturity, els.next,
+    els.tax, els.ins, els.escrow, els.hoa, els.pmi, els.extra];
+  // What a share link may ask for: the options the two selects offer.
+  const optionsOf = sel => [...sel.options].map(o => +o.value);
+  const CHOICES = { terms: optionsOf(els.years), cadences: optionsOf(els.every) };
 
-  /* Accept what people type: "$750,000", "750k", "1.2m", "6.25%". */
-  const parse = s => {
-    const t = String(s).trim().toLowerCase().replace(/[$,%\s_]/g, '');
-    const m = t.match(/^(-?\d*\.?\d+)([km]?)$/);
-    if (!m) return NaN;
-    return +m[1] * (m[2] === 'k' ? 1e3 : m[2] === 'm' ? 1e6 : 1);
+  /* Reading a field. Dollar fields take "750.000" as thousands; a rate or a
+     percentage never does (6.125 is a rate). Property tax is whichever its
+     unit says. */
+  const MONEY = new Set([els.price, els.down, els.balance, els.ins, els.escrow, els.hoa, els.extra]);
+  const UNIT_SELECT = new Map([[els.tax, els.taxUnit], [els.ins, els.insUnit], [els.escrow, els.escrowUnit]]);
+  // The unit the number beside each select is in; it trails the select for
+  // the moment between the viewer picking a unit and the number converting.
+  const unit = new Map();
+  const isMoney = el => el === els.tax ? unit.get(els.taxUnit) !== 'pct' : MONEY.has(el);
+  /* A figure the page works out for a field (a unit conversion, a value from
+     a link) is shown rounded, to cents or to six decimals of a percentage,
+     and kept exact here for as long as the text is the text the page wrote,
+     so the monthly figure does not move by a cent until the viewer edits it. */
+  const exact = new Map();
+  const num = el => {
+    const kept = exact.get(el);
+    if (kept && kept.text === el.value) return kept.value;
+    return parseAmount(el.value, { money: isMoney(el) });
   };
-  const num = el => { const x = parse(el.value); return Number.isFinite(x) && x >= 0 ? x : NaN; };
+  const put = (el, value) => {
+    const text = String(+value.toFixed(unit.get(UNIT_SELECT.get(el)) === 'pct' ? 6 : 2));
+    el.value = text;
+    if (+text === value) exact.delete(el); else exact.set(el, { text, value });
+  };
 
   const nextMonth = () => {
     const d = new Date();
@@ -56,151 +79,190 @@ function boot() {
   };
   const ym = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
   const monthFrom = el => {
-    const m = /^(\d{4})-(\d{2})$/.exec(el.value);
-    return m ? new Date(+m[1], +m[2] - 1, 1) : null;
+    const m = parseMonth(el.value);
+    return m ? new Date(+m.slice(0, 4), +m.slice(5) - 1, 1) : null;
   };
   const monthsBetween = (a, b) => (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
-  // Where the schedule starts: the first payment of a new loan, the next
-  // payment of one under way.
-  const startDate = () => monthFrom(progressMode ? els.next : els.start) || nextMonth();
   const monthOf = (n, start) => new Date(start.getFullYear(), start.getMonth() + n - 1, 1);
+  // Where the month is a text box, tidy what was typed ("3/2025") into the
+  // form the page writes itself once the viewer leaves the field.
+  for (const el of [els.start, els.maturity, els.next]) {
+    el.addEventListener('change', () => {
+      const m = parseMonth(el.value);
+      if (m && el.value !== m) el.value = m;
+    });
+  }
 
   /* ---- state <-> form <-> hash ------------------------------------- */
-  const KEYS = { price: 'p', down: 'd', balance: 'b', next: 'nx', rate: 'r', years: 'y', tax: 't', taxUnit: 'tu', ins: 'i', insUnit: 'iu', escrow: 'w', escrowUnit: 'wu', hoa: 'h', pmi: 'm', extra: 'x', every: 'e', start: 's' };
   let escrowMode = false;
   let progressMode = false;
+  // Which of the two down-payment fields the viewer typed last: 'pct' or 'usd'.
+  let downBy = 'pct';
 
+  /* Dollar fields are written with put(), never as the bare number: a link
+     can carry 85.125, and those digits in a money field would read back as
+     eighty-five thousand. */
   function fill(st) {
-    els.price.value = st.price;
-    els.down.value = st.down;
-    els.downpct.value = st.price > 0 ? +(st.down / st.price * 100).toFixed(2) : 0;
-    els.rate.value = st.rate;
-    if (![...els.years.options].some(o => +o.value === +st.years)) {
-      els.years.add(new Option(`${st.years} years`, st.years));
+    exact.clear();
+    put(els.price, st.price);
+    downBy = st.down != null ? 'usd' : 'pct';
+    if (downBy === 'usd') {
+      put(els.down, st.down);
+      els.downpct.value = downPctOf(st.down, st.price);
+    } else {
+      els.downpct.value = st.downPct;
+      els.down.value = downFromPct(st.price, st.downPct);
     }
+    els.rate.value = st.rate;
     els.years.value = String(st.years);
-    els.tax.value = st.taxRate;
-    els.taxUnit.value = st.taxUnit;
-    els.ins.value = st.insurance;
-    els.insUnit.value = st.insUnit;
-    els.escrow.value = st.escrow;
-    els.escrowUnit.value = st.escrowUnit;
-    setMode(!!st.escrowMode);
-    els.hoa.value = st.hoa;
+    for (const [el, u, x] of [[els.tax, st.taxUnit, st.taxRate], [els.ins, st.insUnit, st.insurance], [els.escrow, st.escrowUnit, st.escrow ?? 0]]) {
+      UNIT_SELECT.get(el).value = u;
+      unit.set(UNIT_SELECT.get(el), u);
+      put(el, x);
+    }
+    put(els.hoa, st.hoa);
     els.pmi.value = st.pmiRate;
-    els.extra.value = st.extra;
-    els.every.value = String([...els.every.options].some(o => +o.value === +st.extraEvery) ? st.extraEvery : 1);
-    els.start.value = st.start || ym(nextMonth());
-    els.balance.value = st.balance ?? '';
-    els.next.value = st.next || ym(nextMonth());
+    put(els.extra, st.extra);
+    els.every.value = String(st.extraEvery);
+    els.start.value = st.start;
+    if (st.balance == null) els.balance.value = ''; else put(els.balance, st.balance);
+    els.next.value = st.next;
     syncMaturity();
     setLoanMode(!!st.progressMode);
+    // After the loan mode, which decides what a tax percentage is taken of.
+    setMode(!!st.escrowMode, st.escrow == null);
   }
 
-  function fromDefaults() {
-    return { ...DEFAULTS, down: Math.round(DEFAULTS.price * DEFAULTS.downPct / 100) };
-  }
+  const fromDefaults = () => defaultState(DEFAULTS, ym(nextMonth()));
+  const fromHash = () => decodeState(location.hash, DEFAULTS, ym(nextMonth()), CHOICES);
 
-  function fromHash() {
-    const q = new URLSearchParams(location.hash.slice(1));
-    if (![...q.keys()].length) return null;
-    const st = fromDefaults();
-    const map = { p: 'price', d: 'down', r: 'rate', y: 'years', t: 'taxRate', i: 'insurance', h: 'hoa', m: 'pmiRate', x: 'extra' };
-    for (const [k, f] of Object.entries(map)) {
-      const x = parse(q.get(k) ?? '');
-      if (Number.isFinite(x) && x >= 0) st[f] = x;
-    }
-    const e = parse(q.get('e') ?? '');
-    if (Number.isFinite(e) && e >= 0) st.extraEvery = e;
-    const w = parse(q.get('w') ?? '');
-    if (Number.isFinite(w) && w >= 0) st.escrow = w;
-    for (const [k, f, ok] of [['tu', 'taxUnit', ['pct', 'yr', 'mo']], ['iu', 'insUnit', ['yr', 'mo']], ['wu', 'escrowUnit', ['mo', 'yr']]]) {
-      if (ok.includes(q.get(k))) st[f] = q.get(k);
-    }
-    st.escrowMode = q.get('em') === '1';
-    const s = q.get('s');
-    if (s && /^\d{4}-\d{2}$/.test(s)) st.start = s;
-    const b = parse(q.get('b') ?? '');
-    if (Number.isFinite(b) && b >= 0) st.balance = b;
-    const nx = q.get('nx');
-    if (nx && /^\d{4}-\d{2}$/.test(nx)) st.next = nx;
-    st.progressMode = q.get('lm') === '1';
-    return st;
+  /* The form as a state. A field that does not read as a number is NaN and
+     a month that does not read is null; the link leaves both out. */
+  function formState() {
+    const month = el => parseMonth(el.value);
+    return {
+      price: num(els.price),
+      down: downBy === 'usd' ? num(els.down) : null,
+      downPct: downBy === 'pct' ? num(els.downpct) : null,
+      balance: num(els.balance), rate: num(els.rate), years: +els.years.value,
+      start: month(els.start), next: month(els.next),
+      taxRate: num(els.tax), taxUnit: els.taxUnit.value,
+      insurance: num(els.ins), insUnit: els.insUnit.value,
+      escrow: num(els.escrow), escrowUnit: els.escrowUnit.value, escrowMode,
+      hoa: num(els.hoa), pmiRate: num(els.pmi), extra: num(els.extra), extraEvery: +els.every.value,
+      progressMode,
+    };
   }
 
   function writeHash() {
-    const q = new URLSearchParams();
-    for (const [k, short] of Object.entries(KEYS)) q.set(short, els[k].value.trim().replace(/[$,\s]/g, ''));
-    if (escrowMode) q.set('em', '1');
-    if (progressMode) q.set('lm', '1');
-    history.replaceState(null, '', '#' + q.toString());
+    const q = encodeState(formState(), DEFAULTS, ym(nextMonth()));
+    history.replaceState(null, '', q ? '#' + q : location.pathname + location.search);
   }
 
   /* ---- down payment: $ and % stay in step --------------------------- */
+  /* Whichever of the two the viewer typed is the fact and the other follows
+     it. A typed percentage sets the dollars, rounded up so 20% is never a
+     dollar short of 20%; typed dollars set the percentage and are never
+     rewritten from it, since the percentage is only shown to two places. */
   els.down.addEventListener('input', () => {
+    downBy = 'usd';
     const p = num(els.price), d = num(els.down);
-    if (p > 0 && Number.isFinite(d)) els.downpct.value = +(d / p * 100).toFixed(2);
+    if (Number.isFinite(p) && Number.isFinite(d)) els.downpct.value = downPctOf(d, p);
   });
   els.downpct.addEventListener('input', () => {
+    downBy = 'pct';
     const p = num(els.price), pc = num(els.downpct);
-    if (Number.isFinite(p) && Number.isFinite(pc)) els.down.value = Math.round(p * Math.min(pc, 100) / 100);
+    if (pc > 100) els.downpct.value = 100;
+    if (Number.isFinite(p) && Number.isFinite(pc)) els.down.value = downFromPct(p, pc);
   });
-  // Changing the price keeps the percentage, which is how people think about it.
   els.price.addEventListener('input', () => {
-    const p = num(els.price), pc = num(els.downpct);
-    if (Number.isFinite(p) && Number.isFinite(pc)) els.down.value = Math.round(p * Math.min(pc, 100) / 100);
+    const p = num(els.price), d = num(els.down), pc = num(els.downpct);
+    if (!Number.isFinite(p)) return;
+    if (downBy === 'pct') { if (Number.isFinite(pc)) els.down.value = downFromPct(p, pc); }
+    else if (Number.isFinite(d)) els.downpct.value = downPctOf(d, p);
   });
 
   /* ---- render ------------------------------------------------------- */
   let view = 'year';
   let last = null;
 
+  const nameOf = el => el.closest('.field').querySelector('.lbl').textContent;
+  // What describes each field when nothing is wrong with it, as built.
+  const ABOUT = new Map(TYPED.map(el => [el, el.getAttribute('aria-describedby') || '']));
+
+  /* Reads the form. `problems` lists every field in use that cannot be
+     read, each named; with any problem there is no loan description at all,
+     so nothing downstream can be computed from a stand-in value. */
   function read() {
-    const bad = [];
-    const val = (el, key) => {
+    const problems = new Map();
+    const flag = (el, what) => { if (!problems.has(el)) problems.set(el, { name: nameOf(el), text: `${nameOf(el)}: ${what}` }); };
+    const val = el => {
       const x = num(el);
-      el.closest('.field').classList.toggle('invalid', !Number.isFinite(x));
-      if (!Number.isFinite(x)) bad.push(key);
-      return Number.isFinite(x) ? x : 0;
+      if (!Number.isFinite(x)) flag(el, 'enter a number.');
+      return x;
     };
-    const rate = val(els.rate, 'rate');
-    if (rate > 30) { els.rate.closest('.field').classList.add('invalid'); bad.push('rate'); }
-    const inf = progressMode ? inferred(val) : null;
-    const d = describe({
-      rate,
-      ...(progressMode
-        ? { price: inf.price, balance: val(els.balance, 'balance'), months: inf.left }
-        : { price: val(els.price, 'price'), down: val(els.down, 'down'), years: +els.years.value }),
+    const month = el => {
+      const d = monthFrom(el);
+      if (!d) flag(el, 'enter a month as YYYY-MM.');
+      return d;
+    };
+
+    const rate = val(els.rate);
+    if (rate > 30) flag(els.rate, 'enter 30 or less.');
+    let loan, start, inf = null;
+    if (progressMode) {
+      const balance = val(els.balance), first = month(els.start);
+      month(els.maturity);
+      start = month(els.next);
+      inf = inferred(balance, rate, first, start);
+      if (inf.paid < 0) flag(els.next, 'it is before the first payment.');
+      else if (inf.paid >= inf.n) flag(els.next, 'it is after the last payment; check the dates and the term.');
+      else if (!inf.ok && !problems.size) flag(els.balance, 'the loan amount cannot be worked out from it.');
+      loan = { price: inf.price, balance, months: inf.left };
+    } else {
+      loan = { price: val(els.price), down: val(els.down), years: +els.years.value };
+      val(els.downpct);
+      start = month(els.start);
+    }
+    const input = {
+      rate, ...loan,
       // Tax and insurance arrive in whatever unit the picker says; the
       // maths takes dollars per year (or a tax rate, when that is the unit).
       ...taxAndInsurance(val),
-      hoa: val(els.hoa, 'hoa'), pmiRate: val(els.pmi, 'pmi'), extra: val(els.extra, 'extra'),
+      hoa: val(els.hoa), pmiRate: val(els.pmi), extra: val(els.extra),
       extraEvery: +els.every.value,
-    });
-    if (!progressMode) val(els.downpct, 'downpct');
-    if (progressMode) {
+    };
+
+    for (const el of TYPED) {
+      const bad = problems.has(el);
+      el.closest('.field').classList.toggle('invalid', bad);
+      if (bad) el.setAttribute('aria-invalid', 'true'); else el.removeAttribute('aria-invalid');
+      // The message is in the headline's sub-line; an invalid field points at it.
+      const about = [ABOUT.get(el), bad && 'out-sub'].filter(Boolean).join(' ');
+      if (about) el.setAttribute('aria-describedby', about); else el.removeAttribute('aria-describedby');
+    }
+    if (inf) {
       $('inferred').classList.toggle('invalid', !inf.ok);
-      if (!inf.ok) bad.push('dates');
       $('inf-price').textContent = inf.ok ? usd(inf.price) : '—';
       $('inf-note').textContent = inf.ok
-        ? `original loan amount, with ${inf.paid} of ${inf.n} payments made; tax, PMI and equity are measured against it`
+        ? `original loan amount, with ${inf.paid} of ${inf.n} payments made; tax and PMI are measured against it`
         : inf.paid < 0 ? 'The next payment is before the first.'
         : inf.paid >= inf.n ? 'The next payment is after the last one — check the dates and term.'
         : 'Enter the balance and dates.';
     }
-    return { d, bad, inf };
+    return { d: problems.size ? null : describe(input), problems: [...problems.values()], inf, start };
   }
 
   /* First and last payment are two views of one fact, given the term:
      editing either rewrites the other. */
   function syncMaturity(fromMaturity = false) {
-    const n = (+els.years.value || 30) * 12;
+    const n = +els.years.value * 12;
     if (fromMaturity) {
       const mt = monthFrom(els.maturity);
       if (mt) els.start.value = ym(new Date(mt.getFullYear(), mt.getMonth() - n + 1, 1));
     } else {
-      const s0 = monthFrom(els.start) || nextMonth();
-      els.maturity.value = ym(new Date(s0.getFullYear(), s0.getMonth() + n - 1, 1));
+      const s0 = monthFrom(els.start);
+      if (s0) els.maturity.value = ym(new Date(s0.getFullYear(), s0.getMonth() + n - 1, 1));
     }
   }
   els.maturity.addEventListener('input', () => syncMaturity(true));
@@ -209,15 +271,13 @@ function boot() {
 
   /* A loan under way: the balance, the term and how far along the loan is
      give back the original principal, which stands in for the home price
-     wherever one is needed. Assumes payments have been exactly on schedule. */
-  function inferred(val) {
-    const balance = val(els.balance, 'balance');
-    const n = (+els.years.value || 30) * 12;
-    const first = monthFrom(els.start) || nextMonth(), next = monthFrom(els.next) || nextMonth();
-    const paid = monthsBetween(first, next);
-    const loan = originalLoan(balance, num(els.rate) || 0, n, paid);
-    const ok = Number.isFinite(loan);
-    return { ok, n, paid, left: ok ? n - paid : NaN, loan, price: ok ? loan : 0 };
+     wherever one is needed. Assumes payments have been exactly on schedule.
+     `first` and `next` are the two payment months, or null when unreadable. */
+  function inferred(balance, rate, first, next) {
+    const n = +els.years.value * 12;
+    const paid = first && next ? monthsBetween(first, next) : NaN;
+    const loan = originalLoan(balance, rate, n, paid);
+    return { ok: Number.isFinite(loan), n, paid, left: n - paid, loan, price: loan };
   }
   const termWord = months => {
     const y = Math.floor(months / 12), mo = months % 12;
@@ -241,7 +301,7 @@ function boot() {
     $('mode-new').setAttribute('aria-pressed', String(!progress));
     $('mode-progress').setAttribute('aria-pressed', String(progress));
     if (progress) {
-      if (!(num(els.balance) >= 0) || els.balance.value.trim() === '') {
+      if (!(num(els.balance) >= 0)) {
         const p = num(els.price) || 0, dn = num(els.down) || 0;
         els.balance.value = Math.max(0, Math.round(p - dn));
       }
@@ -252,41 +312,91 @@ function boot() {
   $('mode-new').addEventListener('click', () => { setLoanMode(false); render(); writeHash(); });
   $('mode-progress').addEventListener('click', () => { setLoanMode(true); render(); writeHash(); });
 
-  const perYear = (x, unit) => unit === 'mo' ? x * 12 : x;
+  const perYear = (x, u) => u === 'mo' ? x * 12 : x;
   function taxAndInsurance(val) {
     if (escrowMode) {
-      return { escrow: perYear(val(els.escrow, 'escrow'), els.escrowUnit.value) };
+      return { escrow: perYear(val(els.escrow), unit.get(els.escrowUnit)) };
     }
-    const t = val(els.tax, 'tax'), tu = els.taxUnit.value;
+    const t = val(els.tax), tu = unit.get(els.taxUnit);
     return {
       ...(tu === 'pct' ? { taxRate: t } : { tax: perYear(t, tu) }),
-      insurance: perYear(val(els.ins, 'ins'), els.insUnit.value),
+      insurance: perYear(val(els.ins), unit.get(els.insUnit)),
     };
+  }
+  // What a tax percentage is a percentage of: the price, or for a loan under
+  // way the inferred loan that stands in for it.
+  const taxBase = () => progressMode
+    ? inferred(num(els.balance), num(els.rate), monthFrom(els.start), monthFrom(els.next)).price
+    : num(els.price);
+
+  /* Picking another unit restates the same cost in it (0.92% of the price
+     becomes 6900 a year, 1800 a year becomes 150 a month), so the bill does
+     not change until the viewer types a different number. A field that
+     cannot be read, or a percentage of no price, is left as typed. */
+  for (const [el, sel] of UNIT_SELECT) {
+    sel.addEventListener('input', () => {
+      const converted = convertUnit(num(el), unit.get(sel), sel.value, taxBase());
+      unit.set(sel, sel.value);
+      if (Number.isFinite(converted)) put(el, converted);
+    });
   }
 
   /* Switching to escrow with nothing entered seeds it from the split
-     figures, so the total does not drop to nothing. */
-  function setMode(escrow) {
+     figures, so the total does not drop to nothing. `seed` is the caller's
+     call: a click seeds over an empty or zero amount, a link only when it
+     carried none, so an escrow of 0 in a link stays 0. */
+  function setMode(escrow, seed = false) {
     escrowMode = escrow;
     $('split-fields').hidden = escrow;
     $('escrow-fields').hidden = !escrow;
     $('mode-split').setAttribute('aria-pressed', String(!escrow));
     $('mode-escrow').setAttribute('aria-pressed', String(escrow));
-    if (escrow && !(num(els.escrow) > 0)) {
-      const p = num(els.price) || 0, t = num(els.tax) || 0, i = num(els.ins) || 0;
-      const tax = els.taxUnit.value === 'pct' ? p * t / 100 : perYear(t, els.taxUnit.value);
-      const yearly = tax + perYear(i, els.insUnit.value);
-      els.escrow.value = Math.round(els.escrowUnit.value === 'mo' ? yearly / 12 : yearly);
+    if (escrow && seed) {
+      const t = num(els.tax) || 0, i = num(els.ins) || 0, tu = unit.get(els.taxUnit);
+      const tax = tu === 'pct' ? (taxBase() || 0) * t / 100 : perYear(t, tu);
+      const yearly = tax + perYear(i, unit.get(els.insUnit));
+      put(els.escrow, Math.round(unit.get(els.escrowUnit) === 'mo' ? yearly / 12 : yearly));
     }
   }
   $('mode-split').addEventListener('click', () => { setMode(false); render(); writeHash(); });
-  $('mode-escrow').addEventListener('click', () => { setMode(true); render(); writeHash(); });
+  $('mode-escrow').addEventListener('click', () => { setMode(true, !(num(els.escrow) > 0)); render(); writeHash(); });
 
   const cadenceWord = e => ({ 0: 'once', 1: 'each month', 3: 'each quarter', 6: 'twice a year', 12: 'each year' })[e] || `every ${e} months`;
 
+  const PARTS = ['pi', 'tax', 'insurance', 'escrow', 'pmi', 'hoa'];
+  const FACTS = ['loan', 'interest', 'cost', 'payoff', 'extra', 'saved'];
+  const setFact = (k, main, sub = '') => { $('sum-' + k).textContent = main; $('sub-' + k).textContent = sub; };
+  // The rows for the mode not in use are hidden rather than shown at $0.
+  const partHidden = k => k === 'escrow' ? !escrowMode : (k === 'tax' || k === 'insurance') && escrowMode;
+  const listOf = names => names.length > 1 ? `${names.slice(0, -1).join(', ')} and ${names.at(-1)}` : names[0];
+
+  /* A field that cannot be read leaves nothing to compute: every figure is
+     dashed and the chart and schedule give way to a line saying why, so no
+     number on the page comes from a value the viewer did not type. */
+  function renderInvalid(problems) {
+    last = null;
+    $('out-total').textContent = '—';
+    $('out-sub').textContent = problems[0].text
+      + (problems.length > 1 ? ` Also check ${listOf(problems.slice(1).map(p => p.name))}.` : '');
+    for (const k of PARTS) {
+      $('bd-' + k).textContent = '—';
+      $('row-' + k).classList.remove('zero');
+      $('row-' + k).hidden = partHidden(k);
+      $('seg-' + k).hidden = true;
+    }
+    for (const k of FACTS) setFact(k, '—');
+    $('fact-extra').classList.add('muted');
+    $('fact-saved').classList.add('muted');
+    $('chart-note').textContent = '';
+    $('chart-legend').textContent = '';
+    $('tip').hidden = true;
+    $('chart').innerHTML = '<p class="empty">No chart until the highlighted field is fixed.</p>';
+    $('schedule').innerHTML = '<tr><td colspan="6" class="empty">No schedule until the highlighted field is fixed.</td></tr>';
+  }
+
   function render() {
-    const { d, bad, inf } = read();
-    const start = startDate();
+    const { d, problems, inf, start } = read();
+    if (!d) { renderInvalid(problems); return; }
     const base = amortize(d, { extra: 0 });
     const fast = d.extra > 0 ? amortize(d) : base;
     /* What the chart draws. A new loan: the schedule as is. A loan under
@@ -295,11 +405,11 @@ function boot() {
        real schedule from today's balance, so the two halves meet at the
        balance the viewer typed. */
     let chart = { start, loan0: d.loan, baseRows: base.rows, fastRows: fast.rows, note: d.loan > 0 ? `${d.years}-year term` : '' };
-    if (d.inProgress && inf && inf.ok && inf.paid > 0) {
+    if (d.inProgress && inf.paid > 0) {
       const hist = amortize(describe({ price: inf.loan, down: 0, rate: d.rate, months: inf.n }), { extra: 0 }).rows.slice(0, inf.paid);
       const shift = rows => rows.map(r => ({ ...r, n: r.n + inf.paid }));
       chart = {
-        start: monthFrom(els.start) || start, loan0: inf.loan, hist,
+        start: monthFrom(els.start), loan0: inf.loan, hist,
         baseRows: hist.concat(shift(base.rows)), fastRows: hist.concat(shift(fast.rows)),
         note: `${termWord(inf.n)} term, ${termWord(d.months)} left`,
       };
@@ -310,23 +420,20 @@ function boot() {
     const total = bd.pi + bd.tax + bd.insurance + bd.escrow + bd.pmi + bd.hoa;
     last = { d, base, fast, start, chart };
 
-    $('out-total').textContent = bad.length ? '—' : usd(total);
-    $('out-sub').textContent = bad.length
-      ? 'Check the highlighted field.'
-      : d.extra > 0
-        ? d.extraEvery === 1
-          ? `plus ${usd(d.extra)} extra principal, ${usd(total + d.extra)} in all`
-          : `plus ${usd(d.extra)} extra principal ${cadenceWord(d.extraEvery)}`
-        : d.loan > 0
-          ? d.inProgress ? `on a ${usd(d.loan)} balance, ${termWord(d.months)} to go` : `on a ${usd(d.loan)} loan over ${d.years} years`
-          : 'Nothing borrowed, so nothing to repay.';
+    $('out-total').textContent = usd(total);
+    $('out-sub').textContent = d.extra > 0
+      ? d.extraEvery === 1
+        ? `plus ${usd(d.extra)} extra principal, ${usd(total + d.extra)} in all`
+        : `plus ${usd(d.extra)} extra principal ${cadenceWord(d.extraEvery)}`
+      : d.loan > 0
+        ? d.inProgress ? `on a ${usd(d.loan)} balance, ${termWord(d.months)} to go` : `on a ${usd(d.loan)} loan over ${d.years} years`
+        : 'Nothing borrowed, so nothing to repay.';
 
-    for (const k of ['pi', 'tax', 'insurance', 'escrow', 'pmi', 'hoa']) {
+    for (const k of PARTS) {
       const x = bd[k];
       $('bd-' + k).textContent = usd2(x);
       $('row-' + k).classList.toggle('zero', x <= 0);
-      // The rows for the mode not in use are hidden rather than shown at $0.
-      $('row-' + k).hidden = k === 'escrow' ? !escrowMode : (k === 'tax' || k === 'insurance') && escrowMode;
+      $('row-' + k).hidden = partHidden(k);
       const seg = $('seg-' + k);
       seg.style.flexGrow = total > 0 ? String(x / total) : '0';
       seg.hidden = x <= 0;
@@ -334,7 +441,7 @@ function boot() {
     }
 
     const payoff = fast.months ? monthOf(fast.months, start) : null;
-    const set = (k, main, sub = '') => { $('sum-' + k).textContent = main; $('sub-' + k).textContent = sub; };
+    const set = setFact;
     /* A loan under way has two horizons: the whole loan, first payment to
        last (the reconstructed history plus what is ahead), and what is
        still to pay from today. The headline is the whole loan; the line
@@ -417,8 +524,11 @@ function boot() {
     { side: 'left', cap: '◀ left axis: balance & totals', title: 'balance & totals' },
     { side: 'right', cap: 'right axis: each payment ▶', title: 'per payment' },
   ];
+  // Puts away whatever tooltip the chart on screen is showing.
+  let clearTip = () => {};
   function drawLineChart({ key, host, legend, tip, start, N, series, ariaLabel }) {
     host.textContent = '';
+    tip.hidden = true;
     const hidden = hiddenLines(key);
     legend.textContent = '';
     for (const ax of AXES) {
@@ -432,10 +542,14 @@ function boot() {
         btn.type = 'button'; btn.className = `${sr.cls}${ax.side === 'right' ? ' dashed' : ''}`;
         btn.setAttribute('aria-pressed', String(!hidden.has(sr.id)));
         btn.innerHTML = `<span class="sw"></span>${sr.label}`;
+        btn.dataset.series = sr.id;
         btn.addEventListener('click', () => {
           if (hidden.has(sr.id)) hidden.delete(sr.id); else hidden.add(sr.id);
           rememberHidden(key, hidden);
           drawCharts();
+          // The redraw rebuilt the legend, this button included; focus goes
+          // to its replacement so a keyboard user stays where they were.
+          legend.querySelector(`button[data-series="${sr.id}"]`)?.focus();
         });
         li.append(btn); legend.append(li);
       }
@@ -548,19 +662,32 @@ function boot() {
       tip.style.left = Math.max(0, Math.min(box.width - tw, left + (left > box.width / 2 ? -tw - 14 : 14))) + 'px';
       tip.style.top = (host.offsetTop + 8) + 'px';
     };
-    const leave = () => {
+    clearTip = () => {
       tip.hidden = true;
       cross.setAttribute('x1', -10); cross.setAttribute('x2', -10);
       for (const sr of shown) sr.dot.setAttribute('cx', -10);
+    };
+    /* A mouse takes the tooltip with it when it leaves. A finger lifting is
+       also a leave, and would take the reading away the moment it appeared,
+       so after a touch it stays until a tap elsewhere. It stays too where
+       the tooltip sits under the chart instead of over it (narrow screens):
+       nothing is covered there, and removing it would make the page jump. */
+    const leave = ev => {
+      if (ev.pointerType === 'touch' || getComputedStyle(tip).position === 'static') return;
+      clearTip();
     };
     hit.addEventListener('pointermove', move);
     hit.addEventListener('pointerdown', move);
     hit.addEventListener('pointerleave', leave);
   }
+  document.addEventListener('pointerdown', ev => { if (!$('chart').contains(ev.target)) clearTip(); });
 
+  // The container width the chart on screen was drawn to.
+  let drawnAt = 0;
   function drawCharts() {
     const { d, chart } = last;
     const { start, loan0, baseRows, fastRows } = chart;
+    drawnAt = $('chart').clientWidth;
     const withExtra = d.extra > 0;
     $('chart-note').textContent = chart.note;
     if (!(loan0 > 0) || !baseRows.length) {
@@ -601,6 +728,11 @@ function boot() {
     const body = $('schedule');
     $('th-period').textContent = view === 'year' ? 'Year' : 'Month';
     const rows = view === 'year' ? byYear(fast.rows) : fast.rows;
+    // Extra and PMI are blank for most loans; a column with nothing in it is
+    // dropped, which is what leaves Balance on a phone's screen.
+    const table = body.closest('table');
+    table.classList.toggle('no-extra', !rows.some(r => r.extra > 0));
+    table.classList.toggle('no-pmi', !rows.some(r => r.pmi > 0));
     if (!rows.length) {
       body.innerHTML = '<tr><td colspan="6" class="empty">No payments — nothing is borrowed.</td></tr>';
       return;
@@ -608,7 +740,7 @@ function boot() {
     const f = x => x > 0 ? usd(x) : '<span class="nil">—</span>';
     body.innerHTML = rows.map(r => {
       const label = view === 'year'
-        ? `${r.year} <small>from ${monthFmt.format(monthOf((r.year - 1) * 12 + 1, start))}</small>`
+        ? `${r.year} <small><span class="wide">from </span>${monthFmt.format(monthOf((r.year - 1) * 12 + 1, start))}</small>`
         : `${r.n} <small>${monthFmt.format(monthOf(r.n, start))}</small>`;
       return `<tr><th scope="row">${label}</th><td>${f(r.principal)}</td><td>${f(r.interest)}</td><td>${f(r.extra)}</td><td>${f(r.pmi)}</td><td>${usd(r.balance)}</td></tr>`;
     }).join('');
@@ -619,7 +751,7 @@ function boot() {
       view = v;
       $('view-year').setAttribute('aria-pressed', String(v === 'year'));
       $('view-month').setAttribute('aria-pressed', String(v === 'month'));
-      drawTable();
+      if (last) drawTable();
     });
   }
 
@@ -646,11 +778,17 @@ function boot() {
     }
     setTimeout(() => { status.textContent = ''; }, 3000);
   });
-  window.addEventListener('hashchange', () => { const st = fromHash(); if (st) { fill(st); render(); } });
+  window.addEventListener('hashchange', () => { fill(fromHash()); render(); });
+  /* The chart is drawn to its container's width, so only a change of width
+     needs a redraw. A phone fires resize as its address bar slides away on
+     scroll, and a redraw then would take the tooltip the viewer just opened. */
   let rw = 0;
-  window.addEventListener('resize', () => { clearTimeout(rw); rw = setTimeout(() => last && drawCharts(), 120); });
+  window.addEventListener('resize', () => {
+    clearTimeout(rw);
+    rw = setTimeout(() => { if (last && $('chart').clientWidth !== drawnAt) drawCharts(); }, 120);
+  });
 
-  fill(fromHash() || fromDefaults());
+  fill(fromHash());
   render();
   document.documentElement.classList.add('ready');
 }

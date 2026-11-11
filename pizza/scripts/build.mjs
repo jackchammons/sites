@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /*
  * Static site build: load data, derive the ranking, render sections, write
- * dist/ and the weekly snapshot. Each step is a pure module under
- * pizza/build/; this file only composes them.
+ * the output directory and the weekly snapshot. Each step is a pure module
+ * under pizza/build/; this file only composes them.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -20,11 +20,11 @@ import { buzzSection } from '../build/sections/buzz.mjs';
 import { directorySection } from '../build/sections/directory.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-// Output dir is overridable so the multi-site build can place this site at
-// dist/<slug>/ while a standalone run still writes to dist/.
+// The multi-site build sets OUT_DIR to dist/<slug>/; a standalone run writes
+// to the same place, so it never clears the other sites' output.
 const dist = process.env.OUT_DIR
   ? path.resolve(process.env.OUT_DIR)
-  : path.join(root, '..', 'dist');
+  : path.join(root, '..', 'dist', path.basename(root));
 
 const ctx = deriveContext(loadContext(root));
 ctx.css = fs.readFileSync(path.join(root, 'src/styles.css'), 'utf8');

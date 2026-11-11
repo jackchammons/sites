@@ -25,9 +25,12 @@ export const NATIONAL_CHAINS = [
 
 export const isNationalChain = name => NATIONAL_CHAINS.some(rx => rx.test(String(name)));
 
-/* Name normalisation, aligned with the research validator's dedup rules and
- * widened for permit-register noise (ALL CAPS, "LLC", "#12" branch suffixes). */
-export const normName = n => String(n).toLowerCase()
+/* The one name normalisation: the research validator's directory dedup and
+ * the candidates queue both read it, so a name that is "already on file" to
+ * one is to the other. Accents fold to their plain letters, and permit-register
+ * noise (ALL CAPS, "LLC", "#12" branch suffixes) and the generic words a
+ * pizzeria's name is padded with drop out. */
+export const normName = n => String(n).normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
   .replace(/['’]/g, '')
   .replace(/^\s*#?\s*\d+\s+/, '')
   .replace(/\s*#\s*\d+\s*$/g, '')

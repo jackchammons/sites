@@ -15,6 +15,13 @@ export const shortDate = iso => {
   });
 };
 
+/* Link text for a citation: the outlet's hostname, so a list of links (or a
+ * screen reader's) says who is being cited instead of "source" eighty times. */
+export const hostOf = url => {
+  try { return new URL(url).hostname.replace(/^www\./, ''); }
+  catch { return 'source'; }
+};
+
 /* A pizzeria name, linked to its best web presence: the official site when one
  * is on file, its Instagram otherwise. Used everywhere a name appears outside
  * the ranked cards, so the rule holds across the page. */

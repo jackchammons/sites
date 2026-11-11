@@ -24,14 +24,28 @@ test('THX 40° is diagonal × 1.2 on a 16:9 screen', () => {
   near(thx.distance / 100, 1.2, 0.01);
 });
 
-test('ITU 3.2H for 1080p and 1.5H for 4K land near one arc-minute per pixel', () => {
+test('ITU 3.2H, 1.6H and 0.8H give the 31°, 58° and 96° BT.500 prints for 16:9', () => {
   const d = s.dims(65, 16 / 9);
   const itu = s.ituDistances(d);
+  assert.deepEqual(itu.map(x => x.heights), [3.2, 1.6, 0.8]);
   near(itu[0].distance, 3.2 * d.height);
-  near(itu[0].angle, 31, 0.5);
-  near(itu[1].angle, 61.3, 0.5);
+  near(itu[0].angle, 31, 0.1);
+  near(itu[1].angle, 58, 0.15);
+  near(itu[2].angle, 96, 0.1);
+  near(itu[1].distance / 12, 4.25, 0.01);
   const hd = s.acuityDistance(s.pixelPitch(d, s.resolution('1080')));
   near(hd / d.height, 3.18, 0.02);
+  // Each is the recommendation's rounding of one arc-minute per pixel.
+  for (const x of itu) near(s.pixelsPerDegree(s.pixelPitch(d, s.resolution(x.res)), x.distance), 60, 0.6);
+});
+
+test('the front-row line is past every seating standard and past ITU 4K on 16:9', () => {
+  assert.ok(s.ANGLE_STANDARDS.every(x => x.angle < s.FRONT_ROW));
+  const itu = s.ituDistances(s.dims(65, 16 / 9));
+  assert.ok(itu[1].angle < s.FRONT_ROW && itu[2].angle > s.FRONT_ROW);
+  // The prose names the standards it is wider than, so an ITU row beyond it does not contradict it.
+  assert.match(s.describeAngle(itu[2].angle), /wider than THX or SMPTE ask/);
+  assert.doesNotMatch(s.describeAngle(itu[1].angle), /front-row/);
 });
 
 test('pixel pitch fits the panel inside the picture', () => {

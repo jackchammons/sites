@@ -14,6 +14,11 @@ test('permit-register noise normalises away', () => {
   assert.equal(normName("The Independent Pizzeria LLC"), normName('Independent'));
 });
 
+test('accents fold to their plain letters, so one name is one key', () => {
+  assert.equal(normName('Z\u00e9eks Pizza'), normName('Zeeks Pizza'));
+  assert.equal(normName('Caf\u00e9 Lago'), normName('Cafe Lago'));
+});
+
 test('candidateKey separates branches of one name by street number', () => {
   assert.notEqual(candidateKey('A Pizza Mart', '800 Seneca St'),
                   candidateKey('A Pizza Mart', '1433 11th Ave'));

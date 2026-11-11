@@ -1,5 +1,4 @@
-import { esc, nameLink, shortDate } from '../html.mjs';
-import { locationLabel } from '../../src/locations.js';
+import { esc, nameLink, shortDate, hostOf } from '../html.mjs';
 
 export function radarSection(ctx) {
   const { dataset, now } = ctx;
@@ -18,7 +17,7 @@ const radarRow = r => `
         <strong>${nameLink(r)}</strong>
         <span class="cand-meta">${esc(r.neighborhood ?? '')}${r.style ? ` · ${esc(r.style)}` : ''}</span>
         ${r.blurb ? `<span class="cand-note">${esc(r.blurb)}</span>` : ''}
-        ${r.statusSource ? `<a href="${esc(r.statusSource)}" target="_blank" rel="noopener nofollow">source</a>` : ''}
+        ${r.statusSource ? `<a href="${esc(r.statusSource)}" target="_blank" rel="noopener nofollow">${esc(hostOf(r.statusSource))}</a>` : ''}
       </li>`;
 
 const closedRow = r => `
@@ -28,7 +27,7 @@ const closedRow = r => `
           r.statusDate ? ` · closed ${esc(shortDate(r.statusDate))}` :
           r.statusDetected ? ` · closure reported ${esc(shortDate(r.statusDetected))}` : ''}</span>
         ${r.statusNote ? `<span class="cand-note">${esc(r.statusNote)}</span>` : ''}
-        ${r.statusSource ? `<a href="${esc(r.statusSource)}" target="_blank" rel="noopener nofollow">source</a>` : ''}
+        ${r.statusSource ? `<a href="${esc(r.statusSource)}" target="_blank" rel="noopener nofollow">${esc(hostOf(r.statusSource))}</a>` : ''}
       </li>`;
 
 const radarSection = (opening.length || closedRecently.length) ? `

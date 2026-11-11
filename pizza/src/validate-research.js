@@ -6,17 +6,28 @@
  *
  * Returns { fails, sections }: an empty fails array means the document passed.
  */
+import { PUGET_SOUND_ZIP, PUGET_SOUND_ZIP_LABEL } from './bounds.js';
+import { normName } from './census.js';
+import { streetKey } from './locations.js';
+import { isRated } from './slice.js';
 
 export const KINDS = new Set(['opening', 'closing', 'ranking', 'mention']);
 export const CAPS = { news: 20, locations: 12, directory: 10, status: 10,
                       mentions: 40, newAttributes: 3, factorRatings: 12, links: 20,
                       candidateReview: 15, facts: 20, ratingSkipped: 12,
-                      factorSources: 12, factsSkipped: 12 };
+                      factorSources: 12, factsSkipped: 12, locationsSkipped: 12 };
 export const MAX_AGE_DAYS = 180;
 /* Mentions feed a 24-month coverage window in slice.js; capping them at 180
  * days meant the window could never fill from the loop. */
 export const MENTION_MAX_AGE_DAYS = 730;
-export const MAX_LEN = { name: 80, note: 600, title: 200, address: 200 };
+export const MAX_LEN = { name: 80, note: 600, title: 200, address: 200,
+                         style: 120, source: 80, label: 40, url: 2000 };
+/* The most entries one news story may be tied to. */
+export const MAX_STORY_MENTIONS = 40;
+/* Top-level keys that are not sections but belong in the file: the agent's
+ * timestamp, the gate's own record of what it dropped (rejected records,
+ * ignored keys), and the names that are handled or refused below. */
+const OTHER_KEYS = ['updated', 'rejected', 'ignored', 'items', 'ratings'];
 
 /* Hosts that are not published criticism: aggregators, social, ordering and
  * reference sites. A rating resting ONLY on these (or on the pizzeria's own
@@ -31,21 +42,26 @@ export const isNonCriticism = (u, own = []) => {
   return !h || NON_CRITICISM_HOSTS.some(d => h === d || h.endsWith('.' + d)) || own.includes(h);
 };
 
-/* Returns { fails, sections, fatal, accepted }. `fails` is every problem found;
- * `fatal` means the document itself is unusable (not an object, a section over
- * its cap, a retired channel); otherwise `accepted` holds each section with the
- * failing records dropped, so one bad record costs that record, not the run. */
+/* Returns { fails, sections, fatal, accepted, unknown }. `fails` is every
+ * problem found; `fatal` means the document itself is unusable (not an object,
+ * a section over its cap, a retired channel); otherwise `accepted` holds each
+ * section with the failing records dropped, so one bad record costs that
+ * record, not the run. `unknown` names the top-level keys that are no section
+ * at all: a misspelt section ("statuses", "factorRating") is never applied,
+ * and the caller has to say so rather than report a clean, empty pass. */
 export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now(), extra = {}) {
   const fails = [];
   const badIdx = {};
+  // A message may quote the value it refuses, and that value has no bound yet.
+  const clip = msg => msg.length > 300 ? msg.slice(0, 300) + '…' : msg;
   const bad = (sec, i, msg) => {
-    fails.push(`${sec}[${i}]: ${msg}`);
+    fails.push(clip(`${sec}[${i}]: ${msg}`));
     (badIdx[sec] ??= new Set()).add(i);
   };
   const byId = new Map(dataset.restaurants.map(r => [r.id, r]));
 
   if (!doc || typeof doc !== 'object' || Array.isArray(doc)) {
-    return { fails: ['research.json must be a JSON object.'], sections: {}, fatal: true, accepted: {} };
+    return { fails: ['research.json must be a JSON object.'], sections: {}, fatal: true, accepted: {}, unknown: [] };
   }
 
   /* `items` was the original field name; keep reading it so older files still work. */
@@ -60,7 +76,8 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
                      facts: doc.facts ?? [],
                      ratingSkipped: doc.ratingSkipped ?? [],
                      factorSources: doc.factorSources ?? [],
-                     factsSkipped: doc.factsSkipped ?? [] };
+                     factsSkipped: doc.factsSkipped ?? [],
+                     locationsSkipped: doc.locationsSkipped ?? [] };
   if (Array.isArray(doc.ratings) && doc.ratings.length) {
     fails.push('ratings are no longer accepted: crowd figures are frozen, see CLAUDE.md');
   }
@@ -71,17 +88,25 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
   for (const [k, hint] of Object.entries(RETIRED)) {
     if (Array.isArray(doc[k]) && doc[k].length) fails.push(`"${k}" is retired — ${hint}`);
   }
+  const known = new Set([...Object.keys(sections), ...OTHER_KEYS, ...Object.keys(RETIRED)]);
+  const unknown = Object.keys(doc).filter(k => !known.has(k));
 
   for (const [name, arr] of Object.entries(sections)) {
     if (!Array.isArray(arr)) { fails.push(`${name} must be an array`); continue; }
     if (arr.length > CAPS[name]) fails.push(`${name}: ${arr.length} entries exceeds the ${CAPS[name]} cap`);
   }
-  if (fails.length) return { fails, sections, fatal: true, accepted: {} };
+  if (fails.length) return { fails, sections, fatal: true, accepted: {}, unknown };
 
   /* A claim we cannot check is not usable, so every section needs a live https source. */
   const checkUrl = (sec, i, url, field = 'url') => {
     let u;
     try { u = new URL(url); } catch { bad(sec, i, `${field} is not a valid URL: ${url}`); return; }
+    // The string is stored as written, not as parsed, so it has to be a plain
+    // one: a real address carries no markup, quotes or spaces unencoded.
+    if (typeof url !== 'string' || url.length > MAX_LEN.url || /[<>"\s]/.test(url)) {
+      bad(sec, i, `${field} is not a plain URL of at most ${MAX_LEN.url} characters: ${url}`);
+      return;
+    }
     if (u.protocol !== 'https:') bad(sec, i, `${field} must be https: ${url}`);
   };
   const checkDate = (sec, i, v, field, maxAgeDays = MAX_AGE_DAYS) => {
@@ -93,11 +118,14 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
 
   /* Free text that reaches the page: bounded, and in a Latin script. A name in
    * a look-alike script ('Zeeks Pizzа' with a Cyrillic а) normalises to a new
-   * slug and forks a real entry. */
+   * slug and forks a real entry. Angle brackets are refused outright: no
+   * name, note or address needs one, and the map popup is built from these
+   * strings in the browser, so the gate does not rest on every sink escaping. */
   const NON_LATIN = /[^\p{Script=Latin}\p{N}\p{P}\p{S}\s]/u;
   const checkText = (sec, i, v, field, max, min = 0) => {
     if (typeof v !== 'string' || v.trim().length < min) { bad(sec, i, `${field} missing or too short`); return false; }
     if (v.length > max) { bad(sec, i, `${field} is longer than ${max} characters`); return false; }
+    if (/[<>]/.test(v)) { bad(sec, i, `${field} contains < or >: "${v.slice(0, 40)}"`); return false; }
     if (NON_LATIN.test(v)) { bad(sec, i, `${field} contains characters outside the Latin script: "${v.slice(0, 40)}"`); return false; }
     return true;
   };
@@ -105,11 +133,15 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
   const seen = new Set();
   news.forEach((it, i) => {
     checkText('news', i, it?.title, 'title', MAX_LEN.title, 8);
-    if (typeof it?.source !== 'string' || !it.source.trim()) bad('news', i, 'source missing');
+    checkText('news', i, it?.source, 'source', MAX_LEN.source, 1);
     checkUrl('news', i, it?.url);
     checkDate('news', i, it?.published, 'published');
     if (!KINDS.has(it?.kind)) bad('news', i, `kind must be one of ${[...KINDS].join('|')}, got "${it?.kind}"`);
-    for (const m of it?.mentions ?? []) if (!byId.has(m)) bad('news', i, `mentions unknown id "${m}"`);
+    if (it?.mentions != null && (!Array.isArray(it.mentions) || it.mentions.length > MAX_STORY_MENTIONS)) {
+      bad('news', i, `mentions must be an array of at most ${MAX_STORY_MENTIONS} entry ids`);
+    } else {
+      for (const m of it?.mentions ?? []) if (!byId.has(m)) bad('news', i, `mentions unknown id "${m}"`);
+    }
     const key = String(it?.url || it?.title).toLowerCase();
     if (seen.has(key)) bad('news', i, 'duplicate of an earlier item');
     seen.add(key);
@@ -126,21 +158,14 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
   /* Region check by ZIP, not by city name. The first version listed cities and
    * rejected a real Zeeks branch in Mill Creek on its first live run -- a chain
    * opens somewhere the list has never heard of and the gate calls the truth a
-   * lie. ZIP prefixes are objective and need no maintenance as the field changes:
+   * lie. The prefixes are in src/bounds.js, with the box the geocoder and the
+   * dataset lint hold the same addresses to.
    *
-   *   980xx  King and Snohomish suburbs (Bellevue, Kent, Mill Creek)
-   *   981xx  Seattle proper
-   *   982xx  Everett and north
-   *   983xx  Kitsap and the Olympic Peninsula
-   *   984xx  Pierce County (Tacoma)
-   *   985xx  Thurston County (Olympia)
-   *
-   * That is wider than "Seattle metro" strictly means, and deliberately so: this
-   * check exists to catch a fabricated address or an out-of-region outpost --
+   * The range is wider than "Seattle metro" strictly means, and deliberately so:
+   * this check exists to catch a fabricated address or an out-of-region outpost --
    * Spokane 992xx, Vancouver WA 986xx, Portland OR -- not to adjudicate which
    * suburbs count. A chain reporting its real Tacoma branch is telling the truth,
    * and a validator that calls that a lie is the more expensive failure. */
-  const PUGET_SOUND_ZIP = /\b98[0-5]\d{2}\b/;
 
   sections.locations.forEach((it, i) => {
     if (!byId.has(it?.id)) bad('locations', i, `unknown restaurant id "${it?.id}"`);
@@ -158,19 +183,14 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
     const seenSites = new Set();
     sites.forEach((st, j) => {
       const where = `sites[${j}]`;
-      if (typeof st?.neighborhood !== 'string' || !st.neighborhood.trim()) {
-        bad('locations', i, `${where}: neighborhood missing`);
-      }
+      checkText('locations', i, st?.neighborhood, `${where}: neighborhood`, MAX_LEN.name, 1);
       const addr = st?.address;
-      if (typeof addr !== 'string' || !addr.trim()) {
-        bad('locations', i, `${where}: address missing`);
-        return;
-      }
+      if (!checkText('locations', i, addr, `${where}: address`, MAX_LEN.address, 1)) return;
       // A street address starts with a number and names a street. This rejects
       // "Capitol Hill" or "Seattle, WA" dressed up as an address.
       if (!/^\s*\d/.test(addr)) bad('locations', i, `${where}: address does not start with a street number: "${addr}"`);
       if (!/\bWA\b|\bWashington\b/i.test(addr)) bad('locations', i, `${where}: address is not in Washington: "${addr}"`);
-      if (!PUGET_SOUND_ZIP.test(addr)) bad('locations', i, `${where}: no Puget Sound ZIP (980xx-983xx): "${addr}"`);
+      if (!PUGET_SOUND_ZIP.test(addr)) bad('locations', i, `${where}: no Puget Sound ZIP (${PUGET_SOUND_ZIP_LABEL}): "${addr}"`);
       const key = addr.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
       if (seenSites.has(key)) bad('locations', i, `${where}: duplicate address "${addr}"`);
       seenSites.add(key);
@@ -179,26 +199,43 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
 
   /* ---- directory: discovered pizzerias ----
    * The important failure to catch is a duplicate of something on file under a
-   * slightly different name, which would fork one pizzeria into two entries. */
-  const normName = n => String(n).normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
-    .replace(/['’]/g, '')
-    .replace(/\b(pizza company|pizza co|pizzeria|pizza|restaurant)\b/g, '')
-    .replace(/[^a-z0-9]+/g, ' ').trim();
-  const knownNames = new Set(dataset.restaurants.map(r => normName(r.name)));
+   * slightly different name, which would fork one pizzeria into two entries.
+   * Two keys guard it: the normalised name (src/census.js, shared with the
+   * candidates queue) and the street address. Both sets grow as records are
+   * accepted, so two spellings of one find in the same file collide too.
+   * A closed entry does not hold its address: the next pizzeria into that
+   * space is a new entry. */
+  const knownNames = new Map(dataset.restaurants.map(r => [normName(r.name), r.name]));
+  const knownStreets = new Map(dataset.restaurants.filter(r => r.status !== 'closed')
+    .flatMap(r => (r.locations ?? []).map(l => [streetKey(l.address), r.name])));
+  const foundHere = new Set();
 
   sections.directory.forEach((it, i) => {
     if (!checkText('directory', i, it?.name, 'name', MAX_LEN.name, 2)) return;
-    if (knownNames.has(normName(it.name))) bad('directory', i, `"${it.name}" is already on file`);
+    const nameKey = normName(it.name);
+    if (nameKey && knownNames.has(nameKey)) {
+      bad('directory', i, foundHere.has(nameKey)
+        ? `"${it.name}" repeats "${knownNames.get(nameKey)}" from earlier in this file`
+        : `"${it.name}" is already on file`);
+    }
     if (!['open', 'opening'].includes(it?.status)) bad('directory', i, `status must be open|opening, got "${it?.status}"`);
     checkText('directory', i, it?.neighborhood, 'neighborhood', MAX_LEN.name, 1);
+    if (it?.style != null) checkText('directory', i, it.style, 'style', MAX_LEN.style);
     checkText('directory', i, it?.note, 'note', MAX_LEN.note, 15);
-    if (it?.address != null) checkText('directory', i, it.address, 'address', MAX_LEN.address, 1);
     checkUrl('directory', i, it?.source, 'source');
     if (it?.url != null) checkUrl('directory', i, it.url, 'url');
-    if (it?.address != null) {
+    let streetAt = null;
+    if (it?.address != null && checkText('directory', i, it.address, 'address', MAX_LEN.address, 1)) {
       if (!/^\s*\d/.test(it.address)) bad('directory', i, `address does not start with a street number: "${it.address}"`);
-      if (!/\b98[0-5]\d{2}\b/.test(it.address)) bad('directory', i, `no Puget Sound ZIP: "${it.address}"`);
+      if (!PUGET_SOUND_ZIP.test(it.address)) bad('directory', i, `no Puget Sound ZIP: "${it.address}"`);
+      streetAt = streetKey(it.address);
+      if (knownStreets.has(streetAt)) {
+        bad('directory', i, `"${it.address}" is already on file as ${knownStreets.get(streetAt)}`);
+      }
     }
+    if (badIdx.directory?.has(i)) return;
+    if (nameKey) { knownNames.set(nameKey, it.name); foundHere.add(nameKey); }
+    if (streetAt) knownStreets.set(streetAt, it.name);
   });
 
   /* ---- status: liveness confirmations ---- */
@@ -224,7 +261,7 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
   sections.mentions.forEach((it, i) => {
     if (!byId.has(it?.id)) bad('mentions', i, `unknown restaurant id "${it?.id}"`);
     checkText('mentions', i, it?.title, 'title', MAX_LEN.title, 8);
-    if (typeof it?.source !== 'string' || !it.source.trim()) bad('mentions', i, 'source name missing');
+    checkText('mentions', i, it?.source, 'source name', MAX_LEN.source, 1);
     checkUrl('mentions', i, it?.url);
     checkDate('mentions', i, it?.date, 'date', MENTION_MAX_AGE_DAYS);
     if (!KINDS.has(it?.kind)) bad('mentions', i, `kind must be one of ${[...KINDS].join('|')}, got "${it?.kind}"`);
@@ -237,8 +274,6 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
    * bounded, an already-rated entry is refused outright, and every proposal
    * carries the sources it was read from. */
   const thisYear = new Date(nowMs).getUTCFullYear();
-  const alreadyRated = r => Boolean(r.factors?.craft && r.factors?.distinctiveness
-    && r.factors?.critical);
 
   const ratingSeen = new Set();
   sections.factorRatings.forEach((it, i) => {
@@ -246,7 +281,7 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
     if (!r) { bad('factorRatings', i, `unknown restaurant id "${it?.id}"`); return; }
     if (ratingSeen.has(it.id)) { bad('factorRatings', i, `duplicate proposal for "${it.id}"`); return; }
     ratingSeen.add(it.id);
-    if (alreadyRated(r)) { bad('factorRatings', i, `${r.name} is already rated; ratings are never overwritten`); return; }
+    if (isRated(r)) { bad('factorRatings', i, `${r.name} is already rated; ratings are never overwritten`); return; }
     for (const k of ['craft', 'distinctiveness']) {
       if (!validFactorValue(it?.[k])) bad('factorRatings', i, `${k} must be 0-10 in 0.5 steps, got ${it?.[k]}`);
     }
@@ -262,6 +297,8 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
     if (it?.styleGroup != null && (typeof it.styleGroup !== 'string'
         || it.styleGroup.trim().length < 3 || it.styleGroup.trim().length > 24)) {
       bad('factorRatings', i, `styleGroup must be a short label, got "${it.styleGroup}"`);
+    } else if (it?.styleGroup != null) {
+      checkText('factorRatings', i, it.styleGroup, 'styleGroup', MAX_LEN.name);
     }
     const srcs = it?.sources;
     if (!Array.isArray(srcs) || srcs.length < 1 || srcs.length > 4) {
@@ -284,7 +321,7 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
   sections.ratingSkipped.forEach((it, i) => {
     const r = byId.get(it?.id);
     if (!r) { bad('ratingSkipped', i, `unknown restaurant id "${it?.id}"`); return; }
-    if (alreadyRated(r)) bad('ratingSkipped', i, `${r.name} is already rated`);
+    if (isRated(r)) bad('ratingSkipped', i, `${r.name} is already rated`);
     if (ratingSeen.has(it.id)) bad('ratingSkipped', i, `${r.name} is also proposed in factorRatings`);
     checkText('ratingSkipped', i, it?.note, 'note', MAX_LEN.note, 10);
   });
@@ -320,6 +357,16 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
     checkText('factsSkipped', i, it?.note, 'note', MAX_LEN.note, 10);
   });
 
+  /* ---- locationsSkipped: the locations task's memory ----
+   * A worklist entry the agent could not verify: no official page, or a page
+   * with no address on it. Recorded so the worklist rests the entry instead
+   * of redrawing it on every pass, which is how the task came to verify
+   * nothing while the same few unverifiable entries held the head of the list. */
+  sections.locationsSkipped.forEach((it, i) => {
+    if (!byId.has(it?.id)) { bad('locationsSkipped', i, `unknown restaurant id "${it?.id}"`); return; }
+    checkText('locationsSkipped', i, it?.note, 'note', MAX_LEN.note, 10);
+  });
+
   /* ---- factorSources: citations for a rating that already exists ----
    * The founding entries were rated editorially with no source on file. This
    * channel attaches published criticism to such a rating without touching
@@ -333,7 +380,7 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
     if (!r) { bad('factorSources', i, `unknown restaurant id "${it?.id}"`); return; }
     if (sourcesSeen.has(it.id)) { bad('factorSources', i, `duplicate factorSources record for "${it.id}"`); return; }
     sourcesSeen.add(it.id);
-    if (!alreadyRated(r)) { bad('factorSources', i, `${r.name} is not rated; sources attach to an existing rating (propose one through factorRatings)`); return; }
+    if (!isRated(r)) { bad('factorSources', i, `${r.name} is not rated; sources attach to an existing rating (propose one through factorRatings)`); return; }
     if (ratingSeen.has(it.id)) { bad('factorSources', i, `${r.name} is also proposed in factorRatings`); return; }
     const srcs = it?.sources;
     if (!Array.isArray(srcs) || srcs.length < 1 || srcs.length > 4) {
@@ -390,16 +437,15 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
     if (!VERDICTS.has(it?.verdict)) {
       bad('candidateReview', i, `verdict must be one of ${[...VERDICTS].join('|')}, got "${it?.verdict}"`);
     }
-    if (typeof it?.note !== 'string' || it.note.trim().length < 10) {
-      bad('candidateReview', i, 'note missing or too short — say what you found');
-    }
+    checkText('candidateReview', i, it?.note, 'note', MAX_LEN.note, 10);
     /* source is optional here and a verdict publishes nothing to the site --
      * it only marks a candidate resolved -- so a non-https source is dropped
      * at apply time rather than costing the whole run (run #62 lost ten
      * verified candidates to one http:// directions page). */
     if (it?.source != null) {
-      try { new URL(it.source); }
-      catch { bad('candidateReview', i, `source is not a valid URL: ${it.source}`); }
+      let plain = typeof it.source === 'string' && it.source.length <= MAX_LEN.url;
+      try { new URL(it.source); } catch { plain = false; }
+      if (!plain) bad('candidateReview', i, `source is not a valid URL: ${it.source}`);
     }
   });
 
@@ -407,7 +453,7 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
   sections.newAttributes.forEach((it, i) => {
     if (!/^[a-z][a-z0-9-]{2,30}$/.test(it?.key ?? '')) bad('newAttributes', i, `key must be kebab-case, got "${it?.key}"`);
     else if (registry[it.key]) bad('newAttributes', i, `"${it.key}" already exists in the registry`);
-    if (typeof it?.label !== 'string' || !it.label.trim()) bad('newAttributes', i, 'label missing');
+    checkText('newAttributes', i, it?.label, 'label', MAX_LEN.label, 1);
     if (it?.frictionCost != null && !(typeof it.frictionCost === 'number' && it.frictionCost >= 0 && it.frictionCost <= 2.5)) {
       bad('newAttributes', i, `frictionCost must be 0-2.5, got ${it?.frictionCost}`);
     }
@@ -415,8 +461,7 @@ export function validateResearch(doc, dataset, registry = {}, nowMs = Date.now()
     else for (const id of it.entries) if (!byId.has(id)) bad('newAttributes', i, `entries names unknown id "${id}"`);
   });
 
-
   const accepted = Object.fromEntries(Object.entries(sections).map(([k, arr]) =>
     [k, arr.filter((_, i) => !badIdx[k]?.has(i))]));
-  return { fails, sections, fatal: false, accepted };
+  return { fails, sections, fatal: false, accepted, unknown };
 }

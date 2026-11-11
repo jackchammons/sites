@@ -1,0 +1,161 @@
+# pizza/ — The Seattle Pizza Index
+
+Rules for working in this directory. `README.md` here explains the method and the
+layout; this file is the list of things that are easy to get wrong. Repo-wide rules
+(build, publishing, the deploy gate) are in the root `CLAUDE.md`.
+
+```bash
+node --test pizza/test/*.test.mjs        # unit tests
+node pizza/scripts/check-dataset.mjs     # lint data/restaurants.json
+node pizza/scripts/build.mjs && node pizza/scripts/verify.mjs    # -> dist/pizza/
+```
+
+Never run `fetch-buzz.mjs`, `geocode.mjs`, `fetch-candidates.mjs`, `verify-research.mjs`,
+`apply-research.mjs`, or a build with `SNAPSHOT=1`, against the checkout unless the
+point is to change `data/`: they all write there. The workflows commit `data/*.json` to
+`main` daily, so pull before editing any of it.
+
+## Where things are
+
+- `src/slice.js` is the scoring algorithm, run at build time only. The page has no
+  reader re-weighting (removed by request); every card explains its inputs instead.
+- `scripts/build.mjs` composes the page from `build/` (`load`, `derive`, `page`,
+  `sections/*`, `emit`). The methodology copy is in `build/page.mjs` and
+  `build/sections/method.mjs`.
+- `scripts/verify.mjs` gates the deploy. `src/app.js` is the only script the browser
+  runs: the map and the directory rows.
+- `scripts/next-task.mjs` picks and briefs the research agent's daily task;
+  `src/validate-research.js` + `scripts/verify-research.mjs` validate what it wrote;
+  `scripts/apply-research.mjs` applies it; `src/check-dataset.js` lints the result.
+- Leaflet is vendored in `src/vendor/`. `app.js` fetches it on demand, when the map is
+  about to be seen, from the literal `'./leaflet.js'`. It is outside the ES import
+  graph, so `verify.mjs` checks that literal and that the emitted file is byte-identical
+  to the vendored one.
+
+## Scoring (SLICE)
+
+- **Three factors are computed, two are editorial.** Reputation, critical reception and
+  value derive at build time in `slice.js`; never store them. Craft and distinctiveness
+  live in `factors` with provenance (`setBy`, `source`, `date`) and are write-once:
+  never overwrite them from a script.
+- **Reputation can lift a score and never lower it.** It combines longevity ×3, review
+  volume ×2 and coverage ×1 as the best weighted mean over the components present, so
+  an added component never lowers the factor. The factor is then counted only when it
+  is measured *and* counting it does not lower the score; otherwise its weight is shared
+  by the other four. Before this rule an entry with nothing on file outranked
+  better-documented ones, and its first press mention cost it up to 17 points.
+- **Critical reception** is the critic base plus a recency-weighted mention boost capped
+  at +1.5. **Value** is (craft + critical)/2 × a price multiplier.
+- **The methodology section prints the constants from `slice.js`.** Change a formula and
+  the copy in `build/page.mjs` must change with it, and `ALGORITHM` must be bumped.
+- **Snapshots carry `algorithm`.** `ALGORITHM` is stamped on every weekly snapshot in
+  `data/history.json`. The record chart draws a rule at a change and the evidence line
+  says "the scoring method changed" instead of inventing a cause. Snapshots are keyed by
+  ISO week, so the daily run overwrites the current week rather than appending. Only
+  `publish.yml` writes one (`SNAPSHOT=1`); a local or CI build must not move the
+  baseline.
+- **The top ten is computed, not stored.** `splitTiers()` publishes the ten
+  highest-scoring entries with `status: "open"`; anything else is held out whatever it
+  scores. Ranks 11+ render in the directory table. `isRated()` decides who competes:
+  craft, distinctiveness and critical all present in `factors`. Import it; do not write
+  the rule out again.
+- **Freshness is the newest verification of any kind.** `verifiedDate()` reads
+  `statusChecked`, `locationsVerified`, `lastVerified` and the graded factors' dates;
+  decay runs from the newest. Anything that explains a score movement must read the
+  same date (`r.verified`), not `lastVerified` alone.
+- **Crowd star ratings stay frozen; review counts are used.** Yelp 403s automated reads
+  and no API key is in use, so the stored stars are display-only. The review *count*
+  feeds reputation. Do not reintroduce a star-rating pipeline; three runs burned their
+  budget rediscovering the 403.
+
+## The dataset
+
+- **One database, three statuses.** `restaurants.json` holds every pizzeria on file:
+  `open`, `opening` (the radar), `closed` (struck through in the directory, held out of
+  the ranking, listed under recently-closed for six months). `attributes` is a flexible
+  flag map; its registry (`data/attributes.json`) carries label + frictionCost per key.
+- **Two dates on a status.** `statusDate` is when a status took effect, as the source
+  reports it, and stays `null` when the source does not say; `statusDetected` is the day
+  the pass recorded it. Only `statusDate` is ever printed as "since" or as a closure
+  year. Writing the detection day into `statusDate` published a March 2024 closure as a
+  2026 one.
+- **Seattle is the inclusion rule.** An entry qualifies by having at least one location
+  inside Seattle city limits. Suburban branches of a qualifying chain are kept in
+  `locations[]` and listed in the directory, but the map plots, and the geocoder looks
+  up, Seattle addresses only (matched by `, Seattle, WA`).
+- **Locations are verified data; `neighborhood` is not.** `locations[]` is written only
+  by `apply-research.mjs` from a pass that read the pizzeria's own locations page.
+  `neighborhood` is the original editorial string and the fallback. Never render
+  `r.neighborhood` directly; use `locationLabel(r)` from `src/locations.js`.
+- **One geographic rule.** `src/bounds.js` holds the ZIP pattern and the lat/lon box,
+  imported by the validator, the geocoder and the lint, so an address the validator
+  accepts cannot fail the lint once geocoded.
+- **`links` is the one channel for web presence.** `{id, website?, instagram?, source}`:
+  instagram must be a real profile URL the agent saw linked or named (never guessed);
+  `website` fills `url` only when the entry has none. `nameLink()` renders
+  `url ?? instagram`.
+
+## The research agent
+
+- **Agents stay out of the deploy path.** `research.yml` runs the Claude Code Action to
+  write `data/research.json`, in its own workflow. If it hangs or fails, the site still
+  publishes. Its write grant is `Edit(pizza/data/research.json)` and a guard step fails
+  the run if `git status` shows any other path. The run also builds and verifies the
+  page from the applied data before committing, so a data shape the renderer cannot
+  handle turns the research run red instead of the next publishes.
+- **Never mention a script the agent cannot run.** The prompt once named
+  `verify-research.mjs`; the agent tried to run it, had no Bash tool, and stopped to ask
+  for approval in an unattended job. Six runs were lost to that. Two more rules keep it
+  green: every brief carries a search budget, and the agent step is `continue-on-error`
+  with the *next* step judging the file, so a turn-ceiling overrun cannot discard work
+  already written. Briefs are code (`next-task.mjs`); the fixed rules and the schema
+  live in the `research.yml` prompt so no task can drop them.
+- **One task per run.** In auto mode `next-task.mjs` picks, among discovery, locations,
+  liveness, news and rating, the type whose last successful pass is oldest *and whose
+  worklist is not empty* (dates are read from `chore(data): research pass (<type>)`
+  commit subjects, so a failed day is retried and a dispatch counts). A forced type
+  (the workflow's `task` input) runs as given, including the dispatch-only ones:
+  `social`, `census`, `facts`, `coverage`, `sources`. Only a forced type can come back
+  `skip=true`.
+- **Every worklist needs attempt memory.** A task that redraws the entries it could not
+  resolve stalls: locations verified nothing for three passes that way. Rating, facts
+  and locations each have a `…Skipped` section the agent fills for entries it could not
+  ground, which stamps `…Attempted` so the entry rests (90 days for rating and facts,
+  30 for locations). Liveness sorts by age of last check. A new task needs the same.
+- **What the agent may write**, all through `verify-research.mjs` → `apply-research.mjs`:
+  `news`, `mentions`, `locations` (+homepage), `locationsSkipped`, `status` (citation
+  required; a review site's label is a lead, not evidence), `directory` (new entries;
+  deduplicated by normalised name and by street address), `factorRatings`,
+  `ratingSkipped`, `factorSources`, `facts`, `factsSkipped`, `newAttributes`, `links`,
+  `candidateReview`.
+- **Records are rejected one at a time.** `verify-research.mjs` drops the records that
+  fail, emits a warning per drop, writes the accepted set back to `research.json`, and
+  fails the run only on a structural problem. Unknown top-level keys are ignored with a
+  warning. Free text and addresses may not contain `<` or `>`.
+- **Ratings fill gaps only.** `factorRatings` proposals carry craft, distinctiveness and
+  criticScore (all three, or the entry can never rank), 0–10 in 0.5 steps, with 1–4 read
+  sources of which at least one is published criticism. The validator refuses a proposal
+  for an already-rated entry. `factorSources` attaches citations to a rating on file and
+  never changes a value. An unrated entry with no findable coverage is a deliberate
+  terminal state.
+- **The candidates queue is the discovery funnel's top.** `data/candidates.json` is
+  seeded by `scripts/fetch-candidates.mjs` from King County food-permit data. Candidates
+  are leads, never entries: the `census` task verifies each through the `directory`
+  channel or records why it does not belong through `candidateReview`. Refresh the seed
+  by hand when the queue runs dry.
+- **Set exactly one research credential.** `CLAUDE_CODE_OAUTH_TOKEN` or
+  `ANTHROPIC_API_KEY`. If both are set the API key wins and bills per token while the
+  subscription allowance goes unused; the gate step warns. The model is named once, as
+  `RESEARCH_MODEL` in `research.yml`.
+
+## Buzz and the deploy gate
+
+- **`fetch-buzz.mjs` is keyless and fails soft.** It sweeps Google News searches before
+  every publish build, rewrites `data/buzz.json` only when the list of stories changed
+  (`updated` is the last sweep that changed it), and exits 0 on any failure. It is what
+  keeps the buzz section current without the agent.
+- **Headlines and agent notes are third-party text.** They must never be able to fail
+  `verify.mjs` or reach the page unescaped, in the static HTML or in a map popup.
+- **`verify.mjs` checks what it claims.** When adding a check, prove it by mutating a
+  built copy and watching it fail; a check that greps for a string the inline data blob
+  always contains is not a check.

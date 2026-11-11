@@ -6,9 +6,12 @@ const NOW = Date.parse('2026-08-30T00:00:00Z');
 
 const dataset = { restaurants: [
   { id: 'delancey', name: 'Delancey', status: 'open',
+    locations: [{ neighborhood: 'Ballard', address: '1415 NW 70th St, Seattle, WA 98117' }],
     factors: { craft: { value: 9.6 }, distinctiveness: { value: 8.6 }, critical: { value: 9.6 } } },
   { id: 'zeeks-pizza', name: 'Zeeks Pizza', status: 'open' },
-  { id: 'roma-roma', name: 'Roma Roma', status: 'open' }
+  { id: 'roma-roma', name: 'Roma Roma', status: 'open' },
+  { id: 'old-slice', name: 'Old Slice', status: 'closed',
+    locations: [{ neighborhood: 'Fremont', address: '3601 Fremont Ave N, Seattle, WA 98103' }] }
 ] };
 const registry = { 'sells-out': { label: 'Sells out', frictionCost: 1.5 } };
 
@@ -81,6 +84,16 @@ test('ratingSkipped: records an attempt on an unrated entry only', () => {
   failsWith({ ratingSkipped: [{ id: 'delancey', note: 'no published review found' }] }, 'already rated');
 });
 
+/* ---- locationsSkipped: the locations task's memory ---- */
+test('locationsSkipped: an id on file and a note that says what was tried', () => {
+  passes({ locationsSkipped: [{ id: 'zeeks-pizza', note: 'no official site found; only aggregator listings' }] });
+  failsWith({ locationsSkipped: [{ id: 'nope', note: 'no official site found' }] }, 'unknown restaurant id');
+  failsWith({ locationsSkipped: [{ id: 'zeeks-pizza', note: 'none' }] }, 'note missing or too short');
+  failsWith({ locationsSkipped: [{ id: 'zeeks-pizza', note: 'x'.repeat(601) }] }, 'longer than 600');
+  failsWith({ locationsSkipped: Array.from({ length: 13 }, () => ({ id: 'zeeks-pizza', note: 'no official site found' })) },
+    'exceeds the 12 cap');
+});
+
 /* ---- locations: the address gate ---- */
 const site = (addr, hood = 'Somewhere') => ({ neighborhood: hood, address: addr });
 const loc = (...sites) => ({ locations: [{ id: 'zeeks-pizza', source: 'https://z.com/l', sites }] });
@@ -92,7 +105,7 @@ test('locations: real Puget Sound addresses pass, Mill Creek included', () => {
 });
 
 test('locations: out-of-region and malformed addresses fail', () => {
-  failsWith(loc(site('801 W Riverside Ave, Spokane, WA 99201')), 'Puget Sound ZIP');
+  failsWith(loc(site('801 W Riverside Ave, Spokane, WA 99201')), 'Puget Sound ZIP (980xx-985xx)');
   failsWith(loc(site('123 SE Main St, Portland, OR 97214')), 'not in Washington');
   failsWith(loc(site('Capitol Hill, Seattle, WA 98122')), 'street number');
   failsWith(loc(site('1415 NW 70th St, Seattle, WA')), 'Puget Sound ZIP');
@@ -117,6 +130,126 @@ test('directory: a variant name cannot fork an existing entry', () => {
     note: NOTE, source: 'https://x.com/a' }] });
 });
 
+const found = over => ({ name: 'Totally New Pie', status: 'open', neighborhood: 'Ballard',
+  note: NOTE, source: 'https://x.com/a', ...over });
+
+test('directory: the shared normName catches a leading article and an accent', () => {
+  failsWith({ directory: [found({ name: 'The Delancey' })] }, 'already on file');
+  failsWith({ directory: [found({ name: 'Delancey Pizzeria & Cafe' })] }, 'already on file');
+  failsWith({ directory: [found({ name: 'ZEEKS PIZZA LLC' })] }, 'already on file');
+});
+
+test('directory: two spellings of one find in the same file collide', () => {
+  const { fails, accepted } = run({ directory: [
+    found({ name: 'Nonna Rosa Pizza' }), found({ name: 'Nonna Rosa Pizzeria' }), found({ name: 'Other Pie' })] });
+  assert.equal(fails.length, 1);
+  assert.match(fails[0], /directory\[1\]: "Nonna Rosa Pizzeria" repeats "Nonna Rosa Pizza" from earlier in this file/);
+  assert.deepEqual(accepted.directory.map(d => d.name), ['Nonna Rosa Pizza', 'Other Pie']);
+});
+
+test('directory: a rejected record does not block a later good one of the same name', () => {
+  const { accepted } = run({ directory: [
+    found({ name: 'Nonna Rosa Pizza', source: 'http://x.com/a' }), found({ name: 'Nonna Rosa Pizzeria' })] });
+  assert.deepEqual(accepted.directory.map(d => d.name), ['Nonna Rosa Pizzeria']);
+});
+
+test('directory: a street address already on file is refused, however it is written', () => {
+  failsWith({ directory: [found({ name: 'Delancey Seattle Annex', address: '1415 N.W. 70th Street, Seattle, WA 98117' })] },
+    'is already on file as Delancey');
+  // same address twice in one file, under names the name rule cannot tie together
+  failsWith({ directory: [
+    found({ name: 'Corner Pie', address: '500 Pine St, Seattle, WA 98101' }),
+    found({ name: 'Pine Street Slices', address: '500 Pine Street, Seattle, WA 98101' })] }, 'is already on file as Corner Pie');
+  // the next pizzeria into a closed one's space is a new entry
+  passes({ directory: [found({ address: '3601 Fremont Ave N, Seattle, WA 98103' })] });
+  passes({ directory: [found({ address: '1417 NW 70th St, Seattle, WA 98117' })] });
+});
+
+test('directory: style is checked like the other free text', () => {
+  passes({ directory: [found({ style: 'New York-style slices' })] });
+  failsWith({ directory: [found({ style: 'x'.repeat(121) })] }, 'style is longer than 120');
+  failsWith({ directory: [found({ style: 7 })] }, 'style missing');
+});
+
+/* ---- angle brackets: no free text or address carries markup ---- */
+test('angle brackets are refused in every free-text field and in addresses', () => {
+  const TAG = '<img src=x onerror=alert(1)>';
+  const story = { title: 'A perfectly plausible headline', source: 'The Stranger',
+    url: 'https://x.com/a', published: '2026-08-20', kind: 'mention' };
+  const mention = { id: 'roma-roma', title: 'A perfectly plausible headline', url: 'https://x.com/r',
+    source: 'Seattle Met', date: '2026-08-15', kind: 'mention' };
+  const cases = {
+    'news title': { news: [{ ...story, title: `Headline ${TAG}` }] },
+    'news source': { news: [{ ...story, source: `Outlet ${TAG}` }] },
+    'mention title': { mentions: [{ ...mention, title: `Headline ${TAG}` }] },
+    'mention source': { mentions: [{ ...mention, source: `Outlet ${TAG}` }] },
+    'location address': loc(site(`5918 Phinney Ave N ${TAG}, Seattle, WA 98103`)),
+    'location neighborhood': loc(site('5918 Phinney Ave N, Seattle, WA 98103', `Phinney ${TAG}`)),
+    'directory name': { directory: [found({ name: `Nonna ${TAG}` })] },
+    'directory neighborhood': { directory: [found({ neighborhood: `Ballard ${TAG}` })] },
+    'directory style': { directory: [found({ style: `Roman ${TAG}` })] },
+    'directory note': { directory: [found({ note: `${NOTE} ${TAG}` })] },
+    'directory address': { directory: [found({ address: `500 Pine St ${TAG}, Seattle, WA 98101` })] },
+    'status note': { status: [{ id: 'delancey', status: 'open', note: `open ${TAG} today`, source: 'https://x.com/a' }] },
+    'rating note': rating({ note: `${NOTE} ${TAG}` }),
+    'rating styleGroup': rating({ styleGroup: '<b>Roman</b>' }),
+    'ratingSkipped note': { ratingSkipped: [{ id: 'roma-roma', note: `nothing found ${TAG}` }] },
+    'factsSkipped note': { factsSkipped: [{ id: 'roma-roma', note: `nothing found ${TAG}` }] },
+    'locationsSkipped note': { locationsSkipped: [{ id: 'roma-roma', note: `nothing found ${TAG}` }] },
+    'factorSources note': { factorSources: [{ id: 'delancey', sources: ['https://www.thestranger.com/a'], note: `${NOTE} ${TAG}` }] },
+    'candidateReview note': { candidateReview: [{ name: 'Anything Pizza', verdict: 'closed', note: `gone ${TAG} for good` }] },
+    'attribute label': { newAttributes: [{ key: 'cash-only', label: `Cash ${TAG}`, entries: ['delancey'] }] }
+  };
+  for (const [what, doc] of Object.entries(cases)) {
+    const { fails, accepted } = run(doc);
+    assert.ok(fails.some(f => f.includes('contains < or >')), `${what}: ${JSON.stringify(fails)}`);
+    assert.deepEqual(Object.values(accepted).flat(), [], `${what}: the record was still accepted`);
+  }
+});
+
+test('a URL is stored as written, so it must be a plain one', () => {
+  const st = source => ({ status: [{ id: 'delancey', status: 'open', note: 'confirmed on its site', source }] });
+  failsWith(st('https://x.com/a"><script>alert(1)</script>'), 'not a plain URL');
+  failsWith(st('https://x.com/a b'), 'not a plain URL');
+  failsWith(st(['https://x.com/a']), 'not a plain URL');
+  failsWith(st('https://x.com/' + 'a'.repeat(2000)), 'not a plain URL');
+  passes(st('https://news.google.com/rss/articles/' + 'C'.repeat(600) + '?oc=5'));
+});
+
+/* ---- length caps ---- */
+test('every string the apply step stores is bounded', () => {
+  const long = n => 'x'.repeat(n);
+  const story = { title: 'A perfectly plausible headline', source: 'The Stranger',
+    url: 'https://x.com/a', published: '2026-08-20', kind: 'mention' };
+  failsWith({ news: [{ ...story, source: long(81) }] }, 'source is longer than 80');
+  failsWith({ mentions: [{ id: 'roma-roma', title: 'A perfectly plausible headline', url: 'https://x.com/r',
+    source: long(81), date: '2026-08-15', kind: 'mention' }] }, 'source name is longer than 80');
+  failsWith(loc(site(`1 ${long(200)} St, Seattle, WA 98101`)), 'address is longer than 200');
+  failsWith(loc(site('1 A St, Seattle, WA 98101', long(81))), 'neighborhood is longer than 80');
+  failsWith({ newAttributes: [{ key: 'cash-only', label: long(41), entries: ['delancey'] }] }, 'label is longer than 40');
+  failsWith({ candidateReview: [{ name: 'Anything Pizza', verdict: 'closed', note: long(601) }] }, 'note is longer than 600');
+  // a refused value is quoted in the message, and the message is bounded too
+  const { fails } = run({ status: [{ id: long(250000), status: 'open', note: 'confirmed on its site', source: 'https://x.com/a' }] });
+  assert.ok(fails.every(f => f.length <= 301), `longest message: ${Math.max(...fails.map(f => f.length))}`);
+});
+
+/* ---- unknown top-level keys ---- */
+test('a misspelt section is reported, never applied, and never fatal', () => {
+  const good = { id: 'delancey', status: 'open', note: 'confirmed on its site today', source: 'https://x.com/a' };
+  const { fails, fatal, accepted, unknown } = run({ updated: '2026-08-30T00:00:00Z',
+    statuses: [good], factorRating: [{}], closure: 'x', status: [good] });
+  assert.equal(fatal, false);
+  assert.deepEqual(fails, []);
+  assert.deepEqual(unknown, ['statuses', 'factorRating', 'closure']);
+  assert.deepEqual(accepted.status, [good]);
+  assert.ok(!('statuses' in accepted) && !('factorRating' in accepted));
+});
+
+test('the keys the gate itself writes, and the legacy ones, are not unknown', () => {
+  assert.deepEqual(run({ updated: 'x', rejected: [], ignored: [], items: [], ratings: [],
+    candidates: [], closures: [], factors: [] }).unknown, []);
+});
+
 /* ---- news ---- */
 test('news: dates must be real, recent and not future', () => {
   const item = over => ({ news: [{ title: 'A perfectly plausible headline', source: 'The Stranger',
@@ -125,6 +258,20 @@ test('news: dates must be real, recent and not future', () => {
   failsWith(item({ published: '2027-01-01' }), 'future');
   failsWith(item({ published: '2025-01-01' }), 'older than');
   failsWith(item({ kind: 'scandal' }), 'kind must be one of');
+});
+
+test('news: a malformed mentions field costs that record, not the run', () => {
+  const item = over => ({ title: 'A perfectly plausible headline', source: 'The Stranger',
+    url: 'https://x.com/a', published: '2026-08-20', kind: 'mention', ...over });
+  for (const mentions of [5, 'delancey', { id: 'delancey' }, true]) {
+    const { fails, fatal, accepted } = run({ news: [item({ mentions }), item({ url: 'https://x.com/b', mentions: ['delancey'] })] });
+    assert.equal(fatal, false);
+    assert.match(fails[0], /news\[0\]: mentions must be an array/);
+    assert.equal(accepted.news.length, 1);
+  }
+  failsWith({ news: [item({ mentions: ['nope'] })] }, 'mentions unknown id');
+  failsWith({ news: [item({ mentions: Array.from({ length: 41 }, () => 'delancey') })] }, 'at most 40');
+  passes({ news: [item({ mentions: null })] });
 });
 
 /* ---- factorRatings: the gate into the ladder ---- */

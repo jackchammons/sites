@@ -11,11 +11,16 @@
 # a dead token by the time a later step pushes ("Invalid username or token" on
 # an otherwise clean pass). GITHUB_TOKEN is job-scoped and outlives that.
 # Requires GH_TOKEN and GITHUB_REPOSITORY in the environment; COMMIT_REMOTE
-# overrides the remote URL (used by tests).
+# overrides the remote URL, which is how scripts/test/commit-data.test.sh
+# points the script at a scratch bare repository.
 #
 # The rebase matters because two workflows commit to main on their own
 # schedules and can overlap; a rejected push should retry against the moved
 # head rather than fail a run that did real work.
+#
+# The push carries only the commit made here. A checkout that is ahead of main
+# (a workflow dispatched on a branch) is refused rather than pushed, whoever
+# the caller is.
 set -euo pipefail
 
 MSG="$1"; shift
@@ -31,7 +36,16 @@ fi
 
 git config user.name  "github-actions[bot]"
 git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-git add -- "$@"
+if ! git add -- "$@"; then
+  # git names the reason on stderr; the annotation names the path, because a
+  # missing or ignored path here is a mistake in the caller's list.
+  refused=()
+  for p in "$@"; do
+    git add --dry-run -- "$p" >/dev/null 2>&1 || refused+=("$p")
+  done
+  echo "::error::commit-data.sh: git add refused ${refused[*]:-$*} (missing or ignored). Nothing was committed."
+  exit 1
+fi
 git commit -m "$MSG"
 
 REMOTE="${COMMIT_REMOTE:-https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git}"
@@ -41,16 +55,28 @@ for attempt in 1 2 3; do
   if ! git fetch "$REMOTE" main; then
     echo "fetch failed on attempt $attempt"; continue
   fi
+  # Only the commit made above may reach main. Anything more between main and
+  # HEAD means this checkout is not main (a workflow dispatched on a branch),
+  # and the rebase would carry those commits along. The count is taken before
+  # the rebase because a rebase drops a commit whose changes main already
+  # holds: afterwards a branch's commit could stand where this run's was and
+  # still count as one.
+  ahead=$(git rev-list --count FETCH_HEAD..HEAD)
+  if [ "$ahead" -gt 1 ]; then
+    echo "::error::Refusing to push: $ahead commits lie between main and this checkout, and only the one data commit made here may be pushed. This checkout is not main."
+    exit 1
+  fi
   if ! git rebase FETCH_HEAD; then
     # Some files are regenerated wholesale by every run that touches them:
     # research.json by each research pass, buzz.json by each feed sweep,
     # history.json by each snapshot of the current ISO week. Two runs that
-    # start close together (every run checks out the SHA it was triggered
-    # on, so the second never sees the first's commit) always conflict on
-    # them, and the newer run's copy is the right one: it was built from
-    # the newer fetch, or from the research this run validated. A conflict
-    # anywhere else -- restaurants.json above all, where two runs' edits
-    # must both survive -- is real and aborts the attempt.
+    # overlap (a research pass and a publish, or two dispatches started from
+    # the same commit) always conflict on them, and this run's copy is the
+    # right one: it was built from the newer fetch, or from the research
+    # this run validated. A conflict anywhere else -- restaurants.json above
+    # all, where two runs' edits must both survive -- is real. It is also
+    # deterministic, so it fails here instead of sleeping and meeting the
+    # same conflict again.
     conflicts=$(git diff --name-only --diff-filter=U)
     regenerated='pizza/data/research.json pizza/data/buzz.json pizza/data/history.json'
     only_regenerated=yes
@@ -65,11 +91,13 @@ for attempt in 1 2 3; do
         echo "rebase: kept this run's copy of $(echo $conflicts | tr '\n' ' ')over the previous run's"
       else
         git rebase --abort || true
-        echo "rebase onto main failed on attempt $attempt"; continue
+        echo "::error::Rebase onto main failed after keeping this run's copy of $(echo $conflicts). The data commit was not pushed."
+        exit 1
       fi
     else
       git rebase --abort || true
-      echo "rebase onto main failed on attempt $attempt (conflicts: ${conflicts:-none})"; continue
+      echo "::error::Rebase onto main failed (conflicts: $(echo ${conflicts:-none})). It would fail the same way on a retry, so the data commit was not pushed."
+      exit 1
     fi
   fi
   if git push "$REMOTE" HEAD:main; then

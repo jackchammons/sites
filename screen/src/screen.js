@@ -46,17 +46,22 @@ export const ANGLE_STANDARDS = [
     note: 'The least THX accepts for the back row of a certified theatre.' },
 ];
 
-/* ITU-R BT.2022 / BT.2020 design viewing distances, in picture heights. Each
-   is the distance at which one pixel of that format subtends about one
-   minute of arc, rounded as the recommendation publishes it. */
+/* ITU-R design viewing distances, in picture heights: the distance at which
+   two adjacent pixels of the format subtend one minute of arc. These are the
+   figures of BT.500-15 Table 1-1 (3.2 H, 1.6 H and 0.8 H, for 31°, 58° and
+   96° on a 16:9 picture); BT.1845-1 Table 1 and BT.2100 Table 3 print the
+   same three. BT.2020 defines the UHD formats and states no distance. */
 export const ITU_STANDARDS = [
-  { id: 'itu-hd', label: 'ITU-R BT.2022 — HDTV', short: 'ITU 1080p', heights: 3.2, res: '1080' },
-  { id: 'itu-uhd', label: 'ITU-R BT.2020 — UHD 4K', short: 'ITU 4K', heights: 1.5, res: '2160' },
-  { id: 'itu-8k', label: 'ITU-R BT.2020 — UHD 8K', short: 'ITU 8K', heights: 0.75, res: '4320' },
+  { id: 'itu-hd', label: 'ITU-R BT.500 — HDTV', short: 'ITU 1080p', heights: 3.2, res: '1080' },
+  { id: 'itu-uhd', label: 'ITU-R BT.500 — UHD 4K', short: 'ITU 4K', heights: 1.6, res: '2160' },
+  { id: 'itu-8k', label: 'ITU-R BT.500 — UHD 8K', short: 'ITU 8K', heights: 0.8, res: '4320' },
 ];
 
-/* Wider than this and the picture is a front-row experience: past the
-   ITU's 58–61° UHD design angle, which is the widest any standard asks. */
+/* Wider than this and the picture is a front-row experience: half as wide
+   again as THX's 40° best seat, and past the 58° the ITU designs UHD 4K for
+   on a 16:9 picture. Only ITU rows lie beyond it (the 8K distance, and the 4K
+   distance on shapes wider than 16:9), and those are the distances at which
+   the pixels resolve, not seats anyone is asked to take. */
 export const FRONT_ROW = 60;
 
 /* The pre-HD rule of thumb, as a multiple of the diagonal. */
@@ -187,7 +192,7 @@ export function placement(d, distance, eyeHeight, centreHeight) {
 /* Where an angle lands among the seating standards, as prose. */
 export function describeAngle(angle) {
   const s = ANGLE_STANDARDS;
-  if (angle >= FRONT_ROW) return `wider than any standard asks — a front-row seat`;
+  if (angle >= FRONT_ROW) return `wider than THX or SMPTE ask — a front-row seat`;
   if (angle >= s[0].angle) return `at or inside THX’s best-seat ${s[0].angle}°`;
   for (let i = 1; i < s.length; i++) {
     if (angle >= s[i].angle) return `between ${s[i].short} and ${s[i - 1].short}`;

@@ -8,7 +8,7 @@ const FS = { reputation: 8.0, critical: 7.0, craft: 7.0, distinctiveness: 7.0, v
 const entry = over => ({
   id: 'x', rank: 5, previousRank: 7, score: 80,
   factorScores: { ...FS }, penaltyApplied: 0, stalenessDecay: 0,
-  factors: {}, mentions: [], lastVerified: '2026-08-01',
+  factors: {}, mentions: [], verified: { date: '2026-08-01', source: 'rating' },
   ...over
 });
 const snap = over => ({ weekKey: '2026-W34', scores: { x: 80 }, ...over });
@@ -48,11 +48,48 @@ test('a fresh provenance date reads as a re-rating even without snapshot factors
 });
 
 test('a fall with active decay and no other cause is attributed to freshness', () => {
-  const r = entry({ score: 79.5, stalenessDecay: 0.012, lastVerified: '2026-03-01' });
+  const r = entry({ score: 79.5, stalenessDecay: 0.012, verified: { date: '2026-03-01', source: 'rating' } });
   const html = evidenceFor(r, snap({ scores: { x: 80.2 } }), NOW);
   assert.match(html, /freshness decay/);
   assert.match(html, /2026-03-01/);
   assert.doesNotMatch(html, /score (up|down)/);
+});
+
+test('the decay line names the check the score ran from, not the legacy rating stamp', () => {
+  const r = entry({ score: 79.5, stalenessDecay: 0.012, lastVerified: '2026-03-01',
+    verified: { date: '2026-06-20', source: 'status check' } });
+  const html = evidenceFor(r, snap({ scores: { x: 80.2 } }), NOW);
+  assert.match(html, /nothing re-verified since the status check on 2026-06-20/);
+  assert.doesNotMatch(html, /2026-03-01/);
+});
+
+test('a rise after a status check is a freshness reset, not displacement', () => {
+  const r = entry({ score: 81.4, lastVerified: '2026-03-01',
+    verified: { date: '2026-08-28', source: 'status check' } });
+  const html = evidenceFor(r, snap({ scores: { x: 80 } }), NOW);
+  assert.match(html, /re-verified by a status check on 2026-08-28, which resets its freshness decay/);
+  assert.doesNotMatch(html, /entries around it/);
+});
+
+test('a rise after a locations check is a freshness reset too', () => {
+  const r = entry({ score: 81.4, verified: { date: '2026-08-27', source: 'locations check' } });
+  const html = evidenceFor(r, snap({ scores: { x: 80 } }), NOW);
+  assert.match(html, /re-verified by a locations check on 2026-08-27/);
+});
+
+test('an old verification does not explain a rise', () => {
+  const r = entry({ score: 81.4, verified: { date: '2026-08-01', source: 'status check' } });
+  const html = evidenceFor(r, snap({ scores: { x: 80 } }), NOW);
+  assert.match(html, /entries around it fell/);
+});
+
+test('a reputation that carries no weight is not offered as the cause of a rise', () => {
+  const r = entry({ factorScores: { ...FS, reputation: 8.6 },
+    reputationDetail: { use: 'lowers' }, score: 80 });
+  const prev = snap({ factors: { x: { ...FS, penalty: 0 } } });
+  assert.doesNotMatch(evidenceFor(r, prev, NOW), /reputation \+/);
+  const counted = entry({ factorScores: { ...FS, reputation: 8.6 }, reputationDetail: { use: 'counted' } });
+  assert.match(evidenceFor(counted, prev, NOW), /reputation \+0\.6/);
 });
 
 test('a small unexplained drift reads as displacement, never a bare score delta', () => {

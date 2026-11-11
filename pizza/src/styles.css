@@ -13,10 +13,12 @@
   --tomato: #e14434;
   --tomato-2: #ff7a5e;
   --crust: #e0a33c;
+  /* Crust as small text. The same hue on dark; the light palette needs a
+     darker one, since the fill colour is 3.7:1 on the page. */
+  --crust-ink: #e0a33c;
   --basil: #6cbf6b;
   --amber: #e2b64a;
-  --moz: #f4e3c8;
-  --char: #7a5a4a;
+  --char: #8a6a5a;
   --radius: 14px;
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
@@ -27,8 +29,8 @@
     --bg: #fbf6ef; --bg-2: #f4ece1; --panel: #fffdfa; --panel-2: #f7f1e8;
     --line: #e2d5c4; --line-soft: #ece2d4;
     --ink: #23180f; --ink-2: #5d4c3e; --ink-3: #736050;
-    --tomato: #c8341f; --tomato-2: #b93018; --crust: #a9761a; --basil: #236322; --amber: #7a5600;
-    --moz: #7a5e35; --char: #a58a76;
+    --tomato: #c8341f; --tomato-2: #b93018; --crust: #a9761a; --crust-ink: #8a5f10;
+    --basil: #236322; --amber: #7a5600; --char: #a58a76;
   }
 }
 
@@ -56,7 +58,6 @@ h1, h2, h3, h4 { line-height: 1.15; margin: 0; letter-spacing: -0.02em; }
    leaving a 62ch ribbon down the left edge. */
 @media (min-width: 1100px) {
   .lede { max-width: 110ch; }
-  .method-p { max-width: 110ch; }
 }
 
 /* ---------- skip link + section nav ---------- */
@@ -155,12 +156,6 @@ h1, h2, h3, h4 { line-height: 1.15; margin: 0; letter-spacing: -0.02em; }
 }
 .formula b { color: var(--tomato-2); }
 
-/* Screen-reader-only text (skip link targets, chart labels). */
-.sr-only {
-  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
-}
-
 /* ---------- leaderboard ---------- */
 .board { display: flex; flex-direction: column; gap: 14px; }
 .card {
@@ -193,7 +188,7 @@ h1, h2, h3, h4 { line-height: 1.15; margin: 0; letter-spacing: -0.02em; }
         margin-top: 4px; line-height: 1.5; }
 .locs em { color: var(--crust); font-style: normal; }
 .locs-label { text-transform: uppercase; letter-spacing: .06em; font-size: 9.5px;
-              color: var(--ink-3); opacity: .75; margin-right: 6px; }
+              color: var(--ink-3); margin-right: 6px; }
 .sig { font-size: 14px; color: var(--ink-2); margin: 10px 0 0; font-style: italic; }
 .blurb { font-size: 14.5px; color: var(--ink-2); margin: 12px 0 0; max-width: 68ch; }
 .scorebox { text-align: right; min-width: 96px; }
@@ -244,18 +239,20 @@ details.math[open] > summary::before { content: "▾ "; }
 details.math > summary:hover { color: var(--ink); }
 .mathbody { padding: 4px 24px 22px; }
 table.calc { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12px; }
-table.calc th {
+table.calc thead th {
   text-align: left; color: var(--ink-3); font-weight: 500; padding: 6px 8px;
   border-bottom: 1px solid var(--line); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
 }
-table.calc td { padding: 7px 8px; border-bottom: 1px solid var(--line-soft); color: var(--ink-2); }
-table.calc td:first-child { color: var(--ink); }
-table.calc td.num { text-align: right; }
-table.calc tr.sum td { font-weight: 700; color: var(--ink); border-bottom: none; }
-table.calc tr.neg td { color: var(--tomato-2); }
+/* A row's first cell is its header (th scope="row") and is styled as the cell
+   it sits beside. */
+table.calc td, table.calc tbody th {
+  padding: 7px 8px; border-bottom: 1px solid var(--line-soft); color: var(--ink-2);
+  font-weight: 400; text-align: left;
+}
+table.calc tbody th, table.calc td:first-child { color: var(--ink); }
+table.calc .num { text-align: right; }
+table.calc tr.sum td, table.calc tr.sum th { font-weight: 700; color: var(--ink); border-bottom: none; }
 .swatch { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 7px; vertical-align: middle; }
-.minibar { display: block; height: 4px; border-radius: 999px; background: var(--line); margin-top: 5px; }
-.minibar i { display: block; height: 100%; border-radius: 999px; background: var(--ink-3); }
 .note { font-size: 12.5px; color: var(--ink-3); margin: 14px 0 0; line-height: 1.55; }
 .card .card-main, .card .stack, .card .chips { cursor: pointer; }
 details.math > summary .hint { font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-left: 8px; font-weight: 400; }
@@ -269,12 +266,12 @@ details.math > summary .hint { font-family: var(--mono); font-size: 11px; color:
 .t-pos { color: var(--basil); background: color-mix(in srgb, var(--basil) 12%, transparent); }
 .t-mid { color: var(--amber); background: color-mix(in srgb, var(--amber) 12%, transparent); }
 .t-neg { color: var(--tomato-2); background: color-mix(in srgb, var(--tomato-2) 10%, transparent); }
-table.calc tr.fac td { border-bottom: none; padding-bottom: 4px; }
+table.calc tr.fac td, table.calc tr.fac th { border-bottom: none; padding-bottom: 4px; }
 table.calc tr.fac + tr.sub td, table.calc tr.sub + tr.sub td { border-bottom: none; }
 table.calc tr.sub td { padding: 2px 8px 4px 22px; font-size: 11.5px; color: var(--ink-3); font-family: var(--sans); }
 table.calc tr.sub:has(+ tr.fac) td, table.calc tr.sub:has(+ tr.sum) td { border-bottom: 1px solid var(--line-soft); padding-bottom: 8px; }
 table.calc td.dim { color: var(--ink-3); }
-table.calc tr.sum td { border-top: 1px solid var(--line); }
+table.calc tr.sum td, table.calc tr.sum th { border-top: 1px solid var(--line); }
 @media (max-width: 720px) {
   /* Fixed layout so the table is exactly the card's width and the sub-rows
      wrap inside it; auto layout let the badge columns push it 26px wide. */
@@ -286,26 +283,26 @@ table.calc tr.sum td { border-top: 1px solid var(--line); }
   table.calc th:nth-child(4) { width: 32%; }
   table.calc th:nth-child(5) { width: 26%; }
   table.calc th .wide { display: none; }
-  table.calc td, table.calc th { padding-left: 4px; padding-right: 4px; }
+  table.calc td, table.calc th, table.calc tbody th { padding-left: 4px; padding-right: 4px; }
   table.calc tr.sub td { padding-left: 6px; }
 }
 
 /* ---------- methodology ---------- */
-.grid2 { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top: 26px; }
+/* Two cards to a row at most: four across left each formula block narrower
+   than the formula in it. */
+.grid2 { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); margin-top: 26px; }
 .mcard { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
 .mcard h4 { font-size: 16px; margin: 0 0 10px; line-height: 1.15; letter-spacing: -0.02em; }
 .mcard p { font-size: 14px; color: var(--ink-2); margin: 0 0 10px; }
-.mcard code, .inline-code {
+.mcard code {
   font-family: var(--mono); font-size: 12.5px; background: var(--panel-2);
-  border: 1px solid var(--line); border-radius: 6px; padding: 2px 6px; color: var(--crust);
+  border: 1px solid var(--line); border-radius: 6px; padding: 2px 6px; color: var(--crust-ink);
 }
 .mcard pre {
   font-family: var(--mono); font-size: 12.5px; background: var(--panel-2);
   border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px;
   overflow-x: auto; color: var(--ink-2); margin: 0 0 10px;
 }
-ul.plain { margin: 0; padding-left: 18px; font-size: 13.5px; color: var(--ink-2); }
-ul.plain li { margin-bottom: 6px; }
 
 footer { padding: 48px 0 64px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 13px; }
 footer p { max-width: 72ch; }
@@ -361,18 +358,19 @@ footer p { max-width: 72ch; }
 }
 .buzz-kind.k-opening { color: var(--basil); border-color: color-mix(in srgb, var(--basil) 45%, var(--line)); }
 .buzz-kind.k-closing { color: var(--tomato-2); border-color: color-mix(in srgb, var(--tomato) 45%, var(--line)); }
-.buzz-kind.k-ranking { color: var(--crust); border-color: color-mix(in srgb, var(--crust) 45%, var(--line)); }
-.buzz-body a {
+.buzz-kind.k-ranking { color: var(--crust-ink); border-color: color-mix(in srgb, var(--crust) 45%, var(--line)); }
+/* The headline only: the pizzeria tags in the meta line are links too, and
+   have their own size. */
+.buzz-body > a {
   color: var(--ink); text-decoration: none; font-size: 15.5px; line-height: 1.45;
   border-bottom: 1px solid transparent;
 }
-.buzz-body a:hover { color: var(--tomato-2); border-bottom-color: currentColor; }
+.buzz-body > a:hover { color: var(--tomato-2); border-bottom-color: currentColor; }
 .buzz-meta {
   display: flex; flex-wrap: wrap; align-items: center;
   gap: 6px 10px; margin-top: 6px;
   font-family: var(--mono); font-size: 11px; color: var(--ink-3);
 }
-.buzz-ranked { color: var(--crust); }
 @media (max-width: 620px) {
   .buzz-item { grid-template-columns: 1fr; gap: 7px; }
   .buzz-kind { justify-self: start; padding: 3px 10px; }
@@ -401,7 +399,7 @@ footer p { max-width: 72ch; }
 }
 .bracket-win { display: flex; gap: 12px; align-items: baseline; padding: 14px 0 0; }
 .bracket-medal {
-  font-family: var(--mono); font-size: 12px; color: var(--crust); font-weight: 700;
+  font-family: var(--mono); font-size: 12px; color: var(--crust-ink); font-weight: 700;
 }
 .bracket-win strong { font-family: var(--serif); font-size: 19px; font-weight: 700; }
 .bracket-sub { font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-top: 3px; }
@@ -412,7 +410,7 @@ footer p { max-width: 72ch; }
 }
 .cand-list { list-style: none; margin: 0 0 8px; padding: 0; }
 .cand-list li {
-  display: grid; grid-template-columns: minmax(120px, 1fr) 1.1fr 2fr 54px;
+  display: grid; grid-template-columns: minmax(120px, 1fr) 1.1fr 2fr 160px;
   gap: 14px; align-items: baseline; padding: 11px 0;
   border-bottom: 1px solid var(--line-soft); font-size: 14px;
 }
@@ -420,7 +418,9 @@ footer p { max-width: 72ch; }
 .cand-list strong { font-family: var(--serif); font-size: 17px; font-weight: 700; }
 .cand-meta { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); }
 .cand-note { color: var(--ink-2); font-size: 13.5px; }
-.cand-list a { font-family: var(--mono); font-size: 11px; color: var(--ink-3); text-align: right; }
+/* The citation is the outlet's hostname. Each row is its own grid, so the
+   column has a fixed width to keep the rows aligned; a longer host wraps. */
+.cand-list a { font-family: var(--mono); font-size: 11px; color: var(--ink-3); text-align: right; overflow-wrap: anywhere; }
 .cand-list a:hover { color: var(--tomato-2); }
 @media (max-width: 720px) {
   .cand-list li { grid-template-columns: 1fr; gap: 5px; }
@@ -493,56 +493,70 @@ footer p { max-width: 72ch; }
 /* ---- Directory ---- */
 /* Stacked (map first) on narrow screens; on a wide one the table takes the
    left column and the map rides beside it as a sticky rail, so clicking a row
-   can focus its marker without scrolling. */
+   can focus its marker without scrolling. The rail is in the markup hidden;
+   app.js reveals it and sets .has-map once there is a map to show, so without
+   one the table keeps the full width. */
 .dir-layout { display: flex; flex-direction: column; gap: 22px; margin-top: 22px; }
 .dir-rail { order: -1; min-width: 0; }
 .dir-list { min-width: 0; }
 .dir-layout .dir-scroll, .dir-layout .dir-map { margin-top: 0; }
 @media (min-width: 1100px) {
-  .dir-layout {
-    display: grid; grid-template-columns: minmax(0, 1fr) clamp(320px, 34vw, 460px);
+  .dir-layout.has-map {
+    display: grid; grid-template-columns: minmax(0, 1fr) clamp(320px, 30vw, 460px);
     gap: 22px; align-items: start;
   }
-  .dir-rail { order: 0; position: sticky; top: 16px; }
+  /* Below the sticky nav, not under it: the same offset anchors scroll to. */
+  .dir-rail { order: 0; position: sticky; top: 64px; }
   .dir-rail .dir-map { height: min(72vh, 640px); }
-  /* The table shares the row with the map now: tighter cells so all six
-     columns sit inside the column without resting in a scrolled-off state. */
+  /* The table shares the row with the map: tighter cells so all six columns
+     sit inside the column without resting in a scrolled-off state. */
   .dir-table { font-size: 12.5px; }
   .dir-table td, .dir-table th { padding: 9px 9px; }
-  .dir-where { min-width: 120px; }
-  .dir-style { min-width: 100px; }
 }
 .dir-scroll { margin-top: 22px; border: 1px solid var(--line); border-radius: var(--radius); }
 .dir-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.dir-table th {
+.dir-table thead th {
   text-align: left; font-family: var(--mono); font-size: 10.5px; text-transform: uppercase;
   letter-spacing: .07em; color: var(--ink-3); padding: 10px 12px;
   border-bottom: 1px solid var(--line); background: var(--bg-2);
   position: sticky; top: 48px; z-index: 1;
 }
 .dir-table th.num, .dir-table td.num { text-align: right; }
-.dir-table td { padding: 10px 12px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
-.dir-table tbody tr:last-child td { border-bottom: 0; }
+/* The name cell is the row's header (th scope="row"), styled as a cell. */
+.dir-table td, .dir-table tbody th {
+  padding: 10px 12px; border-bottom: 1px solid var(--line-soft); vertical-align: top; text-align: left;
+}
+.dir-table tbody tr:last-child td, .dir-table tbody tr:last-child th { border-bottom: 0; }
 .dir-name { font-weight: 600; }
 .dir-st { display: none; }
 .dir-name a { color: var(--ink); text-decoration-color: var(--crust); }
 .dir-rank {
-  font-family: var(--mono); font-size: 10.5px; color: var(--tomato-2);
-  margin-left: 6px; font-variant-numeric: tabular-nums;
+  font-family: var(--mono); font-size: 10.5px; font-weight: 400; color: var(--ink-3);
+  margin-left: 6px; font-variant-numeric: tabular-nums; white-space: nowrap;
 }
+.dir-rank.top { color: var(--tomato-2); }
 .dir-where { min-width: 140px; }
 .dir-addr { font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-top: 3px; line-height: 1.5; }
 .dir-style { color: var(--ink-2); min-width: 120px; }
 .dir-attrs .chip { margin: 1px 2px 1px 0; }
 .dir-score { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 600; }
 .dir-status { font-family: var(--mono); font-size: 11px; color: var(--ink-3); white-space: nowrap; }
-.dir-row.st-closed td, .dir-row.st-closed .dir-name a { color: var(--ink-3); }
+.dir-row.st-closed td, .dir-row.st-closed th, .dir-row.st-closed .dir-name a { color: var(--ink-3); }
 .dir-row.st-closed .dir-name a, .dir-row.st-closed .dir-name { text-decoration: line-through; }
 .dir-row.st-opening .dir-status { color: var(--basil); }
+/* Beside the map the table has about 800px for six columns. The name claims
+   its share first, so most names sit on one line; Where and Style give way,
+   down to minimums at which all six still fit at 1100px. Placed after the
+   base rules for those columns because it has to override them. */
+@media (min-width: 1100px) {
+  .dir-name { width: 28%; }
+  .dir-where { min-width: clamp(120px, 11vw, 140px); }
+  .dir-style { min-width: 100px; }
+}
 
 /* The expanded record under a row: everything the dataset stores. */
 .dir-row { cursor: pointer; }
-.dir-row:hover td { background: color-mix(in srgb, var(--panel-2) 55%, transparent); }
+.dir-row:hover td, .dir-row:hover th { background: color-mix(in srgb, var(--panel-2) 55%, transparent); }
 .dir-toggle {
   appearance: none; background: none; border: 0; margin: -12px 0 -12px -12px;
   padding: 12px 10px 12px 12px; min-width: 44px; min-height: 44px;
@@ -597,7 +611,7 @@ footer p { max-width: 72ch; }
 .buzz-tag {
   display: inline-block; font-family: var(--mono); font-size: 10.5px;
   padding: 1px 8px; border: 1px solid var(--line); border-radius: 99px;
-  color: var(--ink-2); text-decoration: none; background: var(--card);
+  color: var(--ink-2); text-decoration: none; background: var(--panel);
   white-space: nowrap;   /* a tag that wraps mid-name is unreadable */
 }
 a.buzz-tag:hover { border-color: var(--tomato); color: var(--tomato-2); }
@@ -605,6 +619,8 @@ a.buzz-tag:hover { border-color: var(--tomato); color: var(--tomato-2); }
 /* ---- Methodology ---- */
 .method-h { font-size: 16px; margin: 38px 0 8px; }
 .method-p { color: var(--ink-2); font-size: 14px; max-width: 74ch; line-height: 1.65; margin: 0 0 14px; }
+/* Wide screens: the prose runs as wide as the ledes above it. */
+@media (min-width: 1100px) { .method-p { max-width: 110ch; } }
 .dir-more summary {
   cursor: pointer; color: var(--tomato-2); font-family: var(--mono);
   font-size: 10.5px; margin-top: 2px; list-style: none;
@@ -615,7 +631,7 @@ a.buzz-tag:hover { border-color: var(--tomato); color: var(--tomato-2); }
 /* ---- Directory map ---- */
 .dir-map {
   height: 440px; margin-top: 22px; border: 1px solid var(--line);
-  border-radius: var(--radius); background: var(--card); z-index: 0;
+  border-radius: var(--radius); background: var(--line); z-index: 0;
 }
 .dir-map-note { margin-top: 8px; }
 .map-pop { font: 13px/1.5 system-ui, sans-serif; }
@@ -624,13 +640,8 @@ a.buzz-tag:hover { border-color: var(--tomato); color: var(--tomato-2); }
 @media (max-width: 700px) { .dir-map { height: 320px; } }
 
 
-/* ---- Desktop: the ranking uses the width ----
-   Board left, weight panel as a sticky rail on the right, so the controls stay
-   in reach while scrolling the list without ever covering it. Below 1200px the
-   panel drops back under the board, full-width, exactly as on mobile. */
+/* ---- Desktop: the sections use the width ---- */
 @media (min-width: 1200px) {
-  .spotlight-inline { display: none; }
-
   /* the buzz timeline in two columns instead of a half-empty one */
   .buzz-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px; align-items: start; }
 }
@@ -649,6 +660,9 @@ a.buzz-tag:hover { border-color: var(--tomato); color: var(--tomato-2); }
 .chart-wrap { position: relative; margin-top: 24px; }
 .chart-scroll { overflow-x: auto; }
 .bump { display: block; width: 100%; min-width: 560px; height: auto; font-family: var(--mono); }
+/* On a phone the chart is drawn at close to full size and scrolls (it opens at
+   the newest week): squeezed to 560px its labels render at about 6px. */
+@media (max-width: 720px) { .bump { min-width: 860px; } }
 .bump .grid line { stroke: var(--line-soft); stroke-width: 1; }
 .bump .rank-lab, .bump .week-lab { fill: var(--ink-3); font-size: 10.5px; }
 .bump .series path { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }

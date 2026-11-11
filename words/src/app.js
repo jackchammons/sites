@@ -36,7 +36,7 @@ function render(s) {
   const max = s.top[0].count;
   for (const { word, count } of s.top) {
     const row = document.createElement('div'); row.className = 'freq-row';
-    const w = document.createElement('span'); w.className = 'w'; w.textContent = word;
+    const w = document.createElement('span'); w.className = 'w'; w.textContent = word; w.title = word;
     const c = document.createElement('span'); c.className = 'c'; c.textContent = `×${count}`;
     const bar = document.createElement('span'); bar.className = 'bar';
     const fill = document.createElement('i'); fill.style.width = `${count / max * 100}%`;
@@ -48,29 +48,81 @@ function render(s) {
 
 const update = () => render(analyze(ta.value, config));
 
-ta.addEventListener('input', update);
+/* The status line describes the sample or the last button press, so it goes as
+   soon as the viewer edits the text it was describing. */
+ta.addEventListener('input', () => { status.textContent = ''; update(); });
+
+/* Replaces the text between two offsets through the browser's own editing
+   command, which puts the change on the textarea's undo stack: Ctrl/Cmd+Z
+   brings back whatever a button removed. Assigning .value wipes that stack, so
+   it is only the fallback for a browser that refuses the command or applies it
+   differently. The command fires an input event, which recounts. Returns
+   whether the change can be undone. */
+function replaceRange(text, start, end) {
+  const before = ta.value;
+  const want = before.slice(0, start) + text + before.slice(end);
+  if (want === before) return false;
+  ta.focus();
+  ta.setSelectionRange(start, end);
+  let done = false;
+  try {
+    done = document.execCommand(text ? 'insertText' : 'delete', false, text);
+  } catch { done = false; }
+  if (done && ta.value === want) return true;
+  ta.value = want;
+  ta.setSelectionRange(start + text.length, start + text.length);
+  update();
+  return false;
+}
+const undoHint = undoable => (undoable ? ' Ctrl+Z or Cmd+Z in the box undoes this.' : '');
+
 $('clear-btn').addEventListener('click', () => {
-  ta.value = ''; update(); ta.focus(); status.textContent = 'Cleared.';
+  const undoable = replaceRange('', 0, ta.value.length);
+  ta.focus();
+  status.textContent = 'Cleared.' + undoHint(undoable);
 });
-$('sample-btn').addEventListener('click', () => {
-  ta.value = config.sample.text; update();
-  status.textContent = `Sample loaded: ${config.sample.label}.`;
+/* Load sample and Paste hand the focus back to the button: leaving it in the
+   box would raise a phone's keyboard over the figures the viewer asked for. */
+$('sample-btn').addEventListener('click', e => {
+  const undoable = replaceRange(config.sample.text, 0, ta.value.length);
+  e.currentTarget.focus();
+  status.textContent = `Sample loaded: ${config.sample.label}.` + undoHint(undoable);
 });
-$('paste-btn').addEventListener('click', () => {
-  const fallback = () => {
+$('paste-btn').addEventListener('click', e => {
+  const btn = e.currentTarget;
+  const manual = () => {
     status.textContent = 'Click in the box and paste with Ctrl+V or Cmd+V.'; ta.focus();
   };
-  if (navigator.clipboard && navigator.clipboard.readText) {
-    navigator.clipboard.readText()
-      .then(t => { ta.value = t; update(); status.textContent = 'Pasted from clipboard.'; })
-      .catch(fallback);
-  } else fallback();
+  if (!(navigator.clipboard && navigator.clipboard.readText)) { manual(); return; }
+  navigator.clipboard.readText().then(clip => {
+    // A textarea stores line breaks as \n, so the comparison in replaceRange needs them that way.
+    const text = clip.replace(/\r\n?/g, '\n');
+    if (!text) { status.textContent = 'The clipboard holds no text to paste.'; return; }
+    /* The untouched sample is a placeholder, so a paste replaces it. Anything
+       else is the viewer's own text: the paste goes in at the caret, over the
+       selection if there is one, as Ctrl+V would. */
+    const isSample = ta.value === config.sample.text;
+    const undoable = replaceRange(text,
+      isSample ? 0 : ta.selectionStart, isSample ? ta.value.length : ta.selectionEnd);
+    btn.focus();
+    status.textContent = 'Pasted from clipboard.' + undoHint(undoable);
+  }, manual);
 });
 
-/* Open with the sample so the page shows what it does; the browser may have
-   restored the viewer's own text on reload, which takes precedence. */
+/* Open with the sample so the page shows what it does, unless the box already
+   holds the viewer's own text. */
 if (!ta.value) {
   ta.value = config.sample.text;
   status.textContent = 'Showing a sample passage. Clear it or start typing to count your own text.';
 }
 update();
+
+/* A browser that restores the viewer's text after a reload or a trip through
+   history may do it once this script has run, and fires no input event when it
+   does: the box changes under figures that still describe the sample. pageshow
+   comes after the restore, so count again there and drop the sample notice if
+   the text is no longer the sample. */
+window.addEventListener('pageshow', () => {
+  if (ta.value !== config.sample.text) status.textContent = '';
+  update();
+});

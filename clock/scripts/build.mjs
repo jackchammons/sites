@@ -6,7 +6,9 @@
  * the labelled slots for every figure, and one row per city in
  * data/clocks.json. src/app.js fills those slots from the viewer's own clock.
  * Nothing time-dependent is baked into the markup — a value rendered here
- * would be wrong by however long ago the site was published.
+ * would be wrong by however long ago the site was published. That includes
+ * the time of the build itself, so two builds of the same source are byte
+ * for byte the same page.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -14,10 +16,10 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
-// The multi-site build sets OUT_DIR to dist/<slug>/; a standalone run writes dist/.
+// The multi-site build sets OUT_DIR to dist/<slug>/; a standalone run writes the same place.
 const dist = process.env.OUT_DIR
   ? path.resolve(process.env.OUT_DIR)
-  : path.join(root, '..', 'dist');
+  : path.join(root, '..', 'dist', path.basename(root));
 
 const data = JSON.parse(fs.readFileSync(path.join(root, 'data/clocks.json'), 'utf8'));
 const esc = s => String(s).replace(/[&<>"']/g, c =>
@@ -85,8 +87,6 @@ const zonesHtml = data.zones.map(z => `
           <div class="zmeta"><span class="off pending"></span><span class="dayrel pending"></span><span>${esc(z.region)}</span></div>
         </li>`).join('');
 
-const built = new Date().toISOString();
-
 const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -98,7 +98,7 @@ const html = `<!doctype html>
 <meta name="theme-color" content="#fbf6ef" media="(prefers-color-scheme: light)">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕰️</text></svg>">
 <link rel="stylesheet" href="./styles.css">
-<script src="./app.js" defer></script>
+<script type="module" src="./app.js"></script>
 </head>
 <body>
 
@@ -112,7 +112,7 @@ const html = `<!doctype html>
     </div>
   </div>
   <div class="controls" id="controls" hidden>
-    <button type="button" id="toggle-format" aria-pressed="false">24-hour</button>
+    <button type="button" id="toggle-format" aria-pressed="false">12-hour</button>
     <button type="button" id="toggle-seconds" aria-pressed="true">Seconds</button>
   </div>
   <p class="noscript" id="boot-error" hidden>This clock could not start in this browser — the figures below
@@ -149,17 +149,35 @@ const html = `<!doctype html>
   <p>Offsets and zone names come from your browser's own copy of the IANA time zone database,
      so summer time is handled wherever the rules say it should be. The daylight dot beside each
      city is banded from the local hour, not from a sunrise table.</p>
-  <p>Page built ${esc(built)} · <a href="../">all sites</a></p>
+  <p><a href="../">all sites</a></p>
 </div></footer>
 
+<script>
+/* app.js is a module: if it or time.js fails to load, or the two do not link,
+   none of it runs and it cannot report its own absence. The first paint
+   clears every .pending mark, so one still standing when the page has
+   finished loading means that paint never happened. */
+window.addEventListener('load', function () {
+  if (document.querySelector('.pending')) document.getElementById('boot-error').hidden = false;
+});
+</script>
 </body>
 </html>
 `;
 
+// Clearing the target is only safe when it is a previous build or empty: OUT_DIR=. would
+// otherwise delete this site's source.
+const holdsSource = dist === root || root.startsWith(dist + path.sep);
+const foreign = fs.existsSync(dist) && fs.readdirSync(dist).length > 0
+  && !fs.existsSync(path.join(dist, 'index.html'));
+if (holdsSource || foreign) {
+  console.error(`refusing to clear ${dist}: it is not an empty directory or a previous build`);
+  process.exit(1);
+}
 fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(dist, { recursive: true });
 fs.writeFileSync(path.join(dist, 'index.html'), html);
-for (const asset of ['app.js', 'styles.css']) {
+for (const asset of ['app.js', 'time.js', 'styles.css']) {
   fs.copyFileSync(path.join(root, 'src', asset), path.join(dist, asset));
 }
 fs.writeFileSync(path.join(dist, '.nojekyll'), '');

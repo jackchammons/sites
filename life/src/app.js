@@ -1,19 +1,31 @@
 /* The live half of /life/: a canvas the size of the viewport, seeded at
-   random when the page opens and stepped at a fixed rate until it closes. */
-import { createGrid, randomize, step } from './life.js';
+   random when the page opens and stepped at a fixed rate until it closes.
+   A board that has burnt down to still lifes and blinkers is seeded again,
+   and a click, a tap or the space bar pauses it. There is nothing to see
+   but the board, so both of those happen without any control on the page. */
+import { createGrid, randomize, step, createWatch, settled } from './life.js';
 
 const $ = id => document.getElementById(id);
 
 const CELL = 8;                     // CSS pixels per cell, grid line included
 const GENERATIONS_PER_SECOND = 10;  // the conventional "normal" speed
-const INTERVAL = 1000 / GENERATIONS_PER_SECOND;
+const CALM_GENERATIONS_PER_SECOND = 2;  // for a viewer who has asked for less motion
+const REST_MS = 3000;               // how long a settled board stays on show before it is reseeded
 const GRID_LINE = '#e0e0e0';
 const CELL_INK = '#000000';
 
 const canvas = $('board');
 const ctx = canvas.getContext('2d', { alpha: false });
 
+/* Read on every frame rather than once, so switching the setting while the
+   page is open changes the pace straight away. */
+const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+const interval = () => 1000 / (calm.matches ? CALM_GENERATIONS_PER_SECOND : GENERATIONS_PER_SECOND);
+
 let grid, next, scale;
+let watch = createWatch();
+let rest = -1;        // generations a settled board has left; -1 while it is still evolving
+let paused = false;
 
 function layout() {
   const w = window.innerWidth, h = window.innerHeight;
@@ -38,6 +50,9 @@ function layout() {
       }
     }
     grid = fresh;
+    // New territory is new soup, so whatever the board had settled into is over.
+    watch = createWatch();
+    rest = -1;
   }
   next = new Uint8Array(cols * rows);
   draw();
@@ -64,18 +79,48 @@ function draw() {
   for (let y = 0; y <= rows; y++) ctx.fillRect(0, y * CELL, w, 1);
 }
 
+/* One generation. A settled board is left on show for a few seconds, still
+   blinking, and then the whole of it is seeded afresh: left alone it would
+   look exactly like this until the tab closed. */
+function advance() {
+  if (rest === 0) {
+    randomize(grid);
+    watch = createWatch();
+    rest = -1;
+    return;
+  }
+  const out = step(grid, next);
+  next = grid.cells;
+  grid.cells = out;
+  if (rest > 0) rest--;
+  else if (settled(watch, grid)) rest = Math.ceil(REST_MS / interval());
+}
+
+/* The frame loop keeps running while paused and simply steps nothing, which
+   leaves one loop to reason about. Coming back from a pause, or from a
+   hidden tab, plays one generation and carries on: the remainder below
+   drops the time that passed, so there is no burst to catch up. */
 let last = 0;
 function tick(now) {
-  if (now - last >= INTERVAL) {
-    last = now - ((now - last) % INTERVAL);
-    const out = step(grid, next);
-    next = grid.cells;
-    grid.cells = out;
+  const every = interval();
+  if (!paused && now - last >= every) {
+    last = now - ((now - last) % every);
+    advance();
     draw();
   }
   requestAnimationFrame(tick);
 }
 
+function togglePause() { paused = !paused; }
+
 layout();
 window.addEventListener('resize', layout);
+canvas.addEventListener('click', togglePause);
+/* The canvas is the whole page and takes no focus of its own, so the space
+   bar is heard on the window. */
+window.addEventListener('keydown', e => {
+  if (e.key !== ' ' || e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
+  e.preventDefault();
+  togglePause();
+});
 requestAnimationFrame(tick);

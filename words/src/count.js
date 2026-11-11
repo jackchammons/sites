@@ -4,20 +4,49 @@
  * which runs it from the *built* copy. One implementation — don't fork it.
  *
  * Definitions, which the page footer repeats in plain words:
- *  - A word is a run of letters or digits, optionally joined by apostrophes
- *    or hyphens ("well-known", "it's" are one word each). Unicode letters count.
- *  - A sentence ends at . ! ? or … followed by whitespace or the end of the
- *    text; a trailing fragment with no terminator still counts as one.
+ *  - A word is a run of letters or digits, each keeping the combining marks
+ *    that follow it (Devanagari vowel signs, Arabic harakat, Hebrew niqqud, a
+ *    decomposed accent). Apostrophes and hyphens join a word ("well-known",
+ *    "it's" are one word each; U+2010 and U+2011 are hyphens too), and so does
+ *    a "." or "," between two digits ("1,234.56" is one word). Unicode letters
+ *    count.
+ *  - A sentence ends at . ! ? … । or ؟ followed by whitespace or the end of
+ *    the text, with any closing quotes or brackets in between, and at 。 ！ ？
+ *    wherever they fall, since Chinese and Japanese put no space after them.
+ *    A terminator with no word since the last one is not a sentence ("!!!",
+ *    ". . ."); a trailing fragment with no terminator still counts as one.
+ *    There is no abbreviation list, so "Dr. Smith" ends a sentence at the
+ *    period, and the footer says so rather than guess.
  *  - A paragraph is a non-blank block separated by blank lines.
  *  - Lines are newline-separated; an empty text has zero lines.
- *  - Characters are code points, not UTF-16 units, so "é" and emoji count once.
+ *  - Characters are code points, not UTF-16 units, so "é" and "👋" count once
+ *    each. A decomposed accent or a joined emoji sequence is several.
  */
 
 export const READING_WPM = 238;   // adult silent-reading average
 export const SPEAKING_WPM = 150;  // conversational speech
 
-const WORD_RE = /[\p{L}\p{N}]+(?:['’\-][\p{L}\p{N}]+)*/gu;
-const TERMINATOR_RE = /[.!?…]+(?=\s|$)/g;
+/* A "." or "," belongs to a word only with a digit on both sides. The digit
+   before it is matched together with it, which keeps the pattern free of
+   lookbehind for the browsers that still reject one. */
+const CORE = String.raw`\p{Nd}[.,](?=\p{Nd})|[\p{L}\p{N}]`;
+const RUN = String.raw`(?:${CORE})(?:${CORE}|\p{M})*`;
+const WORD_RE = new RegExp(String.raw`${RUN}(?:['’\-\u2010\u2011]${RUN})*`, 'gu');
+
+/* Closing quotes and brackets that may sit between a terminator and the space
+   after it. Opening quote marks are in the set because German closes with them
+   („so.“), and nothing else puts one straight after a terminator. */
+const CLOSERS = String.raw`["'\p{Pe}\p{Pf}\p{Pi}]*`;
+/* U+0964 is the Devanagari danda, U+061F the Arabic question mark, and U+3002,
+   U+FF01 and U+FF1F the ideographic full stop and its full-width companions. */
+const CJK_STOPS = String.raw`\u3002\uFF01\uFF1F`;
+const TERMINATOR_RE = new RegExp(
+  String.raw`[.!?…\u0964\u061F${CJK_STOPS}]+${CLOSERS}(?=\s|$)|[${CJK_STOPS}]+`, 'gu');
+const HAS_WORD_RE = /[\p{L}\p{N}]/u;
+
+/* Case and the style of apostrophe do not make a different word: "It’s" and
+   "it's" are counted together. */
+const fold = w => w.toLowerCase().replace(/’/g, "'");
 
 /* Function words left out of the "most used" list so the list says something
    about the text rather than about English. */
@@ -32,9 +61,12 @@ export function words(text) {
 }
 
 export function countSentences(text) {
-  const terminated = (text.match(TERMINATOR_RE) || []).length;
-  const tail = text.split(TERMINATOR_RE).pop();
-  return terminated + (tail && words(tail).length ? 1 : 0);
+  let count = 0, from = 0;
+  for (const m of text.matchAll(TERMINATOR_RE)) {
+    if (HAS_WORD_RE.test(text.slice(from, m.index))) count++;
+    from = m.index + m[0].length;
+  }
+  return count + (HAS_WORD_RE.test(text.slice(from)) ? 1 : 0);
 }
 
 export function countParagraphs(text) {
@@ -48,7 +80,7 @@ export function countLines(text) {
 export function topWords(list, limit = 6) {
   const counts = new Map();
   for (const w of list) {
-    const k = w.toLowerCase();
+    const k = fold(w);
     counts.set(k, (counts.get(k) || 0) + 1);
   }
   return [...counts.entries()]
@@ -70,7 +102,7 @@ export function analyze(text, opts = {}) {
   for (const w of list) {
     const n = Array.from(w).length;
     totalLen += n;
-    unique.add(w.toLowerCase());
+    unique.add(fold(w));
     if (n > Array.from(longest).length) longest = w;
   }
 

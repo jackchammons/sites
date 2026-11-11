@@ -15,7 +15,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = process.env.OUT_DIR
   ? path.resolve(process.env.OUT_DIR)
-  : path.join(root, '..', 'dist');
+  : path.join(root, '..', 'dist', path.basename(root));
 
 const fails = [];
 const check = (ok, msg) => { if (!ok) fails.push(msg); };
@@ -36,8 +36,15 @@ const app = fs.readFileSync(path.join(dist, 'app.js'), 'utf8');
 
 check(html.length > 3000, `index.html suspiciously small (${html.length} bytes)`);
 check(/<title>[^<]+<\/title>/.test(html), 'missing <title>');
-check(!/undefined|NaN|\[object Object\]/.test(html),
-  'page contains undefined/NaN/[object Object]');
+/* Visible text only: the inline config and the sample passage are free to
+   contain any word, and JSON cannot carry undefined or NaN anyway. */
+const text = html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, ' ').replace(/<[^>]+>/g, ' ');
+const leak = /\bundefined\b|\bNaN\b|\[object Object\]/.exec(text);
+check(!leak, leak && `page shows "${leak[0]}" near: ${text.slice(Math.max(0, leak.index - 40), leak.index + 40).replace(/\s+/g, ' ')}`);
+check(!/=\s*(["'])(?:undefined|null|NaN)\1/.test(html), 'an attribute is literally undefined/null/NaN');
+/* Everything on the page is live, so a deploy with no change of content should
+   leave index.html byte for byte the same. */
+check(!/\d{4}-\d\d-\d\dT\d\d:\d\d/.test(html), 'a build timestamp is baked into the page');
 check(/href="\.\/styles\.css"/.test(html), 'stylesheet not linked relatively');
 check(/<script type="module" src="\.\/app\.js">/.test(html), 'app.js not linked relatively as a module');
 for (const m of html.matchAll(/(?:href|src)="(\/[^/][^"]*)"/g)) {
@@ -90,6 +97,14 @@ const expect = {
 for (const [k, v] of Object.entries(expect)) {
   check(s[k] === v, `analyze().${k}: expected ${JSON.stringify(v)}, got ${JSON.stringify(s[k])}`);
 }
+/* The rules a Latin-only text never reaches: marks that belong to their letter,
+   a number with separators, curly apostrophes, a quoted sentence end, a danda. */
+const hard = count.analyze('नमस्ते दुनिया। It’s 1,234.56 “today.” It\'s cafe\u0301 time');
+const expectHard = { words: 8, sentences: 3, unique: 7, digits: 6, longest: '1,234.56' };
+for (const [k, v] of Object.entries(expectHard)) {
+  check(hard[k] === v, `analyze() on mixed scripts, ${k}: expected ${JSON.stringify(v)}, got ${JSON.stringify(hard[k])}`);
+}
+check(count.countSentences('. . . !!!') === 0, 'bare punctuation counts as a sentence');
 const empty = count.analyze('');
 check(empty.words === 0 && empty.lines === 0 && empty.sentences === 0 && empty.top.length === 0,
   'analyze("") is not all zeros');

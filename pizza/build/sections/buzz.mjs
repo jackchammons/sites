@@ -1,5 +1,4 @@
 import { esc, nameLink, shortDate } from '../html.mjs';
-import { locationLabel } from '../../src/locations.js';
 import { mentionMatch } from '../../src/match.js';
 
 export function buzzSection(ctx) {
@@ -37,21 +36,23 @@ const buzzSection = buzz.items.length ? `
     <div class="eyebrow">The buzz</div>
     <h2 class="sec-h">What Seattle is writing about</h2>
     <p class="lede" style="margin-top:14px">
-      Every day the build sweeps Google News and Eater Seattle for local pizza coverage and files
-      it here, newest first. Stories that mention a pizzeria in the index are tagged with it.
+      Every publish sweeps Google News for local pizza coverage and files what it keeps here,
+      newest first, with the stories the research pass turns up. Stories that mention a pizzeria
+      in the index are tagged with it.
       None of this feeds the score directly; press coverage reaches the ranking only through the
       bounded channels described in the methodology.
     </p>
     <div class="stamp" style="margin-top:18px">
       <span>${buzz.items.length} <b>stories</b></span>
       <span>${buzzSources} <b>outlets</b></span>
-      ${buzz.updated ? `<span>Swept <b>${esc(shortDate(buzz.updated))}</b></span>` : ''}
+      ${buzz.updated ? `<span>List last changed <b>${esc(shortDate(buzz.updated))}</b></span>` : ''}
     </div>
     <ul class="buzz-list">${buzz.items.map(buzzItem).join('')}</ul>
     <p class="note" style="max-width:110ch">
-      Assembled automatically. A story is kept when it reads as local and about pizza;
-      national-chain, crime and business-wire items are filtered out. Every item links to its
-      original source.
+      Assembled automatically by a keyword filter on the headline and the outlet: a story is
+      kept when it reads as local and about pizza, and dropped when it matches a list of
+      national-chain, crime and business-wire terms. A story the list has no term for gets
+      through. Every item links to its original source.
     </p>
   </div>
 </section>

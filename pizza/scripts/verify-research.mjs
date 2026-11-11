@@ -34,7 +34,7 @@ const candidates = fs.existsSync(candidatesPath)
   ? JSON.parse(fs.readFileSync(candidatesPath, 'utf8')).candidates
   : null;
 
-const { fails, sections, fatal, accepted } = validateResearch(doc, dataset, registry, Date.now(),
+const { fails, fatal, accepted, unknown } = validateResearch(doc, dataset, registry, Date.now(),
   candidates ? { candidates } : {});
 
 if (fatal) {
@@ -54,8 +54,26 @@ if (fails.length) {
     console.warn('  ✗ ' + f);
     console.log(`::warning title=research record rejected::${f}`);
   }
-  const kept = { ...doc, ...accepted, rejected: fails };
-  for (const k of Object.keys(accepted)) if (!accepted[k].length) delete kept[k];
+}
+
+/* A top-level key that is no section is never applied, whatever it holds. A
+ * misspelt section name is the usual cause, and without a warning the pass
+ * would read as a clean one that found nothing. */
+for (const k of unknown) {
+  const n = Array.isArray(doc[k]) ? `${doc[k].length} record(s)` : 'its contents';
+  console.warn(`  ✗ "${k}" is not a section; ${n} ignored`);
+  console.log(`::warning title=research section ignored::"${k.slice(0, 60)}" is not a section of research.json, so ${n} were not applied. Check the spelling against the schema.`);
+}
+
+/* The file is rewritten whenever something was dropped, and holds only what
+ * the gate knows: the timestamp, the accepted records and what was refused. */
+if (fails.length || unknown.length) {
+  const kept = {
+    ...(typeof doc.updated === 'string' ? { updated: doc.updated.slice(0, 40) } : {}),
+    ...Object.fromEntries(Object.entries(accepted).filter(([, v]) => v.length)),
+    ...(fails.length ? { rejected: fails } : {}),
+    ...(unknown.length ? { ignored: unknown.map(k => k.slice(0, 60)) } : {})
+  };
   fs.writeFileSync(file, JSON.stringify(kept, null, 2) + '\n');
 }
 const counts = Object.entries(accepted).filter(([, v]) => v.length).map(([k, v]) => `${v.length} ${k}`).join(', ') || 'nothing';

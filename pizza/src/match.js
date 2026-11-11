@@ -4,17 +4,40 @@
  * Both the feed sweep (fetch-buzz.mjs) and the page build (the buzz section's
  * tags) use this, so a story can never be tagged by one and untagged by the
  * other. The rule set, deliberately conservative:
- *   - case-insensitive full-name substring match
+ *   - the full name, as whole words: "Mad Pizza" is not inside "Nomad pizza"
+ *   - written as a name: every word the pizzeria capitalises is capitalised
+ *     in the headline too, so "a Belltown pizza spot" and "Phinney Ridge
+ *     pizza" are descriptions, not Belltown Pizza and Ridge Pizza
+ *   - not the front of an event's name ("World Pizza Championship")
  *   - a leading "The " on the pizzeria's name is optional in the headline
  *   - needles shorter than 5 characters never match (too many false hits)
+ * A headline set entirely in title case can still read a description as a
+ * name; that is the price of matching on text alone, and it costs a tag, not
+ * a score.
  */
+const EVENT_WORD = /^\s+(?:Championships?|Champions?|Cup|Games|Expo|Day|Week|Month)\b/;
+const reEscape = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const isUpper = c => c !== c.toLowerCase();
+
+function names(title, needle) {
+  const words = needle.split(/\s+/);
+  const re = new RegExp(`(?<![\\p{L}\\p{N}])${words.map(reEscape).join('\\s+')}(?![\\p{L}\\p{N}])`, 'giu');
+  for (const m of title.matchAll(re)) {
+    const got = m[0].split(/\s+/);
+    if (!words.every((w, i) => !isUpper(w[0]) || isUpper(got[i][0]))) continue;
+    if (EVENT_WORD.test(title.slice(m.index + m[0].length))) continue;
+    return true;
+  }
+  return false;
+}
+
 export function mentionMatch(title, restaurants) {
-  const t = String(title).toLowerCase();
+  const t = String(title);
   const ids = [];
   for (const r of restaurants) {
-    const name = r.name.toLowerCase();
-    const needles = [name, name.replace(/^the\s+/, '')].filter(n => n.length > 4);
-    if (needles.some(n => t.includes(n))) ids.push(r.id);
+    const name = r.name.trim();
+    const needles = [name, name.replace(/^the\s+/i, '')].filter(n => n.length > 4);
+    if (needles.some(n => names(t, n))) ids.push(r.id);
   }
   return ids;
 }

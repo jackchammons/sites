@@ -1,5 +1,5 @@
 /* Loads everything a build reads: the dataset (with the attribute registry
- * attached so browser and build price friction identically), weekly history,
+ * attached, which is where scoring reads friction costs from), weekly history,
  * and the buzz feed with validated research stories merged in. Pure I/O; no
  * derivation happens here. */
 import fs from 'node:fs';
