@@ -122,8 +122,9 @@ entries in `rankings.json` are out of score order. Text quoted from the data fil
 deploy. It also fails when the page's own copy describes a rating as set by hand, dates
 one to the index's launch or calls anything seeded (`editorial`, `founding entr…`,
 `at launch`, `launched in`, `index launched`, `seeded`), with the same exemption for
-quoted data, and when the pinned map's rules below have come apart. The record, radar and buzz sections are optional: each renders
-nothing when it has nothing to show, and the nav is built from the sections that rendered.
+quoted data, and when the pinned map's rules below have come apart. The record, radar
+and buzz sections are optional: each renders nothing when it has nothing to show, and
+the nav is built from the sections that rendered.
 
 The map is not part of first load. `app.js` reveals the map rail and fetches
 `./leaflet.js` when the map nears the viewport or a directory row asks for its marker; if
