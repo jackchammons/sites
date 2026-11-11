@@ -85,6 +85,49 @@ test('throw and brightness', () => {
   near(s.lensOffsetInches(d, 50), d.height / 2);
 });
 
+test('the lit image: a panel of another shape fills one dimension of the picture', () => {
+  // A 16:9 projector on a 120" scope screen fills the height and lights 82.3 in of the 110.7 in width.
+  const scope = s.dims(120, 2.39);
+  const lit = s.litImage(scope, s.resolution('1080'));
+  const h = 120 / Math.hypot(1, 2.39), w = h * 16 / 9;
+  assert.equal(lit.fills, 'height');
+  assert.equal(lit.height, scope.height);
+  near(lit.height, h, 1e-9); near(lit.width, w, 1e-9); near(lit.area, w * h, 1e-6);
+  near(lit.width, 82.3, 0.05);
+  near(s.throwDistance(lit.width, 1.5), 123.5, 0.05);
+  near(s.footLamberts(2000, 1, lit), 2000 / (w * h / 144), 1e-9);
+  near(s.footLamberts(2000, 1, lit), 75.5, 0.05);
+  near(s.lensOffsetInches(lit, 50), h / 2, 1e-9);
+  // It is the image the pixel maths already describes.
+  near(lit.width / 1920, s.pixelPitch(scope, s.resolution('1080')), 1e-12);
+
+  // A panel wider than the picture fills the width and leaves the height short.
+  const tv = s.dims(100, 16 / 9);
+  const wide = s.litImage(tv, { w: 2560, h: 1080 });
+  assert.equal(wide.fills, 'width');
+  assert.equal(wide.width, tv.width);
+  near(wide.height, tv.width * 1080 / 2560, 1e-9);
+  near(s.lensOffsetInches(wide, 50), tv.width * 1080 / 2560 / 2, 1e-9);
+  assert.equal(s.litImage(s.dims(100, 4 / 3), s.resolution('2160')).fills, 'width');
+  assert.equal(s.litImage(s.dims(100, 2.35), s.resolution('dci4k')).fills, 'height');
+});
+
+test('the lit image of a panel shaped like the picture is the picture, to the last bit', () => {
+  const shapes = { '16:9': ['720', '1080', '1440', '2160', '4320'], '16:10': [{ w: 1920, h: 1200 }, { w: 2560, h: 1600 }],
+    '21:9': [{ w: 2560, h: 1080 }], '4:3': [{ w: 1024, h: 768 }, { w: 1600, h: 1200 }] };
+  for (const [id, panels] of Object.entries(shapes)) for (const panel of panels) {
+    const res = typeof panel === 'string' ? s.resolution(panel) : panel;
+    for (let diag = 20; diag <= 300; diag += 0.7) {
+      const d = s.dims(diag, s.aspect(id).ratio);
+      const lit = s.litImage(d, res);
+      assert.deepEqual(lit, { width: d.width, height: d.height, area: d.area, fills: 'both' }, `${diag}" ${id} with ${res.w} × ${res.h}`);
+      assert.equal(s.throwDistance(lit.width, 1.37), s.throwDistance(d.width, 1.37));
+      assert.equal(s.footLamberts(1850, 1.1, lit), s.footLamberts(1850, 1.1, d));
+      assert.equal(s.lensOffsetInches(lit, 35), s.lensOffsetInches(d, 35));
+    }
+  }
+});
+
 test('placement: centre at eye level is 0°, a high mount is flagged', () => {
   const d = s.dims(65, 16 / 9);
   const level = s.placement(d, 108, 42, 42);

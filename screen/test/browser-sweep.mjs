@@ -21,7 +21,7 @@ import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as s from '../src/screen.js';
-import { states as grid, hashOf, checkState, num, FACTS, FIELDS, TYPING_ROOM, TYPED } from './page-checks.mjs';
+import { states as grid, hashOf, checkState, checkShown, num, FACTS, FIELDS, SHOWN, TYPING_ROOM, TYPED } from './page-checks.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = process.env.OUT_DIR ? path.resolve(process.env.OUT_DIR) : path.join(root, '..', 'dist', path.basename(root));
@@ -67,11 +67,11 @@ const check = (ok, msg, st) => { checks++; if (!ok) failures.push(`${JSON.string
 async function readPage() {
   return page.evaluate(({ FACTS, FIELDS }) => {
     const $ = id => document.getElementById(id);
-    const fact = k => ({ cls: ($('fact-' + k).className.match(/good|ok|warn/) || [''])[0], main: $('sum-' + k).textContent, sub: $('sub-' + k).textContent });
+    const fact = k => ({ cls: ($('fact-' + k).className.match(/good|ok|warn/) || [''])[0], word: $('grade-' + k).textContent, main: $('sum-' + k).textContent, sub: $('sub-' + k).textContent });
     const rows = sel => [...document.querySelectorAll(sel)].map(tr => [...tr.children].map(td => td.textContent.trim()));
     return {
       boot: $('boot-error').hidden, stale: $('main').classList.contains('stale'),
-      fov: $('out-fov').textContent, fovCls: ($('out-total').className.match(/good|ok|warn/) || [''])[0], sub: $('out-sub').textContent,
+      fov: $('out-fov').textContent, fovCls: ($('out-total').className.match(/good|ok|warn/) || [''])[0], fovWord: $('out-grade').textContent, sub: $('out-sub').textContent,
       facts: Object.fromEntries(FACTS.map(k => [k, fact(k)])),
       fields: Object.fromEntries(FIELDS.map(id => [id, $(id).value])),
       pjHidden: $('pj-section').hidden,
@@ -95,6 +95,11 @@ for (const st of states) {
   checkState(await readPage(), st, check);
   check(pageErrors.length === 0, `page errors: ${pageErrors.join(' | ')}`, st);
   pageErrors.length = 0;
+}
+for (const [st, facts] of SHOWN) {
+  await page.evaluate(h => { location.hash = h; }, hashOf(st));
+  await page.waitForTimeout(40);
+  checkShown(await readPage(), st, facts, check);
 }
 
 /* ---- interactions ---------------------------------------------------- */
@@ -132,6 +137,7 @@ async function interact() {
   check((await page.textContent('#out-sub')) === 'Check “Diagonal”.', `the message should name the field: "${await page.textContent('#out-sub')}"`, {});
   check(await page.$eval('#in-diag', e => e.closest('.field').classList.contains('invalid') && e.getAttribute('aria-invalid') === 'true'), 'invalid field flagged', {});
   check((await page.$eval('#out-fov', e => getComputedStyle(e).color)) !== green, 'the blank headline is still drawn in a grade colour', {});
+  check(await page.$eval('#out-grade', e => e.textContent === '' && e.getBoundingClientRect().width === 0), 'the blank headline still carries a grade word', {});
   const dimmed = await page.$$eval('.results .facts, #lanes, #eye-bar, #targets, #matrix, #seats, #sizes, #side-view', els => els.map(e => {
     let o = 1; for (let n = e; n; n = n.parentElement) o *= +getComputedStyle(n).opacity; return o;
   }));
@@ -244,6 +250,35 @@ async function layout() {
       check(m.lanes.every(([lo], i) => i === 0 || lo >= m.lanes[i - 1][1]), 'lanes axis figures overlap', where);
       check(!m.overflow, 'the page scrolls sideways', where);
     }
+    /* The word that names each grade is on the page beside its figure: drawn,
+       inside its fact, in the figure's colour, clear of the figure and of the
+       line beneath wherever it wraps to. A fact with no grade shows none.
+       Between them these rooms show every grade; the last is a projector whose
+       panel is not the picture's shape, which has the longest lines. */
+    for (const hash of ['#d=43&a=16:9&r=1080&v=40&e=42&c=75&u=i&m=tv', '#d=65&a=16:9&r=2160&v=108&u=i&m=tv', '#d=100&a=16:9&r=custom&rw=2560&rh=1080&v=120&m=pj&l=400&o=-20&c=20&u=m']) {
+      const where = { scheme, width, hash };
+      await p2.evaluate(h => { location.hash = h; }, hash);
+      await p2.waitForTimeout(40);
+      const words = await p2.evaluate(() => [...document.querySelectorAll('.grade')].filter(g => !g.closest('[hidden]')).map(g => {
+        const host = g.closest('.fact, .total'), fig = host.querySelector('span:not(.grade)'), sub = host.querySelector('.fact small');
+        const r = g.getBoundingClientRect(), h = host.getBoundingClientRect(), f = fig.getBoundingClientRect();
+        return { id: g.id, text: g.textContent, graded: /\b(good|ok|warn)\b/.test(host.className), w: r.width, h: r.height,
+          inside: r.left >= h.left - 0.5 && r.right <= h.right + 0.5 && r.top >= h.top - 0.5 && r.bottom <= h.bottom + 0.5,
+          clear: !(r.top < f.bottom - 1 && r.bottom > f.top + 1 && r.left < f.right - 0.5 && r.right > f.left + 0.5) && (!sub || r.bottom <= sub.getBoundingClientRect().top + 0.5),
+          colour: getComputedStyle(g).color === getComputedStyle(fig).color };
+      }));
+      check(words.filter(g => g.text).length >= 7, `only ${words.filter(g => g.text).length} grade words on the page`, where);
+      for (const g of words) {
+        if (!g.graded) { check(g.text === '' && g.w === 0 && g.h === 0, `#${g.id} has no grade and shows "${g.text}" (${g.w} × ${g.h})`, where); continue; }
+        check(g.text !== '' && g.w >= 20 && g.h >= 12, `#${g.id} "${g.text}" is not drawn (${g.w} × ${g.h})`, where);
+        check(g.inside, `#${g.id} "${g.text}" leaves its box`, where);
+        check(g.clear, `#${g.id} "${g.text}" runs into its figure or the line beneath`, where);
+        check(g.colour, `#${g.id} "${g.text}" is not in its figure's colour`, where);
+      }
+      check(!(await p2.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)), 'the page scrolls sideways', where);
+    }
+    await p2.evaluate(h => { location.hash = h; }, '#d=65&a=16:9&r=2160&v=108&u=i&m=tv');
+    await p2.waitForTimeout(40);
     // Nine facts in two columns: the ninth takes the whole row, leaving no empty cell.
     const facts = await p2.$eval('.results .facts', e => { const kids = [...e.children].map(k => k.getBoundingClientRect()); const box = e.getBoundingClientRect();
       return { last: kids.at(-1).width, first: kids[0].width, box: box.width }; });

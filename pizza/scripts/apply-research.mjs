@@ -3,10 +3,12 @@
  * Applies validated research to data/restaurants.json.
  *
  * Run only after verify-research.mjs passes. It applies status changes,
- * verified locations, discovered directory entries, mention records, proposed
- * factor ratings and new attribute-registry rows. Crowd figures are frozen -- their sources block automated
+ * verified locations, discovered directory entries, mention records, links,
+ * plain facts, proposed factor ratings and the attempt stamps that rest a
+ * worklist entry. Crowd figures are frozen -- their sources block automated
  * reads and no API key path is in use -- and pillar scores are editorial, so no
- * script writes either.
+ * script writes either. The attribute registry (data/attributes.json) is
+ * maintained by hand: a flag moves a score, and nothing here writes one.
  *
  * applyResearch() is the whole of the logic and touches no file or clock, so
  * the tests drive it directly; the CLI block at the end reads the data files,
@@ -26,15 +28,15 @@ import { isRated } from '../src/slice.js';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 /* Applies every section of a validated research file. `data` holds the parsed
- * files -- dataset (restaurants.json), and where they exist buzz (buzz.json),
- * registry (attributes.json) and candFile (candidates.json) -- and is changed
- * in place. `today` is YYYY-MM-DD and is the only date this stamps. Returns
- * the counts for the summary line and which of the side files changed. */
+ * files -- dataset (restaurants.json), and where they exist buzz (buzz.json)
+ * and candFile (candidates.json) -- and is changed in place. `today` is
+ * YYYY-MM-DD and is the only date this stamps. Returns the counts for the
+ * summary line and which of the side files changed. */
 export function applyResearch(research, data, today, log = () => {}) {
-  const { dataset, buzz = null, registry = null, candFile = null } = data;
+  const { dataset, buzz = null, candFile = null } = data;
   const byId = new Map(dataset.restaurants.map(r => [r.id, r]));
   let changes = 0;
-  let buzzChanged = false, registryChanged = false, candidatesChanged = false;
+  let buzzChanged = false, candidatesChanged = false;
 
   /* status: liveness confirmations. A confirmation with no change still
    * advances statusChecked, which is what rotates the audit worklist.
@@ -258,21 +260,6 @@ export function applyResearch(research, data, today, log = () => {}) {
     }
   }
 
-  /* newAttributes: registry rows plus the flags on the entries that need them. */
-  if ((research.newAttributes ?? []).length && registry) {
-    for (const it of research.newAttributes) {
-      if (registry[it.key]) continue;
-      registry[it.key] = { label: it.label, ...(it.frictionCost != null ? { frictionCost: it.frictionCost } : {}) };
-      for (const id of it.entries) {
-        const r = byId.get(id);
-        if (r) { r.attributes = r.attributes ?? {}; r.attributes[it.key] = true; }
-      }
-      registryChanged = true;
-      changes++;
-      log(`  # new attribute "${it.key}" (${it.label}) on ${it.entries.join(', ')}`);
-    }
-  }
-
   /* Locations replace whatever was stored rather than merging: the agent reads the
    * pizzeria's own locations page, so what it returns is the current set, and a
    * merge would keep a branch that has since closed. neighborhood is left alone as
@@ -332,6 +319,22 @@ export function applyResearch(research, data, today, log = () => {}) {
     log(`  . ${r.name}: locations not verified — ${it.note}`);
   }
 
+  /* coverageSkipped, socialSkipped: the coverage and social backfills looked
+   * and found nothing to file for the entry. Recorded so each worklist rests
+   * it for a quarter instead of handing it to every later pass. */
+  for (const [section, stamp, noteKey, what] of [
+    ['coverageSkipped', 'coverageAttempted', 'coverageNote', 'no new coverage found'],
+    ['socialSkipped', 'socialAttempted', 'socialNote', 'web presence not found']]) {
+    for (const it of research[section] ?? []) {
+      const r = byId.get(it.id);
+      if (!r) continue;
+      r[stamp] = today;
+      r[noteKey] = it.note;
+      changes++;
+      log(`  . ${r.name}: ${what} — ${it.note}`);
+    }
+  }
+
   /* candidateReview: census verdicts drain the registry queue. Promotions need
    * no record of their own -- any candidate whose name now matches a dataset
    * entry (usually one the same run just added through `directory`) is marked
@@ -373,7 +376,7 @@ export function applyResearch(research, data, today, log = () => {}) {
   }
 
   if (changes || located) dataset.dataVersion = today.slice(0, 7).replace('-', '.');
-  return { changes, located, ratedNow, buzzChanged, registryChanged, candidatesChanged };
+  return { changes, located, ratedNow, buzzChanged, candidatesChanged };
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === fs.realpathSync(process.argv[1])) {
@@ -388,12 +391,11 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === fs.realpathSync(proces
   }
 
   const data = { dataset: read('restaurants.json'), buzz: read('buzz.json'),
-                 registry: read('attributes.json'), candFile: read('candidates.json') };
+                 candFile: read('candidates.json') };
   const today = new Date().toISOString().slice(0, 10);
   const done = applyResearch(research, data, today, console.log);
 
   if (done.buzzChanged) write('buzz.json', data.buzz);
-  if (done.registryChanged) write('attributes.json', data.registry);
   if (done.candidatesChanged) write('candidates.json', data.candFile);
   if (done.changes || done.located) {
     const out = JSON.stringify(data.dataset, null, 2) + '\n';

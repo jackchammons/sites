@@ -37,20 +37,21 @@ const downAmt = Math.round(v.price * v.downPct / 100);
    Only the label names the input. The "$" is decoration; a trailing unit and
    the hint are its description, so a screen reader hears "HOA dues" and then
    "/mo" rather than one run-on name. */
-const field = ({ id, label, value, pre, post, hint, units, unit }) => {
+const field = ({ id, label, value, pre, post, hint, units, unit, placeholder }) => {
   const about = [post && !units && `${id}-post`, hint && `${id}-hint`].filter(Boolean).join(' ');
   return `
       <div class="field">
         <label class="lbl" for="${id}">${esc(label)}</label>
-        <span class="box">${pre ? `<i aria-hidden="true">${esc(pre)}</i>` : ''}<input id="${id}" name="${id}" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${esc(value)}"${about ? ` aria-describedby="${about}"` : ''}>${
+        <span class="box">${pre ? `<i aria-hidden="true">${esc(pre)}</i>` : ''}<input id="${id}" name="${id}" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${esc(value)}"${placeholder ? ` placeholder="${esc(placeholder)}"` : ''}${about ? ` aria-describedby="${about}"` : ''}>${
           units ? `<select class="unit" id="${id}-unit" name="${id}-unit" aria-label="${esc(label)} unit">${units.map(([u, l]) => `<option value="${u}"${u === unit ? ' selected' : ''}>${esc(l)}</option>`).join('')}</select>`
           : post ? `<i id="${id}-post" aria-hidden="true">${esc(post)}</i>` : ''}</span>
         ${hint ? `<span class="hint" id="${id}-hint">${hint}</span>` : ''}
       </div>`;
 };
 
-/* A month field. Browsers without a month picker show a plain text box, so
-   the placeholder says what to type; app.js reads a few other spellings. */
+/* A month field. Where the browser has no month picker, app.js puts a month
+   select and a year box in its place. The placeholder, and the other
+   spellings app.js reads, are for a text box that is left showing anyway. */
 const monthField = ({ id, label, hint, wrap = '' }) => `
       <div class="field"${wrap}>
         <label class="lbl" for="${id}">${esc(label)}</label>
@@ -156,6 +157,7 @@ const html = `<!doctype html>
         <span class="lbl">Loan amount, inferred from the balance</span>
         <p><b id="inf-price">—</b> <span id="inf-note"></span></p>
       </div>
+      ${field({ id: 'in-origprice', label: 'Original home price', value: '', pre: '$', placeholder: 'Optional', hint: 'Optional. With it, PMI and a tax % are measured against the price; left empty, against the loan amount.' })}
     </div>
 
     <div class="head h2-row"><h2>Costs on top</h2>

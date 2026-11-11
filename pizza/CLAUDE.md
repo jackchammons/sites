@@ -99,10 +99,22 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
 
 - **Agents stay out of the deploy path.** `research.yml` runs the Claude Code Action to
   write `data/research.json`, in its own workflow. If it hangs or fails, the site still
-  publishes. Its write grant is `Edit(pizza/data/research.json)` and a guard step fails
-  the run if `git status` shows any other path. The run also builds and verifies the
-  page from the applied data before committing, so a data shape the renderer cannot
-  handle turns the research run red instead of the next publishes.
+  publishes.
+- **The agent never shares a runner with a token that can write.** `research.yml` has
+  two jobs. `agent` reads the open web with a read-only token; its write grant is
+  `Edit(pizza/data/research.json)`, a guard step fails the run if `git status` shows any
+  other path, and the one thing that leaves the runner is `research.json`, as an
+  artifact. `apply` starts from a fresh checkout, takes that file, validates it, applies
+  it, builds and verifies the page from the result, and commits. Anything else must not
+  cross between the two jobs. The action is pinned to a commit: bump it deliberately,
+  with a dry run.
+- **The agent does not see this file.** It runs with `--setting-sources user`, so no
+  `CLAUDE.md` and no `.claude/settings.json` from the repository is in its context. Its
+  whole instruction is the brief from `next-task.mjs` plus the prompt in `research.yml`.
+- **Try a change with a dry run.** Dispatching `research.yml` from a branch runs both
+  jobs and commits nothing, and publishes nothing. That is how to test a brief, a prompt
+  or schema change, a new model or a new action version; the agent job's log prints
+  `num_turns` and `total_cost_usd`. A pass costs roughly $0.30 to $1.
 - **Never mention a script the agent cannot run.** The prompt once named
   `verify-research.mjs`; the agent tried to run it, had no Bash tool, and stopped to ask
   for approval in an unattended job. Six runs were lost to that. Two more rules keep it
@@ -111,23 +123,29 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   already written. Briefs are code (`next-task.mjs`); the fixed rules and the schema
   live in the `research.yml` prompt so no task can drop them.
 - **One task per run.** In auto mode `next-task.mjs` picks, among discovery, locations,
-  liveness, news and rating, the type whose last successful pass is oldest *and whose
-  worklist is not empty* (dates are read from `chore(data): research pass (<type>)`
-  commit subjects, so a failed day is retried and a dispatch counts). A forced type
-  (the workflow's `task` input) runs as given, including the dispatch-only ones:
-  `social`, `census`, `facts`, `coverage`, `sources`. Only a forced type can come back
-  `skip=true`.
+  liveness, news, rating and census, the type whose last successful pass is oldest *and
+  whose worklist is not empty* (dates are read from `chore(data): research pass (<type>)`
+  commit subjects, so a failed day is retried and a dispatch counts). Census has work
+  only when the candidates queue has something pending. A forced type (the workflow's
+  `task` input) runs as given, including the dispatch-only ones: `social`, `facts`,
+  `coverage`, `sources`. Only a forced type can come back `skip=true`.
 - **Every worklist needs attempt memory.** A task that redraws the entries it could not
-  resolve stalls: locations verified nothing for three passes that way. Rating, facts
-  and locations each have a `…Skipped` section the agent fills for entries it could not
-  ground, which stamps `…Attempted` so the entry rests (90 days for rating and facts,
-  30 for locations). Liveness sorts by age of last check. A new task needs the same.
+  resolve stalls: locations verified nothing for three passes that way. Rating, facts,
+  locations, coverage and social each have a `…Skipped` section the agent fills for
+  entries it could not resolve, which stamps `…Attempted` so the entry rests (30 days
+  for locations, 90 for the others). Liveness sorts by age of last check. A new task
+  needs the same.
 - **What the agent may write**, all through `verify-research.mjs` → `apply-research.mjs`:
-  `news`, `mentions`, `locations` (+homepage), `locationsSkipped`, `status` (citation
-  required; a review site's label is a lead, not evidence), `directory` (new entries;
+  `news`, `mentions`, `locations` (+homepage), `status`, `directory` (new entries;
   deduplicated by normalised name and by street address), `factorRatings`,
-  `ratingSkipped`, `factorSources`, `facts`, `factsSkipped`, `newAttributes`, `links`,
-  `candidateReview`.
+  `factorSources`, `facts`, `links`, `candidateReview`, and the five `…Skipped`
+  sections. Nothing the agent writes can change `data/attributes.json`: that registry
+  is edited by hand, because a friction cost moves a score and carries no source.
+- **A closure needs a citation the validator can tie to someone.** A news report, the
+  pizzeria's own site, or a post on the Instagram or Facebook account already on file
+  for that entry, with the account name in the URL. A review site or aggregator (matched
+  by registrable name, so `yelp.ca` is `yelp`) is a lead, not evidence, and a bare
+  `instagram.com/p/<id>/` link belongs to nobody.
 - **Records are rejected one at a time.** `verify-research.mjs` drops the records that
   fail, emits a warning per drop, writes the accepted set back to `research.json`, and
   fails the run only on a structural problem. Unknown top-level keys are ignored with a
@@ -141,12 +159,14 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
 - **The candidates queue is the discovery funnel's top.** `data/candidates.json` is
   seeded by `scripts/fetch-candidates.mjs` from King County food-permit data. Candidates
   are leads, never entries: the `census` task verifies each through the `directory`
-  channel or records why it does not belong through `candidateReview`. Refresh the seed
-  by hand when the queue runs dry.
+  channel or records why it does not belong through `candidateReview`. The apply job
+  refreshes the seed once it is a month old (`--max-age-days=30`; `checked` is the last
+  refresh, `updated` the last change), and a new candidate gives census a worklist.
 - **Set exactly one research credential.** `CLAUDE_CODE_OAUTH_TOKEN` or
   `ANTHROPIC_API_KEY`. If both are set the API key wins and bills per token while the
   subscription allowance goes unused; the gate step warns. The model is named once, as
-  `RESEARCH_MODEL` in `research.yml`.
+  `RESEARCH_MODEL` in `research.yml`. There is no credential probe: a direct API call
+  with the subscription token only ever answered 429, so the agent step is the signal.
 
 ## Buzz and the deploy gate
 

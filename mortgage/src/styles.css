@@ -76,6 +76,10 @@ section{margin-top:30px}
 .inferred b{font-family:var(--mono);font-weight:600;color:var(--ink);font-size:15px;margin-right:6px}
 .inferred.invalid{border-color:var(--bad);background:transparent}
 .box input[type=month]{padding-left:0}
+/* The month select and year box that stand in for a month field where the
+   browser has no picker: the year keeps room for four digits and its arrows. */
+.box select[id$="-month"]{flex:1 1 4.5em}
+.box input[id$="-year"]{flex:1 1 5.5em;min-width:5.5ch;padding-right:0}
 .hint{display:block;font-size:11.5px;color:var(--ink-3);margin-top:3px}
 .field.invalid .box{border-color:var(--bad)}
 .field.invalid .lbl{color:var(--bad)}

@@ -4,9 +4,9 @@
  *   task=<type>
  *   brief<<EOF ... EOF     the task-specific half of the agent prompt
  *
- * Five task types rotate. "auto" picks the one whose last successful pass is
- * oldest among those with work to do, so five days cover every kind of
- * upkeep. Passing a type as argv[2] forces it (used by manual dispatches and
+ * Six task types rotate. "auto" picks the one whose last successful pass is
+ * oldest among those with work to do, so every kind of upkeep comes round in
+ * turn. Passing a type as argv[2] forces it (used by manual dispatches and
  * the backfills).
  *
  *   discovery   find Seattle pizzerias not yet on file
@@ -15,6 +15,9 @@
  *   news        coverage the feed sweep missed + mention tags
  *   rating      rate unrated entries from their critical coverage, so
  *               discoveries can join the ranking
+ *   census      verify the candidates the permit-register seed turned up; it
+ *               has work only while some are pending, so on most days the
+ *               rotation passes over it and the other five take the week
  *
  * The brief is task data; the fixed rules (run nothing, schema, validation)
  * live in research.yml so no task can drop them.
@@ -28,13 +31,14 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { locationWorklist } from '../src/locations.js';
 import { isRated } from '../src/slice.js';
+import { hostOf } from '../src/validate-research.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
-export const TYPES = ['discovery', 'locations', 'liveness', 'news', 'rating'];
+export const TYPES = ['discovery', 'locations', 'liveness', 'news', 'rating', 'census'];
 /* Dispatch-only tasks: forceable for backfills, never part of the daily
  * rotation (their daily upkeep rides along on the rotating tasks). */
-export const DISPATCH_ONLY = ['social', 'census', 'facts', 'coverage', 'sources'];
+export const DISPATCH_ONLY = ['social', 'facts', 'coverage', 'sources'];
 
 const DAY = 864e5;
 const daysSince = (iso, now) => iso ? (now - Date.parse(iso)) / DAY : Infinity;
@@ -72,7 +76,9 @@ function readLastSuccess() {
  * counted. An empty worklist is passed over because a skipped run commits
  * nothing, so the same type would stay oldest and be picked every day. With
  * no usable history (lastSuccess null) the order starts from the UTC day
- * instead. discovery and news have no worklist and always qualify. */
+ * instead. discovery and news have no worklist and always qualify; census
+ * qualifies only while the candidates queue holds something pending, which
+ * is what lets a refreshed seed be worked without anyone dispatching it. */
 export function pickTask(forced, lastSuccess, hasWork = () => true, dayIndex = Math.floor(Date.now() / DAY)) {
   if ([...TYPES, ...DISPATCH_ONLY].includes(forced)) return forced;
   const order = lastSuccess
@@ -202,7 +208,8 @@ BUILDERS.liveness = ({ restaurants, now }) => {
   });
   const list = byNeed.slice(0, 6);
   const rows = list.map(r =>
-    `- id: ${r.id} | ${r.name} | site: ${r.url ?? 'none on file'} | currently: ${r.status}${
+    `- id: ${r.id} | ${r.name} | site: ${r.url ?? 'none on file'}${
+      r.instagram ? ` | instagram: ${r.instagram}` : ''} | currently: ${r.status}${
       r.status === 'closed' ? ' (re-confirm the closure, or reopen it with evidence)' : ''}${
       r.statusChecked ? ` (checked ${r.statusChecked})` : ' (never checked)'}`).join('\n');
   const brief = `Your task: confirm whether these pizzerias are still operating.
@@ -218,7 +225,13 @@ closure or opening took effect; omit it otherwise, never estimate it. Confirming
 its check date. A closure claim needs real evidence: a news report, the
 pizzeria's own announcement, or its site gone plus a corroborating
 source. Review-site labels alone ("Yelp says closed") are a lead, not
-evidence — chase the lead or leave the status as it is.
+evidence — chase the lead or leave the status as it is. The pizzeria's
+own announcement may be on its website, or on the Instagram or Facebook
+account listed for it above. Cite a post there by a URL that carries the
+account name — https://www.instagram.com/<handle>/p/<id>/, or the
+profile itself — because a bare instagram.com/p/<id>/ link cannot be
+tied to anyone and is refused, as is a post on an account that is not
+listed above.
 Budget: at most 12 searches and 2 fetches per entry.`;
   return { brief, worklistSize: list.length };
 };
@@ -290,20 +303,24 @@ Budget: about 3 searches per entry, 18 total. Write the file and stop.`;
   return { brief, worklistSize: unrated.length };
 };
 
-BUILDERS.social = ({ openField }) => {
+BUILDERS.social = ({ openField, now }) => {
   // Dispatch-only backfill: fill in Instagram profiles, and best-available
   // links for entries with no website on file. Cheap lookups, so the worklist
   // runs bigger than the fact-verification tasks. Closed entries are excluded:
   // their sites die, and lapsed domains are traps (one pizzeria's old domain
   // now serves a gambling site).
-  // Entries with no website come first; within a tier the order is shuffled.
-  // An alphabetical order stalled: entries the agent could not find a handle
-  // for stayed at the head of the list, and everything past the fifteenth
-  // name never reached a brief.
+  // Attempt memory: an entry the agent searched and could not complete
+  // (socialAttempted) waits a quarter before it is drawn again. What is left
+  // goes never-attempted first, then oldest attempt; entries with no website
+  // lead each of those, and the order within a tie is shuffled. A shuffle
+  // alone hands every pass the entries with no findable handle, since they
+  // are the ones that stay on the list.
+  const SOCIAL_RETRY_DAYS = 90;
+  const tried = r => Date.parse(r.socialAttempted) || 0;
   const worklist = openField
-    .filter(r => !r.instagram || !r.url)
+    .filter(r => (!r.instagram || !r.url) && daysSince(r.socialAttempted, now) >= SOCIAL_RETRY_DAYS)
     .sort(() => Math.random() - 0.5)
-    .sort((a, b) => (a.url ? 1 : 0) - (b.url ? 1 : 0))
+    .sort((a, b) => (tried(a) - tried(b)) || ((a.url ? 1 : 0) - (b.url ? 1 : 0)))
     .slice(0, 15);
   const brief = `Your task: record each pizzeria's web presence — its Instagram
 profile, and an official website for any entry missing one. Cover these,
@@ -326,19 +343,27 @@ For each, report a "links" record. The rules that matter:
   now serves a gambling site — report only sites you actually opened).
   If it truly has no website, report its best canonical web presence as
   "website" — its Instagram, or an ordering page it links as its own.
-- Omitting an entry you could not ground is correct. Every record needs
-  the https "source" page where you saw the link.
+- Every "links" record needs the https "source" page where you saw the
+  link.
+- Leaving a gap you could not ground is correct; filling it with a guess
+  is not. For every entry above where something it is missing stayed
+  missing, report a "socialSkipped" record ({"id","note"}: what you
+  searched and what you found) so it is not redrawn next run. It may sit
+  beside a "links" record for the part you did find.
 
-Write the "links" section only. Budget: about 2 searches per entry,
-25 in total.`;
+Write the "links" section, and a "socialSkipped" record for every
+worklist entry you could not complete. Budget: about 2 searches per
+entry, 25 in total.`;
   return { brief, worklistSize: worklist.length };
 };
 
 BUILDERS.census = ({ restaurants, candidates }) => {
-  // Dispatch-only: drain the registry-seeded candidates queue. Candidates come
-  // from King County food-permit data (and OSM when reachable) -- they are
-  // leads, and every one either joins through the validated directory channel
-  // or gets a recorded verdict so it stops re-entering worklists.
+  // Drain the registry-seeded candidates queue. Candidates come from King
+  // County food-permit data (and OSM when reachable) -- they are leads, and
+  // every one either joins through the validated directory channel or gets a
+  // recorded verdict so it stops re-entering worklists. The queue is empty
+  // except after a seed refresh turns up a new permit, and an empty worklist
+  // keeps the task out of the rotation until then.
   const worklist = candidates.filter(c => c.status === 'pending').slice(0, 10);
   const names = restaurants.map(r => r.name).sort().join('; ');
   const brief = `Your task: verify candidate pizzerias found in King County
@@ -447,19 +472,35 @@ outcome. Budget: about 3 searches per entry, 15 in total.`;
   return { brief, worklistSize: list.length };
 };
 
-BUILDERS.coverage = ({ openField }) => {
+BUILDERS.coverage = ({ openField, now }) => {
   // Dispatch-only backfill of press mentions. The ranking reads a 24-month
   // window and the critical boost fades over 12; the daily news task looks
-  // 30 days back, so the window can only fill from here. Fewest mentions
-  // first, rated entries before unrated.
+  // 30 days back, so the window can only fill from here.
+  // Attempt memory: an entry already searched with nothing new to file
+  // (coverageAttempted) waits a quarter before it is drawn again. Never
+  // attempted first, then oldest attempt; within those, fewest mentions
+  // first and rated entries before unrated. Sorted by mention count alone,
+  // the entries nobody has written about are the head of every list.
+  const COVERAGE_RETRY_DAYS = 90;
+  const tried = r => Date.parse(r.coverageAttempted) || 0;
   const list = openField
-    .filter(r => r.status !== 'opening')
-    .sort((a, b) => ((a.mentions?.length ?? 0) - (b.mentions?.length ?? 0)) || (isRated(b) - isRated(a)))
+    .filter(r => r.status !== 'opening' && daysSince(r.coverageAttempted, now) >= COVERAGE_RETRY_DAYS)
+    .sort((a, b) => (tried(a) - tried(b))
+      || ((a.mentions?.length ?? 0) - (b.mentions?.length ?? 0)) || (isRated(b) - isRated(a)))
     .slice(0, 10);
+  // Each row says which stories are already on file, by outlet host and date:
+  // a story filed twice is dropped at apply time, so an agent that cannot see
+  // them would re-file the one story an entry has and never report it skipped.
+  const onFile = r => {
+    const have = [...(r.mentions ?? [])].sort((a, b) => (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0));
+    if (!have.length) return 'no mentions on file';
+    const shown = have.slice(0, 4).map(m => `${hostOf(m.url)} ${String(m.date).slice(0, 10)}`).join(', ');
+    return `${have.length} mention(s) on file: ${shown}${have.length > 4 ? `, and ${have.length - 4} older` : ''}`;
+  };
   const brief = `Your task: find published coverage from the last two years of these
 pizzerias and connect it to their entries. Cover these, and only these:
 
-${list.map(r => `- id: ${r.id} | ${r.name} | ${r.neighborhood ?? '?'} | ${r.mentions?.length ?? 0} mention(s) on file`).join('\n')}
+${list.map(r => `- id: ${r.id} | ${r.name} | ${r.neighborhood ?? '?'} | ${onFile(r)}`).join('\n')}
 
 For each, search for reviews, roundup entries, opening stories and
 rankings in real outlets (The Infatuation, Seattle Times, Seattle Met,
@@ -468,7 +509,12 @@ Report each story that is genuinely about that pizzeria as a "mentions"
 record: {"id","title","url","source","date","kind": opening|closing|
 ranking|mention}. The story must name the pizzeria; a citywide piece
 that does not is not a mention. Dates up to 730 days old are accepted.
-At most 4 mentions per entry. Budget: 2 searches per entry, 20 in total.`;
+At most 4 mentions per entry. Do not report a story a row above already
+lists by outlet and date.
+For every entry above where you found no story to add, report a
+"coverageSkipped" record ({"id","note"}: what you searched and what you
+found) so it is not redrawn next run; omitting it silently puts it back
+at the front of the list. Budget: 2 searches per entry, 20 in total.`;
   return { brief, worklistSize: list.length };
 };
 

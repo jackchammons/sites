@@ -57,6 +57,27 @@ The standards are constants in `src/screen.js`. There is no method section on th
 (removed on request); the standards, the grading rules and the eye-limit model are
 documented in `src/screen.js`, `src/app.js` and the tests. The footer credits the paper.
 
+A grade is never colour alone. The headline and every graded fact (vertical angle, the
+two pixels-per-degree figures, the 20/20 limit, who would see sharper, the eye line,
+screen brightness, and the bottom edge when it is below the floor) carry a word beside
+the figure in the same colour: `meets` for green, `marginal` for amber, `fails` for red.
+One vocabulary for every fact: it meets the limit that fact is graded on, it is inside a
+weaker limit only, or it is outside all of them. `showGrade` in `app.js` is the only
+place a grade class is set and it writes the word in the same call, so the two cannot
+disagree; `set(k, main, sub, cls)` goes through it. A fact with no grade has an empty
+word slot that takes no room. `verify.mjs` fails a build where a fact has no word slot or
+where `app.js` adds a class anywhere else.
+
+Projector figures describe the image the panel lights, which is the picture only when
+the two are the same shape. `litImage` in `src/screen.js` works it out from the pixel
+pitch (the panel fitted inside the picture, as the pixel facts already assume): a 16:9
+projector on a 2.39:1 screen fills the height and lights three quarters of the width.
+Throw distance uses the lit width, brightness the lit area, lens offset the lit height,
+and the image-width fact quotes the diagonal of the picture that image would light the
+same way. The line under a fact that this changes says which dimension the panel fills
+and the lit size. When the shapes match the lit image is the picture's own figures,
+bit for bit, and nothing mentions it.
+
 ## Working on it
 
 ```bash
@@ -78,19 +99,23 @@ handling live — which is where the vertical angle was graded against a resolut
 distance for a week.
 
 `page.test.mjs` does, on every push: it builds into a temporary directory, stands a small
-DOM in for the browser, imports the built `app.js` and drives it through ~340 rooms by
+DOM in for the browser, imports the built `app.js` and drives it through ~350 rooms by
 the hash, then types into the fields and presses the buttons. `page-checks.mjs` holds the
 rooms and the expectations: every displayed figure is parsed back against an independent
 computation, and the cross-fact rules are checked (the headline and vertical grades agree
 on 16:9, the pixel, eye and 20/20 facts agree, the tables' "you" rows carry the headline
 angle and the diagonal as entered, targets read "met" exactly when the seat is past them,
-and so on), along with what each typed entry must be read as.
+every grade class has its word and an ungraded fact has neither, a projector's figures
+are those of the lit image worked out from the two shapes, and so on), along with what
+each typed entry must be read as. `SHOWN` in the same file is a few rooms with their
+answers written out as the page prints them, the lit-image rooms among them.
 
 `browser-sweep.mjs` runs the same rooms and expectations in Chromium and adds what only a
 layout engine can answer: labels stay inside their charts at every width, nothing
-overflows a phone, both colour schemes and awkward locales render, a tapped tooltip
-stays, and the page shows its "script did not start" note when a file fails to load or
-link. It needs Playwright, so it runs on the dev box, not in CI; run it before and after
+overflows a phone, each grade word is drawn inside its fact in its figure's colour and
+clear of the text around it, both colour schemes and awkward locales render, a tapped
+tooltip stays, and the page shows its "script did not start" note when a file fails to
+load or link. It needs Playwright, so it runs on the dev box, not in CI; run it before and after
 touching a rule in `app.js` or anything that draws.
 
 A field the page fills itself (a hash load, a unit switch) is displayed rounded but keeps

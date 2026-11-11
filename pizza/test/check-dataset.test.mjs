@@ -29,6 +29,13 @@ test('a well-formed dataset passes', () => {
   assert.deepEqual(checkDataset(base(), registry, NOW), []);
 });
 
+test('the header needs a city and a data version, and nothing the scoring left behind', () => {
+  const { cityMeanRating, priorWeight, ...lean } = base();
+  assert.deepEqual(checkDataset(lean, registry, NOW), []);
+  failsWith({ ...lean, city: undefined }, 'dataset.city missing');
+  failsWith({ ...lean, dataVersion: undefined }, 'dataset.dataVersion missing');
+});
+
 test('agent-set factors must cite a source', () => {
   failsWith(base({ factors: { craft: { value: 8, setBy: 'agent', date: '2026-08-01' },
     distinctiveness: { value: 7, setBy: 'editorial', date: '2026-08-01' } } }), 'no https source');
@@ -80,7 +87,8 @@ test('coordinates anywhere the ZIP rule reaches pass: one box for validator, geo
 });
 
 test('the clocks the apply step stamps must be real dates, not in the future', () => {
-  for (const k of ['locationsVerified', 'locationsAttempted', 'statusChecked', 'statusDetected', 'ratingAttempted', 'factsAttempted']) {
+  for (const k of ['locationsVerified', 'locationsAttempted', 'statusChecked', 'statusDetected', 'ratingAttempted', 'factsAttempted',
+    'coverageAttempted', 'socialAttempted']) {
     assert.deepEqual(checkDataset(base({ [k]: '2026-08-29' }), registry, NOW), [], k);
     assert.deepEqual(checkDataset(base({ [k]: null }), registry, NOW), [], k);
     failsWith(base({ [k]: '2099-12-31' }), `${k} is not a past date`);
@@ -90,7 +98,8 @@ test('the clocks the apply step stamps must be real dates, not in the future', (
 
 test('angle brackets are refused in the text the page prints', () => {
   const tag = '<img src=x onerror=alert(1)>';
-  for (const k of ['name', 'neighborhood', 'style', 'styleGroup', 'blurb', 'statusNote', 'ratingNote', 'factsNote', 'locationsNote']) {
+  for (const k of ['name', 'neighborhood', 'style', 'styleGroup', 'blurb', 'statusNote', 'ratingNote', 'factsNote', 'locationsNote',
+    'coverageNote', 'socialNote']) {
     failsWith(base({ [k]: `Fine ${tag}` }), `${k} contains < or >`);
   }
   failsWith(base({ locations: [{ neighborhood: 'Ballard', address: `1 Main St ${tag}, Seattle, WA 98117` }] }), 'contains < or >');

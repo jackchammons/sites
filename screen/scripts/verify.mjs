@@ -74,7 +74,7 @@ check([...app.matchAll(/^import\b/gm)].length === 1, 'app.js has an import this 
 /* Every $('id') in the script has to exist in the markup. Prefixed lookups
    ($('sum-' + k)) are checked in both directions against what was built: a
    slot the page renders must be filled by a set('<k>', …) call, and a call
-   must have its three elements. The call is matched as written, since a bare
+   must have its four elements. The call is matched as written, since a bare
    'eye' or 'res' also appears in code that fills nothing. */
 const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]));
 const literal = [...app.matchAll(/\$\('([^']+)'\)/g)].map(m => m[1]);
@@ -85,8 +85,22 @@ check(slots.length >= 17, `only ${slots.length} fact slots in the page — did t
 for (const id of new Set(literal)) check(ids.has(id), `app.js looks up #${id}, which the page never renders`);
 for (const k of slots) check(filled.has(k), `the page renders slot "${k}", which app.js never fills`);
 for (const k of new Set([...slots, ...filled])) {
-  for (const id of [`sum-${k}`, `sub-${k}`, `fact-${k}`]) check(ids.has(id), `app.js fills slot "${k}", but the page has no #${id}`);
+  for (const id of [`sum-${k}`, `sub-${k}`, `fact-${k}`, `grade-${k}`]) check(ids.has(id), `app.js fills slot "${k}", but the page has no #${id}`);
 }
+/* A grade is a colour class and a word, and a fact must not be able to get
+   the first without the second. Every fact, and the headline, has a slot for
+   the word; and one function in the script adds the class and writes the word
+   together, with no other statement able to add a class or replace a class
+   list. Whether each grade is the right one is test/page.test.mjs's job. */
+for (const k of slots) check(new RegExp(`<span id="sum-${k}">[^<]*</span> <span class="grade" id="grade-${k}"></span>`).test(html), `fact "${k}" has no slot for its grade word`);
+check(/<p class="total" id="out-total">.*<span class="grade" id="out-grade"><\/span><\/p>/.test(html), 'the headline has no slot for its grade word');
+const grader = app.match(/const showGrade = \(box, word, cls\) => \{\n([\s\S]*?)\n  \};/);
+check(grader, 'app.js has no showGrade(box, word, cls) to check');
+if (grader) {
+  check(/box\.classList\.add\(cls\)/.test(grader[1]) && /word\.textContent = /.test(grader[1]), 'showGrade no longer sets the grade class and the grade word together');
+  check(/\$\('fact-' \+ k\), \$\('grade-' \+ k\)/.test(app) && /\$\('out-total'\), \$\('out-grade'\)/.test(app), 'a grade is shown without its word slot');
+}
+check([...app.matchAll(/classList\.add\(/g)].length === 1 && !/\bclassName\b/.test(app), 'app.js sets a class outside showGrade, where a grade could be coloured without its word');
 for (const k of ['in-dist', 'in-eye', 'in-centre']) check(ids.has(`${k}-unit`), `unit adornment #${k}-unit missing`);
 for (const k of ['in-dist', 'in-eye']) check(ids.has(`${k}-hint`), `hint #${k}-hint missing`);
 /* An invalid field is named by the label around it. */
@@ -158,4 +172,4 @@ check(/id="status" role="status"/.test(html), '#status is not announced');
 check(ids.has('out-total'), 'the headline angle has no colourable wrapper');
 
 if (fails.length) report();
-console.log(`Build verified (${new Set(literal).size + slots.length * 3} live slots, maths checked).`);
+console.log(`Build verified (${new Set(literal).size + slots.length * 4} live slots, maths checked).`);

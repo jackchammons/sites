@@ -140,8 +140,11 @@ imported by the page's `app.js`, by the unit tests, and by `verify.mjs` from the
 copy. One implementation of each; never fork it. No figure that depends on the date is
 baked in at build time, because it would be wrong by however long ago the deploy ran.
 
-`screen/` and `words/` also carry a Playwright check for what needs a layout engine
-(`screen/test/browser-sweep.mjs`, `words/test/browser-check.mjs`). They run on a dev
+`mortgage/` and `screen/` also have a node-only page test (`test/page.test.mjs`) that
+builds the site, stands in a small DOM and drives the built `app.js`; it runs in CI
+with the unit tests, and is what covers the wiring no module test sees. `screen/` and
+`words/` carry a Playwright check for what needs a layout engine
+(`screen/test/browser-sweep.mjs`, `words/test/browser-check.mjs`). Those run on a dev
 box, not in CI: run them after changing what those pages draw.
 
 ## Things that will bite you

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { monthlyPI, describe, amortize, monthlyBreakdown, byYear, needsPMI, originalLoan } from '../src/mortgage.js';
+import { monthlyPI, describe, amortize, monthlyBreakdown, byYear, needsPMI, originalLoan, originalLoanMargin, pastPayments } from '../src/mortgage.js';
 
 const near = (a, b, eps = 0.01) => assert.ok(Math.abs(a - b) <= eps, `${a} != ${b}`);
 
@@ -111,10 +111,121 @@ test('originalLoan inverts the schedule', () => {
   for (const [k, eps] of [[1, 1], [12, 1], [97, 1], [300, 10], [359, 600]]) {
     near(originalLoan(s.rows[k - 1].balance, 6.25, 360, k), 600000, eps);
   }
-  near(originalLoan(600000, 6.25, 360, 0), 600000, 0.001);
+  // Before the first payment the loan is the balance, exactly, at any rate:
+  // the same loan entered as new is charged PMI on that very figure.
+  for (const rate of [0, 3.5, 6.25, 7.25, 11]) for (const n of [180, 360, 480]) assert.equal(originalLoan(712500, rate, n, 0), 712500);
+  assert.equal(monthlyBreakdown(describe({ price: 838235, balance: 712500, months: 180, rate: 6.25, pmiRate: 1.1, original: originalLoan(712500, 6.25, 180, 0) })).pmi,
+    monthlyBreakdown(describe({ price: 838235, down: 838235 - 712500, rate: 6.25, years: 15, pmiRate: 1.1 })).pmi);
   near(originalLoan(90000, 0, 120, 30), 120000, 0.001);
   assert.ok(Number.isNaN(originalLoan(1000, 5, 120, 120)));
   assert.ok(Number.isNaN(originalLoan(1000, 5, 120, -1)));
+});
+
+test('the margin on an inferred loan covers what statement rounding does to it', () => {
+  for (const rate of [0, 3, 6.25, 9, 18]) for (const years of [10, 30, 40]) for (const loan of [50000, 123456.78, 712500]) {
+    const s = amortize(describe({ price: loan, down: 0, rate, years }));
+    for (let k = 1; k < years * 12; k += 7) for (const typed of [x => x, Math.round, Math.floor, Math.ceil]) {
+      const off = Math.abs(originalLoan(typed(s.rows[k - 1].balance), rate, years * 12, k) - loan);
+      assert.ok(off <= originalLoanMargin(rate, years * 12, k), `${rate}% ${years}y ${loan} after ${k}: off by ${off}`);
+    }
+  }
+  // A few dollars for as long as PMI could still be owed, which is all it is for.
+  assert.ok(originalLoanMargin(6.25, 360, 24) < 2);
+  assert.ok(originalLoanMargin(6.25, 360, 133) < 5);
+  assert.ok(Number.isNaN(originalLoanMargin(6.25, 360, 360)));
+});
+
+/* One loan, entered as new and as a loan `paid` payments in whose balance
+   is read off the new loan's own schedule to the dollar. `price` is the
+   original home price, or null for a viewer who did not give one. */
+const sumOf = (rows, key) => rows.reduce((t, r) => t + r[key], 0);
+function bothWays({ price = 750000, downPct, rate = 6.25, years = 30, pmiRate = 0.5, paid, given = price }) {
+  const fresh = describe({ price, down: price * downPct / 100, rate, years, pmiRate });
+  const whole = amortize(fresh);
+  const balance = Math.round(whole.rows[paid - 1].balance), n = years * 12;
+  const original = originalLoan(balance, rate, n, paid);
+  const d = describe({ price: given ?? original, balance, months: n - paid, rate, pmiRate, original, originalMargin: originalLoanMargin(rate, n, paid) });
+  const past = pastPayments(d, paid), ahead = amortize(d);
+  return {
+    fresh, whole, d, past, ahead,
+    pmiMonths: past.filter(r => r.pmi > 0).length + ahead.pmiMonths,
+    cost: d.original + sumOf(past, 'interest') + sumOf(past, 'pmi') + ahead.totalInterest + ahead.totalPMI,
+    freshCost: fresh.loan + whole.totalInterest + whole.totalPMI,
+  };
+}
+
+test('a loan under way with its price given carries the PMI of the same loan entered as new', () => {
+  // $750k at 6.25% over 30 years with PMI at 0.5%. Each down payment has its
+  // own PMI months as a new loan; 20% and 25% down have none at any point.
+  for (const [downPct, months, monthly] of [[5, 132, 296.88], [10, 106, 281.25], [15, 72, 265.63], [20, 0, 0], [25, 0, 0]]) {
+    for (const paid of [1, 24, 60, 131, 132, 133, 200, 300, 359]) {
+      const b = bothWays({ downPct, paid }), at = `${downPct}% down, ${paid} paid`;
+      assert.equal(b.whole.pmiMonths, months, at);
+      assert.equal(b.pmiMonths, months, at);
+      // The inferred loan is the real one to within its margin, and the
+      // whole-loan cost follows it: a few dollars early on, more near the end.
+      near(b.cost, b.freshCost, 6 + 3 * originalLoanMargin(6.25, 360, paid));
+      // The charge is on the original loan, and is still in the bill only
+      // while the new loan's own schedule would still be charging it.
+      const due = paid < months ? monthly : 0;
+      near(monthlyBreakdown(b.d).pmi, due, 0.011);
+      assert.equal(monthlyBreakdown(b.d).pmi, b.ahead.rows[0].pmi, at);
+      if (due) assert.equal(b.past.at(-1).pmi, b.ahead.rows[0].pmi, `${at}: the charge does not change at today`);
+    }
+  }
+  const b = bothWays({ downPct: 5, paid: 24 });
+  assert.equal(b.d.loan, 695265);
+  near(b.cost, b.freshCost, 5);
+  near(sumOf(b.past, 'pmi'), 24 * 296.88, 0.25);
+  assert.equal(b.ahead.pmiMonths, 108);
+  near(b.freshCost, 1618499.64);
+});
+
+test('with no price given the loan amount stands in for it, in the history as well', () => {
+  const b = bothWays({ downPct: 5, paid: 24, given: null });
+  assert.equal(b.d.price, b.d.original);
+  // 100% of the "price" at the start, so PMI runs until 78% of the loan.
+  assert.ok(needsPMI(b.d));
+  assert.ok(b.past.every(r => r.pmi > 0));
+  assert.equal(b.past[0].pmi, b.ahead.rows[0].pmi);
+  const last = b.ahead.rows[b.ahead.pmiMonths - 1], next = b.ahead.rows[b.ahead.pmiMonths];
+  assert.ok(last.balance + last.principal > b.d.original * 0.78 && next.balance + next.principal <= b.d.original * 0.78);
+  // A balance already under 78% owes none, and the months paid still did.
+  const late = bothWays({ downPct: 5, paid: 200, given: null });
+  assert.equal(monthlyBreakdown(late.d).pmi, 0);
+  assert.equal(late.ahead.totalPMI, 0);
+  assert.ok(sumOf(late.past, 'pmi') > 0);
+});
+
+test('without a PMI rate the reconstructed payments are the plain schedule of the original loan', () => {
+  for (const paid of [1, 24, 133, 359]) {
+    const b = bothWays({ downPct: 20, paid, pmiRate: 0, given: null });
+    const plainRows = amortize(describe({ price: b.d.original, down: 0, rate: 6.25, months: 360 }), { extra: 0 }).rows.slice(0, paid);
+    assert.deepEqual(b.past, plainRows);
+    assert.equal(sumOf(b.past, 'pmi'), 0);
+  }
+  assert.deepEqual(pastPayments(describe({ price: 1, balance: 1, months: 12, rate: 5 }), 0), []);
+  // Extra principal belongs to what is ahead; the balance typed already holds what was paid.
+  const x = describe({ price: 400000, balance: 300000, months: 300, rate: 6, original: 320000, extra: 500 });
+  assert.equal(sumOf(pastPayments(x, 60), 'extra'), 0);
+});
+
+test('the original loan of a description', () => {
+  assert.equal(describe({ price: 400000, down: 20000, rate: 6, years: 30 }).original, 380000);
+  assert.equal(describe({ price: 400000, down: 20000, rate: 6, years: 30, original: 1 }).original, 380000);
+  assert.equal(describe({ price: 400000, balance: 300000, months: 300, rate: 6 }).original, 300000);
+  const d = describe({ price: 400000, balance: 300000, months: 300, rate: 6, original: 380000, pmiRate: 0.5 });
+  assert.equal(d.original, 380000);
+  assert.equal(d.originalMargin, 0);
+  // Over 80% at the start: PMI is owed, on the original loan, for as long as
+  // the balance is over 78% of the price, and this one no longer is.
+  assert.ok(needsPMI(d));
+  assert.equal(monthlyBreakdown(d).pmi, 0);
+  assert.equal(monthlyBreakdown(describe({ price: 400000, balance: 340000, months: 300, rate: 6, original: 380000, pmiRate: 0.5 })).pmi, 158.33);
+  // An inferred loan a few dollars over the line is within its margin of it.
+  const edge = { price: 750000, balance: 500000, months: 227, rate: 6.25, pmiRate: 0.5, original: 600001.01 };
+  assert.equal(needsPMI(describe(edge)), true);
+  assert.equal(needsPMI(describe({ ...edge, originalMargin: originalLoanMargin(6.25, 360, 133) })), false);
 });
 
 test('down payment is clamped to the price', () => {
