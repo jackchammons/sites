@@ -43,7 +43,17 @@ test('optional fields may be left out', t => {
   assert.deepEqual(withSite(t, s => {
     delete s.verify; delete s.emoji; delete s.cadence; delete s.accent;
   }), []);
+  assert.deepEqual(withSite(t, s => { s.keywords = ['tv size', 'projector']; }), []);
   assert.deepEqual(withSite(t, (s, c) => { delete c.customDomain; }), []);
+});
+
+test('keywords must be a list of words', t => {
+  for (const keywords of ['tv size', [], ['ok', ''], ['ok', 7], {}]) {
+    const problems = withSite(t, s => { s.keywords = keywords; });
+    if (Array.isArray(keywords) && keywords.length === 0) { assert.deepEqual(problems, []); continue; }
+    assert.deepEqual(problems, ['sites[1] "beta": keywords must be an array of non-empty strings when set'],
+      JSON.stringify(keywords));
+  }
 });
 
 test('a duplicate slug names both entries', t => {

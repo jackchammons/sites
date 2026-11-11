@@ -132,9 +132,12 @@ To add one by hand:
   "build": ["node", "scripts/build.mjs"],
   "verify": ["node", "scripts/verify.mjs"],
   "cadence": "Rebuilt Mondays",
-  "accent": "#e14434"
+  "accent": "#e14434",
+  "keywords": ["words people search by", "that the tagline does not use"]
 }
 ```
+
+`keywords` is optional: the landing page's search matches them and never shows them.
 
 `build-all` validates the registry before it builds anything. A site whose build needs
 something the runner does not have (another language, a browser) also needs a setup

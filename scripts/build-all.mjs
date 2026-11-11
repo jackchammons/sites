@@ -164,7 +164,10 @@ const chrome = `<meta name="theme-color" content="${BG.dark}" media="(prefers-co
 /* ---- landing page ---- */
 const cards = built.map(s => {
   // Everything a visitor might reasonably type, lowercased once at build time.
-  const haystack = [s.name, s.tagline, s.slug, s.cadence, s.dir]
+  // keywords are the words people search by that the card's own copy does not
+  // happen to use ("tv size" for a page that says "sizing"); they are matched
+  // and never shown.
+  const haystack = [s.name, s.tagline, s.slug, s.cadence, s.dir, ...(s.keywords ?? [])]
     .filter(Boolean).join(' ').toLowerCase();
   return `
       <a class="card" href="./${esc(s.slug)}/" data-search="${esc(haystack)}" style="--accent:${esc(s.accent || '#e14434')}">

@@ -71,6 +71,9 @@ export function validateRegistry(config, repoRoot) {
     if (site.accent !== undefined && !(typeof site.accent === 'string' && ACCENT.test(site.accent))) {
       bad('accent must be a #rrggbb colour');
     }
+    if (site.keywords !== undefined && !(Array.isArray(site.keywords) && site.keywords.every(isText))) {
+      bad('keywords must be an array of non-empty strings when set');
+    }
 
     if (!isCommand(site.build)) {
       bad('build must be a non-empty array of strings, like ["node", "scripts/build.mjs"]');
