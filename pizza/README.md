@@ -69,10 +69,11 @@ everything else rated is listed in the directory with its score.
 ```
 pizza/
   data/restaurants.json   the dataset: every pizzeria on file, with provenance
-  data/attributes.json    attribute registry (label + frictionCost per flag)
+  data/attributes.json    attribute registry (label + frictionCost per flag), edited by hand
   data/history.json       weekly snapshots, stamped with the algorithm version
   data/buzz.json          press sweep; rewritten only when the list of stories changes
-  data/candidates.json    registry-seeded leads for the census task
+  data/candidates.json    registry-seeded leads for the census task; `updated` is the last
+                          refresh that changed a candidate, `checked` the last that ran
   data/research.json      the research agent's last validated proposals
   src/slice.js            the scoring module (run by the build and the tests; nothing scores in the browser)
   src/render.js           card rendering and the per-card explanation
@@ -131,9 +132,12 @@ Node sites). Only `main` deploys.
 ## The daily loop
 
 Two workflows. `research.yml` runs a Claude agent on one bounded task per day
-(discovery, locations, liveness, news, rating; the type whose last successful pass is
-oldest goes next), writing proposals to `data/research.json`. Dispatch-only backfill tasks
-(`social`, `census`, `facts`, `coverage`, `sources`) run from the Actions tab. The agent's write grant is scoped to that one file, a guard step
+(discovery, locations, liveness, news, rating, census; the type whose last successful pass
+is oldest goes next, passing over any with an empty worklist), writing proposals to
+`data/research.json`. `census` has work only while `data/candidates.json` holds pending
+candidates, so it takes a day when a seed refresh turns up a new food permit and is
+passed over otherwise. Dispatch-only backfill tasks (`social`, `facts`, `coverage`,
+`sources`) run from the Actions tab. The agent's write grant is scoped to that one file, a guard step
 fails the run if anything else changed, every record is validated by
 `validate-research.js` (a record that fails is dropped with a warning; the rest are
 applied), the accepted records are applied to `restaurants.json`, the dataset is linted,
@@ -141,14 +145,39 @@ and the page is built and verified before the commit. `publish.yml`
 rebuilds every site and deploys: once when the research run finishes, and once a day on
 its own schedule, so a day without research still updates the page.
 
+The candidates seed keeps itself current. After the apply step `research.yml` runs
+`fetch-candidates.mjs --max-age-days=30`, which returns before making any request unless
+the last refresh is more than 30 days old. A refresh reads King County's food-permit
+register and OpenStreetMap, each request with a User-Agent and a 25-second timeout,
+rewrites the candidates only when one changed, and stamps `checked` when the permit
+register answered. If neither source answers, or anything else goes wrong, the file is
+left as it was and the step still exits 0. Run it with no flag to refresh at once.
+
+Every worklist remembers what it could not resolve. An entry the agent reports in
+`ratingSkipped`, `factsSkipped`, `locationsSkipped`, `coverageSkipped` or `socialSkipped`
+is stamped `ratingAttempted`, `factsAttempted`, `locationsAttempted`, `coverageAttempted`
+or `socialAttempted` with the note it gave, and rests before it is drawn again: 30 days
+for locations, 90 for the others.
+
 What the agent may write: new directory entries, status changes (with the date the
-source states, if any; a closure needs a news report or the pizzeria's own announcement),
-verified locations and official sites, press mentions up to two years old, factor
-proposals for unrated entries only (at least one source must be published criticism),
-citations for ratings already on file (values never change), a
-note on each unrated entry it could not ground, founding years and price tiers from pages
-that state them, Instagram links, attribute flags and candidate verdicts. It never writes a score. Crowd star ratings were seeded at launch and are never
-refreshed; they are shown as context, and only the review count feeds reputation.
+source states, if any), verified locations and official sites, press mentions up to two
+years old, factor proposals for unrated entries only (at least one source must be
+published criticism), citations for ratings already on file (values never change), a
+note on each worklist entry it could not resolve, founding years and price tiers from
+pages that state them, Instagram links and candidate verdicts. It never writes a score
+and never sets an attribute flag: the flags and their friction costs in
+`data/attributes.json` move scores, so they are edited by hand. Crowd star ratings were
+seeded at launch and are never refreshed; they are shown as context, and only the review
+count feeds reputation.
+
+A closure needs a news report or the pizzeria's own announcement. Review sites,
+aggregators, ordering pages and social hosts are refused as its source, on any of their
+domains (`yelp.ca` and `m.yelp.com` like `yelp.com`), with one exception: the Instagram
+or Facebook account on file for that entry (its `instagram`, or its `url` when that is
+itself a profile). The URL has to name the account, so the profile itself and anything
+under it count (`instagram.com/<handle>/p/<id>/`, `facebook.com/<page>/posts/<id>`),
+while a bare `instagram.com/p/<id>/`, a story, or a post on an account that is not on
+file is a lead, not evidence.
 
 ## Corrections
 

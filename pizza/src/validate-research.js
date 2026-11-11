@@ -62,9 +62,9 @@ export const isNonCriticism = (u, own = []) => {
 };
 
 /* A closure announced by the pizzeria itself, on the Instagram or Facebook
- * account on file for it. That is where a small pizzeria says goodbye, often
- * weeks before any outlet reports it, so the social hosts cannot be refused
- * outright for closures the way they are as criticism.
+ * account on file for it. That is where a small pizzeria says goodbye, and
+ * for many it is the only announcement there will ever be, so the social
+ * hosts cannot be refused outright for closures the way they are as criticism.
  *
  * A URL counts only when it names the account: the profile itself, or
  * anything under it (instagram.com/<handle>/, /<handle>/p/<id>/,

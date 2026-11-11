@@ -313,8 +313,8 @@ BUILDERS.social = ({ openField, now }) => {
   // (socialAttempted) waits a quarter before it is drawn again. What is left
   // goes never-attempted first, then oldest attempt; entries with no website
   // lead each of those, and the order within a tie is shuffled. A shuffle
-  // alone still handed every pass the entries with no findable handle, since
-  // they are the ones that stay on the list.
+  // alone hands every pass the entries with no findable handle, since they
+  // are the ones that stay on the list.
   const SOCIAL_RETRY_DAYS = 90;
   const tried = r => Date.parse(r.socialAttempted) || 0;
   const worklist = openField

@@ -29,8 +29,9 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 /* Applies every section of a validated research file. `data` holds the parsed
  * files -- dataset (restaurants.json), and where they exist buzz (buzz.json)
- * and candFile (candidates.json) -- and is changed in place. `today` is YYYY-MM-DD and is the only date this stamps. Returns
- * the counts for the summary line and which of the side files changed. */
+ * and candFile (candidates.json) -- and is changed in place. `today` is
+ * YYYY-MM-DD and is the only date this stamps. Returns the counts for the
+ * summary line and which of the side files changed. */
 export function applyResearch(research, data, today, log = () => {}) {
   const { dataset, buzz = null, candFile = null } = data;
   const byId = new Map(dataset.restaurants.map(r => [r.id, r]));
