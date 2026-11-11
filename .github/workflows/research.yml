@@ -44,7 +44,7 @@ on:
         description: 'Task type (auto picks the type whose last successful pass is oldest)'
         type: choice
         default: auto
-        options: [auto, discovery, locations, liveness, news, rating, social, census, facts, coverage, sources]
+        options: [auto, discovery, locations, liveness, news, rating, census, social, facts, coverage, sources, rerate]
 
 concurrency:
   group: research
@@ -139,8 +139,8 @@ jobs:
       # worklists are sized from measured timings (an entry whose website is
       # unknown costs about twice one whose site is on file).
       # A manual dispatch can force a type, including the dispatch-only ones
-      # (social, facts, coverage, sources), which is how backfills and
-      # per-task testing work.
+      # (social, facts, coverage, sources, rerate), which is how backfills
+      # and per-task testing work.
       - name: Pick today's task
         id: task
         if: steps.gate.outputs.enabled == 'true'
