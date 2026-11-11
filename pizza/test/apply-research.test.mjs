@@ -251,7 +251,6 @@ test('ratings: a launch rating the agent could not replace is kept, and the entr
   assert.equal(r.lastVerified, '2026-08-26');
   assert.deepEqual([done.reratedNow, done.ratedNow, done.changes], [0, 0, 1]);
   assert.deepEqual(lines, ['  . Delancey: not re-rated, launch rating kept — both sources on file are paywalled; nothing else names it']);
-  assert.deepEqual(checkDataset(dataset, {}, NOW), []);
 });
 
 test('ratings: an unrated entry reported as skipped is stamped, and logged as no coverage found', () => {

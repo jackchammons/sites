@@ -9,10 +9,10 @@
 import { PUGET_SOUND_ZIP, PUGET_SOUND_BOX } from './bounds.js';
 
 const STATUSES = new Set(['open', 'opening', 'closed']);
-/* 'editorial' marks a launch rating (isLaunchRating in slice.js). It stays
- * valid for as long as the data holds one: the rerate task replaces them a
- * few per pass, and the lint runs between passes. */
-const SET_BY = new Set(['editorial', 'agent']);
+/* Every rating is the research agent's, read from published coverage. A
+ * graded factor set by anyone else is a hand-entered value, and the lint
+ * refuses it so one cannot come back. */
+const SET_BY = new Set(['agent']);
 const FACTOR_KEYS = ['craft', 'distinctiveness', 'critical'];
 /* The clocks apply-research stamps. Freshness, the worklists and the radar all
  * read them, so one in the future holds an entry fresh, or out of a worklist,
@@ -87,7 +87,7 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
       const f = r.factors?.[k];
       if (f == null) continue;
       if (typeof f.value !== 'number' || f.value < 0 || f.value > 10) bad(id, `factors.${k}.value out of range: ${f.value}`);
-      if (!SET_BY.has(f.setBy)) bad(id, `factors.${k}.setBy must be editorial|agent`);
+      if (!SET_BY.has(f.setBy)) bad(id, `factors.${k}.setBy must be agent: every rating comes from the research agent`);
       if (f.setBy === 'agent' && !(f.source && https(f.source))) bad(id, `factors.${k} is agent-set but carries no https source`);
       if (f.sources != null && !(Array.isArray(f.sources) && f.sources.every(https))) bad(id, `factors.${k}.sources must be https URLs`);
       if (markup(f.note)) bad(id, `factors.${k}.note contains < or >`);

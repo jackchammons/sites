@@ -1,7 +1,7 @@
 {
   "city": "Seattle, WA",
   "dataVersion": "2026.11",
-  "notes": "Craft, distinctiveness and the critic base are 0-10 ratings stored with provenance. The founding entries were rated editorially when the index launched (August 2026) and carry no cited source; entries added since are rated by the research agent from published coverage, with the sources stored. Crowd star ratings were seeded at launch, are never refreshed and are displayed only; the review count feeds reputation. Locations marked verified were read from the pizzeria's own site on the date recorded.",
+  "notes": "Craft, distinctiveness and the critic base are 0-10 ratings set by the research agent from published coverage and stored with the sources it read and the date. Reputation, critical reception and value are computed at build time and never stored. Locations marked verified were read from the pizzeria's own site on the date recorded.",
   "restaurants": [
     {
       "id": "windy-city-pie",
@@ -1227,26 +1227,11 @@
       "statusDate": "2024-03-01",
       "statusDetected": "2026-08-26",
       "attributes": {},
-      "factors": {
-        "craft": {
-          "value": 8.2,
-          "setBy": "editorial",
-          "date": "2026-08-26"
-        },
-        "distinctiveness": {
-          "value": 8,
-          "setBy": "editorial",
-          "date": "2026-08-26"
-        },
-        "critical": {
-          "value": 8,
-          "setBy": "editorial",
-          "date": "2026-08-26"
-        }
-      },
       "mentions": [],
       "statusNote": "The last remaining Flying Squirrel Pizza location, in Georgetown, closed for good on March 1, 2024 after a decade in business, with no relocation.",
-      "statusChecked": "2026-11-05"
+      "statusChecked": "2026-11-05",
+      "ratingAttempted": "2026-11-11",
+      "ratingNote": "No published criticism of the pizza could be found to ground a rating; the last location closed on March 1, 2024."
     },
     {
       "id": "proletariat-pizza",

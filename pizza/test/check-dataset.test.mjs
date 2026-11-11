@@ -9,9 +9,9 @@ const base = over => ({
   city: 'Seattle', dataVersion: '2026.08',
   restaurants: [{
     id: 'good-pie', name: 'Good Pie', status: 'open', url: 'https://goodpie.com',
-    factors: { craft: { value: 8, setBy: 'editorial', date: '2026-08-01' },
+    factors: { craft: { value: 8, setBy: 'agent', source: 'https://x.com/review', date: '2026-08-01' },
                distinctiveness: { value: 7, setBy: 'agent', source: 'https://x.com/review', date: '2026-08-01' },
-               critical: { value: 8, setBy: 'editorial', date: '2026-08-01' } },
+               critical: { value: 8, setBy: 'agent', source: 'https://x.com/review', date: '2026-08-01' } },
     opened: 2015, priceIndex: 2, attributes: { 'sells-out': true },
     locations: [{ neighborhood: 'Ballard', address: '1 Main St, Seattle, WA 98117', lat: 47.6, lon: -122.3 }],
     mentions: [], lastVerified: '2026-08-20',
@@ -35,16 +35,16 @@ test('the header needs a city and a data version', () => {
 });
 
 test('agent-set factors must cite a source', () => {
-  failsWith(base({ factors: { craft: { value: 8, setBy: 'agent', date: '2026-08-01' },
-    distinctiveness: { value: 7, setBy: 'editorial', date: '2026-08-01' } } }), 'no https source');
+  failsWith(base({ factors: { craft: { value: 8, setBy: 'agent', date: '2026-08-01' } } }), 'no https source');
 });
 
-test('a launch rating lints clean with no source; a rating set by anyone else does not', () => {
+test('a rating set by anyone but the research agent is refused', () => {
   const factors = setBy => Object.fromEntries(['craft', 'distinctiveness', 'critical']
-    .map(k => [k, { value: 8, setBy, date: '2026-08-26' }]));
-  assert.deepEqual(checkDataset(base({ factors: factors('editorial') }), registry, NOW), []);
-  failsWith(base({ factors: factors('launch') }), 'setBy must be editorial|agent');
-  failsWith(base({ factors: factors(undefined) }), 'setBy must be editorial|agent');
+    .map(k => [k, { value: 8, setBy, source: 'https://x.com/review', date: '2026-08-26' }]));
+  assert.deepEqual(checkDataset(base({ factors: factors('agent') }), registry, NOW), []);
+  for (const setBy of ['editorial', 'launch', undefined]) {
+    failsWith(base({ factors: factors(setBy) }), 'setBy must be agent');
+  }
 });
 
 test('closed entries need a citation and a date', () => {
@@ -116,7 +116,7 @@ test('angle brackets are refused in the text the page prints', () => {
   }
   failsWith(base({ locations: [{ neighborhood: 'Ballard', address: `1 Main St ${tag}, Seattle, WA 98117` }] }), 'contains < or >');
   failsWith(base({ locations: [{ neighborhood: `Ballard ${tag}`, address: '1 Main St, Seattle, WA 98117' }] }), 'contains < or >');
-  failsWith(base({ factors: { craft: { value: 8, setBy: 'editorial', note: `good ${tag}` } } }), 'factors.craft.note contains < or >');
+  failsWith(base({ factors: { craft: { value: 8, setBy: 'agent', source: 'https://x.com/review', note: `good ${tag}` } } }), 'factors.craft.note contains < or >');
   // ordinary punctuation is untouched
   assert.deepEqual(checkDataset(base({ blurb: 'Pies & slices (cash only) \u2014 "the best", they say; 50% whole-wheat.' }), registry, NOW), []);
 });
