@@ -237,14 +237,15 @@ const near = (text, m) => text.slice(Math.max(0, m.index - 40), m.index + 40).re
 
 /* Every rating is described one way: read by the research agent from published
  * coverage. The page's own copy never says a rating was typed in by hand or
- * dates one to the index's launch. A factor's `setBy` is one of these words
- * whole, so it is not taken out as quoted text, and a template that printed
- * the raw field is caught as well. */
+ * dates one to the index's launch, and it describes nothing as seeded: every
+ * figure it prints is one the pipeline reads or computes. A factor's `setBy`
+ * is one of these words whole, so it is not taken out as quoted text, and a
+ * template that printed the raw field is caught as well. */
 {
-  const HAND_RATED = /editorial|founding entr|at launch|launched in/i;
-  const text = textWithoutQuoted(HAND_RATED);
-  const hit = HAND_RATED.exec(text);
-  check(!hit, hit && `page describes a hand-set rating ("${hit[0]}") near: ${near(text, hit)}`);
+  const HAND_ENTERED = /editorial|founding entr|at launch|launched in|index launched|seeded/i;
+  const text = textWithoutQuoted(HAND_ENTERED);
+  const hit = HAND_ENTERED.exec(text);
+  check(!hit, hit && `page describes hand-entered data ("${hit[0]}") near: ${near(text, hit)}`);
 }
 
 /* ---------- the pinned map ---------- */

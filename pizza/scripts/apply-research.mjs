@@ -5,13 +5,14 @@
  * Run only after verify-research.mjs passes. It applies status changes,
  * verified locations, discovered directory entries, mention records, links,
  * plain facts, proposed factor ratings and the attempt stamps that rest a
- * worklist entry. Crowd figures are frozen -- their sources block automated
- * reads and no API key path is in use -- so no script writes them. The graded
- * factors are written from a validated factorRatings proposal and from
- * nothing else: once for an unrated entry, and once more to replace a launch
- * rating (isLaunchRating in slice.js). A rating the agent set is never
- * overwritten. The attribute registry (data/attributes.json) is maintained by
- * hand: a flag moves a score, and nothing here writes one.
+ * worklist entry. The dataset holds no crowd figures -- the platforms that
+ * publish them block automated reads and no API key path is in use -- so no
+ * script writes one. The graded factors are written from a validated
+ * factorRatings proposal and from nothing else: once for an unrated entry,
+ * and once more to replace a launch rating (isLaunchRating in slice.js). A
+ * rating the agent set is never overwritten. The attribute registry
+ * (data/attributes.json) is maintained by hand: a flag moves a score, and
+ * nothing here writes one.
  *
  * applyResearch() is the whole of the logic and touches no file or clock, so
  * the tests drive it directly; the CLI block at the end reads the data files,

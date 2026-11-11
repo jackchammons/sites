@@ -170,10 +170,10 @@ jobs:
       #
       # Crowd ratings are NOT the agent's job, and cannot be. Yelp returns 403
       # to automated fetching and Google's results carry no rating in the
-      # HTML; a Yelp API key was considered and ruled out. They stay frozen at
-      # the values in restaurants.json. What the agent is good at is editorial
-      # research: openings, closings and reviews live on news sites that serve
-      # their content to anyone.
+      # HTML; a Yelp API key was considered and ruled out. The dataset keeps
+      # none. What the agent is good at is reading published coverage:
+      # openings, closings and reviews live on news sites that serve their
+      # content to anyone.
       - name: Research and refresh pizza data
         id: agent
         if: steps.gate.outputs.enabled == 'true' && steps.task.outputs.skip != 'true'
@@ -291,7 +291,7 @@ jobs:
               task sets. Omissions are free; fabrications are not.
 
             Do not attempt crowd star ratings or review counts; those sources
-            block automated reads and the stored figures are frozen by design.
+            block automated reads and the index keeps none.
             Write only pizza/data/research.json, never touch restaurants.json
             or any score, and run nothing.
 
@@ -399,8 +399,7 @@ jobs:
       # dataset. Applies every accepted section: restaurants.json takes the
       # statuses, locations, directory entries, mentions, links, facts,
       # factor ratings and attempt stamps; news is folded into buzz.json and
-      # candidate reviews into candidates.json. Crowd figures are frozen and
-      # nothing here writes them.
+      # candidate reviews into candidates.json.
       - name: Apply validated research
         run: node pizza/scripts/apply-research.mjs
 

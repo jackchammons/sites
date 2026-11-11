@@ -45,8 +45,8 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   The dispatch-only `rerate` task works through them; once none is left, `rerate` and
   `sources` have empty worklists and `editorial` can leave `check-dataset.js`. The page
   never describes a rating as editorial or founding, and `verify.mjs` gates on that.
-- **Reputation can lift a score and never lower it.** It combines longevity ×3, review
-  volume ×2 and coverage ×1 as the best weighted mean over the components present, so
+- **Reputation can lift a score and never lower it.** It has two components, longevity
+  ×3 and coverage ×1, combined as the best weighted mean over the components present, so
   an added component never lowers the factor. The factor is then counted only when it
   is measured *and* counting it does not lower the score; otherwise its weight is shared
   by the other four. Before this rule an entry with nothing on file outranked
@@ -70,10 +70,11 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   `statusChecked`, `locationsVerified`, `lastVerified` and the graded factors' dates;
   decay runs from the newest. Anything that explains a score movement must read the
   same date (`r.verified`), not `lastVerified` alone.
-- **Crowd star ratings stay frozen; review counts are used.** Yelp 403s automated reads
-  and no API key is in use, so the stored stars are display-only. The review *count*
-  feeds reputation. Do not reintroduce a star-rating pipeline; three runs burned their
-  budget rediscovering the 403.
+- **There are no crowd figures.** No entry carries a star average or a review count, and
+  nothing scores or prints one. Yelp answers 403 to automated reads and no API key is in
+  use, so a stored figure could not be kept current. Do not build a star or review-count
+  pipeline; three runs burned their budget rediscovering the 403. `check-dataset.js`
+  refuses a `crowd` key on an entry, and the validator refuses a `ratings` section.
 
 ## The dataset
 

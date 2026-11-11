@@ -9,10 +9,10 @@
 import { PUGET_SOUND_ZIP, PUGET_SOUND_BOX } from './bounds.js';
 
 const STATUSES = new Set(['open', 'opening', 'closed']);
-/* 'editorial' marks a launch rating (isLaunchRating in slice.js). It stays
- * valid for as long as the data holds one: the rerate task replaces them a
- * few per pass, and the lint runs between passes. */
-const SET_BY = new Set(['editorial', 'agent']);
+/* Every rating is the research agent's, read from published coverage. A
+ * graded factor set by anyone else is a hand-entered value, and the lint
+ * refuses it so one cannot come back. */
+const SET_BY = new Set(['agent']);
 const FACTOR_KEYS = ['craft', 'distinctiveness', 'critical'];
 /* The clocks apply-research stamps. Freshness, the worklists and the radar all
  * read them, so one in the future holds an entry fresh, or out of a worklist,
@@ -69,7 +69,6 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
     if (r.openedSource != null && !https(r.openedSource)) bad(id, `openedSource must be https`);
     if (r.priceSource != null && !https(r.priceSource)) bad(id, `priceSource must be https`);
     for (const k of STAMPS) if (r[k] != null && !pastDate(r[k])) bad(id, `${k} is not a past date`);
-    if (r.crowd?.observed != null && !pastDate(r.crowd.observed)) bad(id, `crowd.observed is not a past date`);
     if (r.url != null && !https(r.url)) bad(id, `url must be https, got "${r.url}"`);
     if (r.instagram != null && !/^https:\/\/(www\.)?instagram\.com\/[A-Za-z0-9._]{2,30}\/?$/.test(r.instagram)) {
       bad(id, `instagram must be an https instagram.com profile URL, got "${r.instagram}"`);
@@ -88,7 +87,7 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
       const f = r.factors?.[k];
       if (f == null) continue;
       if (typeof f.value !== 'number' || f.value < 0 || f.value > 10) bad(id, `factors.${k}.value out of range: ${f.value}`);
-      if (!SET_BY.has(f.setBy)) bad(id, `factors.${k}.setBy must be editorial|agent`);
+      if (!SET_BY.has(f.setBy)) bad(id, `factors.${k}.setBy must be agent: every rating comes from the research agent`);
       if (f.setBy === 'agent' && !(f.source && https(f.source))) bad(id, `factors.${k} is agent-set but carries no https source`);
       if (f.sources != null && !(Array.isArray(f.sources) && f.sources.every(https))) bad(id, `factors.${k}.sources must be https URLs`);
       if (markup(f.note)) bad(id, `factors.${k}.note contains < or >`);
@@ -98,10 +97,11 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
       bad(id, `opened is not a plausible year: ${r.opened}`);
     }
     if (r.priceIndex != null && ![1, 2, 3, 4].includes(r.priceIndex)) bad(id, `priceIndex must be 1-4: ${r.priceIndex}`);
-    if (r.crowd != null) {
-      if (!(r.crowd.rating >= 1 && r.crowd.rating <= 5)) bad(id, `crowd.rating out of range: ${r.crowd.rating}`);
-      if (!(r.crowd.reviews >= 0)) bad(id, `crowd.reviews out of range: ${r.crowd.reviews}`);
-    }
+    // A star average or a review count cannot be kept current: the platforms
+    // that hold them refuse automated reads. An entry that carried one would
+    // hold a figure nothing can re-check, so the key itself is refused, empty
+    // or not.
+    if (r.crowd !== undefined) bad(id, 'crowd figures are not part of the dataset');
 
     const seenAddr = new Set();
     for (const loc of r.locations ?? []) {

@@ -4,7 +4,7 @@
 import { boardHtml, fieldStats } from '../src/render.js';
 import {
   FRICTION_CAP, ALGORITHM, MAX_STALENESS_DECAY, STALENESS_PER_WEEK, DEFAULT_WEIGHTS,
-  REPUTATION_WEIGHTS, LONGEVITY_FULL_YEARS, VOLUME_HALF_REVIEWS, COVERAGE_WINDOW_MONTHS,
+  REPUTATION_WEIGHTS, LONGEVITY_FULL_YEARS, COVERAGE_WINDOW_MONTHS,
   COVERAGE_FULL_MENTIONS, MENTION_WEIGHT, MENTION_WEIGHT_OTHER, MENTION_HALF_LIFE_MONTHS,
   CRITICAL_BOOST_SCALE, CRITICAL_BOOST_CAP, PRICE_MULT, PRICE_MULT_UNKNOWN
 } from '../src/slice.js';
@@ -175,26 +175,24 @@ ${directorySection}
     <div class="grid2">
       <div class="mcard">
         <h4>Reputation — computed</h4>
-        <p>Three components, each 0–1, weighted ${W.longevity} : ${W.volume} : ${W.coverage}, scored over whichever an entry
+        <p>Two components, each 0–1, weighted ${W.longevity} : ${W.coverage}, scored over whichever an entry
         actually has:</p>
         <pre>longevity = log(1+years) / log(1+${LONGEVITY_FULL_YEARS})
             capped at 1
-volume    = reviews / (reviews + ${VOLUME_HALF_REVIEWS})
 coverage  = mentions in ${COVERAGE_WINDOW_MONTHS} mo / ${COVERAGE_FULL_MENTIONS}
             capped at 1
 
 reputation = 10 × best weighted mean
              over the components on
              file, taken best-first</pre>
-        <p>A component counts only if it raises that mean, and the same rule holds one level
-        up. Reputation carries its ${repShare}% only when it is on file <em>and</em> is at or above the
+        <p>A component counts only if it raises that mean, so with both on file the factor is
+        the higher of the two. The same rule holds one level up.
+        Reputation carries its ${repShare}% only when it is on file <em>and</em> is at or above the
         weighted mean of the entry's other four factors. When nothing is on file, or when what
         is on file sits below the other four, reputation carries no weight and the other four
-        share its ${repShare}% in proportion to their own weights. So a founding year, a review count
-        or a first press mention can lift a score but never lower it, and each card says which
-        of the three cases applies. The log curve means year two proves more than year
-        twelve. The review <em>count</em> is used, never the star average: how many people rated
-        a place is durable, while stored averages go stale.</p>
+        share its ${repShare}% in proportion to their own weights. So a founding year or a first
+        press mention can lift a score but never lower it, and each card says which of the
+        three cases applies. The log curve means year two proves more than year twelve.</p>
       </div>
       <div class="mcard">
         <h4>Critical reception — computed</h4>
@@ -252,9 +250,6 @@ tier    $ ${x2(PRICE_MULT[1])}     $$ ${x2(PRICE_MULT[2])}
         week since then, capped at ${(MAX_STALENESS_DECAY * 100).toFixed(0)}% after ${capWeeks} weeks. An entry left
         alone slides slowly down the board until the rotation checks it again, and the card
         names which check reset the clock.</p>
-        <p>Star averages shown on cards are context, not score input; the review <em>count</em>
-        is what reputation reads. They are printed exactly as stored: the figures on file were
-        seeded when the index launched and are not refreshed.</p>
       </div>
     </div>
 

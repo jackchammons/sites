@@ -16,7 +16,8 @@ import { buzzSection } from '../build/sections/buzz.mjs';
 import { directorySection } from '../build/sections/directory.mjs';
 import { cardHtml, fieldStats } from '../src/render.js';
 import {
-  ALGORITHM, isoWeekKey, isoWeek, LONGEVITY_FULL_YEARS, VOLUME_HALF_REVIEWS, DEFAULT_WEIGHTS
+  ALGORITHM, isoWeekKey, isoWeek, LONGEVITY_FULL_YEARS, COVERAGE_WINDOW_MONTHS, COVERAGE_FULL_MENTIONS,
+  REPUTATION_WEIGHTS, DEFAULT_WEIGHTS
 } from '../src/slice.js';
 
 /* The build's sections, rendered from a small made-up field. Every entry was
@@ -150,7 +151,8 @@ test('the methodology sits inside <main>, prints the constants from slice.js, an
   const html = page(context());
   assert.ok(html.indexOf('id="methodology"') < html.indexOf('</main>'));
   assert.ok(html.includes(`log(1+${LONGEVITY_FULL_YEARS})`));
-  assert.ok(html.includes(`reviews / (reviews + ${VOLUME_HALF_REVIEWS})`));
+  assert.ok(html.includes(`mentions in ${COVERAGE_WINDOW_MONTHS} mo / ${COVERAGE_FULL_MENTIONS}`));
+  assert.ok(html.includes(`Two components, each 0–1, weighted ${REPUTATION_WEIGHTS.longevity} : ${REPUTATION_WEIGHTS.coverage},`));
   assert.ok(html.includes(`Reputation carries its ${DEFAULT_WEIGHTS.reputation}% only when it is on file`));
   assert.ok(html.includes(`scoring module (${ALGORITHM})`));
   assert.match(html, /<a href="\.\.\/">all sites<\/a>/);
@@ -172,7 +174,7 @@ test('a card says which of the three reputation cases applies', () => {
 
   const unmeasured = card('p0');
   assert.equal(unmeasured.r.reputationDetail.use, 'unmeasured');
-  assert.match(unmeasured.html, /No founding year, review count or press on file, so reputation carries no weight/);
+  assert.match(unmeasured.html, /No founding year or press on file, so reputation carries no weight/);
   assert.match(unmeasured.html, />unmeasured<\/span><\/td>\s*<td class="num">0% → <b>0\.0<\/b>/);
 
   const lowers = card('young');
@@ -222,7 +224,7 @@ test('the page describes every rating one way, and a rating the agent has not se
   for (const url of read) assert.ok(record('p1').includes(`href="${url}"`));
 
   const text = html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, ' ').replace(/<[^>]+>/g, ' ');
-  assert.doesNotMatch(text, /editorial|founding entr|at launch|launched in/i);
+  assert.doesNotMatch(text, /editorial|founding entr|at launch|launched in|index launched|seeded/i);
   assert.match(text, /The three graded factors \(craft, distinctiveness and the critic base\) are set by a research\s+agent from published coverage/);
 });
 

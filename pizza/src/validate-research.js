@@ -131,7 +131,7 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
                      coverageSkipped: doc.coverageSkipped ?? [],
                      socialSkipped: doc.socialSkipped ?? [] };
   if (Array.isArray(doc.ratings) && doc.ratings.length) {
-    fails.push('ratings are no longer accepted: crowd figures are frozen, see CLAUDE.md');
+    fails.push('ratings are no longer accepted: the dataset holds no crowd figures, see CLAUDE.md');
   }
   /* Retired sections fail loudly rather than being dropped: a claim routed
    * through an old channel must be re-expressed through the live one, not
