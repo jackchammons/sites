@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { validateResearch } from '../src/validate-research.js';
+import { validateResearch, isNonCriticism, isOwnAccount, registrableName, CAPS } from '../src/validate-research.js';
 
 const NOW = Date.parse('2026-08-30T00:00:00Z');
 
@@ -11,11 +11,16 @@ const dataset = { restaurants: [
   { id: 'zeeks-pizza', name: 'Zeeks Pizza', status: 'open' },
   { id: 'roma-roma', name: 'Roma Roma', status: 'open' },
   { id: 'old-slice', name: 'Old Slice', status: 'closed',
-    locations: [{ neighborhood: 'Fremont', address: '3601 Fremont Ave N, Seattle, WA 98103' }] }
+    locations: [{ neighborhood: 'Fremont', address: '3601 Fremont Ave N, Seattle, WA 98103' }] },
+  // The three ways a social account gets on file: beside a website, as the
+  // only link an entry with no website has, and a Facebook page as that link.
+  { id: 'gram-slice', name: 'Gram Slice', status: 'open', url: 'https://gramslice.example/',
+    instagram: 'https://www.instagram.com/Gram.Slice_sea/' },
+  { id: 'handle-only', name: 'Handle Only', status: 'open', url: 'https://www.instagram.com/handle_only/' },
+  { id: 'booked-pie', name: 'Booked Pie', status: 'open', url: 'https://www.facebook.com/bookedpie/' }
 ] };
-const registry = { 'sells-out': { label: 'Sells out', frictionCost: 1.5 } };
 
-const run = doc => validateResearch(doc, dataset, registry, NOW);
+const run = doc => validateResearch(doc, dataset, NOW);
 const passes = doc => { const { fails } = run(doc); assert.deepEqual(fails, []); };
 const failsWith = (doc, snippet) => {
   const { fails } = run(doc);
@@ -63,6 +68,90 @@ test('status: a closure citing a review site or listing is refused; news passes'
     source: 'https://www.yelp.com/biz/delancey-seattle' }] });
 });
 
+const closure = (id, source) => ({ status: [{ id, status: 'closed', source,
+  note: 'Its own account says the last day of service was Sunday.' }] });
+
+test('status: a closure announced on the entry\'s own Instagram account passes', () => {
+  // the profile itself, and anything under it
+  passes(closure('gram-slice', 'https://www.instagram.com/gram.slice_sea/'));
+  passes(closure('gram-slice', 'https://www.instagram.com/gram.slice_sea/p/DAbc123xyz/'));
+  passes(closure('gram-slice', 'https://instagram.com/Gram.Slice_sea/reel/DAbc123xyz/?igsh=abc'));
+  passes(closure('gram-slice', 'https://m.instagram.com/gram.slice_sea/p/DAbc123xyz/'));
+  // an entry whose only link on file is its profile
+  passes(closure('handle-only', 'https://www.instagram.com/handle_only/p/DAbc123xyz/'));
+});
+
+test('status: a closure on Instagram that names no account, or another one, is refused', () => {
+  failsWith(closure('gram-slice', 'https://www.instagram.com/p/DAbc123xyz/'), 'a closure needs');
+  failsWith(closure('gram-slice', 'https://www.instagram.com/reel/DAbc123xyz/'), 'a closure needs');
+  failsWith(closure('gram-slice', 'https://www.instagram.com/stories/gram.slice_sea/3141592653/'), 'a closure needs');
+  failsWith(closure('gram-slice', 'https://www.instagram.com/explore/tags/gramslice/'), 'a closure needs');
+  // somebody else's account, a longer handle that only starts the same way,
+  // and another entry's account
+  failsWith(closure('gram-slice', 'https://www.instagram.com/seattlefoodfan/p/DAbc123xyz/'), 'a closure needs');
+  failsWith(closure('gram-slice', 'https://www.instagram.com/gram.slice_sea_fans/'), 'a closure needs');
+  failsWith(closure('gram-slice', 'https://www.instagram.com/handle_only/p/DAbc123xyz/'), 'a closure needs');
+  // no account on file at all
+  failsWith(closure('delancey', 'https://www.instagram.com/delanceyseattle/p/DAbc123xyz/'), 'a closure needs');
+  // a look-alike host is not the platform, so it is never the entry's account
+  const entry = dataset.restaurants.find(r => r.id === 'gram-slice');
+  assert.equal(isOwnAccount('https://www.instagram.com/gram.slice_sea/', entry), true);
+  assert.equal(isOwnAccount('https://www.instagram.co/gram.slice_sea/', entry), false);
+  assert.equal(isOwnAccount('https://instagram.com.example/gram.slice_sea/', entry), false);
+  failsWith(closure('gram-slice', 'https://www.instagram.co/gram.slice_sea/'), 'a closure needs');
+  // the message says which URL shape would have counted
+  failsWith(closure('gram-slice', 'https://www.instagram.com/p/DAbc123xyz/'), 'instagram.com/<handle>/p/<id>/');
+});
+
+test('status: a Facebook page on file counts the same way', () => {
+  passes(closure('booked-pie', 'https://www.facebook.com/bookedpie'));
+  passes(closure('booked-pie', 'https://www.facebook.com/bookedpie/posts/pfbid02abc'));
+  passes(closure('booked-pie', 'https://m.facebook.com/BookedPie/posts/pfbid02abc'));
+  failsWith(closure('booked-pie', 'https://www.facebook.com/permalink.php?story_fbid=1&id=2'), 'a closure needs');
+  failsWith(closure('booked-pie', 'https://www.facebook.com/story.php?story_fbid=1&id=2'), 'a closure needs');
+  failsWith(closure('booked-pie', 'https://www.facebook.com/groups/seattlepizza/posts/1/'), 'a closure needs');
+  failsWith(closure('booked-pie', 'https://www.facebook.com/share/p/1AbCdEf/'), 'a closure needs');
+  failsWith(closure('booked-pie', 'https://www.facebook.com/someoneelse/posts/pfbid02abc'), 'a closure needs');
+  // the Instagram account of that name is not on file for this entry
+  failsWith(closure('booked-pie', 'https://www.instagram.com/bookedpie/'), 'a closure needs');
+  // a page addressed by number names no account, on file or cited
+  assert.equal(isOwnAccount('https://www.facebook.com/profile.php?id=7',
+    { url: 'https://www.facebook.com/profile.php?id=7' }), false);
+});
+
+test('status: the pizzeria\'s own website and any news page pass as before', () => {
+  passes(closure('gram-slice', 'https://gramslice.example/goodbye'));
+  passes(closure('gram-slice', 'https://www.capitolhillseattle.com/2026/08/gram-slice-closes/'));
+});
+
+test('status: review sites and aggregators are refused on any of their domains', () => {
+  for (const source of ['https://www.yelp.com/biz/gram-slice-seattle', 'https://m.yelp.com/biz/gram-slice-seattle',
+    'https://www.yelp.ca/biz/gram-slice-seattle', 'https://www.yelp.co.uk/biz/gram-slice-seattle',
+    'https://www.tripadvisor.co.uk/Restaurant_Review-gram-slice', 'https://www.tripadvisor.com.au/Restaurant_Review-x',
+    'https://maps.google.com/?cid=1', 'https://www.google.ca/maps/place/x', 'https://www.doordash.com/store/gram-slice',
+    'https://order.toasttab.com/online/gram-slice', 'https://en.wikipedia.org/wiki/Gram_Slice']) {
+    failsWith(closure('gram-slice', source), 'a closure needs');
+  }
+  // an own-account URL does not unlock an aggregator for the same entry
+  failsWith(closure('handle-only', 'https://www.yelp.com/biz/handle-only-seattle'), 'a closure needs');
+});
+
+test('the non-criticism family is matched by registered name, not exact host', () => {
+  assert.equal(registrableName('m.yelp.com'), 'yelp');
+  assert.equal(registrableName('yelp.ca'), 'yelp');
+  assert.equal(registrableName('www.yelp.co.uk'), 'yelp');
+  assert.equal(registrableName('tripadvisor.com.au'), 'tripadvisor');
+  assert.equal(registrableName('seattle.eater.com'), 'eater');
+  assert.equal(registrableName('localhost'), '');
+  // a name that merely contains one is a different site
+  for (const u of ['https://www.yelpington.com/a', 'https://notyelp.com/a', 'https://yelp.example.com/a',
+    'https://www.thestranger.com/a', 'https://seattle.eater.com/a', 'https://co.example/a']) {
+    assert.equal(isNonCriticism(u), false, u);
+  }
+  // so a rating cannot rest on a country domain of a review site either
+  failsWith(rating({ sources: ['https://www.yelp.ca/biz/roma-roma'] }), 'no source is published criticism');
+});
+
 /* ---- mentions: the 24-month window ---- */
 test('mentions: accepted up to 24 months back, news only 180 days', () => {
   passes({ mentions: [{ id: 'roma-roma', title: 'An older but real review', url: 'https://x.com/r',
@@ -92,6 +181,31 @@ test('locationsSkipped: an id on file and a note that says what was tried', () =
   failsWith({ locationsSkipped: [{ id: 'zeeks-pizza', note: 'x'.repeat(601) }] }, 'longer than 600');
   failsWith({ locationsSkipped: Array.from({ length: 13 }, () => ({ id: 'zeeks-pizza', note: 'no official site found' })) },
     'exceeds the 12 cap');
+});
+
+/* ---- coverageSkipped, socialSkipped: the two backfills' memory ---- */
+test('coverageSkipped and socialSkipped: an id on file and a note that says what was tried', () => {
+  for (const sec of ['coverageSkipped', 'socialSkipped']) {
+    passes({ [sec]: [{ id: 'zeeks-pizza', note: 'searched four outlets by name; nothing in two years' }] });
+    // rated or not, open or closed: the record only rests a worklist entry
+    passes({ [sec]: [{ id: 'delancey', note: 'searched four outlets by name; nothing new' }] });
+    failsWith({ [sec]: [{ id: 'nope', note: 'searched four outlets by name' }] }, 'unknown restaurant id');
+    failsWith({ [sec]: [{ id: 'zeeks-pizza', note: 'none' }] }, 'note missing or too short');
+    failsWith({ [sec]: [{ id: 'zeeks-pizza', note: 'x'.repeat(601) }] }, 'longer than 600');
+    failsWith({ [sec]: [{ id: 'zeeks-pizza' }] }, 'note missing or too short');
+    const full = n => ({ [sec]: Array.from({ length: n }, () => ({ id: 'zeeks-pizza', note: 'searched four outlets by name' })) });
+    assert.equal(run(full(CAPS[sec])).fatal, false);
+    failsWith(full(CAPS[sec] + 1), `exceeds the ${CAPS[sec]} cap`);
+  }
+  assert.deepEqual([CAPS.coverageSkipped, CAPS.socialSkipped], [12, 15]);
+});
+
+test('socialSkipped may sit beside a links record for the part that was found', () => {
+  const { fails, accepted } = run({
+    links: [{ id: 'zeeks-pizza', website: 'https://zeekspizza.com', source: 'https://zeekspizza.com' }],
+    socialSkipped: [{ id: 'zeeks-pizza', note: 'site found; it links no Instagram and no outlet names a handle' }] });
+  assert.deepEqual(fails, []);
+  assert.equal(accepted.links.length + accepted.socialSkipped.length, 2);
 });
 
 /* ---- locations: the address gate ---- */
@@ -196,9 +310,10 @@ test('angle brackets are refused in every free-text field and in addresses', () 
     'ratingSkipped note': { ratingSkipped: [{ id: 'roma-roma', note: `nothing found ${TAG}` }] },
     'factsSkipped note': { factsSkipped: [{ id: 'roma-roma', note: `nothing found ${TAG}` }] },
     'locationsSkipped note': { locationsSkipped: [{ id: 'roma-roma', note: `nothing found ${TAG}` }] },
+    'coverageSkipped note': { coverageSkipped: [{ id: 'roma-roma', note: `nothing found ${TAG}` }] },
+    'socialSkipped note': { socialSkipped: [{ id: 'roma-roma', note: `nothing found ${TAG}` }] },
     'factorSources note': { factorSources: [{ id: 'delancey', sources: ['https://www.thestranger.com/a'], note: `${NOTE} ${TAG}` }] },
-    'candidateReview note': { candidateReview: [{ name: 'Anything Pizza', verdict: 'closed', note: `gone ${TAG} for good` }] },
-    'attribute label': { newAttributes: [{ key: 'cash-only', label: `Cash ${TAG}`, entries: ['delancey'] }] }
+    'candidateReview note': { candidateReview: [{ name: 'Anything Pizza', verdict: 'closed', note: `gone ${TAG} for good` }] }
   };
   for (const [what, doc] of Object.entries(cases)) {
     const { fails, accepted } = run(doc);
@@ -226,7 +341,6 @@ test('every string the apply step stores is bounded', () => {
     source: long(81), date: '2026-08-15', kind: 'mention' }] }, 'source name is longer than 80');
   failsWith(loc(site(`1 ${long(200)} St, Seattle, WA 98101`)), 'address is longer than 200');
   failsWith(loc(site('1 A St, Seattle, WA 98101', long(81))), 'neighborhood is longer than 80');
-  failsWith({ newAttributes: [{ key: 'cash-only', label: long(41), entries: ['delancey'] }] }, 'label is longer than 40');
   failsWith({ candidateReview: [{ name: 'Anything Pizza', verdict: 'closed', note: long(601) }] }, 'note is longer than 600');
   // a refused value is quoted in the message, and the message is bounded too
   const { fails } = run({ status: [{ id: long(250000), status: 'open', note: 'confirmed on its site', source: 'https://x.com/a' }] });
@@ -313,10 +427,17 @@ test('legacy crowd-rating payloads are refused outright', () => {
   failsWith({ ratings: [{ id: 'delancey', rating: 4.8 }] }, 'no longer accepted');
 });
 
-test('newAttributes: registry collisions and wild costs fail', () => {
-  failsWith({ newAttributes: [{ key: 'sells-out', label: 'X', entries: ['delancey'] }] }, 'already exists');
-  failsWith({ newAttributes: [{ key: 'cash-only', label: 'Cash only', frictionCost: 9, entries: ['delancey'] }] }, 'frictionCost');
-  passes({ newAttributes: [{ key: 'cash-only', label: 'Cash only', frictionCost: 0.5, entries: ['delancey'] }] });
+test('newAttributes is no longer a section: a file that carries it has it ignored, not applied', () => {
+  const good = { id: 'delancey', status: 'open', note: 'confirmed on its site today', source: 'https://x.com/a' };
+  const { fails, fatal, accepted, unknown, sections } = run({ status: [good],
+    newAttributes: [{ key: 'hard-parking', label: 'Hard parking', frictionCost: 2.5, entries: ['delancey'] }] });
+  assert.equal(fatal, false);
+  assert.deepEqual(fails, []);
+  assert.deepEqual(unknown, ['newAttributes']);
+  assert.ok(!('newAttributes' in accepted) && !('newAttributes' in sections) && !('newAttributes' in CAPS));
+  assert.deepEqual(accepted.status, [good]);
+  // however many records it holds, an ignored key cannot fail the file
+  assert.equal(run({ newAttributes: Array.from({ length: 50 }, () => ({})) }).fatal, false);
 });
 
 test('status: enum and citation enforced', () => {
@@ -375,7 +496,7 @@ const CANDS = { candidates: [
   { name: 'Belltown Pizza', status: 'pending' },
   { name: 'Ghost Pizza', status: 'rejected' }
 ] };
-const review = it => validateResearch({ candidateReview: [it] }, dataset, registry, NOW, CANDS);
+const review = it => validateResearch({ candidateReview: [it] }, dataset, NOW, CANDS);
 const reviewFails = (it, snippet) => {
   const { fails } = review(it);
   assert.ok(fails.some(f => f.includes(snippet)),
@@ -404,6 +525,6 @@ test('candidateReview: an http source is tolerated (dropped at apply), never fat
 test('candidateReview: without a candidates queue, name matching is skipped', () => {
   const { fails } = validateResearch({ candidateReview: [
     { name: 'Anything Pizza', verdict: 'closed', note: 'long enough note here' }
-  ] }, dataset, registry, NOW);
+  ] }, dataset, NOW);
   assert.deepEqual(fails, []);
 });

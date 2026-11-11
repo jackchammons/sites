@@ -250,6 +250,35 @@ async function layout() {
       check(m.lanes.every(([lo], i) => i === 0 || lo >= m.lanes[i - 1][1]), 'lanes axis figures overlap', where);
       check(!m.overflow, 'the page scrolls sideways', where);
     }
+    /* The word that names each grade is on the page beside its figure: drawn,
+       inside its fact, in the figure's colour, clear of the figure and of the
+       line beneath wherever it wraps to. A fact with no grade shows none. One
+       room with every grade in it, and a projector whose panel is not the
+       picture's shape, which has the longest lines. */
+    for (const hash of ['#d=43&a=16:9&r=1080&v=40&e=42&c=75&u=i&m=tv', '#d=65&a=16:9&r=2160&v=108&u=i&m=tv', '#d=100&a=16:9&r=custom&rw=2560&rh=1080&v=120&m=pj&l=400&o=-20&c=20&u=m']) {
+      const where = { scheme, width, hash };
+      await p2.evaluate(h => { location.hash = h; }, hash);
+      await p2.waitForTimeout(40);
+      const words = await p2.evaluate(() => [...document.querySelectorAll('.grade')].filter(g => !g.closest('[hidden]')).map(g => {
+        const host = g.closest('.fact, .total'), fig = host.querySelector('span:not(.grade)'), sub = host.querySelector('.fact small');
+        const r = g.getBoundingClientRect(), h = host.getBoundingClientRect(), f = fig.getBoundingClientRect();
+        return { id: g.id, text: g.textContent, graded: /\b(good|ok|warn)\b/.test(host.className), w: r.width, h: r.height,
+          inside: r.left >= h.left - 0.5 && r.right <= h.right + 0.5 && r.top >= h.top - 0.5 && r.bottom <= h.bottom + 0.5,
+          clear: !(r.top < f.bottom - 1 && r.bottom > f.top + 1 && r.left < f.right - 0.5 && r.right > f.left + 0.5) && (!sub || r.bottom <= sub.getBoundingClientRect().top + 0.5),
+          colour: getComputedStyle(g).color === getComputedStyle(fig).color };
+      }));
+      check(words.filter(g => g.text).length >= 7, `only ${words.filter(g => g.text).length} grade words on the page`, where);
+      for (const g of words) {
+        if (!g.graded) { check(g.text === '' && g.w === 0 && g.h === 0, `#${g.id} has no grade and shows "${g.text}" (${g.w} × ${g.h})`, where); continue; }
+        check(g.text !== '' && g.w >= 20 && g.h >= 12, `#${g.id} "${g.text}" is not drawn (${g.w} × ${g.h})`, where);
+        check(g.inside, `#${g.id} "${g.text}" leaves its box`, where);
+        check(g.clear, `#${g.id} "${g.text}" runs into its figure or the line beneath`, where);
+        check(g.colour, `#${g.id} "${g.text}" is not in its figure's colour`, where);
+      }
+      check(!(await p2.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)), 'the page scrolls sideways', where);
+    }
+    await p2.evaluate(h => { location.hash = h; }, '#d=65&a=16:9&r=2160&v=108&u=i&m=tv');
+    await p2.waitForTimeout(40);
     // Nine facts in two columns: the ninth takes the whole row, leaving no empty cell.
     const facts = await p2.$eval('.results .facts', e => { const kids = [...e.children].map(k => k.getBoundingClientRect()); const box = e.getBoundingClientRect();
       return { last: kids.at(-1).width, first: kids[0].width, box: box.width }; });

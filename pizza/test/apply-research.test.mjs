@@ -13,7 +13,7 @@ const NOTE = 'a note comfortably long enough to pass every length check';
 const RATED = () => ({ craft: { value: 9, setBy: 'editorial' }, distinctiveness: { value: 8, setBy: 'editorial' },
   critical: { value: 9, setBy: 'editorial' } });
 const fresh = () => ({
-  city: 'Seattle', dataVersion: '2026.10', cityMeanRating: 4.3, priorWeight: 500,
+  city: 'Seattle', dataVersion: '2026.10',
   restaurants: [
     { id: 'delancey', name: 'Delancey', status: 'open', neighborhood: 'Ballard', url: 'https://delancey.example',
       factors: RATED(), attributes: {}, mentions: [],
@@ -62,6 +62,25 @@ test('locationsSkipped: stamps the attempt and keeps the note', () => {
   assert.equal(get('good-luck-bread').locationsNote, 'no official site, only an Instagram profile');
   assert.equal(get('good-luck-bread').locationsVerified, null);
   assert.equal(done.changes, 1);
+  assert.deepEqual(checkDataset(dataset, {}, NOW), []);
+});
+
+test('coverageSkipped and socialSkipped: each stamps its own attempt and keeps the note', () => {
+  const { get, done, dataset, lines } = apply({
+    coverageSkipped: [{ id: 'delancey', note: 'four outlets searched by name; nothing new since the review on file' },
+                      { id: 'not-on-file', note: 'nothing to stamp this on' }],
+    socialSkipped: [{ id: 'good-luck-bread', note: 'no site of its own and no outlet names a handle' }] });
+  assert.equal(get('delancey').coverageAttempted, TODAY);
+  assert.equal(get('delancey').coverageNote, 'four outlets searched by name; nothing new since the review on file');
+  assert.equal(get('delancey').socialAttempted, undefined);
+  assert.equal(get('good-luck-bread').socialAttempted, TODAY);
+  assert.equal(get('good-luck-bread').socialNote, 'no site of its own and no outlet names a handle');
+  assert.equal(get('good-luck-bread').coverageAttempted, undefined);
+  // an attempt verifies nothing, so no freshness or status clock moves
+  assert.equal(get('delancey').locationsVerified, '2026-08-01');
+  assert.equal(get('delancey').statusChecked, undefined);
+  assert.equal(done.changes, 2);
+  assert.equal(lines.length, 2);
   assert.deepEqual(checkDataset(dataset, {}, NOW), []);
 });
 
@@ -153,34 +172,40 @@ test('ratings: an entry already rated is never overwritten; an unrated one is fi
 test('side files are changed only when something was added to them', () => {
   const buzz = { updated: '2026-11-09T00:00:00.000Z', items: [
     { title: 'A story already on file', url: 'https://news.example/known', source: 'X', published: '2026-11-01T00:00:00.000Z', kind: 'mention', mentions: [] }] };
-  const registry = { 'sells-out': { label: 'Sells out' } };
   const candFile = { candidates: [{ name: 'Ghost Pizza', status: 'pending' }, { name: 'DELANCEY', status: 'pending' }] };
   const story = { title: 'A story already on file', url: 'https://news.example/known', source: 'X', published: '2026-11-01', kind: 'mention' };
 
-  const quiet = apply({ news: [story], newAttributes: [{ key: 'sells-out', label: 'Sells out', entries: ['delancey'] }] },
-    fresh(), { buzz, registry, candFile: { candidates: [] } });
-  assert.deepEqual([quiet.done.buzzChanged, quiet.done.registryChanged, quiet.done.candidatesChanged], [false, false, false]);
+  const quiet = apply({ news: [story] }, fresh(), { buzz, candFile: { candidates: [] } });
+  assert.deepEqual([quiet.done.buzzChanged, quiet.done.candidatesChanged], [false, false]);
 
   const busy = apply({
     news: [{ ...story, title: 'A story the sweep missed', url: 'https://news.example/new', published: '2026-11-05', mentions: ['delancey'] }],
-    newAttributes: [{ key: 'cash-only', label: 'Cash only', frictionCost: 0.5, entries: ['delancey'] }],
     candidateReview: [{ name: 'ghost pizza', verdict: 'closed', note: 'gone since spring', source: 'http://x.example/a' }]
-  }, fresh(), { buzz, registry, candFile });
-  assert.deepEqual([busy.done.buzzChanged, busy.done.registryChanged, busy.done.candidatesChanged], [true, true, true]);
+  }, fresh(), { buzz, candFile });
+  assert.deepEqual([busy.done.buzzChanged, busy.done.candidatesChanged], [true, true]);
   assert.equal(buzz.items[0].title, 'A story the sweep missed');
   assert.equal(buzz.items[0].via, 'research');
-  assert.deepEqual(registry['cash-only'], { label: 'Cash only', frictionCost: 0.5 });
-  assert.equal(busy.get('delancey').attributes['cash-only'], true);
   assert.deepEqual(candFile.candidates.map(c => [c.name, c.status, c.resolutionSource]),
     [['Ghost Pizza', 'rejected', undefined], ['DELANCEY', 'promoted', undefined]]);
-  assert.deepEqual(checkDataset(busy.dataset, registry, NOW), []);
+  assert.deepEqual(checkDataset(busy.dataset, {}, NOW), []);
+});
+
+test('newAttributes in a research file is not applied: no flag is set and no registry row is written', () => {
+  const registry = { 'sells-out': { label: 'Sells out', frictionCost: 1.5 } };
+  const before = JSON.stringify(fresh());
+  const { dataset, done } = apply({ newAttributes: [
+    { key: 'hard-parking', label: 'Hard parking', frictionCost: 2.5, entries: ['delancey'] }] }, fresh(), { registry });
+  assert.equal(JSON.stringify(dataset), before);
+  assert.deepEqual(registry, { 'sells-out': { label: 'Sells out', frictionCost: 1.5 } });
+  assert.equal(done.changes, 0);
+  assert.ok(!('registryChanged' in done));
 });
 
 test('an empty research file changes nothing, dataVersion included', () => {
   const before = JSON.stringify(fresh());
   const { dataset, done } = apply({ updated: '2026-11-10T00:00:00Z' });
   assert.equal(JSON.stringify(dataset), before);
-  assert.deepEqual(done, { changes: 0, located: 0, ratedNow: 0, buzzChanged: false, registryChanged: false, candidatesChanged: false });
+  assert.deepEqual(done, { changes: 0, located: 0, ratedNow: 0, buzzChanged: false, candidatesChanged: false });
   assert.equal(apply(located({})).dataset.dataVersion, '2026.11');
 });
 

@@ -74,7 +74,7 @@ check([...app.matchAll(/^import\b/gm)].length === 1, 'app.js has an import this 
 /* Every $('id') in the script has to exist in the markup. Prefixed lookups
    ($('sum-' + k)) are checked in both directions against what was built: a
    slot the page renders must be filled by a set('<k>', …) call, and a call
-   must have its three elements. The call is matched as written, since a bare
+   must have its four elements. The call is matched as written, since a bare
    'eye' or 'res' also appears in code that fills nothing. */
 const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]));
 const literal = [...app.matchAll(/\$\('([^']+)'\)/g)].map(m => m[1]);
@@ -85,7 +85,7 @@ check(slots.length >= 17, `only ${slots.length} fact slots in the page — did t
 for (const id of new Set(literal)) check(ids.has(id), `app.js looks up #${id}, which the page never renders`);
 for (const k of slots) check(filled.has(k), `the page renders slot "${k}", which app.js never fills`);
 for (const k of new Set([...slots, ...filled])) {
-  for (const id of [`sum-${k}`, `sub-${k}`, `fact-${k}`]) check(ids.has(id), `app.js fills slot "${k}", but the page has no #${id}`);
+  for (const id of [`sum-${k}`, `sub-${k}`, `fact-${k}`, `grade-${k}`]) check(ids.has(id), `app.js fills slot "${k}", but the page has no #${id}`);
 }
 /* A grade is a colour class and a word, and a fact must not be able to get
    the first without the second. Every fact, and the headline, has a slot for
@@ -172,4 +172,4 @@ check(/id="status" role="status"/.test(html), '#status is not announced');
 check(ids.has('out-total'), 'the headline angle has no colourable wrapper');
 
 if (fails.length) report();
-console.log(`Build verified (${new Set(literal).size + slots.length * 3} live slots, maths checked).`);
+console.log(`Build verified (${new Set(literal).size + slots.length * 4} live slots, maths checked).`);

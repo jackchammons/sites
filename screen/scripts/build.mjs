@@ -178,7 +178,7 @@ addEventListener('load', function () { if (!window.__screenBooted) bootFailed();
   <section class="panel results">
     <p class="eyebrow">Horizontal viewing angle</p>
     <div aria-live="polite" aria-atomic="true">
-      <p class="total" id="out-total"><span id="out-fov">—</span><small>of view</small> <span class="grade" id="out-grade"></span></p>
+      <p class="total" id="out-total"><span id="out-fov">—</span><small>of view </small><span class="grade" id="out-grade"></span></p>
       <p class="sub" id="out-sub"></p>
     </div>
 
