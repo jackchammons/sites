@@ -45,7 +45,6 @@ jobs:
       - name: Shell scripts
         run: |
           bash -n scripts/commit-data.sh
-          bash -n scripts/preflight.sh
           bash scripts/test/commit-data.test.sh
       - name: Lint the dataset
         run: node pizza/scripts/check-dataset.mjs

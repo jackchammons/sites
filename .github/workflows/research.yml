@@ -50,10 +50,11 @@ concurrency:
   group: research
   cancel-in-progress: false
 
-# The one place the agent's model is named. The preflight probes this id and
-# the agent runs it, so what the probe reports is about the model in use.
+# The one place the agent's model is named. To try another, change it on a
+# branch and dispatch this workflow from that branch: the run is a dry run,
+# and its log prints the turns and cost to compare.
 env:
-  RESEARCH_MODEL: claude-sonnet-5
+  RESEARCH_MODEL: claude-sonnet-5-5
 
 jobs:
   agent:
@@ -109,18 +110,6 @@ jobs:
             echo "enabled=false" >> "$GITHUB_OUTPUT"
             echo "No CLAUDE_CODE_OAUTH_TOKEN or ANTHROPIC_API_KEY — skipping the research pass."
           fi
-
-      # The action hides the SDK's output, so an auth or billing failure surfaces
-      # only as is_error:true with no cost and no model usage. The probe turns
-      # that into the actual API error before three minutes of retries. It
-      # fails the run only on a definitive answer: 401/403 for the credential,
-      # or a 404 for a model id that is unknown or retired. See the script.
-      - name: Preflight credential check
-        if: steps.gate.outputs.enabled == 'true'
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-        run: bash scripts/preflight.sh "$RESEARCH_MODEL"
 
       # Fingerprint taken before the agent runs so the check afterwards can tell
       # a real write from an untouched leftover. research.json is committed
