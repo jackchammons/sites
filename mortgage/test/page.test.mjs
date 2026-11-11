@@ -394,7 +394,7 @@ test('one loan entered as new and as a loan under way with its price: the same P
       // Take the price away and the loan amount stands in for it again.
       type('in-origprice', '');
       holds({ ...under, op: undefined }, '', TYPED);
-      assert.equal(pmiRows() > 0, paid === 24, `${at}: measured against the loan amount, PMI runs until 78% of that`);
+      assert.equal(pmiRows() > 0, under.b > e.original * 0.78, `${at}: measured against the loan amount, PMI runs until 78% of that`);
     }
   }
   go('#');
