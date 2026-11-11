@@ -21,7 +21,7 @@
         "source": "seeded when the index launched; platform not recorded, never refreshed"
       },
       "priceIndex": 3,
-      "lastVerified": "2026-08-01",
+      "lastVerified": "2026-11-11",
       "styleGroup": "Chicago pan",
       "locations": [
         {
@@ -43,40 +43,37 @@
       },
       "factors": {
         "craft": {
-          "value": 9.3,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 8.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/windy-city-pie-1",
           "sources": [
             "https://www.theinfatuation.com/seattle/reviews/windy-city-pie-1",
             "https://komonews.com/seattle-refined/chicago-pizza-in-seattle-take-a-bite-of-windy-city-pie"
           ],
-          "source": "https://www.theinfatuation.com/seattle/reviews/windy-city-pie-1",
-          "sourcedDate": "2026-11-05",
-          "note": "The Infatuation says the Phinney Ridge preorder system made 'already outstanding' deep-dish even better and singles out the Meatza's crispy-crusted edges; Seattle Refined/KOMO profiles owner Dave Lichterman's from-scratch dough and signature Meatza and Sweet Pete pies."
+          "note": "The Infatuation rates this Phinney Ridge Chicago deep-dish spot 8.6/10 and says it's worth crossing town for, praising the puffy, deep crust with a near-burnt caramelized-cheese edge and naming the sausage-pepperoni-bacon 'Meatza' a standout; KOMO's Seattle Refined profiles owner Dave Lichterman's house-made dough and generous toppings, including his own favorite, the pineapple-and-giardiniera 'Sweet Pete.'",
+          "date": "2026-11-11"
         },
         "distinctiveness": {
-          "value": 9.7,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 8,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/windy-city-pie-1",
           "sources": [
             "https://www.theinfatuation.com/seattle/reviews/windy-city-pie-1",
             "https://komonews.com/seattle-refined/chicago-pizza-in-seattle-take-a-bite-of-windy-city-pie"
           ],
-          "source": "https://www.theinfatuation.com/seattle/reviews/windy-city-pie-1",
-          "sourcedDate": "2026-11-05",
-          "note": "The Infatuation says the Phinney Ridge preorder system made 'already outstanding' deep-dish even better and singles out the Meatza's crispy-crusted edges; Seattle Refined/KOMO profiles owner Dave Lichterman's from-scratch dough and signature Meatza and Sweet Pete pies."
+          "note": "The Infatuation rates this Phinney Ridge Chicago deep-dish spot 8.6/10 and says it's worth crossing town for, praising the puffy, deep crust with a near-burnt caramelized-cheese edge and naming the sausage-pepperoni-bacon 'Meatza' a standout; KOMO's Seattle Refined profiles owner Dave Lichterman's house-made dough and generous toppings, including his own favorite, the pineapple-and-giardiniera 'Sweet Pete.'",
+          "date": "2026-11-11"
         },
         "critical": {
-          "value": 9.4,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 8.6,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/windy-city-pie-1",
           "sources": [
             "https://www.theinfatuation.com/seattle/reviews/windy-city-pie-1",
             "https://komonews.com/seattle-refined/chicago-pizza-in-seattle-take-a-bite-of-windy-city-pie"
           ],
-          "source": "https://www.theinfatuation.com/seattle/reviews/windy-city-pie-1",
-          "sourcedDate": "2026-11-05",
-          "note": "The Infatuation says the Phinney Ridge preorder system made 'already outstanding' deep-dish even better and singles out the Meatza's crispy-crusted edges; Seattle Refined/KOMO profiles owner Dave Lichterman's from-scratch dough and signature Meatza and Sweet Pete pies."
+          "note": "The Infatuation rates this Phinney Ridge Chicago deep-dish spot 8.6/10 and says it's worth crossing town for, praising the puffy, deep crust with a near-burnt caramelized-cheese edge and naming the sausage-pepperoni-bacon 'Meatza' a standout; KOMO's Seattle Refined profiles owner Dave Lichterman's house-made dough and generous toppings, including his own favorite, the pineapple-and-giardiniera 'Sweet Pete.'",
+          "date": "2026-11-11"
         }
       },
       "mentions": [
@@ -89,7 +86,8 @@
         }
       ],
       "statusChecked": "2026-11-10",
-      "instagram": "https://www.instagram.com/windycitypie/"
+      "instagram": "https://www.instagram.com/windycitypie/",
+      "ratingAttempted": "2026-11-11"
     },
     {
       "id": "delancey",
@@ -386,7 +384,7 @@
         "source": "seeded when the index launched; platform not recorded, never refreshed"
       },
       "priceIndex": 3,
-      "lastVerified": "2026-08-01",
+      "lastVerified": "2026-11-11",
       "styleGroup": "Thin crust",
       "locations": [
         {
@@ -418,45 +416,43 @@
       },
       "factors": {
         "craft": {
-          "value": 8.9,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/serious-pie",
           "sources": [
             "https://www.theinfatuation.com/seattle/reviews/serious-pie",
             "https://mynorthwest.com/local/lets-eat-best-pizza-in-seattle/33623?page=0"
           ],
-          "source": "https://www.theinfatuation.com/seattle/reviews/serious-pie",
-          "sourcedDate": "2026-11-05",
-          "note": "The Infatuation calls the sausage-pepper-provolone pie the standout, with a crisp, chewy crust; Seattle Times restaurant critic Providence Cicero, quoted on MyNorthwest's Let's Eat segment, praised the 'fabulous' salads and said the pie toppings are always inventive."
+          "note": "The Infatuation calls the oval pies inventive but close to classic, with crisp edges and a chewy (if sometimes soft-bottomed) crust, singling out the fennel sausage pie and truffle-cheese mushroom pie; a MyNorthwest roundup of Tom Douglas's 'pizzeria with a bread-baker's soul' rates the dough among the best in the city thanks to olive oil and sea salt on the crust edges.",
+          "date": "2026-11-11"
         },
         "distinctiveness": {
-          "value": 7.8,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/serious-pie",
           "sources": [
             "https://www.theinfatuation.com/seattle/reviews/serious-pie",
             "https://mynorthwest.com/local/lets-eat-best-pizza-in-seattle/33623?page=0"
           ],
-          "source": "https://www.theinfatuation.com/seattle/reviews/serious-pie",
-          "sourcedDate": "2026-11-05",
-          "note": "The Infatuation calls the sausage-pepper-provolone pie the standout, with a crisp, chewy crust; Seattle Times restaurant critic Providence Cicero, quoted on MyNorthwest's Let's Eat segment, praised the 'fabulous' salads and said the pie toppings are always inventive."
+          "note": "The Infatuation calls the oval pies inventive but close to classic, with crisp edges and a chewy (if sometimes soft-bottomed) crust, singling out the fennel sausage pie and truffle-cheese mushroom pie; a MyNorthwest roundup of Tom Douglas's 'pizzeria with a bread-baker's soul' rates the dough among the best in the city thanks to olive oil and sea salt on the crust edges.",
+          "date": "2026-11-11"
         },
         "critical": {
-          "value": 8.8,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/serious-pie",
           "sources": [
             "https://www.theinfatuation.com/seattle/reviews/serious-pie",
             "https://mynorthwest.com/local/lets-eat-best-pizza-in-seattle/33623?page=0"
           ],
-          "source": "https://www.theinfatuation.com/seattle/reviews/serious-pie",
-          "sourcedDate": "2026-11-05",
-          "note": "The Infatuation calls the sausage-pepper-provolone pie the standout, with a crisp, chewy crust; Seattle Times restaurant critic Providence Cicero, quoted on MyNorthwest's Let's Eat segment, praised the 'fabulous' salads and said the pie toppings are always inventive."
+          "note": "The Infatuation calls the oval pies inventive but close to classic, with crisp edges and a chewy (if sometimes soft-bottomed) crust, singling out the fennel sausage pie and truffle-cheese mushroom pie; a MyNorthwest roundup of Tom Douglas's 'pizzeria with a bread-baker's soul' rates the dough among the best in the city thanks to olive oil and sea salt on the crust edges.",
+          "date": "2026-11-11"
         }
       },
       "mentions": [],
       "statusChecked": "2026-09-06",
-      "instagram": "https://www.instagram.com/seriouspieseattle/"
+      "instagram": "https://www.instagram.com/seriouspieseattle/",
+      "ratingAttempted": "2026-11-11"
     },
     {
       "id": "dinos-tomato-pie",
@@ -719,7 +715,7 @@
         "source": "seeded when the index launched; platform not recorded, never refreshed"
       },
       "priceIndex": 2,
-      "lastVerified": "2026-08-01",
+      "lastVerified": "2026-11-11",
       "styleGroup": "Neapolitan",
       "locations": [
         {
@@ -761,37 +757,34 @@
       "attributes": {},
       "factors": {
         "craft": {
-          "value": 8.4,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 7,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/tutta-bella-neapolitan-pizzeria",
           "sources": [
             "https://www.theinfatuation.com/seattle/reviews/tutta-bella-neapolitan-pizzeria"
           ],
-          "source": "https://www.theinfatuation.com/seattle/reviews/tutta-bella-neapolitan-pizzeria",
-          "sourcedDate": "2026-11-05",
-          "note": "The Infatuation rates it 7.3 and calls the Columbia City location one of the best sit-down meals in the neighborhood, singling out the margherita as the standout pie and noting the crust holds up better to wet toppings with extra oven time."
+          "note": "The Infatuation scores this Neapolitan mini-chain location 7.3/10, praising a charred crust that holds up best with simple toppings -- the Margherita DOC with buffalo mozzarella and San Marzano tomatoes is called the best pie -- while knocking the pistachio-puree Roberto pie for tasting too much like peanut butter.",
+          "date": "2026-11-11"
         },
         "distinctiveness": {
-          "value": 7,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/tutta-bella-neapolitan-pizzeria",
           "sources": [
             "https://www.theinfatuation.com/seattle/reviews/tutta-bella-neapolitan-pizzeria"
           ],
-          "source": "https://www.theinfatuation.com/seattle/reviews/tutta-bella-neapolitan-pizzeria",
-          "sourcedDate": "2026-11-05",
-          "note": "The Infatuation rates it 7.3 and calls the Columbia City location one of the best sit-down meals in the neighborhood, singling out the margherita as the standout pie and noting the crust holds up better to wet toppings with extra oven time."
+          "note": "The Infatuation scores this Neapolitan mini-chain location 7.3/10, praising a charred crust that holds up best with simple toppings -- the Margherita DOC with buffalo mozzarella and San Marzano tomatoes is called the best pie -- while knocking the pistachio-puree Roberto pie for tasting too much like peanut butter.",
+          "date": "2026-11-11"
         },
         "critical": {
-          "value": 8.2,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 7.3,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/tutta-bella-neapolitan-pizzeria",
           "sources": [
             "https://www.theinfatuation.com/seattle/reviews/tutta-bella-neapolitan-pizzeria"
           ],
-          "source": "https://www.theinfatuation.com/seattle/reviews/tutta-bella-neapolitan-pizzeria",
-          "sourcedDate": "2026-11-05",
-          "note": "The Infatuation rates it 7.3 and calls the Columbia City location one of the best sit-down meals in the neighborhood, singling out the margherita as the standout pie and noting the crust holds up better to wet toppings with extra oven time."
+          "note": "The Infatuation scores this Neapolitan mini-chain location 7.3/10, praising a charred crust that holds up best with simple toppings -- the Margherita DOC with buffalo mozzarella and San Marzano tomatoes is called the best pie -- while knocking the pistachio-puree Roberto pie for tasting too much like peanut butter.",
+          "date": "2026-11-11"
         }
       },
       "mentions": [
@@ -811,7 +804,8 @@
         }
       ],
       "instagram": "https://www.instagram.com/tuttabella/",
-      "statusChecked": "2026-10-01"
+      "statusChecked": "2026-10-01",
+      "ratingAttempted": "2026-11-11"
     },
     {
       "id": "pagliacci",
@@ -1102,7 +1096,7 @@
       "opened": 2004,
       "crowd": null,
       "priceIndex": 3,
-      "lastVerified": null,
+      "lastVerified": "2026-11-11",
       "locations": [
         {
           "neighborhood": "Capitol Hill",
@@ -1125,43 +1119,41 @@
       "attributes": {},
       "factors": {
         "craft": {
-          "value": 8.5,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/via-tribunali",
           "sources": [
             "https://www.theinfatuation.com/seattle/reviews/via-tribunali"
           ],
-          "source": "https://www.theinfatuation.com/seattle/reviews/via-tribunali",
-          "sourcedDate": "2026-11-05",
-          "note": "The Infatuation rates it 7.6, calling it a 'middle-tier Neapolitan spot' on Capitol Hill that isn't the neighborhood's top pizza pick but holds its own, recommending the spicy salami pie and a buffalo mozzarella upgrade on the margherita."
+          "note": "The Infatuation scores this Capitol Hill Neapolitan spot 7.6/10, calling it a 'perfect middle-tier' option rather than the neighborhood's top pizza pick -- reliable, romantic and easy to walk into on short notice, recommending the margherita with buffalo mozzarella or the spicy salami pie.",
+          "date": "2026-11-11"
         },
         "distinctiveness": {
-          "value": 7.4,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/via-tribunali",
           "sources": [
             "https://www.theinfatuation.com/seattle/reviews/via-tribunali"
           ],
-          "source": "https://www.theinfatuation.com/seattle/reviews/via-tribunali",
-          "sourcedDate": "2026-11-05",
-          "note": "The Infatuation rates it 7.6, calling it a 'middle-tier Neapolitan spot' on Capitol Hill that isn't the neighborhood's top pizza pick but holds its own, recommending the spicy salami pie and a buffalo mozzarella upgrade on the margherita."
+          "note": "The Infatuation scores this Capitol Hill Neapolitan spot 7.6/10, calling it a 'perfect middle-tier' option rather than the neighborhood's top pizza pick -- reliable, romantic and easy to walk into on short notice, recommending the margherita with buffalo mozzarella or the spicy salami pie.",
+          "date": "2026-11-11"
         },
         "critical": {
-          "value": 8.3,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 7.6,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/via-tribunali",
           "sources": [
             "https://www.theinfatuation.com/seattle/reviews/via-tribunali"
           ],
-          "source": "https://www.theinfatuation.com/seattle/reviews/via-tribunali",
-          "sourcedDate": "2026-11-05",
-          "note": "The Infatuation rates it 7.6, calling it a 'middle-tier Neapolitan spot' on Capitol Hill that isn't the neighborhood's top pizza pick but holds its own, recommending the spicy salami pie and a buffalo mozzarella upgrade on the margherita."
+          "note": "The Infatuation scores this Capitol Hill Neapolitan spot 7.6/10, calling it a 'perfect middle-tier' option rather than the neighborhood's top pizza pick -- reliable, romantic and easy to walk into on short notice, recommending the margherita with buffalo mozzarella or the spicy salami pie.",
+          "date": "2026-11-11"
         }
       },
       "mentions": [],
       "instagram": "https://www.instagram.com/viatrib/",
       "statusChecked": "2026-10-16",
-      "openedSource": "https://en.wikipedia.org/wiki/Via_Tribunali"
+      "openedSource": "https://en.wikipedia.org/wiki/Via_Tribunali",
+      "ratingAttempted": "2026-11-11"
     },
     {
       "id": "big-marios",
@@ -1462,7 +1454,7 @@
       "opened": 1993,
       "crowd": null,
       "priceIndex": 2,
-      "lastVerified": null,
+      "lastVerified": "2026-11-11",
       "locations": [
         {
           "neighborhood": "Greenlake",
@@ -1569,43 +1561,41 @@
       "attributes": {},
       "factors": {
         "craft": {
-          "value": 7.5,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://archive.seattletimes.com/archive/19940708/1919291/popular-zeeks-pizza-is-a-little-slice-of-heaven",
           "sources": [
             "https://archive.seattletimes.com/archive/19940708/1919291/popular-zeeks-pizza-is-a-little-slice-of-heaven"
           ],
-          "source": "https://archive.seattletimes.com/archive/19940708/1919291/popular-zeeks-pizza-is-a-little-slice-of-heaven",
-          "sourcedDate": "2026-11-05",
-          "note": "Seattle Times critic John Hinterberger praised the original Zeek's for its fresh-ingredient focus (dough made daily, herbs chopped twice daily, Danish-style whole-milk mozzarella), calling the Frog Belly Green 'a heck of a piece of pizza' despite too much garlic, and was surprised by the Thai-One-On."
+          "note": "A 1994 Seattle Times review of the original Queen Anne-area shop, founded about nine months earlier, praised the crusts and fresh-daily toppings -- whole-milk mozzarella, Ballard-made sausage, herbs chopped twice a day -- and highlighted inventive, novelty pies like a Thai-style peanut-sauce pizza alongside a build-your-own option.",
+          "date": "2026-11-11"
         },
         "distinctiveness": {
-          "value": 7.6,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://archive.seattletimes.com/archive/19940708/1919291/popular-zeeks-pizza-is-a-little-slice-of-heaven",
           "sources": [
             "https://archive.seattletimes.com/archive/19940708/1919291/popular-zeeks-pizza-is-a-little-slice-of-heaven"
           ],
-          "source": "https://archive.seattletimes.com/archive/19940708/1919291/popular-zeeks-pizza-is-a-little-slice-of-heaven",
-          "sourcedDate": "2026-11-05",
-          "note": "Seattle Times critic John Hinterberger praised the original Zeek's for its fresh-ingredient focus (dough made daily, herbs chopped twice daily, Danish-style whole-milk mozzarella), calling the Frog Belly Green 'a heck of a piece of pizza' despite too much garlic, and was surprised by the Thai-One-On."
+          "note": "A 1994 Seattle Times review of the original Queen Anne-area shop, founded about nine months earlier, praised the crusts and fresh-daily toppings -- whole-milk mozzarella, Ballard-made sausage, herbs chopped twice a day -- and highlighted inventive, novelty pies like a Thai-style peanut-sauce pizza alongside a build-your-own option.",
+          "date": "2026-11-11"
         },
         "critical": {
-          "value": 7.2,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://archive.seattletimes.com/archive/19940708/1919291/popular-zeeks-pizza-is-a-little-slice-of-heaven",
           "sources": [
             "https://archive.seattletimes.com/archive/19940708/1919291/popular-zeeks-pizza-is-a-little-slice-of-heaven"
           ],
-          "source": "https://archive.seattletimes.com/archive/19940708/1919291/popular-zeeks-pizza-is-a-little-slice-of-heaven",
-          "sourcedDate": "2026-11-05",
-          "note": "Seattle Times critic John Hinterberger praised the original Zeek's for its fresh-ingredient focus (dough made daily, herbs chopped twice daily, Danish-style whole-milk mozzarella), calling the Frog Belly Green 'a heck of a piece of pizza' despite too much garlic, and was surprised by the Thai-One-On."
+          "note": "A 1994 Seattle Times review of the original Queen Anne-area shop, founded about nine months earlier, praised the crusts and fresh-daily toppings -- whole-milk mozzarella, Ballard-made sausage, herbs chopped twice a day -- and highlighted inventive, novelty pies like a Thai-style peanut-sauce pizza alongside a build-your-own option.",
+          "date": "2026-11-11"
         }
       },
       "mentions": [],
       "instagram": "https://www.instagram.com/zeekspizza/",
       "openedSource": "https://zeekspizza.com",
-      "statusChecked": "2026-11-05"
+      "statusChecked": "2026-11-05",
+      "ratingAttempted": "2026-11-11"
     },
     {
       "id": "talaricos",
@@ -1619,7 +1609,7 @@
       "opened": null,
       "crowd": null,
       "priceIndex": 1,
-      "lastVerified": null,
+      "lastVerified": "2026-11-11",
       "locations": [
         {
           "neighborhood": "West Seattle",
@@ -1638,47 +1628,45 @@
       },
       "factors": {
         "craft": {
-          "value": 7.5,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/talaricos",
           "sources": [
             "https://www.theinfatuation.com/seattle/reviews/talaricos",
             "https://www.seattleweekly.com/?p=52463"
           ],
-          "source": "https://www.theinfatuation.com/seattle/reviews/talaricos",
-          "sourcedDate": "2026-11-05",
-          "note": "The Infatuation describes Talarico's as a casual West Seattle spot for big groups with slices 'bigger than your face'; Seattle Weekly calls it a pizza bar, not a pizzeria, known for oversized, heavily topped $4.95 slices and a sweet marinara best paired with spicy or salty toppings."
+          "note": "Coverage frames this as a bar first and pizzeria second: The Infatuation highlights face-sized slices and Sunday karaoke as reasons to visit with a big group, while a Seattle Weekly review of the 28-inch pies and $4.95 slices praised the heavily topped, sausage-and-pepperoncini 'Sinatra' slice and noted the sauce runs sweet.",
+          "date": "2026-11-11"
         },
         "distinctiveness": {
-          "value": 8.2,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/talaricos",
           "sources": [
             "https://www.theinfatuation.com/seattle/reviews/talaricos",
             "https://www.seattleweekly.com/?p=52463"
           ],
-          "source": "https://www.theinfatuation.com/seattle/reviews/talaricos",
-          "sourcedDate": "2026-11-05",
-          "note": "The Infatuation describes Talarico's as a casual West Seattle spot for big groups with slices 'bigger than your face'; Seattle Weekly calls it a pizza bar, not a pizzeria, known for oversized, heavily topped $4.95 slices and a sweet marinara best paired with spicy or salty toppings."
+          "note": "Coverage frames this as a bar first and pizzeria second: The Infatuation highlights face-sized slices and Sunday karaoke as reasons to visit with a big group, while a Seattle Weekly review of the 28-inch pies and $4.95 slices praised the heavily topped, sausage-and-pepperoncini 'Sinatra' slice and noted the sauce runs sweet.",
+          "date": "2026-11-11"
         },
         "critical": {
-          "value": 7.4,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.theinfatuation.com/seattle/reviews/talaricos",
           "sources": [
             "https://www.theinfatuation.com/seattle/reviews/talaricos",
             "https://www.seattleweekly.com/?p=52463"
           ],
-          "source": "https://www.theinfatuation.com/seattle/reviews/talaricos",
-          "sourcedDate": "2026-11-05",
-          "note": "The Infatuation describes Talarico's as a casual West Seattle spot for big groups with slices 'bigger than your face'; Seattle Weekly calls it a pizza bar, not a pizzeria, known for oversized, heavily topped $4.95 slices and a sweet marinara best paired with spicy or salty toppings."
+          "note": "Coverage frames this as a bar first and pizzeria second: The Infatuation highlights face-sized slices and Sunday karaoke as reasons to visit with a big group, while a Seattle Weekly review of the 28-inch pies and $4.95 slices praised the heavily topped, sausage-and-pepperoncini 'Sinatra' slice and noted the sauce runs sweet.",
+          "date": "2026-11-11"
         }
       },
       "mentions": [],
       "instagram": "https://www.instagram.com/talaricos.pizza/",
       "factsAttempted": "2026-11-05",
       "factsNote": "Checked talaricospizza.com home page and its /talaricos-about page: no founding year or 'since'/'established' line on either. Searched local coverage (West Seattle Blog, Seattle Met, historylink.org Pizza in Seattle history piece) and found opening coverage but no dated founding year to cite.",
-      "statusChecked": "2026-11-05"
+      "statusChecked": "2026-11-05",
+      "ratingAttempted": "2026-11-11"
     },
     {
       "id": "hot-mamas-pizza",
@@ -2018,7 +2006,7 @@
       "opened": 2017,
       "crowd": null,
       "priceIndex": 2,
-      "lastVerified": null,
+      "lastVerified": "2026-11-11",
       "locations": [
         {
           "neighborhood": "SoDo",
@@ -2038,42 +2026,40 @@
       "factors": {
         "craft": {
           "value": 8,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "setBy": "agent",
+          "source": "https://theinfatuation.com/seattle/reviews/slice-box-pizza",
           "sources": [
             "https://theinfatuation.com/seattle/reviews/slice-box-pizza"
           ],
-          "source": "https://theinfatuation.com/seattle/reviews/slice-box-pizza",
-          "sourcedDate": "2026-11-05",
-          "note": "The Infatuation scores Slice Box 8.5, praising the New York-style pies' crispy crust and calling the cheese slice 'an instant classic,' with the thick Sicilian pepperoni square singled out as the one to prioritize."
+          "note": "The Infatuation rates this New York-style slice shop 8.5/10, praising a 'stunning crispy crust' and balanced sauce-to-cheese ratio, calling the curled, crunchy pepperoni cups and the cheese slice 'an instant classic,' and flagging the Sicilian pepperoni square as a must-try despite the unassuming storefront.",
+          "date": "2026-11-11"
         },
         "distinctiveness": {
-          "value": 8.8,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://theinfatuation.com/seattle/reviews/slice-box-pizza",
           "sources": [
             "https://theinfatuation.com/seattle/reviews/slice-box-pizza"
           ],
-          "source": "https://theinfatuation.com/seattle/reviews/slice-box-pizza",
-          "sourcedDate": "2026-11-05",
-          "note": "The Infatuation scores Slice Box 8.5, praising the New York-style pies' crispy crust and calling the cheese slice 'an instant classic,' with the thick Sicilian pepperoni square singled out as the one to prioritize."
+          "note": "The Infatuation rates this New York-style slice shop 8.5/10, praising a 'stunning crispy crust' and balanced sauce-to-cheese ratio, calling the curled, crunchy pepperoni cups and the cheese slice 'an instant classic,' and flagging the Sicilian pepperoni square as a must-try despite the unassuming storefront.",
+          "date": "2026-11-11"
         },
         "critical": {
-          "value": 7.8,
-          "setBy": "editorial",
-          "date": "2026-08-26",
+          "value": 8.5,
+          "setBy": "agent",
+          "source": "https://theinfatuation.com/seattle/reviews/slice-box-pizza",
           "sources": [
             "https://theinfatuation.com/seattle/reviews/slice-box-pizza"
           ],
-          "source": "https://theinfatuation.com/seattle/reviews/slice-box-pizza",
-          "sourcedDate": "2026-11-05",
-          "note": "The Infatuation scores Slice Box 8.5, praising the New York-style pies' crispy crust and calling the cheese slice 'an instant classic,' with the thick Sicilian pepperoni square singled out as the one to prioritize."
+          "note": "The Infatuation rates this New York-style slice shop 8.5/10, praising a 'stunning crispy crust' and balanced sauce-to-cheese ratio, calling the curled, crunchy pepperoni cups and the cheese slice 'an instant classic,' and flagging the Sicilian pepperoni square as a must-try despite the unassuming storefront.",
+          "date": "2026-11-11"
         }
       },
       "mentions": [],
       "instagram": "https://www.instagram.com/sliceboxpizza_sodo/",
       "openedSource": "https://seattlemag.com/food-and-culture/serious-wave-new-pizza-restaurants-has-hit-seattle-recently/",
-      "statusChecked": "2026-11-10"
+      "statusChecked": "2026-11-10",
+      "ratingAttempted": "2026-11-11"
     },
     {
       "id": "roccos",
