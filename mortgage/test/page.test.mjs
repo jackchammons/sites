@@ -291,8 +291,9 @@ const COSTS = { t: DEFAULTS.taxRate, tu: DEFAULTS.taxUnit, i: DEFAULTS.insurance
 /* The loan the page opens with, and the one "Already paying" turns it into. */
 const OPENING = { lm: 0, p: DEFAULTS.price, dp: DEFAULTS.downPct, r: DEFAULTS.rate, y: DEFAULTS.years, s: NEXT, ...COSTS };
 const UNDER_WAY = { lm: 1, b: DEFAULTS.price * (1 - DEFAULTS.downPct / 100), r: DEFAULTS.rate, y: DEFAULTS.years, s: NEXT, nx: NEXT, ...COSTS };
-/* $750k at 5% down and 6.25% with PMI at 0.5%, first paid in 2024-12: the
-   loan whose PMI the page once got wrong by 21 months. */
+/* $750k at 5% down and 6.25% with PMI at 0.5%, first paid in 2024-12: a
+   loan with eleven years of PMI, two of them already paid by the page's
+   clock. */
 const FIVE_DOWN = { lm: 0, p: 750000, dp: 5, r: 6.25, y: 30, s: '2024-12', ...COSTS, m: 0.5 };
 
 /* ---- tests ----------------------------------------------------------- */

@@ -25,6 +25,10 @@ const cents = x => Math.round(x * 100) / 100;
 export function originalLoan(balance, annualRatePct, months, paid) {
   const n = Math.round(months), k = Math.round(paid);
   if (!(balance >= 0) || !(n > 0) || !(k >= 0) || k >= n) return NaN;
+  // Nothing paid yet: the loan is the balance itself, to the last bit. Run
+  // through the multiply and divide below it can come back a hair under,
+  // which is enough to round a PMI charge of $653.125 down instead of up.
+  if (k === 0) return balance;
   const r = annualRatePct / 100 / 12;
   if (r === 0) return balance * n / (n - k);
   const g = Math.pow(1 + r, n);

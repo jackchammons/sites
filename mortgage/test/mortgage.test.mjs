@@ -111,7 +111,11 @@ test('originalLoan inverts the schedule', () => {
   for (const [k, eps] of [[1, 1], [12, 1], [97, 1], [300, 10], [359, 600]]) {
     near(originalLoan(s.rows[k - 1].balance, 6.25, 360, k), 600000, eps);
   }
-  near(originalLoan(600000, 6.25, 360, 0), 600000, 0.001);
+  // Before the first payment the loan is the balance, exactly, at any rate:
+  // the same loan entered as new is charged PMI on that very figure.
+  for (const rate of [0, 3.5, 6.25, 7.25, 11]) for (const n of [180, 360, 480]) assert.equal(originalLoan(712500, rate, n, 0), 712500);
+  assert.equal(monthlyBreakdown(describe({ price: 838235, balance: 712500, months: 180, rate: 6.25, pmiRate: 1.1, original: originalLoan(712500, 6.25, 180, 0) })).pmi,
+    monthlyBreakdown(describe({ price: 838235, down: 838235 - 712500, rate: 6.25, years: 15, pmiRate: 1.1 })).pmi);
   near(originalLoan(90000, 0, 120, 30), 120000, 0.001);
   assert.ok(Number.isNaN(originalLoan(1000, 5, 120, 120)));
   assert.ok(Number.isNaN(originalLoan(1000, 5, 120, -1)));
@@ -151,8 +155,8 @@ function bothWays({ price = 750000, downPct, rate = 6.25, years = 30, pmiRate = 
 }
 
 test('a loan under way with its price given carries the PMI of the same loan entered as new', () => {
-  // $750k at 6.25% over 30 years with PMI at 0.5%: 5% down is the loan that
-  // was charged 153 months of PMI instead of 132, and none of the 24 paid.
+  // $750k at 6.25% over 30 years with PMI at 0.5%. Each down payment has its
+  // own PMI months as a new loan; 20% and 25% down have none at any point.
   for (const [downPct, months, monthly] of [[5, 132, 296.88], [10, 106, 281.25], [15, 72, 265.63], [20, 0, 0], [25, 0, 0]]) {
     for (const paid of [1, 24, 60, 131, 132, 133, 200, 300, 359]) {
       const b = bothWays({ downPct, paid }), at = `${downPct}% down, ${paid} paid`;
