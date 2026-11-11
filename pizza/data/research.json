@@ -1,41 +1,5 @@
 {
-  "updated": "2026-11-10T00:00:00Z",
-  "status": [
-    {
-      "id": "humble-pie",
-      "status": "open",
-      "note": "Official site is live and promotes its current menu, dining room, patio and catering with no closure notice; no independent report of a closure was found.",
-      "source": "https://humblepieseattle.com"
-    },
-    {
-      "id": "post-alley-pizza",
-      "status": "open",
-      "note": "Official site lists current weekly hours and a Toast ordering link with no closure notice; no independent report of a closure was found.",
-      "source": "https://www.postalley.pizza/"
-    },
-    {
-      "id": "pegasus-pizza",
-      "status": "open",
-      "note": "West Seattle Blog reported the restaurant changed hands to new owners in June 2026 who held a Grand Re-Opening Weekend, and it remains operating.",
-      "source": "https://westseattleblog.com/2026/06/biznote-pegasus-pizza-announces-new-owners/"
-    },
-    {
-      "id": "slice-box",
-      "status": "open",
-      "note": "Official site is live with its address and phone listed and no closure notice; no independent report of a closure was found.",
-      "source": "https://www.sliceboxpizza.com"
-    },
-    {
-      "id": "roccos",
-      "status": "open",
-      "note": "Official site lists daily hours and ongoing event/catering bookings with no closure notice; no independent report of a closure was found.",
-      "source": "https://www.roccosseattle.com"
-    },
-    {
-      "id": "windy-city-pie",
-      "status": "open",
-      "note": "Official site lists current weekly hours and only holiday closures with no closure notice; no independent report of a closure was found.",
-      "source": "https://windycitypie.com"
-    }
-  ]
+  "updated": "2026-11-11T12:00:00Z",
+  "news": [],
+  "mentions": []
 }
