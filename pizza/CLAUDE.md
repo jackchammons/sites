@@ -99,10 +99,22 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
 
 - **Agents stay out of the deploy path.** `research.yml` runs the Claude Code Action to
   write `data/research.json`, in its own workflow. If it hangs or fails, the site still
-  publishes. Its write grant is `Edit(pizza/data/research.json)` and a guard step fails
-  the run if `git status` shows any other path. The run also builds and verifies the
-  page from the applied data before committing, so a data shape the renderer cannot
-  handle turns the research run red instead of the next publishes.
+  publishes.
+- **The agent never shares a runner with a token that can write.** `research.yml` has
+  two jobs. `agent` reads the open web with a read-only token; its write grant is
+  `Edit(pizza/data/research.json)`, a guard step fails the run if `git status` shows any
+  other path, and the one thing that leaves the runner is `research.json`, as an
+  artifact. `apply` starts from a fresh checkout, takes that file, validates it, applies
+  it, builds and verifies the page from the result, and commits. Anything else must not
+  cross between the two jobs. The action is pinned to a commit: bump it deliberately,
+  with a dry run.
+- **The agent does not see this file.** It runs with `--setting-sources user`, so no
+  `CLAUDE.md` and no `.claude/settings.json` from the repository is in its context. Its
+  whole instruction is the brief from `next-task.mjs` plus the prompt in `research.yml`.
+- **Try a change with a dry run.** Dispatching `research.yml` from a branch runs both
+  jobs and commits nothing, and publishes nothing. That is how to test a brief, a prompt
+  or schema change, a new model or a new action version; the agent job's log prints
+  `num_turns` and `total_cost_usd`. A pass costs roughly $0.30 to $1.
 - **Never mention a script the agent cannot run.** The prompt once named
   `verify-research.mjs`; the agent tried to run it, had no Bash tool, and stopped to ask
   for approval in an unattended job. Six runs were lost to that. Two more rules keep it
@@ -146,7 +158,8 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
 - **Set exactly one research credential.** `CLAUDE_CODE_OAUTH_TOKEN` or
   `ANTHROPIC_API_KEY`. If both are set the API key wins and bills per token while the
   subscription allowance goes unused; the gate step warns. The model is named once, as
-  `RESEARCH_MODEL` in `research.yml`.
+  `RESEARCH_MODEL` in `research.yml`. There is no credential probe: a direct API call
+  with the subscription token only ever answered 429, so the agent step is the signal.
 
 ## Buzz and the deploy gate
 
