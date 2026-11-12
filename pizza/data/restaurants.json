@@ -5111,7 +5111,9 @@
       "locations": [
         {
           "neighborhood": "Wedgwood",
-          "address": "7500 25th Ave Ne, Seattle, WA 98115"
+          "address": "7500 25th Ave Ne, Seattle, WA 98115",
+          "lat": 47.68328,
+          "lon": -122.30045
         }
       ],
       "locationsVerified": null,
@@ -5134,7 +5136,9 @@
       "locations": [
         {
           "neighborhood": "Pike Place Market",
-          "address": "1530 Post Aly, Seattle, WA 98101"
+          "address": "1530 Post Aly, Seattle, WA 98101",
+          "lat": 47.60942,
+          "lon": -122.34113
         }
       ],
       "locationsVerified": null,
@@ -5157,7 +5161,9 @@
       "locations": [
         {
           "neighborhood": "Meadowbrook",
-          "address": "11001 35th Ave Ne, Seattle, WA 98125"
+          "address": "11001 35th Ave Ne, Seattle, WA 98125",
+          "lat": 47.70856,
+          "lon": -122.29127
         }
       ],
       "locationsVerified": null,
