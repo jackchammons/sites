@@ -6488,8 +6488,8 @@
       "week": 46,
       "algorithm": "SLICE v2.3",
       "ranks": {
-        "delancey": 1,
-        "a-k-pizza": 2,
+        "a-k-pizza": 1,
+        "delancey": 2,
         "dinos-tomato-pie": 3,
         "post-alley-pizza": 4,
         "proletariat-pizza": 5,
@@ -6565,8 +6565,8 @@
         "breezy-town-pizza": 75
       },
       "scores": {
+        "a-k-pizza": 88.4,
         "delancey": 87.6,
-        "a-k-pizza": 86.3,
         "dinos-tomato-pie": 85.1,
         "post-alley-pizza": 83.2,
         "proletariat-pizza": 82.5,
@@ -6604,7 +6604,7 @@
         "ridge-pizza": 69.9,
         "smoking-monkey-pizza": 69.5,
         "roccos": 69.5,
-        "sunny-hill": 68.7,
+        "sunny-hill": 69.3,
         "big-marios": 68.1,
         "pizzeria-la-rocca": 67.6,
         "talaricos": 67.3,
@@ -6642,6 +6642,14 @@
         "breezy-town-pizza": 69.4
       },
       "factors": {
+        "a-k-pizza": {
+          "reputation": 1.7,
+          "critical": 9.4,
+          "craft": 8.5,
+          "distinctiveness": 8.5,
+          "value": 8.9,
+          "penalty": 0
+        },
         "delancey": {
           "reputation": 10,
           "critical": 9.1,
@@ -6649,14 +6657,6 @@
           "distinctiveness": 8,
           "value": 8.1,
           "penalty": 1.8
-        },
-        "a-k-pizza": {
-          "reputation": 0,
-          "critical": 8.9,
-          "craft": 8.5,
-          "distinctiveness": 8.5,
-          "value": 8.7,
-          "penalty": 0
         },
         "dinos-tomato-pie": {
           "reputation": 8.6,
@@ -6956,10 +6956,10 @@
         },
         "sunny-hill": {
           "reputation": 7,
-          "critical": 7,
+          "critical": 7.2,
           "craft": 7,
           "distinctiveness": 7,
-          "value": 6.3,
+          "value": 6.4,
           "penalty": 0
         },
         "big-marios": {
