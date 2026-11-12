@@ -2,55 +2,45 @@
   "updated": "2026-11-12T00:00:00Z",
   "locations": [
     {
-      "id": "managers-pizza",
-      "homepage": "https://managerspizza.online/",
-      "source": "https://managerspizza.online/",
+      "id": "smoking-monkey-pizza",
+      "homepage": "https://www.smokingmonkeypizza.com/",
+      "source": "https://www.smokingmonkeypizza.com/",
       "sites": [
         {
-          "neighborhood": "U-District",
-          "address": "4741 12th Avenue Northeast, Seattle, WA 98105"
-        }
-      ]
-    },
-    {
-      "id": "palermo-pizza-pasta",
-      "homepage": "https://www.mypalermopizza.com/",
-      "source": "https://www.mypalermopizza.com/",
-      "sites": [
+          "neighborhood": "Renton",
+          "address": "613 S 3rd St, Renton, WA 98057"
+        },
         {
-          "neighborhood": "Capitol Hill",
-          "address": "350 15th Ave E, Seattle, WA 98112"
+          "neighborhood": "Seattle",
+          "address": "3111 W McGraw St Unit 103, Seattle, WA 98199"
         }
       ]
     }
   ],
   "locationsSkipped": [
     {
-      "id": "good-luck-bread",
-      "note": "Fetched pizza.goodluckbread.com homepage and /collections/bakery-day; site mentions a 'SODO kitchen' used for Saturday Bake Sales but states no street address anywhere on the site. A /locations page does not exist (404). No address can be confirmed from the pizzeria's own site."
+      "id": "pudge-bros-pizza",
+      "note": "Fetched https://www.pudgebros.com/ and https://www.pudgebros.com/locations; both returned HTTP 403 (blocked). A search found a Seattle address (269 NE 45th St) but only via third-party directories (Mapquest/Groupon), one of which suggests the store may be closed — not confirmed from the pizzeria's own site, so no address reported."
     },
     {
-      "id": "hot-slice-pizza",
-      "note": "Fetched hotslicepizzasea.com homepage and /contact; the site is a JS-rendered page that returns only a title tag ('Hot Slice Pizza ... Seattle, WA') with no address, and /menu and /contact both 404. A third-party aggregator (atly.com) lists an address but aggregators are not an allowed source, so no address is reported."
+      "id": "modena-pizza-pasta",
+      "note": "Fetched https://www.modenapizzanpasta.com/ and https://modenapizzanpasta.com/ (with and without www); both returned HTTP 404, the domain does not resolve to a live site. A search for an official site found none, only third-party listings (Toast, DoorDash, Mapquest) for an address at 8014 Lake City Way NE, Seattle — not confirmed from the pizzeria's own site."
     },
     {
-      "id": "pizza-paesano",
-      "note": "Worklist site is the Instagram profile itself; fetching https://www.instagram.com/pizza_paesano_seattle/ returned only Instagram's logged-out prompt with no bio, website link, or address. Searched for an official Pizza Paesano Seattle website and for its address; no independent official site or address turned up."
+      "id": "oskars-pizza",
+      "note": "No official website found by search; Oskar's Pizza appears to be a food truck that posts locations via Facebook/Instagram. The worklist's Instagram URL (https://www.instagram.com/oskarspizzas4/) returned HTTP 429 on two fetch attempts, and a search for the handle found no matching profile. Could not verify any address from an official source."
+    },
+    {
+      "id": "downtown-romios-pizza-pasta",
+      "note": "Fetched https://downtownromios.com/ and https://downtownromios.com/locations; both returned HTTP 403 (blocked). Could not verify branches from the official site within budget."
     }
   ],
   "links": [
     {
-      "id": "good-luck-bread",
-      "website": "https://pizza.goodluckbread.com/",
-      "instagram": "https://www.instagram.com/goodluckbread/",
-      "source": "https://pizza.goodluckbread.com/"
-    }
-  ],
-  "facts": [
-    {
-      "id": "managers-pizza",
-      "opened": 2025,
-      "source": "https://managerspizza.online/"
+      "id": "smoking-monkey-pizza",
+      "website": "https://www.smokingmonkeypizza.com/",
+      "instagram": "https://www.instagram.com/smokingmonkeypizzarenton/",
+      "source": "https://www.smokingmonkeypizza.com/"
     }
   ]
 }

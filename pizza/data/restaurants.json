@@ -4413,7 +4413,9 @@
       "mentions": [],
       "instagram": "https://www.instagram.com/modenapizzaandpastaa/",
       "ratingAttempted": "2026-11-07",
-      "ratingNote": "Searched Modena Pizza & Pasta (Lake City Way NE) plus Eater/Seattle Met/The Stranger/neighborhood combinations. Found only DoorDash, Toast, MapQuest and Wanderlog listings with mixed crowd reviews (praise for crust, one flavorless-pasta complaint); no independent critic review or news story. No rating proposed; skipped for lack of published criticism."
+      "ratingNote": "Searched Modena Pizza & Pasta (Lake City Way NE) plus Eater/Seattle Met/The Stranger/neighborhood combinations. Found only DoorDash, Toast, MapQuest and Wanderlog listings with mixed crowd reviews (praise for crust, one flavorless-pasta complaint); no independent critic review or news story. No rating proposed; skipped for lack of published criticism.",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "Fetched https://www.modenapizzanpasta.com/ and https://modenapizzanpasta.com/ (with and without www); both returned HTTP 404, the domain does not resolve to a live site. A search for an official site found none, only third-party listings (Toast, DoorDash, Mapquest) for an address at 8014 Lake City Way NE, Seattle — not confirmed from the pizzeria's own site."
     },
     {
       "id": "hot-slice-pizza",
@@ -4496,7 +4498,9 @@
       "opened": 2018,
       "priceIndex": 1,
       "styleGroup": "By the slice",
-      "lastVerified": "2026-10-18"
+      "lastVerified": "2026-10-18",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "No official website found by search; Oskar's Pizza appears to be a food truck that posts locations via Facebook/Instagram. The worklist's Instagram URL (https://www.instagram.com/oskarspizzas4/) returned HTTP 429 on two fetch attempts, and a search for the handle found no matching profile. Could not verify any address from an official source."
     },
     {
       "id": "palermo-pizza-pasta",
@@ -4615,7 +4619,9 @@
       "ratingAttempted": "2026-11-12",
       "priceIndex": 1,
       "styleGroup": "By the slice",
-      "lastVerified": "2026-11-12"
+      "lastVerified": "2026-11-12",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "Fetched https://www.pudgebros.com/ and https://www.pudgebros.com/locations; both returned HTTP 403 (blocked). A search found a Seattle address (269 NE 45th St) but only via third-party directories (Mapquest/Groupon), one of which suggests the store may be closed — not confirmed from the pizzeria's own site, so no address reported."
     },
     {
       "id": "ridge-pizza",
@@ -4761,7 +4767,9 @@
       "mentions": [],
       "instagram": "https://www.instagram.com/downtownromios/",
       "ratingAttempted": "2026-11-12",
-      "ratingNote": "Searched Seattle Times, Seattle Met, and Capitol Hill Seattle for coverage of Romio's Pizza & Pasta's downtown Pike St location. Found only a 2009 Seattle Met 'Whaddya Think' blurb calling the Romio's brand mediocre/hit-or-miss (page unreachable to confirm it discusses this specific location, and it is 17 years old) plus aggregator listings (OpenTable, Yelp, DoorDash, Toast). Nothing specific and verifiable enough to ground a rating for this location."
+      "ratingNote": "Searched Seattle Times, Seattle Met, and Capitol Hill Seattle for coverage of Romio's Pizza & Pasta's downtown Pike St location. Found only a 2009 Seattle Met 'Whaddya Think' blurb calling the Romio's brand mediocre/hit-or-miss (page unreachable to confirm it discusses this specific location, and it is 17 years old) plus aggregator listings (OpenTable, Yelp, DoorDash, Toast). Nothing specific and verifiable enough to ground a rating for this location.",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "Fetched https://downtownromios.com/ and https://downtownromios.com/locations; both returned HTTP 403 (blocked). Could not verify branches from the official site within budget."
     },
     {
       "id": "seattle-pizza-bar",
@@ -4815,16 +4823,18 @@
       "attributes": {},
       "locations": [
         {
-          "neighborhood": "Magnolia",
-          "address": "3111 W Mcgraw St, #103, Seattle, WA 98199",
-          "lat": 47.63934,
-          "lon": -122.39752
+          "neighborhood": "Renton",
+          "address": "613 S 3rd St, Renton, WA 98057"
+        },
+        {
+          "neighborhood": "Seattle",
+          "address": "3111 W McGraw St Unit 103, Seattle, WA 98199"
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-11-12",
+      "locationsSource": "https://www.smokingmonkeypizza.com/",
       "mentions": [],
-      "instagram": "https://www.instagram.com/smokingmonkeypizzaseattle",
+      "instagram": "https://www.instagram.com/smokingmonkeypizzarenton/",
       "factors": {
         "craft": {
           "value": 7,
