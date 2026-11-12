@@ -111,6 +111,18 @@ if (defaults) {
   check(fast.months < s.months && fast.totalInterest < s.totalInterest, 'extra principal saves nothing');
 }
 
+/* The validation suite, on the built copy: every schedule row re-derived in
+   exact arithmetic, the closed forms, and what one-time and recurring extra
+   principal save (test/validation.mjs; `node scripts/validate.mjs` prints
+   the full report). CI runs it on src/ with the unit tests; this run is on
+   the file that ships. */
+const { validate } = await import('../test/validation.mjs');
+const validation = validate(m, { loans: 120 });
+for (const s of validation.sections) {
+  for (const f of s.failures.filter(Boolean).slice(0, 5)) fails.push(`maths validation, ${s.id}: ${f}`);
+  if (s.failures.length > 5) fails.push(`maths validation, ${s.id}: ${s.failures.length - 5} more`);
+}
+
 /* What the viewer types and what a link carries, from the built copy: a
    parser that misreads a locale's decimal comma is off by a factor of a
    hundred, and a link that does not come back as it was written is a share
@@ -144,4 +156,4 @@ for (const id of ['chart', 'chart-legend', 'tip']) {
 }
 
 if (fails.length) report();
-console.log(`Build verified (${wanted.size} live slots, maths and input reading checked).`);
+console.log(`Build verified (${wanted.size} live slots, input reading checked, maths validated: ${validation.checks} checks on ${validation.loans} loans).`);
