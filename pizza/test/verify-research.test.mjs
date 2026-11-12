@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { validateResearch, isNonCriticism, isOwnAccount, registrableName, CAPS } from '../src/validate-research.js';
+import { validateResearch, isNonCriticism, isOwnAccount, isOwnPage, registrableName, CAPS, SKIPPED, MAX_LEN } from '../src/validate-research.js';
+import { PER_PASS } from '../src/rules.js';
 
 const NOW = Date.parse('2026-08-30T00:00:00Z');
 
@@ -168,9 +169,107 @@ test('mentions: accepted up to 24 months back, news only 180 days', () => {
 /* ---- facts and ratingSkipped ---- */
 test('facts: fill-gap records for opened and priceIndex', () => {
   passes({ facts: [{ id: 'delancey', opened: 2009, source: 'https://delancey.example/about' }] });
-  failsWith({ facts: [{ id: 'delancey', source: 'https://x.com' }] }, 'must carry opened or priceIndex');
+  passes({ facts: [{ id: 'delancey', priceIndex: 3, source: 'https://delancey.example/menu' }] });
+  failsWith({ facts: [{ id: 'delancey', source: 'https://x.com' }] }, 'must carry at least one of opened, priceIndex, style, styleGroup, signature');
   failsWith({ facts: [{ id: 'delancey', opened: 1850, source: 'https://x.com' }] }, 'opened must be');
+  failsWith({ facts: [{ id: 'delancey', priceIndex: 5, source: 'https://x.com' }] }, 'priceIndex must be 1-4');
   failsWith({ facts: [{ id: 'nope', opened: 2000, source: 'https://x.com' }] }, 'unknown restaurant id');
+  failsWith({ facts: [{ id: 'delancey', opened: 2009 }] }, 'source is not a valid URL');
+  failsWith({ facts: [{ id: 'delancey', opened: 2009, source: 'http://delancey.example/about' }] }, 'source must be https');
+});
+
+const described = over => ({ facts: [{ id: 'zeeks-pizza', style: 'Hand-tossed Northwest pies', styleGroup: 'Neighborhood',
+  signature: 'The Tree Hugger, piled with vegetables', source: 'https://zeekspizza.example/menu', ...over }] });
+
+test('facts: style, styleGroup and signature are accepted from the pizzeria\'s own pages or published coverage', () => {
+  passes(described({}));
+  passes(described({ opened: 1993, priceIndex: 2 }));
+  passes(described({ source: 'https://www.seattlemet.com/eat-and-drink/zeeks-review' }));
+  // one fact is a record
+  for (const k of ['style', 'styleGroup', 'signature']) {
+    passes({ facts: [{ id: 'zeeks-pizza', [k]: described({}).facts[0][k], source: 'https://zeekspizza.example/menu' }] });
+  }
+});
+
+test('facts: each description is held to its own rule', () => {
+  // style: the rule a discovery's style is held to
+  failsWith(described({ style: 'x'.repeat(MAX_LEN.style + 1) }), `style is longer than ${MAX_LEN.style}`);
+  failsWith(described({ style: 7 }), 'style missing');
+  failsWith(described({ style: ' ' }), 'style missing or too short');
+  // styleGroup: the rule a rating's styleGroup is held to
+  failsWith(described({ styleGroup: 'NY' }), 'styleGroup must be a short label');
+  failsWith(described({ styleGroup: 'A style group far too long to be a label' }), 'styleGroup must be a short label');
+  failsWith(described({ styleGroup: 7 }), 'styleGroup must be a short label');
+  assert.deepEqual(run(described({ styleGroup: 'NY' })).fails, run(rating({ styleGroup: 'NY' })).fails.map(f => f.replace('factorRatings', 'facts')));
+  // signature: a short phrase, capped
+  assert.equal(MAX_LEN.signature, 100);
+  passes(described({ signature: 'x'.repeat(MAX_LEN.signature) }));
+  failsWith(described({ signature: 'x'.repeat(MAX_LEN.signature + 1) }), `signature is longer than ${MAX_LEN.signature}`);
+  failsWith(described({ signature: 'xy' }), 'signature missing or too short');
+  failsWith(described({ signature: ['The Tree Hugger'] }), 'signature missing');
+  failsWith(described({ signature: 'Пицца Маргарита' }), 'outside the Latin script');
+  // a record that fails one rule is dropped whole, and only that record
+  const { fails, accepted } = run({ facts: [described({ signature: 'xy' }).facts[0], { id: 'roma-roma', opened: 2024, source: 'https://romaroma.example/about' }] });
+  assert.equal(fails.length, 1);
+  assert.deepEqual(accepted.facts.map(f => f.id), ['roma-roma']);
+});
+
+test('facts: an aggregator, a delivery app or a social post is never the source of a description', () => {
+  for (const source of ['https://www.yelp.com/biz/zeeks-pizza-seattle', 'https://www.doordash.com/store/zeeks-pizza-1',
+    'https://www.tripadvisor.com/Restaurant_Review-zeeks', 'https://www.google.com/maps/place/Zeeks', 'https://www.yelp.ca/biz/zeeks',
+    'https://www.instagram.com/seattlefoodfan/p/DAbc123xyz/', 'https://order.toasttab.com/online/some-other-pizzeria']) {
+    for (const k of ['style', 'styleGroup', 'signature']) {
+      const { fails, accepted } = run({ facts: [{ id: 'zeeks-pizza', [k]: described({}).facts[0][k], source }] });
+      assert.equal(fails.length, 1, `${k} from ${source}`);
+      assert.match(fails[0], new RegExp(`^facts\\[0\\]: ${k} must come from the pizzeria's own site or menu, or from published coverage, not `));
+      assert.deepEqual(accepted.facts, []);
+    }
+  }
+  failsWith(described({ source: 'https://www.yelp.com/biz/zeeks-pizza-seattle' }),
+    "style, styleGroup, signature must come from the pizzeria's own site or menu, or from published coverage, not yelp.com");
+  // the year and the tier are plain facts, and any https page may state them
+  passes({ facts: [{ id: 'zeeks-pizza', opened: 1993, priceIndex: 2, source: 'https://www.yelp.com/biz/zeeks-pizza-seattle' }] });
+  // but a description in the same record takes the record with it
+  failsWith({ facts: [{ id: 'zeeks-pizza', opened: 1993, signature: 'The Tree Hugger', source: 'https://www.yelp.com/biz/zeeks-pizza-seattle' }] },
+    'signature must come from');
+});
+
+test('facts: the web presence on file for an entry is its own page, whatever host it lives on', () => {
+  // an entry filed under its Instagram profile, and one whose profile is on file beside its site
+  passes({ facts: [{ id: 'handle-only', signature: 'The square pepperoni', source: 'https://www.instagram.com/handle_only/' }] });
+  passes({ facts: [{ id: 'gram-slice', style: 'New York slices', source: 'https://www.instagram.com/gram.slice_sea/p/DAbc123xyz/' }] });
+  passes({ facts: [{ id: 'booked-pie', signature: 'The white pie', source: 'https://www.facebook.com/bookedpie/posts/pfbid02abc' }] });
+  failsWith({ facts: [{ id: 'gram-slice', style: 'New York slices', source: 'https://www.instagram.com/handle_only/' }] }, 'style must come from');
+  // an entry filed under the ordering page it links as its own
+  const toast = { id: 'toast-pie', name: 'Toast Pie', status: 'open', url: 'https://order.toasttab.com/online/toast-pie' };
+  assert.equal(isOwnPage('https://order.toasttab.com/online/toast-pie', toast), true);
+  assert.equal(isOwnPage('https://order.toasttab.com/online/toast-pie/menu', toast), true);
+  assert.equal(isOwnPage('https://order.toasttab.com/online/toast-pie-two', toast), false);
+  assert.equal(isOwnPage('https://order.toasttab.com/online/another-shop', toast), false);
+  assert.equal(isOwnPage('https://www.toasttab.com/online/toast-pie', toast), false);
+  // a host alone names every business on it, so it is nobody's own page
+  assert.equal(isOwnPage('https://order.toasttab.com/online/another-shop', { ...toast, url: 'https://order.toasttab.com/' }), false);
+  assert.equal(isOwnPage('https://order.toasttab.com/online/toast-pie', { id: 'no-url' }), false);
+  const ds = { restaurants: [toast] };
+  const from = source => validateResearch({ facts: [{ id: 'toast-pie', signature: 'The square pepperoni', source }] }, ds, NOW).fails;
+  assert.deepEqual(from('https://order.toasttab.com/online/toast-pie/menu'), []);
+  assert.match(from('https://order.toasttab.com/online/another-shop')[0], /signature must come from .* not order\.toasttab\.com/);
+});
+
+test('facts: an entry may have a record for each page, and no fact twice', () => {
+  const about = { id: 'zeeks-pizza', opened: 1993, source: 'https://zeekspizza.example/about' };
+  const menu = { id: 'zeeks-pizza', priceIndex: 2, signature: 'The Tree Hugger', source: 'https://zeekspizza.example/menu' };
+  passes({ facts: [about, menu] });
+  const { fails, accepted } = run({ facts: [about, menu, { id: 'zeeks-pizza', opened: 1994, style: 'Hand-tossed pies', source: 'https://www.seattlemet.com/zeeks' }] });
+  assert.deepEqual(fails, ['facts[2]: opened already reported for "zeeks-pizza" by an earlier facts record']);
+  assert.deepEqual(accepted.facts, [about, menu]);
+  // a record that was refused does not hold its facts against a later good one
+  const retry = run({ facts: [{ ...about, opened: 1850 }, about] });
+  assert.equal(retry.fails.length, 1);
+  assert.deepEqual(retry.accepted.facts, [about]);
+  // the section holds three pages for every entry of a facts worklist, and past that the file is refused
+  assert.equal(CAPS.facts, 3 * PER_PASS.facts);
+  failsWith({ facts: Array.from({ length: CAPS.facts + 1 }, () => about) }, `exceeds the ${CAPS.facts} cap`);
 });
 
 test('ratingSkipped: records an attempt on an unrated entry or a launch rating, never on an agent rating', () => {
@@ -192,8 +291,6 @@ test('locationsSkipped: an id on file and a note that says what was tried', () =
   failsWith({ locationsSkipped: [{ id: 'nope', note: 'no official site found' }] }, 'unknown restaurant id');
   failsWith({ locationsSkipped: [{ id: 'zeeks-pizza', note: 'none' }] }, 'note missing or too short');
   failsWith({ locationsSkipped: [{ id: 'zeeks-pizza', note: 'x'.repeat(601) }] }, 'longer than 600');
-  failsWith({ locationsSkipped: Array.from({ length: 13 }, () => ({ id: 'zeeks-pizza', note: 'no official site found' })) },
-    'exceeds the 12 cap');
 });
 
 /* ---- coverageSkipped, socialSkipped: the two backfills' memory ---- */
@@ -206,11 +303,96 @@ test('coverageSkipped and socialSkipped: an id on file and a note that says what
     failsWith({ [sec]: [{ id: 'zeeks-pizza', note: 'none' }] }, 'note missing or too short');
     failsWith({ [sec]: [{ id: 'zeeks-pizza', note: 'x'.repeat(601) }] }, 'longer than 600');
     failsWith({ [sec]: [{ id: 'zeeks-pizza' }] }, 'note missing or too short');
-    const full = n => ({ [sec]: Array.from({ length: n }, () => ({ id: 'zeeks-pizza', note: 'searched four outlets by name' })) });
-    assert.equal(run(full(CAPS[sec])).fatal, false);
-    failsWith(full(CAPS[sec] + 1), `exceeds the ${CAPS[sec]} cap`);
   }
-  assert.deepEqual([CAPS.coverageSkipped, CAPS.socialSkipped], [12, 15]);
+});
+
+/* ---- the `…Skipped` sections are attempt memory, and never cost the file ---- */
+const SKIPPED_SECTIONS = ['ratingSkipped', 'locationsSkipped', 'factsSkipped', 'coverageSkipped', 'socialSkipped'];
+/* Forty unrated entries, so every skipped section accepts a record for any of them. */
+const field = { restaurants: Array.from({ length: 40 }, (_, i) => ({ id: `pie-${String(i).padStart(2, '0')}`, name: `Pie ${i}`, status: 'open' })) };
+const skip = n => ({ id: `pie-${String(n).padStart(2, '0')}`, note: `searched four outlets by name for pie ${n}; nothing found` });
+const mention = id => ({ id, title: 'A perfectly plausible headline', url: `https://x.com/${id}`, source: 'Seattle Met', date: '2026-08-15', kind: 'mention' });
+
+test('skipped sections: each cap is read from rules.js, with room above the worklist it serves', () => {
+  assert.deepEqual(Object.keys(SKIPPED).sort(), [...SKIPPED_SECTIONS].sort());
+  for (const [sec, tasks] of Object.entries(SKIPPED)) {
+    for (const t of tasks) {
+      assert.ok(Number.isInteger(PER_PASS[t]), `${t} has a worklist size in rules.js`);
+      assert.ok(CAPS[sec] > PER_PASS[t], `${sec} (${CAPS[sec]}) has room above the ${t} worklist (${PER_PASS[t]})`);
+    }
+    assert.equal(CAPS[sec], 2 * Math.max(...tasks.map(t => PER_PASS[t])), sec);
+  }
+  assert.deepEqual(SKIPPED, { ratingSkipped: ['rating', 'rerate'], locationsSkipped: ['locations'], factsSkipped: ['facts'],
+    coverageSkipped: ['coverage'], socialSkipped: ['social'] });
+});
+
+test('skipped sections: 16 records for a worklist of 10 are accepted once each, and the file is applied', () => {
+  // The pass that was lost: every worklist entry reported, six of them twice, beside the two mentions it found.
+  const ten = Array.from({ length: 10 }, (_, i) => skip(i));
+  const doc = { mentions: [mention('pie-00'), mention('pie-01')], coverageSkipped: [...ten, ...ten.slice(0, 6)] };
+  assert.equal(doc.coverageSkipped.length, 16);
+  const { fails, fatal, accepted } = validateResearch(doc, field, NOW);
+  assert.equal(fatal, false);
+  assert.deepEqual(accepted.coverageSkipped, ten);
+  assert.deepEqual(accepted.mentions, doc.mentions);
+  assert.deepEqual(fails, [10, 11, 12, 13, 14, 15].map(i =>
+    `coverageSkipped[${i}]: "pie-0${i - 10}" is already reported in this section; the first record is kept`));
+});
+
+test('skipped sections: a repeated id collapses to its first record, in every one of them', () => {
+  for (const sec of SKIPPED_SECTIONS) {
+    const first = skip(3), second = { ...skip(3), note: 'a second note for the same entry, written later' };
+    const { fails, fatal, accepted } = validateResearch({ [sec]: [first, skip(4), second, skip(3)] }, field, NOW);
+    assert.equal(fatal, false, sec);
+    assert.deepEqual(accepted[sec], [first, skip(4)], sec);
+    assert.deepEqual(fails, [2, 3].map(i => `${sec}[${i}]: "pie-03" is already reported in this section; the first record is kept`), sec);
+  }
+});
+
+test('skipped sections: records past the cap are dropped one by one, and nothing else in the file is lost', () => {
+  for (const sec of SKIPPED_SECTIONS) {
+    const cap = CAPS[sec];
+    const doc = { mentions: [mention('pie-00')], [sec]: Array.from({ length: cap + 3 }, (_, i) => skip(i)) };
+    const { fails, fatal, accepted } = validateResearch(doc, field, NOW);
+    assert.equal(fatal, false, sec);
+    assert.deepEqual(accepted[sec], doc[sec].slice(0, cap), sec);
+    assert.deepEqual(accepted.mentions, doc.mentions, sec);
+    assert.deepEqual(fails, [0, 1, 2].map(n => `${sec}[${cap + n}]: past the ${cap} records this section holds; `
+      + `"${skip(cap + n).id}" is not recorded as attempted`), sec);
+    // exactly at the cap nothing is dropped
+    assert.deepEqual(validateResearch({ [sec]: doc[sec].slice(0, cap) }, field, NOW).fails, [], sec);
+  }
+});
+
+test('skipped sections: a record that fails its own checks neither takes an id nor counts towards the cap', () => {
+  const cap = CAPS.coverageSkipped;
+  const good = Array.from({ length: cap }, (_, i) => skip(i));
+  const { fails, accepted } = validateResearch({ coverageSkipped: [{ id: 'pie-00', note: 'none' }, { id: 'nope', note: 'searched four outlets by name' },
+    ...good] }, field, NOW);
+  assert.deepEqual(accepted.coverageSkipped, good);
+  assert.equal(fails.length, 2);
+  assert.match(fails[0], /coverageSkipped\[0\]: note missing or too short/);
+  assert.match(fails[1], /coverageSkipped\[1\]: unknown restaurant id "nope"/);
+});
+
+test('skipped sections: a hundred repeats of one record are one record, not a refused file', () => {
+  for (const sec of SKIPPED_SECTIONS) {
+    const { fatal, accepted, fails } = validateResearch({ [sec]: Array.from({ length: 100 }, () => skip(7)) }, field, NOW);
+    assert.equal(fatal, false, sec);
+    assert.deepEqual(accepted[sec], [skip(7)], sec);
+    assert.equal(fails.length, 99, sec);
+  }
+});
+
+test('every other section\'s cap is still structural: one record over and the file is refused', () => {
+  for (const sec of Object.keys(CAPS).filter(k => !SKIPPED_SECTIONS.includes(k))) {
+    const over = validateResearch({ coverageSkipped: [skip(1)], [sec]: Array.from({ length: CAPS[sec] + 1 }, () => ({})) }, field, NOW);
+    assert.equal(over.fatal, true, sec);
+    assert.deepEqual(over.accepted, {}, sec);
+    assert.deepEqual(over.fails, [`${sec}: ${CAPS[sec] + 1} entries exceeds the ${CAPS[sec]} cap`], sec);
+  }
+  // and a skipped section that is not a list is still a file nothing can be read from
+  assert.equal(validateResearch({ coverageSkipped: { id: 'pie-01' } }, field, NOW).fatal, true);
 });
 
 test('socialSkipped may sit beside a links record for the part that was found', () => {
@@ -320,6 +502,9 @@ test('angle brackets are refused in every free-text field and in addresses', () 
     'status note': { status: [{ id: 'delancey', status: 'open', note: `open ${TAG} today`, source: 'https://x.com/a' }] },
     'rating note': rating({ note: `${NOTE} ${TAG}` }),
     'rating styleGroup': rating({ styleGroup: '<b>Roman</b>' }),
+    'facts style': { facts: [{ id: 'roma-roma', style: `Roman ${TAG}`, source: 'https://romaroma.example/menu' }] },
+    'facts styleGroup': { facts: [{ id: 'roma-roma', styleGroup: '<b>Roman</b>', source: 'https://romaroma.example/menu' }] },
+    'facts signature': { facts: [{ id: 'roma-roma', signature: `The potato slice ${TAG}`, source: 'https://romaroma.example/menu' }] },
     'ratingSkipped note': { ratingSkipped: [{ id: 'roma-roma', note: `nothing found ${TAG}` }] },
     'factsSkipped note': { factsSkipped: [{ id: 'roma-roma', note: `nothing found ${TAG}` }] },
     'locationsSkipped note': { locationsSkipped: [{ id: 'roma-roma', note: `nothing found ${TAG}` }] },
@@ -483,11 +668,15 @@ test('status: enum and citation enforced', () => {
   failsWith({ status: [{ id: 'delancey', status: 'gone', note: 'confirmed on its site', source: 'https://x.com' }] }, 'status must be');
 });
 
-test('factsSkipped: an attempt that found nothing, never alongside a facts record', () => {
+test('factsSkipped: an attempt that could not complete the record, alone or beside what it did find', () => {
   passes({ factsSkipped: [{ id: 'zeeks-pizza', note: 'no page states a founding year or shows prices' }] });
   failsWith({ factsSkipped: [{ id: 'nope', note: 'searched the site and local coverage' }] }, 'unknown restaurant id');
-  failsWith({ facts: [{ id: 'delancey', opened: 2009, source: 'https://delancey.example/about' }],
-    factsSkipped: [{ id: 'delancey', note: 'searched the site and local coverage' }] }, 'is also reported in facts');
+  failsWith({ factsSkipped: [{ id: 'zeeks-pizza', note: 'none' }] }, 'note missing or too short');
+  // a pass that finds the year and not the signature reports both
+  const { fails, accepted } = run({ facts: [{ id: 'delancey', opened: 2009, source: 'https://delancey.example/about' }],
+    factsSkipped: [{ id: 'delancey', note: 'the menu names no pie above the others, and no review does' }] });
+  assert.deepEqual(fails, []);
+  assert.deepEqual([accepted.facts.length, accepted.factsSkipped.length], [1, 1]);
 });
 
 /* ---- factorSources: citations for a rating already on file ---- */

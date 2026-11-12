@@ -30,9 +30,10 @@ export const CLOSURE_RECONFIRM_DAYS = 90;
  * first; a type with nothing on its worklist is passed over. */
 export const ROTATION = ['discovery', 'locations', 'liveness', 'news', 'rating', 'census', 'facts'];
 
-/* What a facts attempt stamped with no list of fields looked for. The task
- * asked for the founding year and the price tier and nothing else until it
- * took on the whole descriptive record, and it recorded only the day. */
+/* What an attempt that recorded a day and no list looked for: the founding
+ * year and the price tier. Those two were the whole of the task when it
+ * stamped attempts that way, so such a stamp says nothing about the other
+ * three facts. */
 export const FACTS_SOUGHT_UNLISTED = ['opened', 'priceIndex'];
 
 /* The facts the last attempt on an entry looked for and did not find: the

@@ -185,8 +185,10 @@ function scratch(candidates) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'fetch-candidates-'));
   for (const d of ['scripts', 'src', 'data']) fs.mkdirSync(path.join(dir, d));
   fs.copyFileSync(script, path.join(dir, 'scripts/fetch-candidates.mjs'));
-  // The script's whole import graph: census.js reads the street key from locations.js.
-  for (const f of ['census.js', 'locations.js']) fs.copyFileSync(path.join(srcDir, f), path.join(dir, 'src', f));
+  // The script's whole import graph: census.js reads the street key from
+  // locations.js and the census worklist size from rules.js, which reads the
+  // list of descriptive facts from schema.js.
+  for (const f of ['census.js', 'locations.js', 'rules.js', 'schema.js']) fs.copyFileSync(path.join(srcDir, f), path.join(dir, 'src', f));
   fs.writeFileSync(path.join(dir, 'stub.mjs'), STUB);
   fs.writeFileSync(path.join(dir, 'data/restaurants.json'), JSON.stringify({ restaurants }));
   const file = path.join(dir, 'data/candidates.json');
@@ -257,6 +259,29 @@ test('CLI: a new permit joins as pending, and with no flag the refresh always ru
     assert.deepEqual(after.candidates.filter(c => c.status === 'pending').map(c => c.name), ['Pizza Rasoi']);
     assert.equal(after.updated, after.checked);
     assert.match(res.stdout, /3 candidate\(s\) — 1 pending, 1 promoted, 1 rejected/);
+  } finally { s.done(); }
+});
+
+test('CLI: a candidate the register has inspected since it was set aside goes back to pending, verdict kept beside it', () => {
+  const judged = stored();
+  Object.assign(judged.candidates[0], { resolvedDate: '2026-08-31', resolutionSource: 'https://news.example/belltown', lastInspection: '2026-03-01' });
+  const s = scratch({ ...judged, checked: daysAgo(40) });
+  try {
+    // the register's row for it is dated 2026-10-05, after the verdict
+    const res = s.run(['--max-age-days=30']);
+    assert.equal(res.status, 0, res.stderr);
+    assert.match(res.stdout, /1 candidate\(s\) inspected since they were set aside, back to pending: Belltown Pizza \(not-pizza\)/);
+    assert.match(res.stdout, /2 candidate\(s\) — 1 pending, 1 promoted/);
+    const after = JSON.parse(s.read());
+    assert.deepEqual(after.candidates.find(c => c.name === 'Belltown Pizza'), { key: 'belltown|2422', name: 'Belltown Pizza',
+      address: '2422 1st Ave, Seattle, WA 98121', sources: ['kc-health'], lastInspection: '2026-10-05', status: 'pending',
+      previousVerdict: { verdict: 'not-pizza', note: 'a bar', resolvedDate: '2026-08-31', source: 'https://news.example/belltown' } });
+    assert.equal(after.updated, after.checked);
+
+    // The same inspection does not bring it back a second time, and says nothing.
+    const again = s.run([]);
+    assert.doesNotMatch(again.stdout, /back to pending/);
+    assert.equal(JSON.stringify(JSON.parse(s.read()).candidates), JSON.stringify(after.candidates));
   } finally { s.done(); }
 });
 

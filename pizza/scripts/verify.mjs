@@ -12,6 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { isRated } from '../src/slice.js';
 import { esc, hostOf } from '../build/html.mjs';
+import { unratedLists, candidateLists } from '../build/sections/candidates.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = process.env.OUT_DIR
@@ -19,6 +20,10 @@ const dist = process.env.OUT_DIR
   : path.join(root, '..', 'dist', path.basename(root));
 const readJson = f => JSON.parse(fs.readFileSync(path.join(root, 'data', f), 'utf8'));
 const dataset = readJson('restaurants.json');
+/* The candidates queue, read the way the build reads it: a file that is
+ * missing or does not parse is no queue, not a failed deploy. */
+let candidatesFile = null;
+try { candidatesFile = readJson('candidates.json'); } catch { /* the page renders without it */ }
 
 /* The unit suite runs first: verify.mjs is the deploy gate the orchestrator
  * calls, so a failing rule test blocks a deploy exactly like a bad page would.
@@ -106,8 +111,9 @@ check(html.length > 20000, `index.html suspiciously small (${html.length} bytes)
 check(/<title>[^<]+<\/title>/.test(html), 'missing <title>');
 check(/<main>/.test(html) && /<nav class="site-nav"/.test(html), 'landmarks missing (main, nav)');
 check(/<style>[\s\S]{5000,}<\/style>/.test(html), 'the inline stylesheet is missing or nearly empty');
-// The sections every build renders. The record, the radar and the buzz are
-// absent when they have nothing to show, and the nav then leaves them out.
+// The sections every build renders. The record, the radar, the buzz and the
+// candidates are absent when they have nothing to show, and the nav then
+// leaves them out.
 for (const id of ['top-ten', 'board', 'styles', 'directory', 'dir-body', 'map', 'methodology']) {
   check(ids.has(id), `id "${id}" missing from the page`);
 }
@@ -191,6 +197,68 @@ for (const r of dataset.restaurants) {
   check(markup.includes(esc(r.name)), `"${r.name}" missing from the page`);
 }
 
+/* ---------- the candidates section ---------- */
+
+/* The section lists two things straight from the data files: entries on file
+ * with no rating, and the candidates queue. It is on the page exactly when
+ * there is something to list, the nav links it exactly then, and every group
+ * holds as many rows as the data has for it and prints that number. The
+ * totals are counted here from the files themselves; the split into groups
+ * is the build's own (the functions it renders from), so what this catches is
+ * a group or a row that went missing between the data and the page, and a
+ * printed count that no longer matches its rows. */
+{
+  const candidates = candidatesFile?.candidates ?? null;
+  const unrated = dataset.restaurants.filter(r => r.status !== 'closed' && !isRated(r));
+  const queued = Array.isArray(candidates) ? candidates.length : 0;
+  const expected = unrated.length + queued > 0;
+  check(ids.has('candidates') === expected, expected
+    ? `the candidates section is missing: ${unrated.length} unrated entr${unrated.length === 1 ? 'y' : 'ies'} and ${queued} candidate(s) have nowhere to be listed`
+    : 'the candidates section rendered with nothing to list');
+  check(nav.includes('href="#candidates"') === ids.has('candidates'),
+    'the nav and the page disagree about the candidates section');
+
+  if (ids.has('candidates')) {
+    const from = markup.indexOf('<section class="section" id="candidates"');
+    const section = markup.slice(from, markup.indexOf('</section>', from));
+    const onFile = unratedLists(dataset.restaurants);
+    const queue = candidateLists(candidates);
+    const want = {
+      'rating-waiting': onFile.waiting, 'rating-looked': onFile.looked, 'rating-opening': onFile.opening,
+      pending: queue.pending, chain: queue.chain, 'not-pizza': queue['not-pizza'],
+      unverifiable: queue.unverifiable, closed: queue.closed, rejected: queue.rejected
+    };
+    const groups = new Map([...section.matchAll(/<details class="cq-group" data-group="([^"]+)"[^>]*>([\s\S]*?)<\/details>/g)]
+      .map(m => [m[1], m[2]]));
+    for (const key of groups.keys()) check(Object.hasOwn(want, key), `the candidates section has a group "${key}" the data does not account for`);
+    let rowsOnFile = 0, rowsQueued = 0;
+    for (const [key, list] of Object.entries(want)) {
+      const body = groups.get(key);
+      if (!list.length) { check(body == null, `the candidates section shows a "${key}" group and the data has nothing for it`); continue; }
+      if (body == null) { check(false, `the candidates section has no "${key}" group; the data has ${list.length}`); continue; }
+      const rows = (body.match(/<tr class="cq-row/g) ?? []).length;
+      const printed = Number(body.match(/<span class="cq-n">(\d+)<\/span>/)?.[1]);
+      check(rows === list.length, `the "${key}" group lists ${rows} row(s); the data has ${list.length}`);
+      check(printed === list.length, `the "${key}" group says ${printed}; the data has ${list.length}`);
+      for (const item of list) check(body.includes(esc(item.name)), `"${item.name}" is missing from the "${key}" group`);
+      if (key.startsWith('rating-')) rowsOnFile += rows; else rowsQueued += rows;
+    }
+    // The groups together are everything, counted from the files and not
+    // from the functions that made the groups.
+    const dupes = Number(section.match(/<p class="note cq-dupes"[^>]*>\s*<b>(\d+)<\/b>/)?.[1] ?? 0);
+    check(rowsOnFile === unrated.length,
+      `the candidates section lists ${rowsOnFile} unrated entr${rowsOnFile === 1 ? 'y' : 'ies'}; the dataset has ${unrated.length}`);
+    check(rowsQueued + dupes === queued,
+      `the candidates section accounts for ${rowsQueued + dupes} candidate(s) (${rowsQueued} listed, ${dupes} counted as duplicates); the queue holds ${queued}`);
+    check(dupes === queue.duplicates, `the candidates section counts ${dupes} duplicate(s); the queue has ${queue.duplicates}`);
+    const stamped = Object.fromEntries([...section.matchAll(/<span data-count="([a-z]+)">(\d+) /g)].map(m => [m[1], Number(m[2])]));
+    for (const [key, n] of Object.entries({ unrated: unrated.length, pending: queue.pending.length,
+      excluded: queue.excluded, duplicate: queue.duplicates })) {
+      check((stamped[key] ?? 0) === n, `the candidates section's summary says ${stamped[key] ?? 0} ${key}; the data has ${n}`);
+    }
+  }
+}
+
 /* The page's visible text, for a test that looks for words the templates must
  * never print. Text the page quotes from the data files may contain such a
  * word honestly -- a headline can say a closing date is "still undefined" --
@@ -200,6 +268,8 @@ for (const r of dataset.restaurants) {
  * field. */
 const dataFiles = ['restaurants.json', 'attributes.json', 'buzz.json', 'research.json']
   .filter(f => fs.existsSync(path.join(root, 'data', f))).map(readJson);
+// A census note or a permit name is quoted on the page as well.
+if (candidatesFile) dataFiles.push(candidatesFile);
 const textWithoutQuoted = words => {
   const whole = new RegExp(`^\\s*(?:${words.source})\\s*$`, words.flags);
   const quoted = new Set();

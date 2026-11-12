@@ -343,7 +343,7 @@ test('facts brief: says what each fact is, where it may come from, and asks for 
     assert.ok(brief.includes(part), part);
   }
   // the style groups already in use, which is the vocabulary the rating task offers too
-  assert.match(brief, /Pick from the groups\s+already in use when one fits -- Detroit pan; Roman --/);
+  assert.match(brief, /Pick from the groups\n  already in use when one fits --\n  Detroit pan; Roman --\n  or coin a short new one/);
   assert.ok(buildTask('rating', rs, { now: NOW }).brief.includes('  Detroit pan; Roman -- or coin'));
   // the caps the validator holds a record to
   assert.ok(brief.includes(`in at most ${MAX_LEN.signature}\n  characters`));

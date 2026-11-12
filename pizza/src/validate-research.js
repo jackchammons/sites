@@ -9,20 +9,34 @@
 import { PUGET_SOUND_ZIP, PUGET_SOUND_ZIP_LABEL } from './bounds.js';
 import { normName } from './census.js';
 import { streetKey } from './locations.js';
+import { PER_PASS } from './rules.js';
 import { FACT_FIELDS } from './schema.js';
 import { isRated, isLaunchRating } from './slice.js';
 
 export const KINDS = new Set(['opening', 'closing', 'ranking', 'mention']);
-/* A `…Skipped` section must be able to hold a whole worklist, since a pass
- * that resolves nothing reports every entry: the social worklist is 15.
- * `facts` holds three records for each entry of its worklist of 12, because
- * a record carries what one page states and an entry's facts are spread over
- * its About page, its menu and its coverage. */
+/* The `…Skipped` sections, each with the tasks whose worklist it serves. A
+ * record in one says a pass looked at an entry and could not resolve it, so
+ * the worklist rests the entry. That is attempt memory, not data, and it is
+ * never the reason a file is refused: a section that repeats an id keeps the
+ * first record for it, and one that runs past its cap keeps the records up
+ * to the cap, each dropped record reported like any other rejection. Losing
+ * the file instead loses every other section with it and redraws the same
+ * worklist on the next pass. */
+export const SKIPPED = { ratingSkipped: ['rating', 'rerate'], locationsSkipped: ['locations'],
+                         factsSkipped: ['facts'], coverageSkipped: ['coverage'], socialSkipped: ['social'] };
+/* Twice the largest worklist a section serves, read from rules.js: a pass
+ * that resolves nothing reports every entry it was given, and the room above
+ * that is for an entry the agent looked at beyond its list. */
+const skippedCap = tasks => 2 * Math.max(...tasks.map(t => PER_PASS[t]));
+/* The most records a section may hold. Past it, any section but a
+ * `…Skipped` one fails the file. `facts` holds three records for each entry
+ * of its worklist, because a record carries what one page states and an
+ * entry's facts are spread over its About page, its menu and its coverage. */
 export const CAPS = { news: 20, locations: 12, directory: 10, status: 10,
                       mentions: 40, factorRatings: 12, links: 20,
-                      candidateReview: 15, facts: 36, ratingSkipped: 12,
-                      factorSources: 12, factsSkipped: 12, locationsSkipped: 12,
-                      coverageSkipped: 12, socialSkipped: 15 };
+                      candidateReview: 15, facts: 3 * PER_PASS.facts,
+                      factorSources: 12,
+                      ...Object.fromEntries(Object.entries(SKIPPED).map(([sec, tasks]) => [sec, skippedCap(tasks)])) };
 export const MAX_AGE_DAYS = 180;
 /* Mentions feed a 24-month coverage window in slice.js; capping them at 180
  * days meant the window could never fill from the loop. */
@@ -116,7 +130,8 @@ export const isOwnPage = (u, entry) => {
  * problem found; `fatal` means the document itself is unusable (not an object,
  * a section over its cap, a retired channel); otherwise `accepted` holds each
  * section with the failing records dropped, so one bad record costs that
- * record, not the run. `unknown` names the top-level keys that are no section
+ * record, not the run. A `…Skipped` section over its cap is not fatal: the
+ * records past the cap are dropped like any other failing record. `unknown` names the top-level keys that are no section
  * at all: a misspelt section ("statuses", "factorRating") is never applied,
  * and the caller has to say so rather than report a clean, empty pass. */
 export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
@@ -164,7 +179,7 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
 
   for (const [name, arr] of Object.entries(sections)) {
     if (!Array.isArray(arr)) { fails.push(`${name} must be an array`); continue; }
-    if (arr.length > CAPS[name]) fails.push(`${name}: ${arr.length} entries exceeds the ${CAPS[name]} cap`);
+    if (arr.length > CAPS[name] && !Object.hasOwn(SKIPPED, name)) fails.push(`${name}: ${arr.length} entries exceeds the ${CAPS[name]} cap`);
   }
   if (fails.length) return { fails, sections, fatal: true, accepted: {}, unknown };
 
@@ -586,6 +601,19 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
       if (!plain) bad('candidateReview', i, `source is not a valid URL: ${it.source}`);
     }
   });
+
+  /* ---- the `…Skipped` sections: one record an entry, and no more than the cap ----
+   * Run after each section's own checks, so a record that failed them neither
+   * stands in for a good one with the same id nor counts towards the cap. */
+  for (const sec of Object.keys(SKIPPED)) {
+    const kept = new Set();
+    sections[sec].forEach((it, i) => {
+      if (badIdx[sec]?.has(i)) return;
+      if (kept.has(it.id)) bad(sec, i, `"${it.id}" is already reported in this section; the first record is kept`);
+      else if (kept.size >= CAPS[sec]) bad(sec, i, `past the ${CAPS[sec]} records this section holds; "${it.id}" is not recorded as attempted`);
+      else kept.add(it.id);
+    });
+  }
 
   const accepted = Object.fromEntries(Object.entries(sections).map(([k, arr]) =>
     [k, arr.filter((_, i) => !badIdx[k]?.has(i))]));

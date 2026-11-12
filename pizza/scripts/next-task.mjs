@@ -586,9 +586,10 @@ its source; never report the same fact twice for one entry.
 - priceIndex: from its own menu. 1 = slices and pies under about $20,
   2 = pies $20-28, 3 = $28-36, 4 = above.
 - style: the kind of pizza it makes, as a short phrase in the page's own
-  terms ("Wood-fired Neapolitan", "New York slices by the slice").
+  terms ("Wood-fired Neapolitan", "New York-style slices").
 - styleGroup: the family that style belongs to. Pick from the groups
-  already in use when one fits -- ${styleGroups.join('; ')} --
+  already in use when one fits --
+  ${styleGroups.join('; ')} --
   or coin a short new one (3 to 24 characters) only when none does.
 - signature: the pie the place is known for, in at most ${MAX_LEN.signature}
   characters: the one its own menu or site puts forward, or the one its

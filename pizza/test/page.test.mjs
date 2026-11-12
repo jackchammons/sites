@@ -8,13 +8,17 @@ import { fileURLToPath } from 'node:url';
 import { deriveContext } from '../build/derive.mjs';
 import { pageHtml } from '../build/page.mjs';
 import { hostOf } from '../build/html.mjs';
-import { methodParts } from '../build/sections/method.mjs';
+import { methodParts, LIFE_STAGES } from '../build/sections/method.mjs';
+import { TASKS, outsideRotation } from '../build/tasks.mjs';
 import { recordSection } from '../build/sections/record.mjs';
 import { bracketsSection } from '../build/sections/brackets.mjs';
 import { radarSection } from '../build/sections/radar.mjs';
 import { buzzSection } from '../build/sections/buzz.mjs';
 import { directorySection } from '../build/sections/directory.mjs';
+import { candidatesSection } from '../build/sections/candidates.mjs';
 import { cardHtml, fieldStats } from '../src/render.js';
+import { PER_PASS, RETRY_DAYS, ROTATION } from '../src/rules.js';
+import { LOCATION_REVISIT_DAYS } from '../src/locations.js';
 import {
   ALGORITHM, isoWeekKey, isoWeek, LONGEVITY_FULL_YEARS, COVERAGE_WINDOW_MONTHS, COVERAGE_FULL_MENTIONS,
   REPUTATION_WEIGHTS, DEFAULT_WEIGHTS
@@ -62,8 +66,13 @@ const page = ctx => pageHtml(ctx, {
   bracketSection: bracketsSection(ctx),
   radarSection: radarSection(ctx),
   buzzSection: buzzSection(ctx),
-  directorySection: directorySection(ctx)
+  directorySection: directorySection(ctx),
+  candidatesSection: candidatesSection(ctx)
 });
+/* One block of an expanded directory record, as the text a reader sees. */
+const blockOf = (record, label) => record
+  .match(new RegExp(`<div class="dd-block"><div class="dd-label">${label}</div>([\\s\\S]*?)</div>\\s*(?:<div class="dd-block">|</div></td>)`))[1]
+  .replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 const standingsOf = html => JSON.parse(html.match(/data-standings='([^']*)'/)[1].replace(/&#39;/g, "'"));
 const dirRows = html => [...html.matchAll(/<tr class="dir-row[^"]*" data-id="([^"]+)">([\s\S]*?)<\/tr>/g)]
   .map(m => ({ id: m[1], rank: m[2].match(/class="dir-rank[^"]*">#(\d+)</)?.[1] ?? null }));
@@ -135,16 +144,27 @@ test('the nav links only the sections that rendered', () => {
     for (const id of expected) assert.ok(html.includes(`id="${id}"`), `#${id} is linked but not on the page`);
   };
   // No earlier snapshot and no stories: no record, no buzz. The closure and
-  // the opening put the radar on the page.
-  check(context(), ['top-ten', 'styles', 'radar', 'directory', 'methodology']);
+  // the opening put the radar on the page, and the entry nobody has rated
+  // puts the candidates there.
+  check(context(), ['top-ten', 'styles', 'radar', 'directory', 'candidates', 'methodology']);
 
-  const settled = restaurants().filter(r => r.status === 'open');
+  // Every open entry rated and no candidates queue: nothing is known of that
+  // is not ranked, so there is no candidates section to link.
+  const settled = restaurants().filter(r => r.status === 'open' && r.factors);
   const story = { title: 'A pizza story', url: 'https://news.example/a', source: 'News', published: '2026-11-08T10:00:00Z', kind: 'mention' };
   const earlier = { weekKey: '2026-W45', week: 45, date: '2026-11-03', algorithm: ALGORITHM, ranks: { p0: 1, p1: 2 } };
-  check(context({
+  const quiet = {
     dataset: { city: 'Seattle', dataVersion: 'test', restaurants: settled, attributeRegistry: {} },
     history: { snapshots: [earlier] }, buzz: { updated: '2026-11-08T10:00:00Z', items: [story] }
-  }), ['top-ten', 'record', 'styles', 'buzz', 'directory', 'methodology']);
+  };
+  check(context(quiet), ['top-ten', 'record', 'styles', 'buzz', 'directory', 'methodology']);
+  assert.doesNotMatch(page(context(quiet)), /href="#(candidates|unranked|queue)"/);
+
+  // A queue alone is enough to bring the section back.
+  const pending = { key: 'new pie|1', name: 'New Pie', address: '1 Pine St, Seattle, WA 98101',
+    sources: ['kc-health'], lastInspection: '2026-10-01', status: 'pending' };
+  check(context({ ...quiet, candidates: [pending] }),
+    ['top-ten', 'record', 'styles', 'buzz', 'directory', 'candidates', 'methodology']);
 });
 
 test('the methodology sits inside <main>, prints the constants from slice.js, and the footer links back', () => {
@@ -212,20 +232,185 @@ test('the page describes every rating one way, and a rating the agent has not se
   const ctx = context({ dataset: { city: 'Seattle', dataVersion: 'test', restaurants: list, attributeRegistry: {} } });
   const html = page(ctx);
   const record = id => html.match(new RegExp(`<tr class="dir-detail" id="dd-${id}"[\\s\\S]*?</tr>`))[0];
-  const graded = id => record(id).match(/<div class="dd-label">Graded factors<\/div>([\s\S]*?)<\/div>\s*<div class="dd-block">/)[1]
-    .replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  const graded = id => blockOf(record(id), 'Rating');
 
   assert.equal(graded('p0'),
     'Craft: 8.0 · Distinctiveness: 8.5 · Critical base: 7.5 All three set by the research agent Aug 27, 2026 from rev.example , paper.example What the coverage says.');
   // Its sources, and neither who set it nor either of its dates.
   assert.equal(graded('p1'),
     'Craft: 8.0 · Distinctiveness: 8.5 · Critical base: 7.5 Sources on file for all three: rev.example , paper.example What was attached.');
-  assert.equal(graded('p2'), 'Craft: 8.0 · Distinctiveness: 8.5 · Critical base: 7.5');
+  // With none on file the record says so, and still says nothing of who or when.
+  assert.equal(graded('p2'), 'Craft: 8.0 · Distinctiveness: 8.5 · Critical base: 7.5 Sources for all three: not on file');
   for (const url of read) assert.ok(record('p1').includes(`href="${url}"`));
 
   const text = html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, ' ').replace(/<[^>]+>/g, ' ');
   assert.doesNotMatch(text, /editorial|founding entr|at launch|launched in|index launched|seeded/i);
   assert.match(text, /The three graded factors \(craft, distinctiveness and the critic base\) are set by a research\s+agent from published coverage/);
+});
+
+test('every directory record has the same rows in the same order, and says what is not on file', () => {
+  const list = restaurants();
+  // One entry with everything the record prints, one with every key present
+  // and empty, and the fixture's bare entry, which lacks the keys altogether.
+  Object.assign(list.find(r => r.id === 'p0'), {
+    styleGroup: 'Wood-fired', signature: 'The plain pie', signatureSource: 'https://full.example/menu',
+    opened: 2009, openedSource: 'https://full.example/about', priceIndex: 3,
+    url: 'https://full.example/', instagram: 'https://www.instagram.com/fullpies',
+    statusSource: 'https://news.example/open', attributes: { waits: true },
+    locations: [{ neighborhood: 'Ballard', address: '1 Pine St, Seattle, WA 98107' }],
+    locationsVerified: '2026-11-01', locationsSource: 'https://full.example/visit',
+    mentions: [{ url: 'https://news.example/review', title: 'A review of Place 00', source: 'News', date: '2026-10-01', kind: 'mention' }]
+  });
+  list.push({ id: 'empty', name: 'Empty Pies', status: 'open', neighborhood: null, style: null, styleGroup: null,
+    signature: null, opened: null, priceIndex: null, url: null, instagram: null, statusSource: null,
+    attributes: {}, locations: [], locationsVerified: null, factors: {}, mentions: [] });
+  const html = directorySection(context({ dataset: { city: 'Seattle', dataVersion: 'test', restaurants: list,
+    attributeRegistry: { waits: { label: 'Long waits', frictionCost: 1.2 } } } }));
+  const record = id => html.match(new RegExp(`<tr class="dir-detail" id="dd-${id}"[\\s\\S]*?</tr>`))[0];
+  const rows = id => [...record(id).matchAll(/<div class="dd-label">([^<]+)<\/div>|<span class="dd-k">([^<]+)<\/span>/g)]
+    .map(m => m[1] ? `[${m[1]}]` : m[2]);
+
+  const shape = ['[On file]', 'Style', 'Style group', 'Known for', 'Opened', 'Price',
+    '[Links]', 'Website', 'Instagram', '[Status]', 'Source', '[Locations]', '[Rating]',
+    '[Score]', '[Attributes]', '[Press on file]'];
+  for (const r of list) assert.deepEqual(rows(r.id), shape, r.id);
+
+  assert.equal(blockOf(record('p0'), 'On file'),
+    'Style Neapolitan Style group Wood-fired Known for The plain pie · full.example Opened 2009 · full.example Price $$$');
+  assert.equal(blockOf(record('p0'), 'Links'), 'Website full.example Instagram @fullpies');
+  assert.match(blockOf(record('p0'), 'Status'), /^Open · last checked Nov 10, 2026 Source news\.example$/);
+  assert.match(blockOf(record('p0'), 'Locations'), /^1 Pine St, Seattle, WA 98107 \(Ballard\) verified 2026-11-01 against full\.example$/);
+  assert.equal(blockOf(record('p0'), 'Attributes'), 'Long waits −1.2');
+
+  // A null and a missing key read the same: the placeholder, in the dim style.
+  const none = 'not on file';
+  for (const id of ['empty', 'unrated']) {
+    assert.equal(blockOf(record(id), 'On file').replace(/^Style Slice /, 'Style not on file '),
+      `Style ${none} Style group ${none} Known for ${none} Opened ${none} Price ${none}`, id);
+    assert.equal(blockOf(record(id), 'Links'), `Website ${none} Instagram ${none}`, id);
+    assert.match(blockOf(record(id), 'Status'), new RegExp(`^Open(?: · last checked [^·]+)? Source ${none}$`), id);
+    assert.equal(blockOf(record(id), 'Locations'), none, id);
+    assert.match(blockOf(record(id), 'Rating'), /^not on file No rating pass has looked at it yet\. What happens next$/, id);
+    assert.equal(blockOf(record(id), 'Score'), 'not on file No score until the entry has a rating.', id);
+    assert.equal(blockOf(record(id), 'Attributes'), none, id);
+    assert.equal(blockOf(record(id), 'Press on file'), none, id);
+  }
+  assert.match(record('empty'), /<span class="dd-dim">not on file<\/span>/);
+  // A rated entry that is not open keeps its score and says why it does not rank.
+  assert.match(blockOf(record('gone'), 'Score'), /^SLICE \d+\.\d .* Held out of the ranking: only open pizzerias compete\.$/);
+  assert.doesNotMatch(blockOf(record('p0'), 'Score'), /Held out/);
+});
+
+/* The methodology between its heading and the end of <main>, as markup and as
+ * the text a reader sees. */
+const methodOf = html => html.slice(html.indexOf('<section class="section" id="methodology"'), html.indexOf('</main>'));
+const textOf = markup => markup.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+
+test('the flow names every stage of an entry\'s life, in order, with the ways out', () => {
+  const method = methodOf(page(context()));
+  const flow = method.match(/<ol class="life"[\s\S]*?<\/ol>/)[0];
+  const stages = [...flow.matchAll(/<li class="life-step" data-stage="([^"]+)">\s*<div class="life-box"><b>([^<]+)<\/b>/g)];
+  assert.deepEqual(stages.map(m => m[2]),
+    ['Permit register', 'Candidate', 'Census verdict', 'On file, unrated', 'Rating pass', 'Ranked', 'Top ten']);
+  assert.deepEqual(stages.map(m => m[1]), LIFE_STAGES.map(s => s.key));
+
+  const text = textOf(flow);
+  // The census's four reasons, the rating task's retry, and closure.
+  for (const reason of ['national chain', 'not pizza-forward', 'could not be verified', 'closed']) {
+    assert.ok(flow.includes(`<li>${reason}</li>`), reason);
+  }
+  assert.ok(text.includes(`up to ${PER_PASS.census} per pass`));
+  assert.ok(text.includes(`up to ${PER_PASS.rating} entries per pass`));
+  assert.ok(text.includes(`No criticism found Stays unrated. Tried again after ${RETRY_DAYS.rating} days.`));
+  assert.match(text, /Closed A cited closure takes it out of the ranking\./);
+  assert.match(text, /Also joins here A pizzeria the discovery task finds/);
+  assert.match(text, /The ten highest scores among open pizzerias\./);
+  // Drawn in markup, so it follows the colour scheme and reflows.
+  assert.doesNotMatch(flow, /<img|<svg/);
+});
+
+test('the methodology has one row for each task in the rotation and names the rest in a line', async () => {
+  const method = methodOf(page(context()));
+  const rows = [...method.matchAll(/<tr role="row" data-task="([^"]+)">([\s\S]*?)<\/tr>/g)];
+  assert.deepEqual(rows.map(m => m[1]), ROTATION);
+  const cellsOf = name => [...rows.find(m => m[1] === name)[2].matchAll(/<td role="cell" data-l="([^"]+)">([\s\S]*?)<\/td>/g)]
+    .map(m => [m[1], m[2].trim()]);
+  for (const name of ROTATION) {
+    const cells = cellsOf(name);
+    assert.deepEqual(cells.map(c => c[0]), ['Looks at', 'Per pass', 'May write', 'Finds nothing', 'Looks again'], name);
+    for (const [label, body] of cells) {
+      assert.ok(body.length > 10, `${name}: "${label}" is blank`);
+      assert.doesNotMatch(body, /undefined|NaN/, `${name}: ${label}`);
+    }
+    // The size of a pass is the one next-task.mjs draws with.
+    const perPass = cells[1][1];
+    if (PER_PASS[name] != null) assert.match(perPass, new RegExp(`^Up to ${PER_PASS[name]} (entries|candidates)\\.$`), name);
+    else assert.match(perPass, /^No worklist/, name);
+  }
+  const again = name => cellsOf(name)[4][1];
+  assert.ok(again('rating').startsWith(`${RETRY_DAYS.rating} days after`));
+  assert.ok(again('locations').startsWith(`${LOCATION_REVISIT_DAYS} days after`));
+
+  const text = textOf(method);
+  assert.match(text, /oldest first, and takes the first that has work to do/);
+  assert.match(text, /A task with nothing on its worklist is passed over\./);
+  // Everything this build knows of that the rotation never picks, by name.
+  const outside = outsideRotation();
+  const line = text.match(/more tasks? (?:is|are) never picked automatically[^.]*\./)?.[0] ?? '';
+  for (const name of outside) assert.ok(line.includes(`${name} (${TASKS[name].summary})`), name);
+  for (const name of ROTATION) assert.ok(!line.includes(`${name} (`), `${name} is in the rotation and in the other line`);
+  // The tasks a dispatch can force are the ones this page accounts for.
+  const forceable = (await import('../scripts/next-task.mjs')).DISPATCH_ONLY ?? [];
+  for (const name of forceable) assert.ok(outside.includes(name), `${name} can be dispatched and the methodology does not name it`);
+});
+
+test('a task that joins the rotation with no row stops the build', () => {
+  ROTATION.push('newtask');
+  try {
+    assert.throws(() => methodParts(context()), /"newtask" is in ROTATION but build\/tasks\.mjs has no row for it/);
+  } finally {
+    ROTATION.pop();
+  }
+  // A task with a worklist and no size on file is the same kind of gap.
+  ROTATION.push('sources');
+  try {
+    assert.throws(() => methodParts(context()), /no row for it/);
+  } finally {
+    ROTATION.pop();
+  }
+  assert.doesNotThrow(() => methodParts(context()));
+});
+
+test('the methodology lists both workflows step by step and says what the agent cannot do', () => {
+  const method = methodOf(page(context()));
+  const steps = label => [...method.match(new RegExp(`<ol class="steps" aria-label="${label}">[\\s\\S]*?</ol>`))[0]
+    .matchAll(/<li><b>([^<]+)<\/b>/g)].map(m => m[1]);
+  assert.deepEqual(steps('The research run, step by step'),
+    ['Pick one task', 'The agent researches', 'Each record is validated on its own',
+     'Accepted records are applied', 'Lint, build, verify', 'Commit']);
+  assert.deepEqual(steps('The publish, step by step'),
+    ['Checks', 'Feed sweep', 'Geocode', 'Lint', 'Build every site', 'Deploy']);
+  const text = textOf(method);
+  assert.match(text, /Once a day, and whenever it is started by hand/);
+  assert.match(text, /After each research run, once a day on its own schedule, and on every change to the code/);
+  assert.match(text, /It can write exactly one file, its proposals\. It cannot run code/);
+  assert.match(text, /The agent never runs code and never writes a score\./);
+  assert.match(text, /A step that fails ends its run: nothing new is committed or deployed/);
+  // What moves a score: the constants are the scoring module's.
+  assert.ok(text.includes(`raises its version, now ${ALGORITHM}`));
+  assert.match(text, /A rating the agent has set\. It is set once\./);
+});
+
+test('no clock time appears in the methodology or the candidates section', () => {
+  const pending = { key: 'new pie|1', name: 'New Pie', address: '1 Pine St, Seattle, WA 98101',
+    sources: ['kc-health'], lastInspection: '2026-10-01', status: 'pending' };
+  const html = page(context({ candidates: [pending], candidatesChecked: '2026-11-12T05:30:31.005Z' }));
+  const from = html.indexOf('<section class="section" id="candidates"');
+  const text = textOf(html.slice(from, html.indexOf('</main>')));
+  assert.ok(text.includes('How it works') && text.includes('Known, but not ranked'));
+  // A scheduled run starts when the runner gets to it, so the page names no hour.
+  assert.doesNotMatch(text, /\b\d{1,2}:\d{2}\b|\b\d{1,2}\s?(?:a\.?m\.?|p\.?m\.?)(?![a-z])|\bUTC\b|\bGMT\b|o'clock|\bmidnight\b|\bnoon\b|\bcron\b/i);
+  assert.match(text, /The register was last read on Nov 11, 2026\./);
 });
 
 test('the build refuses to clear a directory that is not a build output', () => {
