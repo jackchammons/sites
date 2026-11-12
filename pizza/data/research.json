@@ -1,54 +1,74 @@
 {
-  "updated": "2026-11-12T19:00:00Z",
+  "updated": "2026-11-12T00:00:00Z",
   "mentions": [
     {
-      "id": "my-friend-dereks",
-      "title": "My Friend Derek's",
-      "url": "https://www.theinfatuation.com/seattle/reviews/my-friend-dereks",
-      "source": "The Infatuation",
-      "date": "2025-10-29",
+      "id": "pizzeria-22",
+      "title": "Pizzeria 22 doing well with new owners planning delicious changes",
+      "url": "https://westsideseattle.com/node/60321",
+      "source": "West Seattle Blog",
+      "date": "2025-01-20",
       "kind": "mention"
     },
     {
-      "id": "sinners-pizza",
-      "title": "New Pizza Spot Sinner's Pizza to Open in Seattle's University District",
-      "url": "https://whatnow.com/?p=375365",
-      "source": "WhatNow",
-      "date": "2026-02-18",
-      "kind": "opening"
+      "id": "pizza-ritual",
+      "title": "BIZNOTE: 'It's just pizza' - says proprietor of Pizza Ritual, settling on days/hours",
+      "url": "https://westseattleblog.com/2026/01/biznote-its-just-pizza-says-proprietor-of-pizza-ritual-settling-on-days-hours",
+      "source": "West Seattle Blog",
+      "date": "2026-01-07",
+      "kind": "mention"
+    },
+    {
+      "id": "pizzeria-pulcinella",
+      "title": "Which Crust Does the South End Trust?",
+      "url": "https://southseattleemerald.org/community/2025/10/28/which-crust-does-the-south-end-trust",
+      "source": "South Seattle Emerald",
+      "date": "2025-10-28",
+      "kind": "ranking"
+    },
+    {
+      "id": "sacro-bosco-pizza-wine",
+      "title": "Sacro Bosco Is Not a Pizza Restaurant. Thank God.",
+      "url": "https://www.seattlemet.com/articles/sacro-bosco-temple-pastries-pizza",
+      "source": "Seattle Met",
+      "date": "2025-08-20",
+      "kind": "mention"
+    },
+    {
+      "id": "sacro-bosco-pizza-wine",
+      "title": "Friday Feed",
+      "url": "https://www.seattlemet.com/eat-and-drink/2026/05/sacro-bosco-stacked-bush-garden-news",
+      "source": "Seattle Met",
+      "date": "2026-05-15",
+      "kind": "closing"
     }
   ],
   "coverageSkipped": [
     {
-      "id": "slice-box",
-      "note": "Searched 'Slice Box Georgetown Seattle pizza' and 'Slice Box Pizza Georgetown'. Found an Infatuation review (Oct 31, 2024) and several directory listings, but all describe the SoDo location at 1727 1st Ave S (and a Magnolia spot); no coverage names a Georgetown location for this business."
+      "id": "roccos",
+      "note": "Searched 'Rocco's pizza Belltown Seattle review' and a targeted outlet search for Eater/Infatuation/Seattle Times coverage from 2024-2025. Found only OpenTable/aggregator listings and no named review or news item from a real outlet within the last two years."
     },
     {
-      "id": "cornuto-pizzeria",
-      "note": "Searched 'Cornuto Pizzeria Greenwood Phinney Ridge review' and 'Cornuto Pizzeria Seattle 2025'. Found The Infatuation's review, but it published Dec 1, 2022, outside the two-year window; 2025 results were only Yelp/aggregator reviews, no outlet coverage in range."
+      "id": "south-town-pie",
+      "note": "Searched general South Park coverage and a 2025/2026-specific query. The only named critic coverage is a 2022-09-12 Infatuation review (over two years old) and a 2018 Seattle Met opening dispatch; no outlet coverage found within the last two years."
     },
     {
-      "id": "razzis-pizzeria",
-      "note": "Searched 'Razzi's Pizzeria Greenwood Seattle' and '...news review Eater'. Found only HappyCow, FindMeGlutenFree, Birdeye and Spinach aggregator/directory listings; no named-outlet press coverage turned up."
+      "id": "johnny-mos-pizzeria",
+      "note": "Searched 'Johnny Mo's Pizzeria Eastlake Seattle' and a targeted opening-date query. Found only an undated Seattle Met 'Editor's Pick' profile and aggregator/booking listings; no dated news or review from the last two years."
     },
     {
-      "id": "pizzeria-la-rocca",
-      "note": "Searched 'Pizzeria La Rocca Greenwood review' and 'Pizzeria La Rocca Seattle Times Best in PNW 2025'. Found PhinneyWood's piece on its 2024 Seattle Times Best in the PNW awards, but it published Sept 23, 2024, just outside the two-year window; no 2025 award or other coverage found."
+      "id": "pazzos-on-eastlake",
+      "note": "Searched 'Pazzo's on Eastlake Seattle pizza review' and a targeted outlet query (Infatuation/Eater/Seattle Met/Stranger). Found no critic review or news item at all, only directory/listing sites (Restaurantji, MapQuest, Airbnb, WhatsVegan)."
     },
     {
-      "id": "pi-vegan-pizzeria",
-      "note": "Searched 'Pi Vegan Pizzeria Roosevelt review' and '...Eater Infatuation review 2025'. Found only HappyCow/aggregator reviews and a 2015 VegNews story about an earlier ownership change at 'Pizza Pi'; nothing within the two-year window."
+      "id": "sopranos-antico",
+      "note": "Searched 'Soprano's Antico West Seattle pizza' and a 2024-2025 opening/news query. Found only 2016-2017 West Seattle Blog items about its original opening and a 2025 customer review snippet on MapQuest; no outlet coverage within the last two years."
     },
     {
-      "id": "mioposto",
-      "note": "Searched 'Mioposto Mount Baker Seattle pizza' and 'Mioposto Seattle 2025 news'. Found only older Stranger/Seattle Met features and directory listings, none within the two-year window."
-    },
-    {
-      "id": "veraci-pizza",
-      "note": "Searched 'Veraci Pizza Wedgwood Seattle' and 'Veraci Pizza Seattle 2025 news'. Found historical opening coverage and an Inlander piece about founder Jett's departure that would not load to confirm date or whether it covers the Wedgwood location; nothing confirmed within the two-year window."
+      "id": "world-pizza",
+      "note": "Searched 'World Pizza Chinatown International District Seattle' and a 2024-2025 news query. Found only a 2011 reopening review and a 2019 Seattle Met 'best of C-ID' list mention; no coverage within the last two years."
     }
   ],
   "rejected": [
-    "mentions[0]: title missing or too short"
+    "mentions[0]: date is older than 730 days"
   ]
 }

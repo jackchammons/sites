@@ -2098,7 +2098,9 @@
       "instagram": "https://www.instagram.com/roccos_seattle/",
       "openedSource": "https://www.roccosseattle.com",
       "statusChecked": "2026-11-10",
-      "ratingAttempted": "2026-11-11"
+      "ratingAttempted": "2026-11-11",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Rocco's pizza Belltown Seattle review' and a targeted outlet search for Eater/Infatuation/Seattle Times coverage from 2024-2025. Found only OpenTable/aggregator listings and no named review or news item from a real outlet within the last two years."
     },
     {
       "id": "my-friend-dereks",
@@ -2885,7 +2887,9 @@
       "lastVerified": "2026-08-27",
       "instagram": "https://instagram.com/southtownpie_seattle",
       "opened": 2018,
-      "openedSource": "https://seattlemag.com/food-and-culture/after-closing-his-fine-dining-restaurant-queen-anne-seattle-chef-back-new-south-park/"
+      "openedSource": "https://seattlemag.com/food-and-culture/after-closing-his-fine-dining-restaurant-queen-anne-seattle-chef-back-new-south-park/",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched general South Park coverage and a 2025/2026-specific query. The only named critic coverage is a 2022-09-12 Infatuation review (over two years old) and a 2018 Seattle Met opening dispatch; no outlet coverage found within the last two years."
     },
     {
       "id": "pizzeria-22",
@@ -2910,7 +2914,15 @@
       ],
       "locationsVerified": "2026-09-10",
       "locationsSource": "https://www.pizzeria22.com/",
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://westsideseattle.com/node/60321",
+          "title": "Pizzeria 22 doing well with new owners planning delicious changes",
+          "source": "West Seattle Blog",
+          "date": "2025-01-20",
+          "kind": "mention"
+        }
+      ],
       "factors": {
         "craft": {
           "value": 7.5,
@@ -2997,7 +3009,9 @@
       "lastVerified": "2026-08-27",
       "instagram": "https://www.instagram.com/johnnymospizzeria/",
       "factsAttempted": "2026-11-05",
-      "factsNote": "Checked johnnymos.com home page and its /our-story page: both describe the two founders' friendship but state no founding year. Search turned up no article with a year either."
+      "factsNote": "Checked johnnymos.com home page and its /our-story page: both describe the two founders' friendship but state no founding year. Search turned up no article with a year either.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Johnny Mo's Pizzeria Eastlake Seattle' and a targeted opening-date query. Found only an undated Seattle Met 'Editor's Pick' profile and aggregator/booking listings; no dated news or review from the last two years."
     },
     {
       "id": "pazzos-on-eastlake",
@@ -3048,7 +3062,9 @@
       "opened": 1990,
       "styleGroup": "Neighborhood",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/pazzosoneastlake/"
+      "instagram": "https://www.instagram.com/pazzosoneastlake/",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Pazzo's on Eastlake Seattle pizza review' and a targeted outlet query (Infatuation/Eater/Seattle Met/Stranger). Found no critic review or news item at all, only directory/listing sites (Restaurantji, MapQuest, Airbnb, WhatsVegan)."
     },
     {
       "id": "sopranos-antico",
@@ -3099,7 +3115,9 @@
       "opened": 2017,
       "styleGroup": "Neapolitan",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/anticosopranospizzapasta/"
+      "instagram": "https://www.instagram.com/anticosopranospizzapasta/",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Soprano's Antico West Seattle pizza' and a 2024-2025 opening/news query. Found only 2016-2017 West Seattle Blog items about its original opening and a 2025 customer review snippet on MapQuest; no outlet coverage within the last two years."
     },
     {
       "id": "pizza-ritual",
@@ -3124,7 +3142,15 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://westseattleblog.com/2026/01/biznote-its-just-pizza-says-proprietor-of-pizza-ritual-settling-on-days-hours",
+          "title": "BIZNOTE: 'It's just pizza' - says proprietor of Pizza Ritual, settling on days/hours",
+          "source": "West Seattle Blog",
+          "date": "2026-01-07",
+          "kind": "mention"
+        }
+      ],
       "factors": {
         "craft": {
           "value": 6.5,
@@ -3176,7 +3202,15 @@
       ],
       "locationsVerified": "2026-09-30",
       "locationsSource": "https://vincesrestaurants.com/pizzeria-pulcinella",
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://southseattleemerald.org/community/2025/10/28/which-crust-does-the-south-end-trust",
+          "title": "Which Crust Does the South End Trust?",
+          "source": "South Seattle Emerald",
+          "date": "2025-10-28",
+          "kind": "ranking"
+        }
+      ],
       "factors": {
         "craft": {
           "value": 7.5,
@@ -3283,7 +3317,9 @@
       "priceIndex": 1,
       "styleGroup": "By the slice",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/worldpizza/"
+      "instagram": "https://www.instagram.com/worldpizza/",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'World Pizza Chinatown International District Seattle' and a 2024-2025 news query. Found only a 2011 reopening review and a 2019 Seattle Met 'best of C-ID' list mention; no coverage within the last two years."
     },
     {
       "id": "sacro-bosco-pizza-wine",
@@ -3308,7 +3344,22 @@
       ],
       "locationsVerified": "2026-10-15",
       "locationsSource": "https://www.sacroboscopizza.com/location",
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://www.seattlemet.com/articles/sacro-bosco-temple-pastries-pizza",
+          "title": "Sacro Bosco Is Not a Pizza Restaurant. Thank God.",
+          "source": "Seattle Met",
+          "date": "2025-08-20",
+          "kind": "mention"
+        },
+        {
+          "url": "https://www.seattlemet.com/eat-and-drink/2026/05/sacro-bosco-stacked-bush-garden-news",
+          "title": "Friday Feed",
+          "source": "Seattle Met",
+          "date": "2026-05-15",
+          "kind": "closing"
+        }
+      ],
       "factors": {
         "craft": {
           "value": 8.5,
