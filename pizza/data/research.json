@@ -1,79 +1,56 @@
 {
-  "updated": "2026-11-12T18:00:00Z",
+  "updated": "2026-11-12T00:00:00Z",
   "locations": [
     {
-      "id": "italio-pizza-pasta",
-      "homepage": "https://www.italiopizzapastawa.com/",
-      "source": "https://www.italiopizzapastawa.com/",
+      "id": "managers-pizza",
+      "homepage": "https://managerspizza.online/",
+      "source": "https://managerspizza.online/",
       "sites": [
         {
-          "neighborhood": "Greenwood",
-          "address": "305 NW 85th St, Seattle, WA 98117"
+          "neighborhood": "U-District",
+          "address": "4741 12th Avenue Northeast, Seattle, WA 98105"
         }
       ]
     },
     {
-      "id": "jackson-street-pizza-lounge",
-      "homepage": "https://jacksonstreetpizzalounge.com/",
-      "source": "https://jacksonstreetpizzalounge.com/",
+      "id": "palermo-pizza-pasta",
+      "homepage": "https://www.mypalermopizza.com/",
+      "source": "https://www.mypalermopizza.com/",
       "sites": [
         {
-          "neighborhood": "Central District",
-          "address": "2901 S Jackson St, Seattle, WA 98144"
-        }
-      ]
-    },
-    {
-      "id": "mad-pizza",
-      "homepage": "https://www.madpizza.com/",
-      "source": "https://www.madpizza.com/location",
-      "sites": [
-        {
-          "neighborhood": "First Hill",
-          "address": "1321 Madison Street, Seattle, WA 98104"
-        }
-      ]
-    },
-    {
-      "id": "un-po-tipsy",
-      "homepage": "https://unpotipsy.com",
-      "source": "https://unpotipsy.com",
-      "sites": [
-        {
-          "neighborhood": "Pioneer Square",
-          "address": "419 Occidental Ave S, Seattle, WA 98104"
+          "neighborhood": "Capitol Hill",
+          "address": "350 15th Ave E, Seattle, WA 98112"
         }
       ]
     }
   ],
   "locationsSkipped": [
     {
-      "id": "olympic-pizza-pasta",
-      "note": "seattleolympicpizza.com now 301-redirects entirely to an Otter ordering page (order.tryotter.com) with no independent official site remaining. Searched '\"Olympic Pizza\" Seattle Roosevelt Way official site address'; only directory/aggregator listings (Birdeye, Mapquest, Atly, OpenTable) turned up, consistently citing 6413 Roosevelt Way NE, Seattle, WA 98115, but none is the pizzeria's own site, so no address is reported."
+      "id": "good-luck-bread",
+      "note": "Fetched pizza.goodluckbread.com homepage and /collections/bakery-day; site mentions a 'SODO kitchen' used for Saturday Bake Sales but states no street address anywhere on the site. A /locations page does not exist (404). No address can be confirmed from the pizzeria's own site."
+    },
+    {
+      "id": "hot-slice-pizza",
+      "note": "Fetched hotslicepizzasea.com homepage and /contact; the site is a JS-rendered page that returns only a title tag ('Hot Slice Pizza ... Seattle, WA') with no address, and /menu and /contact both 404. A third-party aggregator (atly.com) lists an address but aggregators are not an allowed source, so no address is reported."
+    },
+    {
+      "id": "pizza-paesano",
+      "note": "Worklist site is the Instagram profile itself; fetching https://www.instagram.com/pizza_paesano_seattle/ returned only Instagram's logged-out prompt with no bio, website link, or address. Searched for an official Pizza Paesano Seattle website and for its address; no independent official site or address turned up."
     }
   ],
   "links": [
     {
-      "id": "jackson-street-pizza-lounge",
-      "instagram": "https://www.instagram.com/jacksonstreetpizzalounge/",
-      "source": "https://jacksonstreetpizzalounge.com/"
-    },
-    {
-      "id": "mad-pizza",
-      "instagram": "https://www.instagram.com/madpizza_/",
-      "source": "https://www.madpizza.com/location"
-    },
-    {
-      "id": "un-po-tipsy",
-      "instagram": "https://www.instagram.com/unpotipsy/",
-      "source": "https://unpotipsy.com"
+      "id": "good-luck-bread",
+      "website": "https://pizza.goodluckbread.com/",
+      "instagram": "https://www.instagram.com/goodluckbread/",
+      "source": "https://pizza.goodluckbread.com/"
     }
   ],
   "facts": [
     {
-      "id": "italio-pizza-pasta",
-      "priceIndex": 3,
-      "source": "https://www.italiopizzapastawa.com/"
+      "id": "managers-pizza",
+      "opened": 2025,
+      "source": "https://managerspizza.online/"
     }
   ]
 }

@@ -4267,14 +4267,12 @@
       "attributes": {},
       "locations": [
         {
-          "neighborhood": "University District",
-          "address": "4741 12th Ave NE, Seattle, WA 98105",
-          "lat": 47.66432,
-          "lon": -122.31555
+          "neighborhood": "U-District",
+          "address": "4741 12th Avenue Northeast, Seattle, WA 98105"
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-11-12",
+      "locationsSource": "https://managerspizza.online/",
       "mentions": [],
       "instagram": "https://www.instagram.com/managerspizzaseattle/",
       "factors": {
@@ -4301,7 +4299,10 @@
         }
       },
       "styleGroup": "Creative",
-      "lastVerified": "2026-09-13"
+      "lastVerified": "2026-09-13",
+      "opened": 2025,
+      "openedSource": "https://managerspizza.online/",
+      "factsAttempted": "2026-11-12"
     },
     {
       "id": "un-po-tipsy",
@@ -4438,7 +4439,9 @@
       "mentions": [],
       "instagram": "https://www.instagram.com/hotslicepizzasea/",
       "ratingAttempted": "2026-11-07",
-      "ratingNote": "Searched Hot Slice Pizza (Interbay/Dravus St) plus Eater/Seattle Met/Infatuation/halal-news combinations. Found only Atly, Groupon and aggregator listings describing a halal NY-style slice shop; no critic review, roundup entry, or news coverage turned up anywhere, including halal-food-press searches. No rating proposed; skipped for lack of published criticism."
+      "ratingNote": "Searched Hot Slice Pizza (Interbay/Dravus St) plus Eater/Seattle Met/Infatuation/halal-news combinations. Found only Atly, Groupon and aggregator listings describing a halal NY-style slice shop; no critic review, roundup entry, or news coverage turned up anywhere, including halal-food-press searches. No rating proposed; skipped for lack of published criticism.",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "Fetched hotslicepizzasea.com homepage and /contact; the site is a JS-rendered page that returns only a title tag ('Hot Slice Pizza ... Seattle, WA') with no address, and /menu and /contact both 404. A third-party aggregator (atly.com) lists an address but aggregators are not an allowed source, so no address is reported."
     },
     {
       "id": "oskars-pizza",
@@ -4514,8 +4517,8 @@
           "lon": -122.31248
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-11-12",
+      "locationsSource": "https://www.mypalermopizza.com/",
       "mentions": [],
       "instagram": "https://www.instagram.com/palermoseattle/",
       "ratingAttempted": "2026-11-12",
@@ -4547,7 +4550,9 @@
       "mentions": [],
       "instagram": "https://www.instagram.com/pizza_paesano_seattle/",
       "ratingAttempted": "2026-11-12",
-      "ratingNote": "Searched for 'Pizza Paesano' Ballard by name, plus its listed Instagram handle (pizza_paesano_seattle), across web search and Seattle food-media roundups (Seattle Met, The Stranger, Infatuation). No results returned that reference this business at all -- no menu site, no press mention, no aggregator listing could be found. Could not even confirm current operation independently of the directory entry. Skipping for lack of any verifiable published source."
+      "ratingNote": "Searched for 'Pizza Paesano' Ballard by name, plus its listed Instagram handle (pizza_paesano_seattle), across web search and Seattle food-media roundups (Seattle Met, The Stranger, Infatuation). No results returned that reference this business at all -- no menu site, no press mention, no aggregator listing could be found. Could not even confirm current operation independently of the directory entry. Skipping for lack of any verifiable published source.",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "Worklist site is the Instagram profile itself; fetching https://www.instagram.com/pizza_paesano_seattle/ returned only Instagram's logged-out prompt with no bio, website link, or address. Searched for an official Pizza Paesano Seattle website and for its address; no independent official site or address turned up."
     },
     {
       "id": "pudge-bros-pizza",
@@ -4724,7 +4729,9 @@
       "opened": 2020,
       "priceIndex": 2,
       "styleGroup": "Creative",
-      "lastVerified": "2026-09-18"
+      "lastVerified": "2026-09-18",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "Fetched pizza.goodluckbread.com homepage and /collections/bakery-day; site mentions a 'SODO kitchen' used for Saturday Bake Sales but states no street address anywhere on the site. A /locations page does not exist (404). No address can be confirmed from the pizzeria's own site."
     },
     {
       "id": "downtown-romios-pizza-pasta",
