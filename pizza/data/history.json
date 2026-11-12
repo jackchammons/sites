@@ -6556,12 +6556,13 @@
         "georgetown-pizza-arcade": 66,
         "seward-park-pizza": 67,
         "sinners-pizza": 68,
-        "jackson-street-pizza-lounge": 69,
-        "mad-pizza": 70,
-        "magnolia-pizza-pasta": 71,
-        "pizzeria-gabbiano": 72,
-        "independent-pizzeria": 73,
-        "breezy-town-pizza": 74
+        "lucianos-pizza-pasta": 69,
+        "jackson-street-pizza-lounge": 70,
+        "mad-pizza": 71,
+        "magnolia-pizza-pasta": 72,
+        "pizzeria-gabbiano": 73,
+        "independent-pizzeria": 74,
+        "breezy-town-pizza": 75
       },
       "scores": {
         "delancey": 87.6,
@@ -6632,6 +6633,7 @@
         "georgetown-pizza-arcade": 54.5,
         "seward-park-pizza": 53.4,
         "sinners-pizza": 52.9,
+        "lucianos-pizza-pasta": 49.6,
         "jackson-street-pizza-lounge": 47.7,
         "mad-pizza": 36,
         "magnolia-pizza-pasta": 29.3,
@@ -7182,6 +7184,14 @@
           "craft": 5,
           "distinctiveness": 6.5,
           "value": 5,
+          "penalty": 0
+        },
+        "lucianos-pizza-pasta": {
+          "reputation": 0,
+          "critical": 5.5,
+          "craft": 6,
+          "distinctiveness": 2.5,
+          "value": 5.8,
           "penalty": 0
         },
         "jackson-street-pizza-lounge": {
