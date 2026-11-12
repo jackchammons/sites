@@ -3395,6 +3395,22 @@
           "address": "800 Seneca St, Seattle, WA 98101",
           "lat": 47.60961,
           "lon": -122.32958
+        },
+        {
+          "neighborhood": "Downtown",
+          "address": "925 Stewart St, Seattle, WA 98101"
+        },
+        {
+          "neighborhood": "Capitol Hill",
+          "address": "1433 11th Ave, Seattle, WA 98122"
+        },
+        {
+          "neighborhood": "South Lake Union",
+          "address": "711 Westlake Ave N, Seattle, WA 98109"
+        },
+        {
+          "neighborhood": "University District",
+          "address": "5240 University Way NE, Seattle, WA 98105"
         }
       ],
       "locationsVerified": "2026-11-12",
@@ -3403,9 +3419,7 @@
       "instagram": "https://www.instagram.com/apizzamartfirsthill/",
       "priceIndex": 2,
       "priceSource": "https://www.apizzamartfirsthill.com/",
-      "factsAttempted": "2026-11-12",
-      "locationsAttempted": "2026-11-12",
-      "locationsNote": "Official site (apizzamartfirsthill.com) only lists its own 800 Seneca St address and a boilerplate, unlinked mention of 'other locations' with no addresses; its /locations path returns 403. Could not confirm the permit leads (9452 35th Ave SW; 1823 Terry Ave #102; 1433 11th Ave; 711 Westlake Ave N; 5240 University Way NE D) against an official source — only aggregator/delivery listings (UberEats, DoorDash, SliceLife) surfaced them, which are excluded as sources."
+      "factsAttempted": "2026-11-12"
     },
     {
       "id": "seward-park-pizza",
