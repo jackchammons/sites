@@ -2,61 +2,86 @@
   "updated": "2026-11-12T00:00:00Z",
   "locations": [
     {
-      "id": "capitale-pizzeria",
-      "homepage": "https://www.capitalepizzeria.com/",
-      "source": "https://www.capitalepizzeria.com/",
+      "id": "santorini-pizza-pasta",
+      "homepage": "https://santorinipizza.com",
+      "source": "https://santorinipizza.com",
       "sites": [
         {
-          "neighborhood": "Capitol Hill",
-          "address": "426 Broadway E, Seattle, WA 98102"
+          "neighborhood": "Lake City",
+          "address": "11001 35th Ave NE, Seattle, WA 98125"
+        }
+      ]
+    },
+    {
+      "id": "moto-pizza",
+      "homepage": "https://motopizza.com/",
+      "source": "https://motopizza.com/locations/",
+      "sites": [
+        {
+          "neighborhood": "Bellevue",
+          "address": "1020 Bellevue Square, Bellevue, WA 98004"
+        },
+        {
+          "neighborhood": "Belltown",
+          "address": "3131 Western Ave #301, Seattle, WA 98121"
+        },
+        {
+          "neighborhood": "Edmonds",
+          "address": "414 Main Street, Edmonds, WA 98020"
+        },
+        {
+          "neighborhood": "Pioneer Square",
+          "address": "512 Second Avenue, Suite 100, Seattle, WA 98104"
+        },
+        {
+          "neighborhood": "T-Mobile Park",
+          "address": "1250 1st Ave S, Seattle, WA 98134"
+        },
+        {
+          "neighborhood": "West Seattle",
+          "address": "4526 42nd Ave SW, Seattle, WA 98116"
         }
       ]
     }
   ],
   "links": [
     {
-      "id": "capitale-pizzeria",
-      "website": "https://www.capitalepizzeria.com/",
-      "instagram": "https://www.instagram.com/capitalepizzeriaseattle/",
-      "source": "https://www.capitalepizzeria.com/"
+      "id": "santorini-pizza-pasta",
+      "website": "https://santorinipizza.com",
+      "instagram": "https://www.instagram.com/santorinipizzapasta/",
+      "source": "https://santorinipizza.com"
+    },
+    {
+      "id": "moto-pizza",
+      "website": "https://motopizza.com/",
+      "instagram": "https://www.instagram.com/motopizzashop",
+      "source": "https://motopizza.com/"
+    },
+    {
+      "id": "pizza-pasta-bar",
+      "website": "https://www.pizzaandpastabar.com",
+      "source": "https://www.pikeplacemarket.org/?p=4029"
+    }
+  ],
+  "facts": [
+    {
+      "id": "santorini-pizza-pasta",
+      "priceIndex": 2,
+      "source": "https://santorinipizza.com/menu"
     }
   ],
   "locationsSkipped": [
     {
-      "id": "candela-pizza",
-      "note": "No official Candela Pizza website found. Search turned up only directory/aggregator listings (Seattle Food Truck profile, Atly) citing a food truck at 9454 17th Ave SW, Seattle; the Seattle Food Truck page itself returned HTTP 403 when fetched. No pizzeria-owned site or page could be reached to confirm an address."
+      "id": "numero-uno-pizza",
+      "note": "Searched for an official site; only third-party listings (Slice, FamHop, WhatsVegan, Giftly) surfaced, giving an address of 103 1st Ave S, Seattle, WA 98104. The domain FamHop attributes to it, numerounopizzaseattle.com, redirects to a Slice 'shop disabled' notice rather than a working official site, so no address could be confirmed from the business's own site."
     },
     {
-      "id": "dudez-woodfired-pizza",
-      "note": "A MapQuest listing's 'Web' button resolved to https://dudezwoodfiredpizza.com/, but every fetch attempt (https://, https://www., bare domain) failed with an SSL handshake error, so the site's own locations/about/menu content could not be read. Other results were only directory/delivery listings (MapQuest, Atly, DoorDash) citing 2919 Fuhrman Ave E, Seattle, not confirmed from the pizzeria's own site."
+      "id": "pizza-pasta-bar",
+      "note": "Found the official domain, pizzaandpastabar.com, linked from Pike Place Market's own tenant page (pikeplacemarket.org/?p=4029), but fetching pizzaandpastabar.com directly returned HTTP 403 Forbidden, so the address (third-party pages give 1530 Post Alley, Seattle, WA 98101) could not be confirmed from the pizzeria's own site."
     },
     {
-      "id": "sunny-hill",
-      "note": "Directory listings (Atly, Frankiapp) point to sunnyhillseattle.com as the official site, but fetching both https://www.sunnyhillseattle.com and http://www.sunnyhillseattle.com returned HTTP 403, so its locations/about/menu content could not be confirmed. Aggregators (MyBallard, The Stranger, Toast ordering page) cite 3127 NW 85th St, Seattle, but that was not read from the pizzeria's own site."
-    },
-    {
-      "id": "lucianos-pizza-pasta",
-      "note": "No official Luciano's Pizza & Pasta website found. Search results were all delivery/ordering aggregators (Slice, UberEats, DoorDash, Foodboss) citing two Seattle addresses (2341 California Ave SW and 11064 Lake City Way NE); the Slice menu page was fetched and confirmed it has no outbound link to an official site or Instagram."
-    },
-    {
-      "id": "alberonas-davinci-pizza-pasta",
-      "note": "No official Alberona's DaVinci Pizza & Pasta website found. Search results were aggregators only (Slice, Autoreserve); the Slice menu page (fetched) lists 3624 Leary Way NW, Seattle, WA 98107 but has no link to an official site or Instagram, and the Autoreserve page returned HTTP 403 when fetched."
-    },
-    {
-      "id": "desi-pizza-kitchen",
-      "note": "No official Desi Pizza Kitchen website found. Web search surfaced only aggregators (Slice, ezCater, Valpak, MapQuest) citing a Queen Anne address (2115 Queen Anne Ave N, Seattle, WA 98109); the ezCater brand page was fetched and every link on it points back to ezCater, not an owned site. Could not confirm an address from the pizzeria's own site."
-    },
-    {
-      "id": "fremont-pizza",
-      "note": "Found what appears to be the official homepage, https://www.fremont-pizza.com/ (linked from a JoinLolo merchant listing, labeled 'Fremont Pizza' rather than a delivery aggregator), but the site renders via JavaScript and WebFetch only returned the page title with no address, locations, or social links; subpages /visit, /menu, and /contact-us all returned HTTP 404. Could not confirm an address from the pizzeria's own site."
-    },
-    {
-      "id": "jet-city-pizza",
-      "note": "No official Jet City Pizza website found. Search results were dominated by the unrelated Michigan chain 'Jet's Pizza'; the Washington-specific hits were only aggregator/ordering pages (Toast, Slice, ezCater, MapQuest) citing possible Seattle, Marysville, and Bothell storefronts. The ezCater brand page was fetched and every link on it points back to ezCater, not an owned site. Could not confirm any address from the pizzeria's own site."
-    },
-    {
-      "id": "magnolia-pizza-pasta",
-      "note": "No official Magnolia Pizza & Pasta website found. Search results were only directory/menu aggregators (MenuPages, Slice, MapQuest) citing 2120 W Emerson Pl, Seattle, WA 98199; the MenuPages listing was fetched and has no outbound link to an official site, and separately states the restaurant is 'not accepting orders right now' (an aggregator claim, not independent evidence of closure). Could not confirm an address or current status from the pizzeria's own site."
+      "id": "varlamos-pizzeria",
+      "note": "Searched for an official site; third-party listings give an address of 3617 NE 45th St, Seattle, WA 98105, and an old scanned menu document names the domain varlamospizza.com, but fetching that domain failed with an expired SSL certificate, so the current official site could not be verified."
     }
   ]
 }

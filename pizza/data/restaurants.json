@@ -255,36 +255,36 @@
       "styleGroup": "Detroit pan",
       "locations": [
         {
+          "neighborhood": "Bellevue",
+          "address": "1020 Bellevue Square, Bellevue, WA 98004"
+        },
+        {
           "neighborhood": "Belltown",
           "address": "3131 Western Ave #301, Seattle, WA 98121",
           "lat": 47.61828,
           "lon": -122.35728
         },
         {
+          "neighborhood": "Edmonds",
+          "address": "414 Main Street, Edmonds, WA 98020"
+        },
+        {
           "neighborhood": "Pioneer Square",
-          "address": "512 2nd Ave, Suite 100, Seattle, WA 98104",
-          "lat": 47.60214,
-          "lon": -122.33194
+          "address": "512 Second Avenue, Suite 100, Seattle, WA 98104"
+        },
+        {
+          "neighborhood": "T-Mobile Park",
+          "address": "1250 1st Ave S, Seattle, WA 98134"
         },
         {
           "neighborhood": "West Seattle",
           "address": "4526 42nd Ave SW, Seattle, WA 98116",
           "lat": 47.56207,
           "lon": -122.38509
-        },
-        {
-          "neighborhood": "Edmonds",
-          "address": "414 Main St, Edmonds, WA 98020",
-          "lat": 47.81067,
-          "lon": -122.37799
-        },
-        {
-          "neighborhood": "Bellevue",
-          "address": "1020 Bellevue Square, Bellevue, WA 98004"
         }
       ],
-      "locationsVerified": "2026-08-22",
-      "locationsSource": "https://motopizza.com",
+      "locationsVerified": "2026-11-12",
+      "locationsSource": "https://motopizza.com/locations/",
       "status": "open",
       "statusSource": null,
       "statusDate": null,
@@ -5601,7 +5601,9 @@
       "locationsSource": null,
       "mentions": [],
       "ratingAttempted": "2026-11-12",
-      "ratingNote": "Searched for reviews or news coverage of Numero Uno Pizza at 103 1st Ave S, Pioneer Square. The only hit was a Slice.com ordering/menu page with no critic or customer commentary; broader Pioneer Square pizza coverage (Pizzeria Gabbiano, Un Po Tipsy, Moto Pizza) never mentions this business. No credible published source found."
+      "ratingNote": "Searched for reviews or news coverage of Numero Uno Pizza at 103 1st Ave S, Pioneer Square. The only hit was a Slice.com ordering/menu page with no critic or customer commentary; broader Pioneer Square pizza coverage (Pizzeria Gabbiano, Un Po Tipsy, Moto Pizza) never mentions this business. No credible published source found.",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "Searched for an official site; only third-party listings (Slice, FamHop, WhatsVegan, Giftly) surfaced, giving an address of 103 1st Ave S, Seattle, WA 98104. The domain FamHop attributes to it, numerounopizzaseattle.com, redirects to a Slice 'shop disabled' notice rather than a working official site, so no address could be confirmed from the business's own site."
     },
     {
       "id": "olympia-pizza-spaghetti-house-ii",
@@ -5735,7 +5737,7 @@
       "neighborhood": "Pike Place Market",
       "style": "Italian, thin-crust pizza & fresh pasta",
       "blurb": "Pike Place Market Italian spot open since 2016, making its own sauces, pizza dough and meats from scratch and serving thin-crust pizza alongside customizable pasta; listed as a current Market tenant.",
-      "url": null,
+      "url": "https://www.pizzaandpastabar.com",
       "status": "open",
       "statusSource": "https://www.pikeplacemarket.org/?p=4029",
       "statusDate": null,
@@ -5791,7 +5793,9 @@
       "ratingAttempted": "2026-11-12",
       "priceIndex": 2,
       "styleGroup": "By the slice",
-      "lastVerified": "2026-11-12"
+      "lastVerified": "2026-11-12",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "Found the official domain, pizzaandpastabar.com, linked from Pike Place Market's own tenant page (pikeplacemarket.org/?p=4029), but fetching pizzaandpastabar.com directly returned HTTP 403 Forbidden, so the address (third-party pages give 1530 Post Alley, Seattle, WA 98101) could not be confirmed from the pizzeria's own site."
     },
     {
       "id": "santorini-pizza-pasta",
@@ -5808,17 +5812,21 @@
       "attributes": {},
       "locations": [
         {
-          "neighborhood": "Meadowbrook",
-          "address": "11001 35th Ave Ne, Seattle, WA 98125",
+          "neighborhood": "Lake City",
+          "address": "11001 35th Ave NE, Seattle, WA 98125",
           "lat": 47.70856,
           "lon": -122.29127
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-11-12",
+      "locationsSource": "https://santorinipizza.com",
       "mentions": [],
       "ratingAttempted": "2026-11-12",
-      "ratingNote": "Searched for critic reviews or roundup mentions of Santorini Pizza & Pasta (Meadowbrook/Wedgwood). Found only directory/aggregator listings (Atly, MapQuest, Wanderlog, OpenTable) and a single anonymous 2008 personal blog post. No published criticism from a real outlet turned up, so skipping rather than grounding a score in aggregator copy."
+      "ratingNote": "Searched for critic reviews or roundup mentions of Santorini Pizza & Pasta (Meadowbrook/Wedgwood). Found only directory/aggregator listings (Atly, MapQuest, Wanderlog, OpenTable) and a single anonymous 2008 personal blog post. No published criticism from a real outlet turned up, so skipping rather than grounding a score in aggregator copy.",
+      "priceIndex": 2,
+      "priceSource": "https://santorinipizza.com/menu",
+      "factsAttempted": "2026-11-12",
+      "instagram": "https://www.instagram.com/santorinipizzapasta/"
     },
     {
       "id": "varlamos-pizzeria",
@@ -5843,7 +5851,9 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "Searched for an official site; third-party listings give an address of 3617 NE 45th St, Seattle, WA 98105, and an old scanned menu document names the domain varlamospizza.com, but fetching that domain failed with an expired SSL certificate, so the current official site could not be verified."
     }
   ]
 }
