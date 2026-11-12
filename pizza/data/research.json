@@ -2,53 +2,54 @@
   "updated": "2026-11-12T00:00:00Z",
   "mentions": [
     {
-      "id": "sunny-hill",
-      "title": "14 Absolute Best Pizza Joints In Seattle",
-      "url": "https://www.tastingtable.com/1885016/best-pizza-restaurants-seattle",
-      "source": "Tasting Table",
-      "date": "2025-06-16",
-      "kind": "ranking"
-    },
-    {
-      "id": "a-k-pizza",
-      "title": "The Best Pizza In Seattle",
-      "url": "https://www.theinfatuation.com/seattle/guides/pizza-delivery-seattle",
-      "source": "The Infatuation",
-      "date": "2026-11-09",
+      "id": "castello-pizza-pasta",
+      "title": "Which Crust Does The South End Trust?",
+      "url": "https://southseattleemerald.org/community/2025/10/28/which-crust-does-the-south-end-trust",
+      "source": "South Seattle Emerald",
+      "date": "2025-10-28",
       "kind": "ranking"
     }
   ],
   "coverageSkipped": [
     {
-      "id": "veras-pizza-and-bar",
-      "note": "Searched \"Vera's Pizza and Bar\" Ballard and myballard.com specifically; found only an undated MyBallard item, DoorDash/directory listings, and The Stranger's venue page (no byline/date). No dated news story, review, or ranking within the last two years surfaced."
+      "id": "ananas-pizzeria",
+      "note": "Searched \"Ananas Pizzeria\" First Hill review and again for 2025/2026 coverage. Found Curiocity's opening story (Nov 20, 2023), a Seattle Met Field Notes piece (~April 2024), Capitol Hill Seattle's opening tag, PMQ, and The Infatuation/Stranger slice guides, but all coverage dates to the 2023-2024 opening window, older than 730 days. No story within the last two years found."
     },
     {
-      "id": "coltiva-pizzeria-e-barra",
-      "note": "Searched \"Coltiva\" pizzeria Queen Anne Seattle and for 2024/2025 reviews; found only an undated Daily Hive item, a PR firm's client summary, and OpenTable listings. No qualifying published coverage within the last two years found."
+      "id": "jet-city-pizza",
+      "note": "Searched \"Jet City Pizza\" Wedgwood news and again for review/opening/Eater coverage. Found only directory listings (MapQuest, DoorDash, Slice), a HeraldNet piece about the unrelated Detroit-style Jet's Pizza chain, and Seattle Met Friday Feed roundups that don't mention this business. No dated news story, review, or ranking found."
     },
     {
-      "id": "west-of-chicago-pizza-company",
-      "note": "Searched for West of Chicago Pizza Company news/review 2024-2025 and Eater/Infatuation coverage; found Seattle Met's deep-dish guide (Jan 31, 2024) and an Infatuation review (Dec 2, 2022), both older than the two-year window. No coverage within the window found."
+      "id": "pizza-pasta-bar",
+      "note": "Searched \"Pizza and Pasta Bar\" Pike Place Market review and again for Infatuation/Eater/Seattle Times coverage. Found only the market's own site, aggregator ratings (Sluurpy, Mapquest), and Infatuation pieces about other Pike Place restaurants (Pink Door, Pasta Casalinga). No qualifying outlet coverage naming this business found."
     },
     {
-      "id": "lucianos-pizza-pasta",
-      "note": "Searched \"Luciano's Pizza\" Admiral West Seattle review; found only directory listings, a West Seattle Blog forum rant thread, and template filler pages. No professional review or news story found."
+      "id": "romano-pizza-pasta",
+      "note": "Searched \"Romano Pizza\" Delridge Seattle and again for West Seattle Blog coverage. Found only directory/delivery listings (Slice, Menupages, Mapquest); West Seattle Blog results covered unrelated restaurants (Spiro's, GH Pasta & Pizza). No news story, review, or ranking found."
     },
     {
-      "id": "capitale-pizzeria",
-      "note": "Searched Capitale Pizzeria Capitol Hill Seattle and for a 2025 opening; found Capitol Hill Seattle/WhatNow opening coverage from July and September 2024, both older than the two-year window, plus OpenTable listings. No coverage within the window found."
+      "id": "castello-pizza-pasta",
+      "note": "Found and reported one qualifying mention (South Seattle Emerald, Oct 28, 2025); no additional qualifying stories surfaced in the two searches run."
     },
     {
-      "id": "magnolia-pizza-pasta",
-      "note": "Searched \"Magnolia Pizza\" Magnolia Seattle review/news; the only substantive write-up was a personal Seattle pizza ranking Substack, not a qualifying published outlet. No news story, review, or ranking from a real outlet found."
+      "id": "candela-pizza",
+      "note": "Searched \"Candela Pizza\" Seattle, which surfaced only Seattle Food Truck/Atly directory listings and general citywide pizza-guide links; fetched Tasting Table's \"14 Absolute Best Pizza Joints In Seattle\" (already on file for a different entry) and confirmed it does not mention Candela Pizza. No qualifying coverage found."
     },
     {
-      "id": "olympia-pizza-spaghetti-house-ii",
-      "note": "Searched \"Olympia Pizza\" Wallingford Seattle review/news; found only a 2015 Wallyhood blog post and coverage of the separate Queen Anne original location. No coverage of the Wallingford II location within the last two years found."
+      "id": "dudez-woodfired-pizza",
+      "note": "Searched \"Dude'Z Woodfired Pizza\" Eastlake and again for 2024/2025 review/news coverage. Found only directory listings (Mapquest, DoorDash, Atly) and an undated/textless Fox 13 video segment title. No dated news story, review, or ranking from a named outlet found."
+    },
+    {
+      "id": "italio-pizza-pasta",
+      "note": "Searched \"Italio Pizza\" Greenwood Seattle and again for MyBallard/opening coverage. Found only OpenTable/Slice/directory listings; the MyBallard-targeted search returned unrelated out-of-state pizzeria stories. No qualifying coverage found."
+    },
+    {
+      "id": "olympic-pizza-pasta",
+      "note": "Searched \"Olympic Pizza\" Roosevelt Seattle and again for 2024-2026 news. Found only directory/review listings (Birdeye, Sluurpy, Mapquest) and an unrelated Seattle Magazine piece about the separate Olympia Pizza and Spaghetti House chain. No qualifying coverage of this business found."
+    },
+    {
+      "id": "modena-pizza-pasta",
+      "note": "Searched \"Modena Pizza\" Lake City Seattle and again for 2024/2025 news/review. Found only directory and delivery-platform listings (Mapquest, DoorDash, Menupages, HappyCow). No news story, review, or ranking from a named outlet found."
     }
-  ],
-  "rejected": [
-    "mentions[2]: date is older than 730 days"
   ]
 }

@@ -3284,7 +3284,9 @@
       "ratingAttempted": "2026-11-12",
       "ratingNote": "Searched West Seattle Blog (which covers Delridge food news closely) and Tasting Table's 'Best Pizza Restaurants Seattle' roundup for this Delridge spot (former Olympia Pizza); neither mentions it by name. Only directory/aggregator listings (Slice, MapQuest, MenuPages) with brief customer comments turned up. Skipping for lack of grounding.",
       "socialAttempted": "2026-11-12",
-      "socialNote": "Site on file is romanopizzaandpasta.com. Fetched it — header/footer contain only Order, Home, Menu, Refund Policy links, a phone number and payment logos; no social media link present. Searched 'Romano Pizza & Pasta Delridge Seattle instagram' — no handle found."
+      "socialNote": "Site on file is romanopizzaandpasta.com. Fetched it — header/footer contain only Order, Home, Menu, Refund Policy links, a phone number and payment logos; no social media link present. Searched 'Romano Pizza & Pasta Delridge Seattle instagram' — no handle found.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched \"Romano Pizza\" Delridge Seattle and again for West Seattle Blog coverage. Found only directory/delivery listings (Slice, Menupages, Mapquest); West Seattle Blog results covered unrelated restaurants (Spiro's, GH Pasta & Pizza). No news story, review, or ranking found."
     },
     {
       "id": "world-pizza",
@@ -3758,10 +3760,20 @@
       ],
       "locationsVerified": "2026-11-12",
       "locationsSource": "https://www.castellopizzaandpasta.com/",
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://southseattleemerald.org/community/2025/10/28/which-crust-does-the-south-end-trust",
+          "title": "Which Crust Does The South End Trust?",
+          "source": "South Seattle Emerald",
+          "date": "2025-10-28",
+          "kind": "ranking"
+        }
+      ],
       "instagram": "https://www.instagram.com/castellopizzaandpasta/",
       "ratingAttempted": "2026-11-07",
-      "ratingNote": "Searched Castello Pizza & Pasta (Rainier Ave S) plus Eater/Seattle Met/South Seattle Emerald/halal-news combinations, and fetched Seattle Met's 2021 Rainier Valley/Rainier Beach restaurant guide directly -- it covers Pizzeria Pulcinella but does not mention Castello at all. Remaining results were Yelp-via-aggregator, DoorDash and directory listings. No rating proposed; skipped for lack of published criticism."
+      "ratingNote": "Searched Castello Pizza & Pasta (Rainier Ave S) plus Eater/Seattle Met/South Seattle Emerald/halal-news combinations, and fetched Seattle Met's 2021 Rainier Valley/Rainier Beach restaurant guide directly -- it covers Pizzeria Pulcinella but does not mention Castello at all. Remaining results were Yelp-via-aggregator, DoorDash and directory listings. No rating proposed; skipped for lack of published criticism.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Found and reported one qualifying mention (South Seattle Emerald, Oct 28, 2025); no additional qualifying stories surfaced in the two searches run."
     },
     {
       "id": "candela-pizza",
@@ -3793,7 +3805,9 @@
       "locationsAttempted": "2026-11-12",
       "locationsNote": "No official Candela Pizza website found. Search turned up only directory/aggregator listings (Seattle Food Truck profile, Atly) citing a food truck at 9454 17th Ave SW, Seattle; the Seattle Food Truck page itself returned HTTP 403 when fetched. No pizzeria-owned site or page could be reached to confirm an address.",
       "socialAttempted": "2026-11-12",
-      "socialNote": "Searched 'Candela Pizza South Seattle official website' and for a candelapizza.com domain — only Seattle Food Truck, Atly and Live in Everett profiles turned up (truck based in Renton), no official domain found. Instagram already on file."
+      "socialNote": "Searched 'Candela Pizza South Seattle official website' and for a candelapizza.com domain — only Seattle Food Truck, Atly and Live in Everett profiles turned up (truck based in Renton), no official domain found. Instagram already on file.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched \"Candela Pizza\" Seattle, which surfaced only Seattle Food Truck/Atly directory listings and general citywide pizza-guide links; fetched Tasting Table's \"14 Absolute Best Pizza Joints In Seattle\" (already on file for a different entry) and confirmed it does not mention Candela Pizza. No qualifying coverage found."
     },
     {
       "id": "dudez-woodfired-pizza",
@@ -3825,7 +3839,9 @@
       "locationsAttempted": "2026-11-12",
       "locationsNote": "A MapQuest listing's 'Web' button resolved to https://dudezwoodfiredpizza.com/, but every fetch attempt (https://, https://www., bare domain) failed with an SSL handshake error, so the site's own locations/about/menu content could not be read. Other results were only directory/delivery listings (MapQuest, Atly, DoorDash) citing 2919 Fuhrman Ave E, Seattle, not confirmed from the pizzeria's own site.",
       "socialAttempted": "2026-11-12",
-      "socialNote": "A MapQuest 'Web' button resolves to dudezwoodfiredpizza.com; retried fetching both https and http — both failed with SSL handshake errors, so the site could not be opened to confirm it's live or find a social link. Instagram already on file."
+      "socialNote": "A MapQuest 'Web' button resolves to dudezwoodfiredpizza.com; retried fetching both https and http — both failed with SSL handshake errors, so the site could not be opened to confirm it's live or find a social link. Instagram already on file.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched \"Dude'Z Woodfired Pizza\" Eastlake and again for 2024/2025 review/news coverage. Found only directory listings (Mapquest, DoorDash, Atly) and an undated/textless Fox 13 video segment title. No dated news story, review, or ranking from a named outlet found."
     },
     {
       "id": "elemental-pizza",
@@ -4167,7 +4183,9 @@
       "ratingNote": "Searched for coverage of Italio Pizza & Pasta (305 NW 85th St, Greenwood) including neighborhood blogs (My Ballard, Phinney/Greenwood blogs) and general search. Found only OpenTable/MapQuest/Slice listings and diner-review aggregation, no critic review or press coverage of the specific restaurant. Skipping for lack of published criticism.",
       "priceIndex": 3,
       "priceSource": "https://www.italiopizzapastawa.com/",
-      "factsAttempted": "2026-11-12"
+      "factsAttempted": "2026-11-12",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched \"Italio Pizza\" Greenwood Seattle and again for MyBallard/opening coverage. Found only OpenTable/Slice/directory listings; the MyBallard-targeted search returned unrelated out-of-state pizzeria stories. No qualifying coverage found."
     },
     {
       "id": "jackson-street-pizza-lounge",
@@ -4430,7 +4448,9 @@
       "ratingAttempted": "2026-11-07",
       "ratingNote": "Searched Olympic Pizza & Pasta (Roosevelt Way NE, opened 1975 per a Greek-restaurant history archive) plus Eater/Seattle Met/The Stranger/Seattle Times/My Northwest combinations. Found only Birdeye, Sluurpy, OpenTable, MapQuest and Atly listings, plus a non-critical Greek-community history page; no independent critic review or news story about the pizza itself. No rating proposed; skipped for lack of published criticism.",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "seattleolympicpizza.com now 301-redirects entirely to an Otter ordering page (order.tryotter.com) with no independent official site remaining. Searched '\"Olympic Pizza\" Seattle Roosevelt Way official site address'; only directory/aggregator listings (Birdeye, Mapquest, Atly, OpenTable) turned up, consistently citing 6413 Roosevelt Way NE, Seattle, WA 98115, but none is the pizzeria's own site, so no address is reported."
+      "locationsNote": "seattleolympicpizza.com now 301-redirects entirely to an Otter ordering page (order.tryotter.com) with no independent official site remaining. Searched '\"Olympic Pizza\" Seattle Roosevelt Way official site address'; only directory/aggregator listings (Birdeye, Mapquest, Atly, OpenTable) turned up, consistently citing 6413 Roosevelt Way NE, Seattle, WA 98115, but none is the pizzeria's own site, so no address is reported.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched \"Olympic Pizza\" Roosevelt Seattle and again for 2024-2026 news. Found only directory/review listings (Birdeye, Sluurpy, Mapquest) and an unrelated Seattle Magazine piece about the separate Olympia Pizza and Spaghetti House chain. No qualifying coverage of this business found."
     },
     {
       "id": "modena-pizza-pasta",
@@ -4460,7 +4480,9 @@
       "ratingAttempted": "2026-11-07",
       "ratingNote": "Searched Modena Pizza & Pasta (Lake City Way NE) plus Eater/Seattle Met/The Stranger/neighborhood combinations. Found only DoorDash, Toast, MapQuest and Wanderlog listings with mixed crowd reviews (praise for crust, one flavorless-pasta complaint); no independent critic review or news story. No rating proposed; skipped for lack of published criticism.",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "Fetched https://www.modenapizzanpasta.com/ and https://modenapizzanpasta.com/ (with and without www); both returned HTTP 404, the domain does not resolve to a live site. A search for an official site found none, only third-party listings (Toast, DoorDash, Mapquest) for an address at 8014 Lake City Way NE, Seattle — not confirmed from the pizzeria's own site."
+      "locationsNote": "Fetched https://www.modenapizzanpasta.com/ and https://modenapizzanpasta.com/ (with and without www); both returned HTTP 404, the domain does not resolve to a live site. A search for an official site found none, only third-party listings (Toast, DoorDash, Mapquest) for an address at 8014 Lake City Way NE, Seattle — not confirmed from the pizzeria's own site.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched \"Modena Pizza\" Lake City Seattle and again for 2024/2025 news/review. Found only directory and delivery-platform listings (Mapquest, DoorDash, Menupages, HappyCow). No news story, review, or ranking from a named outlet found."
     },
     {
       "id": "hot-slice-pizza",
@@ -5447,7 +5469,9 @@
       "locationsAttempted": "2026-11-12",
       "locationsNote": "Its site, https://www.ananaspizzeria.com, is a JavaScript-rendered page: fetches of the homepage, /contact, /menu, /visit, and /location all returned either a bare page title with no body text or HTTP 404, so no address, neighborhood, or Instagram link could be read from the pizzeria's own site. The lead, 1106 8th Ave, Seattle, WA 98101, matches third-party coverage (Seattle Met, Curiocity) describing a First Hill location, but those are not the pizzeria's own site and so do not satisfy confirmation; the lead is not reported as a site.",
       "socialAttempted": "2026-11-12",
-      "socialNote": "Site on file is ananaspizzeria.com. Fetched it but the page returned only a bare title with no header/footer/link content (JS-rendered), so no Instagram link could be located. Searched 'Ananas Pizzeria Seattle instagram' — no handle named by any outlet, only an unrelated photo-credit mention."
+      "socialNote": "Site on file is ananaspizzeria.com. Fetched it but the page returned only a bare title with no header/footer/link content (JS-rendered), so no Instagram link could be located. Searched 'Ananas Pizzeria Seattle instagram' — no handle named by any outlet, only an unrelated photo-credit mention.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched \"Ananas Pizzeria\" First Hill review and again for 2025/2026 coverage. Found Curiocity's opening story (Nov 20, 2023), a Seattle Met Field Notes piece (~April 2024), Capitol Hill Seattle's opening tag, PMQ, and The Infatuation/Stranger slice guides, but all coverage dates to the 2023-2024 opening window, older than 730 days. No story within the last two years found."
     },
     {
       "id": "alberonas-davinci-pizza-pasta",
@@ -5839,7 +5863,9 @@
       "locationsAttempted": "2026-11-12",
       "locationsNote": "No official Jet City Pizza website found. Search results were dominated by the unrelated Michigan chain 'Jet's Pizza'; the Washington-specific hits were only aggregator/ordering pages (Toast, Slice, ezCater, MapQuest) citing possible Seattle, Marysville, and Bothell storefronts. The ezCater brand page was fetched and every link on it points back to ezCater, not an owned site. Could not confirm any address from the pizzeria's own site.",
       "socialAttempted": "2026-11-12",
-      "socialNote": "Searched 'Jet City Pizza Wedgwood Seattle website' and '...instagram' — only MapQuest/DoorDash/ezCater/Birdeye listings for the 7500 25th Ave NE location turned up, no official domain or Instagram handle found."
+      "socialNote": "Searched 'Jet City Pizza Wedgwood Seattle website' and '...instagram' — only MapQuest/DoorDash/ezCater/Birdeye listings for the 7500 25th Ave NE location turned up, no official domain or Instagram handle found.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched \"Jet City Pizza\" Wedgwood news and again for review/opening/Eater coverage. Found only directory listings (MapQuest, DoorDash, Slice), a HeraldNet piece about the unrelated Detroit-style Jet's Pizza chain, and Seattle Met Friday Feed roundups that don't mention this business. No dated news story, review, or ranking found."
     },
     {
       "id": "pizza-pasta-bar",
@@ -5907,7 +5933,9 @@
       "locationsAttempted": "2026-11-12",
       "locationsNote": "Found the official domain, pizzaandpastabar.com, linked from Pike Place Market's own tenant page (pikeplacemarket.org/?p=4029), but fetching pizzaandpastabar.com directly returned HTTP 403 Forbidden, so the address (third-party pages give 1530 Post Alley, Seattle, WA 98101) could not be confirmed from the pizzeria's own site.",
       "socialAttempted": "2026-11-12",
-      "socialNote": "pizzaandpastabar.com returned HTTP 403 and could not be fetched. Searched 'Pizza and Pasta Bar Pike Place Market instagram' and checked pikeplacemarket.org's tag page for the business, which only links the Market's own Instagram (instagram.com/pikeplacepublicmarket), not the restaurant's. No handle found."
+      "socialNote": "pizzaandpastabar.com returned HTTP 403 and could not be fetched. Searched 'Pizza and Pasta Bar Pike Place Market instagram' and checked pikeplacemarket.org's tag page for the business, which only links the Market's own Instagram (instagram.com/pikeplacepublicmarket), not the restaurant's. No handle found.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched \"Pizza and Pasta Bar\" Pike Place Market review and again for Infatuation/Eater/Seattle Times coverage. Found only the market's own site, aggregator ratings (Sluurpy, Mapquest), and Infatuation pieces about other Pike Place restaurants (Pink Door, Pasta Casalinga). No qualifying outlet coverage naming this business found."
     },
     {
       "id": "santorini-pizza-pasta",
