@@ -11,6 +11,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { isRated } from '../src/slice.js';
+import { tidyPossessive } from '../src/census.js';
 import { esc, hostOf } from '../build/html.mjs';
 import { unratedLists, candidateLists } from '../build/sections/candidates.mjs';
 
@@ -240,7 +241,10 @@ for (const r of dataset.restaurants) {
       const printed = Number(body.match(/<span class="cq-n">(\d+)<\/span>/)?.[1]);
       check(rows === list.length, `the "${key}" group lists ${rows} row(s); the data has ${list.length}`);
       check(printed === list.length, `the "${key}" group says ${printed}; the data has ${list.length}`);
-      for (const item of list) check(body.includes(esc(item.name)), `"${item.name}" is missing from the "${key}" group`);
+      // An entry is printed under its own name; a permit under the register's,
+      // with a capitalised possessive put right the way the section does it.
+      const shown = item => key.startsWith('rating-') ? item.name : tidyPossessive(item.name);
+      for (const item of list) check(body.includes(esc(shown(item))), `"${item.name}" is missing from the "${key}" group`);
       if (key.startsWith('rating-')) rowsOnFile += rows; else rowsQueued += rows;
     }
     // The groups together are everything, counted from the files and not

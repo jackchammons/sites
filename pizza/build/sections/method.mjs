@@ -149,15 +149,12 @@ export function methodParts(ctx) {
     .map(([, a]) => `<tr><th scope="row">${esc(a.label)}</th><td class="num">−${a.frictionCost.toFixed(1)}</td></tr>`)
     .join('');
 
-  /* The tasks the rotation never picks, in a sentence: the ones that still
-   * have work, and the ones whose work has run out. */
-  const outside = outsideRotation();
-  const spent = outside.filter(t => TASKS[t].done?.(dataset));
-  const live = outside.filter(t => !spent.includes(t));
+  /* The tasks the rotation never picks, in a sentence. A task whose work has
+   * run out for good is left off: it can still be started by hand and comes
+   * back with nothing to do, which tells a reader nothing about the index. */
+  const live = outsideRotation().filter(t => !TASKS[t].done?.(dataset));
   const named = list => list.map(t => `${esc(t)} (${TASKS[t].summary})`);
   const series = items => items.length < 2 ? items.join('') : `${items.slice(0, -1).join(', ')} and ${items.at(-1)}`;
-  // "They" when the sentence is about all of them, the number when it is about some.
-  const some = list => list.length === outside.length ? 'They' : WORDS[list.length] ?? String(list.length);
   const automation = `
     <h3 class="method-h" id="lifecycle">From a food permit to the top ten</h3>
     <p class="method-p">
@@ -196,11 +193,9 @@ export function methodParts(ctx) {
       task with nothing on its worklist is passed over.
     </p>
 ${tasksHtml()}
-    ${outside.length ? `<p class="method-p" id="by-hand" style="margin-top:14px">
-      ${WORDS[outside.length] ?? outside.length} more ${outside.length === 1 ? 'task is' : 'tasks are'} never picked automatically and ${outside.length === 1 ? 'runs' : 'run'} only when started by
-      hand, through the same steps and the same gates.${live.length ? `
-      ${some(live)} ${live.length === 1 && spent.length ? 'catches' : 'catch'} up in bulk: ${series(named(live))}.` : ''}${spent.length ? `
-      ${some(spent)} ${spent.length === 1 && live.length ? 'has' : 'have'} nothing left to do: ${series(named(spent))}.` : ''}
+    ${live.length ? `<p class="method-p" id="by-hand" style="margin-top:14px">
+      ${WORDS[live.length] ?? live.length} more ${live.length === 1 ? 'task is' : 'tasks are'} never picked automatically and ${live.length === 1 ? 'runs' : 'run'} only when started by
+      hand, through the same steps and the same gates. ${live.length === 1 ? 'It catches' : 'They catch'} up in bulk: ${series(named(live))}.
     </p>` : ''}
 
     <h3 class="method-h" id="moves">What can move a score, and what cannot</h3>

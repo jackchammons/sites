@@ -75,7 +75,7 @@ const detailHtml = r => {
     dRow(`${esc(l.address ?? l.neighborhood ?? '')}${l.neighborhood && l.address ? ` <span class="dd-dim">(${esc(l.neighborhood)})</span>` : ''}`));
   if (locs.length) {
     locs.push(dRow(`<span class="dd-dim">${r.locationsVerified
-      ? `verified ${esc(r.locationsVerified)}${r.locationsSource ? ` against ${srcLink(r.locationsSource)}` : ''}`
+      ? `verified ${esc(shortDate(r.locationsVerified))}${r.locationsSource ? ` against ${srcLink(r.locationsSource)}` : ''}`
       : "not yet verified against the pizzeria's own site"}</span>`));
   }
 

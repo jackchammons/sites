@@ -11,7 +11,7 @@ import { esc, nameLink, shortDate, srcLink } from '../html.mjs';
 import { locationLabel } from '../../src/locations.js';
 import { isRated } from '../../src/slice.js';
 import { PER_PASS, RETRY_DAYS } from '../../src/rules.js';
-import { INSPECTION_CUTOFF_MONTHS, REOPENING_VERDICTS, candidateStanding } from '../../src/census.js';
+import { INSPECTION_CUTOFF_MONTHS, REOPENING_VERDICTS, candidateStanding, tidyPossessive } from '../../src/census.js';
 
 const DAY = 864e5;
 const isDate = v => typeof v === 'string' && Number.isFinite(Date.parse(v));
@@ -109,8 +109,10 @@ const group = ({ key, title, rule, label, head, rows }) => {
 
 const entryCell = r => `<th scope="row">${nameLink(r)}<span class="cq-sub">${esc(locationLabel(r) ?? '')}</span></th>`;
 /* A permit name is the register's spelling, not a pizzeria's own, and nothing
- * on file says where it lives on the web, so it is text and never a link. */
-const permitCell = c => `<th scope="row">${esc(c.name)}<span class="cq-sub">${
+ * on file says where it lives on the web, so it is text and never a link.
+ * Names stored before the seed script stopped writing "Soprano'S" are tidied
+ * here; the stored name is the key a census verdict answers to and stays. */
+const permitCell = c => `<th scope="row">${esc(tidyPossessive(c.name))}<span class="cq-sub">${
   c.address ? esc(c.address) : 'address not on file'}</span></th>`;
 
 /* What each verdict means, in a sentence. `was` completes "set aside as …"

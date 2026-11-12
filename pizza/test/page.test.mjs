@@ -279,7 +279,7 @@ test('every directory record has the same rows in the same order, and says what 
     'Style Neapolitan Style group Wood-fired Known for The plain pie · full.example Opened 2009 · full.example Price $$$');
   assert.equal(blockOf(record('p0'), 'Links'), 'Website full.example Instagram @fullpies');
   assert.match(blockOf(record('p0'), 'Status'), /^Open · last checked Nov 10, 2026 Source news\.example$/);
-  assert.match(blockOf(record('p0'), 'Locations'), /^1 Pine St, Seattle, WA 98107 \(Ballard\) verified 2026-11-01 against full\.example$/);
+  assert.match(blockOf(record('p0'), 'Locations'), /^1 Pine St, Seattle, WA 98107 \(Ballard\) verified Nov 1, 2026 against full\.example$/);
   assert.equal(blockOf(record('p0'), 'Attributes'), 'Long waits −1.2');
 
   // A null and a missing key read the same: the placeholder, in the dim style.
@@ -367,12 +367,13 @@ test('the methodology has one row for each task in the rotation and names the re
 
   // The fixture's ratings carry no author, so the two tasks that work through
   // such ratings still have work. Once the agent has set every rating they
-  // have none, and the line says that instead of describing work to come.
+  // have none for good, and the line stops naming them.
   assert.match(line, /They catch up in bulk: social \([^)]+\), .* and rerate \([^)]+\)\.$/);
   const agentSet = restaurants().map(r => r.factors
     ? { ...r, factors: Object.fromEntries(Object.entries(r.factors).map(([k, f]) => [k, { ...f, setBy: 'agent' }])) } : r);
   const done = byHand(methodOf(page(context({ dataset: { city: 'Seattle', dataVersion: 'test', restaurants: agentSet, attributeRegistry: {} } }))));
-  assert.match(done, /Two catch up in bulk: social \([^)]+\) and coverage \([^)]+\)\. Two have nothing left to do: sources \([^)]+\) and rerate \([^)]+\)\.$/);
+  assert.match(done, /^Two more tasks are never picked automatically and run only when started by hand, through the same steps and the same gates\. They catch up in bulk: social \([^)]+\) and coverage \([^)]+\)\.$/);
+  for (const name of ['sources', 'rerate']) assert.ok(!done.includes(`${name} (`), `${name} has nothing left to do and is still named`);
 });
 
 test('a task that joins the rotation with no row stops the build', () => {

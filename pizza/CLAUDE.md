@@ -22,7 +22,8 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   reader re-weighting (removed by request); every card explains its inputs instead.
 - `scripts/build.mjs` composes the page from `build/` (`load`, `derive`, `page`,
   `sections/*`, `emit`). The methodology copy is in `build/page.mjs` and
-  `build/sections/method.mjs`.
+  `build/sections/method.mjs`; the research tasks' rows are in `build/tasks.mjs`, and
+  the Candidates section in `build/sections/candidates.mjs`.
 - `scripts/verify.mjs` gates the deploy. `src/app.js` is the only script the browser
   runs: the map and the directory rows.
 - `scripts/next-task.mjs` picks and briefs the research agent's daily task;
@@ -231,6 +232,28 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   subscription allowance goes unused; the gate step warns. The model is named once, as
   `RESEARCH_MODEL` in `research.yml`. There is no credential probe: a direct API call
   with the subscription token only ever answered 429, so the agent step is the signal.
+
+## What the page says about itself
+
+- **The page describes the automation from the code that runs it.** The lifecycle
+  flow, the two step lists and the task table in the methodology read `rules.js`,
+  `census.js`, `locations.js` and `slice.js`; no worklist size, rest period or cutoff
+  is typed into the copy. A task added to `ROTATION` with no row in `build/tasks.mjs`
+  stops the build, on purpose. A by-hand task whose work has run out for good
+  (`done` in `build/tasks.mjs`) is not named.
+- **No clock time anywhere in that copy.** Scheduled runs start hours late, so the page
+  says "once a day" and what triggers what, never an hour. A page test holds this.
+- **Candidates lists everything known and not ranked, with the reason and what happens
+  next.** Unrated entries are split by why (waiting for a pass, looked and found
+  nothing with the date it is eligible again, not open yet); permit candidates are
+  grouped by `candidateStanding()`. `verify.mjs` counts the rows against the two data
+  files, so a group that loses a row fails the deploy.
+- **Every directory record has the same rows.** Each fact, link and status row is
+  printed for every entry, with "not on file" where the dataset holds the empty value.
+  A new schema key that a reader should see gets a row there.
+- **Candidate notes are third-party text too.** `candidates.json` is in `verify.mjs`'s
+  quoted-data exemption with headlines and agent notes, and a permit name is printed as
+  the register spells it, apart from a capitalised possessive (`tidyPossessive`).
 
 ## Buzz and the deploy gate
 

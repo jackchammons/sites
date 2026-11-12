@@ -44,7 +44,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { mergeCandidates, isSeattleCity, INSPECTION_CUTOFF_MONTHS } from '../src/census.js';
+import { mergeCandidates, isSeattleCity, tidyPossessive, INSPECTION_CUTOFF_MONTHS } from '../src/census.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outPath = path.join(root, 'data/candidates.json');
@@ -56,7 +56,7 @@ const UA = 'Mozilla/5.0 (compatible; SeattlePizzaIndex/1.0; +https://sites.jackh
 const TIMEOUT_MS = 25_000;
 export { INSPECTION_CUTOFF_MONTHS };
 
-const title = s => String(s).toLowerCase().replace(/\b[a-z]/g, c => c.toUpperCase())
+const title = s => tidyPossessive(String(s).toLowerCase().replace(/\b[a-z]/g, c => c.toUpperCase()))
   .replace(/\bLlc\b/g, 'LLC').trim();
 
 /* Inspection rows, newest first, to one candidate per business. The query

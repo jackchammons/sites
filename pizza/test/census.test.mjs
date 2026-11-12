@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { normName, candidateKey, isNationalChain, isSeattleCity, matchEntry, mergeCandidates, coverageStats,
+import { normName, candidateKey, isNationalChain, isSeattleCity, matchEntry, mergeCandidates, coverageStats, tidyPossessive,
   branchLeads, INSPECTION_CUTOFF_MONTHS, REOPENING_VERDICTS, inspectedSinceVerdict, candidateStanding } from '../src/census.js';
 import { PER_PASS } from '../src/rules.js';
 
@@ -288,4 +288,17 @@ test('branch leads: none for a closed entry, an unresolved candidate, a lapsed p
   assert.deepEqual(leadsOf([permit(lead, { lastInspection: days(INSPECTION_CUTOFF_MONTHS * 30 + 1) })]), []);
   assert.deepEqual(leadsOf([permit(lead, { lastInspection: undefined })]), []);
   assert.equal(branchLeads(undefined, [mart()], LEAD_NOW).size, 0);
+});
+
+test("tidyPossessive: a capitalised possessive goes back to lower case and nothing else moves", () => {
+  assert.equal(tidyPossessive("Soprano'S Pizza & Pasta"), "Soprano's Pizza & Pasta");
+  assert.equal(tidyPossessive("Pizzuto\u2019S Italian Cafe"), "Pizzuto\u2019s Italian Cafe");
+  assert.equal(tidyPossessive("Mario'S"), "Mario's");
+  // an apostrophe that opens a word, a word that merely starts with S, and a name already right
+  assert.equal(tidyPossessive("La Vita E 'Bella Pizzeria"), "La Vita E 'Bella Pizzeria");
+  assert.equal(tidyPossessive("Rock 'Slice' Pizza"), "Rock 'Slice' Pizza");
+  assert.equal(tidyPossessive("O'Shea Pizza"), "O'Shea Pizza");
+  assert.equal(tidyPossessive("Tony's Pizza"), "Tony's Pizza");
+  // the key a candidate is stored and matched under does not depend on the case
+  assert.equal(candidateKey("Soprano'S Pizza", '7729 24th Ave Nw'), candidateKey(tidyPossessive("Soprano'S Pizza"), '7729 24th Ave Nw'));
 });

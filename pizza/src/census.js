@@ -51,6 +51,11 @@ export const normName = n => String(n).normalize('NFKD').replace(/[\u0300-\u036f
   .replace(/\b(pizza company|pizza co|pizzeria|pizza|restaurant|ristorante|cafe|the)\b/g, '')
   .replace(/[^a-z0-9]+/g, ' ').trim();
 
+/* The register writes names in capitals, and capitalising each word of
+ * "SOPRANO'S" gives "Soprano'S". A possessive is put back in lower case; an
+ * apostrophe that opens a word ("'Bella") is left as it is. */
+export const tidyPossessive = name => String(name).replace(/(?<=\p{L})(['’])S(?![\p{L}\p{N}])/gu, '$1s');
+
 /* One key per physical place: name + street number, so "PAGLIACCI PIZZA #8"
  * at 4003 Stone Way and the same name downtown stay distinct candidates. */
 export const candidateKey = (name, address) => {
