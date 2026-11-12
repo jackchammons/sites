@@ -3659,7 +3659,9 @@
       "factsAttempted": "2026-11-05",
       "factsNote": "sewardparkpizza.com failed to load (SSL handshake failure) on both http and https attempts. Search found only a Cost:'$' rating on a directory aggregator (not the pizzeria's own menu) and no founding year.",
       "coverageAttempted": "2026-11-12",
-      "coverageNote": "Beyond the South Seattle Emerald listing already reported, searched further and found no second story; the only other Seattle Met/Infatuation hits were about Flying Squirrel Pizza Co.'s original Seward Park location, a different business."
+      "coverageNote": "Beyond the South Seattle Emerald listing already reported, searched further and found no second story; the only other Seattle Met/Infatuation hits were about Flying Squirrel Pizza Co.'s original Seward Park location, a different business.",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "https://sewardparkpizza.com/ failed to load twice (SSL handshake failure, both direct attempts) suggesting the domain is down or misconfigured. Web searches for 'sewardparkpizza.com' and \"Seward Park Pizza\" Seattle pizzeria turned up no official site, only directories/aggregators (FamHop listing, South Seattle Emerald listicle) that conflated the name with Flying Squirrel Pizza Co. and Pizzuto's at 4920 S Genesee St. No official-site confirmation found, so no address is reported."
     },
     {
       "id": "belltown-pizza",
@@ -3873,14 +3875,14 @@
       "attributes": {},
       "locations": [
         {
-          "neighborhood": "Rainier Valley",
+          "neighborhood": "Seward Park",
           "address": "6711 Martin Luther King Jr Way S, Seattle, WA 98118",
           "lat": 47.54198,
           "lon": -122.28399
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-11-12",
+      "locationsSource": "https://www.eymanspizza.com/",
       "mentions": [],
       "instagram": "https://www.instagram.com/eymans_pizza/",
       "factors": {
@@ -3909,7 +3911,7 @@
       "priceIndex": 1,
       "styleGroup": "Neighborhood",
       "lastVerified": "2026-10-13",
-      "factsAttempted": "2026-11-05",
+      "factsAttempted": "2026-11-12",
       "factsNote": "Checked eymanspizza.com home/about anchor: the only year present is 'Partnered with Slice since 2019', which refers to the online-ordering platform, not the restaurant's founding.",
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched 'Eyman's Pizza Rainier Valley Seattle review' and 'Eyman's Pizza Beacon Hill Seattle news 2025'. Found only directory/aggregator listings (Zabihah, Atly, Intentionalist) with no professional critic review or news item from a named outlet."
@@ -3935,8 +3937,8 @@
           "lon": -122.32082
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-11-12",
+      "locationsSource": "https://www.gpaseattle.com/",
       "mentions": [
         {
           "url": "https://www.parentmap.com/article/best-pizza-places-seattle-tacoma-bellevue",
@@ -3946,7 +3948,7 @@
           "kind": "ranking"
         }
       ],
-      "instagram": "https://www.instagram.com/gpa.seattle",
+      "instagram": "https://instagram.com/gpa.seattle",
       "factors": {
         "craft": {
           "value": 5,
@@ -3992,13 +3994,11 @@
       "locations": [
         {
           "neighborhood": "Belltown",
-          "address": "2126 2nd Ave, Ste A, Seattle, WA 98121",
-          "lat": 47.61321,
-          "lon": -122.34387
+          "address": "2126 2nd Ave Suite A, Seattle, WA 98121"
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-11-12",
+      "locationsSource": "https://goodshapepizza.com/",
       "mentions": [
         {
           "url": "https://theinfatuation.com/seattle/reviews/good-shape-pizza",
@@ -4015,7 +4015,7 @@
           "kind": "ranking"
         }
       ],
-      "instagram": "https://www.instagram.com/goodshapepizza/",
+      "instagram": "https://instagram.com/goodshapepizza",
       "factors": {
         "craft": {
           "value": 7.5,
@@ -4060,14 +4060,12 @@
       "attributes": {},
       "locations": [
         {
-          "neighborhood": "Admiral, West Seattle",
-          "address": "3207 California Ave SW, Seattle, WA 98116",
-          "lat": 47.57537,
-          "lon": -122.38709
+          "neighborhood": "Admiral Junction, West Seattle",
+          "address": "3207 California Avenue Southwest, Seattle, WA 98116"
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-11-12",
+      "locationsSource": "https://inpizzawecrust.net/",
       "mentions": [
         {
           "url": "https://www.westsideseattle.com/node/60911",

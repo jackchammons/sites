@@ -1,96 +1,74 @@
 {
-  "updated": "2026-11-12T19:30:00Z",
+  "updated": "2026-11-12T19:00:00Z",
   "locations": [
     {
-      "id": "pizza-by-ruffin",
-      "homepage": "https://pizzabyruffin.com",
-      "source": "https://pizzabyruffin.com",
+      "id": "eymans-pizza",
+      "homepage": "https://www.eymanspizza.com/",
+      "source": "https://www.eymanspizza.com/",
       "sites": [
         {
-          "neighborhood": "South Lake Union",
-          "address": "400 Fairview Avenue N, Suite 107, Seattle, WA 98109"
+          "neighborhood": "Seward Park",
+          "address": "6711 Martin Luther King Jr Way S, Seattle, WA 98118"
         }
       ]
     },
     {
-      "id": "veraci-pizza",
-      "homepage": "https://www.veracipizza.com/",
-      "source": "https://www.veracipizza.com/",
+      "id": "georgetown-pizza-arcade",
+      "homepage": "https://www.gpaseattle.com/",
+      "source": "https://www.gpaseattle.com/",
       "sites": [
         {
-          "neighborhood": "Ballard",
-          "address": "500 NW Market Street, Seattle, WA 98107"
-        },
-        {
-          "neighborhood": "Wedgwood",
-          "address": "7320 NE 35th Street, Seattle, WA 98115"
+          "neighborhood": "Georgetown",
+          "address": "5513 Airport Way S, Seattle, WA 98108"
         }
       ]
     },
     {
-      "id": "belltown-pizza",
-      "homepage": "https://belltownpizza.net/",
-      "source": "https://belltownpizza.net/",
+      "id": "good-shape-pizza",
+      "homepage": "https://goodshapepizza.com/",
+      "source": "https://goodshapepizza.com/",
       "sites": [
         {
           "neighborhood": "Belltown",
-          "address": "2422 1st Avenue, Seattle, WA 98121"
+          "address": "2126 2nd Ave Suite A, Seattle, WA 98121"
         }
       ]
     },
     {
-      "id": "castello-pizza-pasta",
-      "homepage": "https://www.castellopizzaandpasta.com/",
-      "source": "https://www.castellopizzaandpasta.com/",
+      "id": "in-pizza-we-crust",
+      "homepage": "https://inpizzawecrust.net/",
+      "source": "https://inpizzawecrust.net/",
       "sites": [
         {
-          "neighborhood": "Rainier Valley",
-          "address": "3756 Rainier Ave S, Ste B, Seattle, WA 98144"
+          "neighborhood": "Admiral Junction, West Seattle",
+          "address": "3207 California Avenue Southwest, Seattle, WA 98116"
         }
       ]
-    }
-  ],
-  "links": [
-    {
-      "id": "belltown-pizza",
-      "website": "https://belltownpizza.net/",
-      "instagram": "https://www.instagram.com/belltownpizzaseattle",
-      "source": "https://belltownpizza.net/"
-    },
-    {
-      "id": "castello-pizza-pasta",
-      "website": "https://www.castellopizzaandpasta.com/",
-      "instagram": "https://www.instagram.com/castellopizzaandpasta/",
-      "source": "https://www.castellopizzaandpasta.com/"
-    }
-  ],
-  "facts": [
-    {
-      "id": "veraci-pizza",
-      "opened": 2004,
-      "source": "https://www.veracipizza.com/"
-    },
-    {
-      "id": "belltown-pizza",
-      "opened": 1998,
-      "source": "https://belltownpizza.net/"
     }
   ],
   "locationsSkipped": [
     {
-      "id": "pizza-ritual",
-      "note": "pizzaritual.com loads but renders no content (blank page, no business info). Searched web; West Seattle Blog (Jan 2026) says proprietor Matt Gorman runs Pizza Ritual as a takeout/walk-up operation out of the KBM commissary kitchen at 5608 Delridge Way SW with Fri/Sat 5-8pm walk-up hours, but this is third-party news coverage, not the pizzeria's own site, so the on-file address could not be confirmed against an official source."
-    },
-    {
-      "id": "pizza-by-ruffin",
-      "note": "Lead address 527 Eastlake Avenue E, Unit 302, Seattle, WA 98109 does not appear on pizzabyruffin.com, which lists only the Fairview Market Hall location (400 Fairview Ave N Suite 107). Web search for the business plus Eastlake Avenue turned up no connection; the lead could not be confirmed as a Pizza By Ruffin branch."
-    },
-    {
-      "id": "veraci-pizza",
-      "note": "Lead address 4260 23rd Ave W, Seattle, WA 98199 does not appear on veracipizza.com, which lists only Ballard (500 NW Market St) and Wedgwood (7320 NE 35th St) as retail locations. Web search found no Veraci Pizza listing at that address either; the lead could not be confirmed as a current retail branch."
+      "id": "seward-park-pizza",
+      "note": "https://sewardparkpizza.com/ failed to load twice (SSL handshake failure, both direct attempts) suggesting the domain is down or misconfigured. Web searches for 'sewardparkpizza.com' and \"Seward Park Pizza\" Seattle pizzeria turned up no official site, only directories/aggregators (FamHop listing, South Seattle Emerald listicle) that conflated the name with Flying Squirrel Pizza Co. and Pizzuto's at 4920 S Genesee St. No official-site confirmation found, so no address is reported."
     }
   ],
-  "rejected": [
-    "links[0]: instagram must be a profile URL like https://www.instagram.com/<handle>, got \"https://www.instagram.com/pizzabyruffin/?hl=en\""
+  "links": [
+    {
+      "id": "georgetown-pizza-arcade",
+      "instagram": "https://instagram.com/gpa.seattle",
+      "source": "https://www.gpaseattle.com/"
+    },
+    {
+      "id": "good-shape-pizza",
+      "instagram": "https://instagram.com/goodshapepizza",
+      "source": "https://goodshapepizza.com/"
+    }
+  ],
+  "facts": [
+    {
+      "id": "eymans-pizza",
+      "priceIndex": 1,
+      "source": "https://www.eymanspizza.com/"
+    }
   ]
 }
