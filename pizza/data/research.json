@@ -1,67 +1,77 @@
 {
-  "updated": "2026-11-12T18:00:00Z",
+  "updated": "2026-11-12T19:00:00Z",
   "facts": [
     {
-      "id": "castello-pizza-pasta",
+      "id": "g-h-pasta-pizza",
       "priceIndex": 2,
-      "signature": "Castello's Special: pizza sauce, pepperoni, salami, mushrooms, and fresh tomatoes",
-      "source": "https://www.castellopizzaandpasta.com/menu"
+      "source": "https://www.westsideseattle.com/node/59507"
     },
     {
-      "id": "varlamos-pizzeria",
-      "opened": 1994,
-      "source": "https://greeksinwa.omeka.net/items/show/820"
+      "id": "g-h-pasta-pizza",
+      "styleGroup": "Thin crust",
+      "source": "https://www.westsideseattle.com/node/59543"
     },
     {
-      "id": "west-of-chicago-pizza-company",
-      "signature": "Chicago-style deep-dish pizza",
-      "source": "https://www.westsideseattle.com/node/57793"
+      "id": "hot-slice-pizza",
+      "styleGroup": "By the slice",
+      "source": "https://hotslicepizzasea.com/"
+    },
+    {
+      "id": "palermo-pizza-pasta",
+      "priceIndex": 2,
+      "signature": "Palermo Special: pepperoni, Canadian bacon, Italian sausage, mushrooms, black olives",
+      "source": "https://www.mypalermopizza.com/"
+    },
+    {
+      "id": "pizza-twist",
+      "styleGroup": "Creative",
+      "source": "https://pizzatwist.com"
     }
   ],
   "factsSkipped": [
     {
-      "id": "belltown-pizza",
-      "note": "Checked belltownpizza.net (no About/menu page resolved) and local coverage; no independent review names a single signature pie. A 'Signature Pies' menu section (Meatasaurus, the Duncan, McQueen's) appears only on the delivery-ordering site slicelife.com, which isn't an accepted source."
+      "id": "downtown-romios-pizza-pasta",
+      "note": "Own site (downtownromios.com) returned 403 on the homepage and /menu. Searched for founding history and the restaurant's Greek-style pizza; only found OpenTable, Toast ordering, MapQuest, FoodBoss, and WhatsVegan listings, which are excluded aggregator/delivery sources. No opened year, priceIndex, styleGroup, or signature confirmed from a valid source."
     },
     {
-      "id": "ridge-pizza",
-      "note": "ridgepizza.com is only a neighborhood-chooser landing page with no menu. The Stranger's 2012 'Happiest Hour' piece on Ridge Pizza covers the room and happy hour but names no dish. No accepted source for a signature pie."
+      "id": "dudez-woodfired-pizza",
+      "note": "No official website found. Searches surfaced only Atly, MapQuest, and DoorDash listings describing $15 10-inch pies and a 'Signature Pies' menu section; these are aggregator/delivery sources and don't qualify. Opened, priceIndex, styleGroup, and signature remain unconfirmed."
     },
     {
-      "id": "veraci-pizza",
-      "note": "veracipizza.com homepage names no signature pie and its menu subpage 404'd. Seattle Met, Fearless Critic and West Side Seattle coverage discuss the wood-fired style and crust generally but don't single out one pie; reviewer mentions of pepperoni/Margherita are customer comments, not a stated signature."
+      "id": "fremont-pizza",
+      "note": "No official website found. Only MapQuest, Spinach, WhatsVegan, and LoLo directory listings turned up, describing vegan slices and skee-ball but with no valid style, price, signature, or opened-year source."
     },
     {
-      "id": "veras-pizza-and-bar",
-      "note": "verasballard.com names no signature pie. DoorDash reviewer picks (Loaded Potato, Hot Coppa, Pepperoni) come from a delivery app, not an accepted source; the Seattle Pizza Substack review (seattlepizza.substack.com) returned 403 and couldn't be read."
+      "id": "modena-pizza-pasta",
+      "note": "Official site (modenapizzanpasta.com, www variant, and /menu) returned 404. Searches found only Toast ordering, DoorDash, MapQuest, WhatsVegan, and MenuPages listings, all excluded aggregator/delivery sources. No valid source for opened, priceIndex, styleGroup, or signature."
     },
     {
-      "id": "sopranos-pizza-pasta-lake-city",
-      "note": "lakecitysopranos.com returned 403 Forbidden on repeated attempts and a web.archive.org fetch could not be accessed. Only third-party delivery/directory listings (Slicelife, Birdeye, MapQuest, Sluurpy) cover opened year, price, style or signature, and none are accepted sources."
+      "id": "numero-uno-pizza",
+      "note": "No official website found. Only SliceLife, WhatsVegan, and FamHop directory listings turned up; none qualify as the pizzeria's own site or published coverage. Opened, priceIndex, styleGroup, and signature remain unconfirmed."
     },
     {
-      "id": "alberonas-davinci-pizza-pasta",
-      "note": "No official restaurant website found; its Toast ordering page (order.toasttab.com/online/da-vinci) returned 403. Menu prices and a 'House Special' pizza appear only on third-party listings (Slicelife, Menupages), not accepted sources for opened, priceIndex, styleGroup or signature."
+      "id": "olympic-pizza-pasta",
+      "note": "Official site redirects to its Otter online-ordering menu, which lists 'Specialty Pizza' and 'Fan Favorite' pizza names but no prices, style description, or a singled-out signature pie. No source found stating an opening year."
     },
     {
-      "id": "candela-pizza",
-      "note": "No official restaurant website found; its Seattle Food Truck profile page returned 403. A 'wood-fired Yucatan pizza' mention and other details appear only on the aggregator Atly, not an accepted source."
+      "id": "palermo-pizza-pasta",
+      "note": "Own site gave priceIndex and signature (reported). Its linked 'Our Story' page returned no founding-year content, and searches found no coverage stating when it opened, so opened stays unconfirmed."
     },
     {
-      "id": "desi-pizza-kitchen",
-      "note": "No official restaurant website found. Mentions of butter chicken and Achari chicken pizzas as popular items appear only on delivery/directory aggregators (DoorDash, Slice, Atly, MapQuest); no news coverage or opening story was found."
+      "id": "pizza-paesano",
+      "note": "Its listed site is an Instagram profile; fetching it returned only Instagram's login wall, not the bio. Searches turned up no published review or own-site coverage. Opened, priceIndex, styleGroup, and signature remain unconfirmed."
     },
     {
-      "id": "deleo-bros-pizza",
-      "note": "deleobrotherspizza.com's own site shows only a locations page (Seattle, WA and South Lake Tahoe, CA) and a placeholder About page with no real content. A same-named pizzeria found in Edina, MN has a different address and appears to be an unrelated business, so it wasn't used."
+      "id": "pizza-twist",
+      "note": "Own site gave styleGroup (reported, 'Custom Fusion Pizza Kitchen'). No price list is shown, no opened year is stated, and the page names only rotating seasonal specials rather than a signature pizza, so those stay unconfirmed."
     },
     {
-      "id": "castello-pizza-pasta",
-      "note": "castellopizzaandpasta.com/menu gave priceIndex and signature but has no About/history section, so opened year and styleGroup remain unfound. A MapQuest listing claims 'serving since 2011' but a directory listing isn't an accepted source."
+      "id": "romano-pizza-pasta",
+      "note": "Own site's /menu page is a placeholder ('Menu content will go here...'). Searches found only SliceLife, MapQuest, and WhatsVegan aggregator listings citing a 'Romano Special Pizza' price, which are excluded sources. Opened, priceIndex, styleGroup, and signature remain unconfirmed."
     },
     {
-      "id": "varlamos-pizzeria",
-      "note": "The archive source confirms an opened year but says Varlamos is known for its calzones, not a specific pizza, so no signature pie could be reported. No accepted own-site menu or published review gives whole-pizza prices or a style description; only a Scribd-hosted menu scan and third-party listings exist, which aren't accepted sources."
+      "id": "g-h-pasta-pizza",
+      "note": "westsideseattle.com coverage of the West Seattle/Sunrise Heights location gave priceIndex and styleGroup (reported). That same coverage states the November 2023 West Seattle opening was a relocation of the brand's existing Eastlake location, so 2023 is not reported as the business's founding year; no source gives an original opening year. No article names a signature pizza (the review only mentions ordering 'The Classic')."
     }
   ]
 }
