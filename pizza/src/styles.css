@@ -624,6 +624,9 @@ footer p { max-width: 72ch; }
   .cq-table thead th, .cq-table td, .cq-table tbody th { padding-left: 12px; padding-right: 10px; }
   .cq-group > summary { padding-right: 12px; }
 }
+/* On the narrowest phones a date may break across two lines sooner than push
+   the table past its box. */
+@media (max-width: 380px) { .cq-row td { white-space: normal; } }
 
 
 /* ---- Directory ---- */
