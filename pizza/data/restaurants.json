@@ -4268,7 +4268,9 @@
       "locations": [
         {
           "neighborhood": "U-District",
-          "address": "4741 12th Avenue Northeast, Seattle, WA 98105"
+          "address": "4741 12th Avenue Northeast, Seattle, WA 98105",
+          "lat": 47.66432,
+          "lon": -122.31555
         }
       ],
       "locationsVerified": "2026-11-12",
