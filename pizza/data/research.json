@@ -1,105 +1,63 @@
 {
-  "updated": "2026-11-12T20:30:00Z",
-  "facts": [
+  "updated": "2026-11-12T21:00:00Z",
+  "mentions": [
     {
       "id": "g-h-pasta-pizza",
-      "priceIndex": 2,
-      "source": "https://www.westsideseattle.com/node/59507"
+      "title": "Autumn Restaurant transitioning to G.H. Pasta & Pizza",
+      "url": "https://phinneywood.com/2026/01/autumn-restaurant-transitioning-to-g-h-pasta-pizza/",
+      "source": "PhinneyWood",
+      "date": "2026-01-12",
+      "kind": "opening"
     },
     {
-      "id": "g-h-pasta-pizza",
-      "styleGroup": "Thin crust",
-      "source": "https://www.westsideseattle.com/node/59543"
+      "id": "cornelly",
+      "title": "Cornelly Aims to Debut Second Location Sometime This Summer",
+      "url": "https://whatnow.com/?p=216664",
+      "source": "WhatNow Seattle",
+      "date": "2025-02-28",
+      "kind": "opening"
     },
     {
-      "id": "hot-slice-pizza",
-      "styleGroup": "By the slice",
-      "source": "https://hotslicepizzasea.com/"
-    },
-    {
-      "id": "palermo-pizza-pasta",
-      "priceIndex": 2,
-      "signature": "Palermo Special: pepperoni, Canadian bacon, Italian sausage, mushrooms, black olives",
-      "source": "https://www.mypalermopizza.com/"
-    },
-    {
-      "id": "pizza-twist",
-      "styleGroup": "Creative",
-      "source": "https://pizzatwist.com"
-    },
-    {
-      "id": "italio-pizza-pasta",
-      "signature": "Greenwood Special: mozzarella, mushrooms, broccoli, peppers, spinach, pepperoni, sunflower seeds",
-      "source": "https://www.italiopizzapastawa.com/"
-    },
-    {
-      "id": "santorini-pizza-pasta",
-      "opened": 1994,
-      "styleGroup": "Neighborhood",
-      "source": "https://santorinipizza.com/about"
-    },
-    {
-      "id": "santorini-pizza-pasta",
-      "signature": "Santorini Pizza: pepperoni, sausage, salami, Canadian bacon, peppers, mushrooms, onions, olives",
-      "source": "https://santorinipizza.com/menu"
+      "id": "moto-pizza",
+      "title": "Moto Pizza expands with new location in iconic Seattle landmark",
+      "url": "https://www.kiro7.com/news/local/moto-pizza-expands-with-new-location-iconic-seattle-landmark/EXJKJPIQSVGBRBCGCNDM7FAJ54/",
+      "source": "KIRO 7",
+      "date": "2026-03-17",
+      "kind": "opening"
     }
   ],
-  "factsSkipped": [
-    {
-      "id": "downtown-romios-pizza-pasta",
-      "note": "Own site (downtownromios.com) returned 403 on the homepage and /menu. Searched for founding history and the restaurant's Greek-style pizza; only found OpenTable, Toast ordering, MapQuest, FoodBoss, and WhatsVegan listings, which are excluded aggregator/delivery sources. No opened year, priceIndex, styleGroup, or signature confirmed from a valid source."
-    },
-    {
-      "id": "dudez-woodfired-pizza",
-      "note": "No official website found. Searches surfaced only Atly, MapQuest, and DoorDash listings describing $15 10-inch pies and a 'Signature Pies' menu section; these are aggregator/delivery sources and don't qualify. Opened, priceIndex, styleGroup, and signature remain unconfirmed."
-    },
-    {
-      "id": "fremont-pizza",
-      "note": "No official website found. Only MapQuest, Spinach, WhatsVegan, and LoLo directory listings turned up, describing vegan slices and skee-ball but with no valid style, price, signature, or opened-year source."
-    },
-    {
-      "id": "modena-pizza-pasta",
-      "note": "Official site (modenapizzanpasta.com, www variant, and /menu) returned 404. Searches found only Toast ordering, DoorDash, MapQuest, WhatsVegan, and MenuPages listings, all excluded aggregator/delivery sources. No valid source for opened, priceIndex, styleGroup, or signature."
-    },
+  "coverageSkipped": [
     {
       "id": "numero-uno-pizza",
-      "note": "No official website found. Only SliceLife, WhatsVegan, and FamHop directory listings turned up; none qualify as the pizzeria's own site or published coverage. Opened, priceIndex, styleGroup, and signature remain unconfirmed."
+      "note": "Searched for reviews/news about Numero Uno Pizza in Pioneer Square. Only found SliceLife, OpenTable, and MapQuest directory listings, plus unrelated coverage of other Pioneer Square pizzerias (Mario's, Pizzeria Gabbiano). No published-outlet story names this pizzeria."
     },
     {
-      "id": "olympic-pizza-pasta",
-      "note": "Official site redirects to its Otter online-ordering menu, which lists 'Specialty Pizza' and 'Fan Favorite' pizza names but no prices, style description, or a singled-out signature pie. No source found stating an opening year."
+      "id": "santorini-pizza-pasta",
+      "note": "Searched for reviews/coverage of Santorini Pizza & Pasta in Meadowbrook. Only found MapQuest, Atly, Wanderlog, and OpenTable directory/aggregator listings and a 2008 personal blog post. No real-outlet story within the last two years."
     },
     {
-      "id": "palermo-pizza-pasta",
-      "note": "Own site gave priceIndex and signature (reported). Its linked 'Our Story' page returned no founding-year content, and searches found no coverage stating when it opened, so opened stays unconfirmed."
-    },
-    {
-      "id": "pizza-paesano",
-      "note": "Its listed site is an Instagram profile; fetching it returned only Instagram's login wall, not the bio. Searches turned up no published review or own-site coverage. Opened, priceIndex, styleGroup, and signature remain unconfirmed."
-    },
-    {
-      "id": "pizza-twist",
-      "note": "Own site gave styleGroup (reported, 'Custom Fusion Pizza Kitchen'). No price list is shown, no opened year is stated, and the page names only rotating seasonal specials rather than a signature pizza, so those stay unconfirmed."
-    },
-    {
-      "id": "romano-pizza-pasta",
-      "note": "Own site's /menu page is a placeholder ('Menu content will go here...'). Searches found only SliceLife, MapQuest, and WhatsVegan aggregator listings citing a 'Romano Special Pizza' price, which are excluded sources. Opened, priceIndex, styleGroup, and signature remain unconfirmed."
+      "id": "varlamos-pizzeria",
+      "note": "Searched for coverage of Varlamos Pizzeria in Laurelhurst. Only found MapQuest, Foursquare, Atly, and Seattle's Child directory listings plus a Greek-community history archive page; no published outlet story found."
     },
     {
       "id": "g-h-pasta-pizza",
-      "note": "westsideseattle.com coverage of the West Seattle/Sunrise Heights location gave priceIndex and styleGroup (reported). That same coverage states the November 2023 West Seattle opening was a relocation of the brand's existing Eastlake location, so 2023 is not reported as the business's founding year; no source gives an original opening year. No article names a signature pizza (the review only mentions ordering 'The Classic')."
+      "note": "Beyond the PhinneyWood opening piece added above, searched further (WestSide Seattle, WhatNow, Seattle Met) but those either cover the 2023 West Seattle location (outside the 2-year window) or the 2021 predecessor restaurant Autumn, not this pizzeria."
     },
     {
-      "id": "italio-pizza-pasta",
-      "note": "Own site (italiopizzapastawa.com) gave the Greenwood Special signature (reported); its /about path 403'd. Searches of listings (OpenTable, Frankia, MapQuest, Slice, Enprimeurclub) and a local-coverage search found no founding year and no named pizza style/style group for this entry; those sources are excluded aggregators in any case. Opened, style, and styleGroup remain unconfirmed."
+      "id": "pizza-twist",
+      "note": "Searched for press on the Northgate/Pinehurst Pizza Twist location. Only found HappyCow, MapQuest, Spinach Guide, and Gayot directory/aggregator listings; no published outlet story identified this branch."
     },
     {
-      "id": "seattle-pizza-bar",
-      "note": "Own site (seattlepizzaandbar.com) lists six pizzas with toppings but no prices, no named style, and no pizza singled out as a signature; /menu returned 403. A Slice listing once showed a Seattle Special at $18.99 but that slug now reads 'Seattle Pizza is no longer active on Slice,' so it's unreliable even as an aggregator. priceIndex, style, styleGroup, and signature remain unconfirmed."
+      "id": "delancey",
+      "note": "Searched for 2025-2026 coverage beyond the on-file Infatuation review and for Seattle Times/Eater pieces on chef Brandon Pettit. Found only the already-listed Infatuation review (2025-07-15) plus older Stranger/Seattle Met pieces and Wikipedia mirrors outside the two-year window."
     },
     {
-      "id": "hot-slice-pizza",
-      "note": "Own site's homepage renders only a title tag ('Hot Slice Pizza - Authentic NY Style Pizza By The Slice'); /menu and /about both 404. Searches turned up only Atly aggregator listings (41 Dravus St, halal, student discount) and unrelated pizzerias; no opening year, price, or named signature pie from a valid source. Opened, priceIndex, and signature remain unconfirmed."
+      "id": "windy-city-pie",
+      "note": "Searched for Infatuation/Eater coverage beyond the on-file PhinneyWood happy-hour piece. The only Infatuation review found is dated January 2022 (too old); other hits (Seattle Met, Stranger) are older background pieces, not fresh coverage."
+    },
+    {
+      "id": "zeeks-pizza",
+      "note": "Searched for 2025-2026 opening/closing/lawsuit news. The only Zeeks-specific coverage within two years is the PhinneyWood Phinney-location-closure piece already on file (2025-11-05); a chain-growth Yahoo article is from March 2023 (too old) and a July 2026 PhinneyWood piece is about successor tenant Stevie's Famous, not genuinely about Zeeks."
     }
   ]
 }

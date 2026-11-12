@@ -92,8 +92,8 @@
           "kind": "mention"
         }
       ],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched for Infatuation/Eater coverage beyond the on-file PhinneyWood happy-hour piece. The only Infatuation review found is dated January 2022 (too old); other hits (Seattle Met, Stranger) are older background pieces, not fresh coverage.",
       "factsAttempted": null,
       "factsSought": [],
       "factsNote": null,
@@ -188,8 +188,8 @@
           "kind": "mention"
         }
       ],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched for 2025-2026 coverage beyond the on-file Infatuation review and for Seattle Times/Eater pieces on chef Brandon Pettit. Found only the already-listed Infatuation review (2025-07-15) plus older Stranger/Seattle Met pieces and Wikipedia mirrors outside the two-year window.",
       "factsAttempted": null,
       "factsSought": [],
       "factsNote": null,
@@ -287,9 +287,16 @@
           "source": "Seattle Refined",
           "date": "2025-11-17",
           "kind": "mention"
+        },
+        {
+          "url": "https://whatnow.com/?p=216664",
+          "title": "Cornelly Aims to Debut Second Location Sometime This Summer",
+          "source": "WhatNow Seattle",
+          "date": "2025-02-28",
+          "kind": "opening"
         }
       ],
-      "coverageAttempted": null,
+      "coverageAttempted": "2026-11-12",
       "coverageNote": null,
       "factsAttempted": null,
       "factsSought": [],
@@ -411,9 +418,16 @@
           "source": "West Seattle Blog",
           "date": "2026-04-12",
           "kind": "ranking"
+        },
+        {
+          "url": "https://www.kiro7.com/news/local/moto-pizza-expands-with-new-location-iconic-seattle-landmark/EXJKJPIQSVGBRBCGCNDM7FAJ54/",
+          "title": "Moto Pizza expands with new location in iconic Seattle landmark",
+          "source": "KIRO 7",
+          "date": "2026-03-17",
+          "kind": "opening"
         }
       ],
-      "coverageAttempted": null,
+      "coverageAttempted": "2026-11-12",
       "coverageNote": null,
       "factsAttempted": null,
       "factsSought": [],
@@ -1840,8 +1854,8 @@
           "kind": "closing"
         }
       ],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched for 2025-2026 opening/closing/lawsuit news. The only Zeeks-specific coverage within two years is the PhinneyWood Phinney-location-closure piece already on file (2025-11-05); a chain-growth Yahoo article is from March 2023 (too old) and a July 2026 PhinneyWood piece is about successor tenant Stevie's Famous, not genuinely about Zeeks.",
       "factsAttempted": null,
       "factsSought": [],
       "factsNote": null,
@@ -7617,8 +7631,8 @@
       "ratingAttempted": "2026-11-12",
       "ratingNote": "Searched for reviews or news coverage of Numero Uno Pizza at 103 1st Ave S, Pioneer Square. The only hit was a Slice.com ordering/menu page with no critic or customer commentary; broader Pioneer Square pizza coverage (Pizzeria Gabbiano, Un Po Tipsy, Moto Pizza) never mentions this business. No credible published source found.",
       "mentions": [],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched for reviews/news about Numero Uno Pizza in Pioneer Square. Only found SliceLife, OpenTable, and MapQuest directory listings, plus unrelated coverage of other Pioneer Square pizzerias (Mario's, Pizzeria Gabbiano). No published-outlet story names this pizzeria.",
       "factsAttempted": "2026-11-12",
       "factsSought": [
         "opened",
@@ -7931,8 +7945,8 @@
       "ratingAttempted": "2026-11-12",
       "ratingNote": "Searched for critic reviews or roundup mentions of Santorini Pizza & Pasta (Meadowbrook/Wedgwood). Found only directory/aggregator listings (Atly, MapQuest, Wanderlog, OpenTable) and a single anonymous 2008 personal blog post. No published criticism from a real outlet turned up, so skipping rather than grounding a score in aggregator copy.",
       "mentions": [],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched for reviews/coverage of Santorini Pizza & Pasta in Meadowbrook. Only found MapQuest, Atly, Wanderlog, and OpenTable directory/aggregator listings and a 2008 personal blog post. No real-outlet story within the last two years.",
       "factsAttempted": "2026-11-12",
       "factsSought": [],
       "factsNote": null,
@@ -7982,8 +7996,8 @@
       "ratingAttempted": null,
       "ratingNote": null,
       "mentions": [],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched for coverage of Varlamos Pizzeria in Laurelhurst. Only found MapQuest, Foursquare, Atly, and Seattle's Child directory listings plus a Greek-community history archive page; no published outlet story found.",
       "factsAttempted": "2026-11-12",
       "factsSought": [
         "priceIndex",
@@ -8037,9 +8051,17 @@
       "lastVerified": null,
       "ratingAttempted": null,
       "ratingNote": null,
-      "mentions": [],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "mentions": [
+        {
+          "url": "https://phinneywood.com/2026/01/autumn-restaurant-transitioning-to-g-h-pasta-pizza/",
+          "title": "Autumn Restaurant transitioning to G.H. Pasta & Pizza",
+          "source": "PhinneyWood",
+          "date": "2026-01-12",
+          "kind": "opening"
+        }
+      ],
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Beyond the PhinneyWood opening piece added above, searched further (WestSide Seattle, WhatNow, Seattle Met) but those either cover the 2023 West Seattle location (outside the 2-year window) or the 2021 predecessor restaurant Autumn, not this pizzeria.",
       "factsAttempted": "2026-11-12",
       "factsSought": [
         "opened",
@@ -8092,8 +8114,8 @@
       "ratingAttempted": null,
       "ratingNote": null,
       "mentions": [],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched for press on the Northgate/Pinehurst Pizza Twist location. Only found HappyCow, MapQuest, Spinach Guide, and Gayot directory/aggregator listings; no published outlet story identified this branch.",
       "factsAttempted": "2026-11-12",
       "factsSought": [
         "opened",
