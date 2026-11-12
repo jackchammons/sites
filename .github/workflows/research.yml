@@ -228,6 +228,7 @@ jobs:
                        "source":"<https page where you saw the link>"}],
              "candidateReview":[{"name":"<exact candidate name from the worklist>",
                                  "verdict":"closed|chain|not-pizza|duplicate|unverifiable",
+                                 "duplicateOf":"<id of the entry on file; required when the verdict is duplicate, omit otherwise>",
                                  "note":"<what you found>",
                                  "source":"<https page, or omit>"}],
              "directory":[{"name":"<pizzeria>","url":"<https official site or omit>",
@@ -275,6 +276,14 @@ jobs:
               the profile itself); a bare instagram.com/p/<id>/ link is refused.
             - Addresses start with a street number and carry a Puget Sound ZIP
               (980xx-985xx).
+            - A candidateReview with verdict "duplicate" must carry "duplicateOf",
+              the id of the entry on file it is the same business as, taken from
+              your worklist's on-file list. No other verdict may carry it.
+            - A "leads" address on a locations worklist row comes from the permit
+              register and is not a location: include it in "sites" only when the
+              pizzeria's own site, or that branch's own site, confirms it. An entry
+              may have both a "locations" record and a "locationsSkipped" record
+              whose note names a lead you could not confirm.
             - An entry on the locations, coverage or social worklist that you
               could not resolve goes in locationsSkipped, coverageSkipped or
               socialSkipped, so the next pass moves on.

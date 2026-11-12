@@ -495,7 +495,12 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
    * Promotions go through `directory` like any discovery; this section only
    * records why a candidate does NOT join, so the queue drains instead of the
    * same ghosts monopolising every census worklist. When the candidates queue
-   * is provided (extra.candidates), names must match a pending candidate. */
+   * is provided (extra.candidates), names must match a pending candidate.
+   *
+   * A duplicate names the entry it duplicates. The apply step stores that id
+   * on the candidate, which is how a branch the register knows and the entry
+   * lacks reaches the locations worklist; a verdict with no id would resolve
+   * the candidate and lose its address. */
   const VERDICTS = new Set(['closed', 'chain', 'not-pizza', 'duplicate', 'unverifiable']);
   const pendingNames = extra.candidates
     ? new Set(extra.candidates.filter(c => c.status === 'pending')
@@ -512,6 +517,15 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
     reviewSeen.add(name);
     if (!VERDICTS.has(it?.verdict)) {
       bad('candidateReview', i, `verdict must be one of ${[...VERDICTS].join('|')}, got "${it?.verdict}"`);
+    }
+    if (it?.verdict === 'duplicate') {
+      if (!byId.has(it?.duplicateOf)) {
+        bad('candidateReview', i, it?.duplicateOf == null
+          ? 'a duplicate verdict needs duplicateOf, the id of the entry on file it duplicates'
+          : `duplicateOf is not the id of an entry on file: "${it.duplicateOf}"`);
+      }
+    } else if (it?.duplicateOf != null) {
+      bad('candidateReview', i, `duplicateOf belongs to a duplicate verdict only, not "${it?.verdict}"`);
     }
     checkText('candidateReview', i, it?.note, 'note', MAX_LEN.note, 10);
     /* source is optional here and a verdict publishes nothing to the site --

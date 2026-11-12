@@ -29,6 +29,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { branchLeads } from '../src/census.js';
 import { locationWorklist } from '../src/locations.js';
 import { isRated, isLaunchRating } from '../src/slice.js';
 import { hostOf } from '../src/validate-research.js';
@@ -142,8 +143,13 @@ if the city has nothing new.`;
   return { brief, worklistSize: null };
 };
 
-BUILDERS.locations = ({ openField, now }) => {
-  const locList = locationWorklist(openField, now).slice(0, 5);
+BUILDERS.locations = ({ openField, now, candidates }) => {
+  // A branch lead is a permit address the register files under an entry and
+  // the entry does not list. Those entries lead the worklist, and the row
+  // hands the agent the addresses to confirm; none is written anywhere until
+  // the pizzeria's own pages bear it out.
+  const leads = branchLeads(candidates, openField, now);
+  const locList = locationWorklist(openField, now, leads).slice(0, 5);
   const rows = locList.map(r => {
     // An address that arrived with a discovery is on file but nobody has read
     // it off the pizzeria's own site yet, so it carries no verification date.
@@ -154,8 +160,20 @@ BUILDERS.locations = ({ openField, now }) => {
             ? `${r.locations.length} site(s) verified ${r.locationsVerified}`
             : 'address on file, never verified')
         : `UNVERIFIED, stored as "${r.neighborhood}"`;
-    return `- id: ${r.id} | ${r.name} | site: ${r.url ?? 'unknown, search for it'} | ${state}`;
+    const known = leads.get(r.id);
+    return `- id: ${r.id} | ${r.name} | site: ${r.url ?? 'unknown, search for it'} | ${state}${
+      known ? ` | leads: ${known.join(' ; ')}` : ''}`;
   }).join('\n');
+  const leadRule = locList.some(r => leads.has(r.id)) ? `
+A row's "leads" are addresses King County's food-permit register lists
+under that business and that are not on file for it. A lead is not a
+location yet: confirm each one against the pizzeria's own site, or the
+branch's own site, before including it in "sites". A commissary or prep
+kitchen with no counter is not a location. Report the full set of
+branches as usual, and if a lead cannot be confirmed, also file a
+"locationsSkipped" record for that entry whose note says which lead and
+why; it may sit beside the entry's "locations" record.
+` : '';
   const brief = `Your task: verify where these pizzerias actually are. Verify these,
 and only these:
 
@@ -171,7 +189,7 @@ cannot find an official page, report no address for that entry — a wrong
 address is worse than a missing one — and report it as a
 "locationsSkipped" record ({"id","note"}: what you searched and what you
 found) so it is not redrawn next pass.
-
+${leadRule}
 Report every branch that is open now, with its homepage. Branches outside
 the Puget Sound region do not belong. While you are on a pizzeria's own
 site, also look for its Instagram link (usually in the header or footer)
@@ -439,16 +457,19 @@ BUILDERS.census = ({ restaurants, candidates }) => {
   // except after a seed refresh turns up a new permit, and an empty worklist
   // keeps the task out of the rotation until then.
   const worklist = candidates.filter(c => c.status === 'pending').slice(0, 10);
-  const names = restaurants.map(r => r.name).sort().join('; ');
+  // Listed with ids: a duplicate verdict has to say which entry it means.
+  const onFile = [...restaurants].sort((a, b) => a.name.localeCompare(b.name))
+    .map(r => `${r.id} = ${r.name}`).join('\n');
   const brief = `Your task: verify candidate pizzerias found in King County
 food-business permit data, so the real ones can join the directory.
 Verify these, and only these:
 
 ${worklist.map(c => `- "${c.name}" | ${c.address ?? 'address unknown'}${c.lastInspection ? ` | last health inspection ${c.lastInspection}` : ''}`).join('\n')}
 
-Already on file (a candidate may be one of these under a permit-register
-spelling — that is a "duplicate", not a new entry):
-${names}
+Already on file, as id = name (a candidate may be one of these under a
+permit-register spelling, or another branch of one — that is a
+"duplicate", not a new entry):
+${onFile}
 
 For EVERY candidate above, produce exactly one of:
 
@@ -461,8 +482,13 @@ For EVERY candidate above, produce exactly one of:
 2. It should NOT join: report a "candidateReview" record —
    {"name":"<EXACT name from the worklist above>",
     "verdict":"closed|chain|not-pizza|duplicate|unverifiable",
+    "duplicateOf":"<id of the entry on file, for a duplicate only>",
     "note":"<what you found>","source":"<https page, when you have one>"}.
-   duplicate = same place as an entry on file or another candidate;
+   duplicate = the same business as an entry on file, at its address or
+   at another branch; "duplicateOf" is that entry's id from the list
+   above, and is required. A candidate that is the same business as
+   another candidate you are reporting as a new "directory" entry needs
+   no record of its own.
    not-pizza = a grocery counter, bar or restaurant where pizza is
    incidental; unverifiable = you could find no trace beyond the permit.
 
@@ -616,7 +642,9 @@ result on a quiet day.`;
 };
 
 /* The brief and worklist size for one task type, from the dataset alone.
- * `candidates` is the census queue; only the census task reads it. */
+ * `candidates` is the census queue: the census task works its pending
+ * candidates, and the locations task reads its resolved ones for branch
+ * leads. */
 export function buildTask(type, restaurants, { now = Date.now(), candidates = [] } = {}) {
   const openField = restaurants.filter(r => r.status !== 'closed');
   return BUILDERS[type]({ restaurants, openField, now, candidates });

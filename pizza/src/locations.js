@@ -72,18 +72,24 @@ export const LOCATION_REVISIT_DAYS = 30;
 
 /* The locations worklist: entries worth a pass today, most overdue first.
  *
+ * `leads` maps an entry id to the permit addresses the register lists for it
+ * that are not on file (branchLeads in census.js).
+ *
  * Left out: an "opening" entry with no location on file (there is no address
  * to publish until it opens), and anything looked at within the revisit
  * window. An entry nobody can verify would otherwise be redrawn on every pass
  * and hold the head of the list while the pass verified nothing.
  *
- * Order: placeholders first (they are actively wrong on the page), then
- * entries never looked at, then by the date of the last look, oldest first.
+ * Order: entries with a branch lead first (a branch the page does not show
+ * is the one gap a reader can walk into), then placeholders (they are
+ * actively wrong on the page), then entries never looked at, then by the date
+ * of the last look, oldest first. The revisit window covers a lead too, so
+ * one that cannot be confirmed costs a look a month and not a look a day.
  * Entries never looked at tie on that date, so they go by oldest status check
  * and then id; file order would pin the same few to the front.
  * Date.parse(null) is NaN, which would poison a comparison, so it is coerced
  * to 0 and sorts first on its own. */
-export function locationWorklist(restaurants, nowMs = Date.now()) {
+export function locationWorklist(restaurants, nowMs = Date.now(), leads = new Map()) {
   const at = v => Date.parse(v) || 0;
   const lastLook = r => Math.max(at(r.locationsVerified), at(r.locationsAttempted));
   const cutoff = nowMs - LOCATION_REVISIT_DAYS * 864e5;
@@ -91,6 +97,9 @@ export function locationWorklist(restaurants, nowMs = Date.now()) {
     .filter(r => !(r.status === 'opening' && !(r.locations ?? []).length))
     .filter(r => lastLook(r) <= cutoff)
     .sort((a, b) => {
+      const al = leads.get(a.id)?.length ? 0 : 1;
+      const bl = leads.get(b.id)?.length ? 0 : 1;
+      if (al !== bl) return al - bl;
       const ap = a.neighborhoodIsPlaceholder ? 0 : 1;
       const bp = b.neighborhoodIsPlaceholder ? 0 : 1;
       if (ap !== bp) return ap - bp;

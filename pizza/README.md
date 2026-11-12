@@ -81,7 +81,7 @@ pizza/
   src/locations.js        location labels and the locations worklist
   src/validate-research.js   the research-file gate, as a pure function
   src/check-dataset.js    the dataset lint, as a pure function
-  src/census.js           candidate matching and coverage numbers
+  src/census.js           candidate matching, branch leads and coverage numbers
   build/                  the page, section by section (pure modules)
   scripts/build.mjs       composes build/ into OUT_DIR (default ../dist/pizza)
   scripts/verify.mjs      the deploy gate: unit tests plus checks on the output (below)
@@ -167,8 +167,23 @@ The candidates seed keeps itself current. After the apply step `research.yml` ru
 the last refresh is more than 30 days old. A refresh reads King County's food-permit
 register and OpenStreetMap, each request with a User-Agent and a 25-second timeout,
 rewrites the candidates only when one changed, and stamps `checked` when the permit
-register answered. If neither source answers, or anything else goes wrong, the file is
+register answered. The register spells the city several ways (`SEATTLE`, `Seattle`,
+`seattle`, `Seattle,`, `WEST SEATTLE`), so the request matches it in upper case and
+`isSeattleCity()` in `src/census.js` settles which rows count. If neither source answers, or anything else goes wrong, the file is
 left as it was and the step still exits 0. Run it with no flag to refresh at once.
+
+A candidate that turns out to be an entry already on file stays tied to it. One the
+seed matches by name is `promoted` with a `matchedId` (an entry's trailing parenthetical
+is set aside, so the permit name "A Pizza Mart" matches "A Pizza Mart (First Hill)"), and
+a census `duplicate` verdict must name the entry in `duplicateOf`, which is stored as
+`matchedId` too. `branchLeads()` in `src/census.js` then lists, per open entry, the
+Seattle permit addresses inspected within the seed's cutoff that match none of its
+locations. An entry with a lead goes to the head of the locations worklist and its row
+in the brief lists the addresses. A lead is never written into `locations[]`: a second
+permit can be a commissary kitchen or an old registration, so the agent confirms each
+against the pizzeria's own pages and reports the full set as usual. The 30-day rest
+applies to these entries like any other, so a lead nobody can confirm costs one look a
+month.
 
 Every worklist remembers what it could not resolve. An entry the agent reports in
 `ratingSkipped`, `factsSkipped`, `locationsSkipped`, `coverageSkipped` or `socialSkipped`

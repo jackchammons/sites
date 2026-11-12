@@ -95,6 +95,12 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   by `apply-research.mjs` from a pass that read the pizzeria's own locations page.
   `neighborhood` is the original editorial string and the fallback. Never render
   `r.neighborhood` directly; use `locationLabel(r)` from `src/locations.js`.
+- **A permit address is a lead, never a location.** `branchLeads()` in `src/census.js`
+  lists, per open entry, the Seattle permit addresses of candidates whose `matchedId` is
+  that entry and that match none of its locations. Such an entry leads the locations
+  worklist and its row lists the addresses for the agent to confirm on the pizzeria's
+  own pages; a duplicate permit can be a commissary or a second registration. A lead
+  does not bypass the 30-day rest, so one that cannot be confirmed costs a look a month.
 - **One geographic rule.** `src/bounds.js` holds the ZIP pattern and the lat/lon box,
   imported by the validator, the geocoder and the lint, so an address the validator
   accepts cannot fail the lint once geocoded.
@@ -174,6 +180,15 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   channel or records why it does not belong through `candidateReview`. The apply job
   refreshes the seed once it is a month old (`--max-age-days=30`; `checked` is the last
   refresh, `updated` the last change), and a new candidate gives census a worklist.
+- **A duplicate names what it duplicates.** A `candidateReview` with verdict `duplicate`
+  must carry `duplicateOf` (an id on file), stored on the candidate as `matchedId`.
+  Without it a branch's address is thrown away, which is how A Pizza Mart sat on file
+  with one of its six shops. `matchEntry` sets aside a trailing parenthetical in an
+  entry's name.
+- **The permit register's `city` is free text.** It spells Seattle several ways, and a
+  query that compared it with `=` missed a quarter of the city's permits, Jet City Pizza
+  among them. The query matches `upper(city) like '%SEATTLE%'` and `isSeattleCity()`
+  settles the set; never compare `city` with `=`.
 - **Set exactly one research credential.** `CLAUDE_CODE_OAUTH_TOKEN` or
   `ANTHROPIC_API_KEY`. If both are set the API key wins and bills per token while the
   subscription allowance goes unused; the gate step warns. The model is named once, as

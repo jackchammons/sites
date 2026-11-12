@@ -40,7 +40,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { mergeCandidates } from '../src/census.js';
+import { mergeCandidates, isSeattleCity, INSPECTION_CUTOFF_MONTHS } from '../src/census.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outPath = path.join(root, 'data/candidates.json');
@@ -50,17 +50,19 @@ const UA = 'Mozilla/5.0 (compatible; SeattlePizzaIndex/1.0; +https://sites.jackh
  * and a commit still to make, so the worst case has to stay small: one
  * register request and three Overpass mirrors come to 100 seconds. */
 const TIMEOUT_MS = 25_000;
-export const INSPECTION_CUTOFF_MONTHS = 30;
+export { INSPECTION_CUTOFF_MONTHS };
 
 const title = s => String(s).toLowerCase().replace(/\b[a-z]/g, c => c.toUpperCase())
   .replace(/\bLlc\b/g, 'LLC').trim();
 
-/* Inspection rows, newest first, to one candidate per business. */
+/* Inspection rows, newest first, to one candidate per business. The query
+ * matches the city loosely, so the rows are held to isSeattleCity here. */
 export function kingCountyCandidates(rows, nowMs = Date.now()) {
   // An error from Socrata is a JSON object, not a list of rows.
   if (!Array.isArray(rows)) throw new Error('Socrata answered with something that is not a list of rows');
   const seen = new Map();
   for (const row of rows) {
+    if (!isSeattleCity(row?.city)) continue;
     const id = row?.business_id ?? `${row?.name}|${row?.address}`;
     if (seen.has(id)) continue;   // rows are newest-first, so first wins = latest inspection
     seen.set(id, row);
@@ -158,14 +160,23 @@ async function getJson(url, init = {}) {
   return res.json();
 }
 
+/* The register request. Name-filtered and ordered server-side; deduped to
+ * businesses client-side.
+ *
+ * The city is matched in upper case and by containment. SoQL's `=` is
+ * case-sensitive and the register spells Seattle five ways, so
+ * `city = 'SEATTLE'` leaves out about a quarter of the city's permits, Jet
+ * City Pizza among them. Containment also returns the odd "Seattle tacoma";
+ * kingCountyCandidates settles the exact set. */
+export const KING_COUNTY_WHERE =
+  "upper(city) like '%SEATTLE%' AND (upper(name) like '%PIZZ%' OR upper(name) like '%SLICE%')";
+export const kingCountyUrl = () => 'https://data.kingcounty.gov/resource/r878-4sxa.json'
+  + '?$select=business_id,name,address,city,zip_code,inspection_date,inspection_closed_business'
+  + '&$where=' + encodeURIComponent(KING_COUNTY_WHERE)
+  + '&$order=inspection_date DESC&$limit=20000';
+
 async function fromKingCounty() {
-  // Name-filtered and ordered server-side; deduped to businesses client-side.
-  const url = 'https://data.kingcounty.gov/resource/r878-4sxa.json'
-    + '?$select=business_id,name,address,city,zip_code,inspection_date,inspection_closed_business'
-    + '&$where=' + encodeURIComponent(
-      "city = 'SEATTLE' AND (upper(name) like '%PIZZ%' OR upper(name) like '%SLICE%')")
-    + '&$order=inspection_date DESC&$limit=20000';
-  return kingCountyCandidates(await getJson(url));
+  return kingCountyCandidates(await getJson(kingCountyUrl()));
 }
 
 async function fromOverpass() {

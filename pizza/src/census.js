@@ -10,6 +10,18 @@
  * Pure functions of data, no I/O: the fetch script and apply step do the
  * reading and writing.
  */
+import { streetKey } from './locations.js';
+
+/* How long a permit stays a lead after its last inspection. The seed drops a
+ * business the register has not inspected in this long as likely gone, and a
+ * branch lead from a stored candidate is held to the same age. */
+export const INSPECTION_CUTOFF_MONTHS = 30;
+
+/* The register files every permit under a free-text city, and Seattle is
+ * spelt several ways in it: "SEATTLE", "Seattle", "seattle", "Seattle," and
+ * "WEST SEATTLE". Any case, with trailing punctuation or spaces, is the city;
+ * a longer name that merely contains it ("Seattle tacoma") is not. */
+export const isSeattleCity = city => /^\s*(west\s+)?seattle[\s.,;]*$/i.test(String(city ?? ''));
 
 /* National chains are excluded from the index by policy — this is an index of
  * Seattle's own pizzerias. The seed still records them (status "chain") so the
@@ -45,13 +57,22 @@ export const candidateKey = (name, address) => {
   return `${normName(name)}|${num}`;
 };
 
+/* An entry's name without a trailing parenthetical. "A Pizza Mart (First
+ * Hill)" is filed under the branch it was found at, and the register lists
+ * every branch under the plain "A Pizza Mart". */
+const baseName = name => String(name).replace(/\s*\([^()]*\)\s*$/, '');
+
 /* Does a candidate match an entry already on file? Name match is enough when
  * the normalised names collide; permits and OSM both write raw names, so an
- * address tiebreak would reject true matches more often than it caught forks. */
+ * address tiebreak would reject true matches more often than it caught forks.
+ * An entry's full name is tried first, so an entry filed under the plain name
+ * wins over one that only shares it once its parenthetical is set aside. */
 export function matchEntry(candidate, restaurants) {
   const key = normName(candidate.name);
   if (!key) return null;
-  return restaurants.find(r => normName(r.name) === key) ?? null;
+  return restaurants.find(r => normName(r.name) === key)
+    ?? restaurants.find(r => normName(baseName(r.name)) === key)
+    ?? null;
 }
 
 /*
@@ -88,6 +109,63 @@ export function mergeCandidates(existing, incoming, restaurants) {
   }
   return [...byKey.values()].sort((a, b) =>
     a.status.localeCompare(b.status) || a.name.localeCompare(b.name));
+}
+
+/* The keys one door answers to when a permit address is held against an
+ * entry's locations: its street key, its street line alone, and its street
+ * number with its ZIP. The register and a pizzeria's own site write one door
+ * differently in ways the street key does not fold: another ZIP for the same
+ * street line ("10003 Rainier Ave S" under 98118 and 98178), "6711 M L King
+ * Jr Way S" for "6711 Martin Luther King Jr Way S", "9622 16th Ave Sw, A"
+ * for "9622-A 16th Ave SW". Both sides belong to one business and the permit
+ * is in Seattle, so a looser match costs nothing: two branches sharing a
+ * street line, or a number and a ZIP, do not occur, and a false lead costs a
+ * look every month. */
+const doorKeys = address => {
+  const full = String(address ?? '');
+  const key = streetKey(full);
+  const line = key.split('|')[0];
+  const num = full.match(/^\s*(\d+)/)?.[1];
+  const zip = key.split('|')[1];
+  return [key, ...(line ? [`${line}|`] : []), ...(num && zip ? [`#${num}|${zip}`] : [])];
+};
+
+/*
+ * Branch leads: per entry id, the Seattle addresses the permit register lists
+ * under that business and the entry does not have.
+ *
+ * A candidate names its entry through matchedId, whether it was promoted on a
+ * name match or rejected as a duplicate. Its address is a lead when the
+ * permit was inspected within the seed's cutoff and no location on file is at
+ * that door. A lead is never a location: a duplicate permit can be a
+ * commissary kitchen or an old registration, so the locations task confirms
+ * each against the pizzeria's own pages before it is reported. A closed entry
+ * has no leads, since nothing is verified for it any more.
+ *
+ * Returns a Map of id -> addresses, in the order the queue holds them.
+ */
+export function branchLeads(candidates, restaurants, nowMs = Date.now()) {
+  const cutoff = nowMs - INSPECTION_CUTOFF_MONTHS * 30 * 864e5;
+  const byId = new Map(restaurants.map(r => [r.id, r]));
+  const doors = new Map();
+  const leads = new Map();
+  for (const c of candidates ?? []) {
+    const r = byId.get(c?.matchedId);
+    if (!r || r.status === 'closed') continue;
+    if (c.status !== 'promoted' && c.status !== 'rejected') continue;
+    if (typeof c.address !== 'string' || !/, Seattle, WA\b/.test(c.address)) continue;
+    if (!(Date.parse(c.lastInspection) >= cutoff)) continue;
+    if (!doors.has(r.id)) {
+      doors.set(r.id, new Set((r.locations ?? []).flatMap(l => doorKeys(l.address))));
+    }
+    const have = doors.get(r.id);
+    const keys = doorKeys(c.address);
+    if (keys.some(k => have.has(k))) continue;
+    // Two permits at one door are one lead.
+    for (const k of keys) have.add(k);
+    leads.set(r.id, [...(leads.get(r.id) ?? []), c.address]);
+  }
+  return leads;
 }
 
 /* The published coverage numbers. */

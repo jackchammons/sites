@@ -35,6 +35,35 @@ test('worklist: placeholders first, then never looked at, then the oldest look',
   assert.deepEqual(order(rs), ['placeholder', 'never', 'stale', 'recent']);
 });
 
+test('worklist: an entry with a branch lead goes ahead of everything else', () => {
+  const rs = [
+    at('stale', { locationsVerified: '2026-01-01' }),
+    at('never', { locations: [] }),
+    at('placeholder', { neighborhood: 'Multiple locations', neighborhoodIsPlaceholder: true, locations: [] }),
+    at('lead-verified', { locationsVerified: '2026-08-01' }),
+    at('lead-never')
+  ];
+  const leads = new Map([['lead-verified', ['2 B St, Seattle, WA 98101']], ['lead-never', ['3 C St, Seattle, WA 98101']],
+    ['stale', []]]);
+  assert.deepEqual(locationWorklist(rs, NOW, leads).map(r => r.id),
+    ['lead-never', 'lead-verified', 'placeholder', 'never', 'stale']);
+  // With no leads the same entries fall back to the usual order.
+  assert.deepEqual(order(rs), ['placeholder', 'lead-never', 'never', 'stale', 'lead-verified']);
+});
+
+test('worklist: a lead does not shorten the rest after a look', () => {
+  const rs = [
+    at('looked-yesterday', { locationsVerified: '2026-11-09' }),
+    at('skipped-last-week', { locationsVerified: '2026-01-01', locationsAttempted: '2026-11-03' }),
+    at('no-lead')
+  ];
+  const leads = new Map(rs.slice(0, 2).map(r => [r.id, ['2 B St, Seattle, WA 98101']]));
+  assert.deepEqual(locationWorklist(rs, NOW, leads).map(r => r.id), ['no-lead']);
+  // A month on, both are due again and lead the list, oldest look first.
+  assert.deepEqual(locationWorklist(rs, NOW + 31 * 864e5, leads).map(r => r.id),
+    ['skipped-last-week', 'looked-yesterday', 'no-lead']);
+});
+
 test('worklist: an entry attempted yesterday is not drawn, and one never attempted is', () => {
   const rs = [
     at('tried-yesterday', { locations: [], locationsAttempted: '2026-11-09' }),

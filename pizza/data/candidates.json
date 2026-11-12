@@ -1,8 +1,18 @@
 {
-  "updated": "2026-11-11T19:56:51.566Z",
-  "checked": "2026-11-11T19:56:51.566Z",
+  "updated": "2026-11-12T05:30:31.005Z",
+  "checked": "2026-11-12T05:30:31.005Z",
   "cutoffMonths": 30,
   "candidates": [
+    {
+      "key": "dominos|714",
+      "name": "Domino'S Pizza #7063",
+      "address": "714 Taylor Ave N, Seattle, WA 98109",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-01-14",
+      "status": "chain"
+    },
     {
       "key": "dominos|4717",
       "name": "Domino'S Pizza #7084",
@@ -41,6 +51,16 @@
         "kc-health"
       ],
       "lastInspection": "2026-10-13",
+      "status": "chain"
+    },
+    {
+      "key": "dominos|1427",
+      "name": "Domino'S Pizza #7144",
+      "address": "1427 Broadway, Seattle, WA 98122",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-06-10",
       "status": "chain"
     },
     {
@@ -160,6 +180,26 @@
       "resolvedDate": "2026-08-31"
     },
     {
+      "key": "papa johns|1500",
+      "name": "Papa John'S Pizza",
+      "address": "1500 Nw Market St, 106, Seattle, WA 98107",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-04-21",
+      "status": "chain"
+    },
+    {
+      "key": "papa johns|5401",
+      "name": "Papa John'S Pizza #2119",
+      "address": "5401 25th Ave Ne, Seattle, WA 98105",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-09-10",
+      "status": "chain"
+    },
+    {
       "key": "papa johns capitol hill|2116",
       "name": "Papa Johns Pizza- Capitol Hill",
       "address": "2116 E Denny Way, Seattle, WA 98122",
@@ -167,6 +207,16 @@
         "kc-health"
       ],
       "lastInspection": "2026-05-13",
+      "status": "chain"
+    },
+    {
+      "key": "hut|1517",
+      "name": "Pizza Hut #13899",
+      "address": "1517 Sw 104th St, Seattle, WA 98146",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-03-25",
       "status": "chain"
     },
     {
@@ -184,6 +234,146 @@
       "resolvedDate": "2026-09-09"
     },
     {
+      "key": "alberonas davinci pasta|3624",
+      "name": "Alberona'S Davinci Pizza & Pasta",
+      "address": "3624 Leary Way Nw, Seattle, WA 98107",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-10-22",
+      "status": "pending"
+    },
+    {
+      "key": "capitale|426",
+      "name": "Capitale Pizzeria",
+      "address": "426 Broadway E, Seattle, WA 98102",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-10-29",
+      "status": "pending"
+    },
+    {
+      "key": "deleo dba deleo bros|202",
+      "name": "Deleo Pizza Company, LLC Dba Deleo Bros Pizza",
+      "address": "202 Occidental Ave S, Seattle, WA 98104-3120",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-10-13",
+      "status": "pending"
+    },
+    {
+      "key": "desi kitchen|2115",
+      "name": "Desi Pizza Kitchen",
+      "address": "2115 Queen Anne Ave N, Seattle, WA 98109",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-01-02",
+      "status": "pending"
+    },
+    {
+      "key": "fremont|3510",
+      "name": "Fremont Pizza",
+      "address": "3510 Fremont Ave N, Seattle, WA 98103",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-02-24",
+      "status": "pending"
+    },
+    {
+      "key": "jet city|7500",
+      "name": "Jet City Pizza",
+      "address": "7500 25th Ave Ne, Seattle, WA 98115",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-11-05",
+      "status": "pending"
+    },
+    {
+      "key": "lodge|501",
+      "name": "Lodge Pizza",
+      "address": "501 2nd Ave W, 100, Seattle, WA 98119",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-10-02",
+      "status": "pending"
+    },
+    {
+      "key": "magnolia and pasta|2120",
+      "name": "Magnolia Pizza And Pasta",
+      "address": "2120 W Emerson Pl, Seattle, WA 98199",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-02-26",
+      "status": "pending"
+    },
+    {
+      "key": "numero uno|103",
+      "name": "Numero Uno Pizza",
+      "address": "103 1st Ave S, Seattle, WA 98104",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-11-03",
+      "status": "pending"
+    },
+    {
+      "key": "olympia ii spaghetti|4501",
+      "name": "Olympia Ii Pizza & Spaghetti",
+      "address": "4501 Interlake Ave N, Seattle, WA 98103",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-01-07",
+      "status": "pending"
+    },
+    {
+      "key": "olympia|516",
+      "name": "Olympia Pizza #3",
+      "address": "516 15th Ave E, Seattle, WA 98112",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-03-17",
+      "status": "pending"
+    },
+    {
+      "key": "pasta bar|1530",
+      "name": "Pizza & Pasta Bar",
+      "address": "1530 Post Aly, Seattle, WA 98101",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-06-11",
+      "status": "pending"
+    },
+    {
+      "key": "colibri kc574|2524",
+      "name": "Pizza Colibri - Kc574",
+      "address": "2524 16th Ave S, Seattle, WA 98144",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2025-11-03",
+      "status": "pending"
+    },
+    {
+      "key": "group|510",
+      "name": "Pizza Group LLC",
+      "address": "510 Broadway E, Seattle, WA 98102",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-02-11",
+      "status": "pending"
+    },
+    {
       "key": "rasoi|1011",
       "name": "Pizza Rasoi",
       "address": "1011 Valley St, Seattle, WA 98109",
@@ -192,6 +382,79 @@
       ],
       "lastInspection": "2026-10-05",
       "status": "pending"
+    },
+    {
+      "key": "pizzutos italian|5032",
+      "name": "Pizzuto'S Italian Cafe",
+      "address": "5032 Wilson Ave S, Seattle, WA 98118",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-06-18",
+      "status": "pending"
+    },
+    {
+      "key": "santorini pasta|11001",
+      "name": "Santorini Pizza & Pasta",
+      "address": "11001 35th Ave Ne, Seattle, WA 98125",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-04-29",
+      "status": "pending"
+    },
+    {
+      "key": "sopranos pasta|7729",
+      "name": "Soprano'S Pizza & Pasta",
+      "address": "7729 24th Ave Nw, Seattle, WA 98117",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-02-24",
+      "status": "pending"
+    },
+    {
+      "key": "varlamos|3617",
+      "name": "Varlamos Pizzeria",
+      "address": "3617 Ne 45th St, Seattle, WA 98105",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-10-28",
+      "status": "pending"
+    },
+    {
+      "key": "a mart|9452",
+      "name": "A-Pizza Mart",
+      "address": "9452 35th Ave Sw, Seattle, WA 98126",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-10-19",
+      "status": "promoted",
+      "matchedId": "a-pizza-mart-first-hill"
+    },
+    {
+      "key": "a k|6901",
+      "name": "A.K. Pizza",
+      "address": "6901 Martin Luther King Jr Way S, A, Seattle, WA 98118",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-08-14",
+      "status": "promoted",
+      "matchedId": "a-k-pizza"
+    },
+    {
+      "key": "ananas|1106",
+      "name": "Ananas Pizzeria",
+      "address": "1106 8th Ave Av, Seattle, WA 98101",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-04-27",
+      "status": "promoted",
+      "matchedId": "ananas-pizzeria"
     },
     {
       "key": "ballard|5205",
@@ -335,6 +598,17 @@
       "resolvedDate": "2026-08-31"
     },
     {
+      "key": "hot mamas|700",
+      "name": "Hot Mama'S Pizza",
+      "address": "700 E Pine St, Seattle, WA 98122",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-09-24",
+      "status": "promoted",
+      "matchedId": "hot-mamas-pizza"
+    },
+    {
       "key": "in we crust|3207",
       "name": "In Pizza We Crust",
       "address": "3207 California Ave Sw, Seattle, WA 98116",
@@ -382,6 +656,17 @@
       "resolvedDate": "2026-08-31"
     },
     {
+      "key": "lucianos pasta|2341",
+      "name": "Luciano'S Pizza & Pasta",
+      "address": "2341 California Ave Sw, Seattle, WA 98116",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-09-15",
+      "status": "promoted",
+      "matchedId": "lucianos-pizza-pasta"
+    },
+    {
       "key": "mad|1321",
       "name": "Mad Pizza",
       "address": "1321 Madison St, Seattle, WA 98104",
@@ -416,6 +701,39 @@
       "status": "promoted",
       "matchedId": "modena-pizza-pasta",
       "resolvedDate": "2026-09-09"
+    },
+    {
+      "key": "moto|512",
+      "name": "Moto Pizza",
+      "address": "512 2nd Ave, Seattle, WA 98104",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-08-25",
+      "status": "promoted",
+      "matchedId": "moto-pizza"
+    },
+    {
+      "key": "olympic pasta|6413",
+      "name": "Olympic Pizza & Pasta",
+      "address": "6413 Roosevelt Way Ne, Seattle, WA 98115",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-02-04",
+      "status": "promoted",
+      "matchedId": "olympic-pizza-pasta"
+    },
+    {
+      "key": "pagliacci|3058",
+      "name": "Pagliacci Pizza",
+      "address": "3058 Nw 54th St, Seattle, WA 98107",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-11-10",
+      "status": "promoted",
+      "matchedId": "pagliacci"
     },
     {
       "key": "pagliacci|4901",
@@ -458,6 +776,94 @@
         "kc-health"
       ],
       "lastInspection": "2026-10-01",
+      "status": "promoted",
+      "matchedId": "pagliacci"
+    },
+    {
+      "key": "pagliacci|315",
+      "name": "Pagliacci Pizza Inc",
+      "address": "315 N 145th St, Seattle, WA 98133",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-10-27",
+      "status": "promoted",
+      "matchedId": "pagliacci"
+    },
+    {
+      "key": "pagliacci|2400",
+      "name": "Pagliacci Pizza Inc",
+      "address": "2400 10th Ave E, Seattle, WA 98102",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-10-27",
+      "status": "promoted",
+      "matchedId": "pagliacci"
+    },
+    {
+      "key": "pagliacci|1614",
+      "name": "Pagliacci Pizza Inc",
+      "address": "1614 W Dravus St, Seattle, WA 98119",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-09-29",
+      "status": "promoted",
+      "matchedId": "pagliacci"
+    },
+    {
+      "key": "pagliacci|6224",
+      "name": "Pagliacci Pizza Inc",
+      "address": "6224 Sandpoint Way Ne, Seattle, WA 98115",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-09-24",
+      "status": "promoted",
+      "matchedId": "pagliacci"
+    },
+    {
+      "key": "pagliacci|4449",
+      "name": "Pagliacci Pizza Inc",
+      "address": "4449 California Ave Sw, Seattle, WA 98116",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-08-05",
+      "status": "promoted",
+      "matchedId": "pagliacci"
+    },
+    {
+      "key": "pagliacci|4003",
+      "name": "Pagliacci Pizza Inc",
+      "address": "4003 Stone Way N, Seattle, WA 98103",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-07-14",
+      "status": "promoted",
+      "matchedId": "pagliacci"
+    },
+    {
+      "key": "pagliacci|721",
+      "name": "Pagliacci Pizza Inc",
+      "address": "721 Aurora Ave N, Seattle, WA 98109",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-06-02",
+      "status": "promoted",
+      "matchedId": "pagliacci"
+    },
+    {
+      "key": "pagliacci|851",
+      "name": "Pagliacci Pizza Inc",
+      "address": "851 Nw 85th St, Seattle, WA 98117",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2025-07-24",
       "status": "promoted",
       "matchedId": "pagliacci"
     },
@@ -541,6 +947,17 @@
       "matchedId": "pizzeria-la-rocca"
     },
     {
+      "key": "pulcinella|10003",
+      "name": "Pizzeria Pulcinella",
+      "address": "10003 Rainier Ave S, Seattle, WA 98118",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2025-06-12",
+      "status": "promoted",
+      "matchedId": "pizzeria-pulcinella"
+    },
+    {
       "key": "post alley|1123",
       "name": "Post Alley Pizza",
       "address": "1123 Post Ave, Seattle, WA 98101",
@@ -575,6 +992,17 @@
       "resolvedDate": "2026-09-09"
     },
     {
+      "key": "razzis|8523",
+      "name": "Razzis Pizzeria",
+      "address": "8523 Greenwood Ave N, Seattle, WA 98103",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-03-31",
+      "status": "promoted",
+      "matchedId": "razzis-pizzeria"
+    },
+    {
       "key": "ridge|7217",
       "name": "Ridge Pizza",
       "address": "7217 Greenwood Ave N, Seattle, WA 98103",
@@ -596,6 +1024,17 @@
       "lastInspection": "2026-09-29",
       "status": "promoted",
       "matchedId": "romano-pizza-pasta"
+    },
+    {
+      "key": "sinners|4529",
+      "name": "Sinners Pizza",
+      "address": "4529 University Way Ne, Seattle, WA 98105",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-05-26",
+      "status": "promoted",
+      "matchedId": "sinners-pizza"
     },
     {
       "key": "smoking monkey|3111",
@@ -677,6 +1116,28 @@
       "matchedId": "zeeks-pizza"
     },
     {
+      "key": "zeeks|2108",
+      "name": "Zeeks Pizza",
+      "address": "2108 Ne 65th St, Seattle, WA 98115",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-09-14",
+      "status": "promoted",
+      "matchedId": "zeeks-pizza"
+    },
+    {
+      "key": "zeeks|1830",
+      "name": "Zeeks Pizza",
+      "address": "1830 E Mercer St, Seattle, WA 98112",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-07-27",
+      "status": "promoted",
+      "matchedId": "zeeks-pizza"
+    },
+    {
       "key": "zeeks|419",
       "name": "Zeeks Pizza Inc",
       "address": "419 Denny Way, Seattle, WA 98109",
@@ -684,6 +1145,28 @@
         "kc-health"
       ],
       "lastInspection": "2026-07-16",
+      "status": "promoted",
+      "matchedId": "zeeks-pizza"
+    },
+    {
+      "key": "zeeks|7900",
+      "name": "Zeeks Pizza Inc",
+      "address": "7900 E Greenlake Dr N, Seattle, WA 98103",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-09-23",
+      "status": "promoted",
+      "matchedId": "zeeks-pizza"
+    },
+    {
+      "key": "zeeks|6459",
+      "name": "Zeeks Pizza Inc",
+      "address": "6459 California Ave Sw, Seattle, WA 98136",
+      "sources": [
+        "kc-health"
+      ],
+      "lastInspection": "2026-07-28",
       "status": "promoted",
       "matchedId": "zeeks-pizza"
     },
@@ -699,7 +1182,8 @@
       "verdict": "duplicate",
       "note": "800 Seneca St, Ste 103 is the location already on file as 'A Pizza Mart (First Hill)'; the other worklist addresses (Terry Ave, 11th Ave, Westlake Ave N) are further branches of the same locally-owned A Pizza Mart mini-chain.",
       "resolutionSource": "https://www.yelp.com/biz/a-pizza-mart-seattle-14",
-      "resolvedDate": "2026-08-30"
+      "resolvedDate": "2026-08-30",
+      "matchedId": "a-pizza-mart-first-hill"
     },
     {
       "key": "a mart|1823",
@@ -713,7 +1197,8 @@
       "verdict": "duplicate",
       "note": "800 Seneca St, Ste 103 is the location already on file as 'A Pizza Mart (First Hill)'; the other worklist addresses (Terry Ave, 11th Ave, Westlake Ave N) are further branches of the same locally-owned A Pizza Mart mini-chain.",
       "resolutionSource": "https://www.yelp.com/biz/a-pizza-mart-seattle-14",
-      "resolvedDate": "2026-08-30"
+      "resolvedDate": "2026-08-30",
+      "matchedId": "a-pizza-mart-first-hill"
     },
     {
       "key": "a mart|1433",
@@ -727,7 +1212,8 @@
       "verdict": "duplicate",
       "note": "800 Seneca St, Ste 103 is the location already on file as 'A Pizza Mart (First Hill)'; the other worklist addresses (Terry Ave, 11th Ave, Westlake Ave N) are further branches of the same locally-owned A Pizza Mart mini-chain.",
       "resolutionSource": "https://www.yelp.com/biz/a-pizza-mart-seattle-14",
-      "resolvedDate": "2026-08-30"
+      "resolvedDate": "2026-08-30",
+      "matchedId": "a-pizza-mart-first-hill"
     },
     {
       "key": "a mart|711",
@@ -741,7 +1227,8 @@
       "verdict": "duplicate",
       "note": "800 Seneca St, Ste 103 is the location already on file as 'A Pizza Mart (First Hill)'; the other worklist addresses (Terry Ave, 11th Ave, Westlake Ave N) are further branches of the same locally-owned A Pizza Mart mini-chain.",
       "resolutionSource": "https://www.yelp.com/biz/a-pizza-mart-seattle-14",
-      "resolvedDate": "2026-08-30"
+      "resolvedDate": "2026-08-30",
+      "matchedId": "a-pizza-mart-first-hill"
     },
     {
       "key": "a mart bar grill|5240",
@@ -755,7 +1242,8 @@
       "verdict": "duplicate",
       "note": "University Way NE branch trading as 'A Pizza Mart Bar & Grill'; part of the same locally-owned A Pizza Mart mini-chain already on file as 'A Pizza Mart (First Hill)'.",
       "resolutionSource": "https://www.apizzamartuniversity.com/",
-      "resolvedDate": "2026-08-30"
+      "resolvedDate": "2026-08-30",
+      "matchedId": "a-pizza-mart-first-hill"
     },
     {
       "key": "big marios new york style|1011",
@@ -769,7 +1257,8 @@
       "verdict": "duplicate",
       "note": "E Pike St location is the original Capitol Hill Big Mario's, already on file as 'Big Mario's'.",
       "resolutionSource": "https://www.yelp.com/biz/big-marios-new-york-style-pizza-seattle-3",
-      "resolvedDate": "2026-08-30"
+      "resolvedDate": "2026-08-30",
+      "matchedId": "big-marios"
     },
     {
       "key": "big marios ny style|4350",
@@ -783,7 +1272,8 @@
       "verdict": "duplicate",
       "note": "4350 Leary Way NW (Frelard) is Big Mario's second location, opened 2017; same business already on file as 'Big Mario's'.",
       "resolutionSource": "https://www.myballard.com/2017/02/07/big-marios-pizza-to-open-in-frelard/",
-      "resolvedDate": "2026-08-30"
+      "resolvedDate": "2026-08-30",
+      "matchedId": "big-marios"
     },
     {
       "key": "domani|1515",
@@ -825,7 +1315,8 @@
       "verdict": "duplicate",
       "note": "Same address (3207 California Ave SW) and business as 'In Pizza We Crust' — a second King County permit registration for the same wood-fired pizzeria, not a separate business.",
       "resolutionSource": "https://inpizzawecrust.net/",
-      "resolvedDate": "2026-08-31"
+      "resolvedDate": "2026-08-31",
+      "matchedId": "in-pizza-we-crust"
     },
     {
       "key": "italian family|1028",
@@ -881,7 +1372,8 @@
       "verdict": "duplicate",
       "note": "Trades as Hot Slice Pizza at 41 Dravus St, already on file as 'Hot Slice Pizza'.",
       "resolutionSource": "https://hotslicepizzasea.com/",
-      "resolvedDate": "2026-09-12"
+      "resolvedDate": "2026-09-12",
+      "matchedId": "hot-slice-pizza"
     },
     {
       "key": "oskars kc721|5604",
@@ -895,7 +1387,8 @@
       "verdict": "duplicate",
       "note": "Same food truck business as the on-file 'Oskar's Pizza'; it uses a prep kitchen on Delridge Way SW matching the permit address.",
       "resolutionSource": "https://www.westsideseattle.com/robinson-papers/2018/05/31/oskars-pizza-truck-new-and-hot",
-      "resolvedDate": "2026-09-12"
+      "resolvedDate": "2026-09-12",
+      "matchedId": "oskars-pizza"
     },
     {
       "key": "gallery|1117",
@@ -923,7 +1416,8 @@
       "verdict": "duplicate",
       "note": "Downtown/Belltown branch of Razzi's Pizzeria, already on file under its original Greenwood location; permits are issued per-location for the same business.",
       "resolutionSource": "https://dineinseattle.com/dt_listing/razzis-pizzeria-downtown/",
-      "resolvedDate": "2026-09-09"
+      "resolvedDate": "2026-09-09",
+      "matchedId": "razzis-pizzeria"
     },
     {
       "key": "ridge northeast|3338",
@@ -937,7 +1431,8 @@
       "verdict": "duplicate",
       "note": "Expansion location of the on-file 'Ridge Pizza' (originally Phinney Ridge, opened 2012); same ownership, with the Northeast site's contact routing through matt@ridgepizza.com.",
       "resolutionSource": "https://www.ridgepizza.com/coming-soon",
-      "resolvedDate": "2026-09-12"
+      "resolvedDate": "2026-09-12",
+      "matchedId": "ridge-pizza"
     },
     {
       "key": "romios pasta|1011",
@@ -951,7 +1446,8 @@
       "verdict": "duplicate",
       "note": "Same restaurant as the on-file 'Downtown Romio's Pizza & Pasta' at the identical 1011 Pike St address; the permit is filed under the plainer 'Romio'S Pizza & Pasta' name.",
       "resolutionSource": "https://downtownromios.com/directions/",
-      "resolvedDate": "2026-09-12"
+      "resolvedDate": "2026-09-12",
+      "matchedId": "downtown-romios-pizza-pasta"
     },
     {
       "key": "seattle and bar|2801",
@@ -965,7 +1461,8 @@
       "verdict": "duplicate",
       "note": "Both permit branches (2801 Western Ave and 224 Fairview Ave N) belong to the single on-file 'Seattle Pizza & Bar' business, which operates both locations.",
       "resolutionSource": "https://www.seattlepizzaandbar.com/",
-      "resolvedDate": "2026-09-12"
+      "resolvedDate": "2026-09-12",
+      "matchedId": "seattle-pizza-bar"
     },
     {
       "key": "seattle and bar|224",
@@ -979,7 +1476,8 @@
       "verdict": "duplicate",
       "note": "Both permit branches (2801 Western Ave and 224 Fairview Ave N) belong to the single on-file 'Seattle Pizza & Bar' business, which operates both locations.",
       "resolutionSource": "https://www.seattlepizzaandbar.com/",
-      "resolvedDate": "2026-09-12"
+      "resolvedDate": "2026-09-12",
+      "matchedId": "seattle-pizza-bar"
     },
     {
       "key": "seattle super slices|1727",
@@ -1007,7 +1505,8 @@
       "verdict": "duplicate",
       "note": "Same restaurant as the on-file 'Soprano's Pizza & Pasta - Lake City' at the identical 11754 15th Ave NE address.",
       "resolutionSource": "https://lakecitysopranos.com/",
-      "resolvedDate": "2026-09-12"
+      "resolvedDate": "2026-09-12",
+      "matchedId": "sopranos-pizza-pasta-lake-city"
     },
     {
       "key": "swing sandwiches and|223",
@@ -1035,7 +1534,8 @@
       "verdict": "duplicate",
       "note": "Both permit branches (4918 Rainier Ave S and 4411 Stone Way N) are locations of the on-file Neapolitan pizzeria chain 'Tutta Bella'.",
       "resolutionSource": "https://www.tuttabella.com/location/tutta-bella-wallingford/",
-      "resolvedDate": "2026-09-12"
+      "resolvedDate": "2026-09-12",
+      "matchedId": "tutta-bella"
     },
     {
       "key": "tutta bella neapolitan|4411",
@@ -1049,7 +1549,8 @@
       "verdict": "duplicate",
       "note": "Both permit branches (4918 Rainier Ave S and 4411 Stone Way N) are locations of the on-file Neapolitan pizzeria chain 'Tutta Bella'.",
       "resolutionSource": "https://www.tuttabella.com/location/tutta-bella-wallingford/",
-      "resolvedDate": "2026-09-12"
+      "resolvedDate": "2026-09-12",
+      "matchedId": "tutta-bella"
     },
     {
       "key": "tutta bella neapolitan kc489|4918",
@@ -1063,7 +1564,8 @@
       "verdict": "duplicate",
       "note": "A second permit registration at the same 4918 Rainier Ave S address already covered by the on-file 'Tutta Bella' chain; not a separate business.",
       "resolutionSource": "https://www.tripadvisor.com/Restaurant_Review-g60878-d487164-Reviews-Tutta_Bella_Neapolitan_Pizzeria-Seattle_Washington.html",
-      "resolvedDate": "2026-09-12"
+      "resolvedDate": "2026-09-12",
+      "matchedId": "tutta-bella"
     },
     {
       "key": "veraci catering kitchen|4260",
@@ -1077,7 +1579,8 @@
       "verdict": "duplicate",
       "note": "Production/commissary kitchen for the on-file 'Veraci Pizza' catering and mobile wood-fired pizza operation, not a separate storefront business.",
       "resolutionSource": "https://www.veracipizza.com/catering",
-      "resolvedDate": "2026-09-12"
+      "resolvedDate": "2026-09-12",
+      "matchedId": "veraci-pizza"
     },
     {
       "key": "zeeks white center|9809",
@@ -1091,7 +1594,8 @@
       "verdict": "duplicate",
       "note": "White Center location of the on-file 'Zeeks Pizza' chain, per the chain's own location page.",
       "resolutionSource": "https://zeekspizza.com/location/white-center/",
-      "resolvedDate": "2026-09-12"
+      "resolvedDate": "2026-09-12",
+      "matchedId": "zeeks-pizza"
     }
   ]
 }

@@ -360,7 +360,9 @@ export function applyResearch(research, data, today, log = () => {}) {
    * no record of their own -- any candidate whose name now matches a dataset
    * entry (usually one the same run just added through `directory`) is marked
    * promoted here, and verdicts mark the rest so they stop re-entering census
-   * worklists. */
+   * worklists. A duplicate keeps the id of the entry it duplicates as
+   * matchedId, the field a promoted candidate carries, so its permit address
+   * stays tied to that entry as a branch lead. */
   if (candFile) {
     let candChanges = 0;
     for (const it of research.candidateReview ?? []) {
@@ -373,11 +375,13 @@ export function applyResearch(research, data, today, log = () => {}) {
         c.status = it.verdict === 'chain' ? 'chain' : 'rejected';
         c.verdict = it.verdict;
         c.note = it.note;
+        if (it.verdict === 'duplicate' && byId.has(it.duplicateOf)) c.matchedId = it.duplicateOf;
         if (it.source && /^https:/i.test(it.source)) c.resolutionSource = it.source;
         c.resolvedDate = today;
         candChanges++;
       }
-      log(`  - candidate "${it.name}": ${it.verdict} (${matches.length} location(s))`);
+      log(`  - candidate "${it.name}": ${it.verdict}${
+        it.verdict === 'duplicate' && byId.has(it.duplicateOf) ? ` of ${it.duplicateOf}` : ''} (${matches.length} location(s))`);
     }
     for (const c of candFile.candidates) {
       if (c.status !== 'pending') continue;

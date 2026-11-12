@@ -563,6 +563,31 @@ test('candidateReview: bad verdicts, unknown/resolved names, thin notes fail', (
     source: 'not a url' }, 'not a valid URL');
 });
 
+test('candidateReview: a duplicate names the entry on file it duplicates', () => {
+  const dup = { name: 'Belltown Pizza', verdict: 'duplicate', note: 'a second branch of the entry on file' };
+  assert.deepEqual(review({ ...dup, duplicateOf: 'zeeks-pizza' }).fails, []);
+  // A closed entry is still an entry on file.
+  assert.deepEqual(review({ ...dup, duplicateOf: 'old-slice' }).fails, []);
+  reviewFails(dup, 'a duplicate verdict needs duplicateOf');
+  reviewFails({ ...dup, duplicateOf: 'Zeeks Pizza' }, 'duplicateOf is not the id of an entry on file: "Zeeks Pizza"');
+  reviewFails({ ...dup, duplicateOf: 'nowhere-pizza' }, 'duplicateOf is not the id of an entry on file');
+  reviewFails({ ...dup, duplicateOf: ['zeeks-pizza'] }, 'duplicateOf is not the id of an entry on file');
+  // The record is dropped, not the file.
+  const { accepted, fatal } = review(dup);
+  assert.deepEqual([fatal, accepted.candidateReview], [false, []]);
+});
+
+test('candidateReview: duplicateOf on any other verdict is refused', () => {
+  for (const verdict of ['closed', 'chain', 'not-pizza', 'unverifiable']) {
+    reviewFails({ name: 'Belltown Pizza', verdict, note: 'long enough note here', duplicateOf: 'zeeks-pizza' },
+      `duplicateOf belongs to a duplicate verdict only, not "${verdict}"`);
+  }
+  // The rule holds with no candidates queue to match names against.
+  const { fails } = validateResearch({ candidateReview: [
+    { name: 'Anything Pizza', verdict: 'duplicate', note: 'long enough note here' }] }, dataset, NOW);
+  assert.match(fails.join('\n'), /a duplicate verdict needs duplicateOf/);
+});
+
 test('candidateReview: an http source is tolerated (dropped at apply), never fatal', () => {
   assert.deepEqual(review({ name: 'Belltown Pizza', verdict: 'closed',
     note: 'long enough note here', source: 'http://x.com/directions' }).fails, []);
