@@ -2036,8 +2036,8 @@
           "kind": "mention"
         }
       ],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched for coverage beyond the on-file theinfatuation.com 2026-05-06 review. Found Seattle Spectator's by-the-slice review (seattlespectator.com, 2024-05-29) but it is older than the two-year window, and a Seattle Times 'The Ticket' pesto-slice feature with no confirmable publish date (likely ~2023). No new dated mention found.",
       "factsAttempted": null,
       "factsSought": [],
       "factsNote": null,
@@ -2288,8 +2288,8 @@
           "kind": "ranking"
         }
       ],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched for coverage beyond the on-file cascadepbs.org 2025-04-23 'top 5 pizza spots' piece, which search kept resurfacing as the same article. Found a later Cascade PBS item (dev.cascadepbs.org, on Italian sandwiches) naming Post Alley's hoagie as a favorite, but could not confirm its exact publish date from search results, so did not report it.",
       "factsAttempted": null,
       "factsSought": [],
       "factsNote": null,
@@ -2378,8 +2378,8 @@
           "kind": "mention"
         }
       ],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched westseattleblog.com/westsideseattle.com for coverage beyond the on-file 2026-06-08 WSB 'new owners' biznote, which matches what search surfaced again. Older items about the 2023 Alki eviction are outside the two-year window. No new dated mention found.",
       "factsAttempted": null,
       "factsSought": [],
       "factsNote": null,
@@ -2624,9 +2624,16 @@
           "source": "The Infatuation",
           "date": "2025-10-29",
           "kind": "mention"
+        },
+        {
+          "url": "https://www.kuow.org/stories/the-detroit-style-pizza-everyone-s-talking-about",
+          "title": "The Detroit-style pizza everyone's talking about",
+          "source": "KUOW",
+          "date": "2025-02-20",
+          "kind": "opening"
         }
       ],
-      "coverageAttempted": null,
+      "coverageAttempted": "2026-11-12",
       "coverageNote": null,
       "factsAttempted": "2026-11-12",
       "factsSought": [
@@ -2890,8 +2897,8 @@
           "kind": "opening"
         }
       ],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched for coverage beyond the on-file whatnow.com 2026-02-18 opening story; search only resurfaced the same WhatNow article. No other outlet (Seattle Met, Eater, neighborhood blogs) has covered Sinner's Pizza. No new mention found.",
       "factsAttempted": null,
       "factsSought": [],
       "factsNote": null,
@@ -3686,8 +3693,8 @@
           "kind": "mention"
         }
       ],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched westsideseattle.com/westseattleblog.com for coverage beyond the on-file 2025-01-20 ownership-change story. Found an August 2024 West Seattle Blog item on founder Cary Kemp announcing the sale, but it falls outside the two-year window. No new dated mention found.",
       "factsAttempted": null,
       "factsSought": [],
       "factsNote": null,
@@ -3998,8 +4005,8 @@
           "kind": "mention"
         }
       ],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched westseattleblog.com for coverage beyond the on-file 2026-01-07 biznote. Found an April 2025 WSB 'food biznotes' post referencing a 'new pizza' sign at KBM Commissary Kitchen, but could not confirm it names Pizza Ritual specifically, so did not report it.",
       "factsAttempted": "2026-11-12",
       "factsSought": [
         "opened",
@@ -4082,8 +4089,8 @@
           "kind": "ranking"
         }
       ],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched for coverage beyond the on-file southseattleemerald.org 2025-10-28 piece. Found Pulcinella listed in The Infatuation's Rainier Beach guide and a 2021 Seattle Met neighborhood guide, but neither carries a confirmable publish date within the two-year window. No new mention found.",
       "factsAttempted": "2026-11-12",
       "factsSought": [
         "opened"
@@ -4381,8 +4388,8 @@
           "kind": "ranking"
         }
       ],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched for coverage beyond the on-file theinfatuation.com 2026-05-12 review. Found a 2023 Eater Seattle mention (too old) and an undated Infatuation pizza-slices guide entry; could not confirm a publish date within the two-year window for either. No new mention found.",
       "factsAttempted": "2026-11-12",
       "factsSought": [
         "signature"
@@ -6733,8 +6740,8 @@
           "kind": "ranking"
         }
       ],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched for coverage beyond the on-file tastingtable.com 2025-06-16 piece. Found Daily Hive and Seattle Met items plus a pre-opening Stranger business listing, but none carried a confirmable recent publish date. No new mention found.",
       "factsAttempted": "2026-11-12",
       "factsSought": [
         "signature"

@@ -1,63 +1,51 @@
 {
-  "updated": "2026-11-12T21:00:00Z",
+  "updated": "2026-11-12T00:00:00Z",
   "mentions": [
     {
-      "id": "g-h-pasta-pizza",
-      "title": "Autumn Restaurant transitioning to G.H. Pasta & Pizza",
-      "url": "https://phinneywood.com/2026/01/autumn-restaurant-transitioning-to-g-h-pasta-pizza/",
-      "source": "PhinneyWood",
-      "date": "2026-01-12",
-      "kind": "opening"
-    },
-    {
-      "id": "cornelly",
-      "title": "Cornelly Aims to Debut Second Location Sometime This Summer",
-      "url": "https://whatnow.com/?p=216664",
-      "source": "WhatNow Seattle",
-      "date": "2025-02-28",
-      "kind": "opening"
-    },
-    {
-      "id": "moto-pizza",
-      "title": "Moto Pizza expands with new location in iconic Seattle landmark",
-      "url": "https://www.kiro7.com/news/local/moto-pizza-expands-with-new-location-iconic-seattle-landmark/EXJKJPIQSVGBRBCGCNDM7FAJ54/",
-      "source": "KIRO 7",
-      "date": "2026-03-17",
+      "id": "my-friend-dereks",
+      "title": "The Detroit-style pizza everyone's talking about",
+      "url": "https://www.kuow.org/stories/the-detroit-style-pizza-everyone-s-talking-about",
+      "source": "KUOW",
+      "date": "2025-02-20",
       "kind": "opening"
     }
   ],
   "coverageSkipped": [
     {
-      "id": "numero-uno-pizza",
-      "note": "Searched for reviews/news about Numero Uno Pizza in Pioneer Square. Only found SliceLife, OpenTable, and MapQuest directory listings, plus unrelated coverage of other Pioneer Square pizzerias (Mario's, Pizzeria Gabbiano). No published-outlet story names this pizzeria."
+      "id": "hot-mamas-pizza",
+      "note": "Searched for coverage beyond the on-file theinfatuation.com 2026-05-06 review. Found Seattle Spectator's by-the-slice review (seattlespectator.com, 2024-05-29) but it is older than the two-year window, and a Seattle Times 'The Ticket' pesto-slice feature with no confirmable publish date (likely ~2023). No new dated mention found."
     },
     {
-      "id": "santorini-pizza-pasta",
-      "note": "Searched for reviews/coverage of Santorini Pizza & Pasta in Meadowbrook. Only found MapQuest, Atly, Wanderlog, and OpenTable directory/aggregator listings and a 2008 personal blog post. No real-outlet story within the last two years."
+      "id": "post-alley-pizza",
+      "note": "Searched for coverage beyond the on-file cascadepbs.org 2025-04-23 'top 5 pizza spots' piece, which search kept resurfacing as the same article. Found a later Cascade PBS item (dev.cascadepbs.org, on Italian sandwiches) naming Post Alley's hoagie as a favorite, but could not confirm its exact publish date from search results, so did not report it."
     },
     {
-      "id": "varlamos-pizzeria",
-      "note": "Searched for coverage of Varlamos Pizzeria in Laurelhurst. Only found MapQuest, Foursquare, Atly, and Seattle's Child directory listings plus a Greek-community history archive page; no published outlet story found."
+      "id": "pegasus-pizza",
+      "note": "Searched westseattleblog.com/westsideseattle.com for coverage beyond the on-file 2026-06-08 WSB 'new owners' biznote, which matches what search surfaced again. Older items about the 2023 Alki eviction are outside the two-year window. No new dated mention found."
     },
     {
-      "id": "g-h-pasta-pizza",
-      "note": "Beyond the PhinneyWood opening piece added above, searched further (WestSide Seattle, WhatNow, Seattle Met) but those either cover the 2023 West Seattle location (outside the 2-year window) or the 2021 predecessor restaurant Autumn, not this pizzeria."
+      "id": "sinners-pizza",
+      "note": "Searched for coverage beyond the on-file whatnow.com 2026-02-18 opening story; search only resurfaced the same WhatNow article. No other outlet (Seattle Met, Eater, neighborhood blogs) has covered Sinner's Pizza. No new mention found."
     },
     {
-      "id": "pizza-twist",
-      "note": "Searched for press on the Northgate/Pinehurst Pizza Twist location. Only found HappyCow, MapQuest, Spinach Guide, and Gayot directory/aggregator listings; no published outlet story identified this branch."
+      "id": "pizzeria-22",
+      "note": "Searched westsideseattle.com/westseattleblog.com for coverage beyond the on-file 2025-01-20 ownership-change story. Found an August 2024 West Seattle Blog item on founder Cary Kemp announcing the sale, but it falls outside the two-year window. No new dated mention found."
     },
     {
-      "id": "delancey",
-      "note": "Searched for 2025-2026 coverage beyond the on-file Infatuation review and for Seattle Times/Eater pieces on chef Brandon Pettit. Found only the already-listed Infatuation review (2025-07-15) plus older Stranger/Seattle Met pieces and Wikipedia mirrors outside the two-year window."
+      "id": "pizza-ritual",
+      "note": "Searched westseattleblog.com for coverage beyond the on-file 2026-01-07 biznote. Found an April 2025 WSB 'food biznotes' post referencing a 'new pizza' sign at KBM Commissary Kitchen, but could not confirm it names Pizza Ritual specifically, so did not report it."
     },
     {
-      "id": "windy-city-pie",
-      "note": "Searched for Infatuation/Eater coverage beyond the on-file PhinneyWood happy-hour piece. The only Infatuation review found is dated January 2022 (too old); other hits (Seattle Met, Stranger) are older background pieces, not fresh coverage."
+      "id": "pizzeria-pulcinella",
+      "note": "Searched for coverage beyond the on-file southseattleemerald.org 2025-10-28 piece. Found Pulcinella listed in The Infatuation's Rainier Beach guide and a 2021 Seattle Met neighborhood guide, but neither carries a confirmable publish date within the two-year window. No new mention found."
     },
     {
-      "id": "zeeks-pizza",
-      "note": "Searched for 2025-2026 opening/closing/lawsuit news. The only Zeeks-specific coverage within two years is the PhinneyWood Phinney-location-closure piece already on file (2025-11-05); a chain-growth Yahoo article is from March 2023 (too old) and a July 2026 PhinneyWood piece is about successor tenant Stevie's Famous, not genuinely about Zeeks."
+      "id": "oxbow",
+      "note": "Searched for coverage beyond the on-file theinfatuation.com 2026-05-12 review. Found a 2023 Eater Seattle mention (too old) and an undated Infatuation pizza-slices guide entry; could not confirm a publish date within the two-year window for either. No new mention found."
+    },
+    {
+      "id": "sunny-hill",
+      "note": "Searched for coverage beyond the on-file tastingtable.com 2025-06-16 piece. Found Daily Hive and Seattle Met items plus a pre-opening Stranger business listing, but none carried a confirmable recent publish date. No new mention found."
     }
   ]
 }
