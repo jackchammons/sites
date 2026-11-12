@@ -4936,7 +4936,9 @@
       "locations": [
         {
           "neighborhood": "Ballard",
-          "address": "3624 Leary Way Nw, Seattle, WA 98107"
+          "address": "3624 Leary Way Nw, Seattle, WA 98107",
+          "lat": 47.65401,
+          "lon": -122.35966
         }
       ],
       "locationsVerified": null,
@@ -4959,7 +4961,9 @@
       "locations": [
         {
           "neighborhood": "Capitol Hill",
-          "address": "426 Broadway E, Seattle, WA 98102"
+          "address": "426 Broadway E, Seattle, WA 98102",
+          "lat": 47.62281,
+          "lon": -122.32071
         }
       ],
       "locationsVerified": null,
@@ -4982,7 +4986,9 @@
       "locations": [
         {
           "neighborhood": "Queen Anne",
-          "address": "2115 Queen Anne Ave N, Seattle, WA 98109"
+          "address": "2115 Queen Anne Ave N, Seattle, WA 98109",
+          "lat": 47.63772,
+          "lon": -122.35712
         }
       ],
       "locationsVerified": null,
@@ -5005,7 +5011,9 @@
       "locations": [
         {
           "neighborhood": "Fremont",
-          "address": "3510 Fremont Ave N, Seattle, WA 98103"
+          "address": "3510 Fremont Ave N, Seattle, WA 98103",
+          "lat": 47.65096,
+          "lon": -122.34971
         }
       ],
       "locationsVerified": null,
@@ -5028,7 +5036,9 @@
       "locations": [
         {
           "neighborhood": "Magnolia",
-          "address": "2120 W Emerson Pl, Seattle, WA 98199"
+          "address": "2120 W Emerson Pl, Seattle, WA 98199",
+          "lat": 47.65634,
+          "lon": -122.38433
         }
       ],
       "locationsVerified": null,
@@ -5051,7 +5061,9 @@
       "locations": [
         {
           "neighborhood": "Pioneer Square",
-          "address": "103 1st Ave S, Seattle, WA 98104"
+          "address": "103 1st Ave S, Seattle, WA 98104",
+          "lat": 47.60153,
+          "lon": -122.33437
         }
       ],
       "locationsVerified": null,
@@ -5074,7 +5086,9 @@
       "locations": [
         {
           "neighborhood": "Wallingford",
-          "address": "4501 Interlake Ave N, Seattle, WA 98103"
+          "address": "4501 Interlake Ave N, Seattle, WA 98103",
+          "lat": 47.66161,
+          "lon": -122.34089
         }
       ],
       "locationsVerified": null,
