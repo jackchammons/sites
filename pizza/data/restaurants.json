@@ -2458,7 +2458,9 @@
       "locations": [
         {
           "neighborhood": "South Lake Union",
-          "address": "400 Fairview Avenue N, Suite 107, Seattle, WA 98109"
+          "address": "400 Fairview Avenue N, Suite 107, Seattle, WA 98109",
+          "lat": 47.62246,
+          "lon": -122.33385
         }
       ],
       "locationsVerified": "2026-11-12",
@@ -2796,11 +2798,15 @@
       "locations": [
         {
           "neighborhood": "Ballard",
-          "address": "500 NW Market Street, Seattle, WA 98107"
+          "address": "500 NW Market Street, Seattle, WA 98107",
+          "lat": 47.66888,
+          "lon": -122.36344
         },
         {
           "neighborhood": "Wedgwood",
-          "address": "7320 NE 35th Street, Seattle, WA 98115"
+          "address": "7320 NE 35th Street, Seattle, WA 98115",
+          "lat": 47.65386,
+          "lon": -122.27995
         }
       ],
       "locationsVerified": "2026-11-12",
@@ -3671,7 +3677,9 @@
       "locations": [
         {
           "neighborhood": "Belltown",
-          "address": "2422 1st Avenue, Seattle, WA 98121"
+          "address": "2422 1st Avenue, Seattle, WA 98121",
+          "lat": 47.61452,
+          "lon": -122.3481
         }
       ],
       "locationsVerified": "2026-11-12",
