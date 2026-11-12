@@ -2826,9 +2826,30 @@
           "source": "Seattle magazine",
           "date": "2026-08-19",
           "kind": "opening"
+        },
+        {
+          "url": "https://phinneywood.com/2025/11/former-zeeks-phinney-location-to-become-stevies-famous/",
+          "title": "Former Zeek's Phinney location to become Stevie's Famous",
+          "source": "Phinneywood",
+          "date": "2025-11-05",
+          "kind": "opening"
+        },
+        {
+          "url": "https://theinfatuation.com/seattle/reviews/stevies-famous-beacon-hill",
+          "title": "Stevie's Famous: Beacon Hill",
+          "source": "The Infatuation",
+          "date": "2025-03-31",
+          "kind": "mention"
+        },
+        {
+          "url": "https://www.seattlemag.email/food-drink/best-pizza-2024/",
+          "title": "Best Pizza: Stevie's Famous Pizza",
+          "source": "Seattle Magazine",
+          "date": "2024-11-14",
+          "kind": "ranking"
         }
       ],
-      "coverageAttempted": null,
+      "coverageAttempted": "2026-11-12",
       "coverageNote": null,
       "factsAttempted": "2026-11-12",
       "factsSought": [
