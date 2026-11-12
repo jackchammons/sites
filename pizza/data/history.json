@@ -6568,7 +6568,7 @@
         "delancey": 87.6,
         "a-k-pizza": 86.3,
         "dinos-tomato-pie": 85.1,
-        "post-alley-pizza": 82.6,
+        "post-alley-pizza": 83.2,
         "proletariat-pizza": 82.5,
         "windy-city-pie": 80.4,
         "cornelly": 80.4,
@@ -6668,10 +6668,10 @@
         },
         "post-alley-pizza": {
           "reputation": 10,
-          "critical": 8.1,
+          "critical": 8.3,
           "craft": 7.5,
           "distinctiveness": 7,
-          "value": 8.2,
+          "value": 8.3,
           "penalty": 0
         },
         "proletariat-pizza": {
