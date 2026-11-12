@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-12T19:00:00Z",
+  "updated": "2026-11-12T20:30:00Z",
   "facts": [
     {
       "id": "g-h-pasta-pizza",
@@ -26,6 +26,22 @@
       "id": "pizza-twist",
       "styleGroup": "Creative",
       "source": "https://pizzatwist.com"
+    },
+    {
+      "id": "italio-pizza-pasta",
+      "signature": "Greenwood Special: mozzarella, mushrooms, broccoli, peppers, spinach, pepperoni, sunflower seeds",
+      "source": "https://www.italiopizzapastawa.com/"
+    },
+    {
+      "id": "santorini-pizza-pasta",
+      "opened": 1994,
+      "styleGroup": "Neighborhood",
+      "source": "https://santorinipizza.com/about"
+    },
+    {
+      "id": "santorini-pizza-pasta",
+      "signature": "Santorini Pizza: pepperoni, sausage, salami, Canadian bacon, peppers, mushrooms, onions, olives",
+      "source": "https://santorinipizza.com/menu"
     }
   ],
   "factsSkipped": [
@@ -72,6 +88,18 @@
     {
       "id": "g-h-pasta-pizza",
       "note": "westsideseattle.com coverage of the West Seattle/Sunrise Heights location gave priceIndex and styleGroup (reported). That same coverage states the November 2023 West Seattle opening was a relocation of the brand's existing Eastlake location, so 2023 is not reported as the business's founding year; no source gives an original opening year. No article names a signature pizza (the review only mentions ordering 'The Classic')."
+    },
+    {
+      "id": "italio-pizza-pasta",
+      "note": "Own site (italiopizzapastawa.com) gave the Greenwood Special signature (reported); its /about path 403'd. Searches of listings (OpenTable, Frankia, MapQuest, Slice, Enprimeurclub) and a local-coverage search found no founding year and no named pizza style/style group for this entry; those sources are excluded aggregators in any case. Opened, style, and styleGroup remain unconfirmed."
+    },
+    {
+      "id": "seattle-pizza-bar",
+      "note": "Own site (seattlepizzaandbar.com) lists six pizzas with toppings but no prices, no named style, and no pizza singled out as a signature; /menu returned 403. A Slice listing once showed a Seattle Special at $18.99 but that slug now reads 'Seattle Pizza is no longer active on Slice,' so it's unreliable even as an aggregator. priceIndex, style, styleGroup, and signature remain unconfirmed."
+    },
+    {
+      "id": "hot-slice-pizza",
+      "note": "Own site's homepage renders only a title tag ('Hot Slice Pizza - Authentic NY Style Pizza By The Slice'); /menu and /about both 404. Searches turned up only Atly aggregator listings (41 Dravus St, halal, student discount) and unrelated pizzerias; no opening year, price, or named signature pie from a valid source. Opened, priceIndex, and signature remain unconfirmed."
     }
   ]
 }
