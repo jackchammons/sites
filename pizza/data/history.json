@@ -6510,19 +6510,19 @@
         "lupo": 20,
         "moto-pizza": 21,
         "my-friend-dereks": 22,
-        "pagliacci": 23,
-        "cornuto-pizzeria": 24,
-        "via-tribunali": 25,
-        "pi-vegan-pizzeria": 26,
-        "oxbow": 27,
-        "zeeks-pizza": 28,
-        "ananas-pizzeria": 29,
-        "world-pizza": 30,
-        "pizzeria-pulcinella": 31,
-        "razzis-pizzeria": 32,
-        "dantini-pizza": 33,
-        "ballard-pizza-co": 34,
-        "un-po-tipsy": 35,
+        "oxbow": 23,
+        "pagliacci": 24,
+        "cornuto-pizzeria": 25,
+        "via-tribunali": 26,
+        "un-po-tipsy": 27,
+        "pi-vegan-pizzeria": 28,
+        "zeeks-pizza": 29,
+        "ananas-pizzeria": 30,
+        "world-pizza": 31,
+        "pizzeria-pulcinella": 32,
+        "razzis-pizzeria": 33,
+        "dantini-pizza": 34,
+        "ballard-pizza-co": 35,
         "good-luck-bread": 36,
         "ridge-pizza": 37,
         "smoking-monkey-pizza": 38,
@@ -6587,11 +6587,12 @@
         "lupo": 75.6,
         "moto-pizza": 75.4,
         "my-friend-dereks": 75.4,
+        "oxbow": 74.8,
         "pagliacci": 74.5,
         "cornuto-pizzeria": 74.4,
         "via-tribunali": 74,
+        "un-po-tipsy": 73.8,
         "pi-vegan-pizzeria": 73.8,
-        "oxbow": 73.3,
         "zeeks-pizza": 73,
         "ananas-pizzeria": 72.6,
         "world-pizza": 72.6,
@@ -6599,7 +6600,6 @@
         "razzis-pizzeria": 72.3,
         "dantini-pizza": 72.2,
         "ballard-pizza-co": 71.5,
-        "un-po-tipsy": 70.9,
         "good-luck-bread": 70.8,
         "ridge-pizza": 69.9,
         "smoking-monkey-pizza": 69.5,
@@ -6818,6 +6818,14 @@
           "value": 8.2,
           "penalty": 0
         },
+        "oxbow": {
+          "reputation": 5.8,
+          "critical": 7.9,
+          "craft": 7.5,
+          "distinctiveness": 7,
+          "value": 7.7,
+          "penalty": 0
+        },
         "pagliacci": {
           "reputation": 10,
           "critical": 8.1,
@@ -6842,20 +6850,20 @@
           "value": 6.3,
           "penalty": 0
         },
+        "un-po-tipsy": {
+          "reputation": 3.3,
+          "critical": 8.2,
+          "craft": 7,
+          "distinctiveness": 6.5,
+          "value": 7.6,
+          "penalty": 0
+        },
         "pi-vegan-pizzeria": {
           "reputation": 0,
           "critical": 7.5,
           "craft": 7,
           "distinctiveness": 8,
           "value": 7.6,
-          "penalty": 0
-        },
-        "oxbow": {
-          "reputation": 5.8,
-          "critical": 7.5,
-          "craft": 7.5,
-          "distinctiveness": 7,
-          "value": 7.5,
           "penalty": 0
         },
         "zeeks-pizza": {
@@ -6912,14 +6920,6 @@
           "craft": 6.5,
           "distinctiveness": 5.5,
           "value": 6.8,
-          "penalty": 0
-        },
-        "un-po-tipsy": {
-          "reputation": 0,
-          "critical": 7.5,
-          "craft": 7,
-          "distinctiveness": 6.5,
-          "value": 7.3,
           "penalty": 0
         },
         "good-luck-bread": {
