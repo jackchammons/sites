@@ -3994,7 +3994,9 @@
       "locations": [
         {
           "neighborhood": "Belltown",
-          "address": "2126 2nd Ave Suite A, Seattle, WA 98121"
+          "address": "2126 2nd Ave Suite A, Seattle, WA 98121",
+          "lat": 47.61321,
+          "lon": -122.34387
         }
       ],
       "locationsVerified": "2026-11-12",
@@ -4061,7 +4063,9 @@
       "locations": [
         {
           "neighborhood": "Admiral Junction, West Seattle",
-          "address": "3207 California Avenue Southwest, Seattle, WA 98116"
+          "address": "3207 California Avenue Southwest, Seattle, WA 98116",
+          "lat": 47.57537,
+          "lon": -122.38709
         }
       ],
       "locationsVerified": "2026-11-12",

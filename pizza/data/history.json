@@ -6500,13 +6500,13 @@
         "sacro-bosco-pizza-wine": 10,
         "humble-pie": 11,
         "pizzeria-22": 12,
-        "mioposto": 13,
-        "serious-pie": 14,
-        "pizza-by-ruffin": 15,
-        "tutta-bella": 16,
-        "west-of-chicago-pizza-company": 17,
-        "stevies-famous": 18,
-        "good-shape-pizza": 19,
+        "good-shape-pizza": 13,
+        "mioposto": 14,
+        "serious-pie": 15,
+        "pizza-by-ruffin": 16,
+        "tutta-bella": 17,
+        "west-of-chicago-pizza-company": 18,
+        "stevies-famous": 19,
         "lupo": 20,
         "moto-pizza": 21,
         "my-friend-dereks": 22,
@@ -6534,9 +6534,9 @@
         "south-town-pie": 44,
         "elemental-pizza": 45,
         "oskars-pizza": 46,
-        "roma-roma": 47,
-        "belltown-pizza": 48,
-        "in-pizza-we-crust": 49,
+        "in-pizza-we-crust": 47,
+        "roma-roma": 48,
+        "belltown-pizza": 49,
         "capitale-pizzeria": 50,
         "pegasus-pizza": 51,
         "sopranos-antico": 52,
@@ -6545,9 +6545,9 @@
         "hot-mamas-pizza": 55,
         "coltiva-pizzeria-e-barra": 56,
         "pudge-bros-pizza": 57,
-        "a-pizza-mart-first-hill": 58,
-        "veras-pizza-and-bar": 59,
-        "eymans-pizza": 60,
+        "eymans-pizza": 58,
+        "a-pizza-mart-first-hill": 59,
+        "veras-pizza-and-bar": 60,
         "managers-pizza": 61,
         "pizza-pasta-bar": 62,
         "jet-city-pizza": 63,
@@ -6577,13 +6577,13 @@
         "sacro-bosco-pizza-wine": 79,
         "humble-pie": 78.9,
         "pizzeria-22": 78.5,
+        "good-shape-pizza": 77.9,
         "mioposto": 77.7,
         "serious-pie": 77.7,
         "pizza-by-ruffin": 77.6,
         "tutta-bella": 76.9,
         "west-of-chicago-pizza-company": 76.5,
         "stevies-famous": 76.4,
-        "good-shape-pizza": 76.4,
         "lupo": 75.6,
         "moto-pizza": 75.4,
         "my-friend-dereks": 75.4,
@@ -6611,9 +6611,9 @@
         "south-town-pie": 67.3,
         "elemental-pizza": 67.2,
         "oskars-pizza": 66.5,
+        "in-pizza-we-crust": 66.4,
         "roma-roma": 66.2,
         "belltown-pizza": 65.8,
-        "in-pizza-we-crust": 65.6,
         "capitale-pizzeria": 65.3,
         "pegasus-pizza": 65.3,
         "sopranos-antico": 64.9,
@@ -6622,15 +6622,15 @@
         "hot-mamas-pizza": 63.5,
         "coltiva-pizzeria-e-barra": 63.2,
         "pudge-bros-pizza": 62,
+        "eymans-pizza": 61.5,
         "a-pizza-mart-first-hill": 61.4,
         "veras-pizza-and-bar": 61.1,
-        "eymans-pizza": 61,
         "managers-pizza": 60.1,
         "pizza-pasta-bar": 60,
         "jet-city-pizza": 59.7,
         "johnny-mos-pizzeria": 57.3,
         "olympia-pizza-spaghetti-house-ii": 56.1,
-        "georgetown-pizza-arcade": 55.7,
+        "georgetown-pizza-arcade": 55.8,
         "seward-park-pizza": 53.8,
         "sinners-pizza": 53.2,
         "lucianos-pizza-pasta": 49.6,
@@ -6738,6 +6738,14 @@
           "value": 7.9,
           "penalty": 0
         },
+        "good-shape-pizza": {
+          "reputation": 3.3,
+          "critical": 7.7,
+          "craft": 7.5,
+          "distinctiveness": 7,
+          "value": 9.1,
+          "penalty": 0
+        },
         "mioposto": {
           "reputation": 10,
           "critical": 7.5,
@@ -6784,14 +6792,6 @@
           "craft": 7.5,
           "distinctiveness": 7,
           "value": 7.8,
-          "penalty": 0
-        },
-        "good-shape-pizza": {
-          "reputation": 3.3,
-          "critical": 7.7,
-          "craft": 7.5,
-          "distinctiveness": 7,
-          "value": 9.1,
           "penalty": 0
         },
         "lupo": {
@@ -7010,6 +7010,14 @@
           "value": 7.5,
           "penalty": 0
         },
+        "in-pizza-we-crust": {
+          "reputation": 7.5,
+          "critical": 6.2,
+          "craft": 6.5,
+          "distinctiveness": 6.5,
+          "value": 6.3,
+          "penalty": 0
+        },
         "roma-roma": {
           "reputation": 6.7,
           "critical": 7.1,
@@ -7024,14 +7032,6 @@
           "craft": 6,
           "distinctiveness": 4.5,
           "value": 6,
-          "penalty": 0
-        },
-        "in-pizza-we-crust": {
-          "reputation": 7.5,
-          "critical": 6.2,
-          "craft": 6.5,
-          "distinctiveness": 6.5,
-          "value": 6.3,
           "penalty": 0
         },
         "capitale-pizzeria": {
@@ -7098,6 +7098,14 @@
           "value": 7.5,
           "penalty": 0
         },
+        "eymans-pizza": {
+          "reputation": 0,
+          "critical": 5.5,
+          "craft": 6,
+          "distinctiveness": 6.5,
+          "value": 6.9,
+          "penalty": 0
+        },
         "a-pizza-mart-first-hill": {
           "reputation": 8.3,
           "critical": 5,
@@ -7112,14 +7120,6 @@
           "craft": 5.5,
           "distinctiveness": 6.5,
           "value": 5.8,
-          "penalty": 0
-        },
-        "eymans-pizza": {
-          "reputation": 0,
-          "critical": 5.5,
-          "craft": 6,
-          "distinctiveness": 6.5,
-          "value": 6.9,
           "penalty": 0
         },
         "managers-pizza": {
