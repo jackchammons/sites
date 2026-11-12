@@ -6510,9 +6510,9 @@
         "lupo": 20,
         "moto-pizza": 21,
         "my-friend-dereks": 22,
-        "oxbow": 23,
-        "pagliacci": 24,
-        "cornuto-pizzeria": 25,
+        "cornuto-pizzeria": 23,
+        "oxbow": 24,
+        "pagliacci": 25,
         "via-tribunali": 26,
         "un-po-tipsy": 27,
         "pi-vegan-pizzeria": 28,
@@ -6587,9 +6587,9 @@
         "lupo": 75.6,
         "moto-pizza": 75.4,
         "my-friend-dereks": 75.4,
+        "cornuto-pizzeria": 74.9,
         "oxbow": 74.8,
         "pagliacci": 74.5,
-        "cornuto-pizzeria": 74.4,
         "via-tribunali": 74,
         "un-po-tipsy": 73.8,
         "pi-vegan-pizzeria": 73.8,
@@ -6818,6 +6818,14 @@
           "value": 8.2,
           "penalty": 0
         },
+        "cornuto-pizzeria": {
+          "reputation": 8.6,
+          "critical": 7.5,
+          "craft": 7.5,
+          "distinctiveness": 6.5,
+          "value": 7.9,
+          "penalty": 0
+        },
         "oxbow": {
           "reputation": 5.8,
           "critical": 7.9,
@@ -6832,14 +6840,6 @@
           "craft": 6.5,
           "distinctiveness": 4,
           "value": 7.6,
-          "penalty": 0
-        },
-        "cornuto-pizzeria": {
-          "reputation": 8.6,
-          "critical": 7.5,
-          "craft": 7.5,
-          "distinctiveness": 6.5,
-          "value": 7.5,
           "penalty": 0
         },
         "via-tribunali": {
