@@ -1,79 +1,54 @@
 {
-  "updated": "2026-11-12T12:00:00Z",
-  "candidateReview": [
+  "updated": "2026-11-12T19:30:00Z",
+  "factorRatings": [
     {
-      "name": "Magnolia Pizza And Pasta",
-      "verdict": "duplicate",
-      "duplicateOf": "magnolia-pizza-pasta",
-      "note": "Same pizza-and-pasta shop at 2120 W Emerson Pl in Magnolia as the on-file Magnolia Pizza & Pasta; this is just the permit-register spelling of the name.",
-      "source": "https://slicelife.com/restaurants/wa/seattle/98199/magnolia-pizza-pasta-seattle/menu"
+      "id": "ananas-pizzeria",
+      "craft": 6,
+      "distinctiveness": 8.5,
+      "criticScore": 7.6,
+      "opened": 2023,
+      "styleGroup": "Creative",
+      "sources": [
+        "https://theinfatuation.com/seattle/reviews/ananas-pizzeria",
+        "https://curiocity.com/ananas-pizzeria-seattle/"
+      ],
+      "note": "The Infatuation (7.6/10) says this First Hill pizzeria and dive bar from the Taurus Ox team 'doesn't quite compete with pizzerias in other parts of town' on the basics, but its adventurous Lao-influenced pies -- bamboo shoots, lardon, dill, togarashi, pineapple -- make it the most exciting opening the neighborhood has seen, best for late-night slices and beer (open till 1am). Curiocity's opening report (Nov. 2023) confirms the Laotian-pizza concept from the Taurus Ox owners."
     },
     {
-      "name": "Olympia Ii Pizza & Spaghetti",
-      "verdict": "duplicate",
-      "duplicateOf": "olympia-pizza-spaghetti-house-ii",
-      "note": "Same Wallingford restaurant at 4501 Interlake Ave N as the on-file Olympia Pizza & Spaghetti House II, run by the Christofilis family since it passed out of the founding Aliagas family's hands; a permit-register name variant.",
-      "source": "https://greeksinwa.omeka.net/items/show/801"
-    },
-    {
-      "name": "Olympia Pizza #3",
-      "verdict": "duplicate",
-      "duplicateOf": "olympia-pizza-spaghetti-house-ii",
-      "note": "This is Olympia Pizza and Spaghetti House III at 516 15th Ave E on Capitol Hill, the third location of the Greek-founded Olympia Pizza & Spaghetti House family (I, II, III) that also runs the on-file Wallingford location (II) — a branch of the same business, not a separate one.",
-      "source": "https://seattlemag.com/bar-hop-olympia-pizza-and-spaghetti-house-iii/"
-    },
-    {
-      "name": "Pizza Colibri - Kc574",
-      "verdict": "unverifiable",
-      "note": "No trace of a pizzeria by this name anywhere in Seattle across multiple searches; \"Kc574\" reads like a ghost-kitchen/virtual-brand commissary code and turns up nothing in pizza guides, delivery-app listings or local news coverage."
-    },
-    {
-      "name": "Pizza Group LLC",
-      "verdict": "chain",
-      "note": "The LLC behind Pizza Twist (né Chicago's Pizza With-A-Twist) at 510 Broadway E; the Indian-fusion pizza franchise was founded in Chicago in 2014 and by 2024 had grown to roughly 80 locations across about 19-20 U.S. states plus international units — a national chain, not a regional one.",
-      "source": "https://capitolhillseattle.com/2021/08/already-home-to-bombay-burger-capitol-hill-adding-a-new-indian-restaurant-with-a-twist-pizza"
-    },
-    {
-      "name": "Pizza Rasoi",
-      "verdict": "unverifiable",
-      "note": "Indian-Neapolitan fusion pizza pop-up/food truck tied to Tapster at 1011 Valley St; sources conflict on where it actually operates (one places it in Redmond instead) and none confirm it is still running as of 2026, only an undated pop-up listing and a single lukewarm review.",
-      "source": "https://www.zabihah.com/restaurants/7bad84dc-749d-40b2-bc01-c0f887a42a0b/pizza-rasoi-seattle"
-    },
-    {
-      "name": "Pizzuto'S Italian Cafe",
-      "verdict": "not-pizza",
-      "note": "Branded and run as an Italian cafe at 5032 Wilson Ave S; its signature dishes are pastas (pasta Siciliana, prawns Pescara, house potato pasta) and chicken entrees, with pizza just one menu category among several rather than the core of the business.",
-      "source": "https://www.foodboss.com/seattle-wa/pizzutos-italian-cafe-5032-wilson-ave-s-seattle-delivery"
+      "id": "capitale-pizzeria",
+      "craft": 6.5,
+      "distinctiveness": 7.5,
+      "criticScore": 6,
+      "opened": 2024,
+      "styleGroup": "Creative",
+      "sources": [
+        "https://whatnow.com/?p=216497",
+        "https://capitalepizzeria.com"
+      ],
+      "note": "WhatNow reported (July 2024) that Capitale Pizzeria -- a pizza-focused sibling of Belltown's La Fontana Siciliana from Rodrigo Parisi and Saulo Cruz -- was taking over the former Boca Pizzeria space on Broadway E, expected to open later in 2024. The restaurant's own menu confirms a globally themed lineup of wood-fired pies named for cities (Capri, Lisboa, Madrid, Napoli, Ankara, Sao Paulo), a distinctive angle, though no critic has yet weighed in on execution."
     }
   ],
-  "directory": [
+  "ratingSkipped": [
     {
-      "name": "Jet City Pizza",
-      "neighborhood": "Wedgwood",
-      "style": "Delivery pizza, pasta & grinders",
-      "status": "open",
-      "note": "Puget Sound pizza-delivery chain founded in Kenmore in 1994, with branches across Washington State (Bothell, Newcastle, Marysville, Mount Vernon, Kent) and this Wedgwood store serving pizza, pasta and oven grinders; it has no locations outside the state, so it's a regional rather than a national chain.",
-      "source": "https://www.foodboss.com/seattle-wa/jet-city-pizza-7500-25th-ave-ne-seattle-delivery",
-      "address": "7500 25th Ave Ne, Seattle, WA 98115"
+      "id": "santorini-pizza-pasta",
+      "note": "Searched for critic reviews or roundup mentions of Santorini Pizza & Pasta (Meadowbrook/Wedgwood). Found only directory/aggregator listings (Atly, MapQuest, Wanderlog, OpenTable) and a single anonymous 2008 personal blog post. No published criticism from a real outlet turned up, so skipping rather than grounding a score in aggregator copy."
     },
     {
-      "name": "Pizza & Pasta Bar",
-      "neighborhood": "Pike Place Market",
-      "style": "Italian, thin-crust pizza & fresh pasta",
-      "status": "open",
-      "note": "Pike Place Market Italian spot open since 2016, making its own sauces, pizza dough and meats from scratch and serving thin-crust pizza alongside customizable pasta; listed as a current Market tenant.",
-      "source": "https://www.pikeplacemarket.org/?p=4029",
-      "address": "1530 Post Aly, Seattle, WA 98101"
+      "id": "numero-uno-pizza",
+      "note": "Searched for reviews or news coverage of Numero Uno Pizza at 103 1st Ave S, Pioneer Square. The only hit was a Slice.com ordering/menu page with no critic or customer commentary; broader Pioneer Square pizza coverage (Pizzeria Gabbiano, Un Po Tipsy, Moto Pizza) never mentions this business. No credible published source found."
     },
     {
-      "name": "Santorini Pizza & Pasta",
-      "url": "https://santorinipizza.com",
-      "neighborhood": "Meadowbrook",
-      "style": "Italian-American pizza & pasta, Greek-influenced",
-      "status": "open",
-      "note": "Family-run pizza-and-pasta restaurant since 1994 serving gourmet pizzas and pastas alongside Greek-influenced dishes like Greek salad and baklava, with dine-in, takeout, delivery and catering.",
-      "source": "https://santorinipizza.com",
-      "address": "11001 35th Ave Ne, Seattle, WA 98125"
+      "id": "downtown-romios-pizza-pasta",
+      "note": "Searched Seattle Times, Seattle Met, and Capitol Hill Seattle for coverage of Romio's Pizza & Pasta's downtown Pike St location. Found only a 2009 Seattle Met 'Whaddya Think' blurb calling the Romio's brand mediocre/hit-or-miss (page unreachable to confirm it discusses this specific location, and it is 17 years old) plus aggregator listings (OpenTable, Yelp, DoorDash, Toast). Nothing specific and verifiable enough to ground a rating for this location."
+    },
+    {
+      "id": "dudez-woodfired-pizza",
+      "note": "Searched for reviews or news about Dude'Z Woodfired Pizza on Fuhrman Ave E, Eastlake. Found only directory/aggregator listings (Atly, MapQuest, DoorDash) with user ratings but no professional review, roundup entry, or news story. No credible published source found."
     }
+  ],
+  "rejected": [
+    "mentions[0]: date is older than 730 days",
+    "mentions[1]: date is older than 730 days",
+    "mentions[2]: date is older than 730 days"
   ]
 }

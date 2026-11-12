@@ -3615,7 +3615,9 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/dudezwoodfiredpizza/"
+      "instagram": "https://www.instagram.com/dudezwoodfiredpizza/",
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Searched for reviews or news about Dude'Z Woodfired Pizza on Fuhrman Ave E, Eastlake. Found only directory/aggregator listings (Atly, MapQuest, DoorDash) with user ratings but no professional review, roundup entry, or news story. No credible published source found."
     },
     {
       "id": "elemental-pizza",
@@ -4434,7 +4436,9 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/downtownromios/"
+      "instagram": "https://www.instagram.com/downtownromios/",
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Searched Seattle Times, Seattle Met, and Capitol Hill Seattle for coverage of Romio's Pizza & Pasta's downtown Pike St location. Found only a 2009 Seattle Met 'Whaddya Think' blurb calling the Romio's brand mediocre/hit-or-miss (page unreachable to confirm it discusses this specific location, and it is 17 years old) plus aggregator listings (OpenTable, Yelp, DoorDash, Toast). Nothing specific and verifiable enough to ground a rating for this location."
     },
     {
       "id": "seattle-pizza-bar",
@@ -4918,7 +4922,46 @@
       "locations": [],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://theinfatuation.com/seattle/reviews/ananas-pizzeria",
+          "sources": [
+            "https://theinfatuation.com/seattle/reviews/ananas-pizzeria",
+            "https://curiocity.com/ananas-pizzeria-seattle/"
+          ],
+          "note": "The Infatuation (7.6/10) says this First Hill pizzeria and dive bar from the Taurus Ox team 'doesn't quite compete with pizzerias in other parts of town' on the basics, but its adventurous Lao-influenced pies -- bamboo shoots, lardon, dill, togarashi, pineapple -- make it the most exciting opening the neighborhood has seen, best for late-night slices and beer (open till 1am). Curiocity's opening report (Nov. 2023) confirms the Laotian-pizza concept from the Taurus Ox owners.",
+          "date": "2026-11-12"
+        },
+        "distinctiveness": {
+          "value": 8.5,
+          "setBy": "agent",
+          "source": "https://theinfatuation.com/seattle/reviews/ananas-pizzeria",
+          "sources": [
+            "https://theinfatuation.com/seattle/reviews/ananas-pizzeria",
+            "https://curiocity.com/ananas-pizzeria-seattle/"
+          ],
+          "note": "The Infatuation (7.6/10) says this First Hill pizzeria and dive bar from the Taurus Ox team 'doesn't quite compete with pizzerias in other parts of town' on the basics, but its adventurous Lao-influenced pies -- bamboo shoots, lardon, dill, togarashi, pineapple -- make it the most exciting opening the neighborhood has seen, best for late-night slices and beer (open till 1am). Curiocity's opening report (Nov. 2023) confirms the Laotian-pizza concept from the Taurus Ox owners.",
+          "date": "2026-11-12"
+        },
+        "critical": {
+          "value": 7.6,
+          "setBy": "agent",
+          "source": "https://theinfatuation.com/seattle/reviews/ananas-pizzeria",
+          "sources": [
+            "https://theinfatuation.com/seattle/reviews/ananas-pizzeria",
+            "https://curiocity.com/ananas-pizzeria-seattle/"
+          ],
+          "note": "The Infatuation (7.6/10) says this First Hill pizzeria and dive bar from the Taurus Ox team 'doesn't quite compete with pizzerias in other parts of town' on the basics, but its adventurous Lao-influenced pies -- bamboo shoots, lardon, dill, togarashi, pineapple -- make it the most exciting opening the neighborhood has seen, best for late-night slices and beer (open till 1am). Curiocity's opening report (Nov. 2023) confirms the Laotian-pizza concept from the Taurus Ox owners.",
+          "date": "2026-11-12"
+        }
+      },
+      "ratingAttempted": "2026-11-12",
+      "opened": 2023,
+      "styleGroup": "Creative",
+      "lastVerified": "2026-11-12"
     },
     {
       "id": "alberonas-davinci-pizza-pasta",
@@ -4968,7 +5011,46 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://whatnow.com/?p=216497",
+          "sources": [
+            "https://whatnow.com/?p=216497",
+            "https://capitalepizzeria.com"
+          ],
+          "note": "WhatNow reported (July 2024) that Capitale Pizzeria -- a pizza-focused sibling of Belltown's La Fontana Siciliana from Rodrigo Parisi and Saulo Cruz -- was taking over the former Boca Pizzeria space on Broadway E, expected to open later in 2024. The restaurant's own menu confirms a globally themed lineup of wood-fired pies named for cities (Capri, Lisboa, Madrid, Napoli, Ankara, Sao Paulo), a distinctive angle, though no critic has yet weighed in on execution.",
+          "date": "2026-11-12"
+        },
+        "distinctiveness": {
+          "value": 7.5,
+          "setBy": "agent",
+          "source": "https://whatnow.com/?p=216497",
+          "sources": [
+            "https://whatnow.com/?p=216497",
+            "https://capitalepizzeria.com"
+          ],
+          "note": "WhatNow reported (July 2024) that Capitale Pizzeria -- a pizza-focused sibling of Belltown's La Fontana Siciliana from Rodrigo Parisi and Saulo Cruz -- was taking over the former Boca Pizzeria space on Broadway E, expected to open later in 2024. The restaurant's own menu confirms a globally themed lineup of wood-fired pies named for cities (Capri, Lisboa, Madrid, Napoli, Ankara, Sao Paulo), a distinctive angle, though no critic has yet weighed in on execution.",
+          "date": "2026-11-12"
+        },
+        "critical": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://whatnow.com/?p=216497",
+          "sources": [
+            "https://whatnow.com/?p=216497",
+            "https://capitalepizzeria.com"
+          ],
+          "note": "WhatNow reported (July 2024) that Capitale Pizzeria -- a pizza-focused sibling of Belltown's La Fontana Siciliana from Rodrigo Parisi and Saulo Cruz -- was taking over the former Boca Pizzeria space on Broadway E, expected to open later in 2024. The restaurant's own menu confirms a globally themed lineup of wood-fired pies named for cities (Capri, Lisboa, Madrid, Napoli, Ankara, Sao Paulo), a distinctive angle, though no critic has yet weighed in on execution.",
+          "date": "2026-11-12"
+        }
+      },
+      "ratingAttempted": "2026-11-12",
+      "opened": 2024,
+      "styleGroup": "Creative",
+      "lastVerified": "2026-11-12"
     },
     {
       "id": "desi-pizza-kitchen",
@@ -5068,7 +5150,9 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Searched for reviews or news coverage of Numero Uno Pizza at 103 1st Ave S, Pioneer Square. The only hit was a Slice.com ordering/menu page with no critic or customer commentary; broader Pioneer Square pizza coverage (Pizzeria Gabbiano, Un Po Tipsy, Moto Pizza) never mentions this business. No credible published source found."
     },
     {
       "id": "olympia-pizza-spaghetti-house-ii",
@@ -5168,7 +5252,9 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Searched for critic reviews or roundup mentions of Santorini Pizza & Pasta (Meadowbrook/Wedgwood). Found only directory/aggregator listings (Atly, MapQuest, Wanderlog, OpenTable) and a single anonymous 2008 personal blog post. No published criticism from a real outlet turned up, so skipping rather than grounding a score in aggregator copy."
     }
   ]
 }
