@@ -3430,7 +3430,15 @@
       ],
       "locationsVerified": "2026-10-20",
       "locationsSource": "https://www.oxbowmontlake.com/contact",
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://theinfatuation.com/seattle/guides/pizza-slices-seattle",
+          "title": "The Best Pizza Slices In Seattle",
+          "source": "The Infatuation",
+          "date": "2026-05-12",
+          "kind": "ranking"
+        }
+      ],
       "factors": {
         "craft": {
           "value": 7.5,
@@ -4213,7 +4221,9 @@
       "styleGroup": "Pizza bar",
       "lastVerified": "2026-09-18",
       "factsAttempted": "2026-11-05",
-      "factsNote": "Checked jacksonstreetpizzalounge.com home page: the only year present is a '2025' copyright notice in the footer, not an opening date. No About/Our Story page exists."
+      "factsNote": "Checked jacksonstreetpizzalounge.com home page: the only year present is a '2025' copyright notice in the footer, not an opening date. No About/Our Story page exists.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Jackson Street Pizza Lounge Seattle Central District review'. Found The Infatuation review (Jan 4, 2024), Curiocity opening piece (Jul 7, 2023), Axios (Jul 31, 2023) and a KING5 segment (date unconfirmed, page 403'd) — all either outside the 730-day window or undated; no in-window named coverage found."
     },
     {
       "id": "mad-pizza",
@@ -4266,7 +4276,9 @@
       "styleGroup": "Neighborhood",
       "lastVerified": "2026-09-03",
       "factsAttempted": "2026-11-05",
-      "factsNote": "Checked madpizza.com/location and madpizza.com/about: no founding year stated on either. The ChowNow ordering page (order.chownow.com/order/6301/locations) returned HTTP 403, so menu prices could not be read."
+      "factsNote": "Checked madpizza.com/location and madpizza.com/about: no founding year stated on either. The ChowNow ordering page (order.chownow.com/order/6301/locations) returned HTTP 403, so menu prices could not be read.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Mad Pizza First Hill Seattle review'. Only found a Gayot listing and reports that the Madison Street/First Hill location closed around October 2013; no recent (within 2 years) press coverage found."
     },
     {
       "id": "managers-pizza",
@@ -4320,7 +4332,9 @@
       "lastVerified": "2026-09-13",
       "opened": 2025,
       "openedSource": "https://managerspizza.online/",
-      "factsAttempted": "2026-11-12"
+      "factsAttempted": "2026-11-12",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Manager's Pizza University District Seattle review' and '\"Manager's Pizza\" University District Seattle news article'. Only found aggregator listings (Atly) and a Seattle Pizza Substack ranking post that returned HTTP 403; no accessible named-outlet coverage found."
     },
     {
       "id": "un-po-tipsy",
@@ -4345,7 +4359,22 @@
       ],
       "locationsVerified": "2026-11-12",
       "locationsSource": "https://unpotipsy.com",
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://theinfatuation.com/seattle/guides/pizza-slices-seattle",
+          "title": "The Best Pizza Slices In Seattle",
+          "source": "The Infatuation",
+          "date": "2026-05-12",
+          "kind": "ranking"
+        },
+        {
+          "url": "https://seattlemag.com/food-drink/seattles-pizza-just-keeps-getting-better/",
+          "title": "Seattle's Pizza Just Keeps Getting Better",
+          "source": "Seattle Magazine",
+          "date": "2026-04-30",
+          "kind": "ranking"
+        }
+      ],
       "instagram": "https://www.instagram.com/unpotipsy/",
       "factors": {
         "craft": {
@@ -4516,7 +4545,9 @@
       "styleGroup": "By the slice",
       "lastVerified": "2026-10-18",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "No official website found by search; Oskar's Pizza appears to be a food truck that posts locations via Facebook/Instagram. The worklist's Instagram URL (https://www.instagram.com/oskarspizzas4/) returned HTTP 429 on two fetch attempts, and a search for the handle found no matching profile. Could not verify any address from an official source."
+      "locationsNote": "No official website found by search; Oskar's Pizza appears to be a food truck that posts locations via Facebook/Instagram. The worklist's Instagram URL (https://www.instagram.com/oskarspizzas4/) returned HTTP 429 on two fetch attempts, and a search for the handle found no matching profile. Could not verify any address from an official source.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Oskar's Pizza Delridge West Seattle review'. Only found a 2018 West Seattle Blog profile (too old) and Reddit/aggregator mentions of the food truck now parking in Kenmore/Woodinville; no in-window named coverage of the Delridge/West Seattle connection found."
     },
     {
       "id": "palermo-pizza-pasta",
@@ -4639,7 +4670,9 @@
       "locationsAttempted": "2026-11-12",
       "locationsNote": "Fetched https://www.pudgebros.com/ and https://www.pudgebros.com/locations; both returned HTTP 403 (blocked). A search found a Seattle address (269 NE 45th St) but only via third-party directories (Mapquest/Groupon), one of which suggests the store may be closed — not confirmed from the pizzeria's own site, so no address reported.",
       "socialAttempted": "2026-11-12",
-      "socialNote": "Site on file is pudgebros.com. Fetching it (with and without www) returned HTTP 403 Forbidden both times, so the header/footer could not be checked for an Instagram link. Searched 'Pudge Bros pizza Seattle instagram' separately — no handle found in results."
+      "socialNote": "Site on file is pudgebros.com. Fetching it (with and without www) returned HTTP 403 Forbidden both times, so the header/footer could not be checked for an Instagram link. Searched 'Pudge Bros pizza Seattle instagram' separately — no handle found in results.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Pudge Bros Pizza University District Seattle review'. Only found delivery-platform ratings (DoorDash, Uber Eats) and a 2010 Wallyhood blog post; no in-window named-outlet coverage found."
     },
     {
       "id": "ridge-pizza",
@@ -4709,7 +4742,9 @@
       "ratingAttempted": "2026-11-12",
       "priceIndex": 2,
       "styleGroup": "Neighborhood",
-      "lastVerified": "2026-11-12"
+      "lastVerified": "2026-11-12",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Ridge Pizza Phinney Ridge Greenwood Seattle review'. Found only 2012 opening coverage (Seattle Met, The Stranger) and aggregator/Yelp-sourced listings; no coverage within the last 2 years found."
     },
     {
       "id": "good-luck-bread",
@@ -4757,7 +4792,9 @@
       "styleGroup": "Creative",
       "lastVerified": "2026-09-18",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "Fetched pizza.goodluckbread.com homepage and /collections/bakery-day; site mentions a 'SODO kitchen' used for Saturday Bake Sales but states no street address anywhere on the site. A /locations page does not exist (404). No address can be confirmed from the pizzeria's own site."
+      "locationsNote": "Fetched pizza.goodluckbread.com homepage and /collections/bakery-day; site mentions a 'SODO kitchen' used for Saturday Bake Sales but states no street address anywhere on the site. A /locations page does not exist (404). No address can be confirmed from the pizzeria's own site.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Good Luck Bread SoDo Seattle pizza'. Found Seattle Met's 'Frozen Assets' piece dated July 2024, which falls just outside the 730-day window, and a KING5 segment whose page returned HTTP 403 so its date could not be confirmed; no confirmed in-window coverage found."
     },
     {
       "id": "downtown-romios-pizza-pasta",
@@ -4880,7 +4917,9 @@
       },
       "priceIndex": 2,
       "styleGroup": "Wood-fired",
-      "lastVerified": "2026-09-28"
+      "lastVerified": "2026-09-28",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Smoking Monkey Pizza Magnolia Seattle review' and '\"Smoking Monkey Pizza\" Magnolia Seattle 2024 OR 2025'. Found Seattle Times coverage (Feb 2023) about the original Renton shop and notes that a Seattle/Magnolia location opened in 2024, but no named-outlet story specifically covering the Magnolia location within the last 2 years."
     },
     {
       "id": "sopranos-pizza-pasta-lake-city",

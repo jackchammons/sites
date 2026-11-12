@@ -1,33 +1,66 @@
 {
-  "updated": "2026-11-12T18:00:00Z",
-  "links": [
+  "updated": "2026-11-12T00:00:00Z",
+  "mentions": [
     {
-      "id": "deleo-bros-pizza",
-      "website": "https://deleobrotherspizza.com/",
-      "instagram": "https://www.instagram.com/deleobrospizza/",
-      "source": "https://whatnow.com/?p=224132"
+      "id": "oxbow",
+      "title": "The Best Pizza Slices In Seattle",
+      "url": "https://theinfatuation.com/seattle/guides/pizza-slices-seattle",
+      "source": "The Infatuation",
+      "date": "2026-05-12",
+      "kind": "ranking"
+    },
+    {
+      "id": "un-po-tipsy",
+      "title": "The Best Pizza Slices In Seattle",
+      "url": "https://theinfatuation.com/seattle/guides/pizza-slices-seattle",
+      "source": "The Infatuation",
+      "date": "2026-05-12",
+      "kind": "ranking"
+    },
+    {
+      "id": "un-po-tipsy",
+      "title": "Seattle's Pizza Just Keeps Getting Better",
+      "url": "https://seattlemag.com/food-drink/seattles-pizza-just-keeps-getting-better/",
+      "source": "Seattle Magazine",
+      "date": "2026-04-30",
+      "kind": "ranking"
     }
   ],
-  "socialSkipped": [
+  "coverageSkipped": [
     {
-      "id": "starlas",
-      "note": "Checked starlaspizza.com (no Instagram link in header/footer, only an email address and a Google Maps share link). Searched 'Starla's Pizza Capitol Hill Seattle instagram' and 'site:instagram.com starla's pizza seattle'; coverage (WhatNow, Secret Seattle) mentions the owners posted reopening news on Instagram but never states the handle. Left blank rather than guess."
+      "id": "jackson-street-pizza-lounge",
+      "note": "Searched 'Jackson Street Pizza Lounge Seattle Central District review'. Found The Infatuation review (Jan 4, 2024), Curiocity opening piece (Jul 7, 2023), Axios (Jul 31, 2023) and a KING5 segment (date unconfirmed, page 403'd) — all either outside the 730-day window or undated; no in-window named coverage found."
     },
     {
-      "id": "a-k-pizza",
-      "note": "Checked ak-pizza.com (page returned no header/footer/social content). Searched 'A.K. Pizza Othello Seattle instagram' and 'site:instagram.com \"A.K. Pizza\" seattle'; found a ma.to listing using handle 'akpizzaguy' but no article or site confirms it is the shop's own account, so left blank rather than guess."
+      "id": "mad-pizza",
+      "note": "Searched 'Mad Pizza First Hill Seattle review'. Only found a Gayot listing and reports that the Madison Street/First Hill location closed around October 2013; no recent (within 2 years) press coverage found."
     },
     {
-      "id": "olympia-pizza-spaghetti-house-ii",
-      "note": "Checked olympiapizzaii.com (no Instagram link; only menu/login, app store, and maps links). Searched 'Olympia Pizza & Spaghetti House Wallingford instagram' and 'site:instagram.com \"Olympia Pizza\" Wallingford OR Seattle'; no handle found in any result for the Wallingford (II) location specifically."
+      "id": "managers-pizza",
+      "note": "Searched 'Manager's Pizza University District Seattle review' and '\"Manager's Pizza\" University District Seattle news article'. Only found aggregator listings (Atly) and a Seattle Pizza Substack ranking post that returned HTTP 403; no accessible named-outlet coverage found."
     },
     {
-      "id": "pizza-pasta-bar",
-      "note": "pizzaandpastabar.com returned HTTP 403 and could not be fetched. Searched 'Pizza and Pasta Bar Pike Place Market instagram' and checked pikeplacemarket.org's tag page for the business, which only links the Market's own Instagram (instagram.com/pikeplacepublicmarket), not the restaurant's. No handle found."
+      "id": "oskars-pizza",
+      "note": "Searched 'Oskar's Pizza Delridge West Seattle review'. Only found a 2018 West Seattle Blog profile (too old) and Reddit/aggregator mentions of the food truck now parking in Kenmore/Woodinville; no in-window named coverage of the Delridge/West Seattle connection found."
     },
     {
-      "id": "sopranos-pizza-pasta-lake-city",
-      "note": "lakecitysopranos.com returned HTTP 403 and could not be fetched. Searched 'Soprano's Pizza & Pasta Lake City Seattle instagram' and 'site:instagram.com \"Soprano's\" Lake City pizza'; results were all directory/delivery listings or unrelated Soprano's locations (FL, MD, PA), no Instagram handle found for the Seattle Lake City location."
+      "id": "pudge-bros-pizza",
+      "note": "Searched 'Pudge Bros Pizza University District Seattle review'. Only found delivery-platform ratings (DoorDash, Uber Eats) and a 2010 Wallyhood blog post; no in-window named-outlet coverage found."
+    },
+    {
+      "id": "ridge-pizza",
+      "note": "Searched 'Ridge Pizza Phinney Ridge Greenwood Seattle review'. Found only 2012 opening coverage (Seattle Met, The Stranger) and aggregator/Yelp-sourced listings; no coverage within the last 2 years found."
+    },
+    {
+      "id": "good-luck-bread",
+      "note": "Searched 'Good Luck Bread SoDo Seattle pizza'. Found Seattle Met's 'Frozen Assets' piece dated July 2024, which falls just outside the 730-day window, and a KING5 segment whose page returned HTTP 403 so its date could not be confirmed; no confirmed in-window coverage found."
+    },
+    {
+      "id": "smoking-monkey-pizza",
+      "note": "Searched 'Smoking Monkey Pizza Magnolia Seattle review' and '\"Smoking Monkey Pizza\" Magnolia Seattle 2024 OR 2025'. Found Seattle Times coverage (Feb 2023) about the original Renton shop and notes that a Seattle/Magnolia location opened in 2024, but no named-outlet story specifically covering the Magnolia location within the last 2 years."
     }
+  ],
+  "rejected": [
+    "mentions[0]: title missing or too short"
   ]
 }
