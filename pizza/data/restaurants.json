@@ -3398,19 +3398,27 @@
         },
         {
           "neighborhood": "Downtown",
-          "address": "925 Stewart St, Seattle, WA 98101"
+          "address": "925 Stewart St, Seattle, WA 98101",
+          "lat": 47.61607,
+          "lon": -122.33354
         },
         {
           "neighborhood": "Capitol Hill",
-          "address": "1433 11th Ave, Seattle, WA 98122"
+          "address": "1433 11th Ave, Seattle, WA 98122",
+          "lat": 47.61379,
+          "lon": -122.31836
         },
         {
           "neighborhood": "South Lake Union",
-          "address": "711 Westlake Ave N, Seattle, WA 98109"
+          "address": "711 Westlake Ave N, Seattle, WA 98109",
+          "lat": 47.62606,
+          "lon": -122.33911
         },
         {
           "neighborhood": "University District",
-          "address": "5240 University Way NE, Seattle, WA 98105"
+          "address": "5240 University Way NE, Seattle, WA 98105",
+          "lat": 47.66777,
+          "lon": -122.31269
         }
       ],
       "locationsVerified": "2026-11-12",
