@@ -6519,8 +6519,8 @@
         "ananas-pizzeria": 29,
         "world-pizza": 30,
         "pizzeria-pulcinella": 31,
-        "dantini-pizza": 32,
-        "razzis-pizzeria": 33,
+        "razzis-pizzeria": 32,
+        "dantini-pizza": 33,
         "ballard-pizza-co": 34,
         "un-po-tipsy": 35,
         "good-luck-bread": 36,
@@ -6596,8 +6596,8 @@
         "ananas-pizzeria": 72.6,
         "world-pizza": 72.6,
         "pizzeria-pulcinella": 72.3,
-        "dantini-pizza": 72.3,
         "razzis-pizzeria": 72.3,
+        "dantini-pizza": 72.2,
         "ballard-pizza-co": 71.5,
         "un-po-tipsy": 70.9,
         "good-luck-bread": 70.8,
@@ -6890,20 +6890,20 @@
           "value": 6.9,
           "penalty": 0
         },
-        "dantini-pizza": {
-          "reputation": 0,
-          "critical": 7.5,
-          "craft": 7.5,
-          "distinctiveness": 6.5,
-          "value": 7.5,
-          "penalty": 0
-        },
         "razzis-pizzeria": {
           "reputation": 10,
           "critical": 6.5,
           "craft": 6,
           "distinctiveness": 6.5,
           "value": 6.6,
+          "penalty": 0
+        },
+        "dantini-pizza": {
+          "reputation": 0,
+          "critical": 7.5,
+          "craft": 7.5,
+          "distinctiveness": 6.5,
+          "value": 7.5,
           "penalty": 0
         },
         "ballard-pizza-co": {
