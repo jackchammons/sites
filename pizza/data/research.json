@@ -1,74 +1,79 @@
 {
-  "updated": "2026-11-12T19:00:00Z",
+  "updated": "2026-11-12T18:00:00Z",
   "locations": [
     {
-      "id": "eymans-pizza",
-      "homepage": "https://www.eymanspizza.com/",
-      "source": "https://www.eymanspizza.com/",
+      "id": "italio-pizza-pasta",
+      "homepage": "https://www.italiopizzapastawa.com/",
+      "source": "https://www.italiopizzapastawa.com/",
       "sites": [
         {
-          "neighborhood": "Seward Park",
-          "address": "6711 Martin Luther King Jr Way S, Seattle, WA 98118"
+          "neighborhood": "Greenwood",
+          "address": "305 NW 85th St, Seattle, WA 98117"
         }
       ]
     },
     {
-      "id": "georgetown-pizza-arcade",
-      "homepage": "https://www.gpaseattle.com/",
-      "source": "https://www.gpaseattle.com/",
+      "id": "jackson-street-pizza-lounge",
+      "homepage": "https://jacksonstreetpizzalounge.com/",
+      "source": "https://jacksonstreetpizzalounge.com/",
       "sites": [
         {
-          "neighborhood": "Georgetown",
-          "address": "5513 Airport Way S, Seattle, WA 98108"
+          "neighborhood": "Central District",
+          "address": "2901 S Jackson St, Seattle, WA 98144"
         }
       ]
     },
     {
-      "id": "good-shape-pizza",
-      "homepage": "https://goodshapepizza.com/",
-      "source": "https://goodshapepizza.com/",
+      "id": "mad-pizza",
+      "homepage": "https://www.madpizza.com/",
+      "source": "https://www.madpizza.com/location",
       "sites": [
         {
-          "neighborhood": "Belltown",
-          "address": "2126 2nd Ave Suite A, Seattle, WA 98121"
+          "neighborhood": "First Hill",
+          "address": "1321 Madison Street, Seattle, WA 98104"
         }
       ]
     },
     {
-      "id": "in-pizza-we-crust",
-      "homepage": "https://inpizzawecrust.net/",
-      "source": "https://inpizzawecrust.net/",
+      "id": "un-po-tipsy",
+      "homepage": "https://unpotipsy.com",
+      "source": "https://unpotipsy.com",
       "sites": [
         {
-          "neighborhood": "Admiral Junction, West Seattle",
-          "address": "3207 California Avenue Southwest, Seattle, WA 98116"
+          "neighborhood": "Pioneer Square",
+          "address": "419 Occidental Ave S, Seattle, WA 98104"
         }
       ]
     }
   ],
   "locationsSkipped": [
     {
-      "id": "seward-park-pizza",
-      "note": "https://sewardparkpizza.com/ failed to load twice (SSL handshake failure, both direct attempts) suggesting the domain is down or misconfigured. Web searches for 'sewardparkpizza.com' and \"Seward Park Pizza\" Seattle pizzeria turned up no official site, only directories/aggregators (FamHop listing, South Seattle Emerald listicle) that conflated the name with Flying Squirrel Pizza Co. and Pizzuto's at 4920 S Genesee St. No official-site confirmation found, so no address is reported."
+      "id": "olympic-pizza-pasta",
+      "note": "seattleolympicpizza.com now 301-redirects entirely to an Otter ordering page (order.tryotter.com) with no independent official site remaining. Searched '\"Olympic Pizza\" Seattle Roosevelt Way official site address'; only directory/aggregator listings (Birdeye, Mapquest, Atly, OpenTable) turned up, consistently citing 6413 Roosevelt Way NE, Seattle, WA 98115, but none is the pizzeria's own site, so no address is reported."
     }
   ],
   "links": [
     {
-      "id": "georgetown-pizza-arcade",
-      "instagram": "https://instagram.com/gpa.seattle",
-      "source": "https://www.gpaseattle.com/"
+      "id": "jackson-street-pizza-lounge",
+      "instagram": "https://www.instagram.com/jacksonstreetpizzalounge/",
+      "source": "https://jacksonstreetpizzalounge.com/"
     },
     {
-      "id": "good-shape-pizza",
-      "instagram": "https://instagram.com/goodshapepizza",
-      "source": "https://goodshapepizza.com/"
+      "id": "mad-pizza",
+      "instagram": "https://www.instagram.com/madpizza_/",
+      "source": "https://www.madpizza.com/location"
+    },
+    {
+      "id": "un-po-tipsy",
+      "instagram": "https://www.instagram.com/unpotipsy/",
+      "source": "https://unpotipsy.com"
     }
   ],
   "facts": [
     {
-      "id": "eymans-pizza",
-      "priceIndex": 1,
-      "source": "https://www.eymanspizza.com/"
+      "id": "italio-pizza-pasta",
+      "priceIndex": 3,
+      "source": "https://www.italiopizzapastawa.com/"
     }
   ]
 }
