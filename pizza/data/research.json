@@ -1,46 +1,83 @@
 {
-  "updated": "2026-11-12T00:00:00Z",
+  "updated": "2026-11-12T12:00:00Z",
   "locations": [
     {
-      "id": "smoking-monkey-pizza",
-      "homepage": "https://www.smokingmonkeypizza.com/",
-      "source": "https://www.smokingmonkeypizza.com/",
+      "id": "deleo-bros-pizza",
+      "homepage": "https://deleobrotherspizza.com/",
+      "source": "https://deleobrotherspizza.com/",
       "sites": [
         {
-          "neighborhood": "Renton",
-          "address": "613 S 3rd St, Renton, WA 98057"
-        },
+          "neighborhood": "Pioneer Square",
+          "address": "202 Occidental Ave S, Seattle, WA 98104"
+        }
+      ]
+    },
+    {
+      "id": "coltiva-pizzeria-e-barra",
+      "homepage": "https://www.coltivasea.com/",
+      "source": "https://www.coltivasea.com/",
+      "sites": [
         {
-          "neighborhood": "Seattle",
-          "address": "3111 W McGraw St Unit 103, Seattle, WA 98199"
+          "neighborhood": "Lower Queen Anne",
+          "address": "350 1st Ave W, Seattle, WA 98119"
+        }
+      ]
+    },
+    {
+      "id": "west-of-chicago-pizza-company",
+      "homepage": "https://westofchicagopizzacompany.com/",
+      "source": "https://westofchicagopizzacompany.com/",
+      "sites": [
+        {
+          "neighborhood": "West Seattle",
+          "address": "3770 SW Alaska Street, Seattle, WA 98126"
         }
       ]
     }
   ],
-  "locationsSkipped": [
-    {
-      "id": "pudge-bros-pizza",
-      "note": "Fetched https://www.pudgebros.com/ and https://www.pudgebros.com/locations; both returned HTTP 403 (blocked). A search found a Seattle address (269 NE 45th St) but only via third-party directories (Mapquest/Groupon), one of which suggests the store may be closed — not confirmed from the pizzeria's own site, so no address reported."
-    },
-    {
-      "id": "modena-pizza-pasta",
-      "note": "Fetched https://www.modenapizzanpasta.com/ and https://modenapizzanpasta.com/ (with and without www); both returned HTTP 404, the domain does not resolve to a live site. A search for an official site found none, only third-party listings (Toast, DoorDash, Mapquest) for an address at 8014 Lake City Way NE, Seattle — not confirmed from the pizzeria's own site."
-    },
-    {
-      "id": "oskars-pizza",
-      "note": "No official website found by search; Oskar's Pizza appears to be a food truck that posts locations via Facebook/Instagram. The worklist's Instagram URL (https://www.instagram.com/oskarspizzas4/) returned HTTP 429 on two fetch attempts, and a search for the handle found no matching profile. Could not verify any address from an official source."
-    },
-    {
-      "id": "downtown-romios-pizza-pasta",
-      "note": "Fetched https://downtownromios.com/ and https://downtownromios.com/locations; both returned HTTP 403 (blocked). Could not verify branches from the official site within budget."
-    }
-  ],
   "links": [
     {
-      "id": "smoking-monkey-pizza",
-      "website": "https://www.smokingmonkeypizza.com/",
-      "instagram": "https://www.instagram.com/smokingmonkeypizzarenton/",
-      "source": "https://www.smokingmonkeypizza.com/"
+      "id": "veras-pizza-and-bar",
+      "website": "https://www.verasballard.com/",
+      "instagram": "https://www.instagram.com/verasballard/",
+      "source": "https://www.verasballard.com/"
+    },
+    {
+      "id": "coltiva-pizzeria-e-barra",
+      "website": "https://www.coltivasea.com/",
+      "instagram": "https://www.instagram.com/coltivasea",
+      "source": "https://www.coltivasea.com/"
+    },
+    {
+      "id": "west-of-chicago-pizza-company",
+      "website": "https://westofchicagopizzacompany.com/",
+      "instagram": "https://instagram.com/westofchicagopizzacompany",
+      "source": "https://westofchicagopizzacompany.com/"
     }
+  ],
+  "facts": [
+    {
+      "id": "veras-pizza-and-bar",
+      "opened": 2019,
+      "source": "https://www.verasballard.com/about/"
+    },
+    {
+      "id": "west-of-chicago-pizza-company",
+      "opened": 2019,
+      "source": "https://westofchicagopizzacompany.com/"
+    }
+  ],
+  "locationsSkipped": [
+    {
+      "id": "veras-pizza-and-bar",
+      "note": "Checked the official site homepage (verasballard.com) and its /about/ page; neither lists a street address, only a phone number and DoorDash/Caviar delivery links. Aggregator sites (The Stranger, Kineticist) cite 5417 22nd Ave NW, but that is not sourced from the pizzeria's own site, so it was not used."
+    },
+    {
+      "id": "a-k-pizza",
+      "note": "Official site ak-pizza.com is a JS-rendered page with no extractable content; ak-pizza.com/locations and ak-pizza.com/menu both returned 404. A search turned up only directory/aggregator listings (Atly, RestaurantGuru, Secret Seattle) citing 6901 Martin Luther King Jr Way S, which were not used since they aren't the pizzeria's own site."
+    }
+  ],
+  "rejected": [
+    "facts[1]: duplicate facts record for \"veras-pizza-and-bar\""
   ]
 }

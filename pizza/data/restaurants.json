@@ -4944,7 +4944,10 @@
       "opened": 2019,
       "priceIndex": 2,
       "styleGroup": "Pizza bar",
-      "lastVerified": "2026-09-23"
+      "lastVerified": "2026-09-23",
+      "factsAttempted": "2026-11-12",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "Checked the official site homepage (verasballard.com) and its /about/ page; neither lists a street address, only a phone number and DoorDash/Caviar delivery links. Aggregator sites (The Stranger, Kineticist) cite 5417 22nd Ave NW, but that is not sourced from the pizzeria's own site, so it was not used."
     },
     {
       "id": "bobu",
@@ -5045,8 +5048,8 @@
           "lon": -122.33266
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-11-12",
+      "locationsSource": "https://deleobrotherspizza.com/",
       "mentions": [],
       "ratingAttempted": "2026-11-12",
       "ratingNote": "Found genuine news coverage of the August 2025 Pioneer Square opening (whatnow.com on the Minnesota-born chain's expansion, intentionalist.com community spotlight) confirming it serves New York-style slices in a retro 1980s-themed room, but no published review or critic description of the food's execution -- too new for a craft rating grounded in actual coverage of the pizza. Skipped."
@@ -5099,7 +5102,9 @@
         }
       },
       "styleGroup": "Creative",
-      "lastVerified": "2026-10-28"
+      "lastVerified": "2026-10-28",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "Official site ak-pizza.com is a JS-rendered page with no extractable content; ak-pizza.com/locations and ak-pizza.com/menu both returned 404. A search turned up only directory/aggregator listings (Atly, RestaurantGuru, Secret Seattle) citing 6901 Martin Luther King Jr Way S, which were not used since they aren't the pizzeria's own site."
     },
     {
       "id": "coltiva-pizzeria-e-barra",
@@ -5116,14 +5121,14 @@
       "attributes": {},
       "locations": [
         {
-          "neighborhood": "Queen Anne",
+          "neighborhood": "Lower Queen Anne",
           "address": "350 1st Ave W, Seattle, WA 98119",
           "lat": 47.62197,
           "lon": -122.35787
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-11-12",
+      "locationsSource": "https://www.coltivasea.com/",
       "mentions": [],
       "factors": {
         "craft": {
@@ -5151,7 +5156,8 @@
       "opened": 2018,
       "priceIndex": 3,
       "styleGroup": "Thin crust",
-      "lastVerified": "2026-10-18"
+      "lastVerified": "2026-10-18",
+      "instagram": "https://www.instagram.com/coltivasea"
     },
     {
       "id": "west-of-chicago-pizza-company",
@@ -5168,14 +5174,12 @@
       "attributes": {},
       "locations": [
         {
-          "neighborhood": "West Seattle (Alaska Junction)",
-          "address": "3770 SW Alaska St, Seattle, WA 98126",
-          "lat": 47.56118,
-          "lon": -122.37992
+          "neighborhood": "West Seattle",
+          "address": "3770 SW Alaska Street, Seattle, WA 98126"
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-11-12",
+      "locationsSource": "https://westofchicagopizzacompany.com/",
       "mentions": [],
       "factors": {
         "craft": {
@@ -5202,7 +5206,11 @@
       },
       "priceIndex": 2,
       "styleGroup": "Chicago pan",
-      "lastVerified": "2026-10-23"
+      "lastVerified": "2026-10-23",
+      "opened": 2019,
+      "openedSource": "https://westofchicagopizzacompany.com/",
+      "factsAttempted": "2026-11-12",
+      "instagram": "https://instagram.com/westofchicagopizzacompany"
     },
     {
       "id": "starlas",
