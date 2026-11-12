@@ -270,11 +270,15 @@
         },
         {
           "neighborhood": "Pioneer Square",
-          "address": "512 Second Avenue, Suite 100, Seattle, WA 98104"
+          "address": "512 Second Avenue, Suite 100, Seattle, WA 98104",
+          "lat": 47.60209,
+          "lon": -122.33209
         },
         {
           "neighborhood": "T-Mobile Park",
-          "address": "1250 1st Ave S, Seattle, WA 98134"
+          "address": "1250 1st Ave S, Seattle, WA 98134",
+          "lat": 47.5914,
+          "lon": -122.33251
         },
         {
           "neighborhood": "West Seattle",
