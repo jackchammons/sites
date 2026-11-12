@@ -1,6 +1,7 @@
 import { esc, nameLink, shortDate, srcLink, srcLinks } from '../html.mjs';
 import { locationLabel } from '../../src/locations.js';
 import { isLaunchRating } from '../../src/slice.js';
+import { FACT_SOURCE_KEY } from '../../src/schema.js';
 import { hasCandidates } from './candidates.mjs';
 
 export function directorySection(ctx) {
@@ -41,12 +42,18 @@ const FACTOR_NAME = { craft: 'Craft', distinctiveness: 'Distinctiveness', critic
 const detailHtml = r => {
   const scored = scoreById.get(r.id);
 
+  /* The descriptive record: each fact, and beside it the page that states it
+   * when the facts task filed one (FACT_SOURCE_KEY names where that is kept). */
+  const fact = (label, key, shown) => {
+    const source = r[FACT_SOURCE_KEY[key]];
+    return dField(label, shown ? `${shown}${source ? ` · ${srcLink(source)}` : ''}` : '');
+  };
   const facts = [
-    dField('Style', text(r.style)),
-    dField('Style group', text(r.styleGroup)),
-    dField('Known for', text(r.signature)),
-    dField('Opened', r.opened ? `${esc(String(r.opened))}${r.openedSource ? ` · ${srcLink(r.openedSource)}` : ''}` : ''),
-    dField('Price', r.priceIndex ? `${'$'.repeat(r.priceIndex)}${r.priceSource ? ` · ${srcLink(r.priceSource)}` : ''}` : '')
+    fact('Style', 'style', text(r.style)),
+    fact('Style group', 'styleGroup', text(r.styleGroup)),
+    fact('Known for', 'signature', text(r.signature)),
+    fact('Opened', 'opened', r.opened ? esc(String(r.opened)) : ''),
+    fact('Price', 'priceIndex', r.priceIndex ? '$'.repeat(r.priceIndex) : '')
   ];
 
   const links = [

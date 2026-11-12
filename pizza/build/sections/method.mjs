@@ -121,6 +121,7 @@ const TASK_COLUMNS = [['looks', 'Looks at'], ['perPass', 'Per pass'], ['writes',
 /* The explicit roles keep the table a table for a screen reader on a narrow
  * screen, where the stylesheet lays each row out as a block. */
 const tasksHtml = () => `
+    <div class="tasks-wrap">
     <table class="tasks" role="table" aria-label="What each task in the rotation does">
       <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Task</th>${
         TASK_COLUMNS.map(([, label]) => `<th scope="col" role="columnheader">${label}</th>`).join('')}</tr></thead>
@@ -128,7 +129,8 @@ const tasksHtml = () => `
         <tr role="row" data-task="${esc(row.name)}"><th scope="row" role="rowheader">${esc(row.name)}</th>${
           TASK_COLUMNS.map(([key, label]) => `<td role="cell" data-l="${label}">${row[key]}</td>`).join('')}</tr>`).join('')}
       </tbody>
-    </table>`;
+    </table>
+    </div>`;
 
 /* The methodology section's factor cards and friction table, and the account
  * of the automation that follows them. */
@@ -185,7 +187,7 @@ export function methodParts(ctx) {
       that failed is not a pass, so its task is still the oldest and is tried again next. A
       task with nothing on its worklist is passed over.
     </p>
-    <ul class="rota" aria-label="The rotation">${ROTATION.map(t => `<li>${esc(t)}</li>`).join('')}</ul>${tasksHtml()}
+${tasksHtml()}
     ${outside.length ? `<p class="method-p" style="margin-top:14px">
       ${WORDS[outside.length] ?? outside.length} more ${outside.length === 1 ? 'task is' : 'tasks are'} never picked automatically and ${outside.length === 1 ? 'runs' : 'run'} only when started by hand, to catch
       up in bulk: ${outside.map(t => `${esc(t)} (${TASKS[t].summary})`).join(', ')}. ${outside.length === 1 ? 'It goes' : 'They go'} through the same steps and the same gates.

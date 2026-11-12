@@ -11,7 +11,7 @@
  * rotation. `unit` is what a pass counts; a task with none has no worklist.
  * The row's cells answer, in order: what it looks at, what it may write, what
  * it does when it finds nothing, and when it looks at the same thing again. */
-import { PER_PASS, RETRY_DAYS, ROTATION } from '../src/rules.js';
+import { PER_PASS, RETRY_DAYS, ROTATION, LIVENESS_REVISIT_DAYS, CLOSURE_RECONFIRM_DAYS } from '../src/rules.js';
 import { LOCATION_REVISIT_DAYS } from '../src/locations.js';
 
 export const TASKS = {
@@ -42,7 +42,7 @@ export const TASKS = {
       looks: 'Whether an entry is still open, from its own site and recent local coverage. The longest unchecked go first.',
       writes: 'A status (open, opening or closed) with its source, and the date it took effect only when the source states one. A closure needs a news report or the pizzeria\'s own announcement.',
       nothing: 'Leaves the status as it is. Confirming that a place is still open counts as a check.',
-      again: 'When its last check is among the oldest again. A newly recorded closure is confirmed once more.'
+      again: `Oldest check first, and an entry checked in the last ${LIVENESS_REVISIT_DAYS} days goes behind the rest. A closure recorded in the last ${CLOSURE_RECONFIRM_DAYS} days is confirmed once more.`
     }
   },
   news: {
@@ -86,13 +86,13 @@ export const TASKS = {
     }
   },
   facts: {
-    summary: 'founding years and price tiers',
+    summary: 'the descriptive record: year opened, price tier, style, signature pie',
     unit: 'entries',
     row: {
-      looks: 'Open entries with no founding year or no price tier on file, rated ones first, on the pizzeria\'s own site and in local coverage.',
-      writes: 'The year an entry opened and its price tier, each only from a page that states it and only where none is on file.',
-      nothing: 'Leaves the gap and records the attempt with a note.',
-      again: `${RETRY_DAYS.facts} days after it last looked.`
+      looks: 'Open entries missing part of their descriptive record: the year opened, the price tier, the style, the style group or the pie the place is known for. Rated entries go first, then the ones missing most.',
+      writes: 'Any of those facts, each from a page that states it and only where none is on file. A style or a signature pie has to come from the pizzeria\'s own site or from published coverage.',
+      nothing: 'Leaves the gap, and records which facts it looked for.',
+      again: `${RETRY_DAYS.facts} days after an attempt, fact by fact: a gap that attempt did not look for is drawn again sooner.`
     }
   },
   coverage: {

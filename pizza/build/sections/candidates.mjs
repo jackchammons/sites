@@ -11,7 +11,7 @@ import { esc, nameLink, shortDate, srcLink } from '../html.mjs';
 import { locationLabel } from '../../src/locations.js';
 import { isRated } from '../../src/slice.js';
 import { PER_PASS, RETRY_DAYS } from '../../src/rules.js';
-import { INSPECTION_CUTOFF_MONTHS } from '../../src/census.js';
+import { INSPECTION_CUTOFF_MONTHS, REOPENING_VERDICTS, candidateStanding } from '../../src/census.js';
 
 const DAY = 864e5;
 const isDate = v => typeof v === 'string' && Number.isFinite(Date.parse(v));
@@ -46,50 +46,26 @@ export function unratedLists(restaurants) {
 /* ---------- not on file ---------- */
 
 /* The verdicts that set a candidate aside, in the order the page lists them.
- * `returns` marks the ones that are not final. */
-export const VERDICTS = [
-  { key: 'chain', returns: false },
-  { key: 'not-pizza', returns: true },
-  { key: 'unverifiable', returns: true },
-  { key: 'closed', returns: true }
-];
-const RETURNS = new Set(VERDICTS.filter(v => v.returns).map(v => v.key));
+ * `rejected` is a candidate set aside with no verdict on record. */
+export const EXCLUDED = ['chain', 'not-pizza', 'unverifiable', 'closed', 'rejected'];
 
-/* Where one candidate stands, and the dates that decide it.
- *
- * A candidate set aside as not pizza-forward, unverifiable or closed goes
- * back to pending once the permit register records an inspection dated after
- * the day it was set aside: someone is running a kitchen there again, so the
- * verdict is worth a second look. A national chain is excluded by policy and
- * a duplicate is an entry already on file, so neither returns. A candidate
- * the queue marks rejected with no verdict this page knows is `other`, so the
- * groups always add up to the queue. */
-export function candidateState(c) {
-  const inspected = dayOf(c.lastInspection);
-  const resolved = dayOf(c.resolvedDate);
-  if (c.status === 'promoted' || c.verdict === 'duplicate') return { state: 'duplicate', inspected, resolved };
-  if (c.status === 'pending') return { state: 'pending', inspected, resolved: null, returnedFrom: null };
-  if (c.status === 'chain' || c.verdict === 'chain') return { state: 'chain', inspected, resolved };
-  if (RETURNS.has(c.verdict)) {
-    return inspected && resolved && inspected > resolved
-      ? { state: 'pending', inspected, resolved, returnedFrom: c.verdict }
-      : { state: c.verdict, inspected, resolved };
-  }
-  return { state: 'other', inspected, resolved };
-}
-
-/* The queue by state. Duplicates are counted and not listed: each is a branch
- * or a second registration of an entry the directory already shows. */
+/* The queue by where each candidate stands. candidateStanding (census.js) is
+ * the one reading of a candidate's state, and the census worklist draws on
+ * the same data: a candidate is pending here exactly when the census task
+ * would take it, in the order it would. Duplicates are counted and not
+ * listed: each is a branch or a second registration of an entry the directory
+ * already shows. */
 export function candidateLists(candidates) {
-  const lists = { pending: [], chain: [], 'not-pizza': [], unverifiable: [], closed: [], other: [], duplicates: 0 };
-  for (const c of candidates ?? []) {
-    const at = candidateState(c);
-    if (at.state === 'duplicate') lists.duplicates++;
-    else lists[at.state].push({ ...c, at });
+  const queue = Array.isArray(candidates) ? candidates : [];
+  const lists = { pending: [], duplicates: 0, ...Object.fromEntries(EXCLUDED.map(k => [k, []])) };
+  for (const c of queue) {
+    const at = candidateStanding(c, queue);
+    if (at.state === 'listed' || at.state === 'duplicate') lists.duplicates++;
+    else (lists[at.state] ?? lists.rejected).push({ ...c, at });
   }
-  for (const k of Object.keys(lists)) if (Array.isArray(lists[k])) lists[k].sort(byName);
-  const excluded = lists.chain.length + lists['not-pizza'].length + lists.unverifiable.length
-    + lists.closed.length + lists.other.length;
+  lists.pending.sort((a, b) => (a.at.queuePosition ?? Infinity) - (b.at.queuePosition ?? Infinity));
+  for (const k of EXCLUDED) lists[k].sort(byName);
+  const excluded = EXCLUDED.reduce((n, k) => n + lists[k].length, 0);
   return { ...lists, excluded, total: lists.pending.length + excluded + lists.duplicates };
 }
 
@@ -116,7 +92,7 @@ const group = ({ key, title, rule, label, head, rows }) => {
   if (!rows.length) return '';
   const body = rows.map(([cells, note]) => `
           <tr class="cq-row${note ? ' has-note' : ''}">${cells}</tr>${note ? `
-          <tr class="cq-note"><td colspan="${head.length}">${note}</td></tr>` : ''}`).join('');
+          <tr class="cq-note"><td colspan="${head.length}"><div class="cq-note-in">${note}</div></td></tr>` : ''}`).join('');
   return `
     <details class="cq-group" data-group="${key}"${rows.length <= OPEN_UP_TO ? ' open' : ''}>
       <summary><span class="cq-title">${title}</span> <span class="cq-n">${rows.length}</span>
@@ -137,10 +113,12 @@ const entryCell = r => `<th scope="row">${nameLink(r)}<span class="cq-sub">${esc
 const permitCell = c => `<th scope="row">${esc(c.name)}<span class="cq-sub">${
   c.address ? esc(c.address) : 'address not on file'}</span></th>`;
 
+/* What each verdict means, in a sentence. `was` completes "set aside as …"
+ * for a candidate that has come back. */
 const VERDICT_COPY = {
   chain: {
     title: 'National chain',
-    rule: "A brand with shops across the country. Excluded by policy: this is an index of Seattle's own pizzerias. It does not come back.",
+    rule: "A brand with shops across the country. Excluded by policy: this is an index of Seattle's own pizzerias.",
     label: 'Candidates excluded as national chains',
     was: 'a national chain'
   },
@@ -154,7 +132,7 @@ const VERDICT_COPY = {
     title: 'Could not be verified',
     rule: 'The census pass found no trace of a pizzeria beyond the permit.',
     label: 'Candidates that could not be verified',
-    was: 'unverifiable'
+    was: 'one it could not verify'
   },
   closed: {
     title: 'Closed',
@@ -162,13 +140,20 @@ const VERDICT_COPY = {
     label: 'Candidates found to have closed',
     was: 'closed'
   },
-  other: {
+  rejected: {
     title: 'Set aside',
-    rule: 'Set aside by an earlier pass with no reason on file.',
+    rule: 'Set aside by an earlier pass, with no reason on file.',
     label: 'Candidates set aside with no reason on file',
-    was: 'set aside'
+    was: 'not belonging'
   }
 };
+/* Whether a verdict is final. The reopening verdicts are the ones a later
+ * inspection undoes (REOPENING_VERDICTS in census.js); the rest stay. */
+const finality = key => REOPENING_VERDICTS.includes(key)
+  ? ' Not final: it returns to the queue when the register records an inspection dated after the day it was set aside.'
+  : ' It does not come back.';
+const ORDINAL = ['', 'next', '2nd', '3rd'];
+const passName = n => n == null ? NONE : ORDINAL[n] ?? `${n}th`;
 
 export function candidatesSection(ctx) {
   const { dataset, candidates, candidatesChecked } = ctx;
@@ -189,7 +174,7 @@ export function candidatesSection(ctx) {
     </p>
     ${group({
       key: 'rating-waiting', title: 'Waiting for a rating pass',
-      rule: 'No rating pass has looked at these yet.',
+      rule: 'No rating pass has looked at these yet. A pass draws the ones with press on file first; among the rest the order is shuffled.',
       label: 'Pizzerias waiting for a rating pass',
       head: ['Pizzeria', 'Press on file'],
       rows: unrated.waiting.map(r => [`${entryCell(r)}<td>${press(r) ? count(press(r), 'story', 'stories') : 'none'}</td>`, ''])
@@ -212,18 +197,29 @@ export function candidatesSection(ctx) {
     })}` : '';
 
   /* ---- not on file ---- */
-  const pendingRow = c => [
-    `${permitCell(c)}<td>${day(c.at.inspected)}</td>`,
-    c.at.returnedFrom
-      ? `Back in the queue: the register recorded an inspection on ${day(c.at.inspected)}, after this candidate was set aside on ${day(c.at.resolved)} as ${VERDICT_COPY[c.at.returnedFrom].was}.`
-      : ''];
+  /* A candidate that came back carries what the earlier pass found, and the
+   * row says why it is here again. */
+  const pendingRow = c => {
+    const was = c.at.previousVerdict;
+    return [
+      `${permitCell(c)}<td>${day(dayOf(c.at.lastInspection))}</td><td>${passName(c.at.censusPass)}</td>`,
+      was ? `Back in the queue. A census pass set it aside${was.resolvedDate ? ` on ${day(dayOf(was.resolvedDate))}` : ''} as ${
+        VERDICT_COPY[was.verdict]?.was ?? VERDICT_COPY.rejected.was}, and the register has recorded an inspection since.${
+        was.note ? ` What that pass found: ${esc(was.note)}` : ''}` : ''];
+  };
   /* A candidate with no verdict date was settled on its name alone, when the
-   * register was read, and no pass has written a note for it. */
+   * register was read, and no pass has written a note for it. One the
+   * register has already inspected again is still listed under its verdict,
+   * because the queue takes it back only when the register is next read. */
   const excludedRow = c => [
-    `${permitCell(c)}<td>${day(c.at.inspected)}</td><td>${c.at.resolved ? day(c.at.resolved) : '<span class="cq-dim">by name</span>'}</td>`,
-    c.note ? `${esc(c.note)}${c.resolutionSource ? ` <span class="cq-src">${srcLink(c.resolutionSource)}</span>` : ''}` : ''];
+    `${permitCell(c)}<td>${day(dayOf(c.at.lastInspection))}</td><td>${
+      c.at.resolvedDate ? day(dayOf(c.at.resolvedDate)) : '<span class="cq-dim">by name</span>'}</td>`,
+    [c.at.inspectedSince ? '<b class="cq-flag">Due back</b> Inspected since it was set aside: it returns to the queue the next time the register is read.' : '',
+     c.note ? `${esc(c.note)}${c.resolutionSource ? ` <span class="cq-src">${srcLink(c.resolutionSource)}</span>` : ''}` : '']
+      .filter(Boolean).join('<br>')];
   const excludedGroup = key => group({
-    key, ...VERDICT_COPY[key],
+    key, title: VERDICT_COPY[key].title, label: VERDICT_COPY[key].label,
+    rule: VERDICT_COPY[key].rule + (key === 'rejected' ? '' : finality(key)),
     head: ['Permit name', 'Last inspected', 'Set aside'],
     rows: queue[key].map(excludedRow)
   });
@@ -239,18 +235,12 @@ export function candidatesSection(ctx) {
     </p>
     ${group({
       key: 'pending', title: 'Waiting for a census pass',
-      rule: `Found in the permit register and not yet checked. The census task takes up to ${PER_PASS.census} per pass.`,
+      rule: `Found in the permit register and not yet checked. The census task takes up to ${PER_PASS.census} per pass, in this order.`,
       label: 'Candidates waiting for a census pass',
-      head: ['Permit name', 'Last inspected'],
+      head: ['Permit name', 'Last inspected', 'Census pass'],
       rows: queue.pending.map(pendingRow)
     })}
-    ${queue.excluded ? `
-    <p class="method-p cq-between">
-      ${count(queue.excluded, 'candidate has', 'candidates have')} been set aside. A national chain stays out for good. The
-      other verdicts are not final: a candidate returns to the queue when the permit register
-      records an inspection dated after the day it was set aside.
-    </p>` : ''}
-    ${['chain', 'not-pizza', 'unverifiable', 'closed', 'other'].map(excludedGroup).join('')}
+    ${EXCLUDED.map(excludedGroup).join('')}
     ${queue.duplicates ? `
     <p class="note cq-dupes" data-group="duplicate">
       <b>${queue.duplicates}</b> more ${queue.duplicates === 1 ? 'permit is a further branch or a second registration of a pizzeria' : 'permits are further branches or second registrations of pizzerias'}

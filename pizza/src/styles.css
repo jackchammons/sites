@@ -479,7 +479,7 @@ footer p { max-width: 72ch; }
 .life-enter { border-color: color-mix(in srgb, var(--basil) 60%, var(--line)); }
 .life-enter::before { content: "\2191"; color: var(--basil); }
 .life-aside b { display: block; color: var(--ink-2); font-size: 11.5px; margin-bottom: 2px; }
-.life-aside ul { margin: 2px 0 4px; padding-left: 15px; }
+.life-aside ul { margin: 2px 0 4px; padding-left: 15px; list-style: disc; }
 .life-aside p { margin: 0; }
 /* Narrower than seven readable columns, the flow runs down the page: each
    stage under the last, its side box indented beneath it. */
@@ -521,10 +521,8 @@ footer p { max-width: 72ch; }
 /* The task table: one row per task in the rotation. Under 1100px six columns
    do not fit, so each row becomes a block and each cell carries its column's
    name (data-l) beside it; the header row is kept for screen readers only. */
-.tasks {
-  width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 4px;
-  border: 1px solid var(--line); border-radius: var(--radius); border-spacing: 0;
-}
+.tasks-wrap { margin-top: 4px; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--panel); }
+.tasks { width: 100%; border-collapse: collapse; font-size: 13px; }
 .tasks thead th {
   text-align: left; font-family: var(--mono); font-size: 10.5px; font-weight: 500;
   text-transform: uppercase; letter-spacing: .07em; color: var(--ink-3);
@@ -606,6 +604,10 @@ footer p { max-width: 72ch; }
 .cq-row td { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); white-space: nowrap; }
 .cq-row td a { color: var(--ink-2); }
 .cq-sub { display: block; margin-top: 2px; font-family: var(--mono); font-size: 11px; font-weight: 400; color: var(--ink-3); }
+/* With room to spare the place sits beside the name, one line to a row. */
+@media (min-width: 900px) {
+  .cq-sub { display: inline; margin: 0 0 0 12px; }
+}
 .cq-row.has-note > * { border-bottom: 0; padding-bottom: 3px; }
 .cq-note td { padding-top: 0; font-size: 12.5px; color: var(--ink-3); line-height: 1.55; }
 .cq-note-in { max-width: 100ch; overflow-wrap: anywhere; }
@@ -613,7 +615,10 @@ footer p { max-width: 72ch; }
 .cq-dim { color: var(--ink-3); }
 .cq-src { white-space: nowrap; }
 .cq-src a { font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
-.cq-between { margin: 26px 0 0; }
+.cq-flag {
+  font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--basil); margin-right: 4px;
+}
 .cq-dupes b { color: var(--ink-2); }
 @media (max-width: 720px) {
   .cq-table thead th, .cq-table td, .cq-table tbody th { padding-left: 12px; padding-right: 10px; }
