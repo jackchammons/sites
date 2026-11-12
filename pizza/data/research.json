@@ -1,63 +1,83 @@
 {
-  "updated": "2026-11-12T19:30:00Z",
+  "updated": "2026-11-12T19:00:00Z",
   "facts": [
     {
-      "id": "un-po-tipsy",
-      "opened": 2025,
-      "signature": "Tomato Tomato: tomato sauce, basil, olive oil, whole roasted garlic cloves",
-      "source": "https://seattlemag.com/food-drink/seattles-pizza-just-keeps-getting-better/"
+      "id": "georgetown-pizza-arcade",
+      "priceIndex": 3,
+      "source": "https://www.gpaseattle.com/eat"
     },
     {
-      "id": "dantini-pizza",
-      "signature": "Pepperoni + Caramelized Garlic: pepperoni, caramelized garlic confit, mozzarella",
-      "source": "https://theinfatuation.com/seattle/reviews/dantini-pizza"
+      "id": "in-pizza-we-crust",
+      "signature": "I'm Taboo: red sauce, mozzarella, pepperoni, and pineapple",
+      "source": "https://www.seattlerefined.com/lifestyle/in-pizza-we-crust"
     },
     {
-      "id": "cornuto-pizzeria",
-      "priceIndex": 2,
-      "source": "https://www.cornutopizzeria.com/menu"
+      "id": "oxbow",
+      "priceIndex": 3,
+      "source": "https://www.oxbowmontlake.com/lunch"
+    },
+    {
+      "id": "pizza-by-ruffin",
+      "signature": "The Doro: Doro Wat (spicy Ethiopian chicken stew) and cilantro",
+      "source": "https://www.pmq.com/washingtons-first-black-owned-pizzeria-is-also-one-of-seattles-best-new-restaurants/"
+    },
+    {
+      "id": "sinners-pizza",
+      "priceIndex": 3,
+      "signature": "Hellfire Pie",
+      "source": "https://sinners.pizza/"
+    },
+    {
+      "id": "smoking-monkey-pizza",
+      "opened": 2012,
+      "source": "https://patch.com/washington/renton/smoking-monkey-pizza-to-open-on-saturday"
+    },
+    {
+      "id": "smoking-monkey-pizza",
+      "signature": "The DTR: olive oil base, mozzarella, sliced pear, smoked prosciutto, gorgonzola, and parmesan",
+      "source": "https://theticket.seattletimes.com/top-picks/the-dtr-pizza-smoking-monkey-pizza/"
     }
   ],
   "factsSkipped": [
     {
-      "id": "a-k-pizza",
-      "note": "Checked ak-pizza.com home (no content) and /menu (404). Searched for coverage; Secret Seattle's piece says it opened 'in October' with no year, and a direct fetch of that article returned empty content, so the year couldn't be confirmed. No price or named signature pizza found from any valid source."
+      "id": "georgetown-pizza-arcade",
+      "note": "Searched local coverage (ParentMap, South Seattle Emerald, Kineticist) for a named signature pie; found only general descriptions of square 17-inch pies and named specials (Valedictorian, The Dropout, Teacher's Pet) on the restaurant's own eat page, with no page singling one out as the pizza it's known for."
     },
     {
-      "id": "lucianos-pizza-pasta",
-      "note": "No official website found. Search turned up only aggregator/ordering listings (Uber Eats, Slice, MenuPages, DoorDash, Atly, Sluurpy, WhatsVegan) for its West Seattle and Lake City locations, none of which qualify as a source for opened year, price, or signature pie."
+      "id": "in-pizza-we-crust",
+      "note": "Found only outdated food-truck pricing ($10-11 per pie) from seattlefoodtruck.com predating the 2024 permanent Admiral District location; no current menu prices found on the restaurant's site or in coverage."
     },
     {
-      "id": "magnolia-pizza-pasta",
-      "note": "No official website found. Search turned up only aggregator/directory listings (Slice, MenuPages, MapQuest, WhatsVegan) at 2120 W Emerson Pl, none of which qualify as a source for opened year, price, or signature pie."
+      "id": "jet-city-pizza",
+      "note": "No official website found. HistoryLink and Seattle Met only mention the name in passing lists with no history or signature pizza. Aggregator/directory pages (SliceLife, MapQuest) give an unverified 1994 founding claim not corroborated by independent coverage, so opened and signature are both left unreported."
     },
     {
-      "id": "pazzos-on-eastlake",
-      "note": "Fetched pazzosoneastlake.com/menu twice; it lists calzones ($17.95) and a 'Signature Pizzas' section header, but the actual pizza names, prices, and style did not render in the fetched content. A search result naming a 'Palermo' pizza traced to a menu-aggregator (singleplatform.com), not the restaurant's own site, so it wasn't used."
+      "id": "olympia-pizza-spaghetti-house-ii",
+      "note": "The restaurant's own site gives no founding date (\"for years\"). The only year found, 1972, comes from an unverified MapQuest directory listing, not the pizzeria's own site or independent coverage, so it is not reported."
     },
     {
-      "id": "mad-pizza",
-      "note": "Checked madpizza.com home, /menu, and /about; none state an opening year, pizza prices, or a named signature pizza. Search found Mad Pizza is a small Seattle-area chain with unclear/conflicting location history and no reliable opening date, price, or signature pie for any currently open location."
+      "id": "oxbow",
+      "note": "The lunch menu lists five pizzas (Delicata, Sunchoke, Corn & Chorizo, Pepperoni, Cheese) with no page singling one out as the one the cafe is known for."
     },
     {
-      "id": "pizza-ritual",
-      "note": "pizzaritual.com's homepage had no usable text and /menu returned a repeated SSL error. A West Seattle Blog item (Jan 2026) describes it operating out of the KBM commissary kitchen 'since summer,' but the article itself returned 403 Forbidden on direct fetch, giving no verifiable opening year, price, or signature pizza."
+      "id": "pizza-by-ruffin",
+      "note": "Searched the restaurant's own site, discoverslu.com, seattlerefined.com, and PMQ coverage for a whole-pie or slice price; none states one."
     },
     {
-      "id": "seward-park-pizza",
-      "note": "sewardparkpizza.com returned a repeated SSL handshake error on every fetch attempt. Search found only a South Seattle Emerald listing at 4920 S Genesee St with no review, and a possible mix-up with Flying Squirrel Pizza Co. at the same address; nothing usable on opened year, price, or signature pizza."
+      "id": "pizza-pasta-bar",
+      "note": "Official site (pizzaandpastabar.com) returns 403 on all pages tried. Pike Place Market's own page gives no opening date (only \"moved to Seattle twenty-five years ago\" and a 2019 remodel) and no signature pizza. Other candidates (Atmosfy's AI-generated \"since 2016\", a single MapQuest listing naming a \"wet meatloaf pizza\") are aggregator sources, not the restaurant's own site or published criticism, so opened and signature are both left unreported."
     },
     {
-      "id": "ananas-pizzeria",
-      "note": "ananaspizzeria.com's home page and /menu had no usable content. Seattle Met's piece describing Ananas's namesake pizza (pineapple and smoked ham) returned 403 Forbidden on direct fetch at both known URLs, so it couldn't be verified firsthand; no price found anywhere."
+      "id": "pudge-bros-pizza",
+      "note": "Official site (pudgebros.com) returns 403 on all pages tried. The only founding-year claim found is a delivery-platform brand page (SliceLife) citing a 1991 Denver origin for the chain, not confirmed for the Seattle-area location; no signature pizza is named in any coverage found."
     },
     {
-      "id": "capitale-pizzeria",
-      "note": "capitalepizzeria.com's own pages describe several pizzas (Santiago, Calabria, Capri, Napoli, Madrid, Lisboa, Ankara) via reviewer quotes but single out no signature pie and list no prices; a Seattle Restaurant Week $50 prix-fixe mention found in search is a promotion, not a menu price, so it wasn't used."
-    },
-    {
-      "id": "cornuto-pizzeria",
-      "note": "cornutopizzeria.com's own menu gives prices (used for priceIndex) but names no signature pizza. The Infatuation's review and a Seattle Met quote on the site describe general toppings (chile oil, salame piccante, prosciutto di Parma) without tying them to one named pie."
+      "id": "roma-roma",
+      "note": "Official site's menu pages return 404 and its Toast ordering page returns 403, so no price could be read directly from an opened page. No published review names a definitive signature pie (Capitol Hill Seattle mentions a Cherry & Burrata pie only in a photo caption)."
     }
+  ],
+  "rejected": [
+    "facts[2]: signature is longer than 100 characters",
+    "facts[3]: signature is longer than 100 characters"
   ]
 }
