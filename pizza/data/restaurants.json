@@ -4512,7 +4512,9 @@
       "ratingAttempted": "2026-11-07",
       "ratingNote": "Searched Hot Slice Pizza (Interbay/Dravus St) plus Eater/Seattle Met/Infatuation/halal-news combinations. Found only Atly, Groupon and aggregator listings describing a halal NY-style slice shop; no critic review, roundup entry, or news coverage turned up anywhere, including halal-food-press searches. No rating proposed; skipped for lack of published criticism.",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "Fetched hotslicepizzasea.com homepage and /contact; the site is a JS-rendered page that returns only a title tag ('Hot Slice Pizza ... Seattle, WA') with no address, and /menu and /contact both 404. A third-party aggregator (atly.com) lists an address but aggregators are not an allowed source, so no address is reported."
+      "locationsNote": "Fetched hotslicepizzasea.com homepage and /contact; the site is a JS-rendered page that returns only a title tag ('Hot Slice Pizza ... Seattle, WA') with no address, and /menu and /contact both 404. A third-party aggregator (atly.com) lists an address but aggregators are not an allowed source, so no address is reported.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Hot Slice Pizza Interbay Seattle' and 'Hot Slice Pizza Seattle opening news'. Only found directory/aggregator listings (Atly, Airbnb nearby-places pages, Sip Magazine about an unrelated Sizzle Pie piece). No story from a named outlet (Infatuation, Seattle Times, Seattle Met, Seattle Magazine, Eater Seattle, The Stranger, or a neighborhood blog) actually about this pizzeria."
     },
     {
       "id": "oskars-pizza",
@@ -4597,7 +4599,9 @@
       "mentions": [],
       "instagram": "https://www.instagram.com/palermoseattle/",
       "ratingAttempted": "2026-11-12",
-      "ratingNote": "Searched for reviews/roundups of Palermo Pizza & Pasta (350 15th Ave E, Capitol Hill) by name across Seattle Met, The Stranger, Capitol Hill Seattle Blog and general web search. Found only directory/aggregator listings (OpenTable with no reviews, Sluurpy/Yelp mirror, Slice, MapQuest) and no professional review, roundup entry, or news story specific to this pizzeria. Skipping for lack of published criticism."
+      "ratingNote": "Searched for reviews/roundups of Palermo Pizza & Pasta (350 15th Ave E, Capitol Hill) by name across Seattle Met, The Stranger, Capitol Hill Seattle Blog and general web search. Found only directory/aggregator listings (OpenTable with no reviews, Sluurpy/Yelp mirror, Slice, MapQuest) and no professional review, roundup entry, or news story specific to this pizzeria. Skipping for lack of published criticism.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Palermo Pizza Capitol Hill Seattle review' and 'Palermo Pizza Pasta Capitol Hill Seattle Blog'. Found only OpenTable/Sluurpy/MapQuest/Slice directory listings and a 2017 Seattle Met 'best new Italian' piece that does not name this restaurant. No qualifying story found."
     },
     {
       "id": "pizza-paesano",
@@ -4627,7 +4631,9 @@
       "ratingAttempted": "2026-11-12",
       "ratingNote": "Searched for 'Pizza Paesano' Ballard by name, plus its listed Instagram handle (pizza_paesano_seattle), across web search and Seattle food-media roundups (Seattle Met, The Stranger, Infatuation). No results returned that reference this business at all -- no menu site, no press mention, no aggregator listing could be found. Could not even confirm current operation independently of the directory entry. Skipping for lack of any verifiable published source.",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "Worklist site is the Instagram profile itself; fetching https://www.instagram.com/pizza_paesano_seattle/ returned only Instagram's logged-out prompt with no bio, website link, or address. Searched for an official Pizza Paesano Seattle website and for its address; no independent official site or address turned up."
+      "locationsNote": "Worklist site is the Instagram profile itself; fetching https://www.instagram.com/pizza_paesano_seattle/ returned only Instagram's logged-out prompt with no bio, website link, or address. Searched for an official Pizza Paesano Seattle website and for its address; no independent official site or address turned up.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched '\"Pizza Paesano\" Ballard Seattle' and '\"Pizza Paesano\" My Ballard OR myballard.com'. Both returned only unrelated Ballard pizzerias (Ballard Pizza Co., Veraci, Stoneburner, Palermo-Ballard) with no results naming Pizza Paesano itself. No qualifying coverage found."
     },
     {
       "id": "pudge-bros-pizza",
@@ -4846,7 +4852,9 @@
       "ratingAttempted": "2026-11-12",
       "ratingNote": "Searched Seattle Times, Seattle Met, and Capitol Hill Seattle for coverage of Romio's Pizza & Pasta's downtown Pike St location. Found only a 2009 Seattle Met 'Whaddya Think' blurb calling the Romio's brand mediocre/hit-or-miss (page unreachable to confirm it discusses this specific location, and it is 17 years old) plus aggregator listings (OpenTable, Yelp, DoorDash, Toast). Nothing specific and verifiable enough to ground a rating for this location.",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "Fetched https://downtownromios.com/ and https://downtownromios.com/locations; both returned HTTP 403 (blocked). Could not verify branches from the official site within budget."
+      "locationsNote": "Fetched https://downtownromios.com/ and https://downtownromios.com/locations; both returned HTTP 403 (blocked). Could not verify branches from the official site within budget.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched '\"Downtown Romio's\" Pizza Pasta Seattle' and 'Eater Seattle Romio's Pizza Pasta downtown'. Only OpenTable, Toast, DoorDash and FoodBoss listing/menu pages turned up, plus one negative DoorDash customer review. No named-outlet story found."
     },
     {
       "id": "seattle-pizza-bar",
@@ -4883,7 +4891,9 @@
       "ratingNote": "Searched Seattle Pizza & Bar (Belltown/Western Ave and South Lake Union/Fairview Ave locations) plus Eater/Seattle Met/Infatuation/Seattle Times/opening-news combinations. Found only Uber Eats, MapQuest and Poyst listings with mixed crowd feedback; no critic review, roundup mention, or opening story in any local outlet. No rating proposed; skipped for lack of published criticism.",
       "opened": 2022,
       "openedSource": "https://www.seattlepizzaandbar.com/",
-      "factsAttempted": "2026-11-12"
+      "factsAttempted": "2026-11-12",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched '\"Seattle Pizza & Bar\" Belltown OR \"South Lake Union\"' and '\"Seattle Pizza and Bar\" closed Belltown OR \"South Lake Union\" news'. Found only MapQuest/Yelp-mirror listings (one showing a possible closed status with no explanation) and unrelated Seattle Met/Stranger closure roundups from 2017-2019. No dated, named-outlet report naming this business as opened, closed, or reviewed."
     },
     {
       "id": "smoking-monkey-pizza",
@@ -4972,7 +4982,9 @@
       "locationsAttempted": "2026-11-12",
       "locationsNote": "Its site, https://lakecitysopranos.com/, returned HTTP 403 Forbidden on fetch and a wayback-machine fallback is unavailable in this environment, so the official page could not be read. A search turned up third-party listings placing Lake City at 11754 15th Ave NE 98125 and describing the lead address, 7729 24th Ave NW 98117, as a separate Soprano's location in Loyal Heights, but neither is confirmed against the pizzeria's own site, so no address is reported for this entry.",
       "socialAttempted": "2026-11-12",
-      "socialNote": "lakecitysopranos.com returned HTTP 403 and could not be fetched. Searched 'Soprano's Pizza & Pasta Lake City Seattle instagram' and 'site:instagram.com \"Soprano's\" Lake City pizza'; results were all directory/delivery listings or unrelated Soprano's locations (FL, MD, PA), no Instagram handle found for the Seattle Lake City location."
+      "socialNote": "lakecitysopranos.com returned HTTP 403 and could not be fetched. Searched 'Soprano's Pizza & Pasta Lake City Seattle instagram' and 'site:instagram.com \"Soprano's\" Lake City pizza'; results were all directory/delivery listings or unrelated Soprano's locations (FL, MD, PA), no Instagram handle found for the Seattle Lake City location.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched '\"Soprano's Pizza\" Lake City Seattle' and 'Soprano's Pizza Pasta Lake City news blog'. Only Menupages/MapQuest/Sluurpy/Wanderlog directory listings and a single undated Yelp-style customer comment appeared. No qualifying press coverage found."
     },
     {
       "id": "veras-pizza-and-bar",
@@ -5148,7 +5160,9 @@
       "mentions": [],
       "ratingAttempted": "2026-11-12",
       "ratingNote": "Found genuine news coverage of the August 2025 Pioneer Square opening (whatnow.com on the Minnesota-born chain's expansion, intentionalist.com community spotlight) confirming it serves New York-style slices in a retro 1980s-themed room, but no published review or critic description of the food's execution -- too new for a craft rating grounded in actual coverage of the pizza. Skipped.",
-      "instagram": "https://www.instagram.com/deleobrospizza/"
+      "instagram": "https://www.instagram.com/deleobrospizza/",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched '\"DeLeo Bros\" Pizza Pioneer Square Seattle' and '\"DeLeo Bros\" Pizza Seattle Axios OR Eater opening'. Found only a whatnow.com aggregator post (syndicated press-release style, not an original named-outlet report) describing a liquor-license application, plus Intentionalist and MapQuest directory listings with conflicting opening dates. None meets the bar of genuine published criticism/news from the listed outlet types, so nothing qualifying to report."
     },
     {
       "id": "a-k-pizza",
@@ -5502,7 +5516,9 @@
       "locationsAttempted": "2026-11-12",
       "locationsNote": "No official Alberona's DaVinci Pizza & Pasta website found. Search results were aggregators only (Slice, Autoreserve); the Slice menu page (fetched) lists 3624 Leary Way NW, Seattle, WA 98107 but has no link to an official site or Instagram, and the Autoreserve page returned HTTP 403 when fetched.",
       "socialAttempted": "2026-11-12",
-      "socialNote": "Searched 'Alberona's DaVinci Pizza & Pasta Ballard Seattle website' — only Caviar/Slice/aggregator listings (3624 Leary Way NW) turned up, no official domain found. No Instagram handle found in results or named by any outlet."
+      "socialNote": "Searched 'Alberona's DaVinci Pizza & Pasta Ballard Seattle website' — only Caviar/Slice/aggregator listings (3624 Leary Way NW) turned up, no official domain found. No Instagram handle found in results or named by any outlet.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched '\"Alberona's\" DaVinci Pizza Ballard' and 'Alberona's DaVinci Pizza Pasta My Ballard news'. Results were only Caviar/Atly/MapQuest/Slice/Zabihah directory listings and a single old 2018 customer review. No qualifying named-outlet coverage found."
     },
     {
       "id": "capitale-pizzeria",
@@ -5600,7 +5616,9 @@
       "locationsAttempted": "2026-11-12",
       "locationsNote": "No official Desi Pizza Kitchen website found. Web search surfaced only aggregators (Slice, ezCater, Valpak, MapQuest) citing a Queen Anne address (2115 Queen Anne Ave N, Seattle, WA 98109); the ezCater brand page was fetched and every link on it points back to ezCater, not an owned site. Could not confirm an address from the pizzeria's own site.",
       "socialAttempted": "2026-11-12",
-      "socialNote": "Searched 'Desi Pizza Kitchen Queen Anne Seattle website' — only Slice/DoorDash/Uber Eats/Valpak listings turned up (2115 Queen Anne Ave N), no official domain found. No Instagram handle found."
+      "socialNote": "Searched 'Desi Pizza Kitchen Queen Anne Seattle website' — only Slice/DoorDash/Uber Eats/Valpak listings turned up (2115 Queen Anne Ave N), no official domain found. No Instagram handle found.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched '\"Desi Pizza Kitchen\" Queen Anne Seattle' and 'Desi Pizza Kitchen Seattle Eater OR Stranger Indian fusion pizza'. Only MapQuest/Valpak/DoorDash/namaste-locator listings and DoorDash customer comments turned up. No Eater, Stranger, Seattle Met, or similar outlet story found about this location."
     },
     {
       "id": "fremont-pizza",
@@ -5631,7 +5649,9 @@
       "locationsAttempted": "2026-11-12",
       "locationsNote": "Found what appears to be the official homepage, https://www.fremont-pizza.com/ (linked from a JoinLolo merchant listing, labeled 'Fremont Pizza' rather than a delivery aggregator), but the site renders via JavaScript and WebFetch only returned the page title with no address, locations, or social links; subpages /visit, /menu, and /contact-us all returned HTTP 404. Could not confirm an address from the pizzeria's own site.",
       "socialAttempted": "2026-11-12",
-      "socialNote": "Searched 'Fremont Pizza Seattle website' and 'Fremont Pizza Seattle instagram' — only aggregator/delivery listings (3510 Fremont Ave N) turned up; no official domain or Instagram handle found in results or named by any outlet."
+      "socialNote": "Searched 'Fremont Pizza Seattle website' and 'Fremont Pizza Seattle instagram' — only aggregator/delivery listings (3510 Fremont Ave N) turned up; no official domain or Instagram handle found in results or named by any outlet.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched '\"Fremont Pizza\" Seattle review news' and '\"Fremont Pizza\" Seattle Stranger OR \"My Fremont\" news'. Only MapQuest/Lolo/Spinach directory listings surfaced; Seattle Magazine and Seattle Met pizza roundups found in the results covered other restaurants (Tivoli, Whale Wins, Lupo) and did not mention Fremont Pizza. No qualifying coverage found."
     },
     {
       "id": "magnolia-pizza-pasta",

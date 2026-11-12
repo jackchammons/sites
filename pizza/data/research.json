@@ -1,55 +1,45 @@
 {
   "updated": "2026-11-12T00:00:00Z",
-  "mentions": [
-    {
-      "id": "castello-pizza-pasta",
-      "title": "Which Crust Does The South End Trust?",
-      "url": "https://southseattleemerald.org/community/2025/10/28/which-crust-does-the-south-end-trust",
-      "source": "South Seattle Emerald",
-      "date": "2025-10-28",
-      "kind": "ranking"
-    }
-  ],
   "coverageSkipped": [
     {
-      "id": "ananas-pizzeria",
-      "note": "Searched \"Ananas Pizzeria\" First Hill review and again for 2025/2026 coverage. Found Curiocity's opening story (Nov 20, 2023), a Seattle Met Field Notes piece (~April 2024), Capitol Hill Seattle's opening tag, PMQ, and The Infatuation/Stranger slice guides, but all coverage dates to the 2023-2024 opening window, older than 730 days. No story within the last two years found."
+      "id": "hot-slice-pizza",
+      "note": "Searched 'Hot Slice Pizza Interbay Seattle' and 'Hot Slice Pizza Seattle opening news'. Only found directory/aggregator listings (Atly, Airbnb nearby-places pages, Sip Magazine about an unrelated Sizzle Pie piece). No story from a named outlet (Infatuation, Seattle Times, Seattle Met, Seattle Magazine, Eater Seattle, The Stranger, or a neighborhood blog) actually about this pizzeria."
     },
     {
-      "id": "jet-city-pizza",
-      "note": "Searched \"Jet City Pizza\" Wedgwood news and again for review/opening/Eater coverage. Found only directory listings (MapQuest, DoorDash, Slice), a HeraldNet piece about the unrelated Detroit-style Jet's Pizza chain, and Seattle Met Friday Feed roundups that don't mention this business. No dated news story, review, or ranking found."
+      "id": "palermo-pizza-pasta",
+      "note": "Searched 'Palermo Pizza Capitol Hill Seattle review' and 'Palermo Pizza Pasta Capitol Hill Seattle Blog'. Found only OpenTable/Sluurpy/MapQuest/Slice directory listings and a 2017 Seattle Met 'best new Italian' piece that does not name this restaurant. No qualifying story found."
     },
     {
-      "id": "pizza-pasta-bar",
-      "note": "Searched \"Pizza and Pasta Bar\" Pike Place Market review and again for Infatuation/Eater/Seattle Times coverage. Found only the market's own site, aggregator ratings (Sluurpy, Mapquest), and Infatuation pieces about other Pike Place restaurants (Pink Door, Pasta Casalinga). No qualifying outlet coverage naming this business found."
+      "id": "pizza-paesano",
+      "note": "Searched '\"Pizza Paesano\" Ballard Seattle' and '\"Pizza Paesano\" My Ballard OR myballard.com'. Both returned only unrelated Ballard pizzerias (Ballard Pizza Co., Veraci, Stoneburner, Palermo-Ballard) with no results naming Pizza Paesano itself. No qualifying coverage found."
     },
     {
-      "id": "romano-pizza-pasta",
-      "note": "Searched \"Romano Pizza\" Delridge Seattle and again for West Seattle Blog coverage. Found only directory/delivery listings (Slice, Menupages, Mapquest); West Seattle Blog results covered unrelated restaurants (Spiro's, GH Pasta & Pizza). No news story, review, or ranking found."
+      "id": "downtown-romios-pizza-pasta",
+      "note": "Searched '\"Downtown Romio's\" Pizza Pasta Seattle' and 'Eater Seattle Romio's Pizza Pasta downtown'. Only OpenTable, Toast, DoorDash and FoodBoss listing/menu pages turned up, plus one negative DoorDash customer review. No named-outlet story found."
     },
     {
-      "id": "castello-pizza-pasta",
-      "note": "Found and reported one qualifying mention (South Seattle Emerald, Oct 28, 2025); no additional qualifying stories surfaced in the two searches run."
+      "id": "seattle-pizza-bar",
+      "note": "Searched '\"Seattle Pizza & Bar\" Belltown OR \"South Lake Union\"' and '\"Seattle Pizza and Bar\" closed Belltown OR \"South Lake Union\" news'. Found only MapQuest/Yelp-mirror listings (one showing a possible closed status with no explanation) and unrelated Seattle Met/Stranger closure roundups from 2017-2019. No dated, named-outlet report naming this business as opened, closed, or reviewed."
     },
     {
-      "id": "candela-pizza",
-      "note": "Searched \"Candela Pizza\" Seattle, which surfaced only Seattle Food Truck/Atly directory listings and general citywide pizza-guide links; fetched Tasting Table's \"14 Absolute Best Pizza Joints In Seattle\" (already on file for a different entry) and confirmed it does not mention Candela Pizza. No qualifying coverage found."
+      "id": "sopranos-pizza-pasta-lake-city",
+      "note": "Searched '\"Soprano's Pizza\" Lake City Seattle' and 'Soprano's Pizza Pasta Lake City news blog'. Only Menupages/MapQuest/Sluurpy/Wanderlog directory listings and a single undated Yelp-style customer comment appeared. No qualifying press coverage found."
     },
     {
-      "id": "dudez-woodfired-pizza",
-      "note": "Searched \"Dude'Z Woodfired Pizza\" Eastlake and again for 2024/2025 review/news coverage. Found only directory listings (Mapquest, DoorDash, Atly) and an undated/textless Fox 13 video segment title. No dated news story, review, or ranking from a named outlet found."
+      "id": "deleo-bros-pizza",
+      "note": "Searched '\"DeLeo Bros\" Pizza Pioneer Square Seattle' and '\"DeLeo Bros\" Pizza Seattle Axios OR Eater opening'. Found only a whatnow.com aggregator post (syndicated press-release style, not an original named-outlet report) describing a liquor-license application, plus Intentionalist and MapQuest directory listings with conflicting opening dates. None meets the bar of genuine published criticism/news from the listed outlet types, so nothing qualifying to report."
     },
     {
-      "id": "italio-pizza-pasta",
-      "note": "Searched \"Italio Pizza\" Greenwood Seattle and again for MyBallard/opening coverage. Found only OpenTable/Slice/directory listings; the MyBallard-targeted search returned unrelated out-of-state pizzeria stories. No qualifying coverage found."
+      "id": "alberonas-davinci-pizza-pasta",
+      "note": "Searched '\"Alberona's\" DaVinci Pizza Ballard' and 'Alberona's DaVinci Pizza Pasta My Ballard news'. Results were only Caviar/Atly/MapQuest/Slice/Zabihah directory listings and a single old 2018 customer review. No qualifying named-outlet coverage found."
     },
     {
-      "id": "olympic-pizza-pasta",
-      "note": "Searched \"Olympic Pizza\" Roosevelt Seattle and again for 2024-2026 news. Found only directory/review listings (Birdeye, Sluurpy, Mapquest) and an unrelated Seattle Magazine piece about the separate Olympia Pizza and Spaghetti House chain. No qualifying coverage of this business found."
+      "id": "desi-pizza-kitchen",
+      "note": "Searched '\"Desi Pizza Kitchen\" Queen Anne Seattle' and 'Desi Pizza Kitchen Seattle Eater OR Stranger Indian fusion pizza'. Only MapQuest/Valpak/DoorDash/namaste-locator listings and DoorDash customer comments turned up. No Eater, Stranger, Seattle Met, or similar outlet story found about this location."
     },
     {
-      "id": "modena-pizza-pasta",
-      "note": "Searched \"Modena Pizza\" Lake City Seattle and again for 2024/2025 news/review. Found only directory and delivery-platform listings (Mapquest, DoorDash, Menupages, HappyCow). No news story, review, or ranking from a named outlet found."
+      "id": "fremont-pizza",
+      "note": "Searched '\"Fremont Pizza\" Seattle review news' and '\"Fremont Pizza\" Seattle Stranger OR \"My Fremont\" news'. Only MapQuest/Lolo/Spinach directory listings surfaced; Seattle Magazine and Seattle Met pizza roundups found in the results covered other restaurants (Tivoli, Whale Wins, Lupo) and did not mention Fremont Pizza. No qualifying coverage found."
     }
   ]
 }
