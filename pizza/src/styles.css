@@ -512,7 +512,38 @@ footer p { max-width: 72ch; }
      sit inside the column without resting in a scrolled-off state. */
   .dir-table { font-size: 12.5px; }
   .dir-table td, .dir-table th { padding: 9px 9px; }
+
+  /* The reader's "Larger map": the map takes most of the row and nearly the
+     whole window's height, and the table falls back to the two-line rows the
+     narrow layout uses, since six columns no longer fit beside it. */
+  .dir-layout.has-map.map-large { grid-template-columns: minmax(340px, 1fr) minmax(0, 1.7fr); }
+  .dir-layout.map-large .dir-rail .dir-map { height: calc(100vh - 150px); min-height: 420px; }
+  .dir-layout.map-large .dir-table th:nth-child(3), .dir-layout.map-large .dir-table th:nth-child(4),
+  .dir-layout.map-large .dir-table th:nth-child(6),
+  .dir-layout.map-large .dir-style, .dir-layout.map-large .dir-attrs,
+  .dir-layout.map-large .dir-status, .dir-layout.map-large .dir-addr { display: none; }
+  .dir-layout.map-large .dir-where { min-width: 0; color: var(--ink-3); font-family: var(--mono); font-size: 11.5px; }
+  .dir-layout.map-large .dir-st {
+    display: inline-block; margin-left: 8px; font-family: var(--mono); font-size: 10px;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3);
+    border: 1px solid var(--line); border-radius: 999px; padding: 1px 7px; vertical-align: middle;
+  }
+  .dir-layout.map-large .dir-row.st-opening .dir-st { color: var(--basil); }
+  .dir-layout.map-large .dd { grid-template-columns: 1fr; }
+
+  .dir-pin { position: relative; }
+  .map-grow {
+    position: absolute; top: 10px; right: 10px; z-index: 1000;
+    font: 500 12px/1 var(--mono); color: var(--ink); background: var(--panel);
+    border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .18);
+  }
+  .map-grow:hover { border-color: var(--tomato); }
+  .map-grow:focus-visible { outline: 2px solid var(--tomato-2); outline-offset: 2px; }
 }
+/* The button belongs to the side-by-side layout; pinned above the list the
+   map already spans the screen. */
+@media (max-width: 1099px) { .map-grow { display: none; } }
 /* Stacked, the map is pinned under the nav for as long as the list is on
    screen and the rows scroll beneath it, so a row and its marker can be seen
    together. A sticky box stays put only inside its parent, so the pinned box
