@@ -9,7 +9,7 @@
  * entry that lacks one of these keys or carries one this list does not name.
  *
  * `kind` says what a key is for:
- *   identity   which pizzeria this is; never empty, so it has no empty value
+ *   identity   which pizzeria this is
  *   fact       the descriptive record: what the place is and what it makes
  *   link       its web presence
  *   status     whether it is open, and the evidence for that
@@ -17,6 +17,10 @@
  *   rating     the graded factors
  *   coverage   press tied to the entry
  *   stamp      bookkeeping: the day a pass looked, and what it noted
+ *
+ * `empty` is the value a key holds when there is nothing to record. Three
+ * keys have none, because an entry cannot be without them: its id, its name
+ * and its status.
  *
  * `by` names what writes the key. A name in quotes is a section of the
  * research file, applied by apply-research.mjs; nothing else writes an entry
@@ -30,7 +34,7 @@ export const ENTRY_SCHEMA = [
   { key: 'name', kind: 'identity', by: '"directory"' },
 
   { key: 'neighborhood', kind: 'fact', empty: null, by: '"directory"' },
-  { key: 'neighborhoodIsPlaceholder', kind: 'fact', empty: null,
+  { key: 'neighborhoodIsPlaceholder', kind: 'location', empty: null,
     by: 'a person, for a neighborhood such as "Citywide"; "locations" clears it' },
   { key: 'blurb', kind: 'fact', empty: null, by: '"directory", from its note' },
   { key: 'style', kind: 'fact', empty: null, by: '"directory", else "facts"' },
@@ -48,7 +52,7 @@ export const ENTRY_SCHEMA = [
   { key: 'url', kind: 'link', empty: null, by: '"directory", "locations" (homepage), "links" (website)' },
   { key: 'instagram', kind: 'link', empty: null, by: '"links"' },
 
-  { key: 'status', kind: 'identity', by: '"directory", "status"' },
+  { key: 'status', kind: 'status', by: '"directory", "status"' },
   { key: 'statusPrev', kind: 'status', empty: null, by: '"status", on a change' },
   { key: 'statusNote', kind: 'status', empty: null, by: '"status"' },
   { key: 'statusSource', kind: 'status', empty: null, by: '"directory", "status"' },
@@ -134,7 +138,7 @@ const isObject = v => v !== null && typeof v === 'object' && !Array.isArray(v);
 const ordered = (obj, keys) => {
   const out = {};
   for (const k of keys) if (obj[k] !== undefined) out[k] = obj[k];
-  for (const k of Object.keys(obj)) if (!(k in out)) out[k] = obj[k];
+  for (const k of Object.keys(obj)) if (!Object.hasOwn(out, k) && obj[k] !== undefined) out[k] = obj[k];
   return out;
 };
 const keysOf = shape => shape.map(s => s.key);
@@ -170,7 +174,7 @@ export function normalizeEntry(entry) {
     else if (empty !== undefined) out[key] = Array.isArray(empty) ? [] : empty === null ? null : {};
   }
   for (const key of Object.keys(entry)) {
-    if (!(key in out) && !REFUSED_KEYS.includes(key) && entry[key] !== undefined) out[key] = entry[key];
+    if (!Object.hasOwn(out, key) && !REFUSED_KEYS.includes(key) && entry[key] !== undefined) out[key] = entry[key];
   }
   return out;
 }

@@ -11,6 +11,7 @@
  * reading and writing.
  */
 import { streetKey } from './locations.js';
+import { PER_PASS } from './rules.js';
 
 /* How long a permit stays a lead after its last inspection. The seed drops a
  * business the register has not inspected in this long as likely gone, and a
@@ -75,10 +76,37 @@ export function matchEntry(candidate, restaurants) {
     ?? null;
 }
 
+/* The verdicts a later inspection reopens. Each says the census found no
+ * pizzeria to list there: it had closed, it left no trace, or pizza was not
+ * its business. An inspection dated after that finding is the register saying
+ * a kitchen is working under the permit, and the finding has not seen it. A
+ * chain is out by policy whatever it is doing, and a duplicate is a branch of
+ * an entry on file, which reaches the locations worklist as a lead, so
+ * neither of those is reopened by anything. */
+export const REOPENING_VERDICTS = ['closed', 'unverifiable', 'not-pizza'];
+
+/* Is `lastInspection` evidence newer than the verdict a candidate carries?
+ * A verdict with no date on it cannot be shown to be older, and stays. */
+export function inspectedSinceVerdict(candidate, lastInspection = candidate?.lastInspection) {
+  return candidate?.status === 'rejected' && REOPENING_VERDICTS.includes(candidate.verdict)
+    && Date.parse(lastInspection) > Date.parse(candidate.resolvedDate);
+}
+
+/* A reopened candidate goes back to pending with what was found before kept
+ * as previousVerdict, so the next census pass starts from the earlier finding
+ * and the row never reads as both pending and judged. */
+const reopened = candidate => {
+  const { verdict, note, resolvedDate, resolutionSource, ...rest } = candidate;
+  return { ...rest, status: 'pending',
+    previousVerdict: { verdict, ...(note ? { note } : {}), resolvedDate,
+      ...(resolutionSource ? { source: resolutionSource } : {}) } };
+};
+
 /*
  * Merge freshly fetched candidates into the stored queue.
  * - a candidate already in the queue keeps its status and resolution
- *   (a rejected ghost must not resurrect on every refresh);
+ *   (a rejected ghost must not resurrect on every refresh), unless the
+ *   register has inspected it since a verdict that an inspection reopens;
  * - anything matching a dataset entry is recorded as promoted;
  * - national chains are recorded as chain, excluded by policy;
  * - everything else joins as pending.
@@ -91,9 +119,10 @@ export function mergeCandidates(existing, incoming, restaurants) {
     const prev = byKey.get(key);
     if (prev) {
       // Refresh the facts, keep the resolution.
-      byKey.set(key, { ...prev, ...inc, key, status: prev.status,
+      const kept = { ...prev, ...inc, key, status: prev.status,
         ...(prev.note ? { note: prev.note } : {}),
-        sources: [...new Set([...(prev.sources ?? []), ...(inc.sources ?? [])])] });
+        sources: [...new Set([...(prev.sources ?? []), ...(inc.sources ?? [])])] };
+      byKey.set(key, inspectedSinceVerdict(prev, inc.lastInspection) ? reopened(kept) : kept);
       continue;
     }
     const matched = matchEntry(inc, restaurants);
@@ -109,6 +138,57 @@ export function mergeCandidates(existing, incoming, restaurants) {
   }
   return [...byKey.values()].sort((a, b) =>
     a.status.localeCompare(b.status) || a.name.localeCompare(b.name));
+}
+
+/*
+ * Where one candidate stands and what would change that, as data: the page
+ * turns it into words, and the numbers it prints are the ones the queue runs
+ * on.
+ *
+ *   state         'listed'      it is the entry `matchedId`
+ *                 'pending'     waiting for a census pass
+ *                 'chain'       a national chain, left out by policy
+ *                 'duplicate'   another permit or branch of the entry `matchedId`
+ *                 'closed', 'unverifiable', 'not-pizza'   the census verdict
+ *                 'rejected'    set aside with no verdict on record
+ *   matchedId     the entry it is, or is a branch of; otherwise null
+ *   resolvedDate  the day the verdict or the match was recorded, or null
+ *   lastInspection  the register's newest inspection on file for it, or null
+ *   reopens       true when a later inspection returns it to the queue
+ *   reopensAfter  the day such an inspection has to postdate, or null
+ *   inspectedSince  true when the inspection on file already does: the next
+ *                 seed refresh that still finds the permit returns it
+ *   previousVerdict  for a candidate that came back, what was found before
+ *                 ({ verdict, note, resolvedDate, source }), or null
+ *   queuePosition, censusPass, perPass
+ *                 for a pending candidate when `queue` (the whole candidates
+ *                 list) is given: its place among the pending, counting from
+ *                 1, the census pass that reaches it (1 is the next) and how
+ *                 many a pass takes. Null otherwise.
+ */
+export function candidateStanding(candidate, queue = null) {
+  const c = candidate ?? {};
+  const state = c.status === 'promoted' ? 'listed'
+    : c.status === 'pending' || c.status === 'chain' ? c.status
+    : [...REOPENING_VERDICTS, 'duplicate'].includes(c.verdict) ? c.verdict
+    : 'rejected';
+  const reopens = c.status === 'rejected' && REOPENING_VERDICTS.includes(c.verdict) && c.resolvedDate != null;
+  const at = state === 'pending' && queue
+    ? queue.filter(q => q.status === 'pending').findIndex(q => q === candidate || (q.key != null && q.key === c.key)) + 1
+    : 0;
+  return {
+    state,
+    matchedId: state === 'listed' || state === 'duplicate' ? c.matchedId ?? null : null,
+    resolvedDate: state === 'pending' ? null : c.resolvedDate ?? null,
+    lastInspection: c.lastInspection ?? null,
+    reopens,
+    reopensAfter: reopens ? c.resolvedDate : null,
+    inspectedSince: inspectedSinceVerdict(c),
+    previousVerdict: state === 'pending' ? c.previousVerdict ?? null : null,
+    queuePosition: at || null,
+    censusPass: at ? Math.ceil(at / PER_PASS.census) : null,
+    perPass: at ? PER_PASS.census : null
+  };
 }
 
 /* The keys one door answers to when a permit address is held against an
