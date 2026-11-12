@@ -5006,7 +5006,9 @@
       "lastVerified": "2026-09-23",
       "factsAttempted": "2026-11-12",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "Checked the official site homepage (verasballard.com) and its /about/ page; neither lists a street address, only a phone number and DoorDash/Caviar delivery links. Aggregator sites (The Stranger, Kineticist) cite 5417 22nd Ave NW, but that is not sourced from the pizzeria's own site, so it was not used."
+      "locationsNote": "Checked the official site homepage (verasballard.com) and its /about/ page; neither lists a street address, only a phone number and DoorDash/Caviar delivery links. Aggregator sites (The Stranger, Kineticist) cite 5417 22nd Ave NW, but that is not sourced from the pizzeria's own site, so it was not used.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched \"Vera's Pizza and Bar\" Ballard and myballard.com specifically; found only an undated MyBallard item, DoorDash/directory listings, and The Stranger's venue page (no byline/date). No dated news story, review, or ranking within the last two years surfaced."
     },
     {
       "id": "bobu",
@@ -5057,7 +5059,15 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://www.tastingtable.com/1885016/best-pizza-restaurants-seattle",
+          "title": "14 Absolute Best Pizza Joints In Seattle",
+          "source": "Tasting Table",
+          "date": "2025-06-16",
+          "kind": "ranking"
+        }
+      ],
       "factors": {
         "craft": {
           "value": 7,
@@ -5141,7 +5151,15 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://www.theinfatuation.com/seattle/guides/pizza-delivery-seattle",
+          "title": "The Best Pizza In Seattle",
+          "source": "The Infatuation",
+          "date": "2026-11-09",
+          "kind": "ranking"
+        }
+      ],
       "factors": {
         "craft": {
           "value": 8.5,
@@ -5223,7 +5241,9 @@
       "priceIndex": 3,
       "styleGroup": "Thin crust",
       "lastVerified": "2026-10-18",
-      "instagram": "https://www.instagram.com/coltivasea"
+      "instagram": "https://www.instagram.com/coltivasea",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched \"Coltiva\" pizzeria Queen Anne Seattle and for 2024/2025 reviews; found only an undated Daily Hive item, a PR firm's client summary, and OpenTable listings. No qualifying published coverage within the last two years found."
     },
     {
       "id": "west-of-chicago-pizza-company",
@@ -5278,7 +5298,9 @@
       "opened": 2019,
       "openedSource": "https://westofchicagopizzacompany.com/",
       "factsAttempted": "2026-11-12",
-      "instagram": "https://instagram.com/westofchicagopizzacompany"
+      "instagram": "https://instagram.com/westofchicagopizzacompany",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched for West of Chicago Pizza Company news/review 2024-2025 and Eater/Infatuation coverage; found Seattle Met's deep-dish guide (Jan 31, 2024) and an Infatuation review (Dec 2, 2022), both older than the two-year window. No coverage within the window found."
     },
     {
       "id": "starlas",
@@ -5362,7 +5384,9 @@
       "locationsAttempted": "2026-11-12",
       "locationsNote": "No official Luciano's Pizza & Pasta website found. Search results were all delivery/ordering aggregators (Slice, UberEats, DoorDash, Foodboss) citing two Seattle addresses (2341 California Ave SW and 11064 Lake City Way NE); the Slice menu page was fetched and confirmed it has no outbound link to an official site or Instagram.",
       "socialAttempted": "2026-11-12",
-      "socialNote": "Searched 'Luciano's Pizza & Pasta Admiral West Seattle website' — only Uber Eats/Slice/DoorDash/WhatsVegan listings turned up (2341 California Ave SW), no official domain found. No Instagram handle found."
+      "socialNote": "Searched 'Luciano's Pizza & Pasta Admiral West Seattle website' — only Uber Eats/Slice/DoorDash/WhatsVegan listings turned up (2341 California Ave SW), no official domain found. No Instagram handle found.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched \"Luciano's Pizza\" Admiral West Seattle review; found only directory listings, a West Seattle Blog forum rant thread, and template filler pages. No professional review or news story found."
     },
     {
       "id": "ananas-pizzeria",
@@ -5519,7 +5543,9 @@
       "opened": 2024,
       "styleGroup": "Creative",
       "lastVerified": "2026-11-12",
-      "instagram": "https://www.instagram.com/capitalepizzeriaseattle/"
+      "instagram": "https://www.instagram.com/capitalepizzeriaseattle/",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched Capitale Pizzeria Capitol Hill Seattle and for a 2025 opening; found Capitol Hill Seattle/WhatNow opening coverage from July and September 2024, both older than the two-year window, plus OpenTable listings. No coverage within the window found."
     },
     {
       "id": "desi-pizza-kitchen",
@@ -5648,7 +5674,9 @@
       "locationsAttempted": "2026-11-12",
       "locationsNote": "No official Magnolia Pizza & Pasta website found. Search results were only directory/menu aggregators (MenuPages, Slice, MapQuest) citing 2120 W Emerson Pl, Seattle, WA 98199; the MenuPages listing was fetched and has no outbound link to an official site, and separately states the restaurant is 'not accepting orders right now' (an aggregator claim, not independent evidence of closure). Could not confirm an address or current status from the pizzeria's own site.",
       "socialAttempted": "2026-11-12",
-      "socialNote": "Searched 'Magnolia Pizza & Pasta Seattle official website' — only MenuPages/Slice/WhatsVegan listings turned up (2120 W Emerson Pl), no official domain found. No Instagram handle found."
+      "socialNote": "Searched 'Magnolia Pizza & Pasta Seattle official website' — only MenuPages/Slice/WhatsVegan listings turned up (2120 W Emerson Pl), no official domain found. No Instagram handle found.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched \"Magnolia Pizza\" Magnolia Seattle review/news; the only substantive write-up was a personal Seattle pizza ranking Substack, not a qualifying published outlet. No news story, review, or ranking from a real outlet found."
     },
     {
       "id": "numero-uno-pizza",
@@ -5744,7 +5772,9 @@
       "locationsAttempted": "2026-11-12",
       "locationsNote": "The lead, 516 15th Ave E, Seattle, WA 98112 (Capitol Hill), does not appear anywhere on the official site https://olympiapizzaii.com/, which lists only one address, 4501 Interlake Ave N, Seattle, WA 98103 (Wallingford). Third-party delivery listings describe a 516 15th Ave E address under the name 'Olympia Pizza and Spaghetti House III', suggesting the lead belongs to a different, separate business, not this entry. Lead not added.",
       "socialAttempted": "2026-11-12",
-      "socialNote": "Checked olympiapizzaii.com (no Instagram link; only menu/login, app store, and maps links). Searched 'Olympia Pizza & Spaghetti House Wallingford instagram' and 'site:instagram.com \"Olympia Pizza\" Wallingford OR Seattle'; no handle found in any result for the Wallingford (II) location specifically."
+      "socialNote": "Checked olympiapizzaii.com (no Instagram link; only menu/login, app store, and maps links). Searched 'Olympia Pizza & Spaghetti House Wallingford instagram' and 'site:instagram.com \"Olympia Pizza\" Wallingford OR Seattle'; no handle found in any result for the Wallingford (II) location specifically.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched \"Olympia Pizza\" Wallingford Seattle review/news; found only a 2015 Wallyhood blog post and coverage of the separate Queen Anne original location. No coverage of the Wallingford II location within the last two years found."
     },
     {
       "id": "jet-city-pizza",
