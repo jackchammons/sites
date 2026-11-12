@@ -2458,12 +2458,10 @@
       "locations": [
         {
           "neighborhood": "South Lake Union",
-          "address": "400 Fairview Avenue Suite 107, Seattle, WA 98109",
-          "lat": 47.62246,
-          "lon": -122.33385
+          "address": "400 Fairview Avenue N, Suite 107, Seattle, WA 98109"
         }
       ],
-      "locationsVerified": "2026-08-31",
+      "locationsVerified": "2026-11-12",
       "locationsSource": "https://pizzabyruffin.com",
       "mentions": [
         {
@@ -2506,7 +2504,9 @@
       "opened": 2024,
       "styleGroup": "Roman",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/pizzabyruffin/"
+      "instagram": "https://www.instagram.com/pizzabyruffin/",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "Lead address 527 Eastlake Avenue E, Unit 302, Seattle, WA 98109 does not appear on pizzabyruffin.com, which lists only the Fairview Market Hall location (400 Fairview Ave N Suite 107). Web search for the business plus Eastlake Avenue turned up no connection; the lead could not be confirmed as a Pizza By Ruffin branch."
     },
     {
       "id": "cornuto-pizzeria",
@@ -2796,18 +2796,14 @@
       "locations": [
         {
           "neighborhood": "Ballard",
-          "address": "500 NW Market St, Seattle, WA 98107",
-          "lat": 47.66888,
-          "lon": -122.36344
+          "address": "500 NW Market Street, Seattle, WA 98107"
         },
         {
           "neighborhood": "Wedgwood",
-          "address": "7320 35th Ave NE, Seattle, WA 98115",
-          "lat": 47.68191,
-          "lon": -122.29015
+          "address": "7320 NE 35th Street, Seattle, WA 98115"
         }
       ],
-      "locationsVerified": "2026-09-05",
+      "locationsVerified": "2026-11-12",
       "locationsSource": "https://www.veracipizza.com/",
       "mentions": [],
       "factors": {
@@ -2838,7 +2834,10 @@
       "lastVerified": "2026-08-27",
       "instagram": "https://www.instagram.com/veraci_pizza/",
       "coverageAttempted": "2026-11-12",
-      "coverageNote": "Searched 'Veraci Pizza Wedgwood Seattle' and 'Veraci Pizza Seattle 2025 news'. Found historical opening coverage and an Inlander piece about founder Jett's departure that would not load to confirm date or whether it covers the Wedgwood location; nothing confirmed within the two-year window."
+      "coverageNote": "Searched 'Veraci Pizza Wedgwood Seattle' and 'Veraci Pizza Seattle 2025 news'. Found historical opening coverage and an Inlander piece about founder Jett's departure that would not load to confirm date or whether it covers the Wedgwood location; nothing confirmed within the two-year window.",
+      "factsAttempted": "2026-11-12",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "Lead address 4260 23rd Ave W, Seattle, WA 98199 does not appear on veracipizza.com, which lists only Ballard (500 NW Market St) and Wedgwood (7320 NE 35th St) as retail locations. Web search found no Veraci Pizza listing at that address either; the lead could not be confirmed as a current retail branch."
     },
     {
       "id": "south-town-pie",
@@ -3181,7 +3180,9 @@
       "lastVerified": "2026-08-27",
       "instagram": "https://www.instagram.com/pizzaritual/",
       "factsAttempted": "2026-11-05",
-      "factsNote": "pizzaritual.com returned no readable content on two fetch attempts. Search found a Jan 2026 West Seattle Blog item saying it has been running pop-ups at KBM kitchen 'since summer' (no year given) and no menu with prices; The Infatuation lists only a '$$$$' marker, which is not the pizzeria's own menu."
+      "factsNote": "pizzaritual.com returned no readable content on two fetch attempts. Search found a Jan 2026 West Seattle Blog item saying it has been running pop-ups at KBM kitchen 'since summer' (no year given) and no menu with prices; The Infatuation lists only a '$$$$' marker, which is not the pizzeria's own menu.",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "pizzaritual.com loads but renders no content (blank page, no business info). Searched web; West Seattle Blog (Jan 2026) says proprietor Matt Gorman runs Pizza Ritual as a takeout/walk-up operation out of the KBM commissary kitchen at 5608 Delridge Way SW with Fri/Sat 5-8pm walk-up hours, but this is third-party news coverage, not the pizzeria's own site, so the on-file address could not be confirmed against an official source."
     },
     {
       "id": "pizzeria-pulcinella",
@@ -3670,13 +3671,11 @@
       "locations": [
         {
           "neighborhood": "Belltown",
-          "address": "2422 1st Ave, Seattle, WA 98121",
-          "lat": 47.6146,
-          "lon": -122.34826
+          "address": "2422 1st Avenue, Seattle, WA 98121"
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-11-12",
+      "locationsSource": "https://belltownpizza.net/",
       "mentions": [],
       "instagram": "https://www.instagram.com/belltownpizzaseattle",
       "factors": {
@@ -3707,7 +3706,8 @@
       "styleGroup": "Pizza bar",
       "lastVerified": "2026-10-18",
       "coverageAttempted": "2026-11-12",
-      "coverageNote": "Searched 'Belltown Pizza Seattle review 2025' and 'Belltown Pizza Seattle news closing OR opening 2025'. Found only Yelp/Tripadvisor/Roadtrippers user reviews and MapQuest listings; no story from a named outlet (Times, Met, Infatuation, Eater, Stranger) within the last two years."
+      "coverageNote": "Searched 'Belltown Pizza Seattle review 2025' and 'Belltown Pizza Seattle news closing OR opening 2025'. Found only Yelp/Tripadvisor/Roadtrippers user reviews and MapQuest listings; no story from a named outlet (Times, Met, Infatuation, Eater, Stranger) within the last two years.",
+      "factsAttempted": "2026-11-12"
     },
     {
       "id": "castello-pizza-pasta",
@@ -3730,8 +3730,8 @@
           "lon": -122.29048
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-11-12",
+      "locationsSource": "https://www.castellopizzaandpasta.com/",
       "mentions": [],
       "instagram": "https://www.instagram.com/castellopizzaandpasta/",
       "ratingAttempted": "2026-11-07",

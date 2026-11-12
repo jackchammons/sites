@@ -1,94 +1,96 @@
 {
-  "updated": "2026-11-12T00:00:00Z",
+  "updated": "2026-11-12T19:30:00Z",
   "locations": [
     {
-      "id": "olympia-pizza-spaghetti-house-ii",
-      "homepage": "https://olympiapizzaii.com/",
-      "source": "https://olympiapizzaii.com/",
+      "id": "pizza-by-ruffin",
+      "homepage": "https://pizzabyruffin.com",
+      "source": "https://pizzabyruffin.com",
       "sites": [
         {
-          "neighborhood": "Wallingford",
-          "address": "4501 Interlake Ave N, Seattle, WA 98103"
+          "neighborhood": "South Lake Union",
+          "address": "400 Fairview Avenue N, Suite 107, Seattle, WA 98109"
         }
       ]
     },
     {
-      "id": "pagliacci",
-      "homepage": "https://www.pagliacci.com",
-      "source": "https://www.pagliacci.com/locations/",
+      "id": "veraci-pizza",
+      "homepage": "https://www.veracipizza.com/",
+      "source": "https://www.veracipizza.com/",
       "sites": [
-        { "neighborhood": "Ballard", "address": "851 NW 85th Street, Seattle, WA 98117" },
-        { "neighborhood": "Ballard", "address": "3058 NW 54th Street, Seattle, WA 98107" },
-        { "neighborhood": "Capitol Hill", "address": "2400 10th Avenue E, Seattle, WA 98102" },
-        { "neighborhood": "Capitol Hill", "address": "415 E Pike Street, Seattle, WA 98122" },
-        { "neighborhood": "Columbia City", "address": "4901 Rainier Avenue S, Seattle, WA 98118" },
-        { "neighborhood": "Edmonds", "address": "10200 Edmonds Way, Edmonds, WA 98020" },
-        { "neighborhood": "Fremont", "address": "4003 Stone Way N, Seattle, WA 98103" },
-        { "neighborhood": "Lake City", "address": "8024 15th Avenue NE, Seattle, WA 98115" },
-        { "neighborhood": "Madison Valley", "address": "3015 E Madison Street, Seattle, WA 98112" },
-        { "neighborhood": "Magnolia", "address": "1614 W Dravus Street, Seattle, WA 98119" },
-        { "neighborhood": "North Seattle", "address": "315 N 145th Street, Seattle, WA 98133" },
-        { "neighborhood": "Queen Anne", "address": "719 Aurora Avenue N, Seattle, WA 98109" },
-        { "neighborhood": "Sand Point", "address": "6224 Sand Point Way NE, Seattle, WA 98115" },
-        { "neighborhood": "Shoreline", "address": "20059 Ballinger Way NE, Shoreline, WA 98155" },
-        { "neighborhood": "West Seattle", "address": "4449 California Avenue SW, Seattle, WA 98116" },
-        { "neighborhood": "Bellevue", "address": "15238 NE Bel-Red Road, Bellevue, WA 98007" },
-        { "neighborhood": "Bellevue", "address": "15210 SE 37th Street, Bellevue, WA 98006" },
-        { "neighborhood": "Bellevue", "address": "10600 Main St, Bellevue, WA 98004" },
-        { "neighborhood": "Kenmore", "address": "6504 NE Bothell Way, Kenmore, WA 98028" },
-        { "neighborhood": "Kirkland", "address": "13005 NE 70th Place, Kirkland, WA 98033" },
-        { "neighborhood": "Kirkland", "address": "11640 98th Avenue NE, Kirkland, WA 98034" },
-        { "neighborhood": "Mercer Island", "address": "3077 78th Avenue SE, Mercer Island, WA 98040" },
-        { "neighborhood": "Redmond", "address": "16311 Redmond Way, Redmond, WA 98052" },
-        { "neighborhood": "Sammamish", "address": "22830 NE 8th Street, Sammamish, WA 98074" }
+        {
+          "neighborhood": "Ballard",
+          "address": "500 NW Market Street, Seattle, WA 98107"
+        },
+        {
+          "neighborhood": "Wedgwood",
+          "address": "7320 NE 35th Street, Seattle, WA 98115"
+        }
       ]
     },
     {
-      "id": "big-marios",
-      "homepage": "https://bigmariosnewyorkpizza.com/",
-      "source": "https://bigmariosnewyorkpizza.com/",
+      "id": "belltown-pizza",
+      "homepage": "https://belltownpizza.net/",
+      "source": "https://belltownpizza.net/",
       "sites": [
-        { "neighborhood": "Capitol Hill", "address": "1009 E Pike St, Seattle, WA 98122" },
-        { "neighborhood": "Queen Anne", "address": "815 5th Ave N, Seattle, WA 98109" },
-        { "neighborhood": "Fremont", "address": "4350 Leary Way NW, Seattle, WA 98107" },
-        { "neighborhood": "White Center", "address": "9635 16th Ave SW, Seattle, WA 98106" }
+        {
+          "neighborhood": "Belltown",
+          "address": "2422 1st Avenue, Seattle, WA 98121"
+        }
+      ]
+    },
+    {
+      "id": "castello-pizza-pasta",
+      "homepage": "https://www.castellopizzaandpasta.com/",
+      "source": "https://www.castellopizzaandpasta.com/",
+      "sites": [
+        {
+          "neighborhood": "Rainier Valley",
+          "address": "3756 Rainier Ave S, Ste B, Seattle, WA 98144"
+        }
       ]
     }
   ],
   "links": [
     {
-      "id": "pagliacci",
-      "website": "https://www.pagliacci.com",
-      "instagram": "https://www.instagram.com/pagliaccipizza/",
-      "source": "https://www.pagliacci.com"
+      "id": "belltown-pizza",
+      "website": "https://belltownpizza.net/",
+      "instagram": "https://www.instagram.com/belltownpizzaseattle",
+      "source": "https://belltownpizza.net/"
     },
     {
-      "id": "big-marios",
-      "website": "https://bigmariosnewyorkpizza.com/",
-      "instagram": "https://www.instagram.com/bigmariospizza/",
-      "source": "https://bigmariosnewyorkpizza.com/"
+      "id": "castello-pizza-pasta",
+      "website": "https://www.castellopizzaandpasta.com/",
+      "instagram": "https://www.instagram.com/castellopizzaandpasta/",
+      "source": "https://www.castellopizzaandpasta.com/"
+    }
+  ],
+  "facts": [
+    {
+      "id": "veraci-pizza",
+      "opened": 2004,
+      "source": "https://www.veracipizza.com/"
+    },
+    {
+      "id": "belltown-pizza",
+      "opened": 1998,
+      "source": "https://belltownpizza.net/"
     }
   ],
   "locationsSkipped": [
     {
-      "id": "sopranos-pizza-pasta-lake-city",
-      "note": "Its site, https://lakecitysopranos.com/, returned HTTP 403 Forbidden on fetch and a wayback-machine fallback is unavailable in this environment, so the official page could not be read. A search turned up third-party listings placing Lake City at 11754 15th Ave NE 98125 and describing the lead address, 7729 24th Ave NW 98117, as a separate Soprano's location in Loyal Heights, but neither is confirmed against the pizzeria's own site, so no address is reported for this entry."
+      "id": "pizza-ritual",
+      "note": "pizzaritual.com loads but renders no content (blank page, no business info). Searched web; West Seattle Blog (Jan 2026) says proprietor Matt Gorman runs Pizza Ritual as a takeout/walk-up operation out of the KBM commissary kitchen at 5608 Delridge Way SW with Fri/Sat 5-8pm walk-up hours, but this is third-party news coverage, not the pizzeria's own site, so the on-file address could not be confirmed against an official source."
     },
     {
-      "id": "ananas-pizzeria",
-      "note": "Its site, https://www.ananaspizzeria.com, is a JavaScript-rendered page: fetches of the homepage, /contact, /menu, /visit, and /location all returned either a bare page title with no body text or HTTP 404, so no address, neighborhood, or Instagram link could be read from the pizzeria's own site. The lead, 1106 8th Ave, Seattle, WA 98101, matches third-party coverage (Seattle Met, Curiocity) describing a First Hill location, but those are not the pizzeria's own site and so do not satisfy confirmation; the lead is not reported as a site."
+      "id": "pizza-by-ruffin",
+      "note": "Lead address 527 Eastlake Avenue E, Unit 302, Seattle, WA 98109 does not appear on pizzabyruffin.com, which lists only the Fairview Market Hall location (400 Fairview Ave N Suite 107). Web search for the business plus Eastlake Avenue turned up no connection; the lead could not be confirmed as a Pizza By Ruffin branch."
     },
     {
-      "id": "olympia-pizza-spaghetti-house-ii",
-      "note": "The lead, 516 15th Ave E, Seattle, WA 98112 (Capitol Hill), does not appear anywhere on the official site https://olympiapizzaii.com/, which lists only one address, 4501 Interlake Ave N, Seattle, WA 98103 (Wallingford). Third-party delivery listings describe a 516 15th Ave E address under the name 'Olympia Pizza and Spaghetti House III', suggesting the lead belongs to a different, separate business, not this entry. Lead not added."
-    },
-    {
-      "id": "pagliacci",
-      "note": "The lead, 721 Aurora Ave N, Seattle, WA 98109, does not exactly match any address on the official locations page (https://www.pagliacci.com/locations/), which lists the nearest branch, Queen Anne - Valley Street, at 719 Aurora Avenue N, Seattle, WA 98109. The two-digit discrepancy could not be confirmed as the same address, so the lead itself is not added as a separate site (the existing Queen Anne branch at 719 Aurora Avenue N is reported in locations)."
-    },
-    {
-      "id": "big-marios",
-      "note": "The lead, 1011 E Pike St, Seattle, WA 98122, does not exactly match the Capitol Hill location listed on the official site (https://bigmariosnewyorkpizza.com/ and https://bigmariosnewyorkpizza.com/pizza-in-capitol-hill), which both give the address as 1009 E Pike St. The lead itself is not added as a separate site (the existing Capitol Hill branch at 1009 E Pike St is reported in locations)."
+      "id": "veraci-pizza",
+      "note": "Lead address 4260 23rd Ave W, Seattle, WA 98199 does not appear on veracipizza.com, which lists only Ballard (500 NW Market St) and Wedgwood (7320 NE 35th St) as retail locations. Web search found no Veraci Pizza listing at that address either; the lead could not be confirmed as a current retail branch."
     }
+  ],
+  "rejected": [
+    "links[0]: instagram must be a profile URL like https://www.instagram.com/<handle>, got \"https://www.instagram.com/pizzabyruffin/?hl=en\""
   ]
 }
