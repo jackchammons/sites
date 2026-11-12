@@ -2550,8 +2550,8 @@
       "styleSource": null,
       "styleGroup": "Detroit pan",
       "styleGroupSource": null,
-      "signature": null,
-      "signatureSource": null,
+      "signature": "Derek's Fave: red sauce, pepperoni, castelvetranos, and Grana",
+      "signatureSource": "https://www.gayot.com/restaurants/friend-dereks-seattle-wa-98103_25se260702.html",
       "opened": null,
       "openedSource": null,
       "priceIndex": 2,
@@ -2614,9 +2614,11 @@
       ],
       "coverageAttempted": null,
       "coverageNote": null,
-      "factsAttempted": "2026-11-05",
-      "factsSought": [],
-      "factsNote": "Checked myfrienddereks.com home page and /about: describes the pop-up-to-brick-and-mortar story but states no year. Search (Infatuation, KUOW Seattle Eats) covers the Detroit-style pop-up and Tangletown restaurant without giving an opening year.",
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "opened"
+      ],
+      "factsNote": "Checked myfrienddereks.com and Gayot; neither states an opening year, only that the business began as a pop-up before opening its Tangletown brick-and-mortar.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -2689,8 +2691,8 @@
       "styleSource": null,
       "styleGroup": "Thin crust",
       "styleGroupSource": null,
-      "signature": null,
-      "signatureSource": null,
+      "signature": "Normie Macdonald: coppa, hot honey, and burrata",
+      "signatureSource": "https://theinfatuation.com/seattle/reviews/stevies-famous",
       "opened": 2026,
       "openedSource": null,
       "priceIndex": null,
@@ -2793,9 +2795,11 @@
       ],
       "coverageAttempted": null,
       "coverageNote": null,
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "priceIndex"
+      ],
+      "factsNote": "Checked steviesfamous.com and tried order.steviesfamous.com and order.toasttab.com ordering pages, which returned 403/loading errors; could not confirm a whole-pie price from a page I could actually open.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -3357,9 +3361,12 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched 'Pi Vegan Pizzeria Roosevelt review' and '...Eater Infatuation review 2025'. Found only HappyCow/aggregator reviews and a 2015 VegNews story about an earlier ownership change at 'Pizza Pi'; nothing within the two-year window.",
-      "factsAttempted": "2026-11-05",
-      "factsSought": [],
-      "factsNote": "Checked pizzapivegan.com home page: only claims 'America's Oldest vegan pizzeria' with no date. Search found a 2015 VegNews piece about an ownership change but no stated founding year.",
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "opened",
+        "signature"
+      ],
+      "factsNote": "Checked pizzapivegan.com (About page 404) and VegNews coverage; the October 2015 VegNews article says the business was 'open for 13 years' at that point but gives no explicit founding year, and no pizza is named a signature or most popular dish.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -3377,8 +3384,8 @@
       "signatureSource": null,
       "opened": 2006,
       "openedSource": null,
-      "priceIndex": null,
-      "priceSource": null,
+      "priceIndex": 2,
+      "priceSource": "https://www.miopostopizza.com/menu/dinner",
       "attributes": {},
       "url": "https://www.miopostopizza.com/",
       "instagram": "https://instagram.com/mioposto",
@@ -3429,9 +3436,11 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched 'Mioposto Mount Baker Seattle pizza' and 'Mioposto Seattle 2025 news'. Found only older Stranger/Seattle Met features and directory listings, none within the two-year window.",
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "signature"
+      ],
+      "factsNote": "Checked miopostopizza.com homepage and /menu/dinner; no pizza is labeled signature, most popular, or famous, only 'Fig and Prosciutto' flagged as a seasonal special.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -3737,9 +3746,12 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched 'Johnny Mo's Pizzeria Eastlake Seattle' and a targeted opening-date query. Found only an undated Seattle Met 'Editor's Pick' profile and aggregator/booking listings; no dated news or review from the last two years.",
-      "factsAttempted": "2026-11-05",
-      "factsSought": [],
-      "factsNote": "Checked johnnymos.com home page and its /our-story page: both describe the two founders' friendship but state no founding year. Search turned up no article with a year either.",
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "opened",
+        "signature"
+      ],
+      "factsNote": "Checked johnnymos.com (About page 404), myedmondsnews.com (403) and enprimeurclub.com; no opening date found, and no single pizza is named signature, only separate 'Johnny's Pick' (NY thin crust) and 'Mo's Pick' (Chicago thick crust).",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -3885,9 +3897,12 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched 'Soprano's Antico West Seattle pizza' and a 2024-2025 opening/news query. Found only 2016-2017 West Seattle Blog items about its original opening and a 2025 customer review snippet on MapQuest; no outlet coverage within the last two years.",
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "priceIndex",
+        "signature"
+      ],
+      "factsNote": "Checked anticosopranos.com homepage, /menu, and the linked order.menudrive.com storefront; none list pizza prices or name a signature/most popular pie, and the items sit behind an unreadable category page.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -3985,8 +4000,8 @@
       "styleSource": null,
       "styleGroup": "Neapolitan",
       "styleGroupSource": null,
-      "signature": null,
-      "signatureSource": null,
+      "signature": "Margherita",
+      "signatureSource": "https://southseattleemerald.org/food/2018/01/29/pizza-showdown-a-legacy-of-italy-in-south-seattle",
       "opened": null,
       "openedSource": null,
       "priceIndex": 3,
@@ -4049,9 +4064,11 @@
       ],
       "coverageAttempted": null,
       "coverageNote": null,
-      "factsAttempted": "2026-11-05",
-      "factsSought": [],
-      "factsNote": "pulcinellapizza.com failed to load (SSL handshake failure) on two attempts, with and without www. Search turned up conflicting dates: a Feb 2009 DJC item says the Rainier Ave location had 'recently opened', while an Oct 2025 South Seattle Emerald piece describes it as newer, opened summer 2024. Not reporting either given the conflict.",
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "opened"
+      ],
+      "factsNote": "Checked pulcinellapizza.com (unreachable/403) and South Seattle Emerald coverage; no opening year is given, only that owner Vince Mottola revamped the former Lakeside Tavern space in that building.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -4988,8 +5005,11 @@
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched 'Eyman's Pizza Rainier Valley Seattle review' and 'Eyman's Pizza Beacon Hill Seattle news 2025'. Found only directory/aggregator listings (Zabihah, Atly, Intentionalist) with no professional critic review or news item from a named outlet.",
       "factsAttempted": "2026-11-12",
-      "factsSought": [],
-      "factsNote": "Checked eymanspizza.com home/about anchor: the only year present is 'Partnered with Slice since 2019', which refers to the online-ordering platform, not the restaurant's founding.",
+      "factsSought": [
+        "opened",
+        "signature"
+      ],
+      "factsNote": "Checked eymanspizza.com (About page 403/404) and web coverage; found no opening year and no pizza named as signature or most popular.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -5086,8 +5106,8 @@
       "styleSource": null,
       "styleGroup": "Pizza bar",
       "styleGroupSource": null,
-      "signature": null,
-      "signatureSource": null,
+      "signature": "Plain cheese pizza",
+      "signatureSource": "https://theinfatuation.com/seattle/reviews/good-shape-pizza",
       "opened": null,
       "openedSource": null,
       "priceIndex": 1,
@@ -5158,9 +5178,11 @@
       ],
       "coverageAttempted": null,
       "coverageNote": null,
-      "factsAttempted": "2026-11-05",
-      "factsSought": [],
-      "factsNote": "Checked goodshapepizza.com home page: no About/History page exists and no founding year is stated anywhere on the site.",
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "opened"
+      ],
+      "factsNote": "Checked goodshapepizza.com and The Infatuation's review; neither gives an opening year, only that it began as a mobile pop-up before settling at Jupiter Bar in Belltown.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -5317,8 +5339,8 @@
       "styleGroupSource": null,
       "signature": null,
       "signatureSource": null,
-      "opened": null,
-      "openedSource": null,
+      "opened": 2023,
+      "openedSource": "https://curiocity.com/jackson-st-pizza-seattle/",
       "priceIndex": 3,
       "priceSource": null,
       "attributes": {},
@@ -5372,9 +5394,11 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched 'Jackson Street Pizza Lounge Seattle Central District review'. Found The Infatuation review (Jan 4, 2024), Curiocity opening piece (Jul 7, 2023), Axios (Jul 31, 2023) and a KING5 segment (date unconfirmed, page 403'd) — all either outside the 730-day window or undated; no in-window named coverage found.",
-      "factsAttempted": "2026-11-05",
-      "factsSought": [],
-      "factsNote": "Checked jacksonstreetpizzalounge.com home page: the only year present is a '2025' copyright notice in the footer, not an opening date. No About/Our Story page exists.",
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "signature"
+      ],
+      "factsNote": "Checked Curiocity coverage plus Fabulous Washington and Axios (both 403); reviewers single out the Carbonara and El Pastor as standouts but no page names one pizza as signature or most popular.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -5465,12 +5489,12 @@
       "styleSource": null,
       "styleGroup": "Creative",
       "styleGroupSource": null,
-      "signature": null,
-      "signatureSource": null,
+      "signature": "Ahmad Special: pepperoni, mushrooms, and pineapple",
+      "signatureSource": "https://managerspizza.online/",
       "opened": 2025,
       "openedSource": "https://managerspizza.online/",
-      "priceIndex": null,
-      "priceSource": null,
+      "priceIndex": 1,
+      "priceSource": "https://managerspizza.online/",
       "attributes": {},
       "url": "https://managerspizza.online/",
       "instagram": "https://www.instagram.com/managerspizzaseattle/",
@@ -6824,9 +6848,11 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched \"Coltiva\" pizzeria Queen Anne Seattle and for 2024/2025 reviews; found only an undated Daily Hive item, a PR firm's client summary, and OpenTable listings. No qualifying published coverage within the last two years found.",
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "signature"
+      ],
+      "factsNote": "Checked coltivasea.com and a 2018 Seattleite review; coverage praises both the Margherita and the Autunno but names neither as a single signature pizza.",
       "socialAttempted": null,
       "socialNote": null
     },

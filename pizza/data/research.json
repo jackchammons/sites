@@ -1,83 +1,87 @@
 {
-  "updated": "2026-11-12T19:00:00Z",
+  "updated": "2026-11-12T19:40:00Z",
   "facts": [
     {
-      "id": "georgetown-pizza-arcade",
-      "priceIndex": 3,
-      "source": "https://www.gpaseattle.com/eat"
+      "id": "mioposto",
+      "priceIndex": 2,
+      "source": "https://www.miopostopizza.com/menu/dinner"
     },
     {
-      "id": "in-pizza-we-crust",
-      "signature": "I'm Taboo: red sauce, mozzarella, pepperoni, and pineapple",
-      "source": "https://www.seattlerefined.com/lifestyle/in-pizza-we-crust"
+      "id": "stevies-famous",
+      "signature": "Normie Macdonald: coppa, hot honey, and burrata",
+      "source": "https://theinfatuation.com/seattle/reviews/stevies-famous"
     },
     {
-      "id": "oxbow",
-      "priceIndex": 3,
-      "source": "https://www.oxbowmontlake.com/lunch"
+      "id": "good-shape-pizza",
+      "signature": "Plain cheese pizza",
+      "source": "https://theinfatuation.com/seattle/reviews/good-shape-pizza"
     },
     {
-      "id": "pizza-by-ruffin",
-      "signature": "The Doro: Doro Wat (spicy Ethiopian chicken stew) and cilantro",
-      "source": "https://www.pmq.com/washingtons-first-black-owned-pizzeria-is-also-one-of-seattles-best-new-restaurants/"
+      "id": "jackson-street-pizza-lounge",
+      "opened": 2023,
+      "source": "https://curiocity.com/jackson-st-pizza-seattle/"
     },
     {
-      "id": "sinners-pizza",
-      "priceIndex": 3,
-      "signature": "Hellfire Pie",
-      "source": "https://sinners.pizza/"
+      "id": "my-friend-dereks",
+      "signature": "Derek's Fave: red sauce, pepperoni, castelvetranos, and Grana",
+      "source": "https://www.gayot.com/restaurants/friend-dereks-seattle-wa-98103_25se260702.html"
     },
     {
-      "id": "smoking-monkey-pizza",
-      "opened": 2012,
-      "source": "https://patch.com/washington/renton/smoking-monkey-pizza-to-open-on-saturday"
+      "id": "pizzeria-pulcinella",
+      "signature": "Margherita",
+      "source": "https://southseattleemerald.org/food/2018/01/29/pizza-showdown-a-legacy-of-italy-in-south-seattle"
     },
     {
-      "id": "smoking-monkey-pizza",
-      "signature": "The DTR: olive oil base, mozzarella, sliced pear, smoked prosciutto, gorgonzola, and parmesan",
-      "source": "https://theticket.seattletimes.com/top-picks/the-dtr-pizza-smoking-monkey-pizza/"
+      "id": "managers-pizza",
+      "priceIndex": 1,
+      "signature": "Ahmad Special: pepperoni, mushrooms, and pineapple",
+      "source": "https://managerspizza.online/"
     }
   ],
   "factsSkipped": [
     {
-      "id": "georgetown-pizza-arcade",
-      "note": "Searched local coverage (ParentMap, South Seattle Emerald, Kineticist) for a named signature pie; found only general descriptions of square 17-inch pies and named specials (Valedictorian, The Dropout, Teacher's Pet) on the restaurant's own eat page, with no page singling one out as the pizza it's known for."
+      "id": "mioposto",
+      "note": "Checked miopostopizza.com homepage and /menu/dinner; no pizza is labeled signature, most popular, or famous, only 'Fig and Prosciutto' flagged as a seasonal special."
     },
     {
-      "id": "in-pizza-we-crust",
-      "note": "Found only outdated food-truck pricing ($10-11 per pie) from seattlefoodtruck.com predating the 2024 permanent Admiral District location; no current menu prices found on the restaurant's site or in coverage."
+      "id": "sopranos-antico",
+      "note": "Checked anticosopranos.com homepage, /menu, and the linked order.menudrive.com storefront; none list pizza prices or name a signature/most popular pie, and the items sit behind an unreadable category page."
     },
     {
-      "id": "jet-city-pizza",
-      "note": "No official website found. HistoryLink and Seattle Met only mention the name in passing lists with no history or signature pizza. Aggregator/directory pages (SliceLife, MapQuest) give an unverified 1994 founding claim not corroborated by independent coverage, so opened and signature are both left unreported."
+      "id": "stevies-famous",
+      "note": "Checked steviesfamous.com and tried order.steviesfamous.com and order.toasttab.com ordering pages, which returned 403/loading errors; could not confirm a whole-pie price from a page I could actually open."
     },
     {
-      "id": "olympia-pizza-spaghetti-house-ii",
-      "note": "The restaurant's own site gives no founding date (\"for years\"). The only year found, 1972, comes from an unverified MapQuest directory listing, not the pizzeria's own site or independent coverage, so it is not reported."
+      "id": "good-shape-pizza",
+      "note": "Checked goodshapepizza.com and The Infatuation's review; neither gives an opening year, only that it began as a mobile pop-up before settling at Jupiter Bar in Belltown."
     },
     {
-      "id": "oxbow",
-      "note": "The lunch menu lists five pizzas (Delicata, Sunchoke, Corn & Chorizo, Pepperoni, Cheese) with no page singling one out as the one the cafe is known for."
+      "id": "jackson-street-pizza-lounge",
+      "note": "Checked Curiocity coverage plus Fabulous Washington and Axios (both 403); reviewers single out the Carbonara and El Pastor as standouts but no page names one pizza as signature or most popular."
     },
     {
-      "id": "pizza-by-ruffin",
-      "note": "Searched the restaurant's own site, discoverslu.com, seattlerefined.com, and PMQ coverage for a whole-pie or slice price; none states one."
+      "id": "johnny-mos-pizzeria",
+      "note": "Checked johnnymos.com (About page 404), myedmondsnews.com (403) and enprimeurclub.com; no opening date found, and no single pizza is named signature, only separate 'Johnny's Pick' (NY thin crust) and 'Mo's Pick' (Chicago thick crust)."
     },
     {
-      "id": "pizza-pasta-bar",
-      "note": "Official site (pizzaandpastabar.com) returns 403 on all pages tried. Pike Place Market's own page gives no opening date (only \"moved to Seattle twenty-five years ago\" and a 2019 remodel) and no signature pizza. Other candidates (Atmosfy's AI-generated \"since 2016\", a single MapQuest listing naming a \"wet meatloaf pizza\") are aggregator sources, not the restaurant's own site or published criticism, so opened and signature are both left unreported."
+      "id": "my-friend-dereks",
+      "note": "Checked myfrienddereks.com and Gayot; neither states an opening year, only that the business began as a pop-up before opening its Tangletown brick-and-mortar."
     },
     {
-      "id": "pudge-bros-pizza",
-      "note": "Official site (pudgebros.com) returns 403 on all pages tried. The only founding-year claim found is a delivery-platform brand page (SliceLife) citing a 1991 Denver origin for the chain, not confirmed for the Seattle-area location; no signature pizza is named in any coverage found."
+      "id": "pi-vegan-pizzeria",
+      "note": "Checked pizzapivegan.com (About page 404) and VegNews coverage; the October 2015 VegNews article says the business was 'open for 13 years' at that point but gives no explicit founding year, and no pizza is named a signature or most popular dish."
     },
     {
-      "id": "roma-roma",
-      "note": "Official site's menu pages return 404 and its Toast ordering page returns 403, so no price could be read directly from an opened page. No published review names a definitive signature pie (Capitol Hill Seattle mentions a Cherry & Burrata pie only in a photo caption)."
+      "id": "pizzeria-pulcinella",
+      "note": "Checked pulcinellapizza.com (unreachable/403) and South Seattle Emerald coverage; no opening year is given, only that owner Vince Mottola revamped the former Lakeside Tavern space in that building."
+    },
+    {
+      "id": "eymans-pizza",
+      "note": "Checked eymanspizza.com (About page 403/404) and web coverage; found no opening year and no pizza named as signature or most popular."
+    },
+    {
+      "id": "coltiva-pizzeria-e-barra",
+      "note": "Checked coltivasea.com and a 2018 Seattleite review; coverage praises both the Margherita and the Autunno but names neither as a single signature pizza."
     }
-  ],
-  "rejected": [
-    "facts[2]: signature is longer than 100 characters",
-    "facts[3]: signature is longer than 100 characters"
   ]
 }
