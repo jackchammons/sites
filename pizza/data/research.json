@@ -1,88 +1,79 @@
 {
-  "updated": "2026-11-12T00:00:00Z",
+  "updated": "2026-11-12T12:00:00Z",
   "candidateReview": [
     {
-      "name": "Deleo Pizza Company, LLC Dba Deleo Bros Pizza",
+      "name": "Magnolia Pizza And Pasta",
       "verdict": "duplicate",
-      "duplicateOf": "deleo-bros-pizza",
-      "note": "Same business as the on-file DeLeo Bros. Pizza; opened August 2025 at 202 Occidental Ave S in Pioneer Square, run by cousins Nathaniel Dahlman and Johnny De Leo as a Minnesota-born New York-style pizzeria.",
-      "source": "https://intentionalist.com/b/deleo-bros-pizza/"
+      "duplicateOf": "magnolia-pizza-pasta",
+      "note": "Same pizza-and-pasta shop at 2120 W Emerson Pl in Magnolia as the on-file Magnolia Pizza & Pasta; this is just the permit-register spelling of the name.",
+      "source": "https://slicelife.com/restaurants/wa/seattle/98199/magnolia-pizza-pasta-seattle/menu"
     },
     {
-      "name": "Jet City Pizza",
-      "verdict": "chain",
-      "note": "Puget Sound pizza-delivery chain founded in Kenmore in 1994 and now sold as a franchise (FranchiseHelp lists roughly $60k to open a unit), with outlets in Bothell, Newcastle, Marysville, Tacoma and Seattle's Wedgwood; a commodity delivery chain rather than a distinctive pizzeria.",
-      "source": "https://www.franchisehelp.com/franchises/jet-city-pizza/"
+      "name": "Olympia Ii Pizza & Spaghetti",
+      "verdict": "duplicate",
+      "duplicateOf": "olympia-pizza-spaghetti-house-ii",
+      "note": "Same Wallingford restaurant at 4501 Interlake Ave N as the on-file Olympia Pizza & Spaghetti House II, run by the Christofilis family since it passed out of the founding Aliagas family's hands; a permit-register name variant.",
+      "source": "https://greeksinwa.omeka.net/items/show/801"
     },
     {
-      "name": "Lodge Pizza",
+      "name": "Olympia Pizza #3",
+      "verdict": "duplicate",
+      "duplicateOf": "olympia-pizza-spaghetti-house-ii",
+      "note": "This is Olympia Pizza and Spaghetti House III at 516 15th Ave E on Capitol Hill, the third location of the Greek-founded Olympia Pizza & Spaghetti House family (I, II, III) that also runs the on-file Wallingford location (II) — a branch of the same business, not a separate one.",
+      "source": "https://seattlemag.com/bar-hop-olympia-pizza-and-spaghetti-house-iii/"
+    },
+    {
+      "name": "Pizza Colibri - Kc574",
       "verdict": "unverifiable",
-      "note": "No trace of a pizzeria called Lodge Pizza found at 501 2nd Ave W or anywhere else in Seattle across multiple searches; likely a stale or misrecorded permit entry."
+      "note": "No trace of a pizzeria by this name anywhere in Seattle across multiple searches; \"Kc574\" reads like a ghost-kitchen/virtual-brand commissary code and turns up nothing in pizza guides, delivery-app listings or local news coverage."
+    },
+    {
+      "name": "Pizza Group LLC",
+      "verdict": "chain",
+      "note": "The LLC behind Pizza Twist (né Chicago's Pizza With-A-Twist) at 510 Broadway E; the Indian-fusion pizza franchise was founded in Chicago in 2014 and by 2024 had grown to roughly 80 locations across about 19-20 U.S. states plus international units — a national chain, not a regional one.",
+      "source": "https://capitolhillseattle.com/2021/08/already-home-to-bombay-burger-capitol-hill-adding-a-new-indian-restaurant-with-a-twist-pizza"
+    },
+    {
+      "name": "Pizza Rasoi",
+      "verdict": "unverifiable",
+      "note": "Indian-Neapolitan fusion pizza pop-up/food truck tied to Tapster at 1011 Valley St; sources conflict on where it actually operates (one places it in Redmond instead) and none confirm it is still running as of 2026, only an undated pop-up listing and a single lukewarm review.",
+      "source": "https://www.zabihah.com/restaurants/7bad84dc-749d-40b2-bc01-c0f887a42a0b/pizza-rasoi-seattle"
+    },
+    {
+      "name": "Pizzuto'S Italian Cafe",
+      "verdict": "not-pizza",
+      "note": "Branded and run as an Italian cafe at 5032 Wilson Ave S; its signature dishes are pastas (pasta Siciliana, prawns Pescara, house potato pasta) and chicken entrees, with pizza just one menu category among several rather than the core of the business.",
+      "source": "https://www.foodboss.com/seattle-wa/pizzutos-italian-cafe-5032-wilson-ave-s-seattle-delivery"
     }
   ],
   "directory": [
     {
-      "name": "Alberona's DaVinci Pizza & Pasta",
-      "neighborhood": "Ballard",
-      "style": "New York-style, halal-friendly",
+      "name": "Jet City Pizza",
+      "neighborhood": "Wedgwood",
+      "style": "Delivery pizza, pasta & grinders",
       "status": "open",
-      "note": "Neighborhood pizza-and-pasta shop on Leary Way NW serving New York-style pies, calzones and halal options, including halal pepperoni.",
-      "source": "https://slicelife.com/restaurants/wa/seattle/98107/davinci-s-pizza-pasta/menu",
-      "address": "3624 Leary Way Nw, Seattle, WA 98107"
+      "note": "Puget Sound pizza-delivery chain founded in Kenmore in 1994, with branches across Washington State (Bothell, Newcastle, Marysville, Mount Vernon, Kent) and this Wedgwood store serving pizza, pasta and oven grinders; it has no locations outside the state, so it's a regional rather than a national chain.",
+      "source": "https://www.foodboss.com/seattle-wa/jet-city-pizza-7500-25th-ave-ne-seattle-delivery",
+      "address": "7500 25th Ave Ne, Seattle, WA 98115"
     },
     {
-      "name": "Capitale Pizzeria",
-      "neighborhood": "Capitol Hill",
-      "style": "Modern Neapolitan",
+      "name": "Pizza & Pasta Bar",
+      "neighborhood": "Pike Place Market",
+      "style": "Italian, thin-crust pizza & fresh pasta",
       "status": "open",
-      "note": "Modern Neapolitan pizzeria on Broadway from the Limoncello team, serving globally-inspired wood-fired pies in the former Boca Pizzeria space.",
-      "source": "https://www.enprimeurclub.com/restaurants/capitale-pizzeria-seattle-restaurant",
-      "address": "426 Broadway E, Seattle, WA 98102"
+      "note": "Pike Place Market Italian spot open since 2016, making its own sauces, pizza dough and meats from scratch and serving thin-crust pizza alongside customizable pasta; listed as a current Market tenant.",
+      "source": "https://www.pikeplacemarket.org/?p=4029",
+      "address": "1530 Post Aly, Seattle, WA 98101"
     },
     {
-      "name": "Desi Pizza Kitchen",
-      "neighborhood": "Queen Anne",
-      "style": "Indian-fusion",
+      "name": "Santorini Pizza & Pasta",
+      "url": "https://santorinipizza.com",
+      "neighborhood": "Meadowbrook",
+      "style": "Italian-American pizza & pasta, Greek-influenced",
       "status": "open",
-      "note": "Queen Anne pizzeria built entirely around Indian-spiced pies such as tandoori paneer and butter chicken alongside classic styles like Hawaiian.",
-      "source": "https://slicelife.com/restaurants/wa/seattle/98109/desi-pizza-kitchen/menu",
-      "address": "2115 Queen Anne Ave N, Seattle, WA 98109"
-    },
-    {
-      "name": "Fremont Pizza",
-      "neighborhood": "Fremont",
-      "style": "By-the-slice",
-      "status": "open",
-      "note": "Fremont bar-and-slice shop serving classic pizza by the slice with vegan options, draft beer and skeeball.",
-      "source": "https://www.joinlolo.com/merchants/fremont-pizza-seattle-wa-98103",
-      "address": "3510 Fremont Ave N, Seattle, WA 98103"
-    },
-    {
-      "name": "Magnolia Pizza & Pasta",
-      "neighborhood": "Magnolia",
-      "style": "Pizza & pasta",
-      "status": "open",
-      "note": "Longtime Magnolia neighborhood spot on W Emerson Pl serving pizza, calzones and pasta dishes.",
-      "source": "https://www.slicelife.com/restaurants/wa/seattle/98199/magnolia-pizza-pasta-seattle/menu/",
-      "address": "2120 W Emerson Pl, Seattle, WA 98199"
-    },
-    {
-      "name": "Numero Uno Pizza",
-      "neighborhood": "Pioneer Square",
-      "style": "By-the-slice",
-      "status": "open",
-      "note": "Pioneer Square pizza-by-the-slice counter that also serves Turkish lahmacun and pide, with vegetarian, vegan and halal-friendly options.",
-      "source": "https://www.giftly.com/gift-card/numero-uno-pizza-seattle",
-      "address": "103 1st Ave S, Seattle, WA 98104"
-    },
-    {
-      "name": "Olympia Pizza & Spaghetti House II",
-      "neighborhood": "Wallingford",
-      "style": "Greek-influenced",
-      "status": "open",
-      "note": "Longtime Wallingford pizzeria with a Greek twist (tzatziki, Greek salad, calzones, gluten-free crust), a neighborhood fixture since the early 1970s.",
-      "source": "https://wallyhood.org/2015/06/why-isnt-olympia-pizza-more-popular-than-tutta-bella",
-      "address": "4501 Interlake Ave N, Seattle, WA 98103"
+      "note": "Family-run pizza-and-pasta restaurant since 1994 serving gourmet pizzas and pastas alongside Greek-influenced dishes like Greek salad and baklava, with dine-in, takeout, delivery and catering.",
+      "source": "https://santorinipizza.com",
+      "address": "11001 35th Ave Ne, Seattle, WA 98125"
     }
   ]
 }

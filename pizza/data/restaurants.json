@@ -5094,6 +5094,75 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": []
+    },
+    {
+      "id": "jet-city-pizza",
+      "name": "Jet City Pizza",
+      "neighborhood": "Wedgwood",
+      "style": "Delivery pizza, pasta & grinders",
+      "blurb": "Puget Sound pizza-delivery chain founded in Kenmore in 1994, with branches across Washington State (Bothell, Newcastle, Marysville, Mount Vernon, Kent) and this Wedgwood store serving pizza, pasta and oven grinders; it has no locations outside the state, so it's a regional rather than a national chain.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://www.foodboss.com/seattle-wa/jet-city-pizza-7500-25th-ave-ne-seattle-delivery",
+      "statusDate": null,
+      "statusDetected": "2026-11-12",
+      "statusChecked": "2026-11-12",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Wedgwood",
+          "address": "7500 25th Ave Ne, Seattle, WA 98115"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "pizza-pasta-bar",
+      "name": "Pizza & Pasta Bar",
+      "neighborhood": "Pike Place Market",
+      "style": "Italian, thin-crust pizza & fresh pasta",
+      "blurb": "Pike Place Market Italian spot open since 2016, making its own sauces, pizza dough and meats from scratch and serving thin-crust pizza alongside customizable pasta; listed as a current Market tenant.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://www.pikeplacemarket.org/?p=4029",
+      "statusDate": null,
+      "statusDetected": "2026-11-12",
+      "statusChecked": "2026-11-12",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Pike Place Market",
+          "address": "1530 Post Aly, Seattle, WA 98101"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "santorini-pizza-pasta",
+      "name": "Santorini Pizza & Pasta",
+      "neighborhood": "Meadowbrook",
+      "style": "Italian-American pizza & pasta, Greek-influenced",
+      "blurb": "Family-run pizza-and-pasta restaurant since 1994 serving gourmet pizzas and pastas alongside Greek-influenced dishes like Greek salad and baklava, with dine-in, takeout, delivery and catering.",
+      "url": "https://santorinipizza.com",
+      "status": "open",
+      "statusSource": "https://santorinipizza.com",
+      "statusDate": null,
+      "statusDetected": "2026-11-12",
+      "statusChecked": "2026-11-12",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Meadowbrook",
+          "address": "11001 35th Ave Ne, Seattle, WA 98125"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }

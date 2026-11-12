@@ -304,7 +304,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-11-05",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "jet-city-pizza",
+      "resolvedDate": "2026-11-12"
     },
     {
       "key": "lodge|501",
@@ -327,7 +329,12 @@
         "kc-health"
       ],
       "lastInspection": "2026-02-26",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "duplicate",
+      "note": "Same pizza-and-pasta shop at 2120 W Emerson Pl in Magnolia as the on-file Magnolia Pizza & Pasta; this is just the permit-register spelling of the name.",
+      "matchedId": "magnolia-pizza-pasta",
+      "resolutionSource": "https://slicelife.com/restaurants/wa/seattle/98199/magnolia-pizza-pasta-seattle/menu",
+      "resolvedDate": "2026-11-12"
     },
     {
       "key": "numero uno|103",
@@ -349,7 +356,12 @@
         "kc-health"
       ],
       "lastInspection": "2026-01-07",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "duplicate",
+      "note": "Same Wallingford restaurant at 4501 Interlake Ave N as the on-file Olympia Pizza & Spaghetti House II, run by the Christofilis family since it passed out of the founding Aliagas family's hands; a permit-register name variant.",
+      "matchedId": "olympia-pizza-spaghetti-house-ii",
+      "resolutionSource": "https://greeksinwa.omeka.net/items/show/801",
+      "resolvedDate": "2026-11-12"
     },
     {
       "key": "olympia|516",
@@ -359,7 +371,12 @@
         "kc-health"
       ],
       "lastInspection": "2026-03-17",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "duplicate",
+      "note": "This is Olympia Pizza and Spaghetti House III at 516 15th Ave E on Capitol Hill, the third location of the Greek-founded Olympia Pizza & Spaghetti House family (I, II, III) that also runs the on-file Wallingford location (II) — a branch of the same business, not a separate one.",
+      "matchedId": "olympia-pizza-spaghetti-house-ii",
+      "resolutionSource": "https://seattlemag.com/bar-hop-olympia-pizza-and-spaghetti-house-iii/",
+      "resolvedDate": "2026-11-12"
     },
     {
       "key": "pasta bar|1530",
@@ -369,7 +386,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-06-11",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "pizza-pasta-bar",
+      "resolvedDate": "2026-11-12"
     },
     {
       "key": "colibri kc574|2524",
@@ -379,7 +398,10 @@
         "kc-health"
       ],
       "lastInspection": "2025-11-03",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "unverifiable",
+      "note": "No trace of a pizzeria by this name anywhere in Seattle across multiple searches; \"Kc574\" reads like a ghost-kitchen/virtual-brand commissary code and turns up nothing in pizza guides, delivery-app listings or local news coverage.",
+      "resolvedDate": "2026-11-12"
     },
     {
       "key": "group|510",
@@ -389,7 +411,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-02-11",
-      "status": "pending"
+      "status": "chain",
+      "verdict": "chain",
+      "note": "The LLC behind Pizza Twist (né Chicago's Pizza With-A-Twist) at 510 Broadway E; the Indian-fusion pizza franchise was founded in Chicago in 2014 and by 2024 had grown to roughly 80 locations across about 19-20 U.S. states plus international units — a national chain, not a regional one.",
+      "resolutionSource": "https://capitolhillseattle.com/2021/08/already-home-to-bombay-burger-capitol-hill-adding-a-new-indian-restaurant-with-a-twist-pizza",
+      "resolvedDate": "2026-11-12"
     },
     {
       "key": "rasoi|1011",
@@ -399,7 +425,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-10-05",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "unverifiable",
+      "note": "Indian-Neapolitan fusion pizza pop-up/food truck tied to Tapster at 1011 Valley St; sources conflict on where it actually operates (one places it in Redmond instead) and none confirm it is still running as of 2026, only an undated pop-up listing and a single lukewarm review.",
+      "resolutionSource": "https://www.zabihah.com/restaurants/7bad84dc-749d-40b2-bc01-c0f887a42a0b/pizza-rasoi-seattle",
+      "resolvedDate": "2026-11-12"
     },
     {
       "key": "pizzutos italian|5032",
@@ -409,7 +439,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-06-18",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "not-pizza",
+      "note": "Branded and run as an Italian cafe at 5032 Wilson Ave S; its signature dishes are pastas (pasta Siciliana, prawns Pescara, house potato pasta) and chicken entrees, with pizza just one menu category among several rather than the core of the business.",
+      "resolutionSource": "https://www.foodboss.com/seattle-wa/pizzutos-italian-cafe-5032-wilson-ave-s-seattle-delivery",
+      "resolvedDate": "2026-11-12"
     },
     {
       "key": "santorini pasta|11001",
@@ -419,7 +453,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-04-29",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "santorini-pizza-pasta",
+      "resolvedDate": "2026-11-12"
     },
     {
       "key": "sopranos pasta|7729",
