@@ -6494,8 +6494,8 @@
         "post-alley-pizza": 4,
         "proletariat-pizza": 5,
         "veraci-pizza": 6,
-        "windy-city-pie": 7,
-        "cornelly": 8,
+        "cornelly": 7,
+        "windy-city-pie": 8,
         "slice-box": 9,
         "sacro-bosco-pizza-wine": 10,
         "humble-pie": 11,
@@ -6508,8 +6508,8 @@
         "tutta-bella": 18,
         "stevies-famous": 19,
         "smoking-monkey-pizza": 20,
-        "lupo": 21,
-        "moto-pizza": 22,
+        "moto-pizza": 21,
+        "lupo": 22,
         "my-friend-dereks": 23,
         "cornuto-pizzeria": 24,
         "pagliacci": 25,
@@ -6571,8 +6571,8 @@
         "post-alley-pizza": 83.1,
         "proletariat-pizza": 82.5,
         "veraci-pizza": 81.6,
+        "cornelly": 80.6,
         "windy-city-pie": 80.4,
-        "cornelly": 80.4,
         "slice-box": 79.4,
         "sacro-bosco-pizza-wine": 79,
         "humble-pie": 78.9,
@@ -6585,8 +6585,8 @@
         "tutta-bella": 76.9,
         "stevies-famous": 76.4,
         "smoking-monkey-pizza": 76.3,
+        "moto-pizza": 75.8,
         "lupo": 75.6,
-        "moto-pizza": 75.4,
         "my-friend-dereks": 75.4,
         "cornuto-pizzeria": 74.9,
         "pagliacci": 74.5,
@@ -6690,14 +6690,6 @@
           "value": 7.9,
           "penalty": 0
         },
-        "windy-city-pie": {
-          "reputation": 8.6,
-          "critical": 8.7,
-          "craft": 8.5,
-          "distinctiveness": 8,
-          "value": 7.7,
-          "penalty": 3.3
-        },
         "cornelly": {
           "reputation": 7,
           "critical": 8.6,
@@ -6705,6 +6697,14 @@
           "distinctiveness": 7.5,
           "value": 7.7,
           "penalty": 0.8
+        },
+        "windy-city-pie": {
+          "reputation": 8.6,
+          "critical": 8.7,
+          "craft": 8.5,
+          "distinctiveness": 8,
+          "value": 7.7,
+          "penalty": 3.3
         },
         "slice-box": {
           "reputation": 8.3,
@@ -6802,6 +6802,14 @@
           "value": 7.4,
           "penalty": 0
         },
+        "moto-pizza": {
+          "reputation": 6.5,
+          "critical": 8.8,
+          "craft": 8.5,
+          "distinctiveness": 8.5,
+          "value": 6.5,
+          "penalty": 6
+        },
         "lupo": {
           "reputation": 6.5,
           "critical": 8,
@@ -6809,14 +6817,6 @@
           "distinctiveness": 7.5,
           "value": 7.2,
           "penalty": 1.5
-        },
-        "moto-pizza": {
-          "reputation": 6.5,
-          "critical": 8.7,
-          "craft": 8.5,
-          "distinctiveness": 8.5,
-          "value": 6.5,
-          "penalty": 6
         },
         "my-friend-dereks": {
           "reputation": 1.7,
