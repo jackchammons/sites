@@ -6500,10 +6500,10 @@
         "sacro-bosco-pizza-wine": 10,
         "humble-pie": 11,
         "pizzeria-22": 12,
-        "good-shape-pizza": 13,
-        "serious-pie": 14,
-        "pizza-by-ruffin": 15,
-        "mioposto": 16,
+        "mioposto": 13,
+        "good-shape-pizza": 14,
+        "serious-pie": 15,
+        "pizza-by-ruffin": 16,
         "west-of-chicago-pizza-company": 17,
         "tutta-bella": 18,
         "stevies-famous": 19,
@@ -6542,12 +6542,12 @@
         "sopranos-antico": 52,
         "pizza-ritual": 53,
         "pazzos-on-eastlake": 54,
-        "coltiva-pizzeria-e-barra": 55,
-        "hot-mamas-pizza": 56,
-        "pudge-bros-pizza": 57,
-        "eymans-pizza": 58,
-        "a-pizza-mart-first-hill": 59,
-        "managers-pizza": 60,
+        "managers-pizza": 55,
+        "coltiva-pizzeria-e-barra": 56,
+        "hot-mamas-pizza": 57,
+        "pudge-bros-pizza": 58,
+        "eymans-pizza": 59,
+        "a-pizza-mart-first-hill": 60,
         "veras-pizza-and-bar": 61,
         "pizza-pasta-bar": 62,
         "jet-city-pizza": 63,
@@ -6577,10 +6577,10 @@
         "sacro-bosco-pizza-wine": 79,
         "humble-pie": 78.9,
         "pizzeria-22": 78.5,
+        "mioposto": 78.2,
         "good-shape-pizza": 77.9,
         "serious-pie": 77.7,
         "pizza-by-ruffin": 77.6,
-        "mioposto": 77.6,
         "west-of-chicago-pizza-company": 77,
         "tutta-bella": 76.9,
         "stevies-famous": 76.4,
@@ -6619,12 +6619,12 @@
         "sopranos-antico": 64.9,
         "pizza-ritual": 64,
         "pazzos-on-eastlake": 64,
+        "managers-pizza": 63.7,
         "coltiva-pizzeria-e-barra": 63.6,
         "hot-mamas-pizza": 63.5,
         "pudge-bros-pizza": 62,
         "eymans-pizza": 61.5,
         "a-pizza-mart-first-hill": 61.4,
-        "managers-pizza": 61.2,
         "veras-pizza-and-bar": 61.1,
         "pizza-pasta-bar": 60,
         "jet-city-pizza": 59.7,
@@ -6634,7 +6634,7 @@
         "seward-park-pizza": 53.8,
         "sinners-pizza": 52.2,
         "lucianos-pizza-pasta": 49.6,
-        "jackson-street-pizza-lounge": 48.5,
+        "jackson-street-pizza-lounge": 48.8,
         "mad-pizza": 36.7,
         "magnolia-pizza-pasta": 29.3,
         "pizzeria-gabbiano": 85,
@@ -6738,6 +6738,14 @@
           "value": 7.9,
           "penalty": 0
         },
+        "mioposto": {
+          "reputation": 10,
+          "critical": 7.5,
+          "craft": 7.5,
+          "distinctiveness": 6.5,
+          "value": 7.9,
+          "penalty": 0
+        },
         "good-shape-pizza": {
           "reputation": 3.3,
           "critical": 7.7,
@@ -6760,14 +6768,6 @@
           "craft": 7.5,
           "distinctiveness": 8,
           "value": 7.7,
-          "penalty": 0
-        },
-        "mioposto": {
-          "reputation": 10,
-          "critical": 7.5,
-          "craft": 7.5,
-          "distinctiveness": 6.5,
-          "value": 7.5,
           "penalty": 0
         },
         "west-of-chicago-pizza-company": {
@@ -7074,6 +7074,14 @@
           "value": 6,
           "penalty": 0
         },
+        "managers-pizza": {
+          "reputation": 2.5,
+          "critical": 6,
+          "craft": 6,
+          "distinctiveness": 6.5,
+          "value": 7.2,
+          "penalty": 0
+        },
         "coltiva-pizzeria-e-barra": {
           "reputation": 7.9,
           "critical": 6,
@@ -7112,14 +7120,6 @@
           "craft": 5.5,
           "distinctiveness": 6,
           "value": 5.5,
-          "penalty": 0
-        },
-        "managers-pizza": {
-          "reputation": 2.5,
-          "critical": 6,
-          "craft": 6,
-          "distinctiveness": 6.5,
-          "value": 6,
           "penalty": 0
         },
         "veras-pizza-and-bar": {
@@ -7195,7 +7195,7 @@
           "penalty": 0
         },
         "jackson-street-pizza-lounge": {
-          "reputation": 0,
+          "reputation": 5,
           "critical": 5,
           "craft": 4.5,
           "distinctiveness": 5.5,
