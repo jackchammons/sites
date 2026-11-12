@@ -6522,9 +6522,9 @@
         "dantini-pizza": 32,
         "razzis-pizzeria": 33,
         "ballard-pizza-co": 34,
-        "good-luck-bread": 35,
-        "ridge-pizza": 36,
-        "un-po-tipsy": 37,
+        "un-po-tipsy": 35,
+        "good-luck-bread": 36,
+        "ridge-pizza": 37,
         "roccos": 38,
         "smoking-monkey-pizza": 39,
         "sunny-hill": 40,
@@ -6599,9 +6599,9 @@
         "dantini-pizza": 72.3,
         "razzis-pizzeria": 72.3,
         "ballard-pizza-co": 71.5,
+        "un-po-tipsy": 70.9,
         "good-luck-bread": 70.8,
         "ridge-pizza": 69.9,
-        "un-po-tipsy": 69.7,
         "roccos": 69.5,
         "smoking-monkey-pizza": 68.7,
         "sunny-hill": 68.7,
@@ -6634,8 +6634,8 @@
         "seward-park-pizza": 53.8,
         "sinners-pizza": 53.2,
         "lucianos-pizza-pasta": 49.6,
-        "jackson-street-pizza-lounge": 47.7,
-        "mad-pizza": 36,
+        "jackson-street-pizza-lounge": 48.5,
+        "mad-pizza": 36.7,
         "magnolia-pizza-pasta": 29.3,
         "pizzeria-gabbiano": 85.1,
         "independent-pizzeria": 71.9,
@@ -6914,6 +6914,14 @@
           "value": 6.8,
           "penalty": 0
         },
+        "un-po-tipsy": {
+          "reputation": 0,
+          "critical": 7.5,
+          "craft": 7,
+          "distinctiveness": 6.5,
+          "value": 7.3,
+          "penalty": 0
+        },
         "good-luck-bread": {
           "reputation": 7,
           "critical": 7,
@@ -6928,14 +6936,6 @@
           "craft": 6.5,
           "distinctiveness": 5.5,
           "value": 6.6,
-          "penalty": 0
-        },
-        "un-po-tipsy": {
-          "reputation": 0,
-          "critical": 7.5,
-          "craft": 7,
-          "distinctiveness": 6.5,
-          "value": 7.3,
           "penalty": 0
         },
         "roccos": {

@@ -4215,7 +4215,9 @@
       "locations": [
         {
           "neighborhood": "First Hill",
-          "address": "1321 Madison Street, Seattle, WA 98104"
+          "address": "1321 Madison Street, Seattle, WA 98104",
+          "lat": 47.61051,
+          "lon": -122.32192
         }
       ],
       "locationsVerified": "2026-11-12",
