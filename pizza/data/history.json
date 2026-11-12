@@ -6525,8 +6525,8 @@
         "un-po-tipsy": 35,
         "good-luck-bread": 36,
         "ridge-pizza": 37,
-        "roccos": 38,
-        "smoking-monkey-pizza": 39,
+        "smoking-monkey-pizza": 38,
+        "roccos": 39,
         "sunny-hill": 40,
         "big-marios": 41,
         "pizzeria-la-rocca": 42,
@@ -6602,8 +6602,8 @@
         "un-po-tipsy": 70.9,
         "good-luck-bread": 70.8,
         "ridge-pizza": 69.9,
+        "smoking-monkey-pizza": 69.5,
         "roccos": 69.5,
-        "smoking-monkey-pizza": 68.7,
         "sunny-hill": 68.7,
         "big-marios": 68.1,
         "pizzeria-la-rocca": 67.6,
@@ -6938,14 +6938,6 @@
           "value": 6.6,
           "penalty": 0
         },
-        "roccos": {
-          "reputation": 9.3,
-          "critical": 6.8,
-          "craft": 6,
-          "distinctiveness": 5.5,
-          "value": 6.7,
-          "penalty": 0.4
-        },
         "smoking-monkey-pizza": {
           "reputation": 0,
           "critical": 7,
@@ -6953,6 +6945,14 @@
           "distinctiveness": 6.5,
           "value": 7.4,
           "penalty": 0
+        },
+        "roccos": {
+          "reputation": 9.3,
+          "critical": 6.8,
+          "craft": 6,
+          "distinctiveness": 5.5,
+          "value": 6.7,
+          "penalty": 0.4
         },
         "sunny-hill": {
           "reputation": 7,

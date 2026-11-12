@@ -4828,7 +4828,9 @@
         },
         {
           "neighborhood": "Seattle",
-          "address": "3111 W McGraw St Unit 103, Seattle, WA 98199"
+          "address": "3111 W McGraw St Unit 103, Seattle, WA 98199",
+          "lat": 47.63934,
+          "lon": -122.39752
         }
       ],
       "locationsVerified": "2026-11-12",
