@@ -5175,7 +5175,9 @@
       "locations": [
         {
           "neighborhood": "West Seattle",
-          "address": "3770 SW Alaska Street, Seattle, WA 98126"
+          "address": "3770 SW Alaska Street, Seattle, WA 98126",
+          "lat": 47.56118,
+          "lon": -122.37992
         }
       ],
       "locationsVerified": "2026-11-12",
