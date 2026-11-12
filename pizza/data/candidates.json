@@ -465,7 +465,12 @@
         "kc-health"
       ],
       "lastInspection": "2026-02-24",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "duplicate",
+      "note": "This is the Ballard/Loyal Heights branch at 7729 24th Ave NW, Seattle, WA 98117. Birdeye's listing for this exact address labels it 'Sopranos Pizza & Pasta - Ballard' with the same 'Soprano's Pizza & Pasta' branding and matching menu (calzones, pastas, build-your-own pizza) as the Lake City location already on file, indicating it is another branch of the same chain rather than a separate business.",
+      "matchedId": "sopranos-pizza-pasta-lake-city",
+      "resolutionSource": "https://reviews.birdeye.com/sopranos-pizza-pasta-146915601834635",
+      "resolvedDate": "2026-11-12"
     },
     {
       "key": "varlamos|3617",
@@ -475,7 +480,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-10-28",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "varlamos-pizzeria",
+      "resolvedDate": "2026-11-12"
     },
     {
       "key": "a mart|9452",

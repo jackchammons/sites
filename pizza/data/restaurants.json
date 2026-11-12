@@ -5571,6 +5571,29 @@
       "mentions": [],
       "ratingAttempted": "2026-11-12",
       "ratingNote": "Searched for critic reviews or roundup mentions of Santorini Pizza & Pasta (Meadowbrook/Wedgwood). Found only directory/aggregator listings (Atly, MapQuest, Wanderlog, OpenTable) and a single anonymous 2008 personal blog post. No published criticism from a real outlet turned up, so skipping rather than grounding a score in aggregator copy."
+    },
+    {
+      "id": "varlamos-pizzeria",
+      "name": "Varlamos Pizzeria",
+      "neighborhood": "Laurelhurst",
+      "style": null,
+      "blurb": "Longtime Northeast Seattle neighborhood pizzeria known for oversized calzones alongside build-your-own pizzas and pastas.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://www.seattleschild.com/?p=7487",
+      "statusDate": null,
+      "statusDetected": "2026-11-12",
+      "statusChecked": "2026-11-12",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Laurelhurst",
+          "address": "3617 NE 45th St, Seattle, WA 98105"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }

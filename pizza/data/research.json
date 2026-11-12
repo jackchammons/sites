@@ -1,37 +1,22 @@
 {
   "updated": "2026-11-12T00:00:00Z",
-  "factorRatings": [
+  "candidateReview": [
     {
-      "id": "lucianos-pizza-pasta",
-      "craft": 6,
-      "distinctiveness": 2.5,
-      "criticScore": 5.5,
-      "styleGroup": "Neighborhood",
-      "sources": [
-        "https://www.seattleweekly.com/food/in-our-ongoing-series-on-pizzerias-not-named-pagliacci-who-are-willing"
-      ],
-      "note": "The only press coverage found is a brief 2008 Seattle Weekly item in a series on non-Pagliacci pizzerias willing to deliver to West Seattle's Delridge/Poverty Gulch area; it singles out the Luciano's Special for 'high marks for the quality of its onions' but offers no broader assessment of crust, sauce or bake. Reads as a reliable, unpretentious red-sauce delivery pizzeria rather than a destination pie, consistent with its long-running Admiral and Lake City locations."
+      "name": "Soprano'S Pizza & Pasta",
+      "verdict": "duplicate",
+      "duplicateOf": "sopranos-pizza-pasta-lake-city",
+      "note": "This is the Ballard/Loyal Heights branch at 7729 24th Ave NW, Seattle, WA 98117. Birdeye's listing for this exact address labels it 'Sopranos Pizza & Pasta - Ballard' with the same 'Soprano's Pizza & Pasta' branding and matching menu (calzones, pastas, build-your-own pizza) as the Lake City location already on file, indicating it is another branch of the same chain rather than a separate business.",
+      "source": "https://reviews.birdeye.com/sopranos-pizza-pasta-146915601834635"
     }
   ],
-  "ratingSkipped": [
+  "directory": [
     {
-      "id": "palermo-pizza-pasta",
-      "note": "Searched for reviews/roundups of Palermo Pizza & Pasta (350 15th Ave E, Capitol Hill) by name across Seattle Met, The Stranger, Capitol Hill Seattle Blog and general web search. Found only directory/aggregator listings (OpenTable with no reviews, Sluurpy/Yelp mirror, Slice, MapQuest) and no professional review, roundup entry, or news story specific to this pizzeria. Skipping for lack of published criticism."
-    },
-    {
-      "id": "italio-pizza-pasta",
-      "note": "Searched for coverage of Italio Pizza & Pasta (305 NW 85th St, Greenwood) including neighborhood blogs (My Ballard, Phinney/Greenwood blogs) and general search. Found only OpenTable/MapQuest/Slice listings and diner-review aggregation, no critic review or press coverage of the specific restaurant. Skipping for lack of published criticism."
-    },
-    {
-      "id": "sopranos-pizza-pasta-lake-city",
-      "note": "Searched for news/blog coverage of Soprano's Pizza & Pasta - Lake City (11754 15th Ave NE). Found only directory listings (MapQuest/Yelp mirror, Slice, Foursquare, Birdeye) and no Seattle Times, Seattle Met, Eater, or neighborhood-blog review of this specific location. Skipping for lack of published criticism."
-    },
-    {
-      "id": "pizza-paesano",
-      "note": "Searched for 'Pizza Paesano' Ballard by name, plus its listed Instagram handle (pizza_paesano_seattle), across web search and Seattle food-media roundups (Seattle Met, The Stranger, Infatuation). No results returned that reference this business at all -- no menu site, no press mention, no aggregator listing could be found. Could not even confirm current operation independently of the directory entry. Skipping for lack of any verifiable published source."
+      "name": "Varlamos Pizzeria",
+      "neighborhood": "Laurelhurst",
+      "status": "open",
+      "note": "Longtime Northeast Seattle neighborhood pizzeria known for oversized calzones alongside build-your-own pizzas and pastas.",
+      "source": "https://www.seattleschild.com/?p=7487",
+      "address": "3617 NE 45th St, Seattle, WA 98105"
     }
-  ],
-  "rejected": [
-    "mentions[0]: date is older than 730 days"
   ]
 }
