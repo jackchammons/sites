@@ -6016,6 +6016,52 @@
       "locationsNote": "Searched for an official site; third-party listings give an address of 3617 NE 45th St, Seattle, WA 98105, and an old scanned menu document names the domain varlamospizza.com, but fetching that domain failed with an expired SSL certificate, so the current official site could not be verified.",
       "socialAttempted": "2026-11-12",
       "socialNote": "Searched 'Varlamos Pizzeria Laurelhurst Seattle website' — only Foursquare/MapQuest/Atly listings turned up (3617 NE 45th St); a MapQuest 'Website' button was referenced but its target URL wasn't shown, so no domain could be confirmed. No Instagram handle found."
+    },
+    {
+      "id": "g-h-pasta-pizza",
+      "name": "G.H. Pasta & Pizza",
+      "neighborhood": "Phinney Ridge",
+      "style": "Sourdough 12-inch pizza & housemade pasta",
+      "blurb": "Chef Brian Clevenger's General Harvest Restaurants took over the former Autumn space on Greenwood Ave N with a family-friendly pasta-and-pizza menu, opening the first week of February 2026.",
+      "url": "https://ghpastapizza.com",
+      "status": "open",
+      "statusSource": "https://phinneywood.com/2026/01/autumn-restaurant-transitioning-to-g-h-pasta-pizza/",
+      "statusDate": null,
+      "statusDetected": "2026-11-12",
+      "statusChecked": "2026-11-12",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Phinney Ridge",
+          "address": "6726 Greenwood Ave N, Seattle, WA 98103"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "pizza-twist",
+      "name": "Pizza Twist",
+      "neighborhood": "Northgate (Pinehurst)",
+      "style": "Custom fusion pizza (halal options, Indian-fusion toppings)",
+      "blurb": "A fusion-pizza shop with a Northgate-area location offering build-your-own pies, halal meat options, and dishes like lamb kabob and butter chicken pizza.",
+      "url": "https://pizzatwist.com",
+      "status": "open",
+      "statusSource": "https://www.atly.com/gluten-free/location/Pizza-Twist---Roosevelt-Way-NE-Seattle-WA",
+      "statusDate": null,
+      "statusDetected": "2026-11-12",
+      "statusChecked": "2026-11-12",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Northgate (Pinehurst)",
+          "address": "12319 Roosevelt Way NE, Seattle, WA 98125"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }

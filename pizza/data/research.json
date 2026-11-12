@@ -1,45 +1,25 @@
 {
   "updated": "2026-11-12T00:00:00Z",
-  "coverageSkipped": [
+  "directory": [
     {
-      "id": "hot-slice-pizza",
-      "note": "Searched 'Hot Slice Pizza Interbay Seattle' and 'Hot Slice Pizza Seattle opening news'. Only found directory/aggregator listings (Atly, Airbnb nearby-places pages, Sip Magazine about an unrelated Sizzle Pie piece). No story from a named outlet (Infatuation, Seattle Times, Seattle Met, Seattle Magazine, Eater Seattle, The Stranger, or a neighborhood blog) actually about this pizzeria."
+      "name": "G.H. Pasta & Pizza",
+      "url": "https://ghpastapizza.com",
+      "neighborhood": "Phinney Ridge",
+      "style": "Sourdough 12-inch pizza & housemade pasta",
+      "status": "open",
+      "note": "Chef Brian Clevenger's General Harvest Restaurants took over the former Autumn space on Greenwood Ave N with a family-friendly pasta-and-pizza menu, opening the first week of February 2026.",
+      "source": "https://phinneywood.com/2026/01/autumn-restaurant-transitioning-to-g-h-pasta-pizza/",
+      "address": "6726 Greenwood Ave N, Seattle, WA 98103"
     },
     {
-      "id": "palermo-pizza-pasta",
-      "note": "Searched 'Palermo Pizza Capitol Hill Seattle review' and 'Palermo Pizza Pasta Capitol Hill Seattle Blog'. Found only OpenTable/Sluurpy/MapQuest/Slice directory listings and a 2017 Seattle Met 'best new Italian' piece that does not name this restaurant. No qualifying story found."
-    },
-    {
-      "id": "pizza-paesano",
-      "note": "Searched '\"Pizza Paesano\" Ballard Seattle' and '\"Pizza Paesano\" My Ballard OR myballard.com'. Both returned only unrelated Ballard pizzerias (Ballard Pizza Co., Veraci, Stoneburner, Palermo-Ballard) with no results naming Pizza Paesano itself. No qualifying coverage found."
-    },
-    {
-      "id": "downtown-romios-pizza-pasta",
-      "note": "Searched '\"Downtown Romio's\" Pizza Pasta Seattle' and 'Eater Seattle Romio's Pizza Pasta downtown'. Only OpenTable, Toast, DoorDash and FoodBoss listing/menu pages turned up, plus one negative DoorDash customer review. No named-outlet story found."
-    },
-    {
-      "id": "seattle-pizza-bar",
-      "note": "Searched '\"Seattle Pizza & Bar\" Belltown OR \"South Lake Union\"' and '\"Seattle Pizza and Bar\" closed Belltown OR \"South Lake Union\" news'. Found only MapQuest/Yelp-mirror listings (one showing a possible closed status with no explanation) and unrelated Seattle Met/Stranger closure roundups from 2017-2019. No dated, named-outlet report naming this business as opened, closed, or reviewed."
-    },
-    {
-      "id": "sopranos-pizza-pasta-lake-city",
-      "note": "Searched '\"Soprano's Pizza\" Lake City Seattle' and 'Soprano's Pizza Pasta Lake City news blog'. Only Menupages/MapQuest/Sluurpy/Wanderlog directory listings and a single undated Yelp-style customer comment appeared. No qualifying press coverage found."
-    },
-    {
-      "id": "deleo-bros-pizza",
-      "note": "Searched '\"DeLeo Bros\" Pizza Pioneer Square Seattle' and '\"DeLeo Bros\" Pizza Seattle Axios OR Eater opening'. Found only a whatnow.com aggregator post (syndicated press-release style, not an original named-outlet report) describing a liquor-license application, plus Intentionalist and MapQuest directory listings with conflicting opening dates. None meets the bar of genuine published criticism/news from the listed outlet types, so nothing qualifying to report."
-    },
-    {
-      "id": "alberonas-davinci-pizza-pasta",
-      "note": "Searched '\"Alberona's\" DaVinci Pizza Ballard' and 'Alberona's DaVinci Pizza Pasta My Ballard news'. Results were only Caviar/Atly/MapQuest/Slice/Zabihah directory listings and a single old 2018 customer review. No qualifying named-outlet coverage found."
-    },
-    {
-      "id": "desi-pizza-kitchen",
-      "note": "Searched '\"Desi Pizza Kitchen\" Queen Anne Seattle' and 'Desi Pizza Kitchen Seattle Eater OR Stranger Indian fusion pizza'. Only MapQuest/Valpak/DoorDash/namaste-locator listings and DoorDash customer comments turned up. No Eater, Stranger, Seattle Met, or similar outlet story found about this location."
-    },
-    {
-      "id": "fremont-pizza",
-      "note": "Searched '\"Fremont Pizza\" Seattle review news' and '\"Fremont Pizza\" Seattle Stranger OR \"My Fremont\" news'. Only MapQuest/Lolo/Spinach directory listings surfaced; Seattle Magazine and Seattle Met pizza roundups found in the results covered other restaurants (Tivoli, Whale Wins, Lupo) and did not mention Fremont Pizza. No qualifying coverage found."
+      "name": "Pizza Twist",
+      "url": "https://pizzatwist.com",
+      "neighborhood": "Northgate (Pinehurst)",
+      "style": "Custom fusion pizza (halal options, Indian-fusion toppings)",
+      "status": "open",
+      "note": "A fusion-pizza shop with a Northgate-area location offering build-your-own pies, halal meat options, and dishes like lamb kabob and butter chicken pizza.",
+      "source": "https://www.atly.com/gluten-free/location/Pizza-Twist---Roosevelt-Way-NE-Seattle-WA",
+      "address": "12319 Roosevelt Way NE, Seattle, WA 98125"
     }
   ]
 }
