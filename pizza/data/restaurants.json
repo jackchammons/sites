@@ -3082,8 +3082,8 @@
       "signatureSource": null,
       "opened": 2016,
       "openedSource": null,
-      "priceIndex": null,
-      "priceSource": null,
+      "priceIndex": 2,
+      "priceSource": "https://www.cornutopizzeria.com/menu",
       "attributes": {},
       "url": "https://www.cornutopizzeria.com/",
       "instagram": "https://www.instagram.com/cornuto_pizzeria/",
@@ -3134,9 +3134,11 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched 'Cornuto Pizzeria Greenwood Phinney Ridge review' and 'Cornuto Pizzeria Seattle 2025'. Found The Infatuation's review, but it published Dec 1, 2022, outside the two-year window; 2025 results were only Yelp/aggregator reviews, no outlet coverage in range.",
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "signature"
+      ],
+      "factsNote": "cornutopizzeria.com's own menu gives prices (used for priceIndex) but names no signature pizza. The Infatuation's review and a Seattle Met quote on the site describe general toppings (chile oil, salame piccante, prosciutto di Parma) without tying them to one named pie.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -3802,9 +3804,13 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched 'Pazzo's on Eastlake Seattle pizza review' and a targeted outlet query (Infatuation/Eater/Seattle Met/Stranger). Found no critic review or news item at all, only directory/listing sites (Restaurantji, MapQuest, Airbnb, WhatsVegan).",
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "priceIndex",
+        "style",
+        "signature"
+      ],
+      "factsNote": "Fetched pazzosoneastlake.com/menu twice; it lists calzones ($17.95) and a 'Signature Pizzas' section header, but the actual pizza names, prices, and style did not render in the fetched content. A search result naming a 'Palermo' pizza traced to a menu-aggregator (singleplatform.com), not the restaurant's own site, so it wasn't used.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -3954,9 +3960,13 @@
       ],
       "coverageAttempted": null,
       "coverageNote": null,
-      "factsAttempted": "2026-11-05",
-      "factsSought": [],
-      "factsNote": "pizzaritual.com returned no readable content on two fetch attempts. Search found a Jan 2026 West Seattle Blog item saying it has been running pop-ups at KBM kitchen 'since summer' (no year given) and no menu with prices; The Infatuation lists only a '$$$$' marker, which is not the pizzeria's own menu.",
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "opened",
+        "priceIndex",
+        "signature"
+      ],
+      "factsNote": "pizzaritual.com's homepage had no usable text and /menu returned a repeated SSL error. A West Seattle Blog item (Jan 2026) describes it operating out of the KBM commissary kitchen 'since summer,' but the article itself returned 403 Forbidden on direct fetch, giving no verifiable opening year, price, or signature pizza.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -4340,8 +4350,8 @@
       "styleSource": null,
       "styleGroup": "Thin crust",
       "styleGroupSource": null,
-      "signature": null,
-      "signatureSource": null,
+      "signature": "Pepperoni + Caramelized Garlic: pepperoni, caramelized garlic confit, mozzarella",
+      "signatureSource": "https://theinfatuation.com/seattle/reviews/dantini-pizza",
       "opened": null,
       "openedSource": null,
       "priceIndex": null,
@@ -4586,9 +4596,13 @@
       ],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Beyond the South Seattle Emerald listing already reported, searched further and found no second story; the only other Seattle Met/Infatuation hits were about Flying Squirrel Pizza Co.'s original Seward Park location, a different business.",
-      "factsAttempted": "2026-11-05",
-      "factsSought": [],
-      "factsNote": "sewardparkpizza.com failed to load (SSL handshake failure) on both http and https attempts. Search found only a Cost:'$' rating on a directory aggregator (not the pizzeria's own menu) and no founding year.",
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "opened",
+        "priceIndex",
+        "signature"
+      ],
+      "factsNote": "sewardparkpizza.com returned a repeated SSL handshake error on every fetch attempt. Search found only a South Seattle Emerald listing at 4920 S Genesee St with no review, and a possible mix-up with Flying Squirrel Pizza Co. at the same address; nothing usable on opened year, price, or signature pizza.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -5420,9 +5434,13 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched 'Mad Pizza First Hill Seattle review'. Only found a Gayot listing and reports that the Madison Street/First Hill location closed around October 2013; no recent (within 2 years) press coverage found.",
-      "factsAttempted": "2026-11-05",
-      "factsSought": [],
-      "factsNote": "Checked madpizza.com/location and madpizza.com/about: no founding year stated on either. The ChowNow ordering page (order.chownow.com/order/6301/locations) returned HTTP 403, so menu prices could not be read.",
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "opened",
+        "priceIndex",
+        "signature"
+      ],
+      "factsNote": "Checked madpizza.com home, /menu, and /about; none state an opening year, pizza prices, or a named signature pizza. Search found Mad Pizza is a small Seattle-area chain with unclear/conflicting location history and no reliable opening date, price, or signature pie for any currently open location.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -5509,10 +5527,10 @@
       "styleSource": null,
       "styleGroup": "By the slice",
       "styleGroupSource": null,
-      "signature": null,
-      "signatureSource": null,
-      "opened": null,
-      "openedSource": null,
+      "signature": "Tomato Tomato: tomato sauce, basil, olive oil, whole roasted garlic cloves",
+      "signatureSource": "https://seattlemag.com/food-drink/seattles-pizza-just-keeps-getting-better/",
+      "opened": 2025,
+      "openedSource": "https://seattlemag.com/food-drink/seattles-pizza-just-keeps-getting-better/",
       "priceIndex": null,
       "priceSource": null,
       "attributes": {},
@@ -6715,9 +6733,13 @@
       ],
       "coverageAttempted": null,
       "coverageNote": null,
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "opened",
+        "priceIndex",
+        "signature"
+      ],
+      "factsNote": "Checked ak-pizza.com home (no content) and /menu (404). Searched for coverage; Secret Seattle's piece says it opened 'in October' with no year, and a direct fetch of that article returned empty content, so the year couldn't be confirmed. No price or named signature pizza found from any valid source.",
       "socialAttempted": "2026-11-12",
       "socialNote": "Checked ak-pizza.com (page returned no header/footer/social content). Searched 'A.K. Pizza Othello Seattle instagram' and 'site:instagram.com \"A.K. Pizza\" seattle'; found a ma.to listing using handle 'akpizzaguy' but no article or site confirms it is the shop's own account, so left blank rather than guess."
     },
@@ -6987,9 +7009,13 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched \"Luciano's Pizza\" Admiral West Seattle review; found only directory listings, a West Seattle Blog forum rant thread, and template filler pages. No professional review or news story found.",
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "opened",
+        "priceIndex",
+        "signature"
+      ],
+      "factsNote": "No official website found. Search turned up only aggregator/ordering listings (Uber Eats, Slice, MenuPages, DoorDash, Atly, Sluurpy, WhatsVegan) for its West Seattle and Lake City locations, none of which qualify as a source for opened year, price, or signature pie.",
       "socialAttempted": "2026-11-12",
       "socialNote": "Searched 'Luciano's Pizza & Pasta Admiral West Seattle website' — only Uber Eats/Slice/DoorDash/WhatsVegan listings turned up (2341 California Ave SW), no official domain found. No Instagram handle found."
     },
@@ -7065,9 +7091,12 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched \"Ananas Pizzeria\" First Hill review and again for 2025/2026 coverage. Found Curiocity's opening story (Nov 20, 2023), a Seattle Met Field Notes piece (~April 2024), Capitol Hill Seattle's opening tag, PMQ, and The Infatuation/Stranger slice guides, but all coverage dates to the 2023-2024 opening window, older than 730 days. No story within the last two years found.",
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "priceIndex",
+        "signature"
+      ],
+      "factsNote": "ananaspizzeria.com's home page and /menu had no usable content. Seattle Met's piece describing Ananas's namesake pizza (pineapple and smoked ham) returned 403 Forbidden on direct fetch at both known URLs, so it couldn't be verified firsthand; no price found anywhere.",
       "socialAttempted": "2026-11-12",
       "socialNote": "Site on file is ananaspizzeria.com. Fetched it but the page returned only a bare title with no header/footer/link content (JS-rendered), so no Instagram link could be located. Searched 'Ananas Pizzeria Seattle instagram' — no handle named by any outlet, only an unrelated photo-credit mention."
     },
@@ -7201,9 +7230,12 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched Capitale Pizzeria Capitol Hill Seattle and for a 2025 opening; found Capitol Hill Seattle/WhatNow opening coverage from July and September 2024, both older than the two-year window, plus OpenTable listings. No coverage within the window found.",
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "priceIndex",
+        "signature"
+      ],
+      "factsNote": "capitalepizzeria.com's own pages describe several pizzas (Santiago, Calabria, Capri, Napoli, Madrid, Lisboa, Ankara) via reviewer quotes but single out no signature pie and list no prices; a Seattle Restaurant Week $50 prix-fixe mention found in search is a promotion, not a menu price, so it wasn't used.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -7388,9 +7420,13 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched \"Magnolia Pizza\" Magnolia Seattle review/news; the only substantive write-up was a personal Seattle pizza ranking Substack, not a qualifying published outlet. No news story, review, or ranking from a real outlet found.",
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "opened",
+        "priceIndex",
+        "signature"
+      ],
+      "factsNote": "No official website found. Search turned up only aggregator/directory listings (Slice, MenuPages, MapQuest, WhatsVegan) at 2120 W Emerson Pl, none of which qualify as a source for opened year, price, or signature pie.",
       "socialAttempted": "2026-11-12",
       "socialNote": "Searched 'Magnolia Pizza & Pasta Seattle official website' — only MenuPages/Slice/WhatsVegan listings turned up (2120 W Emerson Pl), no official domain found. No Instagram handle found."
     },

@@ -1,25 +1,63 @@
 {
-  "updated": "2026-11-12T00:00:00Z",
-  "directory": [
+  "updated": "2026-11-12T19:30:00Z",
+  "facts": [
     {
-      "name": "G.H. Pasta & Pizza",
-      "url": "https://ghpastapizza.com",
-      "neighborhood": "Phinney Ridge",
-      "style": "Sourdough 12-inch pizza & housemade pasta",
-      "status": "open",
-      "note": "Chef Brian Clevenger's General Harvest Restaurants took over the former Autumn space on Greenwood Ave N with a family-friendly pasta-and-pizza menu, opening the first week of February 2026.",
-      "source": "https://phinneywood.com/2026/01/autumn-restaurant-transitioning-to-g-h-pasta-pizza/",
-      "address": "6726 Greenwood Ave N, Seattle, WA 98103"
+      "id": "un-po-tipsy",
+      "opened": 2025,
+      "signature": "Tomato Tomato: tomato sauce, basil, olive oil, whole roasted garlic cloves",
+      "source": "https://seattlemag.com/food-drink/seattles-pizza-just-keeps-getting-better/"
     },
     {
-      "name": "Pizza Twist",
-      "url": "https://pizzatwist.com",
-      "neighborhood": "Northgate (Pinehurst)",
-      "style": "Custom fusion pizza (halal options, Indian-fusion toppings)",
-      "status": "open",
-      "note": "A fusion-pizza shop with a Northgate-area location offering build-your-own pies, halal meat options, and dishes like lamb kabob and butter chicken pizza.",
-      "source": "https://www.atly.com/gluten-free/location/Pizza-Twist---Roosevelt-Way-NE-Seattle-WA",
-      "address": "12319 Roosevelt Way NE, Seattle, WA 98125"
+      "id": "dantini-pizza",
+      "signature": "Pepperoni + Caramelized Garlic: pepperoni, caramelized garlic confit, mozzarella",
+      "source": "https://theinfatuation.com/seattle/reviews/dantini-pizza"
+    },
+    {
+      "id": "cornuto-pizzeria",
+      "priceIndex": 2,
+      "source": "https://www.cornutopizzeria.com/menu"
+    }
+  ],
+  "factsSkipped": [
+    {
+      "id": "a-k-pizza",
+      "note": "Checked ak-pizza.com home (no content) and /menu (404). Searched for coverage; Secret Seattle's piece says it opened 'in October' with no year, and a direct fetch of that article returned empty content, so the year couldn't be confirmed. No price or named signature pizza found from any valid source."
+    },
+    {
+      "id": "lucianos-pizza-pasta",
+      "note": "No official website found. Search turned up only aggregator/ordering listings (Uber Eats, Slice, MenuPages, DoorDash, Atly, Sluurpy, WhatsVegan) for its West Seattle and Lake City locations, none of which qualify as a source for opened year, price, or signature pie."
+    },
+    {
+      "id": "magnolia-pizza-pasta",
+      "note": "No official website found. Search turned up only aggregator/directory listings (Slice, MenuPages, MapQuest, WhatsVegan) at 2120 W Emerson Pl, none of which qualify as a source for opened year, price, or signature pie."
+    },
+    {
+      "id": "pazzos-on-eastlake",
+      "note": "Fetched pazzosoneastlake.com/menu twice; it lists calzones ($17.95) and a 'Signature Pizzas' section header, but the actual pizza names, prices, and style did not render in the fetched content. A search result naming a 'Palermo' pizza traced to a menu-aggregator (singleplatform.com), not the restaurant's own site, so it wasn't used."
+    },
+    {
+      "id": "mad-pizza",
+      "note": "Checked madpizza.com home, /menu, and /about; none state an opening year, pizza prices, or a named signature pizza. Search found Mad Pizza is a small Seattle-area chain with unclear/conflicting location history and no reliable opening date, price, or signature pie for any currently open location."
+    },
+    {
+      "id": "pizza-ritual",
+      "note": "pizzaritual.com's homepage had no usable text and /menu returned a repeated SSL error. A West Seattle Blog item (Jan 2026) describes it operating out of the KBM commissary kitchen 'since summer,' but the article itself returned 403 Forbidden on direct fetch, giving no verifiable opening year, price, or signature pizza."
+    },
+    {
+      "id": "seward-park-pizza",
+      "note": "sewardparkpizza.com returned a repeated SSL handshake error on every fetch attempt. Search found only a South Seattle Emerald listing at 4920 S Genesee St with no review, and a possible mix-up with Flying Squirrel Pizza Co. at the same address; nothing usable on opened year, price, or signature pizza."
+    },
+    {
+      "id": "ananas-pizzeria",
+      "note": "ananaspizzeria.com's home page and /menu had no usable content. Seattle Met's piece describing Ananas's namesake pizza (pineapple and smoked ham) returned 403 Forbidden on direct fetch at both known URLs, so it couldn't be verified firsthand; no price found anywhere."
+    },
+    {
+      "id": "capitale-pizzeria",
+      "note": "capitalepizzeria.com's own pages describe several pizzas (Santiago, Calabria, Capri, Napoli, Madrid, Lisboa, Ankara) via reviewer quotes but single out no signature pie and list no prices; a Seattle Restaurant Week $50 prix-fixe mention found in search is a promotion, not a menu price, so it wasn't used."
+    },
+    {
+      "id": "cornuto-pizzeria",
+      "note": "cornutopizzeria.com's own menu gives prices (used for priceIndex) but names no signature pizza. The Infatuation's review and a Seattle Met quote on the site describe general toppings (chile oil, salame piccante, prosciutto di Parma) without tying them to one named pie."
     }
   ]
 }
