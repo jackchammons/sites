@@ -130,7 +130,7 @@ const VERDICT_COPY = {
   },
   unverifiable: {
     title: 'Could not be verified',
-    rule: 'The census pass found no trace of a pizzeria beyond the permit.',
+    rule: 'The census pass could not confirm a Seattle pizzeria behind the permit.',
     label: 'Candidates that could not be verified',
     was: 'one it could not verify'
   },
@@ -157,6 +157,9 @@ const passName = n => n == null ? NONE : ORDINAL[n] ?? `${n}th`;
 
 export function candidatesSection(ctx) {
   const { dataset, candidates, candidatesChecked } = ctx;
+  /* A rest that has already run out is printed as "since" its last day: the
+   * entry is back in the draw and has been from then. */
+  const today = (ctx.now ?? new Date()).toISOString().slice(0, 10);
   const unrated = unratedLists(dataset.restaurants);
   const queue = candidateLists(candidates);
   if (!unrated.total && !queue.total) return '';
@@ -166,11 +169,11 @@ export function candidatesSection(ctx) {
   const onFile = unrated.total ? `
     <h3 class="buzz-head" id="unranked">On file, not yet ranked</h3>
     <p class="method-p">
-      ${count(unrated.total, 'pizzeria is', 'pizzerias are')} in the directory with no score. A place competes once a rating
-      pass has read published criticism of it: a review, a roundup or a news story. The rating task
-      takes up to ${PER_PASS.rating} entries per pass, the ones with press on file first and, among equals, the
-      ones no pass has looked at yet. An entry it cannot ground stays unrated and rests
-      ${RETRY_DAYS.rating} days before it is drawn again.
+      ${count(unrated.total, 'pizzeria is', 'pizzerias are')} in the directory with no score. A place is rated, and so
+      competes, once a rating pass has read at least one piece of published criticism of it: a
+      review, a roundup or a news story. The rating task takes up to ${PER_PASS.rating} entries per pass, the
+      ones with press on file first and, among equals, the ones no pass has looked at yet. An
+      entry it cannot ground stays unrated and rests ${RETRY_DAYS.rating} days before it is drawn again.
     </p>
     ${group({
       key: 'rating-waiting', title: 'Waiting for a rating pass',
@@ -185,7 +188,7 @@ export function candidatesSection(ctx) {
       label: 'Pizzerias a rating pass found no published criticism for',
       head: ['Pizzeria', 'Looked', 'Eligible again'],
       rows: unrated.looked.map(r => [
-        `${entryCell(r)}<td>${day(dayOf(r.ratingAttempted))}</td><td>${day(r.eligible)}</td>`,
+        `${entryCell(r)}<td>${day(dayOf(r.ratingAttempted))}</td><td>${r.eligible <= today ? 'since ' : ''}${day(r.eligible)}</td>`,
         r.ratingNote ? esc(r.ratingNote) : ''])
     })}
     ${group({
@@ -228,7 +231,8 @@ export function candidatesSection(ctx) {
     <p class="method-p">
       King County's food-permit register lists every kitchen that holds a health permit. A Seattle
       permit whose name mentions pizza or slices, inspected within the last ${INSPECTION_CUTOFF_MONTHS} months, becomes
-      a candidate: a lead, not an entry. The census task checks each one on the open web, up to
+      a candidate: a lead, not an entry. Places tagged as pizza on OpenStreetMap are added when
+      that source answers. The census task checks each one on the open web, up to
       ${PER_PASS.census} per pass. A candidate that is real, open and pizza-forward joins the directory; the
       rest are set aside here with the reason.${candidatesChecked ? `
       The register was last read on ${esc(shortDate(candidatesChecked))}.` : ''}

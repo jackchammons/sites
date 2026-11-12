@@ -356,12 +356,23 @@ test('the methodology has one row for each task in the rotation and names the re
   assert.match(text, /A task with nothing on its worklist is passed over\./);
   // Everything this build knows of that the rotation never picks, by name.
   const outside = outsideRotation();
-  const line = text.match(/more tasks? (?:is|are) never picked automatically[^.]*\./)?.[0] ?? '';
+  const byHand = markup => textOf(markup.match(/<p class="method-p" id="by-hand"[^>]*>([\s\S]*?)<\/p>/)[1]).trim();
+  const line = byHand(method);
+  assert.match(line, /^\w+ more tasks are never picked automatically and run only when started by hand/);
   for (const name of outside) assert.ok(line.includes(`${name} (${TASKS[name].summary})`), name);
   for (const name of ROTATION) assert.ok(!line.includes(`${name} (`), `${name} is in the rotation and in the other line`);
   // The tasks a dispatch can force are the ones this page accounts for.
   const forceable = (await import('../scripts/next-task.mjs')).DISPATCH_ONLY ?? [];
   for (const name of forceable) assert.ok(outside.includes(name), `${name} can be dispatched and the methodology does not name it`);
+
+  // The fixture's ratings carry no author, so the two tasks that work through
+  // such ratings still have work. Once the agent has set every rating they
+  // have none, and the line says that instead of describing work to come.
+  assert.match(line, /They catch up in bulk: social \([^)]+\), .* and rerate \([^)]+\)\.$/);
+  const agentSet = restaurants().map(r => r.factors
+    ? { ...r, factors: Object.fromEntries(Object.entries(r.factors).map(([k, f]) => [k, { ...f, setBy: 'agent' }])) } : r);
+  const done = byHand(methodOf(page(context({ dataset: { city: 'Seattle', dataVersion: 'test', restaurants: agentSet, attributeRegistry: {} } }))));
+  assert.match(done, /Two catch up in bulk: social \([^)]+\) and coverage \([^)]+\)\. Two have nothing left to do: sources \([^)]+\) and rerate \([^)]+\)\.$/);
 });
 
 test('a task that joins the rotation with no row stops the build', () => {

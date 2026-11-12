@@ -72,7 +72,7 @@ export const ENTRY_SCHEMA = [
   { key: 'ratingNote', kind: 'stamp', empty: null, by: '"ratingSkipped"' },
 
   { key: 'mentions', kind: 'coverage', empty: [], by: '"mentions"' },
-  { key: 'coverageAttempted', kind: 'stamp', empty: null, by: '"coverageSkipped"' },
+  { key: 'coverageAttempted', kind: 'stamp', empty: null, by: '"coverageSkipped", and "mentions" filed by a coverage pass' },
   { key: 'coverageNote', kind: 'stamp', empty: null, by: '"coverageSkipped"' },
 
   { key: 'factsAttempted', kind: 'stamp', empty: null, by: '"factsSkipped"' },

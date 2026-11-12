@@ -85,11 +85,12 @@ export function matchEntry(candidate, restaurants) {
  * neither of those is reopened by anything. */
 export const REOPENING_VERDICTS = ['closed', 'unverifiable', 'not-pizza'];
 
-/* Is `lastInspection` evidence newer than the verdict a candidate carries?
- * A verdict with no date on it cannot be shown to be older, and stays. */
-export function inspectedSinceVerdict(candidate, lastInspection = candidate?.lastInspection) {
+/* Is the inspection on a candidate's row evidence newer than the verdict it
+ * carries? A verdict with no date on it cannot be shown to be older, and
+ * stays. */
+export function inspectedSinceVerdict(candidate) {
   return candidate?.status === 'rejected' && REOPENING_VERDICTS.includes(candidate.verdict)
-    && Date.parse(lastInspection) > Date.parse(candidate.resolvedDate);
+    && Date.parse(candidate.lastInspection) > Date.parse(candidate.resolvedDate);
 }
 
 /* A reopened candidate goes back to pending with what was found before kept
@@ -122,7 +123,9 @@ export function mergeCandidates(existing, incoming, restaurants) {
       const kept = { ...prev, ...inc, key, status: prev.status,
         ...(prev.note ? { note: prev.note } : {}),
         sources: [...new Set([...(prev.sources ?? []), ...(inc.sources ?? [])])] };
-      byKey.set(key, inspectedSinceVerdict(prev, inc.lastInspection) ? reopened(kept) : kept);
+      // The newest inspection on the row is this refresh's when it brought
+      // one, and otherwise the one already on file.
+      byKey.set(key, inspectedSinceVerdict(kept) ? reopened(kept) : kept);
       continue;
     }
     const matched = matchEntry(inc, restaurants);

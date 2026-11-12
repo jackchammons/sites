@@ -45,7 +45,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
  * YYYY-MM-DD and is the only date this stamps. Returns the counts for the
  * summary line, which of the side files changed, and `reshaped`: how many
  * entries were not in the schema's shape until this put them there. */
-export function applyResearch(research, data, today, log = () => {}) {
+export function applyResearch(research, data, today, log = () => {}, { task = null } = {}) {
   const { dataset, buzz = null, candFile = null } = data;
   const byId = new Map(dataset.restaurants.map(r => [r.id, r]));
   let changes = 0;
@@ -129,6 +129,17 @@ export function applyResearch(research, data, today, log = () => {}) {
     const r = byId.get(it.id);
     if (!r) continue;
     r.mentions = r.mentions ?? [];
+    /* A coverage pass searched this entry, whatever becomes of the story it
+     * filed: stamp the look, so the entry rests like one reported in
+     * coverageSkipped. Without it an entry that gains a mention is never
+     * attempted and comes back on every later pass. Only the coverage task's
+     * mentions are a search of the entry; news and rating file them in
+     * passing. */
+    if (task === 'coverage' && r.coverageAttempted !== today) {
+      r.coverageAttempted = today;
+      r.coverageNote = null;
+      changes++;
+    }
     if (r.mentions.some(m => normUrl(m.url) === normUrl(it.url) || normTitle(m.title) === normTitle(it.title))) continue;
     r.mentions.push({ url: it.url, title: it.title, source: it.source, date: String(it.date).slice(0, 10), kind: it.kind });
     r.mentions = r.mentions.slice(-50);
@@ -456,7 +467,9 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === fs.realpathSync(proces
   const data = { dataset: read('restaurants.json'), buzz: read('buzz.json'),
                  candFile: read('candidates.json') };
   const today = new Date().toISOString().slice(0, 10);
-  const done = applyResearch(research, data, today, console.log);
+  // The type of task the agent was given, from the workflow. Absent when the
+  // script is run by hand, and then nothing depends on it.
+  const done = applyResearch(research, data, today, console.log, { task: process.env.RESEARCH_TASK || null });
 
   if (done.buzzChanged) write('buzz.json', data.buzz);
   if (done.candidatesChanged) write('candidates.json', data.candFile);

@@ -7,12 +7,20 @@
  * a table with a blank line in it. Every number comes from the modules the
  * worklists are drawn with; a row never states one of its own.
  *
- * `summary` completes "… (name: summary)" in the line about tasks outside the
+ * `summary` completes "name (summary)" in the line about tasks outside the
  * rotation. `unit` is what a pass counts; a task with none has no worklist.
  * The row's cells answer, in order: what it looks at, what it may write, what
- * it does when it finds nothing, and when it looks at the same thing again. */
+ * it does when it finds nothing, and when it looks at the same thing again.
+ * `done` is for a task whose work can run out: given the dataset, it says
+ * whether anything is left for the task to draw. */
 import { PER_PASS, RETRY_DAYS, ROTATION, LIVENESS_REVISIT_DAYS, CLOSURE_RECONFIRM_DAYS } from '../src/rules.js';
 import { LOCATION_REVISIT_DAYS } from '../src/locations.js';
+import { isLaunchRating } from '../src/slice.js';
+
+/* The sources and rerate tasks both draw from the ratings isLaunchRating
+ * names, and nothing adds to those, so once none is on file neither task has
+ * anything to do again. */
+const noneLeft = dataset => !dataset.restaurants.some(isLaunchRating);
 
 export const TASKS = {
   discovery: {
@@ -105,8 +113,8 @@ export const TASKS = {
       again: `${RETRY_DAYS.coverage} days after an attempt that found nothing new.`
     }
   },
-  sources: { summary: 'the published criticism behind a rating on file', unit: 'entries' },
-  rerate: { summary: 'a rating on file, read afresh from published criticism', unit: 'entries' }
+  sources: { summary: 'the published criticism behind a rating on file', unit: 'entries', done: noneLeft },
+  rerate: { summary: 'a rating on file, read afresh from published criticism', unit: 'entries', done: noneLeft }
 };
 
 /* How much one pass takes, in words. */

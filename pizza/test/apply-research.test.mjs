@@ -85,6 +85,36 @@ test('locationsSkipped: stamps the attempt and keeps the note', () => {
   assert.deepEqual(checkDataset(dataset, {}, NOW), []);
 });
 
+test('mentions: a coverage pass that files a story has looked at the entry; no other task has', () => {
+  const story = { id: 'delancey', title: 'Delancey at fifteen', url: 'https://news.example/delancey-fifteen',
+    source: 'News Example', date: '2026-10-02', kind: 'mention' };
+  const run = (task, dataset = fresh()) => {
+    const lines = [];
+    const done = applyResearch({ mentions: [story] }, { dataset }, TODAY, l => lines.push(l), { task });
+    return { done, r: dataset.restaurants.find(x => x.id === 'delancey'), dataset };
+  };
+  // the coverage task searched the entry, so it rests like one it reported skipped
+  const cov = run('coverage');
+  assert.equal(cov.r.mentions.length, 1);
+  assert.equal(cov.r.coverageAttempted, TODAY);
+  assert.equal(cov.r.coverageNote, null);
+  assert.deepEqual(checkDataset(cov.dataset, {}, NOW), []);
+  // a story already on file is still a look, and an older note about finding nothing is cleared
+  const again = fresh();
+  Object.assign(again.restaurants[0], { mentions: [{ ...story }], coverageAttempted: '2026-07-01',
+    coverageNote: 'nothing found in July' });
+  const dup = run('coverage', again);
+  assert.equal(dup.r.mentions.length, 1);
+  assert.equal(dup.r.coverageAttempted, TODAY);
+  assert.equal(dup.r.coverageNote, null);
+  // news and rating file mentions in passing, and a hand run names no task: no stamp
+  for (const task of ['news', 'rating', null, undefined]) {
+    const other = run(task);
+    assert.equal(other.r.mentions.length, 1, String(task));
+    assert.equal(other.r.coverageAttempted, null, String(task));
+  }
+});
+
 test('coverageSkipped and socialSkipped: each stamps its own attempt and keeps the note', () => {
   const { get, done, dataset, lines } = apply({
     coverageSkipped: [{ id: 'delancey', note: 'four outlets searched by name; nothing new since the review on file' },

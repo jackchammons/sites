@@ -101,8 +101,9 @@ test('the section lists every unrated entry with its reason and what happens nex
 
   const looked = rowsOf(groups.get('rating-looked').body);
   assert.equal(printed(groups.get('rating-looked').body), 2);
-  // Soonest due first; each row carries the day it was looked at and the day it is due.
-  assert.equal(looked[0].cells, 'Earlier Pies Ballard Jun 1, 2026 Aug 30, 2026');
+  // Soonest due first; each row carries the day it was looked at and the day it
+  // is due, and a rest that has run out reads as "since" that day.
+  assert.equal(looked[0].cells, 'Earlier Pies Ballard Jun 1, 2026 since Aug 30, 2026');
   assert.equal(looked[1].cells, 'Looked &lt;b&gt;Pies&lt;/b&gt; Ballard Oct 1, 2026 Dec 30, 2026');
   // The agent's note is third-party text: printed, and escaped.
   assert.equal(looked[1].note, 'Searched three outlets &amp; found &lt;script&gt;nothing&lt;/script&gt;; the listing says &quot;undefined&quot;.');
@@ -116,7 +117,7 @@ test('the section lists every unrated entry with its reason and what happens nex
   assert.ok(text.includes('5 pizzerias are in the directory with no score.'));
   assert.ok(text.includes(`takes up to ${PER_PASS.rating} entries per pass`));
   assert.ok(text.includes(`rests ${RETRY_DAYS.rating} days before it is drawn again`));
-  assert.match(text, /published criticism of it: a review, a roundup or a news story/);
+  assert.match(text, /at least one piece of published criticism of it: a review, a roundup or a news story/);
   assert.ok(!text.includes('Ranked Pies') && !text.includes('Shut Pies'));
 });
 

@@ -7,6 +7,7 @@ layout; this file is the list of things that are easy to get wrong. Repo-wide ru
 ```bash
 node --test pizza/test/*.test.mjs        # unit tests
 node pizza/scripts/check-dataset.mjs     # lint data/restaurants.json
+node pizza/scripts/check-dataset.mjs --normalize   # after a hand edit: put every entry into the schema's shape
 node pizza/scripts/build.mjs && node pizza/scripts/verify.mjs    # -> dist/pizza/
 ```
 
@@ -27,6 +28,9 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
 - `scripts/next-task.mjs` picks and briefs the research agent's daily task;
   `src/validate-research.js` + `scripts/verify-research.mjs` validate what it wrote;
   `scripts/apply-research.mjs` applies it; `src/check-dataset.js` lints the result.
+- `src/schema.js` is the one list of an entry's keys, and the normaliser. `src/rules.js`
+  holds the worklist sizes, the rest periods and the rotation; `next-task.mjs` draws
+  with them and the page prints them, so write a number there and nowhere else.
 - Leaflet is vendored in `src/vendor/`. `app.js` fetches it on demand, when the map is
   about to be seen, from the literal `'./leaflet.js'`. It is outside the ES import
   graph, so `verify.mjs` checks that literal and that the emitted file is byte-identical
@@ -40,11 +44,11 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   `note`, `date`), graded by the research agent from published coverage. A rating the
   agent set is write-once: never overwrite it from a script.
 - **Every rating comes from the research agent.** The index launched with 25 ratings
-  typed in by hand (`setBy: "editorial"`). `isLaunchRating()` in `slice.js` names them,
-  and they are the one thing a validated `factorRatings` proposal may replace, whole.
-  The dispatch-only `rerate` task works through them; once none is left, `rerate` and
-  `sources` have empty worklists and `editorial` can leave `check-dataset.js`. The page
-  never describes a rating as editorial or founding, and `verify.mjs` gates on that.
+  typed in by hand (`setBy: "editorial"`); all have been replaced, and `check-dataset.js`
+  refuses any `setBy` but `agent`. `isLaunchRating()` in `slice.js` and the dispatch-only
+  `rerate` and `sources` tasks remain as the path that replaced them, with worklists
+  that are now always empty. The page never describes a rating as editorial or
+  founding, and `verify.mjs` gates on that.
 - **Reputation can lift a score and never lower it.** It has two components, longevity
   ×3 and coverage ×1, combined as the best weighted mean over the components present, so
   an added component never lowers the factor. The factor is then counted only when it
@@ -78,6 +82,11 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
 
 ## The dataset
 
+- **One shape for every entry.** Every entry carries every key in `src/schema.js`, in
+  that order, with `null`, `[]` or `{}` where nothing is on file, so "not known" is
+  written one way. `apply-research.mjs` normalises on every run and the lint refuses a
+  missing or unknown key (inside a location, a factor and a mention too). To add a key,
+  add it to the schema first, then run `check-dataset.mjs --normalize`.
 - **One database, three statuses.** `restaurants.json` holds every pizzeria on file:
   `open`, `opening` (the radar), `closed` (struck through in the directory, held out of
   the ranking, listed under recently-closed for six months). `attributes` is a flexible
@@ -137,24 +146,41 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   already written. Briefs are code (`next-task.mjs`); the fixed rules and the schema
   live in the `research.yml` prompt so no task can drop them.
 - **One task per run.** In auto mode `next-task.mjs` picks, among discovery, locations,
-  liveness, news, rating and census, the type whose last successful pass is oldest *and
-  whose worklist is not empty* (dates are read from `chore(data): research pass (<type>)`
-  commit subjects, so a failed day is retried and a dispatch counts). Census has work
-  only when the candidates queue has something pending. A forced type (the workflow's
-  `task` input) runs as given, including the dispatch-only ones: `social`, `facts`,
-  `coverage`, `sources`, `rerate`. Only a forced type can come back `skip=true`.
+  liveness, news, rating, census and facts (`ROTATION` in `rules.js`), the type whose
+  last successful pass is oldest *and whose worklist is not empty* (dates are read from
+  `chore(data): research pass (<type>)` commit subjects, so a failed day is retried and
+  a dispatch counts). Census has work only when the candidates queue has something
+  pending; facts only while an open entry lacks a fact no recent attempt looked for. A
+  forced type (the workflow's `task` input) runs as given, including the dispatch-only
+  ones: `social`, `coverage`, `sources`, `rerate`. Only a forced type can come back
+  `skip=true`.
 - **Every worklist needs attempt memory.** A task that redraws the entries it could not
   resolve stalls: locations verified nothing for three passes that way. Rating, facts,
   locations, coverage and social each have a `…Skipped` section the agent fills for
   entries it could not resolve, which stamps `…Attempted` so the entry rests (30 days
   for locations, 90 for the others). Liveness sorts by age of last check. A new task
-  needs the same.
+  needs the same, for the entries it resolved as well as the ones it could not: a
+  coverage pass that filed a mention stamped nothing, so every entry that gained one
+  stayed "never attempted". The apply step is told the task (`RESEARCH_TASK`) and
+  stamps `coverageAttempted` for a coverage pass's `mentions` too.
+- **Facts remembers per fact.** The task fills `opened`, `priceIndex`, `style`,
+  `styleGroup` and `signature`. `factsSkipped` stamps `factsAttempted` and stores
+  `factsSought`, the facts that pass looked for and did not find; an entry rests only
+  while everything it lacks is on that list, and a stamp with no list means year and
+  tier only (the whole task, when those stamps were made). A `facts` record alone
+  stamps nothing, because the locations task files a two-field one in passing.
 - **What the agent may write**, all through `verify-research.mjs` → `apply-research.mjs`:
   `news`, `mentions`, `locations` (+homepage), `status`, `directory` (new entries;
   deduplicated by normalised name and by street address), `factorRatings`,
   `factorSources`, `facts`, `links`, `candidateReview`, and the five `…Skipped`
   sections. Nothing the agent writes can change `data/attributes.json`: that registry
   is edited by hand, because a friction cost moves a score and carries no source.
+- **Facts fill gaps only, each with its source.** A `facts` record carries what one
+  source page states and writes the matching source key (`openedSource`, `priceSource`,
+  `styleSource`, `styleGroupSource`, `signatureSource`); a fact on file is never
+  replaced. `style`, `styleGroup` and `signature` describe the place, so their source
+  must be the pizzeria's own site or menu, or published coverage: an aggregator, a
+  delivery app or a directory listing is refused for them.
 - **A closure needs a citation the validator can tie to someone.** A news report, the
   pizzeria's own site, or a post on the Instagram or Facebook account already on file
   for that entry, with the account name in the URL. A review site or aggregator (matched
@@ -164,6 +190,11 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   fail, emits a warning per drop, writes the accepted set back to `research.json`, and
   fails the run only on a structural problem. Unknown top-level keys are ignored with a
   warning. Free text and addresses may not contain `<` or `>`.
+- **A `…Skipped` section never fails a file.** It keeps one record per id, up to twice
+  the largest worklist that task serves (from `rules.js`), and drops the rest one at a
+  time with a warning. An agent that wrote 16 "nothing found" records for a 10-entry
+  worklist once cost a whole coverage pass, mentions included. Every other section's
+  cap is structural and still fails the file.
 - **Ratings fill gaps, and replace launch ratings.** `factorRatings` proposals carry
   craft, distinctiveness and criticScore (all three, or the entry can never rank), 0–10
   in 0.5 steps, with 1–4 read sources of which at least one is published criticism. The
@@ -180,6 +211,12 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   channel or records why it does not belong through `candidateReview`. The apply job
   refreshes the seed once it is a month old (`--max-age-days=30`; `checked` is the last
   refresh, `updated` the last change), and a new candidate gives census a worklist.
+- **A verdict is not for ever.** A candidate set aside as `closed`, `unverifiable` or
+  `not-pizza` returns to pending when a seed refresh shows a permit inspection dated
+  after the verdict, with the old verdict kept as `previousVerdict` and shown to the
+  agent as an earlier finding. `chain` and `duplicate` never return.
+  `candidateStanding()` in `src/census.js` is the one statement of where a candidate
+  stands; the page's Candidates section reads it.
 - **A duplicate names what it duplicates.** A `candidateReview` with verdict `duplicate`
   must carry `duplicateOf` (an id on file), stored on the candidate as `matchedId`.
   Without it a branch's address is thrown away, which is how A Pizza Mart sat on file

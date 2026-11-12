@@ -41,7 +41,7 @@ export const LIFE_STAGES = [
             list: ['national chain', 'not pizza-forward', 'could not be verified', 'closed'],
             text: 'A chain stays out for good. The other three return to the queue if the register records a later inspection.' } },
   { key: 'on-file', title: 'On file, unrated',
-    text: 'In the directory and on the map, with no score.',
+    text: 'In the directory, with no score.',
     enter: { title: 'Also joins here',
              text: 'A pizzeria the discovery task finds in local coverage.' } },
   { key: 'rating', title: 'Rating pass',
@@ -65,9 +65,9 @@ const RESEARCH_STEPS = [
     gate: 'any other file changed, or nothing was written.' },
   { title: 'Each record is validated on its own',
     text: 'A record is dropped, with a warning, when it has no https source, names an entry that is not on file, carries a date in the future or too old to count, gives an address without a street number and a Puget Sound ZIP, contains markup, repeats something already on file, reports a closure on a review site\'s word alone, or proposes a rating that is off the scale, has no published criticism behind it, or is for an entry the agent has already rated. The rest go on.',
-    gate: 'the file is not well-formed, or a section is over its size limit.' },
+    gate: 'the file is not well-formed, or holds more findings in a section than a pass may file.' },
   { title: 'Accepted records are applied',
-    text: 'A script writes them into the dataset: new entries, statuses, addresses, press mentions, ratings, census verdicts, and the date of each attempt that found nothing. Next the permit register is read again if the last reading is old enough, which is where new candidates come from.' },
+    text: 'A script writes them into the dataset: new entries, statuses, addresses, links, facts, press mentions, ratings, census verdicts, and the date of each attempt that found nothing. Next the permit register is read again if the last reading is old enough, which is where new candidates come from.' },
   { title: 'Lint, build, verify',
     text: 'The dataset is linted, then the page is built from it and checked, before anything is saved.',
     gate: 'anything fails.' },
@@ -149,7 +149,15 @@ export function methodParts(ctx) {
     .map(([, a]) => `<tr><th scope="row">${esc(a.label)}</th><td class="num">−${a.frictionCost.toFixed(1)}</td></tr>`)
     .join('');
 
+  /* The tasks the rotation never picks, in a sentence: the ones that still
+   * have work, and the ones whose work has run out. */
   const outside = outsideRotation();
+  const spent = outside.filter(t => TASKS[t].done?.(dataset));
+  const live = outside.filter(t => !spent.includes(t));
+  const named = list => list.map(t => `${esc(t)} (${TASKS[t].summary})`);
+  const series = items => items.length < 2 ? items.join('') : `${items.slice(0, -1).join(', ')} and ${items.at(-1)}`;
+  // "They" when the sentence is about all of them, the number when it is about some.
+  const some = list => list.length === outside.length ? 'They' : WORDS[list.length] ?? String(list.length);
   const automation = `
     <h3 class="method-h" id="lifecycle">From a food permit to the top ten</h3>
     <p class="method-p">
@@ -188,9 +196,11 @@ export function methodParts(ctx) {
       task with nothing on its worklist is passed over.
     </p>
 ${tasksHtml()}
-    ${outside.length ? `<p class="method-p" style="margin-top:14px">
-      ${WORDS[outside.length] ?? outside.length} more ${outside.length === 1 ? 'task is' : 'tasks are'} never picked automatically and ${outside.length === 1 ? 'runs' : 'run'} only when started by hand, to catch
-      up in bulk: ${outside.map(t => `${esc(t)} (${TASKS[t].summary})`).join(', ')}. ${outside.length === 1 ? 'It goes' : 'They go'} through the same steps and the same gates.
+    ${outside.length ? `<p class="method-p" id="by-hand" style="margin-top:14px">
+      ${WORDS[outside.length] ?? outside.length} more ${outside.length === 1 ? 'task is' : 'tasks are'} never picked automatically and ${outside.length === 1 ? 'runs' : 'run'} only when started by
+      hand, through the same steps and the same gates.${live.length ? `
+      ${some(live)} ${live.length === 1 && spent.length ? 'catches' : 'catch'} up in bulk: ${series(named(live))}.` : ''}${spent.length ? `
+      ${some(spent)} ${spent.length === 1 && live.length ? 'has' : 'have'} nothing left to do: ${series(named(spent))}.` : ''}
     </p>` : ''}
 
     <h3 class="method-h" id="moves">What can move a score, and what cannot</h3>
@@ -205,7 +215,7 @@ ${tasksHtml()}
           <li><b>Freshness.</b> A score loses ${pct(STALENESS_PER_WEEK, 1)} a week from the entry's last verification,
           up to ${pct(MAX_STALENESS_DECAY, 0)}. A status check or a verified set of addresses resets it.</li>
           <li><b>A fact filled in.</b> A founding year or a price tier filed for the first time
-          changes reputation or value.</li>
+          can change reputation or value.</li>
           <li><b>A closure.</b> A closed entry leaves the ranking whatever it scores.</li>
           <li><b>A flag.</b> The attribute flags behind friction are set by hand, never by the
           agent.</li>

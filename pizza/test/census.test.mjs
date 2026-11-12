@@ -91,6 +91,15 @@ test('merge: an inspection on or before the day of the verdict changes nothing b
   assert.deepEqual(mergeCandidates([judged('closed', { lastInspection: '2026-10-01' })], [], restaurants), [judged('closed', { lastInspection: '2026-10-01' })]);
 });
 
+test('merge: an inspection already on file that postdates the verdict brings the candidate back at the next refresh that lists it', () => {
+  // The row was refreshed after its verdict and kept it; the register still shows the same inspection.
+  const stored = judged('not-pizza', { lastInspection: '2026-11-10' });
+  const [c] = mergeCandidates([stored], [inspected('2026-11-10')], restaurants);
+  assert.deepEqual([c.status, c.lastInspection, c.previousVerdict.verdict], ['pending', '2026-11-10', 'not-pizza']);
+  // a source that carries no inspection date leaves the one on file to speak
+  assert.equal(mergeCandidates([stored], [inspected(null, { sources: ['osm'] })], restaurants)[0].status, 'pending');
+});
+
 test('merge: a chain and a duplicate never return, whatever the register shows', () => {
   const chain = judged('chain', { name: 'Dominos Pizza #7196', key: candidateKey('Dominos Pizza #7196', '1 A St') });
   assert.deepEqual(mergeCandidates([chain], [inspected('2026-11-01', { name: 'Dominos Pizza #7196' })], restaurants),

@@ -85,6 +85,7 @@ pizza/
   src/check-dataset.js    the dataset lint, as a pure function
   src/census.js           candidate matching, branch leads, reopened verdicts and coverage numbers
   build/                  the page, section by section (pure modules)
+  build/tasks.mjs         what each research task does, as the methodology prints it
   scripts/build.mjs       composes build/ into OUT_DIR (default ../dist/pizza)
   scripts/verify.mjs      the deploy gate: unit tests plus checks on the output (below)
   scripts/check-dataset.mjs, verify-research.mjs, apply-research.mjs
@@ -125,9 +126,53 @@ entries in `rankings.json` are out of score order. Text quoted from the data fil
 deploy. It also fails when the page's own copy describes a rating as set by hand, dates
 one to the index's launch or calls anything seeded (`editorial`, `founding entr…`,
 `at launch`, `launched in`, `index launched`, `seeded`), with the same exemption for
-quoted data, and when the pinned map's rules below have come apart. The record, radar
-and buzz sections are optional: each renders nothing when it has nothing to show, and
-the nav is built from the sections that rendered.
+quoted data, and when the pinned map's rules below have come apart. The record, radar,
+buzz and candidates sections are optional: each renders nothing when it has nothing to
+show, and the nav is built from the sections that rendered.
+
+The candidates section has checks of its own. It must be on the page, and in the nav,
+exactly when the dataset holds an open or opening entry with no rating or
+`data/candidates.json` holds a candidate. Every group must list as many rows as the data
+has for it, print that number, and name each of its entries; the rows of the first half
+must add up to the unrated entries and the rows of the second half plus the duplicates
+count to the whole queue, both counted from the files. A census note and a permit name
+are quoted data like a headline, so `candidates.json` is among the files the `undefined`
+and wording checks exempt.
+
+## What the page explains about itself
+
+Three parts of the page describe the pipeline, and each prints the pipeline's own
+numbers instead of repeating them.
+
+**Candidates** (`build/sections/candidates.mjs`, after the directory) lists what the
+index knows of and does not rank. *On file, not yet ranked* is every open or opening
+entry with no rating, grouped by why: waiting for a rating pass, looked at with no
+published criticism found (the day, the agent's note, and the day it is due again,
+`ratingAttempted` plus `RETRY_DAYS.rating`), or not open yet. *Not on file* is the
+candidates queue grouped by `candidateStanding()` in `src/census.js`: pending, in the
+order the census task takes them and with the pass that reaches each; then national
+chain, not pizza-forward, could not be verified and closed, each with the permit
+address, the last inspection, the day it was set aside and the agent's note. A
+candidate the register has inspected since its verdict is marked as due back. Branches
+and second registrations of entries on file are one line with a count. A group of more
+than six rows is rendered collapsed, as a `details` element, so it opens without
+JavaScript.
+
+**The directory's expanded record** has the same blocks and rows for every entry, in
+one order: style, style group, known for, opened and price (each with the page that
+states it, where the facts task filed one), website, Instagram, status and its source,
+locations, rating and its sources, score, attributes, press. A field with nothing on
+file prints "not on file" in its place; a missing key and a `null` read the same.
+
+**How it works** ends with the automation, built in `build/sections/method.mjs`: the
+life of an entry as a flow (`LIFE_STAGES`), the two workflows step by step with their
+gates, the task table, and what can and cannot move a score. The table has one row for
+each member of `ROTATION`, written in `build/tasks.mjs` and keyed by task name. A task
+that joins the rotation with no row there stops the build, and so does a task with a
+worklist and no `PER_PASS` size; a task outside the rotation needs only its `summary`,
+for the one line that names those. Change what a task does in `next-task.mjs` and its
+row changes with it. The copy names no hour of the day: a scheduled run starts when the
+runner gets to it, so the page says "once a day" and "after each research run".
 
 The map is not part of first load. `app.js` reveals the map rail and fetches
 `./leaflet.js` when the map nears the viewport or a directory row asks for its marker; if
