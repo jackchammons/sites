@@ -4436,7 +4436,9 @@
         },
         {
           "neighborhood": "South Lake Union",
-          "address": "224 Fairview Ave N, Seattle, WA 98109"
+          "address": "224 Fairview Ave N, Seattle, WA 98109",
+          "lat": 47.62033,
+          "lon": -122.33398
         }
       ],
       "locationsVerified": "2026-11-12",
