@@ -4333,7 +4333,43 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://ddemay.blogspot.com/2010/04",
+          "sources": [
+            "https://ddemay.blogspot.com/2010/04"
+          ],
+          "note": "A 2010 neighborhood-blog review ('Top shelf pizza at Pudge Bros') gave it 4.5 'licks of the lips,' praising a light, airy crust, a standout marinara balancing sweetness, mild spice and tomato flavor, and surprisingly attentive counter service at this tiny, no-frills NE 45th St. slice shop that deliberately skips elaborate topping combinations in favor of a strong base.",
+          "date": "2026-11-12"
+        },
+        "distinctiveness": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://ddemay.blogspot.com/2010/04",
+          "sources": [
+            "https://ddemay.blogspot.com/2010/04"
+          ],
+          "note": "A 2010 neighborhood-blog review ('Top shelf pizza at Pudge Bros') gave it 4.5 'licks of the lips,' praising a light, airy crust, a standout marinara balancing sweetness, mild spice and tomato flavor, and surprisingly attentive counter service at this tiny, no-frills NE 45th St. slice shop that deliberately skips elaborate topping combinations in favor of a strong base.",
+          "date": "2026-11-12"
+        },
+        "critical": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://ddemay.blogspot.com/2010/04",
+          "sources": [
+            "https://ddemay.blogspot.com/2010/04"
+          ],
+          "note": "A 2010 neighborhood-blog review ('Top shelf pizza at Pudge Bros') gave it 4.5 'licks of the lips,' praising a light, airy crust, a standout marinara balancing sweetness, mild spice and tomato flavor, and surprisingly attentive counter service at this tiny, no-frills NE 45th St. slice shop that deliberately skips elaborate topping combinations in favor of a strong base.",
+          "date": "2026-11-12"
+        }
+      },
+      "ratingAttempted": "2026-11-12",
+      "priceIndex": 1,
+      "styleGroup": "By the slice",
+      "lastVerified": "2026-11-12"
     },
     {
       "id": "ridge-pizza",
@@ -4364,7 +4400,46 @@
       "openedSource": "https://www.ridgepizza.com/welcome-1",
       "factsAttempted": "2026-11-12",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "Lead 3338 Ne 65th St, Seattle, WA 98115 matches the sibling site ridgepizzanortheast.com, but that page labels the location 'COMING SOON!' rather than open, so it is not yet a confirmed operating branch."
+      "locationsNote": "Lead 3338 Ne 65th St, Seattle, WA 98115 matches the sibling site ridgepizzanortheast.com, but that page labels the location 'COMING SOON!' rather than open, so it is not yet a confirmed operating branch.",
+      "factors": {
+        "craft": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.seattleweekly.com/?p=86546",
+          "sources": [
+            "https://www.seattleweekly.com/?p=86546",
+            "https://www.thestranger.com/slog/archives/2012/11/27/the-happiest-hour-ridge-pizza-on-phinney-ridge"
+          ],
+          "note": "Seattle Weekly's 2012 review of this newly-opened Phinney Ridge spot praised a crust 'pillowy on the inside, crispy on the outside' under a generously-sauced pepperoni 'True Value' and locally-themed specialty pies; The Stranger separately highlighted its well-kept, family-friendly, arcade-equipped room named for neighborhood founder Guy Phinney.",
+          "date": "2026-11-12"
+        },
+        "distinctiveness": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.seattleweekly.com/?p=86546",
+          "sources": [
+            "https://www.seattleweekly.com/?p=86546",
+            "https://www.thestranger.com/slog/archives/2012/11/27/the-happiest-hour-ridge-pizza-on-phinney-ridge"
+          ],
+          "note": "Seattle Weekly's 2012 review of this newly-opened Phinney Ridge spot praised a crust 'pillowy on the inside, crispy on the outside' under a generously-sauced pepperoni 'True Value' and locally-themed specialty pies; The Stranger separately highlighted its well-kept, family-friendly, arcade-equipped room named for neighborhood founder Guy Phinney.",
+          "date": "2026-11-12"
+        },
+        "critical": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.seattleweekly.com/?p=86546",
+          "sources": [
+            "https://www.seattleweekly.com/?p=86546",
+            "https://www.thestranger.com/slog/archives/2012/11/27/the-happiest-hour-ridge-pizza-on-phinney-ridge"
+          ],
+          "note": "Seattle Weekly's 2012 review of this newly-opened Phinney Ridge spot praised a crust 'pillowy on the inside, crispy on the outside' under a generously-sauced pepperoni 'True Value' and locally-themed specialty pies; The Stranger separately highlighted its well-kept, family-friendly, arcade-equipped room named for neighborhood founder Guy Phinney.",
+          "date": "2026-11-12"
+        }
+      },
+      "ratingAttempted": "2026-11-12",
+      "priceIndex": 2,
+      "styleGroup": "Neighborhood",
+      "lastVerified": "2026-11-12"
     },
     {
       "id": "good-luck-bread",
@@ -4708,7 +4783,9 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Found genuine news coverage of the August 2025 Pioneer Square opening (whatnow.com on the Minnesota-born chain's expansion, intentionalist.com community spotlight) confirming it serves New York-style slices in a retro 1980s-themed room, but no published review or critic description of the food's execution -- too new for a craft rating grounded in actual coverage of the pizza. Skipped."
     },
     {
       "id": "a-k-pizza",
@@ -4986,7 +5063,9 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Searched for Stranger/Eater/Seattle Times/Seattle Met coverage of this Leary Way NW pizzeria across three queries; found only delivery-app listings and aggregator star ratings (Magicpin, WhatsVegan, Slice) plus its own promotional copy -- no published review, roundup entry or news story about this specific place. Skipped."
     },
     {
       "id": "capitale-pizzeria",
@@ -5100,7 +5179,9 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Searched twice for critic or press coverage (Stranger, Eater, Seattle Met) of this Fremont Ave N pizzeria; found only aggregator/directory pages (Atly, Mapquest with 9 reviews, Lolo, WhatsVegan) describing skee-ball and vegan options, no published review or news story. Skipped."
     },
     {
       "id": "magnolia-pizza-pasta",
@@ -5177,7 +5258,43 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://wallyhood.org/2015/06/why-isnt-olympia-pizza-more-popular-than-tutta-bella",
+          "sources": [
+            "https://wallyhood.org/2015/06/why-isnt-olympia-pizza-more-popular-than-tutta-bella"
+          ],
+          "note": "Wallyhood's 2015 neighborhood write-up calls this longtime Wallingford pizza-and-pasta house 'comfortable with a capital C,' praising its Greek-inflected, garlicky pizza and genuinely friendly staff, though it notes Yelp reviews only reach 3 stars (mostly over wait times) and commenters were split, with one calling the dough noticeably sweet.",
+          "date": "2026-11-12"
+        },
+        "distinctiveness": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://wallyhood.org/2015/06/why-isnt-olympia-pizza-more-popular-than-tutta-bella",
+          "sources": [
+            "https://wallyhood.org/2015/06/why-isnt-olympia-pizza-more-popular-than-tutta-bella"
+          ],
+          "note": "Wallyhood's 2015 neighborhood write-up calls this longtime Wallingford pizza-and-pasta house 'comfortable with a capital C,' praising its Greek-inflected, garlicky pizza and genuinely friendly staff, though it notes Yelp reviews only reach 3 stars (mostly over wait times) and commenters were split, with one calling the dough noticeably sweet.",
+          "date": "2026-11-12"
+        },
+        "critical": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://wallyhood.org/2015/06/why-isnt-olympia-pizza-more-popular-than-tutta-bella",
+          "sources": [
+            "https://wallyhood.org/2015/06/why-isnt-olympia-pizza-more-popular-than-tutta-bella"
+          ],
+          "note": "Wallyhood's 2015 neighborhood write-up calls this longtime Wallingford pizza-and-pasta house 'comfortable with a capital C,' praising its Greek-inflected, garlicky pizza and genuinely friendly staff, though it notes Yelp reviews only reach 3 stars (mostly over wait times) and commenters were split, with one calling the dough noticeably sweet.",
+          "date": "2026-11-12"
+        }
+      },
+      "ratingAttempted": "2026-11-12",
+      "priceIndex": 2,
+      "styleGroup": "Neighborhood",
+      "lastVerified": "2026-11-12"
     },
     {
       "id": "jet-city-pizza",

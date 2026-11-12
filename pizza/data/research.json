@@ -1,54 +1,57 @@
 {
-  "updated": "2026-11-12T19:30:00Z",
-  "factorRatings": [
-    {
-      "id": "ananas-pizzeria",
-      "craft": 6,
-      "distinctiveness": 8.5,
-      "criticScore": 7.6,
-      "opened": 2023,
-      "styleGroup": "Creative",
-      "sources": [
-        "https://theinfatuation.com/seattle/reviews/ananas-pizzeria",
-        "https://curiocity.com/ananas-pizzeria-seattle/"
-      ],
-      "note": "The Infatuation (7.6/10) says this First Hill pizzeria and dive bar from the Taurus Ox team 'doesn't quite compete with pizzerias in other parts of town' on the basics, but its adventurous Lao-influenced pies -- bamboo shoots, lardon, dill, togarashi, pineapple -- make it the most exciting opening the neighborhood has seen, best for late-night slices and beer (open till 1am). Curiocity's opening report (Nov. 2023) confirms the Laotian-pizza concept from the Taurus Ox owners."
-    },
-    {
-      "id": "capitale-pizzeria",
-      "craft": 6.5,
-      "distinctiveness": 7.5,
-      "criticScore": 6,
-      "opened": 2024,
-      "styleGroup": "Creative",
-      "sources": [
-        "https://whatnow.com/?p=216497",
-        "https://capitalepizzeria.com"
-      ],
-      "note": "WhatNow reported (July 2024) that Capitale Pizzeria -- a pizza-focused sibling of Belltown's La Fontana Siciliana from Rodrigo Parisi and Saulo Cruz -- was taking over the former Boca Pizzeria space on Broadway E, expected to open later in 2024. The restaurant's own menu confirms a globally themed lineup of wood-fired pies named for cities (Capri, Lisboa, Madrid, Napoli, Ankara, Sao Paulo), a distinctive angle, though no critic has yet weighed in on execution."
-    }
-  ],
+  "updated": "2026-11-12T00:00:00Z",
   "ratingSkipped": [
     {
-      "id": "santorini-pizza-pasta",
-      "note": "Searched for critic reviews or roundup mentions of Santorini Pizza & Pasta (Meadowbrook/Wedgwood). Found only directory/aggregator listings (Atly, MapQuest, Wanderlog, OpenTable) and a single anonymous 2008 personal blog post. No published criticism from a real outlet turned up, so skipping rather than grounding a score in aggregator copy."
+      "id": "alberonas-davinci-pizza-pasta",
+      "note": "Searched for Stranger/Eater/Seattle Times/Seattle Met coverage of this Leary Way NW pizzeria across three queries; found only delivery-app listings and aggregator star ratings (Magicpin, WhatsVegan, Slice) plus its own promotional copy -- no published review, roundup entry or news story about this specific place. Skipped."
     },
     {
-      "id": "numero-uno-pizza",
-      "note": "Searched for reviews or news coverage of Numero Uno Pizza at 103 1st Ave S, Pioneer Square. The only hit was a Slice.com ordering/menu page with no critic or customer commentary; broader Pioneer Square pizza coverage (Pizzeria Gabbiano, Un Po Tipsy, Moto Pizza) never mentions this business. No credible published source found."
+      "id": "deleo-bros-pizza",
+      "note": "Found genuine news coverage of the August 2025 Pioneer Square opening (whatnow.com on the Minnesota-born chain's expansion, intentionalist.com community spotlight) confirming it serves New York-style slices in a retro 1980s-themed room, but no published review or critic description of the food's execution -- too new for a craft rating grounded in actual coverage of the pizza. Skipped."
     },
     {
-      "id": "downtown-romios-pizza-pasta",
-      "note": "Searched Seattle Times, Seattle Met, and Capitol Hill Seattle for coverage of Romio's Pizza & Pasta's downtown Pike St location. Found only a 2009 Seattle Met 'Whaddya Think' blurb calling the Romio's brand mediocre/hit-or-miss (page unreachable to confirm it discusses this specific location, and it is 17 years old) plus aggregator listings (OpenTable, Yelp, DoorDash, Toast). Nothing specific and verifiable enough to ground a rating for this location."
-    },
-    {
-      "id": "dudez-woodfired-pizza",
-      "note": "Searched for reviews or news about Dude'Z Woodfired Pizza on Fuhrman Ave E, Eastlake. Found only directory/aggregator listings (Atly, MapQuest, DoorDash) with user ratings but no professional review, roundup entry, or news story. No credible published source found."
+      "id": "fremont-pizza",
+      "note": "Searched twice for critic or press coverage (Stranger, Eater, Seattle Met) of this Fremont Ave N pizzeria; found only aggregator/directory pages (Atly, Mapquest with 9 reviews, Lolo, WhatsVegan) describing skee-ball and vegan options, no published review or news story. Skipped."
     }
   ],
-  "rejected": [
-    "mentions[0]: date is older than 730 days",
-    "mentions[1]: date is older than 730 days",
-    "mentions[2]: date is older than 730 days"
+  "factorRatings": [
+    {
+      "id": "olympia-pizza-spaghetti-house-ii",
+      "craft": 6,
+      "distinctiveness": 5,
+      "criticScore": 5.5,
+      "priceIndex": 2,
+      "styleGroup": "Neighborhood",
+      "sources": [
+        "https://wallyhood.org/2015/06/why-isnt-olympia-pizza-more-popular-than-tutta-bella"
+      ],
+      "note": "Wallyhood's 2015 neighborhood write-up calls this longtime Wallingford pizza-and-pasta house 'comfortable with a capital C,' praising its Greek-inflected, garlicky pizza and genuinely friendly staff, though it notes Yelp reviews only reach 3 stars (mostly over wait times) and commenters were split, with one calling the dough noticeably sweet."
+    },
+    {
+      "id": "ridge-pizza",
+      "craft": 6.5,
+      "distinctiveness": 5.5,
+      "criticScore": 6,
+      "opened": 2012,
+      "priceIndex": 2,
+      "styleGroup": "Neighborhood",
+      "sources": [
+        "https://www.seattleweekly.com/?p=86546",
+        "https://www.thestranger.com/slog/archives/2012/11/27/the-happiest-hour-ridge-pizza-on-phinney-ridge"
+      ],
+      "note": "Seattle Weekly's 2012 review of this newly-opened Phinney Ridge spot praised a crust 'pillowy on the inside, crispy on the outside' under a generously-sauced pepperoni 'True Value' and locally-themed specialty pies; The Stranger separately highlighted its well-kept, family-friendly, arcade-equipped room named for neighborhood founder Guy Phinney."
+    },
+    {
+      "id": "pudge-bros-pizza",
+      "craft": 6.5,
+      "distinctiveness": 5,
+      "criticScore": 6,
+      "priceIndex": 1,
+      "styleGroup": "By the slice",
+      "sources": [
+        "https://ddemay.blogspot.com/2010/04"
+      ],
+      "note": "A 2010 neighborhood-blog review ('Top shelf pizza at Pudge Bros') gave it 4.5 'licks of the lips,' praising a light, airy crust, a standout marinara balancing sweetness, mild spice and tomato flavor, and surprisingly attentive counter service at this tiny, no-frills NE 45th St. slice shop that deliberately skips elaborate topping combinations in favor of a strong base."
+    }
   ]
 }
