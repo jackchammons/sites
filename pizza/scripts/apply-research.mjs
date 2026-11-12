@@ -4,8 +4,8 @@
  *
  * Run only after verify-research.mjs passes. It applies status changes,
  * verified locations, discovered directory entries, mention records, links,
- * plain facts, proposed factor ratings and the attempt stamps that rest a
- * worklist entry. The dataset holds no crowd figures -- the platforms that
+ * the descriptive facts, proposed factor ratings and the attempt stamps that
+ * rest a worklist entry. The dataset holds no crowd figures -- the platforms that
  * publish them block automated reads and no API key path is in use -- so no
  * script writes one. The graded factors are written from a validated
  * factorRatings proposal and from nothing else: once for an unrated entry,
@@ -18,6 +18,12 @@
  * the tests drive it directly; the CLI block at the end reads the data files,
  * calls it once and writes back whichever of them changed.
  *
+ * Every entry leaves here in the shape src/schema.js states: every key
+ * present, in one order, an empty value where there is nothing to record. A
+ * dataset that came in any other shape is written back in that one even when
+ * the research changed nothing, so the lint that follows never fails a pass
+ * for a key an older writer left out.
+ *
  * Locations are replaced on every verification where a rating is not: a
  * pizzeria publishes its own addresses on a page that serves to anyone, so they
  * are checkable in a way a crowd figure behind a 403 or a graded judgement is
@@ -28,6 +34,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { matchEntry } from '../src/census.js';
 import { normUrl, normTitle } from '../src/match.js';
+import { FACT_FIELDS, FACT_SOURCE_KEY, missingFacts, normalizeEntry, serializeDataset } from '../src/schema.js';
 import { isRated, isLaunchRating } from '../src/slice.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -36,7 +43,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
  * files -- dataset (restaurants.json), and where they exist buzz (buzz.json)
  * and candFile (candidates.json) -- and is changed in place. `today` is
  * YYYY-MM-DD and is the only date this stamps. Returns the counts for the
- * summary line and which of the side files changed. */
+ * summary line, which of the side files changed, and `reshaped`: how many
+ * entries were not in the schema's shape until this put them there. */
 export function applyResearch(research, data, today, log = () => {}) {
   const { dataset, buzz = null, candFile = null } = data;
   const byId = new Map(dataset.restaurants.map(r => [r.id, r]));
@@ -92,7 +100,9 @@ export function applyResearch(research, data, today, log = () => {}) {
       log(`  ? ${it.name}: not added, the id "${id}" is already ${byId.get(id).name}`);
       continue;
     }
-    const entry = {
+    // Everything a discovery does not bring starts at the schema's empty
+    // value, so a new entry has the same keys as one on file for years.
+    const entry = normalizeEntry({
       id,
       name: it.name,
       neighborhood: it.neighborhood,
@@ -101,15 +111,10 @@ export function applyResearch(research, data, today, log = () => {}) {
       url: it.url ?? null,
       status: it.status,
       statusSource: it.source,
-      statusDate: null,
       statusDetected: today,
       statusChecked: today,
-      attributes: {},
-      locations: it.address ? [{ neighborhood: it.neighborhood, address: it.address }] : [],
-      locationsVerified: null,
-      locationsSource: null,
-      mentions: []
-    };
+      locations: it.address ? [{ neighborhood: it.neighborhood, address: it.address }] : []
+    });
     dataset.restaurants.push(entry);
     byId.set(id, entry);
     changes++;
@@ -183,36 +188,58 @@ export function applyResearch(research, data, today, log = () => {}) {
       : `  . ${r.name}: no coverage found — ${it.note}`);
   }
 
-  /* facts: founding year and price tier, fill-gaps-only. The two plain facts
-   * reputation and value read, which an entry could otherwise never acquire
-   * once rated (the rating apply was their only writer). */
+  /* facts: the descriptive record, fill-gaps-only. The year and the tier are
+   * what reputation and value read; style, style group and signature are what
+   * the page describes a place by. Each is written once, with the page that
+   * states it, and a fact already on file is left alone whoever set it. */
+  const shown = {
+    opened: v => `opened ${v}`,
+    priceIndex: v => `price ${'$'.repeat(v)}`,
+    style: v => `style "${v}"`,
+    styleGroup: v => `style group ${v}`,
+    signature: v => `signature "${v}"`
+  };
   for (const it of research.facts ?? []) {
     const r = byId.get(it.id);
     if (!r) continue;
+    const lacks = missingFacts(r);
     const did = [];
-    if (it.opened != null && r.opened == null) { r.opened = it.opened; r.openedSource = it.source; did.push(`opened ${it.opened}`); }
-    if (it.priceIndex != null && r.priceIndex == null) { r.priceIndex = it.priceIndex; r.priceSource = it.source; did.push(`price ${'$'.repeat(it.priceIndex)}`); }
+    for (const k of FACT_FIELDS) {
+      const value = typeof it[k] === 'string' ? it[k].trim() : it[k];
+      if (value == null || value === '' || !lacks.includes(k)) continue;
+      r[k] = value;
+      r[FACT_SOURCE_KEY[k]] = it.source;
+      did.push(shown[k](value));
+    }
     if (did.length) {
       changes++;
       log(`  = ${r.name}: ${did.join(', ')} (${it.source})`);
     }
   }
 
-  /* factsSkipped: the facts task looked and found no page stating the year or
-   * the tier. Recorded so the worklist moves on; retried after a quarter. */
+  /* factsSkipped: the facts task looked and could not complete the entry.
+   * The stamp says when, and factsSought says for what: the facts still
+   * missing once this file's own facts records are in, which is what the pass
+   * looked for and did not find. The worklist rests the entry for those and
+   * for no others, so a fact a later version of the task starts asking about
+   * is not waited on for an attempt that never looked for it.
+   *
+   * A facts record on its own stamps nothing. The locations task files one
+   * when a site happens to state a year or show prices, and that is not a
+   * search for the rest of the record. */
   for (const it of research.factsSkipped ?? []) {
     const r = byId.get(it.id);
     if (!r) continue;
+    const sought = missingFacts(r);
+    if (!sought.length) {
+      log(`  ? ${r.name}: reported as skipped, but nothing is missing from its record`);
+      continue;
+    }
     r.factsAttempted = today;
+    r.factsSought = sought;
     r.factsNote = it.note;
     changes++;
-    log(`  . ${r.name}: no stated facts found — ${it.note}`);
-  }
-  /* Any facts record counts as an attempt too, so a partial fill (year found,
-   * tier not) does not keep the entry at the front of the worklist. */
-  for (const it of research.facts ?? []) {
-    const r = byId.get(it.id);
-    if (r) r.factsAttempted = today;
+    log(`  . ${r.name}: ${sought.join(', ')} not found — ${it.note}`);
   }
 
   /* factorSources: citations attached to a rating that already exists, values
@@ -308,7 +335,7 @@ export function applyResearch(research, data, today, log = () => {}) {
     // order to whatever the agent wrote.
     r.locationsVerified = today;
     r.locationsSource = it.source;
-    delete r.neighborhoodIsPlaceholder;
+    r.neighborhoodIsPlaceholder = null;
 
     /* Every entry on the page should be a link, and verifying locations already
      * required finding the official site -- so the link comes free. A homepage
@@ -401,7 +428,18 @@ export function applyResearch(research, data, today, log = () => {}) {
   }
 
   if (changes || located) dataset.dataVersion = today.slice(0, 7).replace('-', '.');
-  return { changes, located, ratedNow, reratedNow, buzzChanged, candidatesChanged };
+
+  /* Every entry is put into the schema's shape, whatever touched it above:
+   * the sections set keys in the order they run, and an entry written before
+   * a key existed does not have it. On a dataset already in that shape this
+   * changes nothing, because every key a section sets is there to be set. */
+  let reshaped = 0;
+  dataset.restaurants = dataset.restaurants.map(r => {
+    const entry = normalizeEntry(r);
+    if (JSON.stringify(entry) !== JSON.stringify(r)) reshaped++;
+    return entry;
+  });
+  return { changes, located, ratedNow, reratedNow, buzzChanged, candidatesChanged, reshaped };
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === fs.realpathSync(process.argv[1])) {
@@ -422,10 +460,11 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === fs.realpathSync(proces
 
   if (done.buzzChanged) write('buzz.json', data.buzz);
   if (done.candidatesChanged) write('candidates.json', data.candFile);
-  if (done.changes || done.located) {
-    const out = JSON.stringify(data.dataset, null, 2) + '\n';
+  if (done.changes || done.located || done.reshaped) {
+    const out = serializeDataset(data.dataset);
     if (fs.readFileSync(file('restaurants.json'), 'utf8') !== out) fs.writeFileSync(file('restaurants.json'), out);
   }
 
-  console.log(`\napplied: ${done.changes} change(s), ${done.located} location set(s) verified. ${done.ratedNow} newly rated, ${done.reratedNow} re-rated.`);
+  console.log(`\napplied: ${done.changes} change(s), ${done.located} location set(s) verified. ${done.ratedNow} newly rated, ${done.reratedNow} re-rated.${
+    done.reshaped ? ` ${done.reshaped} entr${done.reshaped === 1 ? 'y' : 'ies'} put into the schema's shape.` : ''}`);
 }

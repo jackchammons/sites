@@ -67,7 +67,7 @@ const RESEARCH_STEPS = [
     text: 'A record is dropped, with a warning, when it has no https source, names an entry that is not on file, carries a date in the future or too old to count, gives an address without a street number and a Puget Sound ZIP, contains markup, repeats something already on file, reports a closure on a review site\'s word alone, or proposes a rating that is off the scale, has no published criticism behind it, or is for an entry the agent has already rated. The rest go on.',
     gate: 'the file is not well-formed, or a section is over its size limit.' },
   { title: 'Accepted records are applied',
-    text: 'A script writes them into the dataset: new entries, statuses, addresses, press mentions, ratings, census verdicts, and the date of each attempt that found nothing. The same step reads the permit register again when the last reading is old enough, which is where new candidates come from.' },
+    text: 'A script writes them into the dataset: new entries, statuses, addresses, press mentions, ratings, census verdicts, and the date of each attempt that found nothing. Next the permit register is read again if the last reading is old enough, which is where new candidates come from.' },
   { title: 'Lint, build, verify',
     text: 'The dataset is linted, then the page is built from it and checked, before anything is saved.',
     gate: 'anything fails.' },
@@ -180,12 +180,12 @@ export function methodParts(ctx) {
 
     <h3 class="method-h" id="rotation">How the day's task is chosen</h3>
     <p class="method-p">
-      Each research run does one task. The script orders the ${WORDS[ROTATION.length] ?? ROTATION.length} tasks in the rotation by
+      Each research run does one task. The script orders the ${(WORDS[ROTATION.length] ?? String(ROTATION.length)).toLowerCase()} tasks in the rotation by
       their last successful pass, oldest first, and takes the first that has work to do. A run
       that failed is not a pass, so its task is still the oldest and is tried again next. A
       task with nothing on its worklist is passed over.
     </p>
-    <div class="rota" aria-label="The rotation">${ROTATION.map(t => `<span>${esc(t)}</span>`).join('')}</div>${tasksHtml()}
+    <ul class="rota" aria-label="The rotation">${ROTATION.map(t => `<li>${esc(t)}</li>`).join('')}</ul>${tasksHtml()}
     ${outside.length ? `<p class="method-p" style="margin-top:14px">
       ${WORDS[outside.length] ?? outside.length} more ${outside.length === 1 ? 'task is' : 'tasks are'} never picked automatically and ${outside.length === 1 ? 'runs' : 'run'} only when started by hand, to catch
       up in bulk: ${outside.map(t => `${esc(t)} (${TASKS[t].summary})`).join(', ')}. ${outside.length === 1 ? 'It goes' : 'They go'} through the same steps and the same gates.
@@ -197,8 +197,9 @@ export function methodParts(ctx) {
         <h4>Moves it</h4>
         <ul class="moves">
           <li><b>Press, and its age.</b> A mention filed against an entry can lift critical
-          reception by up to ${CRITICAL_BOOST_CAP.toFixed(1)} and reputation with it. The lift halves every
-          ${MENTION_HALF_LIFE_MONTHS} months and coverage counts ${COVERAGE_WINDOW_MONTHS}, so a score eases back when the press stops.</li>
+          reception by up to ${CRITICAL_BOOST_CAP.toFixed(1)} points and counts toward reputation. The lift halves
+          every ${MENTION_HALF_LIFE_MONTHS} months and reputation counts a mention for ${COVERAGE_WINDOW_MONTHS}, so a score eases back when
+          the press stops.</li>
           <li><b>Freshness.</b> A score loses ${pct(STALENESS_PER_WEEK, 1)} a week from the entry's last verification,
           up to ${pct(MAX_STALENESS_DECAY, 0)}. A status check or a verified set of addresses resets it.</li>
           <li><b>A fact filled in.</b> A founding year or a price tier filed for the first time

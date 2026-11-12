@@ -30,12 +30,12 @@ export function pageHtml(ctx, sections) {
             Rotates through the top ten each Monday.</p>
           </div>
         </div>`;
-  const { factorCards, frictionRows } = sections.method;
+  const { factorCards, frictionRows, automation } = sections.method;
   const field = fieldStats(ctx.allScored);
-  const { recordSection, bracketSection, radarSection, buzzSection, directorySection } = sections;
-  /* The nav lists the sections this build rendered. The record, the radar and
-   * the buzz each render nothing when they have nothing to show, and a link to
-   * a section that is not there goes nowhere. */
+  const { recordSection, bracketSection, radarSection, buzzSection, directorySection, candidatesSection } = sections;
+  /* The nav lists the sections this build rendered. The record, the radar, the
+   * buzz and the candidates each render nothing when they have nothing to
+   * show, and a link to a section that is not there goes nowhere. */
   const nav = [
     ['top-ten', 'Top 10', true],
     ['record', 'Record', recordSection],
@@ -43,6 +43,7 @@ export function pageHtml(ctx, sections) {
     ['radar', 'Radar', radarSection],
     ['buzz', 'Buzz', buzzSection],
     ['directory', 'Directory', directorySection],
+    ['candidates', 'Candidates', candidatesSection],
     ['methodology', 'Method', true]
   ].filter(([, , rendered]) => rendered);
   /* Every constant the methodology prints is read from slice.js, in the form
@@ -135,6 +136,7 @@ ${bracketSection}
 ${radarSection}
 ${buzzSection}
 ${directorySection}
+${candidatesSection}
 
 <section class="section" id="methodology">
   <div class="wrap">
@@ -145,8 +147,15 @@ ${directorySection}
       turns them into the ranking; a daily pipeline keeps the facts current. Every number on this
       page comes from that build.
     </p>
+    <p class="method-jump">
+      <a href="#score">The score</a>
+      <a href="#lifecycle">From a food permit to the top ten</a>
+      <a href="#runs">What runs, and in what order</a>
+      <a href="#rotation">How the day's task is chosen</a>
+      <a href="#moves">What can move a score</a>
+    </p>
 
-    <h3 class="method-h">The score</h3>
+    <h3 class="method-h" id="score">The score</h3>
     <p class="method-p">
       Each factor is a 0–10 rating. Divide by 10, multiply by the factor's weight, and sum: a
       perfect entry scores exactly 100. Friction is then subtracted and freshness decay applied.
@@ -160,17 +169,11 @@ ${directorySection}
     <p class="method-p">
       The three graded factors (craft, distinctiveness and the critic base) are set by a research
       agent from published coverage, and each is stored with the sources it read and the date it
-      was set; an entry's record in the directory shows them. Each day the research job assembles
-      a worklist and hands it to a Claude agent as an explicit brief: these ids, this search
-      budget, write one JSON file, run nothing. For ratings, the agent reads what has actually
-      been published about each place and proposes craft and distinctiveness on a 0.5 grid plus a
-      critic base, citing one to four https sources it read; an entry it cannot ground in real
-      coverage stays unrated. A validator checks each proposal on its own: one that is off-grid,
-      has no published criticism behind it, or would overwrite a rating the agent has already set
-      is dropped with a warning, and the rest are applied. Once the agent has set a rating it is
-      never rewritten; what the rotation re-checks is whether a place is open, where it is, and
-      what has been written about it. The computed
-      factors below run from the stored values at build time.
+      was set; an entry's record in the directory shows them. The agent proposes a rating and a
+      validator decides whether it stands: one that is off the scale, has no published criticism
+      behind it, or is for an entry the agent has already rated is dropped. An entry the agent
+      cannot ground in real coverage stays unrated. The computed factors below are worked out
+      from the stored values on every build.
     </p>
     <div class="grid2">
       <div class="mcard">
@@ -252,65 +255,7 @@ tier    $ ${x2(PRICE_MULT[1])}     $$ ${x2(PRICE_MULT[2])}
         names which check reset the clock.</p>
       </div>
     </div>
-
-    <h3 class="method-h">The daily pipeline</h3>
-    <p class="method-p">
-      A daily research pass and a rebuild keep the dataset moving — and the whole design
-      assumes any given day can fail without consequence.
-    </p>
-    <div class="pipe">
-      <div class="pipe-stage">
-        <span class="pipe-num">01</span>
-        <span class="pipe-when">once a day</span>
-        <b>Research</b>
-        <p>A Claude research agent gets one bounded brief: an explicit worklist, a web-search
-        budget, no ability to run anything. It reads pizzerias' own sites and published local
-        coverage and writes a single file of proposals — facts with sources, never scores
-        applied directly.</p>
-        <div class="pipe-rota" aria-label="Task rotation">
-          <span>discovery</span><span>locations</span><span>liveness</span><span>news</span><span>rating</span><span>census</span>
-        </div>
-        <p class="pipe-sub">one task per day, rotating — a week covers every kind of upkeep</p>
-      </div>
-      <div class="pipe-stage pipe-check">
-        <span class="pipe-num">02</span>
-        <span class="pipe-when">on return</span>
-        <b><span class="pipe-tick">✓</span> Validation</b>
-        <p>Every proposal is checked before anything is written: an https source on each claim,
-        addresses that parse with Puget Sound ZIPs, dates that exist, ratings on the 0.5 grid
-        with published criticism behind them, no duplicates.</p>
-        <p class="pipe-reject">A record that fails is dropped with a warning; the rest are
-        applied.</p>
-      </div>
-      <div class="pipe-stage">
-        <span class="pipe-num">03</span>
-        <span class="pipe-when">when research finishes</span>
-        <b>Rebuild</b>
-        <p>A publish runs when the research pass finishes, and once more each day on its own
-        schedule, so a day without research still updates the page. The site recomputes from
-        the dataset: feeds swept, validated research merged, every
-        rated entry re-scored from scratch, the ten highest open entries published. Once per
-        ISO week the standings are snapshotted — the ▲▼ markers, the record chart and the
-        "why it moved" lines all compare against those.</p>
-      </div>
-      <div class="pipe-stage">
-        <span class="pipe-num">04</span>
-        <span class="pipe-when">on green</span>
-        <b>Deploy</b>
-        <p>Unit tests, a dataset lint and a rendered-page verifier gate the publish. If
-        anything fails, nothing ships and yesterday's site stays up — the gate has already
-        refused real deploys.</p>
-      </div>
-      <div class="pipe-loop"><span>↺ tomorrow: the next task in the rotation</span></div>
-    </div>
-    <p class="method-p">
-      The result is eventual consistency, on purpose. No single run is load-bearing: a failed
-      research pass costs a day and a failed build leaves the last good site standing. The
-      facts the rotation re-checks are an entry's status, its addresses and its coverage; a
-      rating the agent has set stays, with its sources. Freshness decay makes the waiting
-      visible: an entry nobody has re-checked slowly costs score until the rotation comes back
-      around.
-    </p>
+${automation}
 
     <p class="method-p" style="margin-top:22px">
       Ties break on critical reception, then craft, then alphabetically. The dataset, the scoring
