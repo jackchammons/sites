@@ -1,55 +1,54 @@
 {
-  "updated": "2026-11-12T00:00:00Z",
+  "updated": "2026-11-12T19:00:00Z",
   "mentions": [
     {
-      "id": "zeeks-pizza",
-      "title": "Former Zeek's Phinney location to become Stevie's Famous",
-      "url": "https://phinneywood.com/2025/11/former-zeeks-phinney-location-to-become-stevies-famous/",
-      "source": "PhinneyWood",
-      "date": "2025-11-05",
-      "kind": "closing"
+      "id": "my-friend-dereks",
+      "title": "My Friend Derek's",
+      "url": "https://www.theinfatuation.com/seattle/reviews/my-friend-dereks",
+      "source": "The Infatuation",
+      "date": "2025-10-29",
+      "kind": "mention"
     },
     {
-      "id": "post-alley-pizza",
-      "title": "Rachel Belle shares her top 5 favorite Seattle pizza spots",
-      "url": "https://www.cascadepbs.org/culture/2025/04/rachel-belle-shares-her-top-5-favorite-seattle-pizza-spots",
-      "source": "Cascade PBS",
-      "date": "2025-04-23",
-      "kind": "ranking"
+      "id": "sinners-pizza",
+      "title": "New Pizza Spot Sinner's Pizza to Open in Seattle's University District",
+      "url": "https://whatnow.com/?p=375365",
+      "source": "WhatNow",
+      "date": "2026-02-18",
+      "kind": "opening"
     }
   ],
   "coverageSkipped": [
     {
-      "id": "serious-pie",
-      "note": "Searched 'Serious Pie Seattle review 2024 2025' and a follow-up for Eater/Seattle Met/Seattle Times roundups naming it. Found only pieces older than the 730-day window (a 2024-04-12 iHeart/Reader's Digest pickup, a 2015 Daily Meal ranking) or undated aggregator/listing pages (OpenTable, Tasting Table, Opinionated About Dining). No real-outlet story within the last two years confirmed with a working URL."
+      "id": "slice-box",
+      "note": "Searched 'Slice Box Georgetown Seattle pizza' and 'Slice Box Pizza Georgetown'. Found an Infatuation review (Oct 31, 2024) and several directory listings, but all describe the SoDo location at 1727 1st Ave S (and a Magnolia spot); no coverage names a Georgetown location for this business."
     },
     {
-      "id": "dinos-tomato-pie",
-      "note": "Searched 'Dino's Tomato Pie Capitol Hill review 2024 2025' and a follow-up for Eater/Seattle Met/Seattle Times coverage. The Infatuation and Stranger praise are undated/older, Seattle Met's neighborhood pieces predate the window, and the one possible 2025 KING5 piece returned HTTP 403 and could not be verified. No confirmable story within two years."
+      "id": "cornuto-pizzeria",
+      "note": "Searched 'Cornuto Pizzeria Greenwood Phinney Ridge review' and 'Cornuto Pizzeria Seattle 2025'. Found The Infatuation's review, but it published Dec 1, 2022, outside the two-year window; 2025 results were only Yelp/aggregator reviews, no outlet coverage in range."
     },
     {
-      "id": "lupo",
-      "note": "Searched 'Lupo Fremont Seattle pizza review' and a follow-up for 2024/2025 roundups. The Infatuation review (2023-04-03) and SeattleRefined feature (2023-09-26) are both outside the 730-day window; Secret Seattle and Only In Your State pages returned empty/403 on fetch and couldn't be dated. No qualifying mention found."
+      "id": "razzis-pizzeria",
+      "note": "Searched 'Razzi's Pizzeria Greenwood Seattle' and '...news review Eater'. Found only HappyCow, FindMeGlutenFree, Birdeye and Spinach aggregator/directory listings; no named-outlet press coverage turned up."
     },
     {
-      "id": "via-tribunali",
-      "note": "Searched 'Via Tribunali Seattle news' and a follow-up for a 2024/2025 closure. Found only old Pizza Today (2015) and Eater ownership (2020) coverage, plus unverified OpenTable 'permanently closed' labels on the Georgetown listing with no date or news report backing them. No story within two years."
+      "id": "pizzeria-la-rocca",
+      "note": "Searched 'Pizzeria La Rocca Greenwood review' and 'Pizzeria La Rocca Seattle Times Best in PNW 2025'. Found PhinneyWood's piece on its 2024 Seattle Times Best in the PNW awards, but it published Sept 23, 2024, just outside the two-year window; no 2025 award or other coverage found."
     },
     {
-      "id": "proletariat-pizza",
-      "note": "Searched 'Proletariat Pizza White Center 2024 2025' and a follow-up news search. All editorial coverage found (West Seattle Blog, White Center Now, Seattle Weekly) dates from 2009-2011; no 2024-2026 story turned up."
+      "id": "pi-vegan-pizzeria",
+      "note": "Searched 'Pi Vegan Pizzeria Roosevelt review' and '...Eater Infatuation review 2025'. Found only HappyCow/aggregator reviews and a 2015 VegNews story about an earlier ownership change at 'Pizza Pi'; nothing within the two-year window."
     },
     {
-      "id": "ballard-pizza-co",
-      "note": "Searched 'Ballard Pizza Company review 2024 2025' and a follow-up for Eater/Seattle Met rankings. The Stranger review is from 2012, and the Stacker Tripadvisor ranking that mentioned it turned out (on fetch) to be dated 2022-07-19, both outside the 730-day window. No qualifying recent mention found."
+      "id": "mioposto",
+      "note": "Searched 'Mioposto Mount Baker Seattle pizza' and 'Mioposto Seattle 2025 news'. Found only older Stranger/Seattle Met features and directory listings, none within the two-year window."
     },
     {
-      "id": "talaricos",
-      "note": "Searched 'Talarico's West Seattle review 2024 2025' and a follow-up news search. Found only a 2020 reopening story and undated Infatuation/Seattle Met listings; no 2024-2026 coverage."
-    },
-    {
-      "id": "humble-pie",
-      "note": "Searched 'Humble Pie Central District 2024 2025' and a follow-up for closures/news. All editorial coverage (Seattle Mag, Seattle Met, KING5) dates to 2013-2014; a MapQuest listing shows a 'Closed' tag with 2024 reviews but that is not a published news report. No qualifying story found."
+      "id": "veraci-pizza",
+      "note": "Searched 'Veraci Pizza Wedgwood Seattle' and 'Veraci Pizza Seattle 2025 news'. Found historical opening coverage and an Inlander piece about founder Jett's departure that would not load to confirm date or whether it covers the Wedgwood location; nothing confirmed within the two-year window."
     }
+  ],
+  "rejected": [
+    "mentions[0]: title missing or too short"
   ]
 }

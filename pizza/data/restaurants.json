@@ -2030,7 +2030,9 @@
       "instagram": "https://www.instagram.com/sliceboxpizza_sodo/",
       "openedSource": "https://seattlemag.com/food-and-culture/serious-wave-new-pizza-restaurants-has-hit-seattle-recently/",
       "statusChecked": "2026-11-10",
-      "ratingAttempted": "2026-11-11"
+      "ratingAttempted": "2026-11-11",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Slice Box Georgetown Seattle pizza' and 'Slice Box Pizza Georgetown'. Found an Infatuation review (Oct 31, 2024) and several directory listings, but all describe the SoDo location at 1727 1st Ave S (and a Magnolia spot); no coverage names a Georgetown location for this business."
     },
     {
       "id": "roccos",
@@ -2120,7 +2122,15 @@
       ],
       "locationsVerified": "2026-08-26",
       "locationsSource": "https://myfrienddereks.com/",
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://www.theinfatuation.com/seattle/reviews/my-friend-dereks",
+          "title": "My Friend Derek's",
+          "source": "The Infatuation",
+          "date": "2025-10-29",
+          "kind": "mention"
+        }
+      ],
       "statusNote": "The Detroit-style pop-up converted to a permanent brick-and-mortar in Tangletown and is now operating with regular weekly hours.",
       "statusChecked": "2026-08-26",
       "factors": {
@@ -2309,7 +2319,15 @@
       ],
       "locationsVerified": "2026-08-26",
       "locationsSource": "https://sinners.pizza/",
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://whatnow.com/?p=375365",
+          "title": "New Pizza Spot Sinner's Pizza to Open in Seattle's University District",
+          "source": "WhatNow",
+          "date": "2026-02-18",
+          "kind": "opening"
+        }
+      ],
       "instagram": "https://www.instagram.com/sinnerspizzaco/",
       "factors": {
         "craft": {
@@ -2533,7 +2551,9 @@
       "opened": 2016,
       "styleGroup": "Neapolitan",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/cornuto_pizzeria/"
+      "instagram": "https://www.instagram.com/cornuto_pizzeria/",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Cornuto Pizzeria Greenwood Phinney Ridge review' and 'Cornuto Pizzeria Seattle 2025'. Found The Infatuation's review, but it published Dec 1, 2022, outside the two-year window; 2025 results were only Yelp/aggregator reviews, no outlet coverage in range."
     },
     {
       "id": "razzis-pizzeria",
@@ -2587,7 +2607,9 @@
       "lastVerified": "2026-08-27",
       "instagram": "https://www.instagram.com/razzisseattle/",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "Searched for Razzi's Pizzeria's official website (plain search and site: queries); found no confirmed official domain. Third-party listings disagree between razzis.com and razzispizza.com with no way to verify which, if either, is genuine, so the 1314 Howell St lead could not be checked against an official source."
+      "locationsNote": "Searched for Razzi's Pizzeria's official website (plain search and site: queries); found no confirmed official domain. Third-party listings disagree between razzis.com and razzispizza.com with no way to verify which, if either, is genuine, so the 1314 Howell St lead could not be checked against an official source.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Razzi's Pizzeria Greenwood Seattle' and '...news review Eater'. Found only HappyCow, FindMeGlutenFree, Birdeye and Spinach aggregator/directory listings; no named-outlet press coverage turned up."
     },
     {
       "id": "pizzeria-la-rocca",
@@ -2640,7 +2662,9 @@
       "lastVerified": "2026-08-27",
       "instagram": "https://www.instagram.com/pizzerialaroccaseattle/",
       "opened": 2021,
-      "openedSource": "https://intentionalist.com/b/pizzeria-la-rocca/"
+      "openedSource": "https://intentionalist.com/b/pizzeria-la-rocca/",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Pizzeria La Rocca Greenwood review' and 'Pizzeria La Rocca Seattle Times Best in PNW 2025'. Found PhinneyWood's piece on its 2024 Seattle Times Best in the PNW awards, but it published Sept 23, 2024, just outside the two-year window; no 2025 award or other coverage found."
     },
     {
       "id": "pi-vegan-pizzeria",
@@ -2693,7 +2717,9 @@
       "lastVerified": "2026-08-27",
       "instagram": "https://www.instagram.com/pivegan/",
       "factsAttempted": "2026-11-05",
-      "factsNote": "Checked pizzapivegan.com home page: only claims 'America's Oldest vegan pizzeria' with no date. Search found a 2015 VegNews piece about an ownership change but no stated founding year."
+      "factsNote": "Checked pizzapivegan.com home page: only claims 'America's Oldest vegan pizzeria' with no date. Search found a 2015 VegNews piece about an ownership change but no stated founding year.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Pi Vegan Pizzeria Roosevelt review' and '...Eater Infatuation review 2025'. Found only HappyCow/aggregator reviews and a 2015 VegNews story about an earlier ownership change at 'Pizza Pi'; nothing within the two-year window."
     },
     {
       "id": "mioposto",
@@ -2744,7 +2770,9 @@
       "opened": 2006,
       "styleGroup": "Wood-fired",
       "lastVerified": "2026-08-27",
-      "instagram": "https://instagram.com/mioposto"
+      "instagram": "https://instagram.com/mioposto",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Mioposto Mount Baker Seattle pizza' and 'Mioposto Seattle 2025 news'. Found only older Stranger/Seattle Met features and directory listings, none within the two-year window."
     },
     {
       "id": "veraci-pizza",
@@ -2802,7 +2830,9 @@
       "priceIndex": 2,
       "styleGroup": "Neapolitan",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/veraci_pizza/"
+      "instagram": "https://www.instagram.com/veraci_pizza/",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Veraci Pizza Wedgwood Seattle' and 'Veraci Pizza Seattle 2025 news'. Found historical opening coverage and an Inlander piece about founder Jett's departure that would not load to confirm date or whether it covers the Wedgwood location; nothing confirmed within the two-year window."
     },
     {
       "id": "south-town-pie",
