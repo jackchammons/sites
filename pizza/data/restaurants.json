@@ -6033,7 +6033,9 @@
       "locations": [
         {
           "neighborhood": "Phinney Ridge",
-          "address": "6726 Greenwood Ave N, Seattle, WA 98103"
+          "address": "6726 Greenwood Ave N, Seattle, WA 98103",
+          "lat": 47.67851,
+          "lon": -122.35511
         }
       ],
       "locationsVerified": null,
@@ -6056,7 +6058,9 @@
       "locations": [
         {
           "neighborhood": "Northgate (Pinehurst)",
-          "address": "12319 Roosevelt Way NE, Seattle, WA 98125"
+          "address": "12319 Roosevelt Way NE, Seattle, WA 98125",
+          "lat": 47.71839,
+          "lon": -122.31842
         }
       ],
       "locationsVerified": null,
