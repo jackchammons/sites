@@ -2553,7 +2553,9 @@
       "priceIndex": 2,
       "styleGroup": "Neighborhood",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/razzisseattle/"
+      "instagram": "https://www.instagram.com/razzisseattle/",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "Searched for Razzi's Pizzeria's official website (plain search and site: queries); found no confirmed official domain. Third-party listings disagree between razzis.com and razzispizza.com with no way to verify which, if either, is genuine, so the 1314 Howell St lead could not be checked against an official source."
     },
     {
       "id": "pizzeria-la-rocca",
@@ -3395,10 +3397,15 @@
           "lon": -122.32958
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-11-12",
+      "locationsSource": "https://www.apizzamartfirsthill.com/",
       "mentions": [],
-      "instagram": "https://www.instagram.com/apizzamartfirsthill/"
+      "instagram": "https://www.instagram.com/apizzamartfirsthill/",
+      "priceIndex": 2,
+      "priceSource": "https://www.apizzamartfirsthill.com/",
+      "factsAttempted": "2026-11-12",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "Official site (apizzamartfirsthill.com) only lists its own 800 Seneca St address and a boilerplate, unlinked mention of 'other locations' with no addresses; its /locations path returns 403. Could not confirm the permit leads (9452 35th Ave SW; 1823 Terry Ave #102; 1433 11th Ave; 711 Westlake Ave N; 5240 University Way NE D) against an official source — only aggregator/delivery listings (UberEats, DoorDash, SliceLife) surfaced them, which are excluded as sources."
     },
     {
       "id": "seward-park-pizza",
@@ -3639,7 +3646,9 @@
       "opened": 2012,
       "priceIndex": 2,
       "styleGroup": "Wood-fired",
-      "lastVerified": "2026-09-03"
+      "lastVerified": "2026-09-03",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "elementalpizza.com returned HTTP 403 Forbidden on both the homepage and /locations, so no official page could be read. The 701 5th Ave, Ste 300 lead and a separate University Village address appear only on aggregators (Toast, MapQuest, NAICS listings), which are excluded as sources; could not confirm."
     },
     {
       "id": "eymans-pizza",
@@ -4317,16 +4326,21 @@
       "attributes": {},
       "locations": [
         {
-          "neighborhood": "Phinney Ridge / Greenwood",
+          "neighborhood": "Phinney Ridge",
           "address": "7217 Greenwood Ave N, Seattle, WA 98103",
           "lat": 47.68128,
           "lon": -122.35549
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-11-12",
+      "locationsSource": "https://www.ridgepizza.com/welcome-1",
       "mentions": [],
-      "instagram": "https://www.instagram.com/ridgepizza/"
+      "instagram": "https://www.instagram.com/ridgepizzanortheast",
+      "opened": 2012,
+      "openedSource": "https://www.ridgepizza.com/welcome-1",
+      "factsAttempted": "2026-11-12",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "Lead 3338 Ne 65th St, Seattle, WA 98115 matches the sibling site ridgepizzanortheast.com, but that page labels the location 'COMING SOON!' rather than open, so it is not yet a confirmed operating branch."
     },
     {
       "id": "good-luck-bread",
@@ -4415,18 +4429,25 @@
       "attributes": {},
       "locations": [
         {
-          "neighborhood": "Belltown / South Lake Union (two locations)",
-          "address": "2801 Western Ave, E, Seattle, WA 98121",
+          "neighborhood": "Belltown/Waterfront",
+          "address": "2801 Western Ave E, Seattle, WA 98121",
           "lat": 47.61604,
           "lon": -122.35332
+        },
+        {
+          "neighborhood": "South Lake Union",
+          "address": "224 Fairview Ave N, Seattle, WA 98109"
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-11-12",
+      "locationsSource": "https://www.seattlepizzaandbar.com/",
       "mentions": [],
       "instagram": "https://www.instagram.com/seattle_pizza_and_bar/",
       "ratingAttempted": "2026-11-07",
-      "ratingNote": "Searched Seattle Pizza & Bar (Belltown/Western Ave and South Lake Union/Fairview Ave locations) plus Eater/Seattle Met/Infatuation/Seattle Times/opening-news combinations. Found only Uber Eats, MapQuest and Poyst listings with mixed crowd feedback; no critic review, roundup mention, or opening story in any local outlet. No rating proposed; skipped for lack of published criticism."
+      "ratingNote": "Searched Seattle Pizza & Bar (Belltown/Western Ave and South Lake Union/Fairview Ave locations) plus Eater/Seattle Met/Infatuation/Seattle Times/opening-news combinations. Found only Uber Eats, MapQuest and Poyst listings with mixed crowd feedback; no critic review, roundup mention, or opening story in any local outlet. No rating proposed; skipped for lack of published criticism.",
+      "opened": 2022,
+      "openedSource": "https://www.seattlepizzaandbar.com/",
+      "factsAttempted": "2026-11-12"
     },
     {
       "id": "smoking-monkey-pizza",
