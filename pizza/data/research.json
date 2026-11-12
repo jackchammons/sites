@@ -1,5 +1,26 @@
 {
   "updated": "2026-11-12T00:00:00Z",
+  "locations": [
+    {
+      "id": "capitale-pizzeria",
+      "homepage": "https://www.capitalepizzeria.com/",
+      "source": "https://www.capitalepizzeria.com/",
+      "sites": [
+        {
+          "neighborhood": "Capitol Hill",
+          "address": "426 Broadway E, Seattle, WA 98102"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "id": "capitale-pizzeria",
+      "website": "https://www.capitalepizzeria.com/",
+      "instagram": "https://www.instagram.com/capitalepizzeriaseattle/",
+      "source": "https://www.capitalepizzeria.com/"
+    }
+  ],
   "locationsSkipped": [
     {
       "id": "candela-pizza",
@@ -20,6 +41,22 @@
     {
       "id": "alberonas-davinci-pizza-pasta",
       "note": "No official Alberona's DaVinci Pizza & Pasta website found. Search results were aggregators only (Slice, Autoreserve); the Slice menu page (fetched) lists 3624 Leary Way NW, Seattle, WA 98107 but has no link to an official site or Instagram, and the Autoreserve page returned HTTP 403 when fetched."
+    },
+    {
+      "id": "desi-pizza-kitchen",
+      "note": "No official Desi Pizza Kitchen website found. Web search surfaced only aggregators (Slice, ezCater, Valpak, MapQuest) citing a Queen Anne address (2115 Queen Anne Ave N, Seattle, WA 98109); the ezCater brand page was fetched and every link on it points back to ezCater, not an owned site. Could not confirm an address from the pizzeria's own site."
+    },
+    {
+      "id": "fremont-pizza",
+      "note": "Found what appears to be the official homepage, https://www.fremont-pizza.com/ (linked from a JoinLolo merchant listing, labeled 'Fremont Pizza' rather than a delivery aggregator), but the site renders via JavaScript and WebFetch only returned the page title with no address, locations, or social links; subpages /visit, /menu, and /contact-us all returned HTTP 404. Could not confirm an address from the pizzeria's own site."
+    },
+    {
+      "id": "jet-city-pizza",
+      "note": "No official Jet City Pizza website found. Search results were dominated by the unrelated Michigan chain 'Jet's Pizza'; the Washington-specific hits were only aggregator/ordering pages (Toast, Slice, ezCater, MapQuest) citing possible Seattle, Marysville, and Bothell storefronts. The ezCater brand page was fetched and every link on it points back to ezCater, not an owned site. Could not confirm any address from the pizzeria's own site."
+    },
+    {
+      "id": "magnolia-pizza-pasta",
+      "note": "No official Magnolia Pizza & Pasta website found. Search results were only directory/menu aggregators (MenuPages, Slice, MapQuest) citing 2120 W Emerson Pl, Seattle, WA 98199; the MenuPages listing was fetched and has no outbound link to an official site, and separately states the restaurant is 'not accepting orders right now' (an aggregator claim, not independent evidence of closure). Could not confirm an address or current status from the pizzeria's own site."
     }
   ]
 }

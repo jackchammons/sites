@@ -5394,7 +5394,7 @@
       "neighborhood": "Capitol Hill",
       "style": "Modern Neapolitan",
       "blurb": "Modern Neapolitan pizzeria on Broadway from the Limoncello team, serving globally-inspired wood-fired pies in the former Boca Pizzeria space.",
-      "url": null,
+      "url": "https://www.capitalepizzeria.com/",
       "status": "open",
       "statusSource": "https://www.enprimeurclub.com/restaurants/capitale-pizzeria-seattle-restaurant",
       "statusDate": null,
@@ -5409,8 +5409,8 @@
           "lon": -122.32071
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-11-12",
+      "locationsSource": "https://www.capitalepizzeria.com/",
       "mentions": [],
       "factors": {
         "craft": {
@@ -5450,7 +5450,8 @@
       "ratingAttempted": "2026-11-12",
       "opened": 2024,
       "styleGroup": "Creative",
-      "lastVerified": "2026-11-12"
+      "lastVerified": "2026-11-12",
+      "instagram": "https://www.instagram.com/capitalepizzeriaseattle/"
     },
     {
       "id": "desi-pizza-kitchen",
@@ -5477,7 +5478,9 @@
       "locationsSource": null,
       "mentions": [],
       "ratingAttempted": "2026-11-12",
-      "ratingNote": "Searched for reviews/roundups of this Queen Anne Indian-fusion pizza spot (Infatuation Seattle pizza-delivery guide, Eater Seattle, general web). Found only delivery-app and directory listings (DoorDash, Slice, Atly, MapQuest, Valpak) with scattered customer comments on the butter chicken pizza; no published review, roundup entry, or news story naming this specific pizzeria. Skipping for lack of grounding."
+      "ratingNote": "Searched for reviews/roundups of this Queen Anne Indian-fusion pizza spot (Infatuation Seattle pizza-delivery guide, Eater Seattle, general web). Found only delivery-app and directory listings (DoorDash, Slice, Atly, MapQuest, Valpak) with scattered customer comments on the butter chicken pizza; no published review, roundup entry, or news story naming this specific pizzeria. Skipping for lack of grounding.",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "No official Desi Pizza Kitchen website found. Web search surfaced only aggregators (Slice, ezCater, Valpak, MapQuest) citing a Queen Anne address (2115 Queen Anne Ave N, Seattle, WA 98109); the ezCater brand page was fetched and every link on it points back to ezCater, not an owned site. Could not confirm an address from the pizzeria's own site."
     },
     {
       "id": "fremont-pizza",
@@ -5504,7 +5507,9 @@
       "locationsSource": null,
       "mentions": [],
       "ratingAttempted": "2026-11-12",
-      "ratingNote": "Searched twice for critic or press coverage (Stranger, Eater, Seattle Met) of this Fremont Ave N pizzeria; found only aggregator/directory pages (Atly, Mapquest with 9 reviews, Lolo, WhatsVegan) describing skee-ball and vegan options, no published review or news story. Skipped."
+      "ratingNote": "Searched twice for critic or press coverage (Stranger, Eater, Seattle Met) of this Fremont Ave N pizzeria; found only aggregator/directory pages (Atly, Mapquest with 9 reviews, Lolo, WhatsVegan) describing skee-ball and vegan options, no published review or news story. Skipped.",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "Found what appears to be the official homepage, https://www.fremont-pizza.com/ (linked from a JoinLolo merchant listing, labeled 'Fremont Pizza' rather than a delivery aggregator), but the site renders via JavaScript and WebFetch only returned the page title with no address, locations, or social links; subpages /visit, /menu, and /contact-us all returned HTTP 404. Could not confirm an address from the pizzeria's own site."
     },
     {
       "id": "magnolia-pizza-pasta",
@@ -5567,7 +5572,9 @@
       },
       "ratingAttempted": "2026-11-12",
       "styleGroup": "Neighborhood",
-      "lastVerified": "2026-11-12"
+      "lastVerified": "2026-11-12",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "No official Magnolia Pizza & Pasta website found. Search results were only directory/menu aggregators (MenuPages, Slice, MapQuest) citing 2120 W Emerson Pl, Seattle, WA 98199; the MenuPages listing was fetched and has no outbound link to an official site, and separately states the restaurant is 'not accepting orders right now' (an aggregator claim, not independent evidence of closure). Could not confirm an address or current status from the pizzeria's own site."
     },
     {
       "id": "numero-uno-pizza",
@@ -5718,7 +5725,9 @@
       "ratingAttempted": "2026-11-12",
       "priceIndex": 2,
       "styleGroup": "Creative",
-      "lastVerified": "2026-11-12"
+      "lastVerified": "2026-11-12",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "No official Jet City Pizza website found. Search results were dominated by the unrelated Michigan chain 'Jet's Pizza'; the Washington-specific hits were only aggregator/ordering pages (Toast, Slice, ezCater, MapQuest) citing possible Seattle, Marysville, and Bothell storefronts. The ezCater brand page was fetched and every link on it points back to ezCater, not an owned site. Could not confirm any address from the pizzeria's own site."
     },
     {
       "id": "pizza-pasta-bar",
