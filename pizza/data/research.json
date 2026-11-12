@@ -1,22 +1,55 @@
 {
   "updated": "2026-11-12T00:00:00Z",
-  "candidateReview": [
+  "mentions": [
     {
-      "name": "Soprano'S Pizza & Pasta",
-      "verdict": "duplicate",
-      "duplicateOf": "sopranos-pizza-pasta-lake-city",
-      "note": "This is the Ballard/Loyal Heights branch at 7729 24th Ave NW, Seattle, WA 98117. Birdeye's listing for this exact address labels it 'Sopranos Pizza & Pasta - Ballard' with the same 'Soprano's Pizza & Pasta' branding and matching menu (calzones, pastas, build-your-own pizza) as the Lake City location already on file, indicating it is another branch of the same chain rather than a separate business.",
-      "source": "https://reviews.birdeye.com/sopranos-pizza-pasta-146915601834635"
+      "id": "zeeks-pizza",
+      "title": "Former Zeek's Phinney location to become Stevie's Famous",
+      "url": "https://phinneywood.com/2025/11/former-zeeks-phinney-location-to-become-stevies-famous/",
+      "source": "PhinneyWood",
+      "date": "2025-11-05",
+      "kind": "closing"
+    },
+    {
+      "id": "post-alley-pizza",
+      "title": "Rachel Belle shares her top 5 favorite Seattle pizza spots",
+      "url": "https://www.cascadepbs.org/culture/2025/04/rachel-belle-shares-her-top-5-favorite-seattle-pizza-spots",
+      "source": "Cascade PBS",
+      "date": "2025-04-23",
+      "kind": "ranking"
     }
   ],
-  "directory": [
+  "coverageSkipped": [
     {
-      "name": "Varlamos Pizzeria",
-      "neighborhood": "Laurelhurst",
-      "status": "open",
-      "note": "Longtime Northeast Seattle neighborhood pizzeria known for oversized calzones alongside build-your-own pizzas and pastas.",
-      "source": "https://www.seattleschild.com/?p=7487",
-      "address": "3617 NE 45th St, Seattle, WA 98105"
+      "id": "serious-pie",
+      "note": "Searched 'Serious Pie Seattle review 2024 2025' and a follow-up for Eater/Seattle Met/Seattle Times roundups naming it. Found only pieces older than the 730-day window (a 2024-04-12 iHeart/Reader's Digest pickup, a 2015 Daily Meal ranking) or undated aggregator/listing pages (OpenTable, Tasting Table, Opinionated About Dining). No real-outlet story within the last two years confirmed with a working URL."
+    },
+    {
+      "id": "dinos-tomato-pie",
+      "note": "Searched 'Dino's Tomato Pie Capitol Hill review 2024 2025' and a follow-up for Eater/Seattle Met/Seattle Times coverage. The Infatuation and Stranger praise are undated/older, Seattle Met's neighborhood pieces predate the window, and the one possible 2025 KING5 piece returned HTTP 403 and could not be verified. No confirmable story within two years."
+    },
+    {
+      "id": "lupo",
+      "note": "Searched 'Lupo Fremont Seattle pizza review' and a follow-up for 2024/2025 roundups. The Infatuation review (2023-04-03) and SeattleRefined feature (2023-09-26) are both outside the 730-day window; Secret Seattle and Only In Your State pages returned empty/403 on fetch and couldn't be dated. No qualifying mention found."
+    },
+    {
+      "id": "via-tribunali",
+      "note": "Searched 'Via Tribunali Seattle news' and a follow-up for a 2024/2025 closure. Found only old Pizza Today (2015) and Eater ownership (2020) coverage, plus unverified OpenTable 'permanently closed' labels on the Georgetown listing with no date or news report backing them. No story within two years."
+    },
+    {
+      "id": "proletariat-pizza",
+      "note": "Searched 'Proletariat Pizza White Center 2024 2025' and a follow-up news search. All editorial coverage found (West Seattle Blog, White Center Now, Seattle Weekly) dates from 2009-2011; no 2024-2026 story turned up."
+    },
+    {
+      "id": "ballard-pizza-co",
+      "note": "Searched 'Ballard Pizza Company review 2024 2025' and a follow-up for Eater/Seattle Met rankings. The Stranger review is from 2012, and the Stacker Tripadvisor ranking that mentioned it turned out (on fetch) to be dated 2022-07-19, both outside the 730-day window. No qualifying recent mention found."
+    },
+    {
+      "id": "talaricos",
+      "note": "Searched 'Talarico's West Seattle review 2024 2025' and a follow-up news search. Found only a 2020 reopening story and undated Infatuation/Seattle Met listings; no 2024-2026 coverage."
+    },
+    {
+      "id": "humble-pie",
+      "note": "Searched 'Humble Pie Central District 2024 2025' and a follow-up for closures/news. All editorial coverage (Seattle Mag, Seattle Met, KING5) dates to 2013-2014; a MapQuest listing shows a 'Closed' tag with 2024 reviews but that is not a published news report. No qualifying story found."
     }
   ]
 }
