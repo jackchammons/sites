@@ -6508,8 +6508,8 @@
         "pizza-by-ruffin": 18,
         "lupo": 19,
         "moto-pizza": 20,
-        "good-shape-pizza": 21,
-        "my-friend-dereks": 22,
+        "my-friend-dereks": 21,
+        "good-shape-pizza": 22,
         "pagliacci": 23,
         "cornuto-pizzeria": 24,
         "via-tribunali": 25,
@@ -6585,8 +6585,8 @@
         "pizza-by-ruffin": 76,
         "lupo": 75.6,
         "moto-pizza": 75.4,
+        "my-friend-dereks": 75.4,
         "good-shape-pizza": 75.4,
-        "my-friend-dereks": 75,
         "pagliacci": 74.5,
         "cornuto-pizzeria": 74.4,
         "via-tribunali": 74,
@@ -6632,7 +6632,7 @@
         "olympia-pizza-spaghetti-house-ii": 56.1,
         "georgetown-pizza-arcade": 54.5,
         "seward-park-pizza": 53.4,
-        "sinners-pizza": 52.9,
+        "sinners-pizza": 53.2,
         "lucianos-pizza-pasta": 49.6,
         "jackson-street-pizza-lounge": 47.7,
         "mad-pizza": 36,
@@ -6802,20 +6802,20 @@
           "value": 6.5,
           "penalty": 6
         },
+        "my-friend-dereks": {
+          "reputation": 1.7,
+          "critical": 8.1,
+          "craft": 7.5,
+          "distinctiveness": 7,
+          "value": 8.2,
+          "penalty": 0
+        },
         "good-shape-pizza": {
           "reputation": 0,
           "critical": 7.5,
           "craft": 7.5,
           "distinctiveness": 7,
           "value": 9,
-          "penalty": 0
-        },
-        "my-friend-dereks": {
-          "reputation": 0,
-          "critical": 8,
-          "craft": 7.5,
-          "distinctiveness": 7,
-          "value": 8.1,
           "penalty": 0
         },
         "pagliacci": {
@@ -7179,8 +7179,8 @@
           "penalty": 0
         },
         "sinners-pizza": {
-          "reputation": 0,
-          "critical": 5,
+          "reputation": 1.7,
+          "critical": 5.1,
           "craft": 5,
           "distinctiveness": 6.5,
           "value": 5,
