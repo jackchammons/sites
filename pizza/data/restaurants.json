@@ -4919,6 +4919,167 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": []
+    },
+    {
+      "id": "alberonas-davinci-pizza-pasta",
+      "name": "Alberona's DaVinci Pizza & Pasta",
+      "neighborhood": "Ballard",
+      "style": "New York-style, halal-friendly",
+      "blurb": "Neighborhood pizza-and-pasta shop on Leary Way NW serving New York-style pies, calzones and halal options, including halal pepperoni.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://slicelife.com/restaurants/wa/seattle/98107/davinci-s-pizza-pasta/menu",
+      "statusDate": null,
+      "statusDetected": "2026-11-12",
+      "statusChecked": "2026-11-12",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Ballard",
+          "address": "3624 Leary Way Nw, Seattle, WA 98107"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "capitale-pizzeria",
+      "name": "Capitale Pizzeria",
+      "neighborhood": "Capitol Hill",
+      "style": "Modern Neapolitan",
+      "blurb": "Modern Neapolitan pizzeria on Broadway from the Limoncello team, serving globally-inspired wood-fired pies in the former Boca Pizzeria space.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://www.enprimeurclub.com/restaurants/capitale-pizzeria-seattle-restaurant",
+      "statusDate": null,
+      "statusDetected": "2026-11-12",
+      "statusChecked": "2026-11-12",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Capitol Hill",
+          "address": "426 Broadway E, Seattle, WA 98102"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "desi-pizza-kitchen",
+      "name": "Desi Pizza Kitchen",
+      "neighborhood": "Queen Anne",
+      "style": "Indian-fusion",
+      "blurb": "Queen Anne pizzeria built entirely around Indian-spiced pies such as tandoori paneer and butter chicken alongside classic styles like Hawaiian.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://slicelife.com/restaurants/wa/seattle/98109/desi-pizza-kitchen/menu",
+      "statusDate": null,
+      "statusDetected": "2026-11-12",
+      "statusChecked": "2026-11-12",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Queen Anne",
+          "address": "2115 Queen Anne Ave N, Seattle, WA 98109"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "fremont-pizza",
+      "name": "Fremont Pizza",
+      "neighborhood": "Fremont",
+      "style": "By-the-slice",
+      "blurb": "Fremont bar-and-slice shop serving classic pizza by the slice with vegan options, draft beer and skeeball.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://www.joinlolo.com/merchants/fremont-pizza-seattle-wa-98103",
+      "statusDate": null,
+      "statusDetected": "2026-11-12",
+      "statusChecked": "2026-11-12",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Fremont",
+          "address": "3510 Fremont Ave N, Seattle, WA 98103"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "magnolia-pizza-pasta",
+      "name": "Magnolia Pizza & Pasta",
+      "neighborhood": "Magnolia",
+      "style": "Pizza & pasta",
+      "blurb": "Longtime Magnolia neighborhood spot on W Emerson Pl serving pizza, calzones and pasta dishes.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://www.slicelife.com/restaurants/wa/seattle/98199/magnolia-pizza-pasta-seattle/menu/",
+      "statusDate": null,
+      "statusDetected": "2026-11-12",
+      "statusChecked": "2026-11-12",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Magnolia",
+          "address": "2120 W Emerson Pl, Seattle, WA 98199"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "numero-uno-pizza",
+      "name": "Numero Uno Pizza",
+      "neighborhood": "Pioneer Square",
+      "style": "By-the-slice",
+      "blurb": "Pioneer Square pizza-by-the-slice counter that also serves Turkish lahmacun and pide, with vegetarian, vegan and halal-friendly options.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://www.giftly.com/gift-card/numero-uno-pizza-seattle",
+      "statusDate": null,
+      "statusDetected": "2026-11-12",
+      "statusChecked": "2026-11-12",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Pioneer Square",
+          "address": "103 1st Ave S, Seattle, WA 98104"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
+    },
+    {
+      "id": "olympia-pizza-spaghetti-house-ii",
+      "name": "Olympia Pizza & Spaghetti House II",
+      "neighborhood": "Wallingford",
+      "style": "Greek-influenced",
+      "blurb": "Longtime Wallingford pizzeria with a Greek twist (tzatziki, Greek salad, calzones, gluten-free crust), a neighborhood fixture since the early 1970s.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://wallyhood.org/2015/06/why-isnt-olympia-pizza-more-popular-than-tutta-bella",
+      "statusDate": null,
+      "statusDetected": "2026-11-12",
+      "statusChecked": "2026-11-12",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Wallingford",
+          "address": "4501 Interlake Ave N, Seattle, WA 98103"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }

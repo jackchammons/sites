@@ -1,91 +1,88 @@
 {
-  "updated": "2026-11-12T18:00:00Z",
-  "locations": [
+  "updated": "2026-11-12T00:00:00Z",
+  "candidateReview": [
     {
-      "id": "a-pizza-mart-first-hill",
-      "homepage": "https://www.apizzamartfirsthill.com/",
-      "source": "https://www.apizzamartfirsthill.com/",
-      "sites": [
-        {
-          "neighborhood": "First Hill",
-          "address": "800 Seneca St, Seattle, WA 98101"
-        }
-      ]
+      "name": "Deleo Pizza Company, LLC Dba Deleo Bros Pizza",
+      "verdict": "duplicate",
+      "duplicateOf": "deleo-bros-pizza",
+      "note": "Same business as the on-file DeLeo Bros. Pizza; opened August 2025 at 202 Occidental Ave S in Pioneer Square, run by cousins Nathaniel Dahlman and Johnny De Leo as a Minnesota-born New York-style pizzeria.",
+      "source": "https://intentionalist.com/b/deleo-bros-pizza/"
     },
     {
-      "id": "ridge-pizza",
-      "homepage": "https://www.ridgepizza.com/",
-      "source": "https://www.ridgepizza.com/welcome-1",
-      "sites": [
-        {
-          "neighborhood": "Phinney Ridge",
-          "address": "7217 Greenwood Ave N, Seattle, WA 98103"
-        }
-      ]
+      "name": "Jet City Pizza",
+      "verdict": "chain",
+      "note": "Puget Sound pizza-delivery chain founded in Kenmore in 1994 and now sold as a franchise (FranchiseHelp lists roughly $60k to open a unit), with outlets in Bothell, Newcastle, Marysville, Tacoma and Seattle's Wedgwood; a commodity delivery chain rather than a distinctive pizzeria.",
+      "source": "https://www.franchisehelp.com/franchises/jet-city-pizza/"
     },
     {
-      "id": "seattle-pizza-bar",
-      "homepage": "https://www.seattlepizzaandbar.com/",
-      "source": "https://www.seattlepizzaandbar.com/",
-      "sites": [
-        {
-          "neighborhood": "Belltown/Waterfront",
-          "address": "2801 Western Ave E, Seattle, WA 98121"
-        },
-        {
-          "neighborhood": "South Lake Union",
-          "address": "224 Fairview Ave N, Seattle, WA 98109"
-        }
-      ]
+      "name": "Lodge Pizza",
+      "verdict": "unverifiable",
+      "note": "No trace of a pizzeria called Lodge Pizza found at 501 2nd Ave W or anywhere else in Seattle across multiple searches; likely a stale or misrecorded permit entry."
     }
   ],
-  "links": [
+  "directory": [
     {
-      "id": "ridge-pizza",
-      "website": "https://www.ridgepizza.com/",
-      "instagram": "https://www.instagram.com/ridgepizzanortheast",
-      "source": "https://ridgepizzanortheast.com/welcome"
+      "name": "Alberona's DaVinci Pizza & Pasta",
+      "neighborhood": "Ballard",
+      "style": "New York-style, halal-friendly",
+      "status": "open",
+      "note": "Neighborhood pizza-and-pasta shop on Leary Way NW serving New York-style pies, calzones and halal options, including halal pepperoni.",
+      "source": "https://slicelife.com/restaurants/wa/seattle/98107/davinci-s-pizza-pasta/menu",
+      "address": "3624 Leary Way Nw, Seattle, WA 98107"
     },
     {
-      "id": "seattle-pizza-bar",
-      "website": "https://www.seattlepizzaandbar.com/",
-      "instagram": "https://www.instagram.com/seattle_pizza_and_bar/",
-      "source": "https://www.seattlepizzaandbar.com/"
-    }
-  ],
-  "facts": [
-    {
-      "id": "a-pizza-mart-first-hill",
-      "priceIndex": 2,
-      "source": "https://www.apizzamartfirsthill.com/"
+      "name": "Capitale Pizzeria",
+      "neighborhood": "Capitol Hill",
+      "style": "Modern Neapolitan",
+      "status": "open",
+      "note": "Modern Neapolitan pizzeria on Broadway from the Limoncello team, serving globally-inspired wood-fired pies in the former Boca Pizzeria space.",
+      "source": "https://www.enprimeurclub.com/restaurants/capitale-pizzeria-seattle-restaurant",
+      "address": "426 Broadway E, Seattle, WA 98102"
     },
     {
-      "id": "ridge-pizza",
-      "opened": 2012,
-      "source": "https://www.ridgepizza.com/welcome-1"
+      "name": "Desi Pizza Kitchen",
+      "neighborhood": "Queen Anne",
+      "style": "Indian-fusion",
+      "status": "open",
+      "note": "Queen Anne pizzeria built entirely around Indian-spiced pies such as tandoori paneer and butter chicken alongside classic styles like Hawaiian.",
+      "source": "https://slicelife.com/restaurants/wa/seattle/98109/desi-pizza-kitchen/menu",
+      "address": "2115 Queen Anne Ave N, Seattle, WA 98109"
     },
     {
-      "id": "seattle-pizza-bar",
-      "opened": 2022,
-      "source": "https://www.seattlepizzaandbar.com/"
-    }
-  ],
-  "locationsSkipped": [
-    {
-      "id": "a-pizza-mart-first-hill",
-      "note": "Official site (apizzamartfirsthill.com) only lists its own 800 Seneca St address and a boilerplate, unlinked mention of 'other locations' with no addresses; its /locations path returns 403. Could not confirm the permit leads (9452 35th Ave SW; 1823 Terry Ave #102; 1433 11th Ave; 711 Westlake Ave N; 5240 University Way NE D) against an official source — only aggregator/delivery listings (UberEats, DoorDash, SliceLife) surfaced them, which are excluded as sources."
+      "name": "Fremont Pizza",
+      "neighborhood": "Fremont",
+      "style": "By-the-slice",
+      "status": "open",
+      "note": "Fremont bar-and-slice shop serving classic pizza by the slice with vegan options, draft beer and skeeball.",
+      "source": "https://www.joinlolo.com/merchants/fremont-pizza-seattle-wa-98103",
+      "address": "3510 Fremont Ave N, Seattle, WA 98103"
     },
     {
-      "id": "elemental-pizza",
-      "note": "elementalpizza.com returned HTTP 403 Forbidden on both the homepage and /locations, so no official page could be read. The 701 5th Ave, Ste 300 lead and a separate University Village address appear only on aggregators (Toast, MapQuest, NAICS listings), which are excluded as sources; could not confirm."
+      "name": "Magnolia Pizza & Pasta",
+      "neighborhood": "Magnolia",
+      "style": "Pizza & pasta",
+      "status": "open",
+      "note": "Longtime Magnolia neighborhood spot on W Emerson Pl serving pizza, calzones and pasta dishes.",
+      "source": "https://www.slicelife.com/restaurants/wa/seattle/98199/magnolia-pizza-pasta-seattle/menu/",
+      "address": "2120 W Emerson Pl, Seattle, WA 98199"
     },
     {
-      "id": "ridge-pizza",
-      "note": "Lead 3338 Ne 65th St, Seattle, WA 98115 matches the sibling site ridgepizzanortheast.com, but that page labels the location 'COMING SOON!' rather than open, so it is not yet a confirmed operating branch."
+      "name": "Numero Uno Pizza",
+      "neighborhood": "Pioneer Square",
+      "style": "By-the-slice",
+      "status": "open",
+      "note": "Pioneer Square pizza-by-the-slice counter that also serves Turkish lahmacun and pide, with vegetarian, vegan and halal-friendly options.",
+      "source": "https://www.giftly.com/gift-card/numero-uno-pizza-seattle",
+      "address": "103 1st Ave S, Seattle, WA 98104"
     },
     {
-      "id": "razzis-pizzeria",
-      "note": "Searched for Razzi's Pizzeria's official website (plain search and site: queries); found no confirmed official domain. Third-party listings disagree between razzis.com and razzispizza.com with no way to verify which, if either, is genuine, so the 1314 Howell St lead could not be checked against an official source."
+      "name": "Olympia Pizza & Spaghetti House II",
+      "neighborhood": "Wallingford",
+      "style": "Greek-influenced",
+      "status": "open",
+      "note": "Longtime Wallingford pizzeria with a Greek twist (tzatziki, Greek salad, calzones, gluten-free crust), a neighborhood fixture since the early 1970s.",
+      "source": "https://wallyhood.org/2015/06/why-isnt-olympia-pizza-more-popular-than-tutta-bella",
+      "address": "4501 Interlake Ave N, Seattle, WA 98103"
     }
   ]
 }

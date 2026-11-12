@@ -241,7 +241,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-10-22",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "alberonas-davinci-pizza-pasta",
+      "resolvedDate": "2026-11-12"
     },
     {
       "key": "capitale|426",
@@ -251,7 +253,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-10-29",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "capitale-pizzeria",
+      "resolvedDate": "2026-11-12"
     },
     {
       "key": "deleo dba deleo bros|202",
@@ -261,7 +265,12 @@
         "kc-health"
       ],
       "lastInspection": "2026-10-13",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "duplicate",
+      "note": "Same business as the on-file DeLeo Bros. Pizza; opened August 2025 at 202 Occidental Ave S in Pioneer Square, run by cousins Nathaniel Dahlman and Johnny De Leo as a Minnesota-born New York-style pizzeria.",
+      "matchedId": "deleo-bros-pizza",
+      "resolutionSource": "https://intentionalist.com/b/deleo-bros-pizza/",
+      "resolvedDate": "2026-11-12"
     },
     {
       "key": "desi kitchen|2115",
@@ -271,7 +280,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-01-02",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "desi-pizza-kitchen",
+      "resolvedDate": "2026-11-12"
     },
     {
       "key": "fremont|3510",
@@ -281,7 +292,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-02-24",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "fremont-pizza",
+      "resolvedDate": "2026-11-12"
     },
     {
       "key": "jet city|7500",
@@ -291,7 +304,11 @@
         "kc-health"
       ],
       "lastInspection": "2026-11-05",
-      "status": "pending"
+      "status": "chain",
+      "verdict": "chain",
+      "note": "Puget Sound pizza-delivery chain founded in Kenmore in 1994 and now sold as a franchise (FranchiseHelp lists roughly $60k to open a unit), with outlets in Bothell, Newcastle, Marysville, Tacoma and Seattle's Wedgwood; a commodity delivery chain rather than a distinctive pizzeria.",
+      "resolutionSource": "https://www.franchisehelp.com/franchises/jet-city-pizza/",
+      "resolvedDate": "2026-11-12"
     },
     {
       "key": "lodge|501",
@@ -301,7 +318,10 @@
         "kc-health"
       ],
       "lastInspection": "2026-10-02",
-      "status": "pending"
+      "status": "rejected",
+      "verdict": "unverifiable",
+      "note": "No trace of a pizzeria called Lodge Pizza found at 501 2nd Ave W or anywhere else in Seattle across multiple searches; likely a stale or misrecorded permit entry.",
+      "resolvedDate": "2026-11-12"
     },
     {
       "key": "magnolia and pasta|2120",
@@ -321,7 +341,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-11-03",
-      "status": "pending"
+      "status": "promoted",
+      "matchedId": "numero-uno-pizza",
+      "resolvedDate": "2026-11-12"
     },
     {
       "key": "olympia ii spaghetti|4501",
