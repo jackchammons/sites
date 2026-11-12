@@ -1,57 +1,66 @@
 {
-  "updated": "2026-11-12T00:00:00Z",
+  "updated": "2026-11-12T20:00:00Z",
   "ratingSkipped": [
     {
-      "id": "alberonas-davinci-pizza-pasta",
-      "note": "Searched for Stranger/Eater/Seattle Times/Seattle Met coverage of this Leary Way NW pizzeria across three queries; found only delivery-app listings and aggregator star ratings (Magicpin, WhatsVegan, Slice) plus its own promotional copy -- no published review, roundup entry or news story about this specific place. Skipped."
+      "id": "desi-pizza-kitchen",
+      "note": "Searched for reviews/roundups of this Queen Anne Indian-fusion pizza spot (Infatuation Seattle pizza-delivery guide, Eater Seattle, general web). Found only delivery-app and directory listings (DoorDash, Slice, Atly, MapQuest, Valpak) with scattered customer comments on the butter chicken pizza; no published review, roundup entry, or news story naming this specific pizzeria. Skipping for lack of grounding."
     },
     {
-      "id": "deleo-bros-pizza",
-      "note": "Found genuine news coverage of the August 2025 Pioneer Square opening (whatnow.com on the Minnesota-born chain's expansion, intentionalist.com community spotlight) confirming it serves New York-style slices in a retro 1980s-themed room, but no published review or critic description of the food's execution -- too new for a craft rating grounded in actual coverage of the pizza. Skipped."
-    },
-    {
-      "id": "fremont-pizza",
-      "note": "Searched twice for critic or press coverage (Stranger, Eater, Seattle Met) of this Fremont Ave N pizzeria; found only aggregator/directory pages (Atly, Mapquest with 9 reviews, Lolo, WhatsVegan) describing skee-ball and vegan options, no published review or news story. Skipped."
+      "id": "romano-pizza-pasta",
+      "note": "Searched West Seattle Blog (which covers Delridge food news closely) and Tasting Table's 'Best Pizza Restaurants Seattle' roundup for this Delridge spot (former Olympia Pizza); neither mentions it by name. Only directory/aggregator listings (Slice, MapQuest, MenuPages) with brief customer comments turned up. Skipping for lack of grounding."
     }
   ],
   "factorRatings": [
     {
-      "id": "olympia-pizza-spaghetti-house-ii",
+      "id": "a-pizza-mart-first-hill",
+      "craft": 5.5,
+      "distinctiveness": 6,
+      "criticScore": 5,
+      "opened": 2017,
+      "priceIndex": 2,
+      "styleGroup": "Pizza bar",
+      "sources": [
+        "https://capitolhillseattle.com/2017/03/finishing-one-story-from-the-capitol-hill-pizza-boom-plus-a-pizza-mart-tale-on-first-hill",
+        "https://www.apizzamartfirsthill.com/"
+      ],
+      "note": "Capitol Hill Seattle Blog covered this First Hill shop's 2017 opening as the fifth location of 'the 27-year-old pizza player... known for its liquor and pie combination'; diner write-ups elsewhere describe a dive-bar room with crunchy-crust pizza and solid, unexceptional sandwiches rather than destination-level pies."
+    },
+    {
+      "id": "magnolia-pizza-pasta",
+      "craft": 3.5,
+      "distinctiveness": 2,
+      "criticScore": 3,
+      "styleGroup": "Neighborhood",
+      "sources": [
+        "https://seattlepizza.substack.com/i/161361574/the-rankings",
+        "https://seattlepizza.substack.com/p/release-5"
+      ],
+      "note": "The Definitive Seattle Pizza Rankings substack placed Magnolia Pizza & Pasta in its bottom 'Seattle No' tier (pizza you feel bad refusing but don't want to eat), calling it 'just ok,' 'bad' pizza ordered mainly for workplace happy hours rather than sought out."
+    },
+    {
+      "id": "jet-city-pizza",
       "craft": 6,
-      "distinctiveness": 5,
+      "distinctiveness": 6.5,
       "criticScore": 5.5,
       "priceIndex": 2,
-      "styleGroup": "Neighborhood",
+      "styleGroup": "Creative",
       "sources": [
-        "https://wallyhood.org/2015/06/why-isnt-olympia-pizza-more-popular-than-tutta-bella"
+        "https://www.seattlemet.com/businesses/jet-city-pizza-restaurant-pizza"
       ],
-      "note": "Wallyhood's 2015 neighborhood write-up calls this longtime Wallingford pizza-and-pasta house 'comfortable with a capital C,' praising its Greek-inflected, garlicky pizza and genuinely friendly staff, though it notes Yelp reviews only reach 3 stars (mostly over wait times) and commenters were split, with one calling the dough noticeably sweet."
+      "note": "Seattle Met describes this Wedgwood shop's 'experimental' streak -- a Redhook beer-batter crust and oddball toppings like Thai peanut sauce, mandarin oranges, and gyro meat -- and diner feedback elsewhere is largely positive on flavor and freshness, with occasional gripes about gluten-free handling and inconsistency."
     },
     {
-      "id": "ridge-pizza",
-      "craft": 6.5,
-      "distinctiveness": 5.5,
-      "criticScore": 6,
-      "opened": 2012,
-      "priceIndex": 2,
-      "styleGroup": "Neighborhood",
-      "sources": [
-        "https://www.seattleweekly.com/?p=86546",
-        "https://www.thestranger.com/slog/archives/2012/11/27/the-happiest-hour-ridge-pizza-on-phinney-ridge"
-      ],
-      "note": "Seattle Weekly's 2012 review of this newly-opened Phinney Ridge spot praised a crust 'pillowy on the inside, crispy on the outside' under a generously-sauced pepperoni 'True Value' and locally-themed specialty pies; The Stranger separately highlighted its well-kept, family-friendly, arcade-equipped room named for neighborhood founder Guy Phinney."
-    },
-    {
-      "id": "pudge-bros-pizza",
+      "id": "pizza-pasta-bar",
       "craft": 6.5,
       "distinctiveness": 5,
       "criticScore": 6,
-      "priceIndex": 1,
+      "priceIndex": 2,
       "styleGroup": "By the slice",
       "sources": [
-        "https://ddemay.blogspot.com/2010/04"
+        "https://www.elizabethrider.com/?p=28135",
+        "https://www.pikeplacemarket.org/lunch-at-pike-place-market/"
       ],
-      "note": "A 2010 neighborhood-blog review ('Top shelf pizza at Pudge Bros') gave it 4.5 'licks of the lips,' praising a light, airy crust, a standout marinara balancing sweetness, mild spice and tomato flavor, and surprisingly attentive counter service at this tiny, no-frills NE 45th St. slice shop that deliberately skips elaborate topping combinations in favor of a strong base."
+      "note": "Food blogger Elizabeth Rider ranks it her #1 Pike Place Market pizza pick, writing 'the crust is perfectly cooked, and the toppings are fantastic,' and naming the Margherita and White Truffle Mushroom as standouts; Pike Place Market's own site confirms dough, sauce, and meats are made from scratch daily."
     }
   ]
 }

@@ -3167,7 +3167,9 @@
       ],
       "locationsVerified": "2026-10-05",
       "locationsSource": "https://www.romanopizzaandpasta.com/",
-      "mentions": []
+      "mentions": [],
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Searched West Seattle Blog (which covers Delridge food news closely) and Tasting Table's 'Best Pizza Restaurants Seattle' roundup for this Delridge spot (former Olympia Pizza); neither mentions it by name. Only directory/aggregator listings (Slice, MapQuest, MenuPages) with brief customer comments turned up. Skipping for lack of grounding."
     },
     {
       "id": "world-pizza",
@@ -3427,7 +3429,46 @@
       "instagram": "https://www.instagram.com/apizzamartfirsthill/",
       "priceIndex": 2,
       "priceSource": "https://www.apizzamartfirsthill.com/",
-      "factsAttempted": "2026-11-12"
+      "factsAttempted": "2026-11-12",
+      "factors": {
+        "craft": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://capitolhillseattle.com/2017/03/finishing-one-story-from-the-capitol-hill-pizza-boom-plus-a-pizza-mart-tale-on-first-hill",
+          "sources": [
+            "https://capitolhillseattle.com/2017/03/finishing-one-story-from-the-capitol-hill-pizza-boom-plus-a-pizza-mart-tale-on-first-hill",
+            "https://www.apizzamartfirsthill.com/"
+          ],
+          "note": "Capitol Hill Seattle Blog covered this First Hill shop's 2017 opening as the fifth location of 'the 27-year-old pizza player... known for its liquor and pie combination'; diner write-ups elsewhere describe a dive-bar room with crunchy-crust pizza and solid, unexceptional sandwiches rather than destination-level pies.",
+          "date": "2026-11-12"
+        },
+        "distinctiveness": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://capitolhillseattle.com/2017/03/finishing-one-story-from-the-capitol-hill-pizza-boom-plus-a-pizza-mart-tale-on-first-hill",
+          "sources": [
+            "https://capitolhillseattle.com/2017/03/finishing-one-story-from-the-capitol-hill-pizza-boom-plus-a-pizza-mart-tale-on-first-hill",
+            "https://www.apizzamartfirsthill.com/"
+          ],
+          "note": "Capitol Hill Seattle Blog covered this First Hill shop's 2017 opening as the fifth location of 'the 27-year-old pizza player... known for its liquor and pie combination'; diner write-ups elsewhere describe a dive-bar room with crunchy-crust pizza and solid, unexceptional sandwiches rather than destination-level pies.",
+          "date": "2026-11-12"
+        },
+        "critical": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://capitolhillseattle.com/2017/03/finishing-one-story-from-the-capitol-hill-pizza-boom-plus-a-pizza-mart-tale-on-first-hill",
+          "sources": [
+            "https://capitolhillseattle.com/2017/03/finishing-one-story-from-the-capitol-hill-pizza-boom-plus-a-pizza-mart-tale-on-first-hill",
+            "https://www.apizzamartfirsthill.com/"
+          ],
+          "note": "Capitol Hill Seattle Blog covered this First Hill shop's 2017 opening as the fifth location of 'the 27-year-old pizza player... known for its liquor and pie combination'; diner write-ups elsewhere describe a dive-bar room with crunchy-crust pizza and solid, unexceptional sandwiches rather than destination-level pies.",
+          "date": "2026-11-12"
+        }
+      },
+      "ratingAttempted": "2026-11-12",
+      "opened": 2017,
+      "styleGroup": "Pizza bar",
+      "lastVerified": "2026-11-12"
     },
     {
       "id": "seward-park-pizza",
@@ -5154,7 +5195,9 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Searched for reviews/roundups of this Queen Anne Indian-fusion pizza spot (Infatuation Seattle pizza-delivery guide, Eater Seattle, general web). Found only delivery-app and directory listings (DoorDash, Slice, Atly, MapQuest, Valpak) with scattered customer comments on the butter chicken pizza; no published review, roundup entry, or news story naming this specific pizzeria. Skipping for lack of grounding."
     },
     {
       "id": "fremont-pizza",
@@ -5206,7 +5249,45 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 3.5,
+          "setBy": "agent",
+          "source": "https://seattlepizza.substack.com/i/161361574/the-rankings",
+          "sources": [
+            "https://seattlepizza.substack.com/i/161361574/the-rankings",
+            "https://seattlepizza.substack.com/p/release-5"
+          ],
+          "note": "The Definitive Seattle Pizza Rankings substack placed Magnolia Pizza & Pasta in its bottom 'Seattle No' tier (pizza you feel bad refusing but don't want to eat), calling it 'just ok,' 'bad' pizza ordered mainly for workplace happy hours rather than sought out.",
+          "date": "2026-11-12"
+        },
+        "distinctiveness": {
+          "value": 2,
+          "setBy": "agent",
+          "source": "https://seattlepizza.substack.com/i/161361574/the-rankings",
+          "sources": [
+            "https://seattlepizza.substack.com/i/161361574/the-rankings",
+            "https://seattlepizza.substack.com/p/release-5"
+          ],
+          "note": "The Definitive Seattle Pizza Rankings substack placed Magnolia Pizza & Pasta in its bottom 'Seattle No' tier (pizza you feel bad refusing but don't want to eat), calling it 'just ok,' 'bad' pizza ordered mainly for workplace happy hours rather than sought out.",
+          "date": "2026-11-12"
+        },
+        "critical": {
+          "value": 3,
+          "setBy": "agent",
+          "source": "https://seattlepizza.substack.com/i/161361574/the-rankings",
+          "sources": [
+            "https://seattlepizza.substack.com/i/161361574/the-rankings",
+            "https://seattlepizza.substack.com/p/release-5"
+          ],
+          "note": "The Definitive Seattle Pizza Rankings substack placed Magnolia Pizza & Pasta in its bottom 'Seattle No' tier (pizza you feel bad refusing but don't want to eat), calling it 'just ok,' 'bad' pizza ordered mainly for workplace happy hours rather than sought out.",
+          "date": "2026-11-12"
+        }
+      },
+      "ratingAttempted": "2026-11-12",
+      "styleGroup": "Neighborhood",
+      "lastVerified": "2026-11-12"
     },
     {
       "id": "numero-uno-pizza",
@@ -5319,7 +5400,43 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/businesses/jet-city-pizza-restaurant-pizza",
+          "sources": [
+            "https://www.seattlemet.com/businesses/jet-city-pizza-restaurant-pizza"
+          ],
+          "note": "Seattle Met describes this Wedgwood shop's 'experimental' streak -- a Redhook beer-batter crust and oddball toppings like Thai peanut sauce, mandarin oranges, and gyro meat -- and diner feedback elsewhere is largely positive on flavor and freshness, with occasional gripes about gluten-free handling and inconsistency.",
+          "date": "2026-11-12"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/businesses/jet-city-pizza-restaurant-pizza",
+          "sources": [
+            "https://www.seattlemet.com/businesses/jet-city-pizza-restaurant-pizza"
+          ],
+          "note": "Seattle Met describes this Wedgwood shop's 'experimental' streak -- a Redhook beer-batter crust and oddball toppings like Thai peanut sauce, mandarin oranges, and gyro meat -- and diner feedback elsewhere is largely positive on flavor and freshness, with occasional gripes about gluten-free handling and inconsistency.",
+          "date": "2026-11-12"
+        },
+        "critical": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/businesses/jet-city-pizza-restaurant-pizza",
+          "sources": [
+            "https://www.seattlemet.com/businesses/jet-city-pizza-restaurant-pizza"
+          ],
+          "note": "Seattle Met describes this Wedgwood shop's 'experimental' streak -- a Redhook beer-batter crust and oddball toppings like Thai peanut sauce, mandarin oranges, and gyro meat -- and diner feedback elsewhere is largely positive on flavor and freshness, with occasional gripes about gluten-free handling and inconsistency.",
+          "date": "2026-11-12"
+        }
+      },
+      "ratingAttempted": "2026-11-12",
+      "priceIndex": 2,
+      "styleGroup": "Creative",
+      "lastVerified": "2026-11-12"
     },
     {
       "id": "pizza-pasta-bar",
@@ -5344,7 +5461,46 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.elizabethrider.com/?p=28135",
+          "sources": [
+            "https://www.elizabethrider.com/?p=28135",
+            "https://www.pikeplacemarket.org/lunch-at-pike-place-market/"
+          ],
+          "note": "Food blogger Elizabeth Rider ranks it her #1 Pike Place Market pizza pick, writing 'the crust is perfectly cooked, and the toppings are fantastic,' and naming the Margherita and White Truffle Mushroom as standouts; Pike Place Market's own site confirms dough, sauce, and meats are made from scratch daily.",
+          "date": "2026-11-12"
+        },
+        "distinctiveness": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://www.elizabethrider.com/?p=28135",
+          "sources": [
+            "https://www.elizabethrider.com/?p=28135",
+            "https://www.pikeplacemarket.org/lunch-at-pike-place-market/"
+          ],
+          "note": "Food blogger Elizabeth Rider ranks it her #1 Pike Place Market pizza pick, writing 'the crust is perfectly cooked, and the toppings are fantastic,' and naming the Margherita and White Truffle Mushroom as standouts; Pike Place Market's own site confirms dough, sauce, and meats are made from scratch daily.",
+          "date": "2026-11-12"
+        },
+        "critical": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.elizabethrider.com/?p=28135",
+          "sources": [
+            "https://www.elizabethrider.com/?p=28135",
+            "https://www.pikeplacemarket.org/lunch-at-pike-place-market/"
+          ],
+          "note": "Food blogger Elizabeth Rider ranks it her #1 Pike Place Market pizza pick, writing 'the crust is perfectly cooked, and the toppings are fantastic,' and naming the Margherita and White Truffle Mushroom as standouts; Pike Place Market's own site confirms dough, sauce, and meats are made from scratch daily.",
+          "date": "2026-11-12"
+        }
+      },
+      "ratingAttempted": "2026-11-12",
+      "priceIndex": 2,
+      "styleGroup": "By the slice",
+      "lastVerified": "2026-11-12"
     },
     {
       "id": "santorini-pizza-pasta",
