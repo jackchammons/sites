@@ -1,54 +1,86 @@
 {
-  "updated": "2026-11-12T19:30:00Z",
-  "factorRatings": [
+  "updated": "2026-11-12T00:00:00Z",
+  "mentions": [
     {
-      "id": "ananas-pizzeria",
-      "craft": 6,
-      "distinctiveness": 8.5,
-      "criticScore": 7.6,
-      "opened": 2023,
-      "styleGroup": "Creative",
-      "sources": [
-        "https://theinfatuation.com/seattle/reviews/ananas-pizzeria",
-        "https://curiocity.com/ananas-pizzeria-seattle/"
-      ],
-      "note": "The Infatuation (7.6/10) says this First Hill pizzeria and dive bar from the Taurus Ox team 'doesn't quite compete with pizzerias in other parts of town' on the basics, but its adventurous Lao-influenced pies -- bamboo shoots, lardon, dill, togarashi, pineapple -- make it the most exciting opening the neighborhood has seen, best for late-night slices and beer (open till 1am). Curiocity's opening report (Nov. 2023) confirms the Laotian-pizza concept from the Taurus Ox owners."
+      "id": "seward-park-pizza",
+      "title": "Which Crust Does the South End Trust?",
+      "url": "https://southseattleemerald.org/community/2025/10/28/which-crust-does-the-south-end-trust",
+      "source": "South Seattle Emerald",
+      "date": "2025-10-28",
+      "kind": "mention"
     },
     {
-      "id": "capitale-pizzeria",
-      "craft": 6.5,
-      "distinctiveness": 7.5,
-      "criticScore": 6,
-      "opened": 2024,
-      "styleGroup": "Creative",
-      "sources": [
-        "https://whatnow.com/?p=216497",
-        "https://capitalepizzeria.com"
-      ],
-      "note": "WhatNow reported (July 2024) that Capitale Pizzeria -- a pizza-focused sibling of Belltown's La Fontana Siciliana from Rodrigo Parisi and Saulo Cruz -- was taking over the former Boca Pizzeria space on Broadway E, expected to open later in 2024. The restaurant's own menu confirms a globally themed lineup of wood-fired pies named for cities (Capri, Lisboa, Madrid, Napoli, Ankara, Sao Paulo), a distinctive angle, though no critic has yet weighed in on execution."
+      "id": "georgetown-pizza-arcade",
+      "title": "Arts + Eats: Best Pizza Places in Seattle, Tacoma & Bellevue",
+      "url": "https://www.parentmap.com/article/best-pizza-places-seattle-tacoma-bellevue",
+      "source": "ParentMap",
+      "date": "2026-06-17",
+      "kind": "ranking"
+    },
+    {
+      "id": "good-shape-pizza",
+      "title": "Good Shape Pizza",
+      "url": "https://theinfatuation.com/seattle/reviews/good-shape-pizza",
+      "source": "The Infatuation",
+      "date": "2024-11-27",
+      "kind": "mention"
+    },
+    {
+      "id": "good-shape-pizza",
+      "title": "Rachel Belle Shares Her Top 5 Favorite Seattle Pizza Spots",
+      "url": "https://www.cascadepbs.org/culture/2025/04/rachel-belle-shares-her-top-5-favorite-seattle-pizza-spots",
+      "source": "Cascade PBS",
+      "date": "2025-04-23",
+      "kind": "ranking"
+    },
+    {
+      "id": "in-pizza-we-crust",
+      "title": "From rocking a food truck to Admiral area comfort: In Pizza We Crust finds a permanent home",
+      "url": "https://www.westsideseattle.com/node/60911",
+      "source": "West Seattle Blog",
+      "date": "2025-10-31",
+      "kind": "opening"
+    },
+    {
+      "id": "in-pizza-we-crust",
+      "title": "In Pizza We Crust: From pop-up to West Seattle pizzeria",
+      "url": "https://seattlerefined.com/lifestyle/in-pizza-we-crust",
+      "source": "Seattle Refined",
+      "date": "2026-04-22",
+      "kind": "opening"
     }
   ],
-  "ratingSkipped": [
+  "coverageSkipped": [
     {
-      "id": "santorini-pizza-pasta",
-      "note": "Searched for critic reviews or roundup mentions of Santorini Pizza & Pasta (Meadowbrook/Wedgwood). Found only directory/aggregator listings (Atly, MapQuest, Wanderlog, OpenTable) and a single anonymous 2008 personal blog post. No published criticism from a real outlet turned up, so skipping rather than grounding a score in aggregator copy."
+      "id": "dantini-pizza",
+      "note": "Searched 'Dantini Pizza Interbay Seattle review opening' and 'Dantini Pizza Seattle news 2025 2026'. Only named-outlet coverage found is a 2024-08-19 Infatuation review (8.4), which is more than 730 days old; remaining results are aggregator/listing pages with no dates in the last two years."
     },
     {
-      "id": "numero-uno-pizza",
-      "note": "Searched for reviews or news coverage of Numero Uno Pizza at 103 1st Ave S, Pioneer Square. The only hit was a Slice.com ordering/menu page with no critic or customer commentary; broader Pioneer Square pizza coverage (Pizzeria Gabbiano, Un Po Tipsy, Moto Pizza) never mentions this business. No credible published source found."
+      "id": "a-pizza-mart-first-hill",
+      "note": "Searched 'A Pizza Mart First Hill Seattle review' and 'A Pizza Mart Seattle First Hill news 2025'. Found only aggregator/listing pages (MapQuest, Atly, DoorDash) and a 2011 Stranger review that covers a different First Hill pizzeria (Primo), not A Pizza Mart. No qualifying outlet coverage within two years."
     },
     {
-      "id": "downtown-romios-pizza-pasta",
-      "note": "Searched Seattle Times, Seattle Met, and Capitol Hill Seattle for coverage of Romio's Pizza & Pasta's downtown Pike St location. Found only a 2009 Seattle Met 'Whaddya Think' blurb calling the Romio's brand mediocre/hit-or-miss (page unreachable to confirm it discusses this specific location, and it is 17 years old) plus aggregator listings (OpenTable, Yelp, DoorDash, Toast). Nothing specific and verifiable enough to ground a rating for this location."
+      "id": "seward-park-pizza",
+      "note": "Beyond the South Seattle Emerald listing already reported, searched further and found no second story; the only other Seattle Met/Infatuation hits were about Flying Squirrel Pizza Co.'s original Seward Park location, a different business."
     },
     {
-      "id": "dudez-woodfired-pizza",
-      "note": "Searched for reviews or news about Dude'Z Woodfired Pizza on Fuhrman Ave E, Eastlake. Found only directory/aggregator listings (Atly, MapQuest, DoorDash) with user ratings but no professional review, roundup entry, or news story. No credible published source found."
+      "id": "belltown-pizza",
+      "note": "Searched 'Belltown Pizza Seattle review 2025' and 'Belltown Pizza Seattle news closing OR opening 2025'. Found only Yelp/Tripadvisor/Roadtrippers user reviews and MapQuest listings; no story from a named outlet (Times, Met, Infatuation, Eater, Stranger) within the last two years."
+    },
+    {
+      "id": "elemental-pizza",
+      "note": "Searched 'Elemental Pizza University Village Seattle review' and 'Elemental Pizza University Village Seattle news 2025 2026'. Only named-outlet coverage found dates to the 2012 opening and a 2013 Seattle Met feature; nothing within the last two years besides aggregator reviews."
+    },
+    {
+      "id": "eymans-pizza",
+      "note": "Searched 'Eyman's Pizza Rainier Valley Seattle review' and 'Eyman's Pizza Beacon Hill Seattle news 2025'. Found only directory/aggregator listings (Zabihah, Atly, Intentionalist) with no professional critic review or news item from a named outlet."
+    },
+    {
+      "id": "georgetown-pizza-arcade",
+      "note": "A 2023-02-02 Seattle Times arcade guide names it and says it opened November 2022, but that story is more than 730 days old; used the still-current ParentMap roundup instead."
     }
   ],
   "rejected": [
-    "mentions[0]: date is older than 730 days",
-    "mentions[1]: date is older than 730 days",
-    "mentions[2]: date is older than 730 days"
+    "mentions[0]: title missing or too short"
   ]
 }

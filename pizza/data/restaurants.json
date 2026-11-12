@@ -420,7 +420,9 @@
       "mentions": [],
       "statusChecked": "2026-09-06",
       "instagram": "https://www.instagram.com/seriouspieseattle/",
-      "ratingAttempted": "2026-11-11"
+      "ratingAttempted": "2026-11-11",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Serious Pie Seattle review 2024 2025' and a follow-up for Eater/Seattle Met/Seattle Times roundups naming it. Found only pieces older than the 730-day window (a 2024-04-12 iHeart/Reader's Digest pickup, a 2015 Daily Meal ranking) or undated aggregator/listing pages (OpenTable, Tasting Table, Opinionated About Dining). No real-outlet story within the last two years confirmed with a working URL."
     },
     {
       "id": "dinos-tomato-pie",
@@ -489,7 +491,9 @@
       "instagram": "https://www.instagram.com/dinosseattle/",
       "statusChecked": "2026-09-16",
       "openedSource": "https://www.seattlemet.com/eat-and-drink/2016/03/dino-s-tomato-pie-opens-wednesday-on-capitol-hill",
-      "ratingAttempted": "2026-11-11"
+      "ratingAttempted": "2026-11-11",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Dino's Tomato Pie Capitol Hill review 2024 2025' and a follow-up for Eater/Seattle Met/Seattle Times coverage. The Infatuation and Stranger praise are undated/older, Seattle Met's neighborhood pieces predate the window, and the one possible 2025 KING5 piece returned HTTP 403 and could not be verified. No confirmable story within two years."
     },
     {
       "id": "lupo",
@@ -558,7 +562,9 @@
       "mentions": [],
       "instagram": "https://www.instagram.com/lupofremont",
       "statusChecked": "2026-09-16",
-      "ratingAttempted": "2026-11-11"
+      "ratingAttempted": "2026-11-11",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Lupo Fremont Seattle pizza review' and a follow-up for 2024/2025 roundups. The Infatuation review (2023-04-03) and SeattleRefined feature (2023-09-26) are both outside the 730-day window; Secret Seattle and Only In Your State pages returned empty/403 on fetch and couldn't be dated. No qualifying mention found."
     },
     {
       "id": "independent-pizzeria",
@@ -1103,7 +1109,9 @@
       "instagram": "https://www.instagram.com/viatrib/",
       "statusChecked": "2026-10-16",
       "openedSource": "https://en.wikipedia.org/wiki/Via_Tribunali",
-      "ratingAttempted": "2026-11-11"
+      "ratingAttempted": "2026-11-11",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Via Tribunali Seattle news' and a follow-up for a 2024/2025 closure. Found only old Pizza Today (2015) and Eater ownership (2020) coverage, plus unverified OpenTable 'permanently closed' labels on the Georgetown listing with no date or news report backing them. No story within two years."
     },
     {
       "id": "big-marios",
@@ -1298,7 +1306,9 @@
       "instagram": "https://www.instagram.com/proletariatpizza/",
       "statusChecked": "2026-10-26",
       "openedSource": "https://whitecenternow.com/?p=5015",
-      "ratingAttempted": "2026-11-11"
+      "ratingAttempted": "2026-11-11",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Proletariat Pizza White Center 2024 2025' and a follow-up news search. All editorial coverage found (West Seattle Blog, White Center Now, Seattle Weekly) dates from 2009-2011; no 2024-2026 story turned up."
     },
     {
       "id": "ballard-pizza-co",
@@ -1371,7 +1381,9 @@
       "instagram": "https://www.instagram.com/ballardpizzaco/",
       "openedSource": "https://www.seattlemet.com/eat-and-drink/2012/04/first-look-ballard-pizza-company",
       "statusChecked": "2026-11-05",
-      "ratingAttempted": "2026-11-11"
+      "ratingAttempted": "2026-11-11",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Ballard Pizza Company review 2024 2025' and a follow-up for Eater/Seattle Met rankings. The Stranger review is from 2012, and the Stacker Tripadvisor ranking that mentioned it turned out (on fetch) to be dated 2022-07-19, both outside the 730-day window. No qualifying recent mention found."
     },
     {
       "id": "zeeks-pizza",
@@ -1521,7 +1533,15 @@
           "date": "2026-11-11"
         }
       },
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://phinneywood.com/2025/11/former-zeeks-phinney-location-to-become-stevies-famous/",
+          "title": "Former Zeek's Phinney location to become Stevie's Famous",
+          "source": "PhinneyWood",
+          "date": "2025-11-05",
+          "kind": "closing"
+        }
+      ],
       "instagram": "https://www.instagram.com/zeekspizza/",
       "openedSource": "https://zeekspizza.com",
       "statusChecked": "2026-11-05",
@@ -1595,7 +1615,9 @@
       "factsAttempted": "2026-11-05",
       "factsNote": "Checked talaricospizza.com home page and its /talaricos-about page: no founding year or 'since'/'established' line on either. Searched local coverage (West Seattle Blog, Seattle Met, historylink.org Pizza in Seattle history piece) and found opening coverage but no dated founding year to cite.",
       "statusChecked": "2026-11-05",
-      "ratingAttempted": "2026-11-11"
+      "ratingAttempted": "2026-11-11",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Talarico's West Seattle review 2024 2025' and a follow-up news search. Found only a 2020 reopening story and undated Infatuation/Seattle Met listings; no 2024-2026 coverage."
     },
     {
       "id": "hot-mamas-pizza",
@@ -1739,7 +1761,9 @@
       "instagram": "https://www.instagram.com/humblepie_seattle/",
       "openedSource": "https://dailyhive.com/seattle/seattle-humble-pie-pizza",
       "statusChecked": "2026-11-10",
-      "ratingAttempted": "2026-11-11"
+      "ratingAttempted": "2026-11-11",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Humble Pie Central District 2024 2025' and a follow-up for closures/news. All editorial coverage (Seattle Mag, Seattle Met, KING5) dates to 2013-2014; a MapQuest listing shows a 'Closed' tag with 2024 reviews but that is not a published news report. No qualifying story found."
     },
     {
       "id": "pizzeria-gabbiano",
@@ -1856,7 +1880,15 @@
           "date": "2026-11-11"
         }
       },
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://www.cascadepbs.org/culture/2025/04/rachel-belle-shares-her-top-5-favorite-seattle-pizza-spots",
+          "title": "Rachel Belle shares her top 5 favorite Seattle pizza spots",
+          "source": "Cascade PBS",
+          "date": "2025-04-23",
+          "kind": "ranking"
+        }
+      ],
       "instagram": "https://www.instagram.com/postalleypizza/",
       "openedSource": "https://en.wikipedia.org/wiki/Post_Alley_Pizza",
       "statusChecked": "2026-11-10",
@@ -1998,7 +2030,9 @@
       "instagram": "https://www.instagram.com/sliceboxpizza_sodo/",
       "openedSource": "https://seattlemag.com/food-and-culture/serious-wave-new-pizza-restaurants-has-hit-seattle-recently/",
       "statusChecked": "2026-11-10",
-      "ratingAttempted": "2026-11-11"
+      "ratingAttempted": "2026-11-11",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Slice Box Georgetown Seattle pizza' and 'Slice Box Pizza Georgetown'. Found an Infatuation review (Oct 31, 2024) and several directory listings, but all describe the SoDo location at 1727 1st Ave S (and a Magnolia spot); no coverage names a Georgetown location for this business."
     },
     {
       "id": "roccos",
@@ -2064,7 +2098,9 @@
       "instagram": "https://www.instagram.com/roccos_seattle/",
       "openedSource": "https://www.roccosseattle.com",
       "statusChecked": "2026-11-10",
-      "ratingAttempted": "2026-11-11"
+      "ratingAttempted": "2026-11-11",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Rocco's pizza Belltown Seattle review' and a targeted outlet search for Eater/Infatuation/Seattle Times coverage from 2024-2025. Found only OpenTable/aggregator listings and no named review or news item from a real outlet within the last two years."
     },
     {
       "id": "my-friend-dereks",
@@ -2088,7 +2124,15 @@
       ],
       "locationsVerified": "2026-08-26",
       "locationsSource": "https://myfrienddereks.com/",
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://www.theinfatuation.com/seattle/reviews/my-friend-dereks",
+          "title": "My Friend Derek's",
+          "source": "The Infatuation",
+          "date": "2025-10-29",
+          "kind": "mention"
+        }
+      ],
       "statusNote": "The Detroit-style pop-up converted to a permanent brick-and-mortar in Tangletown and is now operating with regular weekly hours.",
       "statusChecked": "2026-08-26",
       "factors": {
@@ -2277,7 +2321,15 @@
       ],
       "locationsVerified": "2026-08-26",
       "locationsSource": "https://sinners.pizza/",
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://whatnow.com/?p=375365",
+          "title": "New Pizza Spot Sinner's Pizza to Open in Seattle's University District",
+          "source": "WhatNow",
+          "date": "2026-02-18",
+          "kind": "opening"
+        }
+      ],
       "instagram": "https://www.instagram.com/sinnerspizzaco/",
       "factors": {
         "craft": {
@@ -2501,7 +2553,9 @@
       "opened": 2016,
       "styleGroup": "Neapolitan",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/cornuto_pizzeria/"
+      "instagram": "https://www.instagram.com/cornuto_pizzeria/",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Cornuto Pizzeria Greenwood Phinney Ridge review' and 'Cornuto Pizzeria Seattle 2025'. Found The Infatuation's review, but it published Dec 1, 2022, outside the two-year window; 2025 results were only Yelp/aggregator reviews, no outlet coverage in range."
     },
     {
       "id": "razzis-pizzeria",
@@ -2555,7 +2609,9 @@
       "lastVerified": "2026-08-27",
       "instagram": "https://www.instagram.com/razzisseattle/",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "Searched for Razzi's Pizzeria's official website (plain search and site: queries); found no confirmed official domain. Third-party listings disagree between razzis.com and razzispizza.com with no way to verify which, if either, is genuine, so the 1314 Howell St lead could not be checked against an official source."
+      "locationsNote": "Searched for Razzi's Pizzeria's official website (plain search and site: queries); found no confirmed official domain. Third-party listings disagree between razzis.com and razzispizza.com with no way to verify which, if either, is genuine, so the 1314 Howell St lead could not be checked against an official source.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Razzi's Pizzeria Greenwood Seattle' and '...news review Eater'. Found only HappyCow, FindMeGlutenFree, Birdeye and Spinach aggregator/directory listings; no named-outlet press coverage turned up."
     },
     {
       "id": "pizzeria-la-rocca",
@@ -2608,7 +2664,9 @@
       "lastVerified": "2026-08-27",
       "instagram": "https://www.instagram.com/pizzerialaroccaseattle/",
       "opened": 2021,
-      "openedSource": "https://intentionalist.com/b/pizzeria-la-rocca/"
+      "openedSource": "https://intentionalist.com/b/pizzeria-la-rocca/",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Pizzeria La Rocca Greenwood review' and 'Pizzeria La Rocca Seattle Times Best in PNW 2025'. Found PhinneyWood's piece on its 2024 Seattle Times Best in the PNW awards, but it published Sept 23, 2024, just outside the two-year window; no 2025 award or other coverage found."
     },
     {
       "id": "pi-vegan-pizzeria",
@@ -2661,7 +2719,9 @@
       "lastVerified": "2026-08-27",
       "instagram": "https://www.instagram.com/pivegan/",
       "factsAttempted": "2026-11-05",
-      "factsNote": "Checked pizzapivegan.com home page: only claims 'America's Oldest vegan pizzeria' with no date. Search found a 2015 VegNews piece about an ownership change but no stated founding year."
+      "factsNote": "Checked pizzapivegan.com home page: only claims 'America's Oldest vegan pizzeria' with no date. Search found a 2015 VegNews piece about an ownership change but no stated founding year.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Pi Vegan Pizzeria Roosevelt review' and '...Eater Infatuation review 2025'. Found only HappyCow/aggregator reviews and a 2015 VegNews story about an earlier ownership change at 'Pizza Pi'; nothing within the two-year window."
     },
     {
       "id": "mioposto",
@@ -2712,7 +2772,9 @@
       "opened": 2006,
       "styleGroup": "Wood-fired",
       "lastVerified": "2026-08-27",
-      "instagram": "https://instagram.com/mioposto"
+      "instagram": "https://instagram.com/mioposto",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Mioposto Mount Baker Seattle pizza' and 'Mioposto Seattle 2025 news'. Found only older Stranger/Seattle Met features and directory listings, none within the two-year window."
     },
     {
       "id": "veraci-pizza",
@@ -2770,7 +2832,9 @@
       "priceIndex": 2,
       "styleGroup": "Neapolitan",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/veraci_pizza/"
+      "instagram": "https://www.instagram.com/veraci_pizza/",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Veraci Pizza Wedgwood Seattle' and 'Veraci Pizza Seattle 2025 news'. Found historical opening coverage and an Inlander piece about founder Jett's departure that would not load to confirm date or whether it covers the Wedgwood location; nothing confirmed within the two-year window."
     },
     {
       "id": "south-town-pie",
@@ -2823,7 +2887,9 @@
       "lastVerified": "2026-08-27",
       "instagram": "https://instagram.com/southtownpie_seattle",
       "opened": 2018,
-      "openedSource": "https://seattlemag.com/food-and-culture/after-closing-his-fine-dining-restaurant-queen-anne-seattle-chef-back-new-south-park/"
+      "openedSource": "https://seattlemag.com/food-and-culture/after-closing-his-fine-dining-restaurant-queen-anne-seattle-chef-back-new-south-park/",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched general South Park coverage and a 2025/2026-specific query. The only named critic coverage is a 2022-09-12 Infatuation review (over two years old) and a 2018 Seattle Met opening dispatch; no outlet coverage found within the last two years."
     },
     {
       "id": "pizzeria-22",
@@ -2848,7 +2914,15 @@
       ],
       "locationsVerified": "2026-09-10",
       "locationsSource": "https://www.pizzeria22.com/",
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://westsideseattle.com/node/60321",
+          "title": "Pizzeria 22 doing well with new owners planning delicious changes",
+          "source": "West Seattle Blog",
+          "date": "2025-01-20",
+          "kind": "mention"
+        }
+      ],
       "factors": {
         "craft": {
           "value": 7.5,
@@ -2935,7 +3009,9 @@
       "lastVerified": "2026-08-27",
       "instagram": "https://www.instagram.com/johnnymospizzeria/",
       "factsAttempted": "2026-11-05",
-      "factsNote": "Checked johnnymos.com home page and its /our-story page: both describe the two founders' friendship but state no founding year. Search turned up no article with a year either."
+      "factsNote": "Checked johnnymos.com home page and its /our-story page: both describe the two founders' friendship but state no founding year. Search turned up no article with a year either.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Johnny Mo's Pizzeria Eastlake Seattle' and a targeted opening-date query. Found only an undated Seattle Met 'Editor's Pick' profile and aggregator/booking listings; no dated news or review from the last two years."
     },
     {
       "id": "pazzos-on-eastlake",
@@ -2986,7 +3062,9 @@
       "opened": 1990,
       "styleGroup": "Neighborhood",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/pazzosoneastlake/"
+      "instagram": "https://www.instagram.com/pazzosoneastlake/",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Pazzo's on Eastlake Seattle pizza review' and a targeted outlet query (Infatuation/Eater/Seattle Met/Stranger). Found no critic review or news item at all, only directory/listing sites (Restaurantji, MapQuest, Airbnb, WhatsVegan)."
     },
     {
       "id": "sopranos-antico",
@@ -3037,7 +3115,9 @@
       "opened": 2017,
       "styleGroup": "Neapolitan",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/anticosopranospizzapasta/"
+      "instagram": "https://www.instagram.com/anticosopranospizzapasta/",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Soprano's Antico West Seattle pizza' and a 2024-2025 opening/news query. Found only 2016-2017 West Seattle Blog items about its original opening and a 2025 customer review snippet on MapQuest; no outlet coverage within the last two years."
     },
     {
       "id": "pizza-ritual",
@@ -3062,7 +3142,15 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://westseattleblog.com/2026/01/biznote-its-just-pizza-says-proprietor-of-pizza-ritual-settling-on-days-hours",
+          "title": "BIZNOTE: 'It's just pizza' - says proprietor of Pizza Ritual, settling on days/hours",
+          "source": "West Seattle Blog",
+          "date": "2026-01-07",
+          "kind": "mention"
+        }
+      ],
       "factors": {
         "craft": {
           "value": 6.5,
@@ -3114,7 +3202,15 @@
       ],
       "locationsVerified": "2026-09-30",
       "locationsSource": "https://vincesrestaurants.com/pizzeria-pulcinella",
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://southseattleemerald.org/community/2025/10/28/which-crust-does-the-south-end-trust",
+          "title": "Which Crust Does the South End Trust?",
+          "source": "South Seattle Emerald",
+          "date": "2025-10-28",
+          "kind": "ranking"
+        }
+      ],
       "factors": {
         "craft": {
           "value": 7.5,
@@ -3167,7 +3263,9 @@
       ],
       "locationsVerified": "2026-10-05",
       "locationsSource": "https://www.romanopizzaandpasta.com/",
-      "mentions": []
+      "mentions": [],
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Searched West Seattle Blog (which covers Delridge food news closely) and Tasting Table's 'Best Pizza Restaurants Seattle' roundup for this Delridge spot (former Olympia Pizza); neither mentions it by name. Only directory/aggregator listings (Slice, MapQuest, MenuPages) with brief customer comments turned up. Skipping for lack of grounding."
     },
     {
       "id": "world-pizza",
@@ -3219,7 +3317,9 @@
       "priceIndex": 1,
       "styleGroup": "By the slice",
       "lastVerified": "2026-08-27",
-      "instagram": "https://www.instagram.com/worldpizza/"
+      "instagram": "https://www.instagram.com/worldpizza/",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'World Pizza Chinatown International District Seattle' and a 2024-2025 news query. Found only a 2011 reopening review and a 2019 Seattle Met 'best of C-ID' list mention; no coverage within the last two years."
     },
     {
       "id": "sacro-bosco-pizza-wine",
@@ -3244,7 +3344,22 @@
       ],
       "locationsVerified": "2026-10-15",
       "locationsSource": "https://www.sacroboscopizza.com/location",
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://www.seattlemet.com/articles/sacro-bosco-temple-pastries-pizza",
+          "title": "Sacro Bosco Is Not a Pizza Restaurant. Thank God.",
+          "source": "Seattle Met",
+          "date": "2025-08-20",
+          "kind": "mention"
+        },
+        {
+          "url": "https://www.seattlemet.com/eat-and-drink/2026/05/sacro-bosco-stacked-bush-garden-news",
+          "title": "Friday Feed",
+          "source": "Seattle Met",
+          "date": "2026-05-15",
+          "kind": "closing"
+        }
+      ],
       "factors": {
         "craft": {
           "value": 8.5,
@@ -3374,7 +3489,9 @@
       "lastVerified": "2026-08-27",
       "instagram": "https://www.instagram.com/dantinipizza",
       "factsAttempted": "2026-11-05",
-      "factsNote": "Checked dantinipizza.com home page and /menu-1: no founding year stated; the menu is two unreadable image files (Dantini-menu-1.jpg, Dantini-menu-2.jpg), not text prices. The square.site order link returned no content."
+      "factsNote": "Checked dantinipizza.com home page and /menu-1: no founding year stated; the menu is two unreadable image files (Dantini-menu-1.jpg, Dantini-menu-2.jpg), not text prices. The square.site order link returned no content.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Dantini Pizza Interbay Seattle review opening' and 'Dantini Pizza Seattle news 2025 2026'. Only named-outlet coverage found is a 2024-08-19 Infatuation review (8.4), which is more than 730 days old; remaining results are aggregator/listing pages with no dates in the last two years."
     },
     {
       "id": "a-pizza-mart-first-hill",
@@ -3427,7 +3544,48 @@
       "instagram": "https://www.instagram.com/apizzamartfirsthill/",
       "priceIndex": 2,
       "priceSource": "https://www.apizzamartfirsthill.com/",
-      "factsAttempted": "2026-11-12"
+      "factsAttempted": "2026-11-12",
+      "factors": {
+        "craft": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://capitolhillseattle.com/2017/03/finishing-one-story-from-the-capitol-hill-pizza-boom-plus-a-pizza-mart-tale-on-first-hill",
+          "sources": [
+            "https://capitolhillseattle.com/2017/03/finishing-one-story-from-the-capitol-hill-pizza-boom-plus-a-pizza-mart-tale-on-first-hill",
+            "https://www.apizzamartfirsthill.com/"
+          ],
+          "note": "Capitol Hill Seattle Blog covered this First Hill shop's 2017 opening as the fifth location of 'the 27-year-old pizza player... known for its liquor and pie combination'; diner write-ups elsewhere describe a dive-bar room with crunchy-crust pizza and solid, unexceptional sandwiches rather than destination-level pies.",
+          "date": "2026-11-12"
+        },
+        "distinctiveness": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://capitolhillseattle.com/2017/03/finishing-one-story-from-the-capitol-hill-pizza-boom-plus-a-pizza-mart-tale-on-first-hill",
+          "sources": [
+            "https://capitolhillseattle.com/2017/03/finishing-one-story-from-the-capitol-hill-pizza-boom-plus-a-pizza-mart-tale-on-first-hill",
+            "https://www.apizzamartfirsthill.com/"
+          ],
+          "note": "Capitol Hill Seattle Blog covered this First Hill shop's 2017 opening as the fifth location of 'the 27-year-old pizza player... known for its liquor and pie combination'; diner write-ups elsewhere describe a dive-bar room with crunchy-crust pizza and solid, unexceptional sandwiches rather than destination-level pies.",
+          "date": "2026-11-12"
+        },
+        "critical": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://capitolhillseattle.com/2017/03/finishing-one-story-from-the-capitol-hill-pizza-boom-plus-a-pizza-mart-tale-on-first-hill",
+          "sources": [
+            "https://capitolhillseattle.com/2017/03/finishing-one-story-from-the-capitol-hill-pizza-boom-plus-a-pizza-mart-tale-on-first-hill",
+            "https://www.apizzamartfirsthill.com/"
+          ],
+          "note": "Capitol Hill Seattle Blog covered this First Hill shop's 2017 opening as the fifth location of 'the 27-year-old pizza player... known for its liquor and pie combination'; diner write-ups elsewhere describe a dive-bar room with crunchy-crust pizza and solid, unexceptional sandwiches rather than destination-level pies.",
+          "date": "2026-11-12"
+        }
+      },
+      "ratingAttempted": "2026-11-12",
+      "opened": 2017,
+      "styleGroup": "Pizza bar",
+      "lastVerified": "2026-11-12",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'A Pizza Mart First Hill Seattle review' and 'A Pizza Mart Seattle First Hill news 2025'. Found only aggregator/listing pages (MapQuest, Atly, DoorDash) and a 2011 Stranger review that covers a different First Hill pizzeria (Primo), not A Pizza Mart. No qualifying outlet coverage within two years."
     },
     {
       "id": "seward-park-pizza",
@@ -3452,7 +3610,15 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://southseattleemerald.org/community/2025/10/28/which-crust-does-the-south-end-trust",
+          "title": "Which Crust Does the South End Trust?",
+          "source": "South Seattle Emerald",
+          "date": "2025-10-28",
+          "kind": "mention"
+        }
+      ],
       "factors": {
         "craft": {
           "value": 6.5,
@@ -3480,7 +3646,9 @@
       "lastVerified": "2026-08-30",
       "instagram": "https://www.instagram.com/sewardparkpizzacompany/",
       "factsAttempted": "2026-11-05",
-      "factsNote": "sewardparkpizza.com failed to load (SSL handshake failure) on both http and https attempts. Search found only a Cost:'$' rating on a directory aggregator (not the pizzeria's own menu) and no founding year."
+      "factsNote": "sewardparkpizza.com failed to load (SSL handshake failure) on both http and https attempts. Search found only a Cost:'$' rating on a directory aggregator (not the pizzeria's own menu) and no founding year.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Beyond the South Seattle Emerald listing already reported, searched further and found no second story; the only other Seattle Met/Infatuation hits were about Flying Squirrel Pizza Co.'s original Seward Park location, a different business."
     },
     {
       "id": "belltown-pizza",
@@ -3533,7 +3701,9 @@
       "opened": 1998,
       "priceIndex": 2,
       "styleGroup": "Pizza bar",
-      "lastVerified": "2026-10-18"
+      "lastVerified": "2026-10-18",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Belltown Pizza Seattle review 2025' and 'Belltown Pizza Seattle news closing OR opening 2025'. Found only Yelp/Tripadvisor/Roadtrippers user reviews and MapQuest listings; no story from a named outlet (Times, Met, Infatuation, Eater, Stranger) within the last two years."
     },
     {
       "id": "castello-pizza-pasta",
@@ -3672,7 +3842,9 @@
       "styleGroup": "Wood-fired",
       "lastVerified": "2026-09-03",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "elementalpizza.com returned HTTP 403 Forbidden on both the homepage and /locations, so no official page could be read. The 701 5th Ave, Ste 300 lead and a separate University Village address appear only on aggregators (Toast, MapQuest, NAICS listings), which are excluded as sources; could not confirm."
+      "locationsNote": "elementalpizza.com returned HTTP 403 Forbidden on both the homepage and /locations, so no official page could be read. The 701 5th Ave, Ste 300 lead and a separate University Village address appear only on aggregators (Toast, MapQuest, NAICS listings), which are excluded as sources; could not confirm.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Elemental Pizza University Village Seattle review' and 'Elemental Pizza University Village Seattle news 2025 2026'. Only named-outlet coverage found dates to the 2012 opening and a 2013 Seattle Met feature; nothing within the last two years besides aggregator reviews."
     },
     {
       "id": "eymans-pizza",
@@ -3726,7 +3898,9 @@
       "styleGroup": "Neighborhood",
       "lastVerified": "2026-10-13",
       "factsAttempted": "2026-11-05",
-      "factsNote": "Checked eymanspizza.com home/about anchor: the only year present is 'Partnered with Slice since 2019', which refers to the online-ordering platform, not the restaurant's founding."
+      "factsNote": "Checked eymanspizza.com home/about anchor: the only year present is 'Partnered with Slice since 2019', which refers to the online-ordering platform, not the restaurant's founding.",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched 'Eyman's Pizza Rainier Valley Seattle review' and 'Eyman's Pizza Beacon Hill Seattle news 2025'. Found only directory/aggregator listings (Zabihah, Atly, Intentionalist) with no professional critic review or news item from a named outlet."
     },
     {
       "id": "georgetown-pizza-arcade",
@@ -3751,7 +3925,15 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://www.parentmap.com/article/best-pizza-places-seattle-tacoma-bellevue",
+          "title": "Arts + Eats: Best Pizza Places in Seattle, Tacoma & Bellevue",
+          "source": "ParentMap",
+          "date": "2026-06-17",
+          "kind": "ranking"
+        }
+      ],
       "instagram": "https://www.instagram.com/gpa.seattle",
       "factors": {
         "craft": {
@@ -3778,7 +3960,9 @@
       },
       "opened": 2022,
       "styleGroup": "Tavern square",
-      "lastVerified": "2026-11-02"
+      "lastVerified": "2026-11-02",
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "A 2023-02-02 Seattle Times arcade guide names it and says it opened November 2022, but that story is more than 730 days old; used the still-current ParentMap roundup instead."
     },
     {
       "id": "good-shape-pizza",
@@ -3803,7 +3987,22 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://theinfatuation.com/seattle/reviews/good-shape-pizza",
+          "title": "Good Shape Pizza",
+          "source": "The Infatuation",
+          "date": "2024-11-27",
+          "kind": "mention"
+        },
+        {
+          "url": "https://www.cascadepbs.org/culture/2025/04/rachel-belle-shares-her-top-5-favorite-seattle-pizza-spots",
+          "title": "Rachel Belle Shares Her Top 5 Favorite Seattle Pizza Spots",
+          "source": "Cascade PBS",
+          "date": "2025-04-23",
+          "kind": "ranking"
+        }
+      ],
       "instagram": "https://www.instagram.com/goodshapepizza/",
       "factors": {
         "craft": {
@@ -3857,7 +4056,22 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://www.westsideseattle.com/node/60911",
+          "title": "From rocking a food truck to Admiral area comfort: In Pizza We Crust finds a permanent home",
+          "source": "West Seattle Blog",
+          "date": "2025-10-31",
+          "kind": "opening"
+        },
+        {
+          "url": "https://seattlerefined.com/lifestyle/in-pizza-we-crust",
+          "title": "In Pizza We Crust: From pop-up to West Seattle pizzeria",
+          "source": "Seattle Refined",
+          "date": "2026-04-22",
+          "kind": "opening"
+        }
+      ],
       "instagram": "https://www.instagram.com/inpizzawecrustllc/",
       "factors": {
         "craft": {
@@ -3910,7 +4124,9 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/italiogreenwood"
+      "instagram": "https://www.instagram.com/italiogreenwood",
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Searched for coverage of Italio Pizza & Pasta (305 NW 85th St, Greenwood) including neighborhood blogs (My Ballard, Phinney/Greenwood blogs) and general search. Found only OpenTable/MapQuest/Slice listings and diner-review aggregation, no critic review or press coverage of the specific restaurant. Skipping for lack of published criticism."
     },
     {
       "id": "jackson-street-pizza-lounge",
@@ -4282,7 +4498,9 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/palermoseattle/"
+      "instagram": "https://www.instagram.com/palermoseattle/",
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Searched for reviews/roundups of Palermo Pizza & Pasta (350 15th Ave E, Capitol Hill) by name across Seattle Met, The Stranger, Capitol Hill Seattle Blog and general web search. Found only directory/aggregator listings (OpenTable with no reviews, Sluurpy/Yelp mirror, Slice, MapQuest) and no professional review, roundup entry, or news story specific to this pizzeria. Skipping for lack of published criticism."
     },
     {
       "id": "pizza-paesano",
@@ -4308,7 +4526,9 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/pizza_paesano_seattle/"
+      "instagram": "https://www.instagram.com/pizza_paesano_seattle/",
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Searched for 'Pizza Paesano' Ballard by name, plus its listed Instagram handle (pizza_paesano_seattle), across web search and Seattle food-media roundups (Seattle Met, The Stranger, Infatuation). No results returned that reference this business at all -- no menu site, no press mention, no aggregator listing could be found. Could not even confirm current operation independently of the directory entry. Skipping for lack of any verifiable published source."
     },
     {
       "id": "pudge-bros-pizza",
@@ -4333,7 +4553,43 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://ddemay.blogspot.com/2010/04",
+          "sources": [
+            "https://ddemay.blogspot.com/2010/04"
+          ],
+          "note": "A 2010 neighborhood-blog review ('Top shelf pizza at Pudge Bros') gave it 4.5 'licks of the lips,' praising a light, airy crust, a standout marinara balancing sweetness, mild spice and tomato flavor, and surprisingly attentive counter service at this tiny, no-frills NE 45th St. slice shop that deliberately skips elaborate topping combinations in favor of a strong base.",
+          "date": "2026-11-12"
+        },
+        "distinctiveness": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://ddemay.blogspot.com/2010/04",
+          "sources": [
+            "https://ddemay.blogspot.com/2010/04"
+          ],
+          "note": "A 2010 neighborhood-blog review ('Top shelf pizza at Pudge Bros') gave it 4.5 'licks of the lips,' praising a light, airy crust, a standout marinara balancing sweetness, mild spice and tomato flavor, and surprisingly attentive counter service at this tiny, no-frills NE 45th St. slice shop that deliberately skips elaborate topping combinations in favor of a strong base.",
+          "date": "2026-11-12"
+        },
+        "critical": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://ddemay.blogspot.com/2010/04",
+          "sources": [
+            "https://ddemay.blogspot.com/2010/04"
+          ],
+          "note": "A 2010 neighborhood-blog review ('Top shelf pizza at Pudge Bros') gave it 4.5 'licks of the lips,' praising a light, airy crust, a standout marinara balancing sweetness, mild spice and tomato flavor, and surprisingly attentive counter service at this tiny, no-frills NE 45th St. slice shop that deliberately skips elaborate topping combinations in favor of a strong base.",
+          "date": "2026-11-12"
+        }
+      },
+      "ratingAttempted": "2026-11-12",
+      "priceIndex": 1,
+      "styleGroup": "By the slice",
+      "lastVerified": "2026-11-12"
     },
     {
       "id": "ridge-pizza",
@@ -4364,7 +4620,46 @@
       "openedSource": "https://www.ridgepizza.com/welcome-1",
       "factsAttempted": "2026-11-12",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "Lead 3338 Ne 65th St, Seattle, WA 98115 matches the sibling site ridgepizzanortheast.com, but that page labels the location 'COMING SOON!' rather than open, so it is not yet a confirmed operating branch."
+      "locationsNote": "Lead 3338 Ne 65th St, Seattle, WA 98115 matches the sibling site ridgepizzanortheast.com, but that page labels the location 'COMING SOON!' rather than open, so it is not yet a confirmed operating branch.",
+      "factors": {
+        "craft": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.seattleweekly.com/?p=86546",
+          "sources": [
+            "https://www.seattleweekly.com/?p=86546",
+            "https://www.thestranger.com/slog/archives/2012/11/27/the-happiest-hour-ridge-pizza-on-phinney-ridge"
+          ],
+          "note": "Seattle Weekly's 2012 review of this newly-opened Phinney Ridge spot praised a crust 'pillowy on the inside, crispy on the outside' under a generously-sauced pepperoni 'True Value' and locally-themed specialty pies; The Stranger separately highlighted its well-kept, family-friendly, arcade-equipped room named for neighborhood founder Guy Phinney.",
+          "date": "2026-11-12"
+        },
+        "distinctiveness": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.seattleweekly.com/?p=86546",
+          "sources": [
+            "https://www.seattleweekly.com/?p=86546",
+            "https://www.thestranger.com/slog/archives/2012/11/27/the-happiest-hour-ridge-pizza-on-phinney-ridge"
+          ],
+          "note": "Seattle Weekly's 2012 review of this newly-opened Phinney Ridge spot praised a crust 'pillowy on the inside, crispy on the outside' under a generously-sauced pepperoni 'True Value' and locally-themed specialty pies; The Stranger separately highlighted its well-kept, family-friendly, arcade-equipped room named for neighborhood founder Guy Phinney.",
+          "date": "2026-11-12"
+        },
+        "critical": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.seattleweekly.com/?p=86546",
+          "sources": [
+            "https://www.seattleweekly.com/?p=86546",
+            "https://www.thestranger.com/slog/archives/2012/11/27/the-happiest-hour-ridge-pizza-on-phinney-ridge"
+          ],
+          "note": "Seattle Weekly's 2012 review of this newly-opened Phinney Ridge spot praised a crust 'pillowy on the inside, crispy on the outside' under a generously-sauced pepperoni 'True Value' and locally-themed specialty pies; The Stranger separately highlighted its well-kept, family-friendly, arcade-equipped room named for neighborhood founder Guy Phinney.",
+          "date": "2026-11-12"
+        }
+      },
+      "ratingAttempted": "2026-11-12",
+      "priceIndex": 2,
+      "styleGroup": "Neighborhood",
+      "lastVerified": "2026-11-12"
     },
     {
       "id": "good-luck-bread",
@@ -4552,7 +4847,9 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Searched for news/blog coverage of Soprano's Pizza & Pasta - Lake City (11754 15th Ave NE). Found only directory listings (MapQuest/Yelp mirror, Slice, Foursquare, Birdeye) and no Seattle Times, Seattle Met, Eater, or neighborhood-blog review of this specific location. Skipping for lack of published criticism."
     },
     {
       "id": "veras-pizza-and-bar",
@@ -4708,7 +5005,9 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Found genuine news coverage of the August 2025 Pioneer Square opening (whatnow.com on the Minnesota-born chain's expansion, intentionalist.com community spotlight) confirming it serves New York-style slices in a retro 1980s-themed room, but no published review or critic description of the food's execution -- too new for a craft rating grounded in actual coverage of the pizza. Skipped."
     },
     {
       "id": "a-k-pizza",
@@ -4904,7 +5203,42 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.seattleweekly.com/food/in-our-ongoing-series-on-pizzerias-not-named-pagliacci-who-are-willing",
+          "sources": [
+            "https://www.seattleweekly.com/food/in-our-ongoing-series-on-pizzerias-not-named-pagliacci-who-are-willing"
+          ],
+          "note": "The only press coverage found is a brief 2008 Seattle Weekly item in a series on non-Pagliacci pizzerias willing to deliver to West Seattle's Delridge/Poverty Gulch area; it singles out the Luciano's Special for 'high marks for the quality of its onions' but offers no broader assessment of crust, sauce or bake. Reads as a reliable, unpretentious red-sauce delivery pizzeria rather than a destination pie, consistent with its long-running Admiral and Lake City locations.",
+          "date": "2026-11-12"
+        },
+        "distinctiveness": {
+          "value": 2.5,
+          "setBy": "agent",
+          "source": "https://www.seattleweekly.com/food/in-our-ongoing-series-on-pizzerias-not-named-pagliacci-who-are-willing",
+          "sources": [
+            "https://www.seattleweekly.com/food/in-our-ongoing-series-on-pizzerias-not-named-pagliacci-who-are-willing"
+          ],
+          "note": "The only press coverage found is a brief 2008 Seattle Weekly item in a series on non-Pagliacci pizzerias willing to deliver to West Seattle's Delridge/Poverty Gulch area; it singles out the Luciano's Special for 'high marks for the quality of its onions' but offers no broader assessment of crust, sauce or bake. Reads as a reliable, unpretentious red-sauce delivery pizzeria rather than a destination pie, consistent with its long-running Admiral and Lake City locations.",
+          "date": "2026-11-12"
+        },
+        "critical": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.seattleweekly.com/food/in-our-ongoing-series-on-pizzerias-not-named-pagliacci-who-are-willing",
+          "sources": [
+            "https://www.seattleweekly.com/food/in-our-ongoing-series-on-pizzerias-not-named-pagliacci-who-are-willing"
+          ],
+          "note": "The only press coverage found is a brief 2008 Seattle Weekly item in a series on non-Pagliacci pizzerias willing to deliver to West Seattle's Delridge/Poverty Gulch area; it singles out the Luciano's Special for 'high marks for the quality of its onions' but offers no broader assessment of crust, sauce or bake. Reads as a reliable, unpretentious red-sauce delivery pizzeria rather than a destination pie, consistent with its long-running Admiral and Lake City locations.",
+          "date": "2026-11-12"
+        }
+      },
+      "ratingAttempted": "2026-11-12",
+      "styleGroup": "Neighborhood",
+      "lastVerified": "2026-11-12"
     },
     {
       "id": "ananas-pizzeria",
@@ -4986,7 +5320,9 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Searched for Stranger/Eater/Seattle Times/Seattle Met coverage of this Leary Way NW pizzeria across three queries; found only delivery-app listings and aggregator star ratings (Magicpin, WhatsVegan, Slice) plus its own promotional copy -- no published review, roundup entry or news story about this specific place. Skipped."
     },
     {
       "id": "capitale-pizzeria",
@@ -5075,7 +5411,9 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Searched for reviews/roundups of this Queen Anne Indian-fusion pizza spot (Infatuation Seattle pizza-delivery guide, Eater Seattle, general web). Found only delivery-app and directory listings (DoorDash, Slice, Atly, MapQuest, Valpak) with scattered customer comments on the butter chicken pizza; no published review, roundup entry, or news story naming this specific pizzeria. Skipping for lack of grounding."
     },
     {
       "id": "fremont-pizza",
@@ -5100,7 +5438,9 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Searched twice for critic or press coverage (Stranger, Eater, Seattle Met) of this Fremont Ave N pizzeria; found only aggregator/directory pages (Atly, Mapquest with 9 reviews, Lolo, WhatsVegan) describing skee-ball and vegan options, no published review or news story. Skipped."
     },
     {
       "id": "magnolia-pizza-pasta",
@@ -5125,7 +5465,45 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 3.5,
+          "setBy": "agent",
+          "source": "https://seattlepizza.substack.com/i/161361574/the-rankings",
+          "sources": [
+            "https://seattlepizza.substack.com/i/161361574/the-rankings",
+            "https://seattlepizza.substack.com/p/release-5"
+          ],
+          "note": "The Definitive Seattle Pizza Rankings substack placed Magnolia Pizza & Pasta in its bottom 'Seattle No' tier (pizza you feel bad refusing but don't want to eat), calling it 'just ok,' 'bad' pizza ordered mainly for workplace happy hours rather than sought out.",
+          "date": "2026-11-12"
+        },
+        "distinctiveness": {
+          "value": 2,
+          "setBy": "agent",
+          "source": "https://seattlepizza.substack.com/i/161361574/the-rankings",
+          "sources": [
+            "https://seattlepizza.substack.com/i/161361574/the-rankings",
+            "https://seattlepizza.substack.com/p/release-5"
+          ],
+          "note": "The Definitive Seattle Pizza Rankings substack placed Magnolia Pizza & Pasta in its bottom 'Seattle No' tier (pizza you feel bad refusing but don't want to eat), calling it 'just ok,' 'bad' pizza ordered mainly for workplace happy hours rather than sought out.",
+          "date": "2026-11-12"
+        },
+        "critical": {
+          "value": 3,
+          "setBy": "agent",
+          "source": "https://seattlepizza.substack.com/i/161361574/the-rankings",
+          "sources": [
+            "https://seattlepizza.substack.com/i/161361574/the-rankings",
+            "https://seattlepizza.substack.com/p/release-5"
+          ],
+          "note": "The Definitive Seattle Pizza Rankings substack placed Magnolia Pizza & Pasta in its bottom 'Seattle No' tier (pizza you feel bad refusing but don't want to eat), calling it 'just ok,' 'bad' pizza ordered mainly for workplace happy hours rather than sought out.",
+          "date": "2026-11-12"
+        }
+      },
+      "ratingAttempted": "2026-11-12",
+      "styleGroup": "Neighborhood",
+      "lastVerified": "2026-11-12"
     },
     {
       "id": "numero-uno-pizza",
@@ -5177,7 +5555,43 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://wallyhood.org/2015/06/why-isnt-olympia-pizza-more-popular-than-tutta-bella",
+          "sources": [
+            "https://wallyhood.org/2015/06/why-isnt-olympia-pizza-more-popular-than-tutta-bella"
+          ],
+          "note": "Wallyhood's 2015 neighborhood write-up calls this longtime Wallingford pizza-and-pasta house 'comfortable with a capital C,' praising its Greek-inflected, garlicky pizza and genuinely friendly staff, though it notes Yelp reviews only reach 3 stars (mostly over wait times) and commenters were split, with one calling the dough noticeably sweet.",
+          "date": "2026-11-12"
+        },
+        "distinctiveness": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://wallyhood.org/2015/06/why-isnt-olympia-pizza-more-popular-than-tutta-bella",
+          "sources": [
+            "https://wallyhood.org/2015/06/why-isnt-olympia-pizza-more-popular-than-tutta-bella"
+          ],
+          "note": "Wallyhood's 2015 neighborhood write-up calls this longtime Wallingford pizza-and-pasta house 'comfortable with a capital C,' praising its Greek-inflected, garlicky pizza and genuinely friendly staff, though it notes Yelp reviews only reach 3 stars (mostly over wait times) and commenters were split, with one calling the dough noticeably sweet.",
+          "date": "2026-11-12"
+        },
+        "critical": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://wallyhood.org/2015/06/why-isnt-olympia-pizza-more-popular-than-tutta-bella",
+          "sources": [
+            "https://wallyhood.org/2015/06/why-isnt-olympia-pizza-more-popular-than-tutta-bella"
+          ],
+          "note": "Wallyhood's 2015 neighborhood write-up calls this longtime Wallingford pizza-and-pasta house 'comfortable with a capital C,' praising its Greek-inflected, garlicky pizza and genuinely friendly staff, though it notes Yelp reviews only reach 3 stars (mostly over wait times) and commenters were split, with one calling the dough noticeably sweet.",
+          "date": "2026-11-12"
+        }
+      },
+      "ratingAttempted": "2026-11-12",
+      "priceIndex": 2,
+      "styleGroup": "Neighborhood",
+      "lastVerified": "2026-11-12"
     },
     {
       "id": "jet-city-pizza",
@@ -5202,7 +5616,43 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/businesses/jet-city-pizza-restaurant-pizza",
+          "sources": [
+            "https://www.seattlemet.com/businesses/jet-city-pizza-restaurant-pizza"
+          ],
+          "note": "Seattle Met describes this Wedgwood shop's 'experimental' streak -- a Redhook beer-batter crust and oddball toppings like Thai peanut sauce, mandarin oranges, and gyro meat -- and diner feedback elsewhere is largely positive on flavor and freshness, with occasional gripes about gluten-free handling and inconsistency.",
+          "date": "2026-11-12"
+        },
+        "distinctiveness": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/businesses/jet-city-pizza-restaurant-pizza",
+          "sources": [
+            "https://www.seattlemet.com/businesses/jet-city-pizza-restaurant-pizza"
+          ],
+          "note": "Seattle Met describes this Wedgwood shop's 'experimental' streak -- a Redhook beer-batter crust and oddball toppings like Thai peanut sauce, mandarin oranges, and gyro meat -- and diner feedback elsewhere is largely positive on flavor and freshness, with occasional gripes about gluten-free handling and inconsistency.",
+          "date": "2026-11-12"
+        },
+        "critical": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.seattlemet.com/businesses/jet-city-pizza-restaurant-pizza",
+          "sources": [
+            "https://www.seattlemet.com/businesses/jet-city-pizza-restaurant-pizza"
+          ],
+          "note": "Seattle Met describes this Wedgwood shop's 'experimental' streak -- a Redhook beer-batter crust and oddball toppings like Thai peanut sauce, mandarin oranges, and gyro meat -- and diner feedback elsewhere is largely positive on flavor and freshness, with occasional gripes about gluten-free handling and inconsistency.",
+          "date": "2026-11-12"
+        }
+      },
+      "ratingAttempted": "2026-11-12",
+      "priceIndex": 2,
+      "styleGroup": "Creative",
+      "lastVerified": "2026-11-12"
     },
     {
       "id": "pizza-pasta-bar",
@@ -5227,7 +5677,46 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.elizabethrider.com/?p=28135",
+          "sources": [
+            "https://www.elizabethrider.com/?p=28135",
+            "https://www.pikeplacemarket.org/lunch-at-pike-place-market/"
+          ],
+          "note": "Food blogger Elizabeth Rider ranks it her #1 Pike Place Market pizza pick, writing 'the crust is perfectly cooked, and the toppings are fantastic,' and naming the Margherita and White Truffle Mushroom as standouts; Pike Place Market's own site confirms dough, sauce, and meats are made from scratch daily.",
+          "date": "2026-11-12"
+        },
+        "distinctiveness": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://www.elizabethrider.com/?p=28135",
+          "sources": [
+            "https://www.elizabethrider.com/?p=28135",
+            "https://www.pikeplacemarket.org/lunch-at-pike-place-market/"
+          ],
+          "note": "Food blogger Elizabeth Rider ranks it her #1 Pike Place Market pizza pick, writing 'the crust is perfectly cooked, and the toppings are fantastic,' and naming the Margherita and White Truffle Mushroom as standouts; Pike Place Market's own site confirms dough, sauce, and meats are made from scratch daily.",
+          "date": "2026-11-12"
+        },
+        "critical": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.elizabethrider.com/?p=28135",
+          "sources": [
+            "https://www.elizabethrider.com/?p=28135",
+            "https://www.pikeplacemarket.org/lunch-at-pike-place-market/"
+          ],
+          "note": "Food blogger Elizabeth Rider ranks it her #1 Pike Place Market pizza pick, writing 'the crust is perfectly cooked, and the toppings are fantastic,' and naming the Margherita and White Truffle Mushroom as standouts; Pike Place Market's own site confirms dough, sauce, and meats are made from scratch daily.",
+          "date": "2026-11-12"
+        }
+      },
+      "ratingAttempted": "2026-11-12",
+      "priceIndex": 2,
+      "styleGroup": "By the slice",
+      "lastVerified": "2026-11-12"
     },
     {
       "id": "santorini-pizza-pasta",
@@ -5255,6 +5744,31 @@
       "mentions": [],
       "ratingAttempted": "2026-11-12",
       "ratingNote": "Searched for critic reviews or roundup mentions of Santorini Pizza & Pasta (Meadowbrook/Wedgwood). Found only directory/aggregator listings (Atly, MapQuest, Wanderlog, OpenTable) and a single anonymous 2008 personal blog post. No published criticism from a real outlet turned up, so skipping rather than grounding a score in aggregator copy."
+    },
+    {
+      "id": "varlamos-pizzeria",
+      "name": "Varlamos Pizzeria",
+      "neighborhood": "Laurelhurst",
+      "style": null,
+      "blurb": "Longtime Northeast Seattle neighborhood pizzeria known for oversized calzones alongside build-your-own pizzas and pastas.",
+      "url": null,
+      "status": "open",
+      "statusSource": "https://www.seattleschild.com/?p=7487",
+      "statusDate": null,
+      "statusDetected": "2026-11-12",
+      "statusChecked": "2026-11-12",
+      "attributes": {},
+      "locations": [
+        {
+          "neighborhood": "Laurelhurst",
+          "address": "3617 NE 45th St, Seattle, WA 98105",
+          "lat": 47.66098,
+          "lon": -122.28843
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "mentions": []
     }
   ]
 }

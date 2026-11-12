@@ -6497,18 +6497,18 @@
         "cornelly": 7,
         "veraci-pizza": 8,
         "slice-box": 9,
-        "humble-pie": 10,
-        "sacro-bosco-pizza-wine": 11,
+        "sacro-bosco-pizza-wine": 10,
+        "humble-pie": 11,
         "pizzeria-22": 12,
         "mioposto": 13,
         "serious-pie": 14,
         "tutta-bella": 15,
         "west-of-chicago-pizza-company": 16,
         "stevies-famous": 17,
-        "pizza-by-ruffin": 18,
-        "lupo": 19,
-        "moto-pizza": 20,
-        "good-shape-pizza": 21,
+        "good-shape-pizza": 18,
+        "pizza-by-ruffin": 19,
+        "lupo": 20,
+        "moto-pizza": 21,
         "my-friend-dereks": 22,
         "pagliacci": 23,
         "cornuto-pizzeria": 24,
@@ -6518,67 +6518,75 @@
         "zeeks-pizza": 28,
         "ananas-pizzeria": 29,
         "world-pizza": 30,
-        "dantini-pizza": 31,
-        "razzis-pizzeria": 32,
-        "ballard-pizza-co": 33,
-        "pizzeria-pulcinella": 34,
+        "pizzeria-pulcinella": 31,
+        "dantini-pizza": 32,
+        "razzis-pizzeria": 33,
+        "ballard-pizza-co": 34,
         "good-luck-bread": 35,
-        "un-po-tipsy": 36,
-        "roccos": 37,
-        "smoking-monkey-pizza": 38,
-        "sunny-hill": 39,
-        "big-marios": 40,
-        "pizzeria-la-rocca": 41,
-        "talaricos": 42,
-        "south-town-pie": 43,
-        "elemental-pizza": 44,
-        "oskars-pizza": 45,
-        "roma-roma": 46,
-        "capitale-pizzeria": 47,
-        "pegasus-pizza": 48,
-        "belltown-pizza": 49,
-        "in-pizza-we-crust": 50,
-        "sopranos-antico": 51,
-        "pazzos-on-eastlake": 52,
+        "ridge-pizza": 36,
+        "un-po-tipsy": 37,
+        "roccos": 38,
+        "smoking-monkey-pizza": 39,
+        "sunny-hill": 40,
+        "big-marios": 41,
+        "pizzeria-la-rocca": 42,
+        "talaricos": 43,
+        "south-town-pie": 44,
+        "elemental-pizza": 45,
+        "oskars-pizza": 46,
+        "roma-roma": 47,
+        "in-pizza-we-crust": 48,
+        "capitale-pizzeria": 49,
+        "pegasus-pizza": 50,
+        "belltown-pizza": 51,
+        "sopranos-antico": 52,
         "pizza-ritual": 53,
-        "hot-mamas-pizza": 54,
-        "coltiva-pizzeria-e-barra": 55,
-        "veras-pizza-and-bar": 56,
-        "eymans-pizza": 57,
-        "managers-pizza": 58,
-        "johnny-mos-pizzeria": 59,
-        "georgetown-pizza-arcade": 60,
-        "seward-park-pizza": 61,
-        "sinners-pizza": 62,
-        "jackson-street-pizza-lounge": 63,
-        "mad-pizza": 64,
-        "pizzeria-gabbiano": 65,
-        "independent-pizzeria": 66,
-        "breezy-town-pizza": 67
+        "pazzos-on-eastlake": 54,
+        "hot-mamas-pizza": 55,
+        "coltiva-pizzeria-e-barra": 56,
+        "pudge-bros-pizza": 57,
+        "a-pizza-mart-first-hill": 58,
+        "veras-pizza-and-bar": 59,
+        "eymans-pizza": 60,
+        "managers-pizza": 61,
+        "pizza-pasta-bar": 62,
+        "jet-city-pizza": 63,
+        "johnny-mos-pizzeria": 64,
+        "olympia-pizza-spaghetti-house-ii": 65,
+        "georgetown-pizza-arcade": 66,
+        "seward-park-pizza": 67,
+        "sinners-pizza": 68,
+        "lucianos-pizza-pasta": 69,
+        "jackson-street-pizza-lounge": 70,
+        "mad-pizza": 71,
+        "magnolia-pizza-pasta": 72,
+        "pizzeria-gabbiano": 73,
+        "independent-pizzeria": 74,
+        "breezy-town-pizza": 75
       },
       "scores": {
         "delancey": 87.6,
         "a-k-pizza": 86.3,
         "dinos-tomato-pie": 85.1,
-        "post-alley-pizza": 82.6,
+        "post-alley-pizza": 83.2,
         "proletariat-pizza": 82.5,
         "windy-city-pie": 80.4,
         "cornelly": 80.4,
         "veraci-pizza": 80,
         "slice-box": 79.5,
+        "sacro-bosco-pizza-wine": 79,
         "humble-pie": 78.9,
-        "sacro-bosco-pizza-wine": 78.7,
-        "pizzeria-22": 78.4,
+        "pizzeria-22": 78.5,
         "mioposto": 77.7,
         "serious-pie": 77.7,
         "tutta-bella": 76.9,
         "west-of-chicago-pizza-company": 76.5,
         "stevies-famous": 76.4,
+        "good-shape-pizza": 76.4,
         "pizza-by-ruffin": 76,
         "lupo": 75.6,
         "moto-pizza": 75.4,
-        "good-shape-pizza": 75.4,
-        "my-friend-dereks": 75,
+        "my-friend-dereks": 75.4,
         "pagliacci": 74.5,
         "cornuto-pizzeria": 74.4,
         "via-tribunali": 74,
@@ -6587,11 +6595,12 @@
         "zeeks-pizza": 73,
         "ananas-pizzeria": 72.7,
         "world-pizza": 72.6,
+        "pizzeria-pulcinella": 72.3,
         "dantini-pizza": 72.3,
         "razzis-pizzeria": 72.3,
         "ballard-pizza-co": 71.5,
-        "pizzeria-pulcinella": 71.3,
         "good-luck-bread": 70.8,
+        "ridge-pizza": 69.9,
         "un-po-tipsy": 69.7,
         "roccos": 69.5,
         "smoking-monkey-pizza": 68.7,
@@ -6603,24 +6612,31 @@
         "elemental-pizza": 67.2,
         "oskars-pizza": 66.5,
         "roma-roma": 66.2,
+        "in-pizza-we-crust": 65.6,
         "capitale-pizzeria": 65.3,
         "pegasus-pizza": 65.3,
         "belltown-pizza": 65.3,
-        "in-pizza-we-crust": 65,
         "sopranos-antico": 64.9,
+        "pizza-ritual": 64,
         "pazzos-on-eastlake": 64,
-        "pizza-ritual": 63.6,
         "hot-mamas-pizza": 63.5,
         "coltiva-pizzeria-e-barra": 63.2,
+        "pudge-bros-pizza": 62,
+        "a-pizza-mart-first-hill": 61.4,
         "veras-pizza-and-bar": 61.1,
         "eymans-pizza": 61,
         "managers-pizza": 60.1,
+        "pizza-pasta-bar": 60,
+        "jet-city-pizza": 59.7,
         "johnny-mos-pizzeria": 57.3,
-        "georgetown-pizza-arcade": 54.5,
-        "seward-park-pizza": 53.4,
-        "sinners-pizza": 52.9,
+        "olympia-pizza-spaghetti-house-ii": 56.1,
+        "georgetown-pizza-arcade": 55.7,
+        "seward-park-pizza": 53.8,
+        "sinners-pizza": 53.2,
+        "lucianos-pizza-pasta": 49.6,
         "jackson-street-pizza-lounge": 47.7,
         "mad-pizza": 36,
+        "magnolia-pizza-pasta": 29.3,
         "pizzeria-gabbiano": 85.1,
         "independent-pizzeria": 71.9,
         "breezy-town-pizza": 69.4
@@ -6652,10 +6668,10 @@
         },
         "post-alley-pizza": {
           "reputation": 10,
-          "critical": 8.1,
+          "critical": 8.3,
           "craft": 7.5,
           "distinctiveness": 7,
-          "value": 8.2,
+          "value": 8.3,
           "penalty": 0
         },
         "proletariat-pizza": {
@@ -6698,6 +6714,14 @@
           "value": 8.7,
           "penalty": 0.8
         },
+        "sacro-bosco-pizza-wine": {
+          "reputation": 3.3,
+          "critical": 8.6,
+          "craft": 8.5,
+          "distinctiveness": 8,
+          "value": 6.4,
+          "penalty": 0
+        },
         "humble-pie": {
           "reputation": 9.5,
           "critical": 8,
@@ -6706,17 +6730,9 @@
           "value": 8.1,
           "penalty": 1.3
         },
-        "sacro-bosco-pizza-wine": {
-          "reputation": 2.5,
-          "critical": 8.5,
-          "craft": 8.5,
-          "distinctiveness": 8,
-          "value": 6.4,
-          "penalty": 0
-        },
         "pizzeria-22": {
           "reputation": 10,
-          "critical": 7.5,
+          "critical": 7.6,
           "craft": 7.5,
           "distinctiveness": 6.5,
           "value": 7.9,
@@ -6762,6 +6778,14 @@
           "value": 7.8,
           "penalty": 0
         },
+        "good-shape-pizza": {
+          "reputation": 3.3,
+          "critical": 7.7,
+          "craft": 7.5,
+          "distinctiveness": 7,
+          "value": 9.1,
+          "penalty": 0
+        },
         "pizza-by-ruffin": {
           "reputation": 4,
           "critical": 7.8,
@@ -6786,20 +6810,12 @@
           "value": 6.5,
           "penalty": 6
         },
-        "good-shape-pizza": {
-          "reputation": 0,
-          "critical": 7.5,
-          "craft": 7.5,
-          "distinctiveness": 7,
-          "value": 9,
-          "penalty": 0
-        },
         "my-friend-dereks": {
-          "reputation": 0,
-          "critical": 8,
+          "reputation": 1.7,
+          "critical": 8.1,
           "craft": 7.5,
           "distinctiveness": 7,
-          "value": 8.1,
+          "value": 8.2,
           "penalty": 0
         },
         "pagliacci": {
@@ -6866,6 +6882,14 @@
           "value": 7.2,
           "penalty": 0
         },
+        "pizzeria-pulcinella": {
+          "reputation": 1.7,
+          "critical": 7.7,
+          "craft": 7.5,
+          "distinctiveness": 7,
+          "value": 6.9,
+          "penalty": 0
+        },
         "dantini-pizza": {
           "reputation": 0,
           "critical": 7.5,
@@ -6890,20 +6914,20 @@
           "value": 6.8,
           "penalty": 0
         },
-        "pizzeria-pulcinella": {
-          "reputation": 0,
-          "critical": 7.5,
-          "craft": 7.5,
-          "distinctiveness": 7,
-          "value": 6.8,
-          "penalty": 0
-        },
         "good-luck-bread": {
           "reputation": 7,
           "critical": 7,
           "craft": 7,
           "distinctiveness": 7.5,
           "value": 7.4,
+          "penalty": 0
+        },
+        "ridge-pizza": {
+          "reputation": 9.8,
+          "critical": 6,
+          "craft": 6.5,
+          "distinctiveness": 5.5,
+          "value": 6.6,
           "penalty": 0
         },
         "un-po-tipsy": {
@@ -6994,6 +7018,14 @@
           "value": 6.8,
           "penalty": 0
         },
+        "in-pizza-we-crust": {
+          "reputation": 7.5,
+          "critical": 6.2,
+          "craft": 6.5,
+          "distinctiveness": 6.5,
+          "value": 6.3,
+          "penalty": 0
+        },
         "capitale-pizzeria": {
           "reputation": 4,
           "critical": 6,
@@ -7018,14 +7050,6 @@
           "value": 6,
           "penalty": 0
         },
-        "in-pizza-we-crust": {
-          "reputation": 7.5,
-          "critical": 6,
-          "craft": 6.5,
-          "distinctiveness": 6.5,
-          "value": 6.3,
-          "penalty": 0
-        },
         "sopranos-antico": {
           "reputation": 8.3,
           "critical": 6,
@@ -7034,20 +7058,20 @@
           "value": 6.3,
           "penalty": 0
         },
+        "pizza-ritual": {
+          "reputation": 1.7,
+          "critical": 6.6,
+          "craft": 6.5,
+          "distinctiveness": 6.5,
+          "value": 6.6,
+          "penalty": 0
+        },
         "pazzos-on-eastlake": {
           "reputation": 10,
           "critical": 6,
           "craft": 6,
           "distinctiveness": 3.5,
           "value": 6,
-          "penalty": 0
-        },
-        "pizza-ritual": {
-          "reputation": 0,
-          "critical": 6.5,
-          "craft": 6.5,
-          "distinctiveness": 6.5,
-          "value": 6.5,
           "penalty": 0
         },
         "hot-mamas-pizza": {
@@ -7064,6 +7088,22 @@
           "craft": 6,
           "distinctiveness": 6,
           "value": 5.4,
+          "penalty": 0
+        },
+        "pudge-bros-pizza": {
+          "reputation": 0,
+          "critical": 6,
+          "craft": 6.5,
+          "distinctiveness": 5,
+          "value": 7.5,
+          "penalty": 0
+        },
+        "a-pizza-mart-first-hill": {
+          "reputation": 8.3,
+          "critical": 5,
+          "craft": 5.5,
+          "distinctiveness": 6,
+          "value": 5.5,
           "penalty": 0
         },
         "veras-pizza-and-bar": {
@@ -7090,6 +7130,22 @@
           "value": 6,
           "penalty": 0
         },
+        "pizza-pasta-bar": {
+          "reputation": 0,
+          "critical": 6,
+          "craft": 6.5,
+          "distinctiveness": 5,
+          "value": 6.6,
+          "penalty": 0
+        },
+        "jet-city-pizza": {
+          "reputation": 0,
+          "critical": 5.5,
+          "craft": 6,
+          "distinctiveness": 6.5,
+          "value": 6,
+          "penalty": 0
+        },
         "johnny-mos-pizzeria": {
           "reputation": 0,
           "critical": 6,
@@ -7098,28 +7154,44 @@
           "value": 6.3,
           "penalty": 0
         },
+        "olympia-pizza-spaghetti-house-ii": {
+          "reputation": 0,
+          "critical": 5.5,
+          "craft": 6,
+          "distinctiveness": 5,
+          "value": 6,
+          "penalty": 0
+        },
         "georgetown-pizza-arcade": {
           "reputation": 5.8,
-          "critical": 5,
+          "critical": 5.4,
           "craft": 5,
           "distinctiveness": 6.5,
-          "value": 5,
+          "value": 5.2,
           "penalty": 0
         },
         "seward-park-pizza": {
-          "reputation": 0,
-          "critical": 6,
+          "reputation": 1.7,
+          "critical": 6.1,
           "craft": 6.5,
           "distinctiveness": 3,
           "value": 6.3,
           "penalty": 0
         },
         "sinners-pizza": {
-          "reputation": 0,
-          "critical": 5,
+          "reputation": 1.7,
+          "critical": 5.1,
           "craft": 5,
           "distinctiveness": 6.5,
           "value": 5,
+          "penalty": 0
+        },
+        "lucianos-pizza-pasta": {
+          "reputation": 0,
+          "critical": 5.5,
+          "craft": 6,
+          "distinctiveness": 2.5,
+          "value": 5.8,
           "penalty": 0
         },
         "jackson-street-pizza-lounge": {
@@ -7136,6 +7208,14 @@
           "craft": 4,
           "distinctiveness": 3.5,
           "value": 3.8,
+          "penalty": 0
+        },
+        "magnolia-pizza-pasta": {
+          "reputation": 0,
+          "critical": 3,
+          "craft": 3.5,
+          "distinctiveness": 2,
+          "value": 3.3,
           "penalty": 0
         },
         "pizzeria-gabbiano": {

@@ -128,6 +128,11 @@ src/styles.css
 scripts/build.mjs       renders the form and output slots into OUT_DIR
 scripts/verify.mjs      deploy gate: ID seam, maths and input reading from the built copy
 test/mortgage.test.mjs  unit tests for the maths
+test/oracle.mjs         the reference the maths is validated against: exact arithmetic
+                        and closed-form formulas, importing nothing from src/
+test/validation.mjs     the validation suite, as a function of the module under test
+test/validation.test.mjs  the suite on src/, and proof that it fails on a broken calculator
+scripts/validate.mjs    the suite by hand, with a report
 test/inputs.test.mjs    unit tests for parsing, units, the down payment and the link
 test/page.test.mjs      the page script: the built app.js run in Node on a stand-in DOM
 test/page-checks.mjs    the loans the page is put through and what each must show
@@ -160,6 +165,55 @@ the comments of `src/mortgage.js` and in the tests.
 The build references `./styles.css`, `./app.js`, `./mortgage.js` and `./inputs.js` as plain
 relative paths. `scripts/build-all.mjs` stamps every asset URL with a content hash after
 `verify.mjs` has run, so nothing here adds a `?v=`.
+
+## Validating the maths
+
+`test/validation.mjs` is the answer to "is the calculator right?". It trusts nothing in
+`src/mortgage.js`: every expectation comes from `test/oracle.mjs` or from an argument
+about what any correct loan must do. Over a seeded set of loans (hand-picked corners, then
+random sizes, rates, terms, loans under way and loans with PMI) it checks:
+
+- **payment**: the level payment is the annuity formula evaluated exactly, to the cent;
+- **ledger**: every row of every schedule, under every extra-principal cadence, re-derived
+  from the row before it in exact arithmetic (whole cents in a `BigInt`, the rate as a
+  ratio): interest, principal, extra, PMI, balance, and the totals as the sums of the rows.
+  An exact half cent may round either way; anything else has one answer;
+- **formulas**: balances, payoff months and total interest against closed forms that never
+  walk a schedule, within what rounding each month to the cent can add up to;
+- **lump sum**: one extra payment of twenty sizes per loan, from 0.05% of the loan to more
+  than all of it: the saving against its closed form, the books balancing, and the shape of
+  the saving as the payment grows;
+- **extras**: a larger recurring extra never costs more or takes longer, and the same money
+  paid sooner never costs more;
+- **pmi**: a one-time payment never lengthens PMI or raises interest plus PMI.
+
+It runs three ways: in CI with the unit tests (`test/validation.test.mjs`, on `src/`), in
+the deploy gate (`verify.mjs`, on the built copy that ships), and by hand:
+
+```bash
+node mortgage/scripts/validate.mjs                 # 1,000 loans, with a report
+node mortgage/scripts/validate.mjs --loans=5000 --seed=7 [--built]
+```
+
+The report gives each section's count, the largest gap found between the calculator and a
+closed form, and a table of one-time payments on the example loan.
+
+**Saving per dollar falls as a one-time payment grows, and that is correct.** A dollar of
+principal comes off the far end of the loan, so the first dollar is spared interest for the
+whole term (`firstDollarSaving()`: at 7.25% over 30 years, $7.69 per dollar). Each further
+dollar shortens the loan, so it removes a payment that was due sooner and is spared
+interest for less time; $200,000 on the example loan saves $3.32 per dollar. The suite
+holds the page to exactly that: the ratio may only fall as the amount rises, and never
+exceed the first-dollar figure. The one exception is a loan with PMI, where the payment
+that carries the balance under 78% of the price also ends PMI, and the ratio steps up
+there. That step is real too.
+
+`test/oracle.mjs` is the one place the maths is written twice, on purpose: a reference has
+to be independent of what it checks. It is never imported by the page. The last test in
+`validation.test.mjs` makes thirteen plausible mistakes in a copy of `mortgage.js` (interest
+truncated, a cent too much in one month, the one-time payment a month late, PMI cancelled
+at 80%) and requires the suite to reject each. If `mortgage.js` is reworded so one no
+longer applies, that test says which: reword the mutation, do not delete it.
 
 ## Working on it
 
