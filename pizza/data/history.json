@@ -6505,11 +6505,11 @@
         "tutta-bella": 15,
         "west-of-chicago-pizza-company": 16,
         "stevies-famous": 17,
-        "pizza-by-ruffin": 18,
-        "lupo": 19,
-        "moto-pizza": 20,
-        "my-friend-dereks": 21,
-        "good-shape-pizza": 22,
+        "good-shape-pizza": 18,
+        "pizza-by-ruffin": 19,
+        "lupo": 20,
+        "moto-pizza": 21,
+        "my-friend-dereks": 22,
         "pagliacci": 23,
         "cornuto-pizzeria": 24,
         "via-tribunali": 25,
@@ -6535,10 +6535,10 @@
         "elemental-pizza": 45,
         "oskars-pizza": 46,
         "roma-roma": 47,
-        "capitale-pizzeria": 48,
-        "pegasus-pizza": 49,
-        "belltown-pizza": 50,
-        "in-pizza-we-crust": 51,
+        "in-pizza-we-crust": 48,
+        "capitale-pizzeria": 49,
+        "pegasus-pizza": 50,
+        "belltown-pizza": 51,
         "sopranos-antico": 52,
         "pizza-ritual": 53,
         "pazzos-on-eastlake": 54,
@@ -6582,11 +6582,11 @@
         "tutta-bella": 76.9,
         "west-of-chicago-pizza-company": 76.5,
         "stevies-famous": 76.4,
+        "good-shape-pizza": 76.4,
         "pizza-by-ruffin": 76,
         "lupo": 75.6,
         "moto-pizza": 75.4,
         "my-friend-dereks": 75.4,
-        "good-shape-pizza": 75.4,
         "pagliacci": 74.5,
         "cornuto-pizzeria": 74.4,
         "via-tribunali": 74,
@@ -6612,10 +6612,10 @@
         "elemental-pizza": 67.2,
         "oskars-pizza": 66.5,
         "roma-roma": 66.2,
+        "in-pizza-we-crust": 65.6,
         "capitale-pizzeria": 65.3,
         "pegasus-pizza": 65.3,
         "belltown-pizza": 65.3,
-        "in-pizza-we-crust": 65,
         "sopranos-antico": 64.9,
         "pizza-ritual": 64,
         "pazzos-on-eastlake": 64,
@@ -6630,8 +6630,8 @@
         "jet-city-pizza": 59.7,
         "johnny-mos-pizzeria": 57.3,
         "olympia-pizza-spaghetti-house-ii": 56.1,
-        "georgetown-pizza-arcade": 54.5,
-        "seward-park-pizza": 53.4,
+        "georgetown-pizza-arcade": 55.7,
+        "seward-park-pizza": 53.8,
         "sinners-pizza": 53.2,
         "lucianos-pizza-pasta": 49.6,
         "jackson-street-pizza-lounge": 47.7,
@@ -6778,6 +6778,14 @@
           "value": 7.8,
           "penalty": 0
         },
+        "good-shape-pizza": {
+          "reputation": 3.3,
+          "critical": 7.7,
+          "craft": 7.5,
+          "distinctiveness": 7,
+          "value": 9.1,
+          "penalty": 0
+        },
         "pizza-by-ruffin": {
           "reputation": 4,
           "critical": 7.8,
@@ -6808,14 +6816,6 @@
           "craft": 7.5,
           "distinctiveness": 7,
           "value": 8.2,
-          "penalty": 0
-        },
-        "good-shape-pizza": {
-          "reputation": 0,
-          "critical": 7.5,
-          "craft": 7.5,
-          "distinctiveness": 7,
-          "value": 9,
           "penalty": 0
         },
         "pagliacci": {
@@ -7018,6 +7018,14 @@
           "value": 6.8,
           "penalty": 0
         },
+        "in-pizza-we-crust": {
+          "reputation": 7.5,
+          "critical": 6.2,
+          "craft": 6.5,
+          "distinctiveness": 6.5,
+          "value": 6.3,
+          "penalty": 0
+        },
         "capitale-pizzeria": {
           "reputation": 4,
           "critical": 6,
@@ -7040,14 +7048,6 @@
           "craft": 6,
           "distinctiveness": 4.5,
           "value": 6,
-          "penalty": 0
-        },
-        "in-pizza-we-crust": {
-          "reputation": 7.5,
-          "critical": 6,
-          "craft": 6.5,
-          "distinctiveness": 6.5,
-          "value": 6.3,
           "penalty": 0
         },
         "sopranos-antico": {
@@ -7164,15 +7164,15 @@
         },
         "georgetown-pizza-arcade": {
           "reputation": 5.8,
-          "critical": 5,
+          "critical": 5.4,
           "craft": 5,
           "distinctiveness": 6.5,
-          "value": 5,
+          "value": 5.2,
           "penalty": 0
         },
         "seward-park-pizza": {
-          "reputation": 0,
-          "critical": 6,
+          "reputation": 1.7,
+          "critical": 6.1,
           "craft": 6.5,
           "distinctiveness": 3,
           "value": 6.3,
