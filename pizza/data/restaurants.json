@@ -5588,7 +5588,9 @@
       "locations": [
         {
           "neighborhood": "Laurelhurst",
-          "address": "3617 NE 45th St, Seattle, WA 98105"
+          "address": "3617 NE 45th St, Seattle, WA 98105",
+          "lat": 47.66098,
+          "lon": -122.28843
         }
       ],
       "locationsVerified": null,
