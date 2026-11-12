@@ -2,50 +2,74 @@
   "updated": "2026-11-12T00:00:00Z",
   "mentions": [
     {
-      "id": "my-friend-dereks",
-      "title": "The Detroit-style pizza everyone's talking about",
-      "url": "https://www.kuow.org/stories/the-detroit-style-pizza-everyone-s-talking-about",
-      "source": "KUOW",
-      "date": "2025-02-20",
+      "id": "a-k-pizza",
+      "title": "Seattle's Pizza Just Keeps Getting Better",
+      "url": "https://seattlemag.com/food-drink/seattles-pizza-just-keeps-getting-better/",
+      "source": "Seattle Magazine",
+      "date": "2026-04-30",
+      "kind": "mention"
+    },
+    {
+      "id": "tutta-bella",
+      "title": "Tutta Bella announces closure of 2 Seattle restaurants",
+      "url": "https://www.kiro7.com/news/local/tutta-bella-announces-closure-2-seattle-restaurants/U6GRKWFOQNDRFG7DUZGI2LBMFA/",
+      "source": "KIRO 7",
+      "date": "2026-09-24",
+      "kind": "closing"
+    },
+    {
+      "id": "pizza-by-ruffin",
+      "title": "Pizza By Ruffin brings community vibes to South Lake Union",
+      "url": "https://www.discoverslu.com/story/bold-flavors-of-black-diaspora/",
+      "source": "Discover SLU",
+      "date": "2025-04-07",
+      "kind": "mention"
+    },
+    {
+      "id": "pizza-by-ruffin",
+      "title": "Washington's First Black-Owned Pizzeria Is Also One of Seattle's Best New Restaurants",
+      "url": "https://www.pmq.com/washingtons-first-black-owned-pizzeria-is-also-one-of-seattles-best-new-restaurants/",
+      "source": "PMQ Pizza Magazine",
+      "date": "2025-02-24",
+      "kind": "ranking"
+    },
+    {
+      "id": "un-po-tipsy",
+      "title": "3 new Renee Erickson restaurants opening in Pioneer Square",
+      "url": "https://www.axios.com/local/seattle/2025/12/12/seattle-chef-renee-erickson-opening-restaurants-pioneer-square",
+      "source": "Axios Seattle",
+      "date": "2025-12-12",
       "kind": "opening"
+    },
+    {
+      "id": "pagliacci",
+      "title": "Pagliacci Pizza Wins PENW Award For Performance Excellence",
+      "url": "https://pizzatoday.com/news/pagliacci-pizza-wins-penw-award-for-performance-excellence/614680/",
+      "source": "Pizza Today",
+      "date": "2025-09-11",
+      "kind": "mention"
     }
   ],
   "coverageSkipped": [
     {
-      "id": "hot-mamas-pizza",
-      "note": "Searched for coverage beyond the on-file theinfatuation.com 2026-05-06 review. Found Seattle Spectator's by-the-slice review (seattlespectator.com, 2024-05-29) but it is older than the two-year window, and a Seattle Times 'The Ticket' pesto-slice feature with no confirmable publish date (likely ~2023). No new dated mention found."
+      "id": "big-marios",
+      "note": "Searched for 2025-2026 coverage specific to the Capitol Hill location; found only chain-wide items (a Northlake Tavern burglary/sale saga, old Capitol Hill Seattle posts from 2010/2018/2023) and the Oct 2026 Ivar's/Taco Time collab story already on file. No new Capitol Hill-specific story found."
     },
     {
-      "id": "post-alley-pizza",
-      "note": "Searched for coverage beyond the on-file cascadepbs.org 2025-04-23 'top 5 pizza spots' piece, which search kept resurfacing as the same article. Found a later Cascade PBS item (dev.cascadepbs.org, on Italian sandwiches) naming Post Alley's hoagie as a favorite, but could not confirm its exact publish date from search results, so did not report it."
+      "id": "sacro-bosco-pizza-wine",
+      "note": "Searched for closure news beyond the two Seattle Met reviews on file. Found a Seattle Met 'Friday Feed' item (seattlemet.com/eat-and-drink/2026/05/...) and a ma.to event listing both suggesting a final pizza party around May 15, 2026, but the Seattle Met page returned HTTP 403 on fetch so I could not confirm its exact headline/date, and ma.to is an event aggregator, not a published outlet. No new mention added; worth revisiting for a closing story."
     },
     {
-      "id": "pegasus-pizza",
-      "note": "Searched westseattleblog.com/westsideseattle.com for coverage beyond the on-file 2026-06-08 WSB 'new owners' biznote, which matches what search surfaced again. Older items about the 2023 Alki eviction are outside the two-year window. No new dated mention found."
+      "id": "good-shape-pizza",
+      "note": "Searched for coverage beyond the Infatuation review and Cascade PBS piece on file; found only the same Infatuation review page and generic/aggregator 'best pizza' roundups (a 2019 Seattle Met guide, Atly, Giftly), none of which are a new dated story within the two-year window."
     },
     {
-      "id": "sinners-pizza",
-      "note": "Searched for coverage beyond the on-file whatnow.com 2026-02-18 opening story; search only resurfaced the same WhatNow article. No other outlet (Seattle Met, Eater, neighborhood blogs) has covered Sinner's Pizza. No new mention found."
+      "id": "in-pizza-we-crust",
+      "note": "Searched for 2026 coverage; found only the same October 31, 2025 Westside Seattle opening story already on file and 2026 Yelp/MapQuest consumer reviews (not published coverage). No new story found."
     },
     {
-      "id": "pizzeria-22",
-      "note": "Searched westsideseattle.com/westseattleblog.com for coverage beyond the on-file 2025-01-20 ownership-change story. Found an August 2024 West Seattle Blog item on founder Cary Kemp announcing the sale, but it falls outside the two-year window. No new dated mention found."
-    },
-    {
-      "id": "pizza-ritual",
-      "note": "Searched westseattleblog.com for coverage beyond the on-file 2026-01-07 biznote. Found an April 2025 WSB 'food biznotes' post referencing a 'new pizza' sign at KBM Commissary Kitchen, but could not confirm it names Pizza Ritual specifically, so did not report it."
-    },
-    {
-      "id": "pizzeria-pulcinella",
-      "note": "Searched for coverage beyond the on-file southseattleemerald.org 2025-10-28 piece. Found Pulcinella listed in The Infatuation's Rainier Beach guide and a 2021 Seattle Met neighborhood guide, but neither carries a confirmable publish date within the two-year window. No new mention found."
-    },
-    {
-      "id": "oxbow",
-      "note": "Searched for coverage beyond the on-file theinfatuation.com 2026-05-12 review. Found a 2023 Eater Seattle mention (too old) and an undated Infatuation pizza-slices guide entry; could not confirm a publish date within the two-year window for either. No new mention found."
-    },
-    {
-      "id": "sunny-hill",
-      "note": "Searched for coverage beyond the on-file tastingtable.com 2025-06-16 piece. Found Daily Hive and Seattle Met items plus a pre-opening Stranger business listing, but none carried a confirmable recent publish date. No new mention found."
+      "id": "roma-roma",
+      "note": "Entry already lists 4 mentions on file, the per-entry maximum, so no search was performed."
     }
   ]
 }

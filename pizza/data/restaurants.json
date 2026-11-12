@@ -923,9 +923,16 @@
           "source": "FOX 13 Seattle",
           "date": "2026-09-23",
           "kind": "closing"
+        },
+        {
+          "url": "https://www.kiro7.com/news/local/tutta-bella-announces-closure-2-seattle-restaurants/U6GRKWFOQNDRFG7DUZGI2LBMFA/",
+          "title": "Tutta Bella announces closure of 2 Seattle restaurants",
+          "source": "KIRO 7",
+          "date": "2026-09-24",
+          "kind": "closing"
         }
       ],
-      "coverageAttempted": null,
+      "coverageAttempted": "2026-11-12",
       "coverageNote": null,
       "factsAttempted": null,
       "factsSought": [],
@@ -1166,9 +1173,16 @@
           "source": "The Infatuation",
           "date": "2026-05-12",
           "kind": "mention"
+        },
+        {
+          "url": "https://pizzatoday.com/news/pagliacci-pizza-wins-penw-award-for-performance-excellence/614680/",
+          "title": "Pagliacci Pizza Wins PENW Award For Performance Excellence",
+          "source": "Pizza Today",
+          "date": "2025-09-11",
+          "kind": "mention"
         }
       ],
-      "coverageAttempted": null,
+      "coverageAttempted": "2026-11-12",
       "coverageNote": null,
       "factsAttempted": null,
       "factsSought": [],
@@ -1454,8 +1468,8 @@
           "kind": "opening"
         }
       ],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched for 2025-2026 coverage specific to the Capitol Hill location; found only chain-wide items (a Northlake Tavern burglary/sale saga, old Capitol Hill Seattle posts from 2010/2018/2023) and the Oct 2026 Ivar's/Taco Time collab story already on file. No new Capitol Hill-specific story found.",
       "factsAttempted": null,
       "factsSought": [],
       "factsNote": null,
@@ -2998,8 +3012,8 @@
           "kind": "mention"
         }
       ],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Entry already lists 4 mentions on file, the per-entry maximum, so no search was performed.",
       "factsAttempted": "2026-11-12",
       "factsSought": [
         "priceIndex",
@@ -3086,9 +3100,23 @@
           "source": "Seattle magazine",
           "date": "2026-08-07",
           "kind": "mention"
+        },
+        {
+          "url": "https://www.discoverslu.com/story/bold-flavors-of-black-diaspora/",
+          "title": "Pizza By Ruffin brings community vibes to South Lake Union",
+          "source": "Discover SLU",
+          "date": "2025-04-07",
+          "kind": "mention"
+        },
+        {
+          "url": "https://www.pmq.com/washingtons-first-black-owned-pizzeria-is-also-one-of-seattles-best-new-restaurants/",
+          "title": "Washington's First Black-Owned Pizzeria Is Also One of Seattle's Best New Restaurants",
+          "source": "PMQ Pizza Magazine",
+          "date": "2025-02-24",
+          "kind": "ranking"
         }
       ],
-      "coverageAttempted": null,
+      "coverageAttempted": "2026-11-12",
       "coverageNote": null,
       "factsAttempted": "2026-11-12",
       "factsSought": [
@@ -4306,8 +4334,8 @@
           "kind": "closing"
         }
       ],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched for closure news beyond the two Seattle Met reviews on file. Found a Seattle Met 'Friday Feed' item (seattlemet.com/eat-and-drink/2026/05/...) and a ma.to event listing both suggesting a final pizza party around May 15, 2026, but the Seattle Met page returned HTTP 403 on fetch so I could not confirm its exact headline/date, and ma.to is an event aggregator, not a published outlet. No new mention added; worth revisiting for a closing story.",
       "factsAttempted": "2026-11-12",
       "factsSought": [
         "signature"
@@ -5227,8 +5255,8 @@
           "kind": "ranking"
         }
       ],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched for coverage beyond the Infatuation review and Cascade PBS piece on file; found only the same Infatuation review page and generic/aggregator 'best pizza' roundups (a 2019 Seattle Met guide, Atly, Giftly), none of which are a new dated story within the two-year window.",
       "factsAttempted": "2026-11-12",
       "factsSought": [
         "opened"
@@ -5317,8 +5345,8 @@
           "kind": "opening"
         }
       ],
-      "coverageAttempted": null,
-      "coverageNote": null,
+      "coverageAttempted": "2026-11-12",
+      "coverageNote": "Searched for 2026 coverage; found only the same October 31, 2025 Westside Seattle opening story already on file and 2026 Yelp/MapQuest consumer reviews (not published coverage). No new story found.",
       "factsAttempted": "2026-11-12",
       "factsSought": [
         "priceIndex"
@@ -5685,9 +5713,16 @@
           "source": "Seattle Magazine",
           "date": "2026-04-30",
           "kind": "ranking"
+        },
+        {
+          "url": "https://www.axios.com/local/seattle/2025/12/12/seattle-chef-renee-erickson-opening-restaurants-pioneer-square",
+          "title": "3 new Renee Erickson restaurants opening in Pioneer Square",
+          "source": "Axios Seattle",
+          "date": "2025-12-12",
+          "kind": "opening"
         }
       ],
-      "coverageAttempted": null,
+      "coverageAttempted": "2026-11-12",
       "coverageNote": null,
       "factsAttempted": "2026-11-12",
       "factsSought": [
@@ -6877,9 +6912,16 @@
           "source": "The Infatuation",
           "date": "2026-11-09",
           "kind": "ranking"
+        },
+        {
+          "url": "https://seattlemag.com/food-drink/seattles-pizza-just-keeps-getting-better/",
+          "title": "Seattle's Pizza Just Keeps Getting Better",
+          "source": "Seattle Magazine",
+          "date": "2026-04-30",
+          "kind": "mention"
         }
       ],
-      "coverageAttempted": null,
+      "coverageAttempted": "2026-11-12",
       "coverageNote": null,
       "factsAttempted": "2026-11-12",
       "factsSought": [
