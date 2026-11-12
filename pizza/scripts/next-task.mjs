@@ -581,10 +581,13 @@ its source; never report the same fact twice for one entry.
 
 - opened: the year it opened, from a page that says so: an "established
   2009" line, a "since 1979" in the header, an opening story with a
-  date. Never infer a year from a domain registration, a review date or
-  a photo.
-- priceIndex: from its own menu. 1 = slices and pies under about $20,
-  2 = pies $20-28, 3 = $28-36, 4 = above.
+  date. A dated opening story that gives the day and not the year is
+  enough: one published in January 2026 that says "opened on December
+  14" means 2025. Never infer a year from a domain registration, a
+  review date or a photo.
+- priceIndex: from its own menu, or from a published review that states
+  what a whole pie costs; a "$$" symbol is not a price. 1 = slices and
+  pies under about $20, 2 = pies $20-28, 3 = $28-36, 4 = above.
 - style: the kind of pizza it makes, as a short phrase in the page's own
   terms ("Wood-fired Neapolitan", "New York-style slices").
 - styleGroup: the family that style belongs to. Pick from the groups
@@ -595,7 +598,9 @@ its source; never report the same fact twice for one entry.
   characters: the one its own menu or site puts forward, or the one its
   coverage keeps returning to, with what is on it when the page says. It
   is not your pick from the menu. When no page singles one out, leave it
-  missing.
+  missing. Write the pie itself, not a sentence about it: its name, then
+  its toppings when the page gives them ("Pepperoni", "The Hawaiian:
+  pineapple and smoked ham"), with no "signature pie" and no praise.
 
 The source for style, styleGroup and signature is the pizzeria's own
 site or menu, or published coverage of it (a review, a roundup entry, a

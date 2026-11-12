@@ -354,7 +354,11 @@ test('facts brief: says what each fact is, where it may come from, and asks for 
   // where a description may come from
   assert.match(brief, /The source for style, styleGroup and signature is the pizzeria's own\nsite or menu, or published coverage of it/);
   assert.match(brief, /A review aggregator, a delivery app or a directory listing\nis never one/);
-  assert.match(brief, /Never infer a year from a domain registration, a review date or\n  a photo\./);
+  assert.match(brief, /Never infer a year from a domain registration, a\n  review date or a photo\./);
+  // what the first dry run showed the brief had to say outright
+  assert.match(brief, /A dated opening story that gives the day and not the year is\n  enough/);
+  assert.match(brief, /a "\$\$" symbol is not a price/);
+  assert.match(brief, /Write the pie itself, not a sentence about it/);
   assert.match(brief, /a fact already on file is never replaced/);
   // attempt memory, and it may sit beside a partial find
   assert.match(brief, /report a "factsSkipped" record \(\{"id","note"\}/);
