@@ -2621,7 +2621,9 @@
       "locationsAttempted": "2026-11-12",
       "locationsNote": "Searched for Razzi's Pizzeria's official website (plain search and site: queries); found no confirmed official domain. Third-party listings disagree between razzis.com and razzispizza.com with no way to verify which, if either, is genuine, so the 1314 Howell St lead could not be checked against an official source.",
       "coverageAttempted": "2026-11-12",
-      "coverageNote": "Searched 'Razzi's Pizzeria Greenwood Seattle' and '...news review Eater'. Found only HappyCow, FindMeGlutenFree, Birdeye and Spinach aggregator/directory listings; no named-outlet press coverage turned up."
+      "coverageNote": "Searched 'Razzi's Pizzeria Greenwood Seattle' and '...news review Eater'. Found only HappyCow, FindMeGlutenFree, Birdeye and Spinach aggregator/directory listings; no named-outlet press coverage turned up.",
+      "socialAttempted": "2026-11-12",
+      "socialNote": "Website on file is unresolved between razzis.com and razzispizza.com. Retried fetching https and http razzispizza.com/about.html — both failed with certificate verification errors, so the domain could not be confirmed live. Instagram already on file; no new website found."
     },
     {
       "id": "pizzeria-la-rocca",
@@ -3280,7 +3282,9 @@
       "locationsSource": "https://www.romanopizzaandpasta.com/",
       "mentions": [],
       "ratingAttempted": "2026-11-12",
-      "ratingNote": "Searched West Seattle Blog (which covers Delridge food news closely) and Tasting Table's 'Best Pizza Restaurants Seattle' roundup for this Delridge spot (former Olympia Pizza); neither mentions it by name. Only directory/aggregator listings (Slice, MapQuest, MenuPages) with brief customer comments turned up. Skipping for lack of grounding."
+      "ratingNote": "Searched West Seattle Blog (which covers Delridge food news closely) and Tasting Table's 'Best Pizza Restaurants Seattle' roundup for this Delridge spot (former Olympia Pizza); neither mentions it by name. Only directory/aggregator listings (Slice, MapQuest, MenuPages) with brief customer comments turned up. Skipping for lack of grounding.",
+      "socialAttempted": "2026-11-12",
+      "socialNote": "Site on file is romanopizzaandpasta.com. Fetched it — header/footer contain only Order, Home, Menu, Refund Policy links, a phone number and payment logos; no social media link present. Searched 'Romano Pizza & Pasta Delridge Seattle instagram' — no handle found."
     },
     {
       "id": "world-pizza",
@@ -3779,7 +3783,9 @@
       "ratingAttempted": "2026-11-07",
       "ratingNote": "Searched Candela Pizza (South Seattle pizza truck) plus Eater/Seattle Times/Seattle Met/Infatuation/South Seattle Emerald/West Seattle Blog combinations. Found only SeattleFoodTruck.com and a LiveInEverett promotional profile (owners Octavio and Zully Ortega, truck based in Renton, ~3 months old as of that piece) -- no independent review, roundup entry, or news story. No rating proposed; skipped for lack of published criticism.",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "No official Candela Pizza website found. Search turned up only directory/aggregator listings (Seattle Food Truck profile, Atly) citing a food truck at 9454 17th Ave SW, Seattle; the Seattle Food Truck page itself returned HTTP 403 when fetched. No pizzeria-owned site or page could be reached to confirm an address."
+      "locationsNote": "No official Candela Pizza website found. Search turned up only directory/aggregator listings (Seattle Food Truck profile, Atly) citing a food truck at 9454 17th Ave SW, Seattle; the Seattle Food Truck page itself returned HTTP 403 when fetched. No pizzeria-owned site or page could be reached to confirm an address.",
+      "socialAttempted": "2026-11-12",
+      "socialNote": "Searched 'Candela Pizza South Seattle official website' and for a candelapizza.com domain — only Seattle Food Truck, Atly and Live in Everett profiles turned up (truck based in Renton), no official domain found. Instagram already on file."
     },
     {
       "id": "dudez-woodfired-pizza",
@@ -3809,7 +3815,9 @@
       "ratingAttempted": "2026-11-12",
       "ratingNote": "Searched for reviews or news about Dude'Z Woodfired Pizza on Fuhrman Ave E, Eastlake. Found only directory/aggregator listings (Atly, MapQuest, DoorDash) with user ratings but no professional review, roundup entry, or news story. No credible published source found.",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "A MapQuest listing's 'Web' button resolved to https://dudezwoodfiredpizza.com/, but every fetch attempt (https://, https://www., bare domain) failed with an SSL handshake error, so the site's own locations/about/menu content could not be read. Other results were only directory/delivery listings (MapQuest, Atly, DoorDash) citing 2919 Fuhrman Ave E, Seattle, not confirmed from the pizzeria's own site."
+      "locationsNote": "A MapQuest listing's 'Web' button resolved to https://dudezwoodfiredpizza.com/, but every fetch attempt (https://, https://www., bare domain) failed with an SSL handshake error, so the site's own locations/about/menu content could not be read. Other results were only directory/delivery listings (MapQuest, Atly, DoorDash) citing 2919 Fuhrman Ave E, Seattle, not confirmed from the pizzeria's own site.",
+      "socialAttempted": "2026-11-12",
+      "socialNote": "A MapQuest 'Web' button resolves to dudezwoodfiredpizza.com; retried fetching both https and http — both failed with SSL handshake errors, so the site could not be opened to confirm it's live or find a social link. Instagram already on file."
     },
     {
       "id": "elemental-pizza",
@@ -4629,7 +4637,9 @@
       "styleGroup": "By the slice",
       "lastVerified": "2026-11-12",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "Fetched https://www.pudgebros.com/ and https://www.pudgebros.com/locations; both returned HTTP 403 (blocked). A search found a Seattle address (269 NE 45th St) but only via third-party directories (Mapquest/Groupon), one of which suggests the store may be closed — not confirmed from the pizzeria's own site, so no address reported."
+      "locationsNote": "Fetched https://www.pudgebros.com/ and https://www.pudgebros.com/locations; both returned HTTP 403 (blocked). A search found a Seattle address (269 NE 45th St) but only via third-party directories (Mapquest/Groupon), one of which suggests the store may be closed — not confirmed from the pizzeria's own site, so no address reported.",
+      "socialAttempted": "2026-11-12",
+      "socialNote": "Site on file is pudgebros.com. Fetching it (with and without www) returned HTTP 403 Forbidden both times, so the header/footer could not be checked for an Instagram link. Searched 'Pudge Bros pizza Seattle instagram' separately — no handle found in results."
     },
     {
       "id": "ridge-pizza",
@@ -5035,7 +5045,9 @@
       "styleGroup": "Detroit pan",
       "lastVerified": "2026-10-18",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "Directory listings (Atly, Frankiapp) point to sunnyhillseattle.com as the official site, but fetching both https://www.sunnyhillseattle.com and http://www.sunnyhillseattle.com returned HTTP 403, so its locations/about/menu content could not be confirmed. Aggregators (MyBallard, The Stranger, Toast ordering page) cite 3127 NW 85th St, Seattle, but that was not read from the pizzeria's own site."
+      "locationsNote": "Directory listings (Atly, Frankiapp) point to sunnyhillseattle.com as the official site, but fetching both https://www.sunnyhillseattle.com and http://www.sunnyhillseattle.com returned HTTP 403, so its locations/about/menu content could not be confirmed. Aggregators (MyBallard, The Stranger, Toast ordering page) cite 3127 NW 85th St, Seattle, but that was not read from the pizzeria's own site.",
+      "socialAttempted": "2026-11-12",
+      "socialNote": "An Atly listing names sunnyhillseattle.com as the website, but fetching https://www.sunnyhillseattle.com returned HTTP 403 Forbidden, so the page could not actually be opened to verify it or find an Instagram link. No Instagram handle found in search results."
     },
     {
       "id": "deleo-bros-pizza",
@@ -5302,7 +5314,9 @@
       "styleGroup": "Neighborhood",
       "lastVerified": "2026-11-12",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "No official Luciano's Pizza & Pasta website found. Search results were all delivery/ordering aggregators (Slice, UberEats, DoorDash, Foodboss) citing two Seattle addresses (2341 California Ave SW and 11064 Lake City Way NE); the Slice menu page was fetched and confirmed it has no outbound link to an official site or Instagram."
+      "locationsNote": "No official Luciano's Pizza & Pasta website found. Search results were all delivery/ordering aggregators (Slice, UberEats, DoorDash, Foodboss) citing two Seattle addresses (2341 California Ave SW and 11064 Lake City Way NE); the Slice menu page was fetched and confirmed it has no outbound link to an official site or Instagram.",
+      "socialAttempted": "2026-11-12",
+      "socialNote": "Searched 'Luciano's Pizza & Pasta Admiral West Seattle website' — only Uber Eats/Slice/DoorDash/WhatsVegan listings turned up (2341 California Ave SW), no official domain found. No Instagram handle found."
     },
     {
       "id": "ananas-pizzeria",
@@ -5361,7 +5375,9 @@
       "styleGroup": "Creative",
       "lastVerified": "2026-11-12",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "Its site, https://www.ananaspizzeria.com, is a JavaScript-rendered page: fetches of the homepage, /contact, /menu, /visit, and /location all returned either a bare page title with no body text or HTTP 404, so no address, neighborhood, or Instagram link could be read from the pizzeria's own site. The lead, 1106 8th Ave, Seattle, WA 98101, matches third-party coverage (Seattle Met, Curiocity) describing a First Hill location, but those are not the pizzeria's own site and so do not satisfy confirmation; the lead is not reported as a site."
+      "locationsNote": "Its site, https://www.ananaspizzeria.com, is a JavaScript-rendered page: fetches of the homepage, /contact, /menu, /visit, and /location all returned either a bare page title with no body text or HTTP 404, so no address, neighborhood, or Instagram link could be read from the pizzeria's own site. The lead, 1106 8th Ave, Seattle, WA 98101, matches third-party coverage (Seattle Met, Curiocity) describing a First Hill location, but those are not the pizzeria's own site and so do not satisfy confirmation; the lead is not reported as a site.",
+      "socialAttempted": "2026-11-12",
+      "socialNote": "Site on file is ananaspizzeria.com. Fetched it but the page returned only a bare title with no header/footer/link content (JS-rendered), so no Instagram link could be located. Searched 'Ananas Pizzeria Seattle instagram' — no handle named by any outlet, only an unrelated photo-credit mention."
     },
     {
       "id": "alberonas-davinci-pizza-pasta",
@@ -5390,7 +5406,9 @@
       "ratingAttempted": "2026-11-12",
       "ratingNote": "Searched for Stranger/Eater/Seattle Times/Seattle Met coverage of this Leary Way NW pizzeria across three queries; found only delivery-app listings and aggregator star ratings (Magicpin, WhatsVegan, Slice) plus its own promotional copy -- no published review, roundup entry or news story about this specific place. Skipped.",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "No official Alberona's DaVinci Pizza & Pasta website found. Search results were aggregators only (Slice, Autoreserve); the Slice menu page (fetched) lists 3624 Leary Way NW, Seattle, WA 98107 but has no link to an official site or Instagram, and the Autoreserve page returned HTTP 403 when fetched."
+      "locationsNote": "No official Alberona's DaVinci Pizza & Pasta website found. Search results were aggregators only (Slice, Autoreserve); the Slice menu page (fetched) lists 3624 Leary Way NW, Seattle, WA 98107 but has no link to an official site or Instagram, and the Autoreserve page returned HTTP 403 when fetched.",
+      "socialAttempted": "2026-11-12",
+      "socialNote": "Searched 'Alberona's DaVinci Pizza & Pasta Ballard Seattle website' — only Caviar/Slice/aggregator listings (3624 Leary Way NW) turned up, no official domain found. No Instagram handle found in results or named by any outlet."
     },
     {
       "id": "capitale-pizzeria",
@@ -5484,7 +5502,9 @@
       "ratingAttempted": "2026-11-12",
       "ratingNote": "Searched for reviews/roundups of this Queen Anne Indian-fusion pizza spot (Infatuation Seattle pizza-delivery guide, Eater Seattle, general web). Found only delivery-app and directory listings (DoorDash, Slice, Atly, MapQuest, Valpak) with scattered customer comments on the butter chicken pizza; no published review, roundup entry, or news story naming this specific pizzeria. Skipping for lack of grounding.",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "No official Desi Pizza Kitchen website found. Web search surfaced only aggregators (Slice, ezCater, Valpak, MapQuest) citing a Queen Anne address (2115 Queen Anne Ave N, Seattle, WA 98109); the ezCater brand page was fetched and every link on it points back to ezCater, not an owned site. Could not confirm an address from the pizzeria's own site."
+      "locationsNote": "No official Desi Pizza Kitchen website found. Web search surfaced only aggregators (Slice, ezCater, Valpak, MapQuest) citing a Queen Anne address (2115 Queen Anne Ave N, Seattle, WA 98109); the ezCater brand page was fetched and every link on it points back to ezCater, not an owned site. Could not confirm an address from the pizzeria's own site.",
+      "socialAttempted": "2026-11-12",
+      "socialNote": "Searched 'Desi Pizza Kitchen Queen Anne Seattle website' — only Slice/DoorDash/Uber Eats/Valpak listings turned up (2115 Queen Anne Ave N), no official domain found. No Instagram handle found."
     },
     {
       "id": "fremont-pizza",
@@ -5513,7 +5533,9 @@
       "ratingAttempted": "2026-11-12",
       "ratingNote": "Searched twice for critic or press coverage (Stranger, Eater, Seattle Met) of this Fremont Ave N pizzeria; found only aggregator/directory pages (Atly, Mapquest with 9 reviews, Lolo, WhatsVegan) describing skee-ball and vegan options, no published review or news story. Skipped.",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "Found what appears to be the official homepage, https://www.fremont-pizza.com/ (linked from a JoinLolo merchant listing, labeled 'Fremont Pizza' rather than a delivery aggregator), but the site renders via JavaScript and WebFetch only returned the page title with no address, locations, or social links; subpages /visit, /menu, and /contact-us all returned HTTP 404. Could not confirm an address from the pizzeria's own site."
+      "locationsNote": "Found what appears to be the official homepage, https://www.fremont-pizza.com/ (linked from a JoinLolo merchant listing, labeled 'Fremont Pizza' rather than a delivery aggregator), but the site renders via JavaScript and WebFetch only returned the page title with no address, locations, or social links; subpages /visit, /menu, and /contact-us all returned HTTP 404. Could not confirm an address from the pizzeria's own site.",
+      "socialAttempted": "2026-11-12",
+      "socialNote": "Searched 'Fremont Pizza Seattle website' and 'Fremont Pizza Seattle instagram' — only aggregator/delivery listings (3510 Fremont Ave N) turned up; no official domain or Instagram handle found in results or named by any outlet."
     },
     {
       "id": "magnolia-pizza-pasta",
@@ -5578,7 +5600,9 @@
       "styleGroup": "Neighborhood",
       "lastVerified": "2026-11-12",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "No official Magnolia Pizza & Pasta website found. Search results were only directory/menu aggregators (MenuPages, Slice, MapQuest) citing 2120 W Emerson Pl, Seattle, WA 98199; the MenuPages listing was fetched and has no outbound link to an official site, and separately states the restaurant is 'not accepting orders right now' (an aggregator claim, not independent evidence of closure). Could not confirm an address or current status from the pizzeria's own site."
+      "locationsNote": "No official Magnolia Pizza & Pasta website found. Search results were only directory/menu aggregators (MenuPages, Slice, MapQuest) citing 2120 W Emerson Pl, Seattle, WA 98199; the MenuPages listing was fetched and has no outbound link to an official site, and separately states the restaurant is 'not accepting orders right now' (an aggregator claim, not independent evidence of closure). Could not confirm an address or current status from the pizzeria's own site.",
+      "socialAttempted": "2026-11-12",
+      "socialNote": "Searched 'Magnolia Pizza & Pasta Seattle official website' — only MenuPages/Slice/WhatsVegan listings turned up (2120 W Emerson Pl), no official domain found. No Instagram handle found."
     },
     {
       "id": "numero-uno-pizza",
@@ -5607,7 +5631,9 @@
       "ratingAttempted": "2026-11-12",
       "ratingNote": "Searched for reviews or news coverage of Numero Uno Pizza at 103 1st Ave S, Pioneer Square. The only hit was a Slice.com ordering/menu page with no critic or customer commentary; broader Pioneer Square pizza coverage (Pizzeria Gabbiano, Un Po Tipsy, Moto Pizza) never mentions this business. No credible published source found.",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "Searched for an official site; only third-party listings (Slice, FamHop, WhatsVegan, Giftly) surfaced, giving an address of 103 1st Ave S, Seattle, WA 98104. The domain FamHop attributes to it, numerounopizzaseattle.com, redirects to a Slice 'shop disabled' notice rather than a working official site, so no address could be confirmed from the business's own site."
+      "locationsNote": "Searched for an official site; only third-party listings (Slice, FamHop, WhatsVegan, Giftly) surfaced, giving an address of 103 1st Ave S, Seattle, WA 98104. The domain FamHop attributes to it, numerounopizzaseattle.com, redirects to a Slice 'shop disabled' notice rather than a working official site, so no address could be confirmed from the business's own site.",
+      "socialAttempted": "2026-11-12",
+      "socialNote": "A FamHop listing names numerounopizzaseattle.com as the website, but fetching it 301-redirects to a Slice 'disabled shop' notice page, so the domain no longer serves a live site and can't be reported. Also searched for an Instagram handle — none found in results or named by any outlet."
     },
     {
       "id": "olympia-pizza-spaghetti-house-ii",
@@ -5733,7 +5759,9 @@
       "styleGroup": "Creative",
       "lastVerified": "2026-11-12",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "No official Jet City Pizza website found. Search results were dominated by the unrelated Michigan chain 'Jet's Pizza'; the Washington-specific hits were only aggregator/ordering pages (Toast, Slice, ezCater, MapQuest) citing possible Seattle, Marysville, and Bothell storefronts. The ezCater brand page was fetched and every link on it points back to ezCater, not an owned site. Could not confirm any address from the pizzeria's own site."
+      "locationsNote": "No official Jet City Pizza website found. Search results were dominated by the unrelated Michigan chain 'Jet's Pizza'; the Washington-specific hits were only aggregator/ordering pages (Toast, Slice, ezCater, MapQuest) citing possible Seattle, Marysville, and Bothell storefronts. The ezCater brand page was fetched and every link on it points back to ezCater, not an owned site. Could not confirm any address from the pizzeria's own site.",
+      "socialAttempted": "2026-11-12",
+      "socialNote": "Searched 'Jet City Pizza Wedgwood Seattle website' and '...instagram' — only MapQuest/DoorDash/ezCater/Birdeye listings for the 7500 25th Ave NE location turned up, no official domain or Instagram handle found."
     },
     {
       "id": "pizza-pasta-bar",
@@ -5857,7 +5885,9 @@
       "locationsSource": null,
       "mentions": [],
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "Searched for an official site; third-party listings give an address of 3617 NE 45th St, Seattle, WA 98105, and an old scanned menu document names the domain varlamospizza.com, but fetching that domain failed with an expired SSL certificate, so the current official site could not be verified."
+      "locationsNote": "Searched for an official site; third-party listings give an address of 3617 NE 45th St, Seattle, WA 98105, and an old scanned menu document names the domain varlamospizza.com, but fetching that domain failed with an expired SSL certificate, so the current official site could not be verified.",
+      "socialAttempted": "2026-11-12",
+      "socialNote": "Searched 'Varlamos Pizzeria Laurelhurst Seattle website' — only Foursquare/MapQuest/Atly listings turned up (3617 NE 45th St); a MapQuest 'Website' button was referenced but its target URL wasn't shown, so no domain could be confirmed. No Instagram handle found."
     }
   ]
 }
