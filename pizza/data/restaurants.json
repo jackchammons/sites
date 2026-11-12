@@ -788,7 +788,7 @@
         },
         {
           "neighborhood": "Capitol Hill",
-          "address": "415 E. Pike Street, Seattle, WA 98122",
+          "address": "415 E Pike Street, Seattle, WA 98122",
           "lat": 47.61393,
           "lon": -122.32605
         },
@@ -911,8 +911,8 @@
           "lon": -122.03405
         }
       ],
-      "locationsVerified": "2026-08-22",
-      "locationsSource": "https://www.pagliacci.com/locations",
+      "locationsVerified": "2026-11-12",
+      "locationsSource": "https://www.pagliacci.com/locations/",
       "status": "open",
       "statusSource": null,
       "statusDate": null,
@@ -977,7 +977,9 @@
       ],
       "instagram": "https://www.instagram.com/pagliaccipizza/",
       "statusChecked": "2026-10-06",
-      "ratingAttempted": "2026-11-11"
+      "ratingAttempted": "2026-11-11",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "The lead, 721 Aurora Ave N, Seattle, WA 98109, does not exactly match any address on the official locations page (https://www.pagliacci.com/locations/), which lists the nearest branch, Queen Anne - Valley Street, at 719 Aurora Avenue N, Seattle, WA 98109. The two-digit discrepancy could not be confirmed as the same address, so the lead itself is not added as a separate site (the existing Queen Anne branch at 719 Aurora Avenue N is reported in locations)."
     },
     {
       "id": "breezy-town-pizza",
@@ -1151,7 +1153,7 @@
           "lon": -122.3554
         }
       ],
-      "locationsVerified": "2026-08-22",
+      "locationsVerified": "2026-11-12",
       "locationsSource": "https://bigmariosnewyorkpizza.com/",
       "status": "open",
       "statusSource": null,
@@ -1213,7 +1215,9 @@
       "instagram": "https://www.instagram.com/bigmariospizza/",
       "statusChecked": "2026-10-21",
       "openedSource": "https://en.wikipedia.org/wiki/Big_Mario%27s_Pizza",
-      "ratingAttempted": "2026-11-11"
+      "ratingAttempted": "2026-11-11",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "The lead, 1011 E Pike St, Seattle, WA 98122, does not exactly match the Capitol Hill location listed on the official site (https://bigmariosnewyorkpizza.com/ and https://bigmariosnewyorkpizza.com/pizza-in-capitol-hill), which both give the address as 1009 E Pike St. The lead itself is not added as a separate site (the existing Capitol Hill branch at 1009 E Pike St is reported in locations)."
     },
     {
       "id": "flying-squirrel",
@@ -4849,7 +4853,9 @@
       "locationsSource": null,
       "mentions": [],
       "ratingAttempted": "2026-11-12",
-      "ratingNote": "Searched for news/blog coverage of Soprano's Pizza & Pasta - Lake City (11754 15th Ave NE). Found only directory listings (MapQuest/Yelp mirror, Slice, Foursquare, Birdeye) and no Seattle Times, Seattle Met, Eater, or neighborhood-blog review of this specific location. Skipping for lack of published criticism."
+      "ratingNote": "Searched for news/blog coverage of Soprano's Pizza & Pasta - Lake City (11754 15th Ave NE). Found only directory listings (MapQuest/Yelp mirror, Slice, Foursquare, Birdeye) and no Seattle Times, Seattle Met, Eater, or neighborhood-blog review of this specific location. Skipping for lack of published criticism.",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "Its site, https://lakecitysopranos.com/, returned HTTP 403 Forbidden on fetch and a wayback-machine fallback is unavailable in this environment, so the official page could not be read. A search turned up third-party listings placing Lake City at 11754 15th Ave NE 98125 and describing the lead address, 7729 24th Ave NW 98117, as a separate Soprano's location in Loyal Heights, but neither is confirmed against the pizzeria's own site, so no address is reported for this entry."
     },
     {
       "id": "veras-pizza-and-bar",
@@ -5295,7 +5301,9 @@
       "ratingAttempted": "2026-11-12",
       "opened": 2023,
       "styleGroup": "Creative",
-      "lastVerified": "2026-11-12"
+      "lastVerified": "2026-11-12",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "Its site, https://www.ananaspizzeria.com, is a JavaScript-rendered page: fetches of the homepage, /contact, /menu, /visit, and /location all returned either a bare page title with no body text or HTTP 404, so no address, neighborhood, or Instagram link could be read from the pizzeria's own site. The lead, 1106 8th Ave, Seattle, WA 98101, matches third-party coverage (Seattle Met, Curiocity) describing a First Hill location, but those are not the pizzeria's own site and so do not satisfy confirmation; the lead is not reported as a site."
     },
     {
       "id": "alberonas-davinci-pizza-pasta",
@@ -5538,7 +5546,7 @@
       "neighborhood": "Wallingford",
       "style": "Greek-influenced",
       "blurb": "Longtime Wallingford pizzeria with a Greek twist (tzatziki, Greek salad, calzones, gluten-free crust), a neighborhood fixture since the early 1970s.",
-      "url": null,
+      "url": "https://olympiapizzaii.com/",
       "status": "open",
       "statusSource": "https://wallyhood.org/2015/06/why-isnt-olympia-pizza-more-popular-than-tutta-bella",
       "statusDate": null,
@@ -5553,8 +5561,8 @@
           "lon": -122.34089
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-11-12",
+      "locationsSource": "https://olympiapizzaii.com/",
       "mentions": [],
       "factors": {
         "craft": {
@@ -5591,7 +5599,9 @@
       "ratingAttempted": "2026-11-12",
       "priceIndex": 2,
       "styleGroup": "Neighborhood",
-      "lastVerified": "2026-11-12"
+      "lastVerified": "2026-11-12",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "The lead, 516 15th Ave E, Seattle, WA 98112 (Capitol Hill), does not appear anywhere on the official site https://olympiapizzaii.com/, which lists only one address, 4501 Interlake Ave N, Seattle, WA 98103 (Wallingford). Third-party delivery listings describe a 516 15th Ave E address under the name 'Olympia Pizza and Spaghetti House III', suggesting the lead belongs to a different, separate business, not this entry. Lead not added."
     },
     {
       "id": "jet-city-pizza",

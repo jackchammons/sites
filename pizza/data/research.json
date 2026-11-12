@@ -1,86 +1,94 @@
 {
   "updated": "2026-11-12T00:00:00Z",
-  "mentions": [
+  "locations": [
     {
-      "id": "seward-park-pizza",
-      "title": "Which Crust Does the South End Trust?",
-      "url": "https://southseattleemerald.org/community/2025/10/28/which-crust-does-the-south-end-trust",
-      "source": "South Seattle Emerald",
-      "date": "2025-10-28",
-      "kind": "mention"
+      "id": "olympia-pizza-spaghetti-house-ii",
+      "homepage": "https://olympiapizzaii.com/",
+      "source": "https://olympiapizzaii.com/",
+      "sites": [
+        {
+          "neighborhood": "Wallingford",
+          "address": "4501 Interlake Ave N, Seattle, WA 98103"
+        }
+      ]
     },
     {
-      "id": "georgetown-pizza-arcade",
-      "title": "Arts + Eats: Best Pizza Places in Seattle, Tacoma & Bellevue",
-      "url": "https://www.parentmap.com/article/best-pizza-places-seattle-tacoma-bellevue",
-      "source": "ParentMap",
-      "date": "2026-06-17",
-      "kind": "ranking"
+      "id": "pagliacci",
+      "homepage": "https://www.pagliacci.com",
+      "source": "https://www.pagliacci.com/locations/",
+      "sites": [
+        { "neighborhood": "Ballard", "address": "851 NW 85th Street, Seattle, WA 98117" },
+        { "neighborhood": "Ballard", "address": "3058 NW 54th Street, Seattle, WA 98107" },
+        { "neighborhood": "Capitol Hill", "address": "2400 10th Avenue E, Seattle, WA 98102" },
+        { "neighborhood": "Capitol Hill", "address": "415 E Pike Street, Seattle, WA 98122" },
+        { "neighborhood": "Columbia City", "address": "4901 Rainier Avenue S, Seattle, WA 98118" },
+        { "neighborhood": "Edmonds", "address": "10200 Edmonds Way, Edmonds, WA 98020" },
+        { "neighborhood": "Fremont", "address": "4003 Stone Way N, Seattle, WA 98103" },
+        { "neighborhood": "Lake City", "address": "8024 15th Avenue NE, Seattle, WA 98115" },
+        { "neighborhood": "Madison Valley", "address": "3015 E Madison Street, Seattle, WA 98112" },
+        { "neighborhood": "Magnolia", "address": "1614 W Dravus Street, Seattle, WA 98119" },
+        { "neighborhood": "North Seattle", "address": "315 N 145th Street, Seattle, WA 98133" },
+        { "neighborhood": "Queen Anne", "address": "719 Aurora Avenue N, Seattle, WA 98109" },
+        { "neighborhood": "Sand Point", "address": "6224 Sand Point Way NE, Seattle, WA 98115" },
+        { "neighborhood": "Shoreline", "address": "20059 Ballinger Way NE, Shoreline, WA 98155" },
+        { "neighborhood": "West Seattle", "address": "4449 California Avenue SW, Seattle, WA 98116" },
+        { "neighborhood": "Bellevue", "address": "15238 NE Bel-Red Road, Bellevue, WA 98007" },
+        { "neighborhood": "Bellevue", "address": "15210 SE 37th Street, Bellevue, WA 98006" },
+        { "neighborhood": "Bellevue", "address": "10600 Main St, Bellevue, WA 98004" },
+        { "neighborhood": "Kenmore", "address": "6504 NE Bothell Way, Kenmore, WA 98028" },
+        { "neighborhood": "Kirkland", "address": "13005 NE 70th Place, Kirkland, WA 98033" },
+        { "neighborhood": "Kirkland", "address": "11640 98th Avenue NE, Kirkland, WA 98034" },
+        { "neighborhood": "Mercer Island", "address": "3077 78th Avenue SE, Mercer Island, WA 98040" },
+        { "neighborhood": "Redmond", "address": "16311 Redmond Way, Redmond, WA 98052" },
+        { "neighborhood": "Sammamish", "address": "22830 NE 8th Street, Sammamish, WA 98074" }
+      ]
     },
     {
-      "id": "good-shape-pizza",
-      "title": "Good Shape Pizza",
-      "url": "https://theinfatuation.com/seattle/reviews/good-shape-pizza",
-      "source": "The Infatuation",
-      "date": "2024-11-27",
-      "kind": "mention"
-    },
-    {
-      "id": "good-shape-pizza",
-      "title": "Rachel Belle Shares Her Top 5 Favorite Seattle Pizza Spots",
-      "url": "https://www.cascadepbs.org/culture/2025/04/rachel-belle-shares-her-top-5-favorite-seattle-pizza-spots",
-      "source": "Cascade PBS",
-      "date": "2025-04-23",
-      "kind": "ranking"
-    },
-    {
-      "id": "in-pizza-we-crust",
-      "title": "From rocking a food truck to Admiral area comfort: In Pizza We Crust finds a permanent home",
-      "url": "https://www.westsideseattle.com/node/60911",
-      "source": "West Seattle Blog",
-      "date": "2025-10-31",
-      "kind": "opening"
-    },
-    {
-      "id": "in-pizza-we-crust",
-      "title": "In Pizza We Crust: From pop-up to West Seattle pizzeria",
-      "url": "https://seattlerefined.com/lifestyle/in-pizza-we-crust",
-      "source": "Seattle Refined",
-      "date": "2026-04-22",
-      "kind": "opening"
+      "id": "big-marios",
+      "homepage": "https://bigmariosnewyorkpizza.com/",
+      "source": "https://bigmariosnewyorkpizza.com/",
+      "sites": [
+        { "neighborhood": "Capitol Hill", "address": "1009 E Pike St, Seattle, WA 98122" },
+        { "neighborhood": "Queen Anne", "address": "815 5th Ave N, Seattle, WA 98109" },
+        { "neighborhood": "Fremont", "address": "4350 Leary Way NW, Seattle, WA 98107" },
+        { "neighborhood": "White Center", "address": "9635 16th Ave SW, Seattle, WA 98106" }
+      ]
     }
   ],
-  "coverageSkipped": [
+  "links": [
     {
-      "id": "dantini-pizza",
-      "note": "Searched 'Dantini Pizza Interbay Seattle review opening' and 'Dantini Pizza Seattle news 2025 2026'. Only named-outlet coverage found is a 2024-08-19 Infatuation review (8.4), which is more than 730 days old; remaining results are aggregator/listing pages with no dates in the last two years."
+      "id": "pagliacci",
+      "website": "https://www.pagliacci.com",
+      "instagram": "https://www.instagram.com/pagliaccipizza/",
+      "source": "https://www.pagliacci.com"
     },
     {
-      "id": "a-pizza-mart-first-hill",
-      "note": "Searched 'A Pizza Mart First Hill Seattle review' and 'A Pizza Mart Seattle First Hill news 2025'. Found only aggregator/listing pages (MapQuest, Atly, DoorDash) and a 2011 Stranger review that covers a different First Hill pizzeria (Primo), not A Pizza Mart. No qualifying outlet coverage within two years."
-    },
-    {
-      "id": "seward-park-pizza",
-      "note": "Beyond the South Seattle Emerald listing already reported, searched further and found no second story; the only other Seattle Met/Infatuation hits were about Flying Squirrel Pizza Co.'s original Seward Park location, a different business."
-    },
-    {
-      "id": "belltown-pizza",
-      "note": "Searched 'Belltown Pizza Seattle review 2025' and 'Belltown Pizza Seattle news closing OR opening 2025'. Found only Yelp/Tripadvisor/Roadtrippers user reviews and MapQuest listings; no story from a named outlet (Times, Met, Infatuation, Eater, Stranger) within the last two years."
-    },
-    {
-      "id": "elemental-pizza",
-      "note": "Searched 'Elemental Pizza University Village Seattle review' and 'Elemental Pizza University Village Seattle news 2025 2026'. Only named-outlet coverage found dates to the 2012 opening and a 2013 Seattle Met feature; nothing within the last two years besides aggregator reviews."
-    },
-    {
-      "id": "eymans-pizza",
-      "note": "Searched 'Eyman's Pizza Rainier Valley Seattle review' and 'Eyman's Pizza Beacon Hill Seattle news 2025'. Found only directory/aggregator listings (Zabihah, Atly, Intentionalist) with no professional critic review or news item from a named outlet."
-    },
-    {
-      "id": "georgetown-pizza-arcade",
-      "note": "A 2023-02-02 Seattle Times arcade guide names it and says it opened November 2022, but that story is more than 730 days old; used the still-current ParentMap roundup instead."
+      "id": "big-marios",
+      "website": "https://bigmariosnewyorkpizza.com/",
+      "instagram": "https://www.instagram.com/bigmariospizza/",
+      "source": "https://bigmariosnewyorkpizza.com/"
     }
   ],
-  "rejected": [
-    "mentions[0]: title missing or too short"
+  "locationsSkipped": [
+    {
+      "id": "sopranos-pizza-pasta-lake-city",
+      "note": "Its site, https://lakecitysopranos.com/, returned HTTP 403 Forbidden on fetch and a wayback-machine fallback is unavailable in this environment, so the official page could not be read. A search turned up third-party listings placing Lake City at 11754 15th Ave NE 98125 and describing the lead address, 7729 24th Ave NW 98117, as a separate Soprano's location in Loyal Heights, but neither is confirmed against the pizzeria's own site, so no address is reported for this entry."
+    },
+    {
+      "id": "ananas-pizzeria",
+      "note": "Its site, https://www.ananaspizzeria.com, is a JavaScript-rendered page: fetches of the homepage, /contact, /menu, /visit, and /location all returned either a bare page title with no body text or HTTP 404, so no address, neighborhood, or Instagram link could be read from the pizzeria's own site. The lead, 1106 8th Ave, Seattle, WA 98101, matches third-party coverage (Seattle Met, Curiocity) describing a First Hill location, but those are not the pizzeria's own site and so do not satisfy confirmation; the lead is not reported as a site."
+    },
+    {
+      "id": "olympia-pizza-spaghetti-house-ii",
+      "note": "The lead, 516 15th Ave E, Seattle, WA 98112 (Capitol Hill), does not appear anywhere on the official site https://olympiapizzaii.com/, which lists only one address, 4501 Interlake Ave N, Seattle, WA 98103 (Wallingford). Third-party delivery listings describe a 516 15th Ave E address under the name 'Olympia Pizza and Spaghetti House III', suggesting the lead belongs to a different, separate business, not this entry. Lead not added."
+    },
+    {
+      "id": "pagliacci",
+      "note": "The lead, 721 Aurora Ave N, Seattle, WA 98109, does not exactly match any address on the official locations page (https://www.pagliacci.com/locations/), which lists the nearest branch, Queen Anne - Valley Street, at 719 Aurora Avenue N, Seattle, WA 98109. The two-digit discrepancy could not be confirmed as the same address, so the lead itself is not added as a separate site (the existing Queen Anne branch at 719 Aurora Avenue N is reported in locations)."
+    },
+    {
+      "id": "big-marios",
+      "note": "The lead, 1011 E Pike St, Seattle, WA 98122, does not exactly match the Capitol Hill location listed on the official site (https://bigmariosnewyorkpizza.com/ and https://bigmariosnewyorkpizza.com/pizza-in-capitol-hill), which both give the address as 1009 E Pike St. The lead itself is not added as a separate site (the existing Capitol Hill branch at 1009 E Pike St is reported in locations)."
+    }
   ]
 }
