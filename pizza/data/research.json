@@ -1,66 +1,37 @@
 {
-  "updated": "2026-11-12T20:00:00Z",
-  "ratingSkipped": [
-    {
-      "id": "desi-pizza-kitchen",
-      "note": "Searched for reviews/roundups of this Queen Anne Indian-fusion pizza spot (Infatuation Seattle pizza-delivery guide, Eater Seattle, general web). Found only delivery-app and directory listings (DoorDash, Slice, Atly, MapQuest, Valpak) with scattered customer comments on the butter chicken pizza; no published review, roundup entry, or news story naming this specific pizzeria. Skipping for lack of grounding."
-    },
-    {
-      "id": "romano-pizza-pasta",
-      "note": "Searched West Seattle Blog (which covers Delridge food news closely) and Tasting Table's 'Best Pizza Restaurants Seattle' roundup for this Delridge spot (former Olympia Pizza); neither mentions it by name. Only directory/aggregator listings (Slice, MapQuest, MenuPages) with brief customer comments turned up. Skipping for lack of grounding."
-    }
-  ],
+  "updated": "2026-11-12T00:00:00Z",
   "factorRatings": [
     {
-      "id": "a-pizza-mart-first-hill",
-      "craft": 5.5,
-      "distinctiveness": 6,
-      "criticScore": 5,
-      "opened": 2017,
-      "priceIndex": 2,
-      "styleGroup": "Pizza bar",
-      "sources": [
-        "https://capitolhillseattle.com/2017/03/finishing-one-story-from-the-capitol-hill-pizza-boom-plus-a-pizza-mart-tale-on-first-hill",
-        "https://www.apizzamartfirsthill.com/"
-      ],
-      "note": "Capitol Hill Seattle Blog covered this First Hill shop's 2017 opening as the fifth location of 'the 27-year-old pizza player... known for its liquor and pie combination'; diner write-ups elsewhere describe a dive-bar room with crunchy-crust pizza and solid, unexceptional sandwiches rather than destination-level pies."
-    },
-    {
-      "id": "magnolia-pizza-pasta",
-      "craft": 3.5,
-      "distinctiveness": 2,
-      "criticScore": 3,
+      "id": "lucianos-pizza-pasta",
+      "craft": 6,
+      "distinctiveness": 2.5,
+      "criticScore": 5.5,
       "styleGroup": "Neighborhood",
       "sources": [
-        "https://seattlepizza.substack.com/i/161361574/the-rankings",
-        "https://seattlepizza.substack.com/p/release-5"
+        "https://www.seattleweekly.com/food/in-our-ongoing-series-on-pizzerias-not-named-pagliacci-who-are-willing"
       ],
-      "note": "The Definitive Seattle Pizza Rankings substack placed Magnolia Pizza & Pasta in its bottom 'Seattle No' tier (pizza you feel bad refusing but don't want to eat), calling it 'just ok,' 'bad' pizza ordered mainly for workplace happy hours rather than sought out."
-    },
-    {
-      "id": "jet-city-pizza",
-      "craft": 6,
-      "distinctiveness": 6.5,
-      "criticScore": 5.5,
-      "priceIndex": 2,
-      "styleGroup": "Creative",
-      "sources": [
-        "https://www.seattlemet.com/businesses/jet-city-pizza-restaurant-pizza"
-      ],
-      "note": "Seattle Met describes this Wedgwood shop's 'experimental' streak -- a Redhook beer-batter crust and oddball toppings like Thai peanut sauce, mandarin oranges, and gyro meat -- and diner feedback elsewhere is largely positive on flavor and freshness, with occasional gripes about gluten-free handling and inconsistency."
-    },
-    {
-      "id": "pizza-pasta-bar",
-      "craft": 6.5,
-      "distinctiveness": 5,
-      "criticScore": 6,
-      "priceIndex": 2,
-      "styleGroup": "By the slice",
-      "sources": [
-        "https://www.elizabethrider.com/?p=28135",
-        "https://www.pikeplacemarket.org/lunch-at-pike-place-market/"
-      ],
-      "note": "Food blogger Elizabeth Rider ranks it her #1 Pike Place Market pizza pick, writing 'the crust is perfectly cooked, and the toppings are fantastic,' and naming the Margherita and White Truffle Mushroom as standouts; Pike Place Market's own site confirms dough, sauce, and meats are made from scratch daily."
+      "note": "The only press coverage found is a brief 2008 Seattle Weekly item in a series on non-Pagliacci pizzerias willing to deliver to West Seattle's Delridge/Poverty Gulch area; it singles out the Luciano's Special for 'high marks for the quality of its onions' but offers no broader assessment of crust, sauce or bake. Reads as a reliable, unpretentious red-sauce delivery pizzeria rather than a destination pie, consistent with its long-running Admiral and Lake City locations."
     }
+  ],
+  "ratingSkipped": [
+    {
+      "id": "palermo-pizza-pasta",
+      "note": "Searched for reviews/roundups of Palermo Pizza & Pasta (350 15th Ave E, Capitol Hill) by name across Seattle Met, The Stranger, Capitol Hill Seattle Blog and general web search. Found only directory/aggregator listings (OpenTable with no reviews, Sluurpy/Yelp mirror, Slice, MapQuest) and no professional review, roundup entry, or news story specific to this pizzeria. Skipping for lack of published criticism."
+    },
+    {
+      "id": "italio-pizza-pasta",
+      "note": "Searched for coverage of Italio Pizza & Pasta (305 NW 85th St, Greenwood) including neighborhood blogs (My Ballard, Phinney/Greenwood blogs) and general search. Found only OpenTable/MapQuest/Slice listings and diner-review aggregation, no critic review or press coverage of the specific restaurant. Skipping for lack of published criticism."
+    },
+    {
+      "id": "sopranos-pizza-pasta-lake-city",
+      "note": "Searched for news/blog coverage of Soprano's Pizza & Pasta - Lake City (11754 15th Ave NE). Found only directory listings (MapQuest/Yelp mirror, Slice, Foursquare, Birdeye) and no Seattle Times, Seattle Met, Eater, or neighborhood-blog review of this specific location. Skipping for lack of published criticism."
+    },
+    {
+      "id": "pizza-paesano",
+      "note": "Searched for 'Pizza Paesano' Ballard by name, plus its listed Instagram handle (pizza_paesano_seattle), across web search and Seattle food-media roundups (Seattle Met, The Stranger, Infatuation). No results returned that reference this business at all -- no menu site, no press mention, no aggregator listing could be found. Could not even confirm current operation independently of the directory entry. Skipping for lack of any verifiable published source."
+    }
+  ],
+  "rejected": [
+    "mentions[0]: date is older than 730 days"
   ]
 }

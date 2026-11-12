@@ -3951,7 +3951,9 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/italiogreenwood"
+      "instagram": "https://www.instagram.com/italiogreenwood",
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Searched for coverage of Italio Pizza & Pasta (305 NW 85th St, Greenwood) including neighborhood blogs (My Ballard, Phinney/Greenwood blogs) and general search. Found only OpenTable/MapQuest/Slice listings and diner-review aggregation, no critic review or press coverage of the specific restaurant. Skipping for lack of published criticism."
     },
     {
       "id": "jackson-street-pizza-lounge",
@@ -4323,7 +4325,9 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/palermoseattle/"
+      "instagram": "https://www.instagram.com/palermoseattle/",
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Searched for reviews/roundups of Palermo Pizza & Pasta (350 15th Ave E, Capitol Hill) by name across Seattle Met, The Stranger, Capitol Hill Seattle Blog and general web search. Found only directory/aggregator listings (OpenTable with no reviews, Sluurpy/Yelp mirror, Slice, MapQuest) and no professional review, roundup entry, or news story specific to this pizzeria. Skipping for lack of published criticism."
     },
     {
       "id": "pizza-paesano",
@@ -4349,7 +4353,9 @@
       "locationsVerified": null,
       "locationsSource": null,
       "mentions": [],
-      "instagram": "https://www.instagram.com/pizza_paesano_seattle/"
+      "instagram": "https://www.instagram.com/pizza_paesano_seattle/",
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Searched for 'Pizza Paesano' Ballard by name, plus its listed Instagram handle (pizza_paesano_seattle), across web search and Seattle food-media roundups (Seattle Met, The Stranger, Infatuation). No results returned that reference this business at all -- no menu site, no press mention, no aggregator listing could be found. Could not even confirm current operation independently of the directory entry. Skipping for lack of any verifiable published source."
     },
     {
       "id": "pudge-bros-pizza",
@@ -4668,7 +4674,9 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "ratingAttempted": "2026-11-12",
+      "ratingNote": "Searched for news/blog coverage of Soprano's Pizza & Pasta - Lake City (11754 15th Ave NE). Found only directory listings (MapQuest/Yelp mirror, Slice, Foursquare, Birdeye) and no Seattle Times, Seattle Met, Eater, or neighborhood-blog review of this specific location. Skipping for lack of published criticism."
     },
     {
       "id": "veras-pizza-and-bar",
@@ -5022,7 +5030,42 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "factors": {
+        "craft": {
+          "value": 6,
+          "setBy": "agent",
+          "source": "https://www.seattleweekly.com/food/in-our-ongoing-series-on-pizzerias-not-named-pagliacci-who-are-willing",
+          "sources": [
+            "https://www.seattleweekly.com/food/in-our-ongoing-series-on-pizzerias-not-named-pagliacci-who-are-willing"
+          ],
+          "note": "The only press coverage found is a brief 2008 Seattle Weekly item in a series on non-Pagliacci pizzerias willing to deliver to West Seattle's Delridge/Poverty Gulch area; it singles out the Luciano's Special for 'high marks for the quality of its onions' but offers no broader assessment of crust, sauce or bake. Reads as a reliable, unpretentious red-sauce delivery pizzeria rather than a destination pie, consistent with its long-running Admiral and Lake City locations.",
+          "date": "2026-11-12"
+        },
+        "distinctiveness": {
+          "value": 2.5,
+          "setBy": "agent",
+          "source": "https://www.seattleweekly.com/food/in-our-ongoing-series-on-pizzerias-not-named-pagliacci-who-are-willing",
+          "sources": [
+            "https://www.seattleweekly.com/food/in-our-ongoing-series-on-pizzerias-not-named-pagliacci-who-are-willing"
+          ],
+          "note": "The only press coverage found is a brief 2008 Seattle Weekly item in a series on non-Pagliacci pizzerias willing to deliver to West Seattle's Delridge/Poverty Gulch area; it singles out the Luciano's Special for 'high marks for the quality of its onions' but offers no broader assessment of crust, sauce or bake. Reads as a reliable, unpretentious red-sauce delivery pizzeria rather than a destination pie, consistent with its long-running Admiral and Lake City locations.",
+          "date": "2026-11-12"
+        },
+        "critical": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.seattleweekly.com/food/in-our-ongoing-series-on-pizzerias-not-named-pagliacci-who-are-willing",
+          "sources": [
+            "https://www.seattleweekly.com/food/in-our-ongoing-series-on-pizzerias-not-named-pagliacci-who-are-willing"
+          ],
+          "note": "The only press coverage found is a brief 2008 Seattle Weekly item in a series on non-Pagliacci pizzerias willing to deliver to West Seattle's Delridge/Poverty Gulch area; it singles out the Luciano's Special for 'high marks for the quality of its onions' but offers no broader assessment of crust, sauce or bake. Reads as a reliable, unpretentious red-sauce delivery pizzeria rather than a destination pie, consistent with its long-running Admiral and Lake City locations.",
+          "date": "2026-11-12"
+        }
+      },
+      "ratingAttempted": "2026-11-12",
+      "styleGroup": "Neighborhood",
+      "lastVerified": "2026-11-12"
     },
     {
       "id": "ananas-pizzeria",
