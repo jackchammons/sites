@@ -489,6 +489,11 @@ For EVERY candidate above, produce exactly one of:
    above, and is required. A candidate that is the same business as
    another candidate you are reporting as a new "directory" entry needs
    no record of its own.
+   chain = a national brand, with shops across the country (Domino's,
+   Papa John's, MOD). A chain that is local to the Puget Sound region is
+   NOT one, however many shops it has and whether or not it franchises:
+   Pagliacci and Zeeks are on file, and a regional chain with a Seattle
+   shop joins the same way, as a "directory" entry.
    not-pizza = a grocery counter, bar or restaurant where pizza is
    incidental; unverifiable = you could find no trace beyond the permit.
 

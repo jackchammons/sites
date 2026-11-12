@@ -449,3 +449,12 @@ test('CLI: writes task, skip and a delimited brief to GITHUB_OUTPUT', () => {
     fs.rmSync(dir, { recursive: true, force: true });
   }
 });
+
+test('census brief: a chain is a national brand, and a Puget Sound chain joins', () => {
+  const { brief } = buildTask('census', [], {
+    now: Date.parse('2026-11-12T12:00:00Z'),
+    candidates: [{ key: 'jet city|7500', name: 'Jet City Pizza', address: '7500 25th Ave Ne, Seattle, WA 98115', status: 'pending' }]
+  });
+  assert.match(brief, /chain = a national brand/);
+  assert.match(brief, /local to the Puget Sound region is\s+NOT one/);
+});

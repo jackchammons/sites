@@ -304,11 +304,7 @@
         "kc-health"
       ],
       "lastInspection": "2026-11-05",
-      "status": "chain",
-      "verdict": "chain",
-      "note": "Puget Sound pizza-delivery chain founded in Kenmore in 1994 and now sold as a franchise (FranchiseHelp lists roughly $60k to open a unit), with outlets in Bothell, Newcastle, Marysville, Tacoma and Seattle's Wedgwood; a commodity delivery chain rather than a distinctive pizzeria.",
-      "resolutionSource": "https://www.franchisehelp.com/franchises/jet-city-pizza/",
-      "resolvedDate": "2026-11-12"
+      "status": "pending"
     },
     {
       "key": "lodge|501",
