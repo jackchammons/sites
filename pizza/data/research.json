@@ -1,59 +1,67 @@
 {
-  "updated": "2026-11-12T19:00:00Z",
+  "updated": "2026-11-12T18:00:00Z",
   "facts": [
     {
-      "id": "south-town-pie",
-      "signature": "Pastrami pie: gruyere fondue, caramelized onion, pickles, everything bagel-spiced crust",
-      "source": "https://www.theinfatuation.com/seattle/reviews/south-town-pie"
+      "id": "castello-pizza-pasta",
+      "priceIndex": 2,
+      "signature": "Castello's Special: pizza sauce, pepperoni, salami, mushrooms, and fresh tomatoes",
+      "source": "https://www.castellopizzaandpasta.com/menu"
     },
     {
-      "id": "a-pizza-mart-first-hill",
-      "signature": "Classic Cheese Pizza: fresh homemade dough, pizza sauce & mozzarella cheese",
-      "source": "https://www.apizzamartfirsthill.com/"
+      "id": "varlamos-pizzeria",
+      "opened": 1994,
+      "source": "https://greeksinwa.omeka.net/items/show/820"
     },
     {
-      "id": "pizzeria-22",
-      "signature": "Margherita 22 and Margherita D.O.C. with burrata",
-      "source": "https://www.pizzeria22.com/"
-    },
-    {
-      "id": "world-pizza",
-      "signature": "Potato pizza",
-      "source": "https://nwasianweekly.com/2019/06/world-pizza/"
+      "id": "west-of-chicago-pizza-company",
+      "signature": "Chicago-style deep-dish pizza",
+      "source": "https://www.westsideseattle.com/node/57793"
     }
   ],
   "factsSkipped": [
     {
-      "id": "elemental-pizza",
-      "note": "Official site returned 403 Forbidden on repeated fetches. Web search found a namesake 'Elemental Pizza' (coppa, kale, tomatoes) only via a delivery-app menu listing and a Seattle Met opening piece that also 403'd, neither usable as a source for a signature pie."
+      "id": "belltown-pizza",
+      "note": "Checked belltownpizza.net (no About/menu page resolved) and local coverage; no independent review names a single signature pie. A 'Signature Pies' menu section (Meatasaurus, the Duncan, McQueen's) appears only on the delivery-ordering site slicelife.com, which isn't an accepted source."
     },
     {
-      "id": "good-luck-bread",
-      "note": "Read the homepage and tried /menu (404). Menu lists Pepperoni, Plain Cheese, Spicy Bacon and Onion, Sweetie Pie, and Delicata Squash pies, but none is singled out by the site as its signature."
+      "id": "ridge-pizza",
+      "note": "ridgepizza.com is only a neighborhood-chooser landing page with no menu. The Stranger's 2012 'Happiest Hour' piece on Ridge Pizza covers the room and happy hour but names no dish. No accepted source for a signature pie."
     },
     {
-      "id": "oskars-pizza",
-      "note": "Instagram profile returned HTTP 429 Too Many Requests on repeated attempts; could not read the bio or posts to find a named signature pie."
+      "id": "veraci-pizza",
+      "note": "veracipizza.com homepage names no signature pie and its menu subpage 404'd. Seattle Met, Fearless Critic and West Side Seattle coverage discuss the wood-fired style and crust generally but don't single out one pie; reviewer mentions of pepperoni/Margherita are customer comments, not a stated signature."
     },
     {
-      "id": "pizzeria-la-rocca",
-      "note": "Read the homepage; /menu and /about returned 404. Site describes general 'woodfired artisan' pizza but names no signature pie."
+      "id": "veras-pizza-and-bar",
+      "note": "verasballard.com names no signature pie. DoorDash reviewer picks (Loaded Potato, Hot Coppa, Pepperoni) come from a delivery app, not an accepted source; the Seattle Pizza Substack review (seattlepizza.substack.com) returned 403 and couldn't be read."
     },
     {
-      "id": "razzis-pizzeria",
-      "note": "No official site found. Frommer's listing page returned 403 Forbidden; other results (HappyCow, Airbnb, RatRadar, Stacker) are aggregators/directories, not valid sources for a signature pie."
+      "id": "sopranos-pizza-pasta-lake-city",
+      "note": "lakecitysopranos.com returned 403 Forbidden on repeated attempts and a web.archive.org fetch could not be accessed. Only third-party delivery/directory listings (Slicelife, Birdeye, MapQuest, Sluurpy) cover opened year, price, style or signature, and none are accepted sources."
     },
     {
-      "id": "sacro-bosco-pizza-wine",
-      "note": "Read the homepage; /menu and /press returned 404. A Seattle Met 'Holy Pepperoni' review names standout pies with mortadella, pistachio pesto and stracciatella, but the article returned 403 Forbidden on direct fetch and could not be verified firsthand."
+      "id": "alberonas-davinci-pizza-pasta",
+      "note": "No official restaurant website found; its Toast ordering page (order.toasttab.com/online/da-vinci) returned 403. Menu prices and a 'House Special' pizza appear only on third-party listings (Slicelife, Menupages), not accepted sources for opened, priceIndex, styleGroup or signature."
     },
     {
-      "id": "sunny-hill",
-      "note": "No official site found. The Mainline Pizza Quest review (which reviewers' summaries suggest names a standout Detroit-style pie) hit a Google rate-limit redirect and could not be read; other results are directories/aggregators."
+      "id": "candela-pizza",
+      "note": "No official restaurant website found; its Seattle Food Truck profile page returned 403. A 'wood-fired Yucatan pizza' mention and other details appear only on the aggregator Atly, not an accepted source."
     },
     {
-      "id": "un-po-tipsy",
-      "note": "Read the homepage and /menu; the menu is PDF-only with no prices in the fetched page text. Web search found only a third-party per-person cost estimate (not a menu price or review-stated pie price), so priceIndex could not be determined."
+      "id": "desi-pizza-kitchen",
+      "note": "No official restaurant website found. Mentions of butter chicken and Achari chicken pizzas as popular items appear only on delivery/directory aggregators (DoorDash, Slice, Atly, MapQuest); no news coverage or opening story was found."
+    },
+    {
+      "id": "deleo-bros-pizza",
+      "note": "deleobrotherspizza.com's own site shows only a locations page (Seattle, WA and South Lake Tahoe, CA) and a placeholder About page with no real content. A same-named pizzeria found in Edina, MN has a different address and appears to be an unrelated business, so it wasn't used."
+    },
+    {
+      "id": "castello-pizza-pasta",
+      "note": "castellopizzaandpasta.com/menu gave priceIndex and signature but has no About/history section, so opened year and styleGroup remain unfound. A MapQuest listing claims 'serving since 2011' but a directory listing isn't an accepted source."
+    },
+    {
+      "id": "varlamos-pizzeria",
+      "note": "The archive source confirms an opened year but says Varlamos is known for its calzones, not a specific pizza, so no signature pie could be reported. No accepted own-site menu or published review gives whole-pizza prices or a style description; only a Scribd-hosted menu scan and third-party listings exist, which aren't accepted sources."
     }
   ]
 }

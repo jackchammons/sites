@@ -3521,8 +3521,10 @@
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched 'Veraci Pizza Wedgwood Seattle' and 'Veraci Pizza Seattle 2025 news'. Found historical opening coverage and an Inlander piece about founder Jett's departure that would not load to confirm date or whether it covers the Wedgwood location; nothing confirmed within the two-year window.",
       "factsAttempted": "2026-11-12",
-      "factsSought": [],
-      "factsNote": null,
+      "factsSought": [
+        "signature"
+      ],
+      "factsNote": "veracipizza.com homepage names no signature pie and its menu subpage 404'd. Seattle Met, Fearless Critic and West Side Seattle coverage discuss the wood-fired style and crust generally but don't single out one pie; reviewer mentions of pepperoni/Margherita are customer comments, not a stated signature.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -4704,8 +4706,10 @@
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched 'Belltown Pizza Seattle review 2025' and 'Belltown Pizza Seattle news closing OR opening 2025'. Found only Yelp/Tripadvisor/Roadtrippers user reviews and MapQuest listings; no story from a named outlet (Times, Met, Infatuation, Eater, Stranger) within the last two years.",
       "factsAttempted": "2026-11-12",
-      "factsSought": [],
-      "factsNote": null,
+      "factsSought": [
+        "signature"
+      ],
+      "factsNote": "Checked belltownpizza.net (no About/menu page resolved) and local coverage; no independent review names a single signature pie. A 'Signature Pies' menu section (Meatasaurus, the Duncan, McQueen's) appears only on the delivery-ordering site slicelife.com, which isn't an accepted source.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -4719,12 +4723,12 @@
       "styleSource": null,
       "styleGroup": null,
       "styleGroupSource": null,
-      "signature": null,
-      "signatureSource": null,
+      "signature": "Castello's Special: pizza sauce, pepperoni, salami, mushrooms, and fresh tomatoes",
+      "signatureSource": "https://www.castellopizzaandpasta.com/menu",
       "opened": null,
       "openedSource": null,
-      "priceIndex": null,
-      "priceSource": null,
+      "priceIndex": 2,
+      "priceSource": "https://www.castellopizzaandpasta.com/menu",
       "attributes": {},
       "url": "https://www.castellopizzaandpasta.com/",
       "instagram": "https://www.instagram.com/castellopizzaandpasta/",
@@ -4762,9 +4766,12 @@
       ],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Found and reported one qualifying mention (South Seattle Emerald, Oct 28, 2025); no additional qualifying stories surfaced in the two searches run.",
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "opened",
+        "styleGroup"
+      ],
+      "factsNote": "castellopizzaandpasta.com/menu gave priceIndex and signature but has no About/history section, so opened year and styleGroup remain unfound. A MapQuest listing claims 'serving since 2011' but a directory listing isn't an accepted source.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -4813,9 +4820,14 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched \"Candela Pizza\" Seattle, which surfaced only Seattle Food Truck/Atly directory listings and general citywide pizza-guide links; fetched Tasting Table's \"14 Absolute Best Pizza Joints In Seattle\" (already on file for a different entry) and confirmed it does not mention Candela Pizza. No qualifying coverage found.",
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "opened",
+        "priceIndex",
+        "styleGroup",
+        "signature"
+      ],
+      "factsNote": "No official restaurant website found; its Seattle Food Truck profile page returned 403. A 'wood-fired Yucatan pizza' mention and other details appear only on the aggregator Atly, not an accepted source.",
       "socialAttempted": "2026-11-12",
       "socialNote": "Searched 'Candela Pizza South Seattle official website' and for a candelapizza.com domain — only Seattle Food Truck, Atly and Live in Everett profiles turned up (truck based in Renton), no official domain found. Instagram already on file."
     },
@@ -6145,8 +6157,10 @@
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched 'Ridge Pizza Phinney Ridge Greenwood Seattle review'. Found only 2012 opening coverage (Seattle Met, The Stranger) and aggregator/Yelp-sourced listings; no coverage within the last 2 years found.",
       "factsAttempted": "2026-11-12",
-      "factsSought": [],
-      "factsNote": null,
+      "factsSought": [
+        "signature"
+      ],
+      "factsNote": "ridgepizza.com is only a neighborhood-chooser landing page with no menu. The Stranger's 2012 'Happiest Hour' piece on Ridge Pizza covers the room and happy hour but names no dish. No accepted source for a signature pie.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -6448,9 +6462,15 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched '\"Soprano's Pizza\" Lake City Seattle' and 'Soprano's Pizza Pasta Lake City news blog'. Only Menupages/MapQuest/Sluurpy/Wanderlog directory listings and a single undated Yelp-style customer comment appeared. No qualifying press coverage found.",
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "opened",
+        "priceIndex",
+        "style",
+        "styleGroup",
+        "signature"
+      ],
+      "factsNote": "lakecitysopranos.com returned 403 Forbidden on repeated attempts and a web.archive.org fetch could not be accessed. Only third-party delivery/directory listings (Slicelife, Birdeye, MapQuest, Sluurpy) cover opened year, price, style or signature, and none are accepted sources.",
       "socialAttempted": "2026-11-12",
       "socialNote": "lakecitysopranos.com returned HTTP 403 and could not be fetched. Searched 'Soprano's Pizza & Pasta Lake City Seattle instagram' and 'site:instagram.com \"Soprano's\" Lake City pizza'; results were all directory/delivery listings or unrelated Soprano's locations (FL, MD, PA), no Instagram handle found for the Seattle Lake City location."
     },
@@ -6522,8 +6542,10 @@
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched \"Vera's Pizza and Bar\" Ballard and myballard.com specifically; found only an undated MyBallard item, DoorDash/directory listings, and The Stranger's venue page (no byline/date). No dated news story, review, or ranking within the last two years surfaced.",
       "factsAttempted": "2026-11-12",
-      "factsSought": [],
-      "factsNote": null,
+      "factsSought": [
+        "signature"
+      ],
+      "factsNote": "verasballard.com names no signature pie. DoorDash reviewer picks (Loaded Potato, Hot Coppa, Pepperoni) come from a delivery app, not an accepted source; the Seattle Pizza Substack review (seattlepizza.substack.com) returned 403 and couldn't be read.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -6706,9 +6728,14 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched '\"DeLeo Bros\" Pizza Pioneer Square Seattle' and '\"DeLeo Bros\" Pizza Seattle Axios OR Eater opening'. Found only a whatnow.com aggregator post (syndicated press-release style, not an original named-outlet report) describing a liquor-license application, plus Intentionalist and MapQuest directory listings with conflicting opening dates. None meets the bar of genuine published criticism/news from the listed outlet types, so nothing qualifying to report.",
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "opened",
+        "priceIndex",
+        "styleGroup",
+        "signature"
+      ],
+      "factsNote": "deleobrotherspizza.com's own site shows only a locations page (Seattle, WA and South Lake Tahoe, CA) and a placeholder About page with no real content. A same-named pizzeria found in Edina, MN has a different address and appears to be an unrelated business, so it wasn't used.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -6882,8 +6909,8 @@
       "styleSource": null,
       "styleGroup": "Chicago pan",
       "styleGroupSource": null,
-      "signature": null,
-      "signatureSource": null,
+      "signature": "Chicago-style deep-dish pizza",
+      "signatureSource": "https://www.westsideseattle.com/node/57793",
       "opened": 2019,
       "openedSource": "https://westofchicagopizzacompany.com/",
       "priceIndex": 2,
@@ -7201,9 +7228,14 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched '\"Alberona's\" DaVinci Pizza Ballard' and 'Alberona's DaVinci Pizza Pasta My Ballard news'. Results were only Caviar/Atly/MapQuest/Slice/Zabihah directory listings and a single old 2018 customer review. No qualifying named-outlet coverage found.",
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "opened",
+        "priceIndex",
+        "styleGroup",
+        "signature"
+      ],
+      "factsNote": "No official restaurant website found; its Toast ordering page (order.toasttab.com/online/da-vinci) returned 403. Menu prices and a 'House Special' pizza appear only on third-party listings (Slicelife, Menupages), not accepted sources for opened, priceIndex, styleGroup or signature.",
       "socialAttempted": "2026-11-12",
       "socialNote": "Searched 'Alberona's DaVinci Pizza & Pasta Ballard Seattle website' — only Caviar/Slice/aggregator listings (3624 Leary Way NW) turned up, no official domain found. No Instagram handle found in results or named by any outlet."
     },
@@ -7340,9 +7372,14 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched '\"Desi Pizza Kitchen\" Queen Anne Seattle' and 'Desi Pizza Kitchen Seattle Eater OR Stranger Indian fusion pizza'. Only MapQuest/Valpak/DoorDash/namaste-locator listings and DoorDash customer comments turned up. No Eater, Stranger, Seattle Met, or similar outlet story found about this location.",
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "opened",
+        "priceIndex",
+        "styleGroup",
+        "signature"
+      ],
+      "factsNote": "No official restaurant website found. Mentions of butter chicken and Achari chicken pizzas as popular items appear only on delivery/directory aggregators (DoorDash, Slice, Atly, MapQuest); no news coverage or opening story was found.",
       "socialAttempted": "2026-11-12",
       "socialNote": "Searched 'Desi Pizza Kitchen Queen Anne Seattle website' — only Slice/DoorDash/Uber Eats/Valpak listings turned up (2115 Queen Anne Ave N), no official domain found. No Instagram handle found."
     },
@@ -7858,8 +7895,8 @@
       "styleGroupSource": null,
       "signature": null,
       "signatureSource": null,
-      "opened": null,
-      "openedSource": null,
+      "opened": 1994,
+      "openedSource": "https://greeksinwa.omeka.net/items/show/820",
       "priceIndex": null,
       "priceSource": null,
       "attributes": {},
@@ -7891,9 +7928,14 @@
       "mentions": [],
       "coverageAttempted": null,
       "coverageNote": null,
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "priceIndex",
+        "style",
+        "styleGroup",
+        "signature"
+      ],
+      "factsNote": "The archive source confirms an opened year but says Varlamos is known for its calzones, not a specific pizza, so no signature pie could be reported. No accepted own-site menu or published review gives whole-pizza prices or a style description; only a Scribd-hosted menu scan and third-party listings exist, which aren't accepted sources.",
       "socialAttempted": "2026-11-12",
       "socialNote": "Searched 'Varlamos Pizzeria Laurelhurst Seattle website' — only Foursquare/MapQuest/Atly listings turned up (3617 NE 45th St); a MapQuest 'Website' button was referenced but its target URL wasn't shown, so no domain could be confirmed. No Instagram handle found."
     },
