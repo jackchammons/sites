@@ -146,6 +146,30 @@ const dirApi = { expand: null };
 
     map.fitBounds(bounds, { padding: [24, 24] });
 
+    /* Beside the table the map is a third of the row, which is small for
+     * finding one corner of the city. The button trades the table's width for
+     * the map's: the layout class does the resizing in CSS, and Leaflet is
+     * told its box changed. The choice is the reader's, so it is remembered. */
+    const pin = el.parentElement;
+    const grow = document.createElement('button');
+    grow.type = 'button';
+    grow.className = 'map-grow';
+    const setLarge = large => {
+      layout.classList.toggle('map-large', large);
+      grow.textContent = large ? 'Smaller map' : 'Larger map';
+      grow.setAttribute('aria-pressed', String(large));
+      map.invalidateSize();
+    };
+    grow.addEventListener('click', () => {
+      const large = !layout.classList.contains('map-large');
+      setLarge(large);
+      try { localStorage.setItem('pizza.mapLarge', large ? '1' : '0'); } catch {}
+    });
+    pin.append(grow);
+    let remembered = false;
+    try { remembered = localStorage.getItem('pizza.mapLarge') === '1'; } catch {}
+    setLarge(remembered);
+
     return id => {
       const m = markersById.get(id);
       if (!m) return false;

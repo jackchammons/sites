@@ -161,6 +161,17 @@ test('census draws pending candidates only', () => {
   assert.doesNotMatch(brief, /Ghost/);
 });
 
+test('census brief: lists the entries on file by id and asks a duplicate to name one', () => {
+  const candidates = [{ name: 'Lead One', status: 'pending', address: '1 A St' }];
+  const rs = [entry('zed-pie', { name: 'Zed Pie' }), entry('a-pizza-mart-first-hill', { name: 'A Pizza Mart (First Hill)' })];
+  const { brief } = buildTask('census', rs, { now: NOW, candidates });
+  assert.match(brief, /\na-pizza-mart-first-hill = A Pizza Mart \(First Hill\)\nzed-pie = Zed Pie\n/);
+  assert.match(brief, /"duplicateOf":"<id of the entry on file, for a duplicate only>"/);
+  assert.match(brief, /"duplicateOf" is that entry's id from the list\s+above, and is required/);
+  // The brief is the agent's whole instruction, and it has no shell.
+  assert.doesNotMatch(brief, /\.mjs|\.js\b|matchedId|candidates\.json/);
+});
+
 /* ---- attempt memory for the coverage and social backfills ---- */
 const ids = (brief) => [...brief.matchAll(/^- id: (\S+) \|/gm)].map(m => m[1]);
 
@@ -365,6 +376,50 @@ test('locations brief: rests recent attempts, says what is on file, asks for loc
   assert.match(brief, /- id: verified-in-march \| .* \| 1 site\(s\) verified 2026-03-01/);
   assert.doesNotMatch(brief, /verified null/);
   assert.match(brief, /"locationsSkipped" record/);
+});
+
+test('locations: an entry with a branch lead is drawn first, and its row lists the permit addresses', () => {
+  const addr = a => [{ neighborhood: 'First Hill', address: a }];
+  const rs = [
+    entry('placeholder', { neighborhood: 'Citywide', neighborhoodIsPlaceholder: true }),
+    entry('never-tried'),
+    entry('mart', { name: 'A Pizza Mart (First Hill)', locations: addr('800 Seneca St, Seattle, WA 98101') }),
+    entry('rested', { locations: addr('5 E St, Seattle, WA 98101'), locationsVerified: '2026-11-01' }),
+    entry('shut', { status: 'closed', locations: addr('6 F St, Seattle, WA 98101') })
+  ];
+  const permit = (matchedId, address, over = {}) => ({ name: 'A Pizza Mart', address, sources: ['kc-health'],
+    lastInspection: '2026-06-11', status: 'rejected', verdict: 'duplicate', matchedId, ...over });
+  const candidates = [
+    permit('mart', '800 Seneca St, 103, Seattle, WA 98101'),
+    permit('mart', '1823 Terry Ave, #102, Seattle, WA 98101'),
+    permit('mart', '1433 11th Ave, Seattle, WA 98122', { status: 'promoted', verdict: undefined }),
+    permit('rested', '7 G St, Seattle, WA 98101'),
+    permit('shut', '8 H St, Seattle, WA 98101'),
+    { name: 'Lead One', status: 'pending', address: '9 I St, Seattle, WA 98101', lastInspection: '2026-06-11' }
+  ];
+  const { brief, worklistSize } = buildTask('locations', rs, { now: NOW, candidates });
+  assert.equal(worklistSize, 3);
+  assert.deepEqual(ids(brief), ['mart', 'placeholder', 'never-tried']);
+  assert.match(brief, /- id: mart \| .* \| address on file, never verified \| leads: 1823 Terry Ave, #102, Seattle, WA 98101 ; 1433 11th Ave, Seattle, WA 98122\n/);
+  // The address on file is not a lead, and an entry that is resting or closed is not drawn for one.
+  assert.doesNotMatch(brief, /leads:.*800 Seneca|7 G St|8 H St|9 I St/);
+  assert.equal(brief.match(/leads:/g).length, 1);
+
+  // What a lead is, and what to do with one that cannot be confirmed.
+  assert.match(brief, /A row's "leads" are addresses King County's food-permit register lists\nunder that business and that are not on file for it\./);
+  assert.match(brief, /confirm each one against the pizzeria's own site, or the\nbranch's own site, before including it in "sites"/);
+  assert.match(brief, /A commissary or prep\nkitchen with no counter is not a location\./);
+  assert.match(brief, /if a lead cannot be confirmed, also file a\n"locationsSkipped" record for that entry whose note says which lead and\nwhy/);
+  assert.doesNotMatch(brief, /\.mjs|\.js\b|matchedId|candidates\.json/);
+});
+
+test('locations brief: with no lead on the worklist the brief says nothing about leads', () => {
+  const rs = [entry('never-tried'), entry('rested', { locationsVerified: '2026-11-01' })];
+  const candidates = [{ name: 'X', address: '7 G St, Seattle, WA 98101', lastInspection: '2026-06-11',
+    status: 'promoted', matchedId: 'rested' }];
+  const withQueue = buildTask('locations', rs, { now: NOW, candidates }).brief;
+  assert.doesNotMatch(withQueue, /lead/i);
+  assert.equal(withQueue, buildTask('locations', rs, { now: NOW }).brief);
 });
 
 test('locations: nothing left to look at is an empty worklist', () => {

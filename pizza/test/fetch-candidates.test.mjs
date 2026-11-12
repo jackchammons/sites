@@ -5,12 +5,12 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { kingCountyCandidates, overpassCandidates, parseArgs, seedAgeDays, nextSeed, INSPECTION_CUTOFF_MONTHS }
-  from '../scripts/fetch-candidates.mjs';
+import { kingCountyCandidates, overpassCandidates, parseArgs, seedAgeDays, nextSeed, INSPECTION_CUTOFF_MONTHS,
+  KING_COUNTY_WHERE, kingCountyUrl } from '../scripts/fetch-candidates.mjs';
 import { mergeCandidates } from '../src/census.js';
 
 const script = fileURLToPath(new URL('../scripts/fetch-candidates.mjs', import.meta.url));
-const census = fileURLToPath(new URL('../src/census.js', import.meta.url));
+const srcDir = fileURLToPath(new URL('../src/', import.meta.url));
 const NOW = Date.parse('2026-11-10T12:00:00Z');
 const NOW_ISO = '2026-11-10T12:00:00.000Z';
 
@@ -37,6 +37,31 @@ test('king county: a lapsed permit, a closed business and a row with no address 
     row({ business_id: 'PR-5', address: undefined }),
     row({ business_id: 'PR-6', name: '' })
   ], NOW), []);
+});
+
+test('king county: Seattle in every spelling the register uses is kept, and a longer city name is not', () => {
+  const spelt = ['SEATTLE', 'Seattle', 'seattle', 'Seattle,', 'WEST SEATTLE', 'West Seattle', ' Seattle ', 'SEATTLE.'];
+  const out = kingCountyCandidates(spelt.map((city, i) =>
+    row({ business_id: `PR-${i}`, name: `PIZZA NUMBER ${i}`, address: `${i + 1} PINE ST`, city })), NOW);
+  assert.deepEqual(out.map(c => c.address), spelt.map((_, i) => `${i + 1} Pine St, Seattle, WA 98121`));
+
+  const elsewhere = ['Seattle tacoma', 'SEATTLE TACOMA', 'SeaTac', 'Seattle Heights', 'North Seattle Park',
+    'East Seattle', 'BELLEVUE', '', undefined];
+  assert.deepEqual(kingCountyCandidates(elsewhere.map((city, i) =>
+    row({ business_id: `PR-${i}`, name: `PIZZA NUMBER ${i}`, city })), NOW), []);
+});
+
+test('king county: the request compares the city in upper case, never by a case-sensitive equality', () => {
+  // SoQL's `=` is case-sensitive, so `city = 'SEATTLE'` cannot see a permit
+  // filed as "Seattle", and about a quarter of the city's are.
+  assert.equal(KING_COUNTY_WHERE,
+    "upper(city) like '%SEATTLE%' AND (upper(name) like '%PIZZ%' OR upper(name) like '%SLICE%')");
+  assert.doesNotMatch(KING_COUNTY_WHERE, /(^|[^(\w])city\s*(=|in\b|like\b)/i);
+  const url = new URL(kingCountyUrl());
+  assert.equal(url.origin + url.pathname, 'https://data.kingcounty.gov/resource/r878-4sxa.json');
+  assert.equal(url.searchParams.get('$where'), KING_COUNTY_WHERE);
+  assert.match(url.searchParams.get('$select'), /\bcity\b/);
+  assert.equal(url.searchParams.get('$order'), 'inspection_date DESC');
 });
 
 test('king county: an answer that is not a list of rows is an error, not an empty register', () => {
@@ -160,7 +185,8 @@ function scratch(candidates) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'fetch-candidates-'));
   for (const d of ['scripts', 'src', 'data']) fs.mkdirSync(path.join(dir, d));
   fs.copyFileSync(script, path.join(dir, 'scripts/fetch-candidates.mjs'));
-  fs.copyFileSync(census, path.join(dir, 'src/census.js'));
+  // The script's whole import graph: census.js reads the street key from locations.js.
+  for (const f of ['census.js', 'locations.js']) fs.copyFileSync(path.join(srcDir, f), path.join(dir, 'src', f));
   fs.writeFileSync(path.join(dir, 'stub.mjs'), STUB);
   fs.writeFileSync(path.join(dir, 'data/restaurants.json'), JSON.stringify({ restaurants }));
   const file = path.join(dir, 'data/candidates.json');
@@ -201,6 +227,7 @@ test('CLI: outside the window both registries are asked, each request with a Use
     const requests = s.requests();
     assert.equal(requests.length, 4);   // the register, then three Overpass mirrors that are all busy
     assert.match(requests[0].url, /^https:\/\/data\.kingcounty\.gov\/resource\//);
+    assert.equal(requests[0].url, kingCountyUrl());
     for (const r of requests) {
       assert.match(r.ua, /SeattlePizzaIndex/);
       assert.equal(r.signal, true);

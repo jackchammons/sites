@@ -282,6 +282,31 @@ test('side files are changed only when something was added to them', () => {
   assert.deepEqual(checkDataset(busy.dataset, {}, NOW), []);
 });
 
+test('candidateReview: a duplicate stores the entry it duplicates as matchedId, on every branch of the name', () => {
+  const candFile = { candidates: [
+    { name: 'Delancey Annex', address: '1 A St, Seattle, WA 98101', status: 'pending' },
+    { name: 'DELANCEY ANNEX', address: '2 B St, Seattle, WA 98102', status: 'pending' },
+    { name: 'Ghost Pizza', status: 'pending' },
+    { name: 'Corner Bar', status: 'pending' }
+  ] };
+  const research = { candidateReview: [
+    { name: 'Delancey Annex', verdict: 'duplicate', duplicateOf: 'delancey', note: 'two more permits of the entry on file' },
+    { name: 'Ghost Pizza', verdict: 'closed', note: 'gone since spring' },
+    // The validator refuses both of these; the apply step still writes no id it cannot find.
+    { name: 'Corner Bar', verdict: 'duplicate', duplicateOf: 'nowhere', note: 'names an entry that is not on file' }
+  ] };
+  assert.deepEqual(validateResearch({ candidateReview: research.candidateReview.slice(0, 2) }, fresh(), NOW, candFile).fails, []);
+  const { done, lines } = apply(research, fresh(), { candFile });
+  assert.equal(done.candidatesChanged, true);
+  assert.deepEqual(candFile.candidates.map(c => [c.name, c.status, c.verdict, c.matchedId, c.resolvedDate]), [
+    ['Delancey Annex', 'rejected', 'duplicate', 'delancey', TODAY],
+    ['DELANCEY ANNEX', 'rejected', 'duplicate', 'delancey', TODAY],
+    ['Ghost Pizza', 'rejected', 'closed', undefined, TODAY],
+    ['Corner Bar', 'rejected', 'duplicate', undefined, TODAY]
+  ]);
+  assert.ok(lines.includes('  - candidate "Delancey Annex": duplicate of delancey (2 location(s))'));
+});
+
 test('newAttributes in a research file is not applied: no flag is set and no registry row is written', () => {
   const registry = { 'sells-out': { label: 'Sells out', frictionCost: 1.5 } };
   const before = JSON.stringify(fresh());
