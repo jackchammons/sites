@@ -6509,8 +6509,8 @@
         "stevies-famous": 19,
         "smoking-monkey-pizza": 20,
         "moto-pizza": 21,
-        "lupo": 22,
-        "my-friend-dereks": 23,
+        "my-friend-dereks": 22,
+        "lupo": 23,
         "cornuto-pizzeria": 24,
         "pagliacci": 25,
         "via-tribunali": 26,
@@ -6586,8 +6586,8 @@
         "stevies-famous": 76.4,
         "smoking-monkey-pizza": 76.3,
         "moto-pizza": 75.8,
+        "my-friend-dereks": 75.6,
         "lupo": 75.6,
-        "my-friend-dereks": 75.4,
         "cornuto-pizzeria": 74.9,
         "pagliacci": 74.5,
         "via-tribunali": 74,
@@ -6810,6 +6810,14 @@
           "value": 6.5,
           "penalty": 6
         },
+        "my-friend-dereks": {
+          "reputation": 3.3,
+          "critical": 8.1,
+          "craft": 7.5,
+          "distinctiveness": 7,
+          "value": 8.2,
+          "penalty": 0
+        },
         "lupo": {
           "reputation": 6.5,
           "critical": 8,
@@ -6817,14 +6825,6 @@
           "distinctiveness": 7.5,
           "value": 7.2,
           "penalty": 1.5
-        },
-        "my-friend-dereks": {
-          "reputation": 1.7,
-          "critical": 8.1,
-          "craft": 7.5,
-          "distinctiveness": 7,
-          "value": 8.2,
-          "penalty": 0
         },
         "cornuto-pizzeria": {
           "reputation": 8.6,
