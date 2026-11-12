@@ -3217,9 +3217,11 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched 'Razzi's Pizzeria Greenwood Seattle' and '...news review Eater'. Found only HappyCow, FindMeGlutenFree, Birdeye and Spinach aggregator/directory listings; no named-outlet press coverage turned up.",
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "signature"
+      ],
+      "factsNote": "No official site found. Frommer's listing page returned 403 Forbidden; other results (HappyCow, Airbnb, RatRadar, Stacker) are aggregators/directories, not valid sources for a signature pie.",
       "socialAttempted": "2026-11-12",
       "socialNote": "Website on file is unresolved between razzis.com and razzispizza.com. Retried fetching https and http razzispizza.com/about.html — both failed with certificate verification errors, so the domain could not be confirmed live. Instagram already on file; no new website found."
     },
@@ -3289,9 +3291,11 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched 'Pizzeria La Rocca Greenwood review' and 'Pizzeria La Rocca Seattle Times Best in PNW 2025'. Found PhinneyWood's piece on its 2024 Seattle Times Best in the PNW awards, but it published Sept 23, 2024, just outside the two-year window; no 2025 award or other coverage found.",
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "signature"
+      ],
+      "factsNote": "Read the homepage; /menu and /about returned 404. Site describes general 'woodfired artisan' pizza but names no signature pie.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -3532,8 +3536,8 @@
       "styleSource": null,
       "styleGroup": "Pizza bar",
       "styleGroupSource": null,
-      "signature": null,
-      "signatureSource": null,
+      "signature": "Pastrami pie: gruyere fondue, caramelized onion, pickles, everything bagel-spiced crust",
+      "signatureSource": "https://www.theinfatuation.com/seattle/reviews/south-town-pie",
       "opened": 2018,
       "openedSource": "https://seattlemag.com/food-and-culture/after-closing-his-fine-dining-restaurant-queen-anne-seattle-chef-back-new-south-park/",
       "priceIndex": 2,
@@ -3604,8 +3608,8 @@
       "styleSource": null,
       "styleGroup": "Neapolitan",
       "styleGroupSource": null,
-      "signature": null,
-      "signatureSource": null,
+      "signature": "Margherita 22 and Margherita D.O.C. with burrata",
+      "signatureSource": "https://www.pizzeria22.com/",
       "opened": 2011,
       "openedSource": "https://www.westsideseattle.com/node/60041",
       "priceIndex": 2,
@@ -4133,8 +4137,8 @@
       "styleSource": null,
       "styleGroup": "By the slice",
       "styleGroupSource": null,
-      "signature": null,
-      "signatureSource": null,
+      "signature": "Potato pizza",
+      "signatureSource": "https://nwasianweekly.com/2019/06/world-pizza/",
       "opened": 1992,
       "openedSource": null,
       "priceIndex": 1,
@@ -4276,9 +4280,11 @@
       ],
       "coverageAttempted": null,
       "coverageNote": null,
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "signature"
+      ],
+      "factsNote": "Read the homepage; /menu and /press returned 404. A Seattle Met 'Holy Pepperoni' review names standout pies with mortadella, pistachio pesto and stracciatella, but the article returned 403 Forbidden on direct fetch and could not be verified firsthand.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -4446,8 +4452,8 @@
       "styleSource": null,
       "styleGroup": "Pizza bar",
       "styleGroupSource": null,
-      "signature": null,
-      "signatureSource": null,
+      "signature": "Classic Cheese Pizza: fresh homemade dough, pizza sauce & mozzarella cheese",
+      "signatureSource": "https://www.apizzamartfirsthill.com/",
       "opened": 2017,
       "openedSource": null,
       "priceIndex": 2,
@@ -4931,9 +4937,11 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched 'Elemental Pizza University Village Seattle review' and 'Elemental Pizza University Village Seattle news 2025 2026'. Only named-outlet coverage found dates to the 2012 opening and a 2013 Seattle Met feature; nothing within the last two years besides aggregator reviews.",
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "signature"
+      ],
+      "factsNote": "Official site returned 403 Forbidden on repeated fetches. Web search found a namesake 'Elemental Pizza' (coppa, kale, tomatoes) only via a delivery-app menu listing and a Seattle Met opening piece that also 403'd, neither usable as a source for a signature pie.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -5634,9 +5642,11 @@
       ],
       "coverageAttempted": null,
       "coverageNote": null,
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "priceIndex"
+      ],
+      "factsNote": "Read the homepage and /menu; the menu is PDF-only with no prices in the fetched page text. Web search found only a third-party per-person cost estimate (not a menu price or review-stated pie price), so priceIndex could not be determined.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -5860,9 +5870,11 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched 'Oskar's Pizza Delridge West Seattle review'. Only found a 2018 West Seattle Blog profile (too old) and Reddit/aggregator mentions of the food truck now parking in Kenmore/Woodinville; no in-window named coverage of the Delridge/West Seattle connection found.",
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "signature"
+      ],
+      "factsNote": "Instagram profile returned HTTP 429 Too Many Requests on repeated attempts; could not read the bio or posts to find a named signature pie.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -6198,9 +6210,11 @@
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched 'Good Luck Bread SoDo Seattle pizza'. Found Seattle Met's 'Frozen Assets' piece dated July 2024, which falls just outside the 730-day window, and a KING5 segment whose page returned HTTP 403 so its date could not be confirmed; no confirmed in-window coverage found.",
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "signature"
+      ],
+      "factsNote": "Read the homepage and tried /menu (404). Menu lists Pepperoni, Plain Cheese, Spicy Bacon and Onion, Sweetie Pie, and Delicata Squash pies, but none is singled out by the site as its signature.",
       "socialAttempted": null,
       "socialNote": null
     },
@@ -6639,9 +6653,11 @@
       ],
       "coverageAttempted": null,
       "coverageNote": null,
-      "factsAttempted": null,
-      "factsSought": [],
-      "factsNote": null,
+      "factsAttempted": "2026-11-12",
+      "factsSought": [
+        "signature"
+      ],
+      "factsNote": "No official site found. The Mainline Pizza Quest review (which reviewers' summaries suggest names a standout Detroit-style pie) hit a Google rate-limit redirect and could not be read; other results are directories/aggregators.",
       "socialAttempted": "2026-11-12",
       "socialNote": "An Atly listing names sunnyhillseattle.com as the website, but fetching https://www.sunnyhillseattle.com returned HTTP 403 Forbidden, so the page could not actually be opened to verify it or find an Instagram link. No Instagram handle found in search results."
     },

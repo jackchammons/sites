@@ -1,87 +1,59 @@
 {
-  "updated": "2026-11-12T19:40:00Z",
+  "updated": "2026-11-12T19:00:00Z",
   "facts": [
     {
-      "id": "mioposto",
-      "priceIndex": 2,
-      "source": "https://www.miopostopizza.com/menu/dinner"
+      "id": "south-town-pie",
+      "signature": "Pastrami pie: gruyere fondue, caramelized onion, pickles, everything bagel-spiced crust",
+      "source": "https://www.theinfatuation.com/seattle/reviews/south-town-pie"
     },
     {
-      "id": "stevies-famous",
-      "signature": "Normie Macdonald: coppa, hot honey, and burrata",
-      "source": "https://theinfatuation.com/seattle/reviews/stevies-famous"
+      "id": "a-pizza-mart-first-hill",
+      "signature": "Classic Cheese Pizza: fresh homemade dough, pizza sauce & mozzarella cheese",
+      "source": "https://www.apizzamartfirsthill.com/"
     },
     {
-      "id": "good-shape-pizza",
-      "signature": "Plain cheese pizza",
-      "source": "https://theinfatuation.com/seattle/reviews/good-shape-pizza"
+      "id": "pizzeria-22",
+      "signature": "Margherita 22 and Margherita D.O.C. with burrata",
+      "source": "https://www.pizzeria22.com/"
     },
     {
-      "id": "jackson-street-pizza-lounge",
-      "opened": 2023,
-      "source": "https://curiocity.com/jackson-st-pizza-seattle/"
-    },
-    {
-      "id": "my-friend-dereks",
-      "signature": "Derek's Fave: red sauce, pepperoni, castelvetranos, and Grana",
-      "source": "https://www.gayot.com/restaurants/friend-dereks-seattle-wa-98103_25se260702.html"
-    },
-    {
-      "id": "pizzeria-pulcinella",
-      "signature": "Margherita",
-      "source": "https://southseattleemerald.org/food/2018/01/29/pizza-showdown-a-legacy-of-italy-in-south-seattle"
-    },
-    {
-      "id": "managers-pizza",
-      "priceIndex": 1,
-      "signature": "Ahmad Special: pepperoni, mushrooms, and pineapple",
-      "source": "https://managerspizza.online/"
+      "id": "world-pizza",
+      "signature": "Potato pizza",
+      "source": "https://nwasianweekly.com/2019/06/world-pizza/"
     }
   ],
   "factsSkipped": [
     {
-      "id": "mioposto",
-      "note": "Checked miopostopizza.com homepage and /menu/dinner; no pizza is labeled signature, most popular, or famous, only 'Fig and Prosciutto' flagged as a seasonal special."
+      "id": "elemental-pizza",
+      "note": "Official site returned 403 Forbidden on repeated fetches. Web search found a namesake 'Elemental Pizza' (coppa, kale, tomatoes) only via a delivery-app menu listing and a Seattle Met opening piece that also 403'd, neither usable as a source for a signature pie."
     },
     {
-      "id": "sopranos-antico",
-      "note": "Checked anticosopranos.com homepage, /menu, and the linked order.menudrive.com storefront; none list pizza prices or name a signature/most popular pie, and the items sit behind an unreadable category page."
+      "id": "good-luck-bread",
+      "note": "Read the homepage and tried /menu (404). Menu lists Pepperoni, Plain Cheese, Spicy Bacon and Onion, Sweetie Pie, and Delicata Squash pies, but none is singled out by the site as its signature."
     },
     {
-      "id": "stevies-famous",
-      "note": "Checked steviesfamous.com and tried order.steviesfamous.com and order.toasttab.com ordering pages, which returned 403/loading errors; could not confirm a whole-pie price from a page I could actually open."
+      "id": "oskars-pizza",
+      "note": "Instagram profile returned HTTP 429 Too Many Requests on repeated attempts; could not read the bio or posts to find a named signature pie."
     },
     {
-      "id": "good-shape-pizza",
-      "note": "Checked goodshapepizza.com and The Infatuation's review; neither gives an opening year, only that it began as a mobile pop-up before settling at Jupiter Bar in Belltown."
+      "id": "pizzeria-la-rocca",
+      "note": "Read the homepage; /menu and /about returned 404. Site describes general 'woodfired artisan' pizza but names no signature pie."
     },
     {
-      "id": "jackson-street-pizza-lounge",
-      "note": "Checked Curiocity coverage plus Fabulous Washington and Axios (both 403); reviewers single out the Carbonara and El Pastor as standouts but no page names one pizza as signature or most popular."
+      "id": "razzis-pizzeria",
+      "note": "No official site found. Frommer's listing page returned 403 Forbidden; other results (HappyCow, Airbnb, RatRadar, Stacker) are aggregators/directories, not valid sources for a signature pie."
     },
     {
-      "id": "johnny-mos-pizzeria",
-      "note": "Checked johnnymos.com (About page 404), myedmondsnews.com (403) and enprimeurclub.com; no opening date found, and no single pizza is named signature, only separate 'Johnny's Pick' (NY thin crust) and 'Mo's Pick' (Chicago thick crust)."
+      "id": "sacro-bosco-pizza-wine",
+      "note": "Read the homepage; /menu and /press returned 404. A Seattle Met 'Holy Pepperoni' review names standout pies with mortadella, pistachio pesto and stracciatella, but the article returned 403 Forbidden on direct fetch and could not be verified firsthand."
     },
     {
-      "id": "my-friend-dereks",
-      "note": "Checked myfrienddereks.com and Gayot; neither states an opening year, only that the business began as a pop-up before opening its Tangletown brick-and-mortar."
+      "id": "sunny-hill",
+      "note": "No official site found. The Mainline Pizza Quest review (which reviewers' summaries suggest names a standout Detroit-style pie) hit a Google rate-limit redirect and could not be read; other results are directories/aggregators."
     },
     {
-      "id": "pi-vegan-pizzeria",
-      "note": "Checked pizzapivegan.com (About page 404) and VegNews coverage; the October 2015 VegNews article says the business was 'open for 13 years' at that point but gives no explicit founding year, and no pizza is named a signature or most popular dish."
-    },
-    {
-      "id": "pizzeria-pulcinella",
-      "note": "Checked pulcinellapizza.com (unreachable/403) and South Seattle Emerald coverage; no opening year is given, only that owner Vince Mottola revamped the former Lakeside Tavern space in that building."
-    },
-    {
-      "id": "eymans-pizza",
-      "note": "Checked eymanspizza.com (About page 403/404) and web coverage; found no opening year and no pizza named as signature or most popular."
-    },
-    {
-      "id": "coltiva-pizzeria-e-barra",
-      "note": "Checked coltivasea.com and a 2018 Seattleite review; coverage praises both the Margherita and the Autunno but names neither as a single signature pizza."
+      "id": "un-po-tipsy",
+      "note": "Read the homepage and /menu; the menu is PDF-only with no prices in the fetched page text. Web search found only a third-party per-person cost estimate (not a menu price or review-stated pie price), so priceIndex could not be determined."
     }
   ]
 }
