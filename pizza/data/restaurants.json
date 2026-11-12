@@ -3773,7 +3773,9 @@
       "mentions": [],
       "instagram": "https://www.instagram.com/candelapizza_/",
       "ratingAttempted": "2026-11-07",
-      "ratingNote": "Searched Candela Pizza (South Seattle pizza truck) plus Eater/Seattle Times/Seattle Met/Infatuation/South Seattle Emerald/West Seattle Blog combinations. Found only SeattleFoodTruck.com and a LiveInEverett promotional profile (owners Octavio and Zully Ortega, truck based in Renton, ~3 months old as of that piece) -- no independent review, roundup entry, or news story. No rating proposed; skipped for lack of published criticism."
+      "ratingNote": "Searched Candela Pizza (South Seattle pizza truck) plus Eater/Seattle Times/Seattle Met/Infatuation/South Seattle Emerald/West Seattle Blog combinations. Found only SeattleFoodTruck.com and a LiveInEverett promotional profile (owners Octavio and Zully Ortega, truck based in Renton, ~3 months old as of that piece) -- no independent review, roundup entry, or news story. No rating proposed; skipped for lack of published criticism.",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "No official Candela Pizza website found. Search turned up only directory/aggregator listings (Seattle Food Truck profile, Atly) citing a food truck at 9454 17th Ave SW, Seattle; the Seattle Food Truck page itself returned HTTP 403 when fetched. No pizzeria-owned site or page could be reached to confirm an address."
     },
     {
       "id": "dudez-woodfired-pizza",
@@ -3801,7 +3803,9 @@
       "mentions": [],
       "instagram": "https://www.instagram.com/dudezwoodfiredpizza/",
       "ratingAttempted": "2026-11-12",
-      "ratingNote": "Searched for reviews or news about Dude'Z Woodfired Pizza on Fuhrman Ave E, Eastlake. Found only directory/aggregator listings (Atly, MapQuest, DoorDash) with user ratings but no professional review, roundup entry, or news story. No credible published source found."
+      "ratingNote": "Searched for reviews or news about Dude'Z Woodfired Pizza on Fuhrman Ave E, Eastlake. Found only directory/aggregator listings (Atly, MapQuest, DoorDash) with user ratings but no professional review, roundup entry, or news story. No credible published source found.",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "A MapQuest listing's 'Web' button resolved to https://dudezwoodfiredpizza.com/, but every fetch attempt (https://, https://www., bare domain) failed with an SSL handshake error, so the site's own locations/about/menu content could not be read. Other results were only directory/delivery listings (MapQuest, Atly, DoorDash) citing 2919 Fuhrman Ave E, Seattle, not confirmed from the pizzeria's own site."
     },
     {
       "id": "elemental-pizza",
@@ -5025,7 +5029,9 @@
       "opened": 2020,
       "priceIndex": 3,
       "styleGroup": "Detroit pan",
-      "lastVerified": "2026-10-18"
+      "lastVerified": "2026-10-18",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "Directory listings (Atly, Frankiapp) point to sunnyhillseattle.com as the official site, but fetching both https://www.sunnyhillseattle.com and http://www.sunnyhillseattle.com returned HTTP 403, so its locations/about/menu content could not be confirmed. Aggregators (MyBallard, The Stranger, Toast ordering page) cite 3127 NW 85th St, Seattle, but that was not read from the pizzeria's own site."
     },
     {
       "id": "deleo-bros-pizza",
@@ -5290,7 +5296,9 @@
       },
       "ratingAttempted": "2026-11-12",
       "styleGroup": "Neighborhood",
-      "lastVerified": "2026-11-12"
+      "lastVerified": "2026-11-12",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "No official Luciano's Pizza & Pasta website found. Search results were all delivery/ordering aggregators (Slice, UberEats, DoorDash, Foodboss) citing two Seattle addresses (2341 California Ave SW and 11064 Lake City Way NE); the Slice menu page was fetched and confirmed it has no outbound link to an official site or Instagram."
     },
     {
       "id": "ananas-pizzeria",
@@ -5376,7 +5384,9 @@
       "locationsSource": null,
       "mentions": [],
       "ratingAttempted": "2026-11-12",
-      "ratingNote": "Searched for Stranger/Eater/Seattle Times/Seattle Met coverage of this Leary Way NW pizzeria across three queries; found only delivery-app listings and aggregator star ratings (Magicpin, WhatsVegan, Slice) plus its own promotional copy -- no published review, roundup entry or news story about this specific place. Skipped."
+      "ratingNote": "Searched for Stranger/Eater/Seattle Times/Seattle Met coverage of this Leary Way NW pizzeria across three queries; found only delivery-app listings and aggregator star ratings (Magicpin, WhatsVegan, Slice) plus its own promotional copy -- no published review, roundup entry or news story about this specific place. Skipped.",
+      "locationsAttempted": "2026-11-12",
+      "locationsNote": "No official Alberona's DaVinci Pizza & Pasta website found. Search results were aggregators only (Slice, Autoreserve); the Slice menu page (fetched) lists 3624 Leary Way NW, Seattle, WA 98107 but has no link to an official site or Instagram, and the Autoreserve page returned HTTP 403 when fetched."
     },
     {
       "id": "capitale-pizzeria",

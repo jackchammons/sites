@@ -1,83 +1,25 @@
 {
-  "updated": "2026-11-12T12:00:00Z",
-  "locations": [
-    {
-      "id": "deleo-bros-pizza",
-      "homepage": "https://deleobrotherspizza.com/",
-      "source": "https://deleobrotherspizza.com/",
-      "sites": [
-        {
-          "neighborhood": "Pioneer Square",
-          "address": "202 Occidental Ave S, Seattle, WA 98104"
-        }
-      ]
-    },
-    {
-      "id": "coltiva-pizzeria-e-barra",
-      "homepage": "https://www.coltivasea.com/",
-      "source": "https://www.coltivasea.com/",
-      "sites": [
-        {
-          "neighborhood": "Lower Queen Anne",
-          "address": "350 1st Ave W, Seattle, WA 98119"
-        }
-      ]
-    },
-    {
-      "id": "west-of-chicago-pizza-company",
-      "homepage": "https://westofchicagopizzacompany.com/",
-      "source": "https://westofchicagopizzacompany.com/",
-      "sites": [
-        {
-          "neighborhood": "West Seattle",
-          "address": "3770 SW Alaska Street, Seattle, WA 98126"
-        }
-      ]
-    }
-  ],
-  "links": [
-    {
-      "id": "veras-pizza-and-bar",
-      "website": "https://www.verasballard.com/",
-      "instagram": "https://www.instagram.com/verasballard/",
-      "source": "https://www.verasballard.com/"
-    },
-    {
-      "id": "coltiva-pizzeria-e-barra",
-      "website": "https://www.coltivasea.com/",
-      "instagram": "https://www.instagram.com/coltivasea",
-      "source": "https://www.coltivasea.com/"
-    },
-    {
-      "id": "west-of-chicago-pizza-company",
-      "website": "https://westofchicagopizzacompany.com/",
-      "instagram": "https://instagram.com/westofchicagopizzacompany",
-      "source": "https://westofchicagopizzacompany.com/"
-    }
-  ],
-  "facts": [
-    {
-      "id": "veras-pizza-and-bar",
-      "opened": 2019,
-      "source": "https://www.verasballard.com/about/"
-    },
-    {
-      "id": "west-of-chicago-pizza-company",
-      "opened": 2019,
-      "source": "https://westofchicagopizzacompany.com/"
-    }
-  ],
+  "updated": "2026-11-12T00:00:00Z",
   "locationsSkipped": [
     {
-      "id": "veras-pizza-and-bar",
-      "note": "Checked the official site homepage (verasballard.com) and its /about/ page; neither lists a street address, only a phone number and DoorDash/Caviar delivery links. Aggregator sites (The Stranger, Kineticist) cite 5417 22nd Ave NW, but that is not sourced from the pizzeria's own site, so it was not used."
+      "id": "candela-pizza",
+      "note": "No official Candela Pizza website found. Search turned up only directory/aggregator listings (Seattle Food Truck profile, Atly) citing a food truck at 9454 17th Ave SW, Seattle; the Seattle Food Truck page itself returned HTTP 403 when fetched. No pizzeria-owned site or page could be reached to confirm an address."
     },
     {
-      "id": "a-k-pizza",
-      "note": "Official site ak-pizza.com is a JS-rendered page with no extractable content; ak-pizza.com/locations and ak-pizza.com/menu both returned 404. A search turned up only directory/aggregator listings (Atly, RestaurantGuru, Secret Seattle) citing 6901 Martin Luther King Jr Way S, which were not used since they aren't the pizzeria's own site."
+      "id": "dudez-woodfired-pizza",
+      "note": "A MapQuest listing's 'Web' button resolved to https://dudezwoodfiredpizza.com/, but every fetch attempt (https://, https://www., bare domain) failed with an SSL handshake error, so the site's own locations/about/menu content could not be read. Other results were only directory/delivery listings (MapQuest, Atly, DoorDash) citing 2919 Fuhrman Ave E, Seattle, not confirmed from the pizzeria's own site."
+    },
+    {
+      "id": "sunny-hill",
+      "note": "Directory listings (Atly, Frankiapp) point to sunnyhillseattle.com as the official site, but fetching both https://www.sunnyhillseattle.com and http://www.sunnyhillseattle.com returned HTTP 403, so its locations/about/menu content could not be confirmed. Aggregators (MyBallard, The Stranger, Toast ordering page) cite 3127 NW 85th St, Seattle, but that was not read from the pizzeria's own site."
+    },
+    {
+      "id": "lucianos-pizza-pasta",
+      "note": "No official Luciano's Pizza & Pasta website found. Search results were all delivery/ordering aggregators (Slice, UberEats, DoorDash, Foodboss) citing two Seattle addresses (2341 California Ave SW and 11064 Lake City Way NE); the Slice menu page was fetched and confirmed it has no outbound link to an official site or Instagram."
+    },
+    {
+      "id": "alberonas-davinci-pizza-pasta",
+      "note": "No official Alberona's DaVinci Pizza & Pasta website found. Search results were aggregators only (Slice, Autoreserve); the Slice menu page (fetched) lists 3624 Leary Way NW, Seattle, WA 98107 but has no link to an official site or Instagram, and the Autoreserve page returned HTTP 403 when fetched."
     }
-  ],
-  "rejected": [
-    "facts[1]: duplicate facts record for \"veras-pizza-and-bar\""
   ]
 }
