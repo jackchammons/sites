@@ -7,13 +7,14 @@
  * Pure function of (dataset, registry, nowMs); the CLI wrapper does the I/O.
  */
 import { PUGET_SOUND_ZIP, PUGET_SOUND_BOX } from './bounds.js';
+import { ENTRY_SCHEMA, ENTRY_KEYS, LOCATION_SHAPE, FACTOR_NAMES, FACTOR_SHAPE, MENTION_SHAPE,
+  FACT_FIELDS, FACT_SOURCE_KEY } from './schema.js';
 
 const STATUSES = new Set(['open', 'opening', 'closed']);
 /* Every rating is the research agent's, read from published coverage. A
  * graded factor set by anyone else is a hand-entered value, and the lint
  * refuses it so one cannot come back. */
 const SET_BY = new Set(['agent']);
-const FACTOR_KEYS = ['craft', 'distinctiveness', 'critical'];
 /* The clocks apply-research stamps. Freshness, the worklists and the radar all
  * read them, so one in the future holds an entry fresh, or out of a worklist,
  * until that day comes. */
@@ -22,8 +23,18 @@ const STAMPS = ['statusChecked', 'statusDetected', 'locationsVerified', 'locatio
 /* Free text the page prints. The research validator refuses angle brackets in
  * what the agent writes; this holds a hand edit to the same rule, because the
  * map popup is assembled from these strings in the browser. */
-const TEXT = ['name', 'neighborhood', 'style', 'styleGroup', 'blurb',
+const TEXT = ['name', 'neighborhood', 'style', 'styleGroup', 'signature', 'blurb',
   'statusNote', 'ratingNote', 'factsNote', 'locationsNote', 'coverageNote', 'socialNote'];
+
+const isObject = v => v !== null && typeof v === 'object' && !Array.isArray(v);
+const namesOf = shape => new Set(shape.map(s => s.key));
+const LOCATION_KEYS = namesOf(LOCATION_SHAPE);
+const FACTOR_KEYS = namesOf(FACTOR_SHAPE);
+const MENTION_KEYS = namesOf(MENTION_SHAPE);
+
+/* How the lint reports an entry that lacks schema keys. The CLI looks for it
+ * to say that normalising is the remedy. */
+export const MISSING_KEYS = 'missing schema keys:';
 
 export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
   const fails = [];
@@ -52,6 +63,23 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
     ids.add(id);
 
     if (typeof r.name !== 'string' || !r.name.trim()) bad(id, 'name missing');
+
+    // One shape for every entry (src/schema.js). A key the schema does not
+    // name is a field nothing reads, or a misspelling of one that is read. A
+    // key that is absent cannot be told from one nobody has filled in, and
+    // every worklist that draws on what is missing would then depend on how
+    // an entry happened to be written. An empty value says "nothing on file",
+    // and only a key that is present can say it.
+    for (const k of Object.keys(r ?? {})) {
+      if (k !== 'crowd' && k !== 'criticScore' && !ENTRY_KEYS.includes(k)) bad(id, `"${k}" is not a key of the schema`);
+    }
+    const absent = ENTRY_SCHEMA.filter(s => s.empty !== undefined && !Object.hasOwn(r ?? {}, s.key)).map(s => s.key);
+    if (absent.length) bad(id, `${MISSING_KEYS} ${absent.join(', ')}`);
+    for (const { key, empty } of ENTRY_SCHEMA) {
+      if (empty == null || absent.includes(key)) continue;
+      if (Array.isArray(empty) && !Array.isArray(r[key])) bad(id, `${key} must be a list, empty when there is nothing to record`);
+      else if (!Array.isArray(empty) && !isObject(r[key])) bad(id, `${key} must be an object, empty when there is nothing to record`);
+    }
     for (const k of TEXT) if (markup(r[k])) bad(id, `${k} contains < or >`);
     if (!STATUSES.has(r.status)) bad(id, `status must be open|opening|closed, got "${r.status}"`);
     if (r.status !== 'open') {
@@ -66,8 +94,12 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
     if (r.statusDate != null && r.statusDetected != null && Date.parse(r.statusDate) > Date.parse(r.statusDetected) + 864e5) {
       bad(id, `statusDate ${r.statusDate} is after it was detected (${r.statusDetected})`);
     }
-    if (r.openedSource != null && !https(r.openedSource)) bad(id, `openedSource must be https`);
-    if (r.priceSource != null && !https(r.priceSource)) bad(id, `priceSource must be https`);
+    for (const k of Object.values(FACT_SOURCE_KEY)) {
+      if (r[k] != null && !https(r[k])) bad(id, `${k} must be https`);
+    }
+    for (const k of Array.isArray(r.factsSought) ? r.factsSought : []) {
+      if (!FACT_FIELDS.includes(k)) bad(id, `factsSought names "${k}", which is not one of ${FACT_FIELDS.join(', ')}`);
+    }
     for (const k of STAMPS) if (r[k] != null && !pastDate(r[k])) bad(id, `${k} is not a past date`);
     if (r.url != null && !https(r.url)) bad(id, `url must be https, got "${r.url}"`);
     if (r.instagram != null && !/^https:\/\/(www\.)?instagram\.com\/[A-Za-z0-9._]{2,30}\/?$/.test(r.instagram)) {
@@ -83,16 +115,22 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
     }
 
     // Provenance: an agent may only hold a rating it can cite.
-    for (const k of FACTOR_KEYS) {
+    for (const k of Object.keys(isObject(r.factors) ? r.factors : {})) {
+      if (!FACTOR_NAMES.includes(k)) bad(id, `factors.${k} is not a graded factor`);
+    }
+    for (const k of FACTOR_NAMES) {
       const f = r.factors?.[k];
       if (f == null) continue;
+      for (const fk of Object.keys(f)) {
+        if (!FACTOR_KEYS.has(fk)) bad(id, `factors.${k}.${fk} is not a key of the schema`);
+      }
       if (typeof f.value !== 'number' || f.value < 0 || f.value > 10) bad(id, `factors.${k}.value out of range: ${f.value}`);
       if (!SET_BY.has(f.setBy)) bad(id, `factors.${k}.setBy must be agent: every rating comes from the research agent`);
       if (f.setBy === 'agent' && !(f.source && https(f.source))) bad(id, `factors.${k} is agent-set but carries no https source`);
       if (f.sources != null && !(Array.isArray(f.sources) && f.sources.every(https))) bad(id, `factors.${k}.sources must be https URLs`);
       if (markup(f.note)) bad(id, `factors.${k}.note contains < or >`);
     }
-    if (r.criticScore != null) bad(id, 'legacy top-level criticScore: migrate to factors.critical');
+    if (r.criticScore !== undefined) bad(id, 'legacy top-level criticScore: migrate to factors.critical');
     if (r.opened != null && (typeof r.opened !== 'number' || r.opened < 1900 || r.opened > new Date(nowMs).getUTCFullYear())) {
       bad(id, `opened is not a plausible year: ${r.opened}`);
     }
@@ -104,8 +142,11 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
     if (r.crowd !== undefined) bad(id, 'crowd figures are not part of the dataset');
 
     const seenAddr = new Set();
-    for (const loc of r.locations ?? []) {
+    for (const loc of Array.isArray(r.locations) ? r.locations : []) {
       const where = `location "${loc?.address ?? '?'}"`;
+      for (const k of Object.keys(loc ?? {})) {
+        if (!LOCATION_KEYS.has(k)) bad(id, `${where}: "${k}" is not a key of the schema`);
+      }
       if (typeof loc?.neighborhood !== 'string' || !loc.neighborhood.trim()) bad(id, `${where}: neighborhood missing`);
       if (typeof loc?.address !== 'string' || !/^\s*\d/.test(loc.address)) { bad(id, `${where}: not a street address`); continue; }
       if (markup(loc.address) || markup(loc.neighborhood)) bad(id, `${where}: address or neighborhood contains < or >`);
@@ -118,7 +159,10 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
       seenAddr.add(key);
     }
 
-    for (const m of r.mentions ?? []) {
+    for (const m of Array.isArray(r.mentions) ? r.mentions : []) {
+      for (const k of Object.keys(m ?? {})) {
+        if (!MENTION_KEYS.has(k)) bad(id, `mention "${m?.title ?? '?'}": "${k}" is not a key of the schema`);
+      }
       if (!https(m?.url)) bad(id, `mention "${m?.title ?? '?'}" has no https url`);
       if (!pastDate(m?.date)) bad(id, `mention "${m?.title ?? '?'}" has a bad date`);
     }

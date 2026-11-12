@@ -9,22 +9,40 @@
 import { PUGET_SOUND_ZIP, PUGET_SOUND_ZIP_LABEL } from './bounds.js';
 import { normName } from './census.js';
 import { streetKey } from './locations.js';
+import { PER_PASS } from './rules.js';
+import { FACT_FIELDS } from './schema.js';
 import { isRated, isLaunchRating } from './slice.js';
 
 export const KINDS = new Set(['opening', 'closing', 'ranking', 'mention']);
-/* A `…Skipped` section must be able to hold a whole worklist, since a pass
- * that resolves nothing reports every entry: the social worklist is 15. */
+/* The `…Skipped` sections, each with the tasks whose worklist it serves. A
+ * record in one says a pass looked at an entry and could not resolve it, so
+ * the worklist rests the entry. That is attempt memory, not data, and it is
+ * never the reason a file is refused: a section that repeats an id keeps the
+ * first record for it, and one that runs past its cap keeps the records up
+ * to the cap, each dropped record reported like any other rejection. Losing
+ * the file instead loses every other section with it and redraws the same
+ * worklist on the next pass. */
+export const SKIPPED = { ratingSkipped: ['rating', 'rerate'], locationsSkipped: ['locations'],
+                         factsSkipped: ['facts'], coverageSkipped: ['coverage'], socialSkipped: ['social'] };
+/* Twice the largest worklist a section serves, read from rules.js: a pass
+ * that resolves nothing reports every entry it was given, and the room above
+ * that is for an entry the agent looked at beyond its list. */
+const skippedCap = tasks => 2 * Math.max(...tasks.map(t => PER_PASS[t]));
+/* The most records a section may hold. Past it, any section but a
+ * `…Skipped` one fails the file. `facts` holds three records for each entry
+ * of its worklist, because a record carries what one page states and an
+ * entry's facts are spread over its About page, its menu and its coverage. */
 export const CAPS = { news: 20, locations: 12, directory: 10, status: 10,
                       mentions: 40, factorRatings: 12, links: 20,
-                      candidateReview: 15, facts: 20, ratingSkipped: 12,
-                      factorSources: 12, factsSkipped: 12, locationsSkipped: 12,
-                      coverageSkipped: 12, socialSkipped: 15 };
+                      candidateReview: 15, facts: 3 * PER_PASS.facts,
+                      factorSources: 12,
+                      ...Object.fromEntries(Object.entries(SKIPPED).map(([sec, tasks]) => [sec, skippedCap(tasks)])) };
 export const MAX_AGE_DAYS = 180;
 /* Mentions feed a 24-month coverage window in slice.js; capping them at 180
  * days meant the window could never fill from the loop. */
 export const MENTION_MAX_AGE_DAYS = 730;
 export const MAX_LEN = { name: 80, note: 600, title: 200, address: 200,
-                         style: 120, source: 80, url: 2000 };
+                         style: 120, signature: 100, source: 80, url: 2000 };
 /* The most entries one news story may be tied to. */
 export const MAX_STORY_MENTIONS = 40;
 /* Top-level keys that are not sections but belong in the file: the agent's
@@ -93,11 +111,27 @@ export const isOwnAccount = (u, entry) => {
   return account != null && [entry?.url, entry?.instagram].some(own => own && accountOf(own) === account);
 };
 
+/* A page of the web presence on file for an entry, when that presence lives
+ * on a host the list above names: its own social account, or the url on file
+ * and anything beneath it. A pizzeria with no site of its own is filed under
+ * its profile or the ordering page it links as its own, and for that entry
+ * such a page is its menu, not an aggregator's listing. The url on file has
+ * to name a page, since the host alone is shared by every business on it. */
+export const isOwnPage = (u, entry) => {
+  if (isOwnAccount(u, entry)) return true;
+  let page, own;
+  try { page = new URL(u); own = new URL(entry?.url); } catch { return false; }
+  const path = x => x.pathname.replace(/\/+$/, '');
+  return hostOf(u) === hostOf(entry.url) && path(own) !== ''
+    && (path(page) === path(own) || path(page).startsWith(path(own) + '/'));
+};
+
 /* Returns { fails, sections, fatal, accepted, unknown }. `fails` is every
  * problem found; `fatal` means the document itself is unusable (not an object,
  * a section over its cap, a retired channel); otherwise `accepted` holds each
  * section with the failing records dropped, so one bad record costs that
- * record, not the run. `unknown` names the top-level keys that are no section
+ * record, not the run. A `…Skipped` section over its cap is not fatal: the
+ * records past the cap are dropped like any other failing record. `unknown` names the top-level keys that are no section
  * at all: a misspelt section ("statuses", "factorRating") is never applied,
  * and the caller has to say so rather than report a clean, empty pass. */
 export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
@@ -145,7 +179,7 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
 
   for (const [name, arr] of Object.entries(sections)) {
     if (!Array.isArray(arr)) { fails.push(`${name} must be an array`); continue; }
-    if (arr.length > CAPS[name]) fails.push(`${name}: ${arr.length} entries exceeds the ${CAPS[name]} cap`);
+    if (arr.length > CAPS[name] && !Object.hasOwn(SKIPPED, name)) fails.push(`${name}: ${arr.length} entries exceeds the ${CAPS[name]} cap`);
   }
   if (fails.length) return { fails, sections, fatal: true, accepted: {}, unknown };
 
@@ -324,6 +358,17 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
     if (!KINDS.has(it?.kind)) bad('mentions', i, `kind must be one of ${[...KINDS].join('|')}, got "${it?.kind}"`);
   });
 
+  /* A style group is a label the page groups entries under, so it is held
+   * short. The rating task and the facts task both write one, under this one
+   * rule. */
+  const checkStyleGroup = (sec, i, v) => {
+    if (typeof v !== 'string' || v.trim().length < 3 || v.trim().length > 24) {
+      bad(sec, i, `styleGroup must be a short label, got "${v}"`);
+    } else {
+      checkText(sec, i, v, 'styleGroup', MAX_LEN.name);
+    }
+  };
+
   /* Values bounded and stepped so a typo cannot smuggle in a 47. */
   const validFactorValue = v => typeof v === 'number' && v >= 0 && v <= 10 && Math.round(v * 2) === v * 2;
   /* factorRatings: the full proposal that makes an unrated entry rankable, or
@@ -354,12 +399,7 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
     if (it?.priceIndex != null && ![1, 2, 3, 4].includes(it.priceIndex)) {
       bad('factorRatings', i, `priceIndex must be 1-4, got ${it.priceIndex}`);
     }
-    if (it?.styleGroup != null && (typeof it.styleGroup !== 'string'
-        || it.styleGroup.trim().length < 3 || it.styleGroup.trim().length > 24)) {
-      bad('factorRatings', i, `styleGroup must be a short label, got "${it.styleGroup}"`);
-    } else if (it?.styleGroup != null) {
-      checkText('factorRatings', i, it.styleGroup, 'styleGroup', MAX_LEN.name);
-    }
+    if (it?.styleGroup != null) checkStyleGroup('factorRatings', i, it.styleGroup);
     const srcs = it?.sources;
     if (!Array.isArray(srcs) || srcs.length < 1 || srcs.length > 4) {
       bad('factorRatings', i, 'sources must be 1-4 https URLs actually read');
@@ -388,34 +428,57 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
     checkText('ratingSkipped', i, it?.note, 'note', MAX_LEN.note, 10);
   });
 
-  /* ---- facts: founding year and price tier, for any entry that lacks them ----
-   * The two plain facts reputation and value read, and the only two an entry
-   * could never acquire once rated. Fill-gaps-only at apply time; the source
-   * is the page that states the year (the pizzeria's own site, or coverage). */
-  const factsSeen = new Set();
+  /* ---- facts: the descriptive record, for any entry that lacks part of it ----
+   * The year a place opened, its price tier, its style, its style group and
+   * the pie it is known for. Fill-gaps-only at apply time. A record carries
+   * what one page states, with that page as its source, so an entry may have
+   * several records in a file as long as no fact is reported twice.
+   *
+   * The year and the tier are plain facts and any https page may state them.
+   * Style, style group and signature are descriptions, and they are taken
+   * from someone with a view of the pizza: the pizzeria's own site or menu,
+   * or published coverage. An aggregator's category tags and "popular
+   * dishes" are compiled from orders and reviews, by nobody who made the
+   * pizza or reviewed it. The one exception is a page of the entry's own
+   * web presence on such a host (isOwnPage). */
+  const DESCRIBED = ['style', 'styleGroup', 'signature'];
+  const factsReported = new Map();
   sections.facts.forEach((it, i) => {
     const r = byId.get(it?.id);
     if (!r) { bad('facts', i, `unknown restaurant id "${it?.id}"`); return; }
-    if (factsSeen.has(it.id)) bad('facts', i, `duplicate facts record for "${it.id}"`);
-    factsSeen.add(it.id);
-    if (it?.opened == null && it?.priceIndex == null) bad('facts', i, 'must carry opened or priceIndex');
+    const carried = FACT_FIELDS.filter(k => it?.[k] != null);
+    if (!carried.length) bad('facts', i, `must carry at least one of ${FACT_FIELDS.join(', ')}`);
+    const reported = factsReported.get(it.id) ?? new Set();
+    const again = carried.filter(k => reported.has(k));
+    if (again.length) bad('facts', i, `${again.join(', ')} already reported for "${it.id}" by an earlier facts record`);
     if (it?.opened != null && (typeof it.opened !== 'number' || it.opened < 1900 || it.opened > thisYear)) {
       bad('facts', i, `opened must be a year 1900-${thisYear}, got ${it.opened}`);
     }
     if (it?.priceIndex != null && ![1, 2, 3, 4].includes(it.priceIndex)) {
       bad('facts', i, `priceIndex must be 1-4, got ${it.priceIndex}`);
     }
+    if (it?.style != null) checkText('facts', i, it.style, 'style', MAX_LEN.style, 2);
+    if (it?.styleGroup != null) checkStyleGroup('facts', i, it.styleGroup);
+    if (it?.signature != null) checkText('facts', i, it.signature, 'signature', MAX_LEN.signature, 3);
     checkUrl('facts', i, it?.source, 'source');
+    const described = carried.filter(k => DESCRIBED.includes(k));
+    if (described.length && isNonCriticism(it?.source) && !isOwnPage(it?.source, r)) {
+      bad('facts', i, `${described.join(', ')} must come from the pizzeria's own site or menu, or from published coverage, not ${hostOf(it?.source) || 'that source'}`);
+    }
+    if (badIdx.facts?.has(i)) return;
+    for (const k of carried) reported.add(k);
+    factsReported.set(it.id, reported);
   });
 
   /* ---- factsSkipped: the facts task's memory ----
-   * An entry the agent searched for a founding year or price tier and could
-   * not ground. Without this the worklist redrew the same twelve every run:
-   * the second dispatch filled one entry of twelve. */
+   * An entry the agent searched and could not complete. Without this the
+   * worklist redrew the same twelve every run: the second dispatch filled one
+   * entry of twelve. It may sit beside a facts record for the same entry: a
+   * pass that finds the year and not the signature reports both, and the
+   * apply step rests the entry for what is still missing. */
   sections.factsSkipped.forEach((it, i) => {
     const r = byId.get(it?.id);
     if (!r) { bad('factsSkipped', i, `unknown restaurant id "${it?.id}"`); return; }
-    if (factsSeen.has(it.id)) bad('factsSkipped', i, `${r.name} is also reported in facts`);
     checkText('factsSkipped', i, it?.note, 'note', MAX_LEN.note, 10);
   });
 
@@ -538,6 +601,19 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
       if (!plain) bad('candidateReview', i, `source is not a valid URL: ${it.source}`);
     }
   });
+
+  /* ---- the `…Skipped` sections: one record an entry, and no more than the cap ----
+   * Run after each section's own checks, so a record that failed them neither
+   * stands in for a good one with the same id nor counts towards the cap. */
+  for (const sec of Object.keys(SKIPPED)) {
+    const kept = new Set();
+    sections[sec].forEach((it, i) => {
+      if (badIdx[sec]?.has(i)) return;
+      if (kept.has(it.id)) bad(sec, i, `"${it.id}" is already reported in this section; the first record is kept`);
+      else if (kept.size >= CAPS[sec]) bad(sec, i, `past the ${CAPS[sec]} records this section holds; "${it.id}" is not recorded as attempted`);
+      else kept.add(it.id);
+    });
+  }
 
   const accepted = Object.fromEntries(Object.entries(sections).map(([k, arr]) =>
     [k, arr.filter((_, i) => !badIdx[k]?.has(i))]));

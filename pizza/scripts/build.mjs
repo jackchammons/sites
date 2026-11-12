@@ -18,6 +18,7 @@ import { bracketsSection } from '../build/sections/brackets.mjs';
 import { radarSection } from '../build/sections/radar.mjs';
 import { buzzSection } from '../build/sections/buzz.mjs';
 import { directorySection } from '../build/sections/directory.mjs';
+import { candidatesSection } from '../build/sections/candidates.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // The multi-site build sets OUT_DIR to dist/<slug>/; a standalone run writes
@@ -36,7 +37,8 @@ const html = pageHtml(ctx, {
   bracketSection: bracketsSection(ctx),
   radarSection: radarSection(ctx),
   buzzSection: buzzSection(ctx),
-  directorySection: directorySection(ctx)
+  directorySection: directorySection(ctx),
+  candidatesSection: candidatesSection(ctx)
 });
 
 writeDist(dist, ctx, html);

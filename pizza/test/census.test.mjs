@@ -1,7 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { normName, candidateKey, isNationalChain, isSeattleCity, matchEntry, mergeCandidates, coverageStats,
-  branchLeads, INSPECTION_CUTOFF_MONTHS } from '../src/census.js';
+import { normName, candidateKey, isNationalChain, isSeattleCity, matchEntry, mergeCandidates, coverageStats, tidyPossessive,
+  branchLeads, INSPECTION_CUTOFF_MONTHS, REOPENING_VERDICTS, inspectedSinceVerdict, candidateStanding } from '../src/census.js';
+import { PER_PASS } from '../src/rules.js';
 
 const restaurants = [
   { id: 'tutta-bella', name: 'Tutta Bella' },
@@ -58,6 +59,132 @@ test('merge: a stored resolution survives a refresh; a new dataset entry promote
   assert.equal(refreshed.find(c => c.name === 'Ghost Pizza').status, 'rejected');
   assert.equal(refreshed.find(c => c.name === 'Candela Pizza').status, 'promoted');
   assert.equal(refreshed.find(c => c.name === 'Candela Pizza').matchedId, 'candela');
+});
+
+/* ---- a verdict is not for ever ---- */
+const judged = (verdict, over = {}) => ({ key: candidateKey('Ghost Pizza', '1 A St'), name: 'Ghost Pizza',
+  address: '1 A St, Seattle, WA 98101', sources: ['kc-health'], lastInspection: '2026-03-01',
+  status: verdict === 'chain' ? 'chain' : 'rejected', verdict, note: 'what the census found',
+  resolutionSource: 'https://news.example/ghost', resolvedDate: '2026-08-31', ...over });
+const inspected = (lastInspection, over = {}) => ({ name: 'Ghost Pizza', address: '1 A St, Seattle, WA 98101',
+  sources: ['kc-health'], ...(lastInspection ? { lastInspection } : {}), ...over });
+
+test('merge: closed, unverifiable and not-pizza return to pending on an inspection dated after the verdict', () => {
+  assert.deepEqual(REOPENING_VERDICTS, ['closed', 'unverifiable', 'not-pizza']);
+  for (const verdict of REOPENING_VERDICTS) {
+    const [c] = mergeCandidates([judged(verdict)], [inspected('2026-09-01')], restaurants);
+    assert.deepEqual(c, { key: 'ghost|1', name: 'Ghost Pizza', address: '1 A St, Seattle, WA 98101', sources: ['kc-health'],
+      lastInspection: '2026-09-01', status: 'pending',
+      previousVerdict: { verdict, note: 'what the census found', resolvedDate: '2026-08-31', source: 'https://news.example/ghost' } }, verdict);
+  }
+});
+
+test('merge: an inspection on or before the day of the verdict changes nothing but the facts', () => {
+  for (const date of ['2026-08-31', '2026-08-30', '2026-03-01']) {
+    const [c] = mergeCandidates([judged('closed')], [inspected(date)], restaurants);
+    assert.deepEqual(c, judged('closed', { lastInspection: date }), date);
+  }
+  // an OpenStreetMap row carries no inspection, and a verdict with no date cannot be shown to be older
+  assert.equal(mergeCandidates([judged('closed')], [inspected(null, { sources: ['osm'] })], restaurants)[0].status, 'rejected');
+  assert.equal(mergeCandidates([judged('closed', { resolvedDate: undefined })], [inspected('2026-10-01')], restaurants)[0].status, 'rejected');
+  // the register no longer listing it is no evidence either way
+  assert.deepEqual(mergeCandidates([judged('closed', { lastInspection: '2026-10-01' })], [], restaurants), [judged('closed', { lastInspection: '2026-10-01' })]);
+});
+
+test('merge: an inspection already on file that postdates the verdict brings the candidate back at the next refresh that lists it', () => {
+  // The row was refreshed after its verdict and kept it; the register still shows the same inspection.
+  const stored = judged('not-pizza', { lastInspection: '2026-11-10' });
+  const [c] = mergeCandidates([stored], [inspected('2026-11-10')], restaurants);
+  assert.deepEqual([c.status, c.lastInspection, c.previousVerdict.verdict], ['pending', '2026-11-10', 'not-pizza']);
+  // a source that carries no inspection date leaves the one on file to speak
+  assert.equal(mergeCandidates([stored], [inspected(null, { sources: ['osm'] })], restaurants)[0].status, 'pending');
+});
+
+test('merge: a chain and a duplicate never return, whatever the register shows', () => {
+  const chain = judged('chain', { name: 'Dominos Pizza #7196', key: candidateKey('Dominos Pizza #7196', '1 A St') });
+  assert.deepEqual(mergeCandidates([chain], [inspected('2026-11-01', { name: 'Dominos Pizza #7196' })], restaurants),
+    [{ ...chain, lastInspection: '2026-11-01' }]);
+  // a chain the seed filed by name carries no verdict at all
+  const seeded = { ...chain, verdict: undefined, note: undefined, resolvedDate: undefined, resolutionSource: undefined };
+  assert.equal(mergeCandidates([seeded], [inspected('2026-11-01', { name: 'Dominos Pizza #7196' })], restaurants)[0].status, 'chain');
+  const dup = judged('duplicate', { matchedId: 'zeeks-pizza' });
+  assert.deepEqual(mergeCandidates([dup], [inspected('2026-11-01')], restaurants), [{ ...dup, lastInspection: '2026-11-01' }]);
+  // nor does a promoted candidate, which is already an entry
+  const promoted = { ...inspected('2026-03-01'), key: 'ghost|1', status: 'promoted', matchedId: 'ghost', resolvedDate: '2026-08-31' };
+  assert.equal(mergeCandidates([promoted], [inspected('2026-11-01')], restaurants)[0].status, 'promoted');
+});
+
+test('merge: a candidate that came back is not reopened twice by the same inspection', () => {
+  const once = mergeCandidates([judged('unverifiable')], [inspected('2026-09-01')], restaurants);
+  const twice = mergeCandidates(once, [inspected('2026-09-01')], restaurants);
+  assert.deepEqual(twice, once);
+  // judged again on a later day, it stays judged until the register inspects it again
+  const again = [{ ...once[0], status: 'rejected', verdict: 'not-pizza', note: 'a bar now', resolvedDate: '2026-11-12' }];
+  assert.equal(mergeCandidates(again, [inspected('2026-09-01')], restaurants)[0].status, 'rejected');
+  const [back] = mergeCandidates(again, [inspected('2026-12-02')], restaurants);
+  assert.equal(back.status, 'pending');
+  // the row keeps the latest finding as the previous verdict, not the first
+  assert.deepEqual(back.previousVerdict, { verdict: 'not-pizza', note: 'a bar now', resolvedDate: '2026-11-12' });
+});
+
+test('merge: a candidate that comes back as an entry now on file is promoted, not queued', () => {
+  const [c] = mergeCandidates([judged('closed')], [inspected('2026-09-01')], [...restaurants, { id: 'ghost-pizza', name: 'Ghost Pizza' }]);
+  assert.deepEqual([c.status, c.matchedId, c.previousVerdict.verdict], ['promoted', 'ghost-pizza', 'closed']);
+});
+
+test('inspectedSinceVerdict: reads the inspection already on a stored row', () => {
+  assert.equal(inspectedSinceVerdict(judged('not-pizza', { lastInspection: '2026-11-10' })), true);
+  assert.equal(inspectedSinceVerdict(judged('not-pizza', { lastInspection: '2026-08-31' })), false);
+  assert.equal(inspectedSinceVerdict(judged('duplicate', { lastInspection: '2026-11-10' })), false);
+  assert.equal(inspectedSinceVerdict(judged('chain', { lastInspection: '2026-11-10' })), false);
+  assert.equal(inspectedSinceVerdict({ status: 'pending', lastInspection: '2026-11-10' }), false);
+  assert.equal(inspectedSinceVerdict(undefined), false);
+});
+
+/* ---- where a candidate stands, for the page ---- */
+test('candidateStanding: a state, and the dates and numbers it depends on', () => {
+  const none = { matchedId: null, resolvedDate: null, lastInspection: null, reopens: false, reopensAfter: null,
+    inspectedSince: false, previousVerdict: null, queuePosition: null, censusPass: null, perPass: null };
+
+  assert.deepEqual(candidateStanding({ status: 'promoted', matchedId: 'zeeks-pizza', lastInspection: '2026-03-01', resolvedDate: '2026-08-31' }),
+    { ...none, state: 'listed', matchedId: 'zeeks-pizza', lastInspection: '2026-03-01', resolvedDate: '2026-08-31' });
+  assert.deepEqual(candidateStanding(judged('chain', { lastInspection: '2026-11-10' })),
+    { ...none, state: 'chain', lastInspection: '2026-11-10', resolvedDate: '2026-08-31' });
+  assert.deepEqual(candidateStanding(judged('duplicate', { matchedId: 'zeeks-pizza', lastInspection: '2026-11-10' })),
+    { ...none, state: 'duplicate', matchedId: 'zeeks-pizza', lastInspection: '2026-11-10', resolvedDate: '2026-08-31' });
+
+  // the three verdicts an inspection reopens: what it has to postdate, and whether one already does
+  for (const verdict of REOPENING_VERDICTS) {
+    assert.deepEqual(candidateStanding(judged(verdict)),
+      { ...none, state: verdict, lastInspection: '2026-03-01', resolvedDate: '2026-08-31', reopens: true, reopensAfter: '2026-08-31' });
+    assert.equal(candidateStanding(judged(verdict, { lastInspection: '2026-11-10' })).inspectedSince, true);
+  }
+  // set aside with no verdict or no date on record: nothing to measure an inspection against
+  assert.deepEqual(candidateStanding({ status: 'rejected', lastInspection: '2026-03-01' }), { ...none, state: 'rejected', lastInspection: '2026-03-01' });
+  assert.equal(candidateStanding(judged('closed', { resolvedDate: undefined })).reopens, false);
+  assert.equal(candidateStanding(undefined).state, 'rejected');
+});
+
+test('candidateStanding: a pending candidate knows its place in the queue and what was found before', () => {
+  const queue = [
+    judged('chain'),
+    ...Array.from({ length: 12 }, (_, i) => ({ key: `lead|${i}`, name: `Lead ${i}`, status: 'pending', lastInspection: '2026-06-11' }))
+  ];
+  assert.deepEqual(candidateStanding(queue[1], queue), { state: 'pending', matchedId: null, resolvedDate: null, lastInspection: '2026-06-11',
+    reopens: false, reopensAfter: null, inspectedSince: false, previousVerdict: null, queuePosition: 1, censusPass: 1, perPass: PER_PASS.census });
+  assert.deepEqual([candidateStanding(queue[PER_PASS.census], queue).queuePosition, candidateStanding(queue[PER_PASS.census], queue).censusPass],
+    [PER_PASS.census, 1]);
+  assert.deepEqual([candidateStanding(queue[PER_PASS.census + 1], queue).queuePosition, candidateStanding(queue[PER_PASS.census + 1], queue).censusPass],
+    [PER_PASS.census + 1, 2]);
+  // a copy of the row is found by its key; with no queue given the place is not known
+  assert.equal(candidateStanding({ ...queue[3] }, queue).queuePosition, 3);
+  assert.deepEqual([candidateStanding(queue[3]).queuePosition, candidateStanding(queue[3]).perPass], [null, null]);
+
+  const [back] = mergeCandidates([judged('closed')], [inspected('2026-09-01')], restaurants);
+  const standing = candidateStanding(back, [back]);
+  assert.deepEqual([standing.state, standing.resolvedDate, standing.reopens, standing.queuePosition], ['pending', null, false, 1]);
+  assert.deepEqual(standing.previousVerdict, { verdict: 'closed', note: 'what the census found', resolvedDate: '2026-08-31',
+    source: 'https://news.example/ghost' });
 });
 
 test('coverageStats counts by status', () => {
@@ -161,4 +288,17 @@ test('branch leads: none for a closed entry, an unresolved candidate, a lapsed p
   assert.deepEqual(leadsOf([permit(lead, { lastInspection: days(INSPECTION_CUTOFF_MONTHS * 30 + 1) })]), []);
   assert.deepEqual(leadsOf([permit(lead, { lastInspection: undefined })]), []);
   assert.equal(branchLeads(undefined, [mart()], LEAD_NOW).size, 0);
+});
+
+test("tidyPossessive: a capitalised possessive goes back to lower case and nothing else moves", () => {
+  assert.equal(tidyPossessive("Soprano'S Pizza & Pasta"), "Soprano's Pizza & Pasta");
+  assert.equal(tidyPossessive("Pizzuto\u2019S Italian Cafe"), "Pizzuto\u2019s Italian Cafe");
+  assert.equal(tidyPossessive("Mario'S"), "Mario's");
+  // an apostrophe that opens a word, a word that merely starts with S, and a name already right
+  assert.equal(tidyPossessive("La Vita E 'Bella Pizzeria"), "La Vita E 'Bella Pizzeria");
+  assert.equal(tidyPossessive("Rock 'Slice' Pizza"), "Rock 'Slice' Pizza");
+  assert.equal(tidyPossessive("O'Shea Pizza"), "O'Shea Pizza");
+  assert.equal(tidyPossessive("Tony's Pizza"), "Tony's Pizza");
+  // the key a candidate is stored and matched under does not depend on the case
+  assert.equal(candidateKey("Soprano'S Pizza", '7729 24th Ave Nw'), candidateKey(tidyPossessive("Soprano'S Pizza"), '7729 24th Ave Nw'));
 });

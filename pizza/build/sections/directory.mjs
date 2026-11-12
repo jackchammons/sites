@@ -1,10 +1,11 @@
 import { esc, nameLink, shortDate, srcLink, srcLinks } from '../html.mjs';
 import { locationLabel } from '../../src/locations.js';
-import { coverageStats } from '../../src/census.js';
 import { isLaunchRating } from '../../src/slice.js';
+import { FACT_SOURCE_KEY } from '../../src/schema.js';
+import { hasCandidates } from './candidates.mjs';
 
 export function directorySection(ctx) {
-  const { dataset, allScored, candidates } = ctx;
+  const { dataset, allScored } = ctx;
 /* ---- Directory ---- */
 const STATUS_LABEL = { open: 'Open', opening: 'Opening soon', closed: 'Closed' };
 const scoreById = new Map(allScored.map(r => [r.id, r]));
@@ -20,11 +21,18 @@ const directoryEntries = [...dataset.restaurants].sort((a, b) => {
   return ra !== rb ? ra - rb : a.name.localeCompare(b.name, 'en');
 });
 
-/* One block of the expanded record: a label and its rows. Blocks with nothing
- * to say are omitted, so a sparse discovery renders a short honest card. */
-const dBlock = (label, rows) => rows.length
-  ? `<div class="dd-block"><div class="dd-label">${label}</div>${rows.join('')}</div>` : '';
+/* One block of the expanded record: a label and its rows. Every record has
+ * the same blocks and the same rows in the same order, so two pizzerias can be
+ * read against each other; a field with nothing on file says so in its place.
+ * A missing key and a null are the same thing here. */
+const NONE = '<span class="dd-dim">not on file</span>';
+const dBlock = (label, rows) =>
+  `<div class="dd-block"><div class="dd-label">${label}</div>${rows.length ? rows.join('') : dRow(NONE)}</div>`;
 const dRow = html => `<div class="dd-row">${html}</div>`;
+/* A labelled field. `html` is already escaped; null, undefined and '' all
+ * print the placeholder. */
+const dField = (label, html) => `<div class="dd-row dd-kv"><span class="dd-k">${label}</span><span>${html || NONE}</span></div>`;
+const text = v => v == null || v === '' ? '' : esc(String(v));
 
 const FACTOR_NAME = { craft: 'Craft', distinctiveness: 'Distinctiveness', critical: 'Critical base' };
 
@@ -34,9 +42,24 @@ const FACTOR_NAME = { craft: 'Craft', distinctiveness: 'Distinctiveness', critic
 const detailHtml = r => {
   const scored = scoreById.get(r.id);
 
-  const links = [];
-  if (r.url) links.push(dRow(`Website: ${srcLink(r.url, r.url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''))}`));
-  if (r.instagram) links.push(dRow(`Instagram: ${srcLink(r.instagram, '@' + (r.instagram.match(/instagram\.com\/([^/?]+)/)?.[1] ?? 'profile'))}`));
+  /* The descriptive record: each fact, and beside it the page that states it
+   * when the facts task filed one (FACT_SOURCE_KEY names where that is kept). */
+  const fact = (label, key, shown) => {
+    const source = r[FACT_SOURCE_KEY[key]];
+    return dField(label, shown ? `${shown}${source ? ` · ${srcLink(source)}` : ''}` : '');
+  };
+  const facts = [
+    fact('Style', 'style', text(r.style)),
+    fact('Style group', 'styleGroup', text(r.styleGroup)),
+    fact('Known for', 'signature', text(r.signature)),
+    fact('Opened', 'opened', r.opened ? esc(String(r.opened)) : ''),
+    fact('Price', 'priceIndex', r.priceIndex ? '$'.repeat(r.priceIndex) : '')
+  ];
+
+  const links = [
+    dField('Website', r.url ? srcLink(r.url, r.url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')) : ''),
+    dField('Instagram', r.instagram ? srcLink(r.instagram, '@' + (r.instagram.match(/instagram\.com\/([^/?]+)/)?.[1] ?? 'profile')) : '')
+  ];
 
   const status = [];
   // statusDate is the event date as the source reports it; statusDetected is
@@ -44,21 +67,17 @@ const detailHtml = r => {
   status.push(dRow(`${esc(STATUS_LABEL[r.status] ?? 'Open')}${
     r.statusDate ? ` since ${esc(shortDate(r.statusDate))}` :
     r.status !== 'open' && r.statusDetected ? ` <span class="dd-dim">(reported ${esc(shortDate(r.statusDetected))}; date not stated by the source)</span>` : ''}${
-    r.statusChecked ? ` · last checked ${esc(shortDate(r.statusChecked))}` : ''}${
-    r.statusSource ? ` · ${srcLink(r.statusSource)}` : ''}`));
+    r.statusChecked ? ` · last checked ${esc(shortDate(r.statusChecked))}` : ''}`));
+  status.push(dField('Source', r.statusSource ? srcLink(r.statusSource) : ''));
   if (r.statusNote) status.push(dRow(esc(r.statusNote)));
 
   const locs = (r.locations ?? []).map(l =>
     dRow(`${esc(l.address ?? l.neighborhood ?? '')}${l.neighborhood && l.address ? ` <span class="dd-dim">(${esc(l.neighborhood)})</span>` : ''}`));
-  if (locs.length && (r.locationsVerified || r.locationsSource)) {
-    locs.push(dRow(`<span class="dd-dim">verified ${esc(r.locationsVerified ?? '?')}${
-      r.locationsSource ? ` against ${srcLink(r.locationsSource)}` : ''}</span>`));
+  if (locs.length) {
+    locs.push(dRow(`<span class="dd-dim">${r.locationsVerified
+      ? `verified ${esc(shortDate(r.locationsVerified))}${r.locationsSource ? ` against ${srcLink(r.locationsSource)}` : ''}`
+      : "not yet verified against the pizzeria's own site"}</span>`));
   }
-
-  const facts = [];
-  if (r.style) facts.push(dRow(`Style: ${esc(r.style)}${r.styleGroup ? ` <span class="dd-dim">(${esc(r.styleGroup)})</span>` : ''}`));
-  if (r.opened) facts.push(dRow(`Opened: ${esc(String(r.opened))}${r.openedSource ? ` · ${srcLink(r.openedSource)}` : ''}`));
-  if (r.priceIndex) facts.push(dRow(`Price: ${'$'.repeat(r.priceIndex)}${r.priceSource ? ` · ${srcLink(r.priceSource)}` : ''}`));
 
   /* The three graded factors usually share one provenance (one agent pass, one
    * note, the same sources), so it is printed once with the three values on a
@@ -74,11 +93,11 @@ const detailHtml = r => {
     const srcs = f.sources?.length ? f.sources : f.source ? [f.source] : [];
     const from = srcs.length ? srcLinks(srcs) : '';
     const set = agentSet
-      ? `set by the research agent${f.date ? ` ${esc(shortDate(f.date))}` : ''}${from ? ` from ${from}` : ''}`
+      ? `set by the research agent${f.date ? ` ${esc(shortDate(f.date))}` : ''}${from ? ` from ${from}` : '; sources not on file'}`
       : '';
     return {
-      line: set || (from && `sources on file: ${from}`),
-      all: set ? `All three ${set}` : from && `Sources on file for all three: ${from}`,
+      line: set || (from ? `sources on file: ${from}` : 'sources not on file'),
+      all: set ? `All three ${set}` : from ? `Sources on file for all three: ${from}` : 'Sources for all three: not on file',
       note: f.note ?? ''
     };
   };
@@ -86,13 +105,22 @@ const detailHtml = r => {
   const provs = present.map(k => provenanceOf(r.factors[k]));
   const shared = present.length > 1 && provs.every(p => p.line === provs[0].line && p.note === provs[0].note);
   const noteHtml = p => p.note ? `<div class="dd-note">${esc(p.note)}</div>` : '';
-  const graded = shared
+  /* An entry with no rating says so, and says where the rating task stands
+   * with it: the Candidates section lists it with the day it is due again. */
+  const graded = !present.length
+    ? [dRow(`${NONE}<div class="dd-note">${
+        r.status === 'closed' ? 'Closed before a rating pass reached it.'
+        : r.status === 'opening' ? 'Rated once it has opened and criticism of it has been published.'
+        : r.ratingAttempted ? `A rating pass looked on ${esc(shortDate(r.ratingAttempted))} and found no published criticism to rate from.${r.ratingNote ? ` ${esc(r.ratingNote)}` : ''}`
+        : 'No rating pass has looked at it yet.'}${
+        r.status !== 'closed' ? ' <a href="#unranked">What happens next</a>' : ''}</div>`)]
+    : shared
     ? [dRow(`${present.map(k => `${FACTOR_NAME[k]}: <b>${r.factors[k].value.toFixed(1)}</b>`).join(' <span class="dd-dim">·</span> ')}`),
-       ...(provs[0].all || provs[0].note
-         ? [dRow(`${provs[0].all ? `<span class="dd-dim">${provs[0].all}</span>` : ''}${noteHtml(provs[0])}`)] : [])]
-    : present.map((k, i) => dRow(`${FACTOR_NAME[k]}: <b>${r.factors[k].value.toFixed(1)}</b>${
-        provs[i].line ? ` <span class="dd-dim">${provs[i].line}</span>` : ''}${noteHtml(provs[i])}`));
+       dRow(`<span class="dd-dim">${provs[0].all}</span>${noteHtml(provs[0])}`)]
+    : present.map((k, i) => dRow(`${FACTOR_NAME[k]}: <b>${r.factors[k].value.toFixed(1)}</b> <span class="dd-dim">${provs[i].line}</span>${noteHtml(provs[i])}`));
 
+  /* The score is computed for every rated entry, open or not; only open ones
+   * compete, and the record says which this is. */
   const computed = scored ? [dRow(
     `SLICE <b>${scored.score.toFixed(1)}</b> — ` +
     Object.entries(scored.factorScores).map(([k, v]) => {
@@ -100,9 +128,9 @@ const detailHtml = r => {
       return `${k} ${use === 'unmeasured' ? 'unmeasured' : v.toFixed(1)}${use === 'lowers' ? ' (not counted: below the other four)' : ''}`;
     }).join(' · ') +
     ` · friction −${scored.penaltyApplied.toFixed(1)} · decay −${(scored.stalenessDecay * 100).toFixed(1)}%${
-      scored.verified ? ` (last ${scored.verified.source} ${esc(shortDate(scored.verified.date))})` : ''}`
-  )] : [dRow(`<span class="dd-dim">Not yet rated — no score until the rating rotation grounds one in published coverage.${
-      r.ratingAttempted ? ` Last looked ${esc(shortDate(r.ratingAttempted))}${r.ratingNote ? `: ${esc(r.ratingNote)}` : ''}` : ''}</span>`)];
+      scored.verified ? ` (last ${scored.verified.source} ${esc(shortDate(scored.verified.date))})` : ''}${
+      (r.status ?? 'open') === 'open' ? '' : '<div class="dd-note">Held out of the ranking: only open pizzerias compete.</div>'}`
+  )] : [dRow(`${NONE}<div class="dd-note">No score until the entry has a rating.</div>`)];
 
   const attrs = Object.keys(r.attributes ?? {}).filter(k => r.attributes[k]).map(k => {
     const reg = dataset.attributeRegistry[k];
@@ -115,13 +143,13 @@ const detailHtml = r => {
     .map(m => dRow(`${srcLink(m.url, m.title)} <span class="dd-dim">${esc(m.source)} · ${esc(shortDate(m.date))}</span>`));
 
   return `<div class="dd">
+    ${dBlock('On file', facts)}
     ${dBlock('Links', links)}
     ${dBlock('Status', status)}
     ${dBlock('Locations', locs)}
-    ${dBlock('On file', facts)}
-    ${dBlock('Graded factors', graded)}
-    ${dBlock('Score', r.status === 'open' ? computed : [])}
-    ${attrs.length ? `<div class="dd-block"><div class="dd-label">Attributes</div><div class="dd-chips">${attrs.join('')}</div></div>` : ''}
+    ${dBlock('Rating', graded)}
+    ${dBlock('Score', computed)}
+    ${dBlock('Attributes', attrs.length ? [`<div class="dd-chips">${attrs.join('')}</div>`] : [])}
     ${dBlock('Press on file', mentions)}
   </div>`;
 };
@@ -167,27 +195,13 @@ const directorySection = `
       so this is also where ranks 11 and up live. Click a row for everything on file about that pizzeria — and to find it on
       the map. Entries without a score have not been rated yet.
     </p>
-    ${(() => {
-      /* Coverage, stated honestly: what is verified, what is known-of and
-       * pending, and what is excluded on purpose. The pending queue is seeded
-       * from public registries (King County food-business permits, and
-       * OpenStreetMap), so "complete" is checkable rather than asserted. */
-      if (!candidates) return '';
-      const cov = coverageStats(candidates);
-      return `
-    <div class="stamp" style="margin-top:18px">
-      <span>${dataset.restaurants.length} <b>verified entries</b></span>
-      ${cov.pending ? `<span>${cov.pending} <b>candidates pending verification</b></span>` : ''}
-      ${cov.chains ? `<span>${cov.chains} <b>national-chain spots excluded</b></span>` : ''}
-    </div>
     <p class="note" style="margin-top:10px; max-width:110ch">
       Inclusion rule: a pizza-forward place with a location inside Seattle city limits.
       National chains (Domino's, Pizza Hut, MOD, and the like) are excluded by policy — this is
-      an index of Seattle's own pizzerias. The pending queue is drawn from King County
-      food-business permit data; a candidate is listed only after the research pass verifies
-      it is real, open, and actually about pizza.
-    </p>`;
-    })()}
+      an index of Seattle's own pizzerias.${hasCandidates(ctx) ? `
+      The entries here that have no score yet, and the places the index knows of that are not
+      listed, are under <a href="#candidates">Candidates</a>, each with the reason.` : ''}
+    </p>
     <div class="dir-layout">
       <div class="dir-list">
         <div class="dir-scroll">

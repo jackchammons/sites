@@ -14,7 +14,11 @@
  *
  * Candidates are LEADS, not entries: the census research task verifies each
  * one through the validated `directory` channel before it can join the site.
- * Existing resolutions (promoted/rejected/chain) survive a refresh.
+ * Existing resolutions (promoted/rejected/chain) survive a refresh, with one
+ * exception: a candidate set aside as closed, unverifiable or not-pizza goes
+ * back to pending when the register shows an inspection dated after that
+ * verdict, and carries the verdict along as previousVerdict (mergeCandidates
+ * in src/census.js).
  *
  *   node pizza/scripts/fetch-candidates.mjs                    refresh at once
  *   node pizza/scripts/fetch-candidates.mjs --max-age-days=30  only if the last
@@ -40,7 +44,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { mergeCandidates, isSeattleCity, INSPECTION_CUTOFF_MONTHS } from '../src/census.js';
+import { mergeCandidates, isSeattleCity, tidyPossessive, INSPECTION_CUTOFF_MONTHS } from '../src/census.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outPath = path.join(root, 'data/candidates.json');
@@ -52,7 +56,7 @@ const UA = 'Mozilla/5.0 (compatible; SeattlePizzaIndex/1.0; +https://sites.jackh
 const TIMEOUT_MS = 25_000;
 export { INSPECTION_CUTOFF_MONTHS };
 
-const title = s => String(s).toLowerCase().replace(/\b[a-z]/g, c => c.toUpperCase())
+const title = s => tidyPossessive(String(s).toLowerCase().replace(/\b[a-z]/g, c => c.toUpperCase()))
   .replace(/\bLlc\b/g, 'LLC').trim();
 
 /* Inspection rows, newest first, to one candidate per business. The query
@@ -239,6 +243,12 @@ async function refresh(argv) {
   }
 
   const merged = mergeCandidates(prior.candidates ?? [], incoming, dataset.restaurants);
+  const wasPending = new Set((prior.candidates ?? []).filter(c => c.status === 'pending').map(c => c.key));
+  const back = merged.filter(c => c.status === 'pending' && c.previousVerdict && !wasPending.has(c.key));
+  if (back.length) {
+    console.log(`  ${back.length} candidate(s) inspected since they were set aside, back to pending: ${
+      back.map(c => `${c.name} (${c.previousVerdict.verdict})`).join('; ')}`);
+  }
   const next = nextSeed(prior, merged, new Date().toISOString(), answered.has('kc-health'));
   const stats = {};
   for (const c of next.file.candidates) stats[c.status] = (stats[c.status] ?? 0) + 1;

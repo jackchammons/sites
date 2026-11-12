@@ -52,10 +52,18 @@ export function loadContext(root) {
    * renders fine without it, just with no coverage numbers to publish. */
   const candidatesPath = path.join(root, 'data/candidates.json');
   let candidates = null;
+  /* The day the permit register last answered a refresh (`checked`), or, in a
+   * file written before that stamp existed, the last refresh that changed
+   * anything. The page prints it so "pending" can be read against a date. */
+  let candidatesChecked = null;
   if (fs.existsSync(candidatesPath)) {
-    try { candidates = JSON.parse(fs.readFileSync(candidatesPath, 'utf8')).candidates; }
-    catch (e) { console.warn(`  ! ignoring data/candidates.json: ${e.message}`); }
+    try {
+      const file = JSON.parse(fs.readFileSync(candidatesPath, 'utf8'));
+      candidates = file.candidates;
+      const stamp = file.checked ?? file.updated;
+      if (typeof stamp === 'string' && Number.isFinite(Date.parse(stamp))) candidatesChecked = stamp;
+    } catch (e) { console.warn(`  ! ignoring data/candidates.json: ${e.message}`); }
   }
 
-  return { root, dataset, history, buzz, candidates };
+  return { root, dataset, history, buzz, candidates, candidatesChecked };
 }

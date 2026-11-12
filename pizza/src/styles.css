@@ -427,67 +427,206 @@ footer p { max-width: 72ch; }
   .cand-list a { text-align: left; }
 }
 
-/* ---- The pipeline flow chart ---- */
-/* ---- The daily pipeline ----
-   Four stages reading left to right on a desktop, stacked on a phone, with a
-   loop-back rail underneath: the diagram's real subject is the cycle, not any
-   one run. Validation is a checkpoint like the others -- calm, green tick --
-   with the reject path stated in words rather than alarm styling. */
-.pipe { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px 30px; margin-top: 26px; }
-.pipe-stage {
+/* ---- How the index is kept ----
+   Four blocks at the foot of the methodology: the life of an entry as a flow,
+   the two workflows as numbered steps, the task table, and what moves a score.
+   Each is laid out twice, across on a wide screen and down on a narrow one,
+   from the same markup. */
+.method-jump { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; }
+.method-jump a {
+  font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); text-decoration: none;
+  border: 1px solid var(--line); border-radius: 999px; padding: 7px 13px;
+  background: color-mix(in srgb, var(--panel) 70%, transparent);
+}
+.method-jump a:hover, .method-jump a:focus-visible { color: var(--tomato-2); border-color: var(--tomato); }
+
+/* The flow. Seven stages in a row, each a list item two grid rows tall: the
+   stage in the first row, the way out of it (or the second way in) in the
+   second. The rows are shared through subgrid so the stages line up whatever
+   their text runs to; without subgrid each item keeps its own two rows and
+   the boxes are merely uneven. The arrow into a stage is drawn by that stage,
+   in the gap before it. */
+.life {
+  list-style: none; margin: 30px 0 0; padding: 0; counter-reset: life;
+  display: grid; grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-rows: auto auto; gap: 28px 24px;
+}
+.life-step { display: grid; grid-row: span 2; grid-template-rows: subgrid; counter-increment: life; }
+.life-box {
   position: relative; border: 1px solid var(--line); border-top: 3px solid var(--crust);
-  border-radius: var(--radius); padding: 14px 16px 12px; background: var(--panel);
+  border-radius: var(--radius); padding: 16px 13px 13px; background: var(--panel);
 }
-.pipe-check { border-top-color: var(--basil); }
-/* Arrow to the next stage, drawn by the stage before it. */
-.pipe-stage:not(:nth-child(4))::after {
-  content: "\2192"; position: absolute; right: -25px; top: 50%;
-  transform: translateY(-50%); color: var(--ink-3); font-size: 17px;
-}
-.pipe-num {
-  position: absolute; top: -12px; left: 12px; padding: 0 7px;
-  background: var(--bg); font-family: var(--mono); font-size: 10px;
+.life-step:last-child .life-box { border-top-color: var(--tomato); }
+.life-box::before {
+  content: counter(life, decimal-leading-zero); position: absolute; top: -12px; left: 10px;
+  padding: 0 6px; background: var(--bg); font-family: var(--mono); font-size: 10px;
   letter-spacing: .12em; color: var(--ink-3);
 }
-.pipe-when {
-  display: inline-block; font-family: var(--mono); font-size: 10px;
-  text-transform: uppercase; letter-spacing: .07em; color: var(--ink-3); margin-bottom: 4px;
+.life-step + .life-step .life-box::after {
+  content: "\2192"; position: absolute; left: -21px; top: 50%;
+  transform: translateY(-50%); color: var(--ink-3); font-size: 16px; line-height: 1;
 }
-.pipe-stage > b { display: block; font-size: 14px; margin-bottom: 4px; }
-.pipe-tick { color: var(--basil); }
-.pipe-stage > p { margin: 0 0 6px; font-size: 12px; color: var(--ink-2); line-height: 1.6; }
-.pipe-reject { font-size: 11.5px !important; color: var(--ink-3) !important; }
-.pipe-reject::before { content: ""; }
-.pipe-rota { display: flex; flex-wrap: wrap; gap: 4px; margin: 8px 0 4px; }
-.pipe-rota span {
-  font-family: var(--mono); font-size: 9.5px; letter-spacing: .05em;
-  border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px;
-  color: var(--ink-3); white-space: nowrap;
+.life-box b { display: block; font-size: 14px; margin-bottom: 5px; }
+.life-box p { margin: 0; font-size: 12px; color: var(--ink-2); line-height: 1.55; }
+.life-aside {
+  position: relative; align-self: start; border: 1px dashed var(--char); border-radius: 10px;
+  padding: 9px 11px 10px; font-size: 11.5px; color: var(--ink-3); line-height: 1.5;
 }
-.pipe-sub { font-size: 10.5px !important; color: var(--ink-3) !important; margin: 0 !important; }
-/* The loop-back rail: an open bracket under all four stages, arrowhead rising
-   back into Research. */
-.pipe-loop {
-  grid-column: 1 / -1; position: relative; height: 30px; margin: -4px 40px 16px;
-  border: 1px dashed var(--line); border-top: none;
-  border-radius: 0 0 14px 14px;
+.life-aside::before {
+  content: "\2193"; position: absolute; top: -22px; left: 18px;
+  color: var(--ink-3); font-size: 14px; line-height: 1;
 }
-.pipe-loop::before {
-  content: "\25B2"; position: absolute; left: -5px; top: -9px;
-  color: var(--ink-3); font-size: 9px;
+.life-enter { border-color: color-mix(in srgb, var(--basil) 60%, var(--line)); }
+.life-enter::before { content: "\2191"; color: var(--basil); }
+.life-aside b { display: block; color: var(--ink-2); font-size: 11.5px; margin-bottom: 2px; }
+.life-aside ul { margin: 2px 0 4px; padding-left: 15px; list-style: disc; }
+.life-aside p { margin: 0; }
+/* Narrower than seven readable columns, the flow runs down the page: each
+   stage under the last, its side box indented beneath it. */
+@media (max-width: 1179px) {
+  .life { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; gap: 32px; max-width: 62ch; }
+  .life-step { display: block; }
+  .life-step + .life-step .life-box::after { content: "\2193"; left: 22px; top: -27px; transform: none; }
+  .life-aside { margin: 10px 0 0 30px; }
+  .life-aside::before { content: "\21B3"; top: 9px; left: -21px; }
+  .life-enter::before { content: "\2191"; }
 }
-.pipe-loop span {
-  position: absolute; left: 50%; bottom: -9px; transform: translateX(-50%);
-  background: var(--bg); padding: 0 12px; white-space: nowrap;
-  font-family: var(--mono); font-size: 10.5px; color: var(--ink-3);
+
+/* The two workflows: a numbered rail of steps in each card. */
+.mcard .run-when {
+  font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .07em;
+  color: var(--ink-3); margin: -4px 0 16px; line-height: 1.6;
 }
-@media (max-width: 980px) {
-  .pipe { grid-template-columns: 1fr; max-width: 60ch; gap: 30px; }
-  .pipe-stage:not(:nth-child(4))::after {
-    content: "\2193"; right: auto; left: 26px; top: auto; bottom: -25px; transform: none;
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+.steps > li { position: relative; padding: 0 0 16px 36px; counter-increment: step; }
+.steps > li:last-child { padding-bottom: 0; }
+.steps > li::before {
+  content: counter(step); position: absolute; left: 0; top: -1px; width: 24px; height: 24px;
+  border: 1px solid var(--line); border-radius: 50%; background: var(--panel-2);
+  font-family: var(--mono); font-size: 11px; font-weight: 600; line-height: 22px;
+  text-align: center; color: var(--ink-2);
+}
+.steps > li:not(:last-child)::after {
+  content: ""; position: absolute; left: 12px; top: 27px; bottom: 3px; width: 1px; background: var(--line);
+}
+.steps > li > b { font-size: 14.5px; }
+.steps > li > p { margin: 3px 0 0; font-size: 13.5px; }
+.steps > li > .step-gate { margin-top: 6px; font-size: 12.5px; color: var(--ink-3); }
+.step-gate span {
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--basil); border: 1px solid color-mix(in srgb, var(--basil) 45%, var(--line));
+  border-radius: 999px; padding: 1px 8px; margin-right: 5px; white-space: nowrap;
+}
+
+/* The task table: one row per task in the rotation. Under 1100px six columns
+   do not fit, so each row becomes a block and each cell carries its column's
+   name (data-l) beside it; the header row is kept for screen readers only. */
+.tasks-wrap { margin-top: 4px; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--panel); }
+.tasks { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tasks thead th {
+  text-align: left; font-family: var(--mono); font-size: 10.5px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .07em; color: var(--ink-3);
+  padding: 10px 12px; border-bottom: 1px solid var(--line); background: var(--bg-2);
+}
+.tasks td, .tasks tbody th {
+  padding: 12px; border-bottom: 1px solid var(--line-soft); vertical-align: top;
+  text-align: left; color: var(--ink-2); line-height: 1.5;
+}
+.tasks tbody tr:last-child > * { border-bottom: 0; }
+.tasks tbody th { font-family: var(--mono); font-size: 12.5px; font-weight: 600; color: var(--ink); white-space: nowrap; }
+.tasks td:nth-child(3) { width: 12%; }
+@media (max-width: 1099px) {
+  .tasks, .tasks tbody, .tasks tr, .tasks th, .tasks td { display: block; }
+  .tasks thead {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip-path: inset(50%); white-space: nowrap;
   }
-  .pipe-loop { display: none; }
+  .tasks tr { padding: 14px 16px 16px; border-bottom: 1px solid var(--line); }
+  .tasks tbody tr:last-child { border-bottom: 0; }
+  .tasks td, .tasks tbody th { padding: 0; border: 0; }
+  .tasks tbody th { font-size: 14px; margin-bottom: 4px; }
+  .tasks td:nth-child(3) { width: auto; }
+  .tasks td { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 10px; margin-top: 8px; }
+  .tasks td::before {
+    content: attr(data-l); font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--ink-3); padding-top: 3px;
+  }
 }
+@media (max-width: 560px) {
+  .tasks td { grid-template-columns: minmax(0, 1fr); gap: 1px; }
+}
+
+.moves { margin: 0 0 12px; padding-left: 18px; font-size: 14px; color: var(--ink-2); }
+.moves li { margin-bottom: 8px; }
+.moves b { color: var(--ink); }
+
+/* ---- Candidates ----
+   Each group is a details element: the summary carries the name, the count
+   and the rule in a sentence, and the rows open under it with or without
+   JavaScript. A row's first cell is its header, with the place under the
+   name; an agent's note is a second, full-width row, so a long one never
+   squeezes the columns on a phone. */
+.cq-group {
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--panel); margin-top: 12px;
+}
+.cq-group > summary {
+  position: relative; cursor: pointer; list-style: none;
+  padding: 13px 16px 13px 40px; min-height: 48px;
+}
+.cq-group > summary::-webkit-details-marker { display: none; }
+.cq-group > summary::before {
+  content: "▸"; position: absolute; left: 17px; top: 15px; color: var(--tomato-2); font-size: 12px;
+}
+.cq-group[open] > summary::before { content: "▾"; }
+.cq-group[open] > summary { border-bottom: 1px solid var(--line-soft); }
+.cq-group > summary:hover .cq-title { color: var(--tomato-2); }
+.cq-group > summary:focus-visible { outline: 2px solid var(--tomato-2); outline-offset: 2px; border-radius: var(--radius); }
+.cq-title { font-weight: 600; font-size: 15px; }
+.cq-n {
+  font-family: var(--mono); font-size: 11.5px; font-weight: 600; color: var(--ink-2);
+  border: 1px solid var(--line); border-radius: 999px; padding: 1px 9px; margin-left: 6px;
+  vertical-align: 1px;
+}
+.cq-rule { display: block; margin-top: 3px; font-size: 13px; color: var(--ink-3); line-height: 1.5; max-width: 100ch; }
+.cq-scroll { overflow-x: auto; }
+.cq-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.cq-table thead th {
+  text-align: left; font-family: var(--mono); font-size: 10.5px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .07em; color: var(--ink-3);
+  padding: 9px 16px; border-bottom: 1px solid var(--line-soft);
+}
+.cq-table td, .cq-table tbody th {
+  padding: 10px 16px; border-bottom: 1px solid var(--line-soft); vertical-align: top; text-align: left;
+}
+.cq-table tbody th { font-weight: 600; width: 52%; }
+.cq-table tbody th a { color: var(--ink); text-decoration-color: var(--crust); }
+.cq-row td { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); white-space: nowrap; }
+.cq-row td a { color: var(--ink-2); }
+.cq-sub { display: block; margin-top: 2px; font-family: var(--mono); font-size: 11px; font-weight: 400; color: var(--ink-3); }
+/* With room to spare the place sits beside the name, one line to a row. */
+@media (min-width: 900px) {
+  .cq-sub { display: inline; margin: 0 0 0 12px; }
+}
+.cq-row.has-note > * { border-bottom: 0; padding-bottom: 3px; }
+.cq-note td { padding-top: 0; font-size: 12.5px; color: var(--ink-3); line-height: 1.55; }
+.cq-note-in { max-width: 100ch; overflow-wrap: anywhere; }
+.cq-table tbody tr:last-child > * { border-bottom: 0; }
+.cq-dim { color: var(--ink-3); }
+.cq-src { white-space: nowrap; }
+.cq-src a { font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+.cq-flag {
+  font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--basil); margin-right: 4px;
+}
+.cq-dupes b { color: var(--ink-2); }
+@media (max-width: 720px) {
+  .cq-table thead th, .cq-table td, .cq-table tbody th { padding-left: 12px; padding-right: 10px; }
+  .cq-group > summary { padding-right: 12px; }
+}
+/* On the narrowest phones a date may break across two lines sooner than push
+   the table past its box. */
+@media (max-width: 380px) { .cq-row td { white-space: normal; } }
 
 
 /* ---- Directory ---- */
@@ -654,6 +793,10 @@ footer p { max-width: 72ch; }
   letter-spacing: .09em; color: var(--ink-3); margin-bottom: 4px;
 }
 .dd-row { margin: 2px 0; line-height: 1.55; color: var(--ink-2); overflow-wrap: anywhere; }
+/* A labelled field: the labels share a column, so the same row sits at the
+   same place in every record. */
+.dd-kv { display: grid; grid-template-columns: 86px minmax(0, 1fr); gap: 8px; }
+.dd-k { color: var(--ink-3); }
 .dd-row b { color: var(--ink); }
 .dd-dim { color: var(--ink-3); font-size: 11.5px; }
 .dd-note { color: var(--ink-3); font-size: 11.5px; margin: 1px 0 5px; max-width: 52ch; }

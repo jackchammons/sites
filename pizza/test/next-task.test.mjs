@@ -6,7 +6,12 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { pickTask, buildTask, lastSuccessFromLog, TYPES, DISPATCH_ONLY } from '../scripts/next-task.mjs';
-import { CAPS } from '../src/validate-research.js';
+import { PER_PASS, RETRY_DAYS, ROTATION, LIVENESS_REVISIT_DAYS, CLOSURE_RECONFIRM_DAYS, FACTS_SOUGHT_UNLISTED,
+  factsSought, factsOutstanding } from '../src/rules.js';
+import { LOCATION_REVISIT_DAYS } from '../src/locations.js';
+import { CAPS, MAX_LEN } from '../src/validate-research.js';
+import { applyResearch } from '../scripts/apply-research.mjs';
+import { mergeCandidates } from '../src/census.js';
 
 const script = fileURLToPath(new URL('../scripts/next-task.mjs', import.meta.url));
 const NOW = Date.parse('2026-11-10T12:00:00Z');
@@ -22,30 +27,37 @@ const launch = (...sources) => graded('editorial', sources);
 const AGENT = graded('agent', ['https://www.thestranger.com/a-review']);
 const entry = (id, over = {}) => ({ id, name: id.replace(/-/g, ' '), status: 'open', neighborhood: 'Ballard',
   url: `https://${id}.example`, locations: [], mentions: [], ...over });
+/* The whole descriptive record, for an entry the facts task has nothing to find for. */
+const DESCRIBED = { opened: 2015, priceIndex: 2, style: 'Wood-fired Neapolitan', styleGroup: 'Neapolitan', signature: 'The margherita' };
 
 /* ---- the picker ---- */
 test('rotation: the type whose last successful pass is oldest goes next', () => {
-  const ages = { discovery: day(8), locations: day(9), liveness: day(5), news: day(6), rating: day(7), census: day(10) };
+  const ages = { discovery: day(8), locations: day(9), liveness: day(5), news: day(6), rating: day(7), census: day(10), facts: day(11) };
   assert.equal(pickTask('auto', ages), 'liveness');
   assert.equal(pickTask('auto', { ...ages, liveness: day(10) }), 'news');
+  assert.equal(pickTask('auto', { ...ages, facts: day(4) }), 'facts');
 });
 
 test('rotation: a type with no pass on record goes first, ties in listed order', () => {
-  const ages = { discovery: day(8), locations: day(9), liveness: 0, news: day(6), rating: 0, census: day(7) };
+  const ages = { discovery: day(8), locations: day(9), liveness: 0, news: day(6), rating: 0, census: day(7), facts: day(5) };
   assert.equal(pickTask('auto', ages), 'liveness');
   assert.equal(pickTask('auto', Object.fromEntries(TYPES.map(t => [t, 0]))), TYPES[0]);
+  // facts has never run in the rotation, so its first turn comes at once
+  assert.equal(pickTask('auto', { ...ages, liveness: day(1), rating: day(2), facts: 0 }), 'facts');
 });
 
 test('rotation: the oldest type is passed over when its worklist is empty', () => {
-  const ages = { discovery: day(2), locations: day(3), liveness: day(4), news: day(5), rating: day(1), census: day(6) };
+  const ages = { discovery: day(2), locations: day(3), liveness: day(4), news: day(5), rating: day(1), census: day(6), facts: day(7) };
   assert.equal(pickTask('auto', ages), 'rating');
   assert.equal(pickTask('auto', ages, t => t !== 'rating'), 'discovery');
   assert.equal(pickTask('auto', ages, t => !['rating', 'discovery', 'locations'].includes(t)), 'liveness');
 });
 
-test('rotation: census rotates with the daily types, and the backfills stay dispatch-only', () => {
-  assert.deepEqual(TYPES, ['discovery', 'locations', 'liveness', 'news', 'rating', 'census']);
-  assert.deepEqual(DISPATCH_ONLY, ['social', 'facts', 'coverage', 'sources', 'rerate']);
+test('rotation: census and facts rotate with the daily types, and the backfills stay dispatch-only', () => {
+  assert.deepEqual(TYPES, ['discovery', 'locations', 'liveness', 'news', 'rating', 'census', 'facts']);
+  // the rotation is the one the page prints
+  assert.equal(TYPES, ROTATION);
+  assert.deepEqual(DISPATCH_ONLY, ['social', 'coverage', 'sources', 'rerate']);
   // Every backfill has a worklist today, and auto mode still never draws one.
   const none = Object.fromEntries(TYPES.map(t => [t, 0]));
   for (let d = 0; d < 12; d++) {
@@ -58,7 +70,7 @@ test('rotation: census rotates with the daily types, and the backfills stay disp
 test('census: a seed with pending candidates is worked without a dispatch, and an empty one is passed over', () => {
   // The last census pass is months old, as it is whenever the queue has been dry.
   const ages = { discovery: day(5), locations: day(6), liveness: day(7), news: day(8), rating: day(9),
-    census: Date.parse('2026-09-12T12:50:00Z') };
+    census: Date.parse('2026-09-12T12:50:00Z'), facts: day(10) };
   const rs = [entry('a-pie'), entry('b-pie')];
   const hasWork = candidates => t => buildTask(t, rs, { now: NOW, candidates }).worklistSize !== 0;
 
@@ -72,7 +84,7 @@ test('census: a seed with pending candidates is worked without a dispatch, and a
   // Once that pass is committed census is the newest type and takes its turn.
   assert.equal(pickTask('auto', { ...ages, census: day(10) }, hasWork(refreshed)), 'discovery');
   // With no history, census has its own day and gives it up when the queue is dry.
-  const censusDay = [0, 1, 2, 3, 4, 5].find(n => TYPES[n % TYPES.length] === 'census');
+  const censusDay = TYPES.map((_, n) => n).find(n => TYPES[n % TYPES.length] === 'census');
   assert.equal(pickTask('auto', null, hasWork(refreshed), censusDay), 'census');
   assert.equal(pickTask('auto', null, hasWork(dry), censusDay), TYPES[(censusDay + 1) % TYPES.length]);
 });
@@ -83,15 +95,22 @@ test('rotation: a forced type is returned even with an empty worklist', () => {
 });
 
 test('rotation: an unrecognised argument means auto', () => {
-  const ages = { discovery: day(2), locations: day(3), liveness: day(4), news: day(5), rating: day(1), census: day(6) };
+  const ages = { discovery: day(2), locations: day(3), liveness: day(4), news: day(5), rating: day(1), census: day(6), facts: day(7) };
   assert.equal(pickTask('nonsense', ages), 'rating');
 });
 
 test('rotation: with no usable history the order starts from the UTC day', () => {
   for (let d = 0; d < TYPES.length; d++) assert.equal(pickTask('auto', null, () => true, 20000 + d), TYPES[(20000 + d) % TYPES.length]);
+  // Seven types, so each has one day in seven, facts among them.
+  const days = TYPES.map((_, i) => 20000 + i);
+  assert.deepEqual(days.map(d => pickTask('auto', null, () => true, d)).sort(), [...TYPES].sort());
   // On rating's day, with nothing to rate, the day goes to the type after it.
-  const d = [20000, 20001, 20002, 20003, 20004].find(n => TYPES[n % TYPES.length] === 'rating');
+  const d = days.find(n => TYPES[n % TYPES.length] === 'rating');
   assert.equal(pickTask('auto', null, t => t !== 'rating', d), TYPES[(d + 1) % TYPES.length]);
+  // On facts' day, with every gap already tried, it wraps round to the first type.
+  const f = days.find(n => TYPES[n % TYPES.length] === 'facts');
+  assert.equal(pickTask('auto', null, t => t !== 'facts', f), TYPES[(f + 1) % TYPES.length]);
+  assert.equal(TYPES[(f + 1) % TYPES.length], 'discovery');
 });
 
 /* ---- reading the history ---- */
@@ -108,8 +127,11 @@ test('history: only the subject the research workflow writes counts as a pass', 
   ].join('\n');
   assert.deepEqual(lastSuccessFromLog(log), {
     discovery: 0, locations: Date.parse('2026-11-09T12:50:00Z'), liveness: 0, news: 0,
-    rating: Date.parse('2026-11-07T12:50:00Z'), census: 0
+    rating: Date.parse('2026-11-07T12:50:00Z'), census: 0, facts: 0
   });
+  // A facts pass dispatched while the task was a backfill is a pass on record.
+  assert.equal(lastSuccessFromLog('2026-11-05T12:50:00+00:00\tchore(data): research pass (facts) 2026-11-05').facts,
+    Date.parse('2026-11-05T12:50:00Z'));
   // A dispatched census pass counts like any other, so the type then waits its turn.
   assert.equal(lastSuccessFromLog('2026-09-12T12:50:00+00:00\tchore(data): research pass (census) 2026-09-12').census,
     Date.parse('2026-09-12T12:50:00Z'));
@@ -126,7 +148,7 @@ test('rating: an empty worklist is size 0, and auto mode moves on from it', () =
   ];
   assert.equal(buildTask('rating', rs, { now: NOW }).worklistSize, 0);
 
-  const ages = { discovery: day(2), locations: day(3), liveness: day(4), news: day(5), rating: day(1), census: day(6) };
+  const ages = { discovery: day(2), locations: day(3), liveness: day(4), news: day(5), rating: day(1), census: day(6), facts: day(7) };
   const hasWork = t => buildTask(t, rs, { now: NOW }).worklistSize !== 0;
   assert.equal(pickTask('auto', ages, hasWork), 'discovery');
   // Forced, the same empty worklist is what the workflow's skip=true reports.
@@ -241,6 +263,245 @@ test('a pass that resolves nothing can report its whole worklist: every skipped 
   assert.ok(size('coverage') <= CAPS.coverageSkipped);
   assert.ok(size('social') <= CAPS.socialSkipped);
   assert.equal(size('social'), 15);
+});
+
+/* ---- the numbers every worklist draws with ---- */
+test('rules: every worklist takes the number of entries rules.js states, and no other', () => {
+  assert.deepEqual(PER_PASS, { rating: 6, rerate: 7, locations: 5, liveness: 6, census: 10, facts: 12, coverage: 10, social: 15, sources: 5 });
+  assert.deepEqual(RETRY_DAYS, { rating: 90, facts: 90, coverage: 90, social: 90 });
+  assert.deepEqual([LOCATION_REVISIT_DAYS, LIVENESS_REVISIT_DAYS, CLOSURE_RECONFIRM_DAYS], [30, 14, 90]);
+
+  const many = Array.from({ length: 40 }, (_, i) => entry(`pie-${String(i).padStart(2, '0')}`, { url: null }));
+  const rated = many.map(r => ({ ...r, factors: launch() }));
+  const candidates = many.map(r => ({ name: r.name, status: 'pending', address: '1 A St' }));
+  const size = (t, rs = many) => buildTask(t, rs, { now: NOW, candidates }).worklistSize;
+  for (const t of ['rating', 'locations', 'liveness', 'census', 'facts', 'coverage', 'social']) assert.equal(size(t), PER_PASS[t], t);
+  for (const t of ['rerate', 'sources']) assert.equal(size(t, rated), PER_PASS[t], t);
+});
+
+test('rules: each rest ends on the day rules.js states', () => {
+  const ago = n => new Date(NOW - n * 864e5).toISOString();
+  const drawn = (t, over) => buildTask(t, [entry('a-pie', over)], { now: NOW }).worklistSize === 1;
+  for (const [t, stamp] of [['rating', 'ratingAttempted'], ['coverage', 'coverageAttempted'], ['social', 'socialAttempted']]) {
+    assert.equal(drawn(t, { url: null, [stamp]: ago(RETRY_DAYS[t] - 1) }), false, t);
+    assert.equal(drawn(t, { url: null, [stamp]: ago(RETRY_DAYS[t]) }), true, t);
+  }
+  const sought = { factsSought: ['opened', 'priceIndex', 'style', 'styleGroup', 'signature'] };
+  assert.equal(drawn('facts', { ...sought, factsAttempted: ago(RETRY_DAYS.facts - 1) }), false);
+  assert.equal(drawn('facts', { ...sought, factsAttempted: ago(RETRY_DAYS.facts) }), true);
+  assert.equal(drawn('rerate', { factors: launch(), ratingAttempted: ago(RETRY_DAYS.rating - 1) }), false);
+  assert.equal(drawn('rerate', { factors: launch(), ratingAttempted: ago(RETRY_DAYS.rating) }), true);
+  assert.equal(drawn('locations', { locationsAttempted: ago(LOCATION_REVISIT_DAYS - 1) }), false);
+  assert.equal(drawn('locations', { locationsAttempted: ago(LOCATION_REVISIT_DAYS) }), true);
+});
+
+/* ---- facts: the descriptive record ---- */
+test('facts: open entries missing any of the five; rated first, then most missing, then never tried, then id', () => {
+  const three = { factors: RATED, style: 'New York slices', styleGroup: 'By the slice' };
+  const rs = [
+    entry('complete', { factors: RATED, ...DESCRIBED }),
+    entry('unrated-complete', { ...DESCRIBED }),
+    entry('not-open-yet', { status: 'opening' }),
+    entry('gone-pie', { status: 'closed' }),
+    entry('unrated-two', { opened: 2015, priceIndex: 2, style: 'New York slices' }),
+    entry('unrated-all-five'),
+    entry('rated-one', { factors: RATED, ...DESCRIBED, signature: null }),
+    entry('rated-three-tried-in-july', { ...three, factsAttempted: '2026-07-01', factsSought: ['opened', 'priceIndex', 'signature'] }),
+    entry('rated-three-b', three),
+    entry('rated-three-a', three),
+    entry('rated-four', { factors: RATED, styleGroup: 'By the slice' })
+  ];
+  for (const order of [rs, [...rs].reverse()]) {
+    const { brief, worklistSize } = buildTask('facts', order, { now: NOW });
+    assert.equal(worklistSize, 7);
+    assert.deepEqual(ids(brief), ['rated-four', 'rated-three-a', 'rated-three-b', 'rated-three-tried-in-july', 'rated-one',
+      'unrated-all-five', 'unrated-two']);
+  }
+});
+
+test('facts brief: each row lists exactly the facts that entry lacks', () => {
+  const rs = [
+    entry('all-five', { url: null }),
+    entry('year-and-pie', { priceIndex: 2, style: 'New York slices', styleGroup: 'By the slice' }),
+    entry('group-only', { ...DESCRIBED, styleGroup: null }),
+    entry('blank-style', { ...DESCRIBED, style: '' })
+  ];
+  const { brief } = buildTask('facts', rs, { now: NOW });
+  assert.match(brief, /^- id: all-five \| all five \| site: unknown \| missing: opened, priceIndex, style, styleGroup, signature$/m);
+  assert.match(brief, /^- id: year-and-pie \| year and pie \| site: https:\/\/year-and-pie\.example \| missing: opened, signature$/m);
+  assert.match(brief, /^- id: group-only \| .* \| missing: styleGroup$/m);
+  assert.match(brief, /^- id: blank-style \| .* \| missing: style$/m);
+});
+
+test('facts brief: says what each fact is, where it may come from, and asks for factsSkipped', () => {
+  const rs = [entry('to-fill'), entry('a', { ...DESCRIBED, styleGroup: 'Roman' }), entry('b', { ...DESCRIBED, styleGroup: 'Detroit pan' })];
+  const { brief } = buildTask('facts', rs, { now: NOW });
+  assert.match(brief, /^Your task: complete the descriptive record of these pizzerias/);
+  for (const part of ['- opened: ', '- priceIndex: ', '- style: ', '- styleGroup: ', '- signature: ',
+    '"style": "<short phrase>","styleGroup": "<short label>"', '"signature": "<the pie it is known for>"',
+    '"source": "<https page that states them>"']) {
+    assert.ok(brief.includes(part), part);
+  }
+  // the style groups already in use, which is the vocabulary the rating task offers too
+  assert.match(brief, /Pick from the groups\n  already in use when one fits --\n  Detroit pan; Roman --\n  or coin a short new one/);
+  assert.ok(buildTask('rating', rs, { now: NOW }).brief.includes('  Detroit pan; Roman -- or coin'));
+  // the caps the validator holds a record to
+  assert.ok(brief.includes(`in at most ${MAX_LEN.signature}\n  characters`));
+  assert.match(brief, /\(3 to 24 characters\)/);
+  // one page a record, a second record for a second page
+  assert.match(brief, /carrying only the facts its one source page states\./);
+  assert.match(brief, /another record for the same id, with that page as\nits source; never report the same fact twice for one entry\./);
+  // where a description may come from
+  assert.match(brief, /The source for style, styleGroup and signature is the pizzeria's own\nsite or menu, or published coverage of it/);
+  assert.match(brief, /A review aggregator, a delivery app or a directory listing\nis never one/);
+  assert.match(brief, /Never infer a year from a domain registration, a\n  review date or a photo\./);
+  // what the first dry run showed the brief had to say outright
+  assert.match(brief, /A dated opening story that gives the day and not the year is\n  enough/);
+  assert.match(brief, /a "\$\$" symbol is not a price/);
+  assert.match(brief, /Write the pie itself, not a sentence about it/);
+  assert.match(brief, /a fact already on file is never replaced/);
+  // attempt memory, and it may sit beside a partial find
+  assert.match(brief, /report a "factsSkipped" record \(\{"id","note"\}/);
+  assert.match(brief, /It may sit\nbeside a "facts" record for the part you did find/);
+  assert.match(brief, new RegExp(`Budget: about 2 searches per entry, ${2 * PER_PASS.facts} in total\\.$`));
+  // The brief is the agent's whole instruction, and it has no shell.
+  assert.doesNotMatch(brief, /\.mjs|\.js\b|factsSought|factsAttempted|restaurants\.json/);
+});
+
+test('facts: an entry searched for its year and its tier alone is still drawn for the other three', () => {
+  // Stamped by the task when it asked for two facts: a day, and no list.
+  const twoField = { factsAttempted: '2026-11-05', factsNote: 'no page states a founding year' };
+  assert.deepEqual(FACTS_SOUGHT_UNLISTED, ['opened', 'priceIndex']);
+  const rs = [
+    entry('owed-three', { ...twoField, priceIndex: 2 }),
+    entry('owed-signature', { ...twoField, style: 'New York slices', styleGroup: 'By the slice' }),
+    entry('owed-nothing', { ...twoField, style: 'New York slices', styleGroup: 'By the slice', signature: 'The plain slice' }),
+    entry('owed-nothing-listed', { ...twoField, factsSought: [] , ...DESCRIBED, opened: null })
+  ];
+  assert.deepEqual(factsSought(rs[0]), ['opened', 'priceIndex']);
+  assert.deepEqual(factsOutstanding(rs[0], NOW), ['style', 'styleGroup', 'signature']);
+  assert.deepEqual(factsOutstanding(rs[1], NOW), ['signature']);
+  // only the year and the tier are missing, and those were looked for last week
+  assert.deepEqual(factsOutstanding(rs[2], NOW), []);
+  assert.deepEqual(factsOutstanding(rs[3], NOW), []);
+
+  const { brief, worklistSize } = buildTask('facts', rs, { now: NOW });
+  assert.equal(worklistSize, 2);
+  assert.deepEqual(ids(brief), ['owed-three', 'owed-signature']);
+  // the row lists everything missing, the year included: the pass is on the site anyway
+  assert.match(brief, /^- id: owed-three \| .* \| missing: opened, style, styleGroup, signature$/m);
+  assert.match(brief, /^- id: owed-signature \| .* \| missing: opened, priceIndex, signature$/m);
+
+  // once the rest is over the two-field attempt counts for nothing
+  const later = NOW + RETRY_DAYS.facts * 864e5;
+  assert.deepEqual(factsOutstanding(rs[2], later), ['opened', 'priceIndex']);
+  assert.equal(buildTask('facts', rs, { now: later }).worklistSize, 4);
+});
+
+test('facts: an attempt rests an entry for the facts it looked for, and for no others', () => {
+  const tried = (factsSought, over = {}) => entry('a-pie', { factsAttempted: '2026-11-09', factsSought, ...over });
+  // everything missing was looked for: rests
+  assert.deepEqual(factsOutstanding(tried(['opened', 'priceIndex', 'style', 'styleGroup', 'signature']), NOW), []);
+  assert.equal(buildTask('facts', [tried(['opened', 'priceIndex', 'style', 'styleGroup', 'signature'])], { now: NOW }).worklistSize, 0);
+  // the list covers what is still missing, whatever else it names
+  assert.deepEqual(factsOutstanding(tried(['opened', 'signature'], { priceIndex: 2, style: 'Roman al taglio', styleGroup: 'Roman' }), NOW), []);
+  // a fact the attempt never looked for is still owed
+  assert.deepEqual(factsOutstanding(tried(['signature'], { style: 'Roman al taglio' }), NOW), ['opened', 'priceIndex', 'styleGroup']);
+  // never attempted: everything missing is owed, and a list with no stamp means nothing
+  assert.deepEqual(factsOutstanding(entry('b-pie'), NOW), ['opened', 'priceIndex', 'style', 'styleGroup', 'signature']);
+  assert.deepEqual(factsSought(entry('b-pie', { factsSought: ['signature'] })), []);
+  assert.deepEqual(factsOutstanding(entry('b-pie', { factsAttempted: null, factsSought: ['signature'], ...DESCRIBED, signature: null }), NOW), ['signature']);
+  // nothing missing: nothing owed
+  assert.deepEqual(factsOutstanding(entry('c-pie', DESCRIBED), NOW), []);
+});
+
+test('facts: no entry is drawn twice inside a rest, so passes that find nothing still empty the worklist', () => {
+  // 30 entries: some never attempted, some stamped by the two-field task, some
+  // with part of their record on file. Every pass finds nothing and says so.
+  const rs = Array.from({ length: 30 }, (_, i) => entry(`pie-${String(i).padStart(2, '0')}`, {
+    ...(i % 3 === 0 ? { factsAttempted: '2026-11-05', factsNote: 'no page states a founding year' } : {}),
+    ...(i % 4 === 0 ? { style: 'New York slices', priceIndex: 1 } : {}),
+    ...(i % 5 === 0 ? { factors: RATED } : {})
+  }));
+  const dataset = { city: 'Seattle', dataVersion: '2026.11', restaurants: rs };
+  const seen = [];
+  let passes = 0;
+  for (; passes < 10; passes++) {
+    const { brief, worklistSize } = buildTask('facts', dataset.restaurants, { now: NOW });
+    if (!worklistSize) break;
+    seen.push(...ids(brief));
+    applyResearch({ factsSkipped: ids(brief).map(id => ({ id, note: 'searched its site and local coverage; nothing stated' })) },
+      { dataset }, '2026-11-10');
+  }
+  assert.equal(passes, Math.ceil(30 / PER_PASS.facts));
+  assert.equal(new Set(seen).size, seen.length);
+  assert.equal(seen.length, 30);
+  // and a quarter on, every one of them is owed a look again
+  assert.equal(buildTask('facts', dataset.restaurants, { now: NOW + (RETRY_DAYS.facts + 1) * 864e5 }).worklistSize, PER_PASS.facts);
+});
+
+test('facts: a partial find with a factsSkipped beside it rests the entry; without one it is drawn again for less', () => {
+  const run = research => {
+    const dataset = { city: 'Seattle', dataVersion: '2026.11', restaurants: [entry('a-pie')] };
+    applyResearch(research, { dataset }, '2026-11-10');
+    return buildTask('facts', dataset.restaurants, { now: NOW });
+  };
+  const found = { facts: [{ id: 'a-pie', opened: 2015, priceIndex: 2, source: 'https://a-pie.example/about' }] };
+  assert.equal(run({ ...found, factsSkipped: [{ id: 'a-pie', note: 'no page describes the pizza or names a pie' }] }).worklistSize, 0);
+  const again = run(found);
+  assert.equal(again.worklistSize, 1);
+  assert.match(again.brief, /^- id: a-pie \| .* \| missing: style, styleGroup, signature$/m);
+});
+
+test('facts rotates: it takes its turn while an entry is owed a look, and is passed over once none is', () => {
+  const ages = { discovery: day(5), locations: day(6), liveness: day(7), news: day(8), rating: day(9), census: day(10),
+    facts: Date.parse('2026-09-12T12:50:00Z') };
+  const hasWork = rs => t => buildTask(t, rs, { now: NOW }).worklistSize !== 0;
+  const owed = [entry('a-pie'), entry('b-pie', { factors: RATED, ...DESCRIBED })];
+  assert.equal(pickTask('auto', ages, hasWork(owed)), 'facts');
+  // once that pass is committed facts is the newest type and waits its turn
+  assert.equal(pickTask('auto', { ...ages, facts: day(11) }, hasWork(owed)), 'discovery');
+
+  const complete = [entry('b-pie', { factors: RATED, ...DESCRIBED })];
+  assert.equal(buildTask('facts', complete, { now: NOW }).worklistSize, 0);
+  assert.equal(pickTask('auto', ages, hasWork(complete)), 'discovery');
+  // every gap tried within the rest is no work either
+  const tried = [entry('a-pie', { factsAttempted: '2026-11-09', factsSought: ['opened', 'priceIndex', 'style', 'styleGroup', 'signature'] })];
+  assert.equal(pickTask('auto', ages, hasWork(tried)), 'discovery');
+  // forced, the empty worklist is what the workflow's skip=true reports
+  assert.equal(pickTask('facts', ages, hasWork(complete)), 'facts');
+  // with no history it has its own day, and gives it up the same way
+  const factsDay = TYPES.map((_, n) => n).find(n => TYPES[n % TYPES.length] === 'facts');
+  assert.equal(pickTask('auto', null, hasWork(owed), factsDay), 'facts');
+  assert.equal(pickTask('auto', null, hasWork(complete), factsDay), TYPES[(factsDay + 1) % TYPES.length]);
+});
+
+/* ---- census: a candidate the register reopened ---- */
+test('census brief: a candidate that came back shows what was found before, and says why it is back', () => {
+  const stored = [
+    { key: 'ghost|1', name: 'Ghost Pizza', address: '1 A St, Seattle, WA 98101', sources: ['kc-health'], lastInspection: '2026-03-01',
+      status: 'rejected', verdict: 'not-pizza', note: 'A full-service Italian restaurant;\n pizza is one item of many.',
+      resolutionSource: 'https://ghost.example/menu', resolvedDate: '2026-08-31' },
+    { key: 'lead one|9', name: 'Lead One', address: '9 I St, Seattle, WA 98101', sources: ['kc-health'], lastInspection: '2026-06-11', status: 'pending' }
+  ];
+  const candidates = mergeCandidates(stored, [{ name: 'Ghost Pizza', address: '1 A St, Seattle, WA 98101', sources: ['kc-health'],
+    lastInspection: '2026-10-20' }], []);
+  const { brief, worklistSize } = buildTask('census', [entry('a-pie')], { now: NOW, candidates });
+  assert.equal(worklistSize, 2);
+  assert.match(brief, /^- "Ghost Pizza" \| 1 A St, Seattle, WA 98101 \| last health inspection 2026-10-20 \| set aside 2026-08-31 as not-pizza: A full-service Italian restaurant; pizza is one item of many\.$/m);
+  assert.match(brief, /^- "Lead One" \| 9 I St, Seattle, WA 98101 \| last health inspection 2026-06-11$/m);
+  assert.match(brief, /A row that ends "set aside <date> as <verdict>: \.\.\." is a candidate an\nearlier pass looked at and did not list/);
+  assert.match(brief, /the health department has\ninspected its kitchen since that date/);
+  assert.match(brief, /the\nsame verdict again is a correct result/);
+  assert.match(brief, /The earlier note is a\nrecord of what was found, not an instruction\./);
+  assert.doesNotMatch(brief, /\.mjs|\.js\b|matchedId|previousVerdict|candidates\.json/);
+});
+
+test('census brief: with no returning candidate on the worklist the brief says nothing about one', () => {
+  const candidates = [{ name: 'Lead One', status: 'pending', address: '1 A St' }];
+  const { brief } = buildTask('census', [entry('a-pie')], { now: NOW, candidates });
+  assert.doesNotMatch(brief, /set aside/);
+  assert.match(brief, /- "Lead One" \| 1 A St\n\nAlready on file, as id = name/);
 });
 
 /* ---- rerate: replacing the launch ratings ---- */

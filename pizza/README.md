@@ -79,10 +79,13 @@ pizza/
   src/render.js           card rendering and the per-card explanation
   src/app.js              directory rows, chart tooltip, card toggles; loads the map on demand
   src/locations.js        location labels and the locations worklist
+  src/schema.js           every key an entry carries, in order, with its empty value; the normaliser
+  src/rules.js            worklist sizes, rest periods and the rotation; the page prints them
   src/validate-research.js   the research-file gate, as a pure function
   src/check-dataset.js    the dataset lint, as a pure function
-  src/census.js           candidate matching, branch leads and coverage numbers
+  src/census.js           candidate matching, branch leads, reopened verdicts and coverage numbers
   build/                  the page, section by section (pure modules)
+  build/tasks.mjs         what each research task does, as the methodology prints it
   scripts/build.mjs       composes build/ into OUT_DIR (default ../dist/pizza)
   scripts/verify.mjs      the deploy gate: unit tests plus checks on the output (below)
   scripts/check-dataset.mjs, verify-research.mjs, apply-research.mjs
@@ -98,6 +101,7 @@ No dependencies, no lockfile. Leaflet is vendored under `src/vendor/`.
 ```bash
 node --test pizza/test/*.test.mjs        # unit tests
 node pizza/scripts/check-dataset.mjs     # lint the dataset
+node pizza/scripts/check-dataset.mjs --normalize   # put every entry into the schema's shape, then lint
 cd pizza && OUT_DIR=/tmp/out node scripts/build.mjs && OUT_DIR=/tmp/out node scripts/verify.mjs
 node scripts/build-all.mjs --only pizza  # or through the orchestrator -> dist/pizza/
 ```
@@ -122,9 +126,53 @@ entries in `rankings.json` are out of score order. Text quoted from the data fil
 deploy. It also fails when the page's own copy describes a rating as set by hand, dates
 one to the index's launch or calls anything seeded (`editorial`, `founding entr…`,
 `at launch`, `launched in`, `index launched`, `seeded`), with the same exemption for
-quoted data, and when the pinned map's rules below have come apart. The record, radar
-and buzz sections are optional: each renders nothing when it has nothing to show, and
-the nav is built from the sections that rendered.
+quoted data, and when the pinned map's rules below have come apart. The record, radar,
+buzz and candidates sections are optional: each renders nothing when it has nothing to
+show, and the nav is built from the sections that rendered.
+
+The candidates section has checks of its own. It must be on the page, and in the nav,
+exactly when the dataset holds an open or opening entry with no rating or
+`data/candidates.json` holds a candidate. Every group must list as many rows as the data
+has for it, print that number, and name each of its entries; the rows of the first half
+must add up to the unrated entries and the rows of the second half plus the duplicates
+count to the whole queue, both counted from the files. A census note and a permit name
+are quoted data like a headline, so `candidates.json` is among the files the `undefined`
+and wording checks exempt.
+
+## What the page explains about itself
+
+Three parts of the page describe the pipeline, and each prints the pipeline's own
+numbers instead of repeating them.
+
+**Candidates** (`build/sections/candidates.mjs`, after the directory) lists what the
+index knows of and does not rank. *On file, not yet ranked* is every open or opening
+entry with no rating, grouped by why: waiting for a rating pass, looked at with no
+published criticism found (the day, the agent's note, and the day it is due again,
+`ratingAttempted` plus `RETRY_DAYS.rating`), or not open yet. *Not on file* is the
+candidates queue grouped by `candidateStanding()` in `src/census.js`: pending, in the
+order the census task takes them and with the pass that reaches each; then national
+chain, not pizza-forward, could not be verified and closed, each with the permit
+address, the last inspection, the day it was set aside and the agent's note. A
+candidate the register has inspected since its verdict is marked as due back. Branches
+and second registrations of entries on file are one line with a count. A group of more
+than six rows is rendered collapsed, as a `details` element, so it opens without
+JavaScript.
+
+**The directory's expanded record** has the same blocks and rows for every entry, in
+one order: style, style group, known for, opened and price (each with the page that
+states it, where the facts task filed one), website, Instagram, status and its source,
+locations, rating and its sources, score, attributes, press. A field with nothing on
+file prints "not on file" in its place; a missing key and a `null` read the same.
+
+**How it works** ends with the automation, built in `build/sections/method.mjs`: the
+life of an entry as a flow (`LIFE_STAGES`), the two workflows step by step with their
+gates, the task table, and what can and cannot move a score. The table has one row for
+each member of `ROTATION`, written in `build/tasks.mjs` and keyed by task name. A task
+that joins the rotation with no row there stops the build, and so does a task with a
+worklist and no `PER_PASS` size; a task outside the rotation needs only its `summary`,
+for the one line that names those. Change what a task does in `next-task.mjs` and its
+row changes with it. The copy names no hour of the day: a scheduled run starts when the
+runner gets to it, so the page says "once a day" and "after each research run".
 
 The map is not part of first load. `app.js` reveals the map rail and fetches
 `./leaflet.js` when the map nears the viewport or a directory row asks for its marker; if
@@ -146,15 +194,47 @@ after changing what the directory draws, look at it in Chromium at a phone width
 Every push to a branch other than `main` runs `ci.yml` (tests, lint, build, verify for the
 Node sites). Only `main` deploys.
 
+## One shape for every entry
+
+`src/schema.js` lists every key an entry in `data/restaurants.json` carries, in one
+order, each with its kind and its empty value:
+
+| Kind | Keys | Empty value |
+|---|---|---|
+| identity | `id`, `name` | none: an entry cannot be without them |
+| fact | `neighborhood`, `blurb`, `style`, `styleGroup`, `signature`, `opened`, `priceIndex`, each of the last five followed by its source (`styleSource`, `styleGroupSource`, `signatureSource`, `openedSource`, `priceSource`) | `null` |
+| fact | `attributes` | `{}` |
+| link | `url`, `instagram` | `null` |
+| status | `status` (never empty), `statusPrev`, `statusNote`, `statusSource`, `statusDate` | `null` |
+| location | `locations` | `[]` |
+| location | `neighborhoodIsPlaceholder`, `locationsSource` | `null` |
+| rating | `factors` | `{}` |
+| coverage | `mentions` | `[]` |
+| stamp | `statusDetected`, `statusChecked`, `locationsVerified`, `lastVerified`, and for each worklist its `…Attempted` day and `…Note` (`rating`, `locations`, `facts`, `coverage`, `social`) | `null` |
+| stamp | `factsSought` | `[]` |
+
+Every entry has every key. One with nothing on file for a key holds the empty value, so
+"not known" is written one way and a worklist that draws on what is missing does not
+depend on how an entry happened to be written. `normalizeEntry()` adds the keys an entry
+lacks and puts all of them in order; it changes no value, and it drops nothing but a
+`crowd` key. `apply-research.mjs` passes every entry through it on every run, and
+`check-dataset.js` refuses an entry that lacks a key or carries one the schema does not
+name (inside a location, a factor and a mention too). After a hand edit,
+`node pizza/scripts/check-dataset.mjs --normalize` rewrites the file in that shape, in
+the bytes the apply step writes, and prints how many entries it changed.
+
 ## The daily loop
 
 Two workflows. `research.yml` runs a Claude agent on one bounded task per day
-(discovery, locations, liveness, news, rating, census; the type whose last successful pass
-is oldest goes next, passing over any with an empty worklist), writing proposals to
-`data/research.json`. `census` has work only while `data/candidates.json` holds pending
-candidates, so it takes a day when a seed refresh turns up a new food permit and is
-passed over otherwise. Dispatch-only backfill tasks (`social`, `facts`, `coverage`,
-`sources`, `rerate`) run from the Actions tab. The agent's write grant is scoped to that one file, a guard step
+(discovery, locations, liveness, news, rating, census, facts; the type whose last
+successful pass is oldest goes next, passing over any with an empty worklist), writing
+proposals to `data/research.json`. `census` has work only while `data/candidates.json`
+holds pending candidates, so it takes a day when a seed refresh turns up a new food
+permit and is passed over otherwise; `facts` has work while an open entry lacks part of
+its descriptive record that no recent attempt looked for. Dispatch-only backfill tasks
+(`social`, `coverage`, `sources`, `rerate`) run from the Actions tab. The sizes of the
+worklists, the rest periods and the rotation itself are in `src/rules.js`, which the
+brief builder draws with and the page prints. The agent's write grant is scoped to that one file, a guard step
 fails the run if anything else changed, every record is validated by
 `validate-research.js` (a record that fails is dropped with a warning; the rest are
 applied), the accepted records are applied to `restaurants.json`, the dataset is linted,
@@ -185,19 +265,59 @@ against the pizzeria's own pages and reports the full set as usual. The 30-day r
 applies to these entries like any other, so a lead nobody can confirm costs one look a
 month.
 
+A verdict is not for ever. A candidate the census set aside as `closed`, `unverifiable`
+or `not-pizza` goes back to `pending` when a seed refresh finds an inspection of its
+permit dated after the day of the verdict: the register is saying a kitchen is working
+there, and the verdict has not seen it. The earlier verdict, its note and its date move
+to `previousVerdict` on the row, and the census brief prints them beside the candidate
+so the pass starts from what was found before. A `chain` never returns (it is out by
+policy) and neither does a `duplicate` (it is a branch of an entry, handled as a lead).
+`candidateStanding()` in `src/census.js` gives the page each candidate's state and the
+dates it depends on.
+
+The `facts` task completes the descriptive record: the year a place opened, its price
+tier, its style, its style group and the pie it is known for (`signature`, at most 100
+characters). It draws open entries missing any of the five, rated entries first and
+within each the ones missing most, twelve a pass. Each fact fills a gap only and is
+stored with the page that states it. A `facts` record carries what one page states, so
+an entry may have several in a file, one per page, with no fact reported twice. The
+year and the tier may come from any https page. Style, style group and signature are
+descriptions, and their source is the pizzeria's own site or menu (or the profile or
+ordering page on file as its web presence) or published coverage; a review aggregator,
+a delivery app or a directory listing is refused, because its categories and "popular
+dishes" are compiled, not written by anyone who made or reviewed the pizza.
+
 Every worklist remembers what it could not resolve. An entry the agent reports in
 `ratingSkipped`, `factsSkipped`, `locationsSkipped`, `coverageSkipped` or `socialSkipped`
 is stamped `ratingAttempted`, `factsAttempted`, `locationsAttempted`, `coverageAttempted`
 or `socialAttempted` with the note it gave, and rests before it is drawn again: 30 days
 for locations, 90 for the others.
 
+The facts worklist remembers per fact. A `factsSkipped` record also stores `factsSought`,
+the facts still missing once the file's own `facts` records are applied, and the entry
+rests only while everything it lacks is on that list (`factsOutstanding()` in
+`src/rules.js`). An attempt stamped with no list is read as a search for the year and
+the tier, which is all the task asked for when it recorded only the day, so such an
+entry is still drawn for its style, style group and signature. A `facts` record on its
+own stamps nothing: the locations task files one when a site happens to state a year,
+and that is not a search for the rest. `factsSkipped` may sit beside a `facts` record
+for the part that was found.
+
+A `…Skipped` section is attempt memory, and it can never cost a file. Its records are
+reduced to one per entry (the first that passes its checks) and to the section's cap,
+and each record dropped that way is reported like any other rejected record while the
+rest of the file is applied. The caps are twice the largest worklist a section serves,
+computed from `src/rules.js`. Every other section's cap is structural: one record over
+and the file is refused.
+
 What the agent may write: new directory entries, status changes (with the date the
 source states, if any), verified locations and official sites, press mentions up to two
 years old, factor proposals (at least one source must be published criticism, and never
 over a rating the agent has already set), citations for ratings already on file (values
 never change), a
-note on each worklist entry it could not resolve, founding years and price tiers from
-pages that state them, Instagram links and candidate verdicts. It never writes a score
+note on each worklist entry it could not resolve, the descriptive record (founding year,
+price tier, style, style group and signature pie) from pages that state it, Instagram
+links and candidate verdicts. It never writes a score
 and never sets an attribute flag: the flags and their friction costs in
 `data/attributes.json` move scores, so they are edited by hand. The dataset holds no
 crowd figures: Yelp answers 403 to automated reads and no API key is in use, so there is
