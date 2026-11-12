@@ -8091,7 +8091,7 @@
       "styleGroupSource": "https://www.westsideseattle.com/node/59543",
       "signature": null,
       "signatureSource": null,
-      "opened": null,
+      "opened": 2026,
       "openedSource": null,
       "priceIndex": 2,
       "priceSource": "https://www.westsideseattle.com/node/59507",
@@ -8117,9 +8117,43 @@
       "locationsSource": null,
       "locationsAttempted": null,
       "locationsNote": null,
-      "factors": {},
-      "lastVerified": null,
-      "ratingAttempted": null,
+      "factors": {
+        "craft": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.westsideseattle.com/node/59543",
+          "sources": [
+            "https://www.westsideseattle.com/node/59543",
+            "https://phinneywood.com/2026/01/autumn-restaurant-transitioning-to-g-h-pasta-pizza/"
+          ],
+          "note": "Westside Seattle's review of this General Harvest-group concept (at its sister Sunrise Heights/West Seattle location, same brand and menu format) called the food 'simple, unpretentious and excellent,' singling out a cracker-crust 'Classic' pizza with twice-cooked pepperoni and house-made mozzarella. Phinneywood's coverage of the Phinney Ridge location opening (replacing Autumn, from chef Brian Clevenger's acclaimed General Harvest group behind Vendemmia, Raccolto and Haymaker) describes an affordable, family-friendly casual format with rotating pizza specials.",
+          "date": "2026-11-12"
+        },
+        "distinctiveness": {
+          "value": 5.5,
+          "setBy": "agent",
+          "source": "https://www.westsideseattle.com/node/59543",
+          "sources": [
+            "https://www.westsideseattle.com/node/59543",
+            "https://phinneywood.com/2026/01/autumn-restaurant-transitioning-to-g-h-pasta-pizza/"
+          ],
+          "note": "Westside Seattle's review of this General Harvest-group concept (at its sister Sunrise Heights/West Seattle location, same brand and menu format) called the food 'simple, unpretentious and excellent,' singling out a cracker-crust 'Classic' pizza with twice-cooked pepperoni and house-made mozzarella. Phinneywood's coverage of the Phinney Ridge location opening (replacing Autumn, from chef Brian Clevenger's acclaimed General Harvest group behind Vendemmia, Raccolto and Haymaker) describes an affordable, family-friendly casual format with rotating pizza specials.",
+          "date": "2026-11-12"
+        },
+        "critical": {
+          "value": 6.5,
+          "setBy": "agent",
+          "source": "https://www.westsideseattle.com/node/59543",
+          "sources": [
+            "https://www.westsideseattle.com/node/59543",
+            "https://phinneywood.com/2026/01/autumn-restaurant-transitioning-to-g-h-pasta-pizza/"
+          ],
+          "note": "Westside Seattle's review of this General Harvest-group concept (at its sister Sunrise Heights/West Seattle location, same brand and menu format) called the food 'simple, unpretentious and excellent,' singling out a cracker-crust 'Classic' pizza with twice-cooked pepperoni and house-made mozzarella. Phinneywood's coverage of the Phinney Ridge location opening (replacing Autumn, from chef Brian Clevenger's acclaimed General Harvest group behind Vendemmia, Raccolto and Haymaker) describes an affordable, family-friendly casual format with rotating pizza specials.",
+          "date": "2026-11-12"
+        }
+      },
+      "lastVerified": "2026-11-12",
+      "ratingAttempted": "2026-11-12",
       "ratingNote": null,
       "mentions": [
         {

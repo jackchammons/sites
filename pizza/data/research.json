@@ -2,28 +2,33 @@
   "updated": "2026-11-12T00:00:00Z",
   "mentions": [
     {
-      "id": "stevies-famous",
-      "title": "Former Zeek's Phinney location to become Stevie's Famous",
-      "url": "https://phinneywood.com/2025/11/former-zeeks-phinney-location-to-become-stevies-famous/",
+      "id": "g-h-pasta-pizza",
+      "title": "Autumn Restaurant transitioning to G.H. Pasta & Pizza",
+      "url": "https://phinneywood.com/2026/01/autumn-restaurant-transitioning-to-g-h-pasta-pizza/",
       "source": "Phinneywood",
-      "date": "2025-11-05",
+      "date": "2026-01-12",
       "kind": "opening"
-    },
-    {
-      "id": "stevies-famous",
-      "title": "Stevie's Famous: Beacon Hill",
-      "url": "https://theinfatuation.com/seattle/reviews/stevies-famous-beacon-hill",
-      "source": "The Infatuation",
-      "date": "2025-03-31",
-      "kind": "mention"
-    },
-    {
-      "id": "stevies-famous",
-      "title": "Best Pizza: Stevie's Famous Pizza",
-      "url": "https://www.seattlemag.email/food-drink/best-pizza-2024/",
-      "source": "Seattle Magazine",
-      "date": "2024-11-14",
-      "kind": "ranking"
     }
+  ],
+  "factorRatings": [
+    {
+      "id": "g-h-pasta-pizza",
+      "craft": 6.5,
+      "distinctiveness": 5.5,
+      "criticScore": 6.5,
+      "opened": 2026,
+      "priceIndex": 2,
+      "styleGroup": "Neighborhood",
+      "sources": [
+        "https://www.westsideseattle.com/node/59543",
+        "https://phinneywood.com/2026/01/autumn-restaurant-transitioning-to-g-h-pasta-pizza/"
+      ],
+      "note": "Westside Seattle's review of this General Harvest-group concept (at its sister Sunrise Heights/West Seattle location, same brand and menu format) called the food 'simple, unpretentious and excellent,' singling out a cracker-crust 'Classic' pizza with twice-cooked pepperoni and house-made mozzarella. Phinneywood's coverage of the Phinney Ridge location opening (replacing Autumn, from chef Brian Clevenger's acclaimed General Harvest group behind Vendemmia, Raccolto and Haymaker) describes an affordable, family-friendly casual format with rotating pizza specials."
+    }
+  ],
+  "rejected": [
+    "mentions[0]: date is older than 730 days",
+    "ratingSkipped[0]: note is longer than 600 characters",
+    "ratingSkipped[1]: note is longer than 600 characters"
   ]
 }
