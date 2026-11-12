@@ -1,65 +1,33 @@
 {
-  "updated": "2026-11-12T00:00:00Z",
+  "updated": "2026-11-12T18:00:00Z",
+  "links": [
+    {
+      "id": "deleo-bros-pizza",
+      "website": "https://deleobrotherspizza.com/",
+      "instagram": "https://www.instagram.com/deleobrospizza/",
+      "source": "https://whatnow.com/?p=224132"
+    }
+  ],
   "socialSkipped": [
     {
-      "id": "alberonas-davinci-pizza-pasta",
-      "note": "Searched 'Alberona's DaVinci Pizza & Pasta Ballard Seattle website' — only Caviar/Slice/aggregator listings (3624 Leary Way NW) turned up, no official domain found. No Instagram handle found in results or named by any outlet."
+      "id": "starlas",
+      "note": "Checked starlaspizza.com (no Instagram link in header/footer, only an email address and a Google Maps share link). Searched 'Starla's Pizza Capitol Hill Seattle instagram' and 'site:instagram.com starla's pizza seattle'; coverage (WhatNow, Secret Seattle) mentions the owners posted reopening news on Instagram but never states the handle. Left blank rather than guess."
     },
     {
-      "id": "razzis-pizzeria",
-      "note": "Website on file is unresolved between razzis.com and razzispizza.com. Retried fetching https and http razzispizza.com/about.html — both failed with certificate verification errors, so the domain could not be confirmed live. Instagram already on file; no new website found."
+      "id": "a-k-pizza",
+      "note": "Checked ak-pizza.com (page returned no header/footer/social content). Searched 'A.K. Pizza Othello Seattle instagram' and 'site:instagram.com \"A.K. Pizza\" seattle'; found a ma.to listing using handle 'akpizzaguy' but no article or site confirms it is the shop's own account, so left blank rather than guess."
     },
     {
-      "id": "candela-pizza",
-      "note": "Searched 'Candela Pizza South Seattle official website' and for a candelapizza.com domain — only Seattle Food Truck, Atly and Live in Everett profiles turned up (truck based in Renton), no official domain found. Instagram already on file."
+      "id": "olympia-pizza-spaghetti-house-ii",
+      "note": "Checked olympiapizzaii.com (no Instagram link; only menu/login, app store, and maps links). Searched 'Olympia Pizza & Spaghetti House Wallingford instagram' and 'site:instagram.com \"Olympia Pizza\" Wallingford OR Seattle'; no handle found in any result for the Wallingford (II) location specifically."
     },
     {
-      "id": "numero-uno-pizza",
-      "note": "A FamHop listing names numerounopizzaseattle.com as the website, but fetching it 301-redirects to a Slice 'disabled shop' notice page, so the domain no longer serves a live site and can't be reported. Also searched for an Instagram handle — none found in results or named by any outlet."
+      "id": "pizza-pasta-bar",
+      "note": "pizzaandpastabar.com returned HTTP 403 and could not be fetched. Searched 'Pizza and Pasta Bar Pike Place Market instagram' and checked pikeplacemarket.org's tag page for the business, which only links the Market's own Instagram (instagram.com/pikeplacepublicmarket), not the restaurant's. No handle found."
     },
     {
-      "id": "dudez-woodfired-pizza",
-      "note": "A MapQuest 'Web' button resolves to dudezwoodfiredpizza.com; retried fetching both https and http — both failed with SSL handshake errors, so the site could not be opened to confirm it's live or find a social link. Instagram already on file."
-    },
-    {
-      "id": "fremont-pizza",
-      "note": "Searched 'Fremont Pizza Seattle website' and 'Fremont Pizza Seattle instagram' — only aggregator/delivery listings (3510 Fremont Ave N) turned up; no official domain or Instagram handle found in results or named by any outlet."
-    },
-    {
-      "id": "desi-pizza-kitchen",
-      "note": "Searched 'Desi Pizza Kitchen Queen Anne Seattle website' — only Slice/DoorDash/Uber Eats/Valpak listings turned up (2115 Queen Anne Ave N), no official domain found. No Instagram handle found."
-    },
-    {
-      "id": "magnolia-pizza-pasta",
-      "note": "Searched 'Magnolia Pizza & Pasta Seattle official website' — only MenuPages/Slice/WhatsVegan listings turned up (2120 W Emerson Pl), no official domain found. No Instagram handle found."
-    },
-    {
-      "id": "lucianos-pizza-pasta",
-      "note": "Searched 'Luciano's Pizza & Pasta Admiral West Seattle website' — only Uber Eats/Slice/DoorDash/WhatsVegan listings turned up (2341 California Ave SW), no official domain found. No Instagram handle found."
-    },
-    {
-      "id": "varlamos-pizzeria",
-      "note": "Searched 'Varlamos Pizzeria Laurelhurst Seattle website' — only Foursquare/MapQuest/Atly listings turned up (3617 NE 45th St); a MapQuest 'Website' button was referenced but its target URL wasn't shown, so no domain could be confirmed. No Instagram handle found."
-    },
-    {
-      "id": "jet-city-pizza",
-      "note": "Searched 'Jet City Pizza Wedgwood Seattle website' and '...instagram' — only MapQuest/DoorDash/ezCater/Birdeye listings for the 7500 25th Ave NE location turned up, no official domain or Instagram handle found."
-    },
-    {
-      "id": "sunny-hill",
-      "note": "An Atly listing names sunnyhillseattle.com as the website, but fetching https://www.sunnyhillseattle.com returned HTTP 403 Forbidden, so the page could not actually be opened to verify it or find an Instagram link. No Instagram handle found in search results."
-    },
-    {
-      "id": "pudge-bros-pizza",
-      "note": "Site on file is pudgebros.com. Fetching it (with and without www) returned HTTP 403 Forbidden both times, so the header/footer could not be checked for an Instagram link. Searched 'Pudge Bros pizza Seattle instagram' separately — no handle found in results."
-    },
-    {
-      "id": "ananas-pizzeria",
-      "note": "Site on file is ananaspizzeria.com. Fetched it but the page returned only a bare title with no header/footer/link content (JS-rendered), so no Instagram link could be located. Searched 'Ananas Pizzeria Seattle instagram' — no handle named by any outlet, only an unrelated photo-credit mention."
-    },
-    {
-      "id": "romano-pizza-pasta",
-      "note": "Site on file is romanopizzaandpasta.com. Fetched it — header/footer contain only Order, Home, Menu, Refund Policy links, a phone number and payment logos; no social media link present. Searched 'Romano Pizza & Pasta Delridge Seattle instagram' — no handle found."
+      "id": "sopranos-pizza-pasta-lake-city",
+      "note": "lakecitysopranos.com returned HTTP 403 and could not be fetched. Searched 'Soprano's Pizza & Pasta Lake City Seattle instagram' and 'site:instagram.com \"Soprano's\" Lake City pizza'; results were all directory/delivery listings or unrelated Soprano's locations (FL, MD, PA), no Instagram handle found for the Seattle Lake City location."
     }
   ]
 }

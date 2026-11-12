@@ -4909,7 +4909,9 @@
       "ratingAttempted": "2026-11-12",
       "ratingNote": "Searched for news/blog coverage of Soprano's Pizza & Pasta - Lake City (11754 15th Ave NE). Found only directory listings (MapQuest/Yelp mirror, Slice, Foursquare, Birdeye) and no Seattle Times, Seattle Met, Eater, or neighborhood-blog review of this specific location. Skipping for lack of published criticism.",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "Its site, https://lakecitysopranos.com/, returned HTTP 403 Forbidden on fetch and a wayback-machine fallback is unavailable in this environment, so the official page could not be read. A search turned up third-party listings placing Lake City at 11754 15th Ave NE 98125 and describing the lead address, 7729 24th Ave NW 98117, as a separate Soprano's location in Loyal Heights, but neither is confirmed against the pizzeria's own site, so no address is reported for this entry."
+      "locationsNote": "Its site, https://lakecitysopranos.com/, returned HTTP 403 Forbidden on fetch and a wayback-machine fallback is unavailable in this environment, so the official page could not be read. A search turned up third-party listings placing Lake City at 11754 15th Ave NE 98125 and describing the lead address, 7729 24th Ave NW 98117, as a separate Soprano's location in Loyal Heights, but neither is confirmed against the pizzeria's own site, so no address is reported for this entry.",
+      "socialAttempted": "2026-11-12",
+      "socialNote": "lakecitysopranos.com returned HTTP 403 and could not be fetched. Searched 'Soprano's Pizza & Pasta Lake City Seattle instagram' and 'site:instagram.com \"Soprano's\" Lake City pizza'; results were all directory/delivery listings or unrelated Soprano's locations (FL, MD, PA), no Instagram handle found for the Seattle Lake City location."
     },
     {
       "id": "veras-pizza-and-bar",
@@ -5074,7 +5076,8 @@
       "locationsSource": "https://deleobrotherspizza.com/",
       "mentions": [],
       "ratingAttempted": "2026-11-12",
-      "ratingNote": "Found genuine news coverage of the August 2025 Pioneer Square opening (whatnow.com on the Minnesota-born chain's expansion, intentionalist.com community spotlight) confirming it serves New York-style slices in a retro 1980s-themed room, but no published review or critic description of the food's execution -- too new for a craft rating grounded in actual coverage of the pizza. Skipped."
+      "ratingNote": "Found genuine news coverage of the August 2025 Pioneer Square opening (whatnow.com on the Minnesota-born chain's expansion, intentionalist.com community spotlight) confirming it serves New York-style slices in a retro 1980s-themed room, but no published review or critic description of the food's execution -- too new for a craft rating grounded in actual coverage of the pizza. Skipped.",
+      "instagram": "https://www.instagram.com/deleobrospizza/"
     },
     {
       "id": "a-k-pizza",
@@ -5126,7 +5129,9 @@
       "styleGroup": "Creative",
       "lastVerified": "2026-10-28",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "Official site ak-pizza.com is a JS-rendered page with no extractable content; ak-pizza.com/locations and ak-pizza.com/menu both returned 404. A search turned up only directory/aggregator listings (Atly, RestaurantGuru, Secret Seattle) citing 6901 Martin Luther King Jr Way S, which were not used since they aren't the pizzeria's own site."
+      "locationsNote": "Official site ak-pizza.com is a JS-rendered page with no extractable content; ak-pizza.com/locations and ak-pizza.com/menu both returned 404. A search turned up only directory/aggregator listings (Atly, RestaurantGuru, Secret Seattle) citing 6901 Martin Luther King Jr Way S, which were not used since they aren't the pizzeria's own site.",
+      "socialAttempted": "2026-11-12",
+      "socialNote": "Checked ak-pizza.com (page returned no header/footer/social content). Searched 'A.K. Pizza Othello Seattle instagram' and 'site:instagram.com \"A.K. Pizza\" seattle'; found a ma.to listing using handle 'akpizzaguy' but no article or site confirms it is the shop's own account, so left blank rather than guess."
     },
     {
       "id": "coltiva-pizzeria-e-barra",
@@ -5252,7 +5257,9 @@
       "locations": [],
       "locationsVerified": null,
       "locationsSource": null,
-      "mentions": []
+      "mentions": [],
+      "socialAttempted": "2026-11-12",
+      "socialNote": "Checked starlaspizza.com (no Instagram link in header/footer, only an email address and a Google Maps share link). Searched 'Starla's Pizza Capitol Hill Seattle instagram' and 'site:instagram.com starla's pizza seattle'; coverage (WhatNow, Secret Seattle) mentions the owners posted reopening news on Instagram but never states the handle. Left blank rather than guess."
     },
     {
       "id": "lucianos-pizza-pasta",
@@ -5696,7 +5703,9 @@
       "styleGroup": "Neighborhood",
       "lastVerified": "2026-11-12",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "The lead, 516 15th Ave E, Seattle, WA 98112 (Capitol Hill), does not appear anywhere on the official site https://olympiapizzaii.com/, which lists only one address, 4501 Interlake Ave N, Seattle, WA 98103 (Wallingford). Third-party delivery listings describe a 516 15th Ave E address under the name 'Olympia Pizza and Spaghetti House III', suggesting the lead belongs to a different, separate business, not this entry. Lead not added."
+      "locationsNote": "The lead, 516 15th Ave E, Seattle, WA 98112 (Capitol Hill), does not appear anywhere on the official site https://olympiapizzaii.com/, which lists only one address, 4501 Interlake Ave N, Seattle, WA 98103 (Wallingford). Third-party delivery listings describe a 516 15th Ave E address under the name 'Olympia Pizza and Spaghetti House III', suggesting the lead belongs to a different, separate business, not this entry. Lead not added.",
+      "socialAttempted": "2026-11-12",
+      "socialNote": "Checked olympiapizzaii.com (no Instagram link; only menu/login, app store, and maps links). Searched 'Olympia Pizza & Spaghetti House Wallingford instagram' and 'site:instagram.com \"Olympia Pizza\" Wallingford OR Seattle'; no handle found in any result for the Wallingford (II) location specifically."
     },
     {
       "id": "jet-city-pizza",
@@ -5827,7 +5836,9 @@
       "styleGroup": "By the slice",
       "lastVerified": "2026-11-12",
       "locationsAttempted": "2026-11-12",
-      "locationsNote": "Found the official domain, pizzaandpastabar.com, linked from Pike Place Market's own tenant page (pikeplacemarket.org/?p=4029), but fetching pizzaandpastabar.com directly returned HTTP 403 Forbidden, so the address (third-party pages give 1530 Post Alley, Seattle, WA 98101) could not be confirmed from the pizzeria's own site."
+      "locationsNote": "Found the official domain, pizzaandpastabar.com, linked from Pike Place Market's own tenant page (pikeplacemarket.org/?p=4029), but fetching pizzaandpastabar.com directly returned HTTP 403 Forbidden, so the address (third-party pages give 1530 Post Alley, Seattle, WA 98101) could not be confirmed from the pizzeria's own site.",
+      "socialAttempted": "2026-11-12",
+      "socialNote": "pizzaandpastabar.com returned HTTP 403 and could not be fetched. Searched 'Pizza and Pasta Bar Pike Place Market instagram' and checked pikeplacemarket.org's tag page for the business, which only links the Market's own Instagram (instagram.com/pikeplacepublicmarket), not the restaurant's. No handle found."
     },
     {
       "id": "santorini-pizza-pasta",
