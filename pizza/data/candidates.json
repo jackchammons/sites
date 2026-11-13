@@ -2,7 +2,7 @@
   "updated": "2026-11-12T05:30:31.005Z",
   "checked": "2026-11-12T05:30:31.005Z",
   "cutoffMonths": 30,
-  "servesCursor": 24,
+  "servesCursor": 28,
   "candidates": [
     {
       "key": "dominos|714",
@@ -1981,6 +1981,20 @@
       "resolvedDate": "2026-11-13",
       "lat": 47.69639,
       "lon": -122.29094
+    },
+    {
+      "key": "watershed pub kitchen|10104",
+      "name": "Watershed Pub & Kitchen",
+      "address": "10104 3rd Ave NE, Seattle, WA 98125",
+      "neighborhood": "Northgate",
+      "sources": [
+        "research"
+      ],
+      "status": "rejected",
+      "verdict": "not-pizza",
+      "note": "A neighborhood pub in the Thornton Place development with 21 rotating beer taps, sandwiches, mac and cheese, and salads; its kitchen also turns out New York-style pizza, which reviewers single out as a highlight.",
+      "resolutionSource": "https://theinfatuation.com/seattle/reviews/watershed-pub-and-kitchen",
+      "resolvedDate": "2026-11-13"
     }
   ]
 }

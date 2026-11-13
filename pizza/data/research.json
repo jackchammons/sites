@@ -1,33 +1,12 @@
 {
-  "updated": "2026-11-13T12:00:00Z",
+  "updated": "2026-11-13T00:00:00Z",
   "servesPizza": [
     {
-      "name": "Willmott's Ghost",
-      "address": "2100 6th Ave, Seattle, WA 98121",
-      "neighborhood": "South Lake Union",
-      "note": "An all-day Italian restaurant on the ground floor of Amazon's Spheres; Roman-style pizza al taglio dominates its lunch menu alongside starters, salads, and secondi like lemon ricotta lasagna.",
-      "source": "https://theinfatuation.com/seattle/reviews/willmotts-ghost"
-    },
-    {
-      "name": "Cinque Terre Ristorante",
-      "address": "2001 Westlake Ave, Seattle, WA 98121",
-      "neighborhood": "South Lake Union",
-      "note": "An Italian ristorante in Amazon's Doppler building; its stone-oven Neapolitan pizzas (margherita, calabrese, bianca) are served alongside pastas and entrees.",
-      "source": "https://www.theinfatuation.com/seattle/reviews/cinque-terre"
-    },
-    {
-      "name": "Big Time Brewery & Alehouse",
-      "address": "4133 University Way NE, Seattle, WA 98105",
-      "neighborhood": "University District",
-      "note": "Seattle's original brewpub, pouring its own beer since 1988; its kitchen menu includes 8-inch and 16-inch pizzas (cheese, pepperoni, Hawaiian, BBQ chicken, and more) alongside sandwiches and burgers.",
-      "source": "https://bigtimebrewery.com/menu-2"
-    },
-    {
-      "name": "Fiddler's Inn Pub & Pizza",
-      "address": "9219 35th Ave NE, Seattle, WA 98115",
-      "neighborhood": "Wedgwood",
-      "note": "A neighborhood pub with a patio and live music; serves 10-inch and 16-inch pub pizzas alongside sandwiches and salads.",
-      "source": "https://theinfatuation.com/seattle/reviews/fiddlers-inn"
+      "name": "Watershed Pub & Kitchen",
+      "address": "10104 3rd Ave NE, Seattle, WA 98125",
+      "neighborhood": "Northgate",
+      "note": "A neighborhood pub in the Thornton Place development with 21 rotating beer taps, sandwiches, mac and cheese, and salads; its kitchen also turns out New York-style pizza, which reviewers single out as a highlight.",
+      "source": "https://theinfatuation.com/seattle/reviews/watershed-pub-and-kitchen"
     }
   ]
 }
