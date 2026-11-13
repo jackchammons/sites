@@ -1738,7 +1738,9 @@
       "verdict": "not-pizza",
       "note": "An Italian restaurant and bar on the ground floor of Hotel Ballard whose menu centers on housemade pasta and vegetable dishes, with a rotating seasonal wood-fired pizza (e.g. winter squash, basil, and imported white cheese) alongside it.",
       "resolutionSource": "https://www.stoneburnerseattle.com/",
-      "resolvedDate": "2026-11-13"
+      "resolvedDate": "2026-11-13",
+      "lat": 47.66611,
+      "lon": -122.38262
     },
     {
       "key": "petoskeys|125",
@@ -1752,7 +1754,9 @@
       "verdict": "not-pizza",
       "note": "A Fremont neighborhood sports bar with an Upper Midwest-leaning menu of hoagies, cheese curds, and beer that also serves a thin-crust \"Midwest Tavern Style\" pizza, available whole or by the slice.",
       "resolutionSource": "https://petoskeysbar.com",
-      "resolvedDate": "2026-11-13"
+      "resolvedDate": "2026-11-13",
+      "lat": 47.65247,
+      "lon": -122.3566
     }
   ]
 }
