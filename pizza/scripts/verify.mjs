@@ -12,8 +12,8 @@ import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { isRated } from '../src/slice.js';
 import { tidyPossessive } from '../src/census.js';
+import { buildRegistry, CATEGORIES, mapPoints, recentlyClosed } from '../src/registry.js';
 import { esc, hostOf } from '../build/html.mjs';
-import { unratedLists, candidateLists } from '../build/sections/candidates.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = process.env.OUT_DIR
@@ -112,10 +112,10 @@ check(html.length > 20000, `index.html suspiciously small (${html.length} bytes)
 check(/<title>[^<]+<\/title>/.test(html), 'missing <title>');
 check(/<main>/.test(html) && /<nav class="site-nav"/.test(html), 'landmarks missing (main, nav)');
 check(/<style>[\s\S]{5000,}<\/style>/.test(html), 'the inline stylesheet is missing or nearly empty');
-// The sections every build renders. The record, the radar, the buzz and the
-// candidates are absent when they have nothing to show, and the nav then
-// leaves them out.
-for (const id of ['top-ten', 'board', 'styles', 'directory', 'dir-body', 'map', 'methodology']) {
+// The sections every build renders, and the parts of the directory app.js
+// works with. The record, the radar and the buzz are absent when they have
+// nothing to show, and the nav then leaves them out.
+for (const id of ['top-ten', 'board', 'styles', 'directory', 'dir-list', 'dir-tools', 'dir-q', 'dir-cats', 'dir-status', 'map', 'methodology']) {
   check(ids.has(id), `id "${id}" missing from the page`);
 }
 check(html.indexOf('id="methodology"') < html.indexOf('</main>'), 'the methodology section is outside <main>');
@@ -138,6 +138,9 @@ const lookedUp = new Set([
 check(lookedUp.size > 0, 'found no id lookups in app.js; the id check is not checking anything');
 for (const id of lookedUp) {
   if (/^(record-chart|chart-)/.test(id) && !ids.has('record')) continue;
+  // The heading over the places that are not on file is there only when the
+  // candidates queue holds something; the directory section checks that.
+  if (id === 'candidates') continue;
   check(ids.has(id), `app.js looks up #${id}, which is not on the page`);
 }
 
@@ -149,10 +152,6 @@ try {
 } catch (e) {
   check(false, blob == null ? 'the inline __PIZZA__ data block is missing or cut short'
     : `the inline __PIZZA__ data does not parse: ${e.message}`);
-}
-if (pageData) {
-  check(pageData.dataset?.restaurants?.length === dataset.restaurants.length,
-    `inline data lists ${pageData.dataset?.restaurants?.length} entries, the dataset has ${dataset.restaurants.length}`);
 }
 
 // The published split is computed, not stored: the ten highest-scoring rated,
@@ -181,11 +180,6 @@ if (ids.has('record')) {
   }
 }
 
-// The directory lists every entry in the dataset, whatever its status.
-const dirRows = (html.match(/<tr class="dir-row/g) || []).length;
-check(dirRows === dataset.restaurants.length,
-  `expected ${dataset.restaurants.length} directory rows, found ${dirRows}`);
-
 // Any entry with a website must be linked wherever its name appears; checking
 // the href is present catches a rendering path that dropped the link.
 for (const r of dataset.restaurants) {
@@ -198,67 +192,199 @@ for (const r of dataset.restaurants) {
   check(markup.includes(esc(r.name)), `"${r.name}" missing from the page`);
 }
 
-/* ---------- the candidates section ---------- */
+/* ---------- the directory, and the one list behind it ---------- */
 
-/* The section lists two things straight from the data files: entries on file
- * with no rating, and the candidates queue. It is on the page exactly when
- * there is something to list, the nav links it exactly then, and every group
- * holds as many rows as the data has for it and prints that number. The
- * totals are counted here from the files themselves; the split into groups
- * is the build's own (the functions it renders from), so what this catches is
- * a group or a row that went missing between the data and the page, and a
- * printed count that no longer matches its rows. */
+/* The page lists places from one list, the registry (src/registry.js): every
+ * pizzeria on file and every place known only from the candidates queue,
+ * each in exactly one category. The directory renders a category as a
+ * <details class="dg">; the radar, the map and every number of pizzerias the
+ * page prints are drawn from the same list. What is checked here is that the
+ * page agrees with that list everywhere, and that the list is whole: the
+ * rows are counted against the two data files themselves. The split into
+ * categories is the registry's own, so what this catches is a row or a
+ * category that went missing between the data and the page, one that is in
+ * two places or the wrong one, and a printed number that no longer matches
+ * its rows. */
+const registry = buildRegistry(dataset.restaurants, candidatesFile?.candidates ?? null);
+const sectionOf = id => {
+  const from = markup.indexOf(`<section class="section" id="${id}"`);
+  return from < 0 ? '' : markup.slice(from, markup.indexOf('</section>', from));
+};
+const same = (a, b) => a.length === b.length && a.every((x, i) => x === b[i]);
 {
   const candidates = candidatesFile?.candidates ?? null;
-  const unrated = dataset.restaurants.filter(r => r.status !== 'closed' && !isRated(r));
   const queued = Array.isArray(candidates) ? candidates.length : 0;
-  const expected = unrated.length + queued > 0;
-  check(ids.has('candidates') === expected, expected
-    ? `the candidates section is missing: ${unrated.length} unrated entr${unrated.length === 1 ? 'y' : 'ies'} and ${queued} candidate(s) have nowhere to be listed`
-    : 'the candidates section rendered with nothing to list');
-  check(nav.includes('href="#candidates"') === ids.has('candidates'),
-    'the nav and the page disagree about the candidates section');
+  const dir = sectionOf('directory');
 
-  if (ids.has('candidates')) {
-    const from = markup.indexOf('<section class="section" id="candidates"');
-    const section = markup.slice(from, markup.indexOf('</section>', from));
-    const onFile = unratedLists(dataset.restaurants);
-    const queue = candidateLists(candidates);
-    const want = {
-      'rating-waiting': onFile.waiting, 'rating-looked': onFile.looked, 'rating-opening': onFile.opening,
-      pending: queue.pending, chain: queue.chain, 'not-pizza': queue['not-pizza'],
-      unverifiable: queue.unverifiable, closed: queue.closed, rejected: queue.rejected
-    };
-    const groups = new Map([...section.matchAll(/<details class="cq-group" data-group="([^"]+)"[^>]*>([\s\S]*?)<\/details>/g)]
-      .map(m => [m[1], m[2]]));
-    for (const key of groups.keys()) check(Object.hasOwn(want, key), `the candidates section has a group "${key}" the data does not account for`);
-    let rowsOnFile = 0, rowsQueued = 0;
-    for (const [key, list] of Object.entries(want)) {
-      const body = groups.get(key);
-      if (!list.length) { check(body == null, `the candidates section shows a "${key}" group and the data has nothing for it`); continue; }
-      if (body == null) { check(false, `the candidates section has no "${key}" group; the data has ${list.length}`); continue; }
-      const rows = (body.match(/<tr class="cq-row/g) ?? []).length;
-      const printed = Number(body.match(/<span class="cq-n">(\d+)<\/span>/)?.[1]);
-      check(rows === list.length, `the "${key}" group lists ${rows} row(s); the data has ${list.length}`);
-      check(printed === list.length, `the "${key}" group says ${printed}; the data has ${list.length}`);
-      // An entry is printed under its own name; a permit under the register's,
-      // with a capitalised possessive put right the way the section does it.
-      const shown = item => key.startsWith('rating-') ? item.name : tidyPossessive(item.name);
-      for (const item of list) check(body.includes(esc(shown(item))), `"${item.name}" is missing from the "${key}" group`);
-      if (key.startsWith('rating-')) rowsOnFile += rows; else rowsQueued += rows;
+  // A category runs from its <details> to the next one, or to the map rail.
+  // (Rows hold <details> of their own, so the closing tag cannot delimit it.)
+  const starts = [...dir.matchAll(/<details class="dg" id="cat-([a-z-]+)" data-cat="([a-z-]+)"( open)?>/g)];
+  const listEnd = dir.indexOf('<div class="dir-rail"');
+  const groups = starts.map((m, i) => ({
+    key: m[2], idKey: m[1], open: Boolean(m[3]), at: m.index,
+    body: dir.slice(m.index, starts[i + 1]?.index ?? (listEnd < 0 ? dir.length : listEnd))
+  }));
+  const rowIds = body => [...body.matchAll(/<tr class="(?:dir|cq)-row[^"]*" id="([^"]+)"/g)].map(m => m[1]);
+  const byKey = new Map(groups.map(g => [g.key, g]));
+  check(byKey.size === groups.length, 'a directory category is rendered more than once');
+  for (const g of groups) {
+    check(g.key === g.idKey && CATEGORIES.includes(g.key), `the directory has a category "${g.key}" (id cat-${g.idKey}) the registry does not name`);
+  }
+  check(same(groups.map(g => g.key), CATEGORIES.filter(k => byKey.has(k))), `the directory's categories are out of order: ${groups.map(g => g.key).join(', ')}`);
+
+  // Every category holds as many rows as the registry has for it, says that
+  // number, and names each place. A category with nothing in it is not there.
+  for (const key of CATEGORIES) {
+    const want = registry.byCategory[key];
+    const g = byKey.get(key);
+    if (!want.length) { check(!g, `the directory shows a "${key}" category and the registry has nothing in it`); continue; }
+    if (!g) { check(false, `the directory has no "${key}" category; the registry has ${want.length} place(s) in it`); continue; }
+    const rows = rowIds(g.body);
+    const printed = Number(g.body.match(/<span class="dg-n" data-count="[^"]*">(\d+)<\/span>/)?.[1]);
+    check(rows.length === want.length, `the "${key}" category lists ${rows.length} row(s); the registry has ${want.length}`);
+    check(printed === want.length, `the "${key}" category's header says ${printed}; the registry has ${want.length}`);
+    // An entry is printed under its own name; a candidate under the queue's,
+    // with a capitalised possessive put right the way the section does it.
+    // The name has to be in the place's own row, as text a reader sees: a
+    // note elsewhere in the category may name it, and so does the label of
+    // the row's own button.
+    for (const p of want) {
+      const row = g.body.match(new RegExp(`<tr class="(?:dir|cq)-row[^"]*" id="${p.anchor}"[\\s\\S]*?</tr>`))?.[0] ?? '';
+      check(row.replace(/<[^>]+>/g, ' ').includes(esc(p.kind === 'entry' ? p.name : tidyPossessive(p.name))),
+        `"${p.name}" is not named in its row in the "${key}" category`);
     }
-    // The groups together are everything, counted from the files and not
-    // from the functions that made the groups.
-    const dupes = Number(section.match(/<p class="note cq-dupes"[^>]*>\s*<b>(\d+)<\/b>/)?.[1] ?? 0);
-    check(rowsOnFile === unrated.length,
-      `the candidates section lists ${rowsOnFile} unrated entr${rowsOnFile === 1 ? 'y' : 'ies'}; the dataset has ${unrated.length}`);
-    check(rowsQueued + dupes === queued,
-      `the candidates section accounts for ${rowsQueued + dupes} candidate(s) (${rowsQueued} listed, ${dupes} counted as duplicates); the queue holds ${queued}`);
-    check(dupes === queue.duplicates, `the candidates section counts ${dupes} duplicate(s); the queue has ${queue.duplicates}`);
-    const stamped = Object.fromEntries([...section.matchAll(/<span data-count="([a-z]+)">(\d+) /g)].map(m => [m[1], Number(m[2])]));
-    for (const [key, n] of Object.entries({ unrated: unrated.length, pending: queue.pending.length,
-      excluded: queue.excluded, duplicate: queue.duplicates })) {
-      check((stamped[key] ?? 0) === n, `the candidates section's summary says ${stamped[key] ?? 0} ${key}; the data has ${n}`);
+  }
+
+  // Every place in the registry is in exactly one category, and it is its own.
+  const where = new Map();
+  for (const g of groups) for (const id of rowIds(g.body)) where.set(id, [...(where.get(id) ?? []), g.key]);
+  const anchors = new Set(registry.places.map(p => p.anchor));
+  for (const p of registry.places) {
+    const at = where.get(p.anchor) ?? [];
+    check(at.length === 1, `"${p.name}" is in ${at.length} categories of the directory${at.length ? ` (${at.join(', ')})` : ''}; every place is in exactly one`);
+    if (at.length === 1) check(at[0] === p.category, `"${p.name}" is listed under "${at[0]}"; the registry has it under "${p.category}"`);
+  }
+  for (const id of where.keys()) check(anchors.has(id), `the directory lists a row "${id}" that is no place in the registry`);
+
+  // The same, counted from the files and not from the registry: every entry
+  // on file is one row in one category, and the candidates the page lists
+  // plus the ones tied to an entry are the whole queue.
+  const entryAt = new Map();
+  let candidateRows = 0;
+  for (const g of groups) {
+    for (const m of g.body.matchAll(/<tr class="dir-row[^"]*" id="[^"]+" data-id="([^"]+)"/g)) entryAt.set(m[1], [...(entryAt.get(m[1]) ?? []), g.key]);
+    candidateRows += (g.body.match(/<tr class="cq-row/g) ?? []).length;
+  }
+  let entryRows = 0;
+  for (const r of dataset.restaurants) {
+    const at = entryAt.get(esc(r.id)) ?? [];
+    entryRows += at.length;
+    check(at.length === 1, `the entry "${r.name}" is in ${at.length} categories of the directory${at.length ? ` (${at.join(', ')})` : ''}; every entry on file is in exactly one`);
+  }
+  check(entryRows === dataset.restaurants.length, `the directory lists ${entryRows} entry row(s); the dataset has ${dataset.restaurants.length}`);
+  check(candidateRows + registry.tied === queued,
+    `the directory accounts for ${candidateRows + registry.tied} candidate(s) (${candidateRows} listed, ${registry.tied} tied to an entry on file); the queue holds ${queued}`);
+  const dupes = Number(dir.match(/<p class="note cq-dupes"[^>]*>\s*<b[^>]*>(\d+)<\/b>/)?.[1] ?? 0);
+  check(dupes === registry.tiedPermits, `the directory counts ${dupes} further permit(s) of pizzerias on file; the queue has ${registry.tiedPermits}`);
+
+  // By default the reader sees the ranking: that category is open, and no other.
+  const openKeys = groups.filter(g => g.open).map(g => g.key);
+  check(same(openKeys, registry.counts.ranked ? ['ranked'] : []),
+    `the categories open by default are [${openKeys.join(', ')}]; it should be the ranked one alone`);
+
+  // There is no Candidates section any more. Its id lives on at the head of
+  // the categories that are not on file, exactly when the queue holds
+  // something, so an old link still lands where the candidates are listed.
+  check(!/href="#candidates"/.test(nav) && !/>\s*Candidates\s*</.test(nav), 'the nav still has a Candidates entry; the candidates are part of the directory');
+  check(!markup.includes('<section class="section" id="candidates"'), 'the Candidates section is back; the candidates are part of the directory');
+  check(ids.has('candidates') === queued > 0, queued
+    ? `id "candidates" is missing: ${queued} candidate(s) are in the queue and old links to them land nowhere`
+    : 'the "Not on file" heading rendered with no candidates queue');
+  if (ids.has('candidates')) {
+    const head = dir.indexOf('id="candidates"');
+    const onFile = groups.filter(g => registry.byCategory[g.key].some(p => p.kind === 'entry'));
+    const rest = groups.filter(g => !onFile.includes(g));
+    check(head >= 0 && onFile.every(g => g.at < head) && rest.every(g => g.at > head),
+      'id "candidates" is not at the head of the categories that are not on file');
+  }
+
+  // The search field and the toggles: there once, rendered hidden (they do
+  // nothing without app.js), one toggle per category on the page, pressed
+  // exactly where its category is open.
+  const tools = dir.match(/<div class="dir-tools" id="dir-tools" hidden>([\s\S]*?)<div class="dir-list" id="dir-list">/)?.[1] ?? null;
+  check(tools != null, 'the search field and the toggles (#dir-tools) are missing, are not rendered hidden, or are not ahead of the list');
+  check((html.match(/\sid="dir-tools"/g) ?? []).length === 1, 'the toggles (#dir-tools) are on the page more than once');
+  if (tools != null) {
+    check(/<input type="search" id="dir-q"/.test(tools), 'the directory has no search field (#dir-q)');
+    check(/<span id="dir-status" role="status" aria-live="polite">/.test(tools), 'the search has no polite live region (#dir-status) to announce its count in');
+    for (const id of ['dir-clear', 'dir-all', 'dir-reset', 'dir-none']) {
+      check(new RegExp(`<button type="button" class="dir-act" id="${id}"`).test(tools), `the directory's tools have no #${id} button`);
+    }
+    const chips = [...tools.matchAll(/<button type="button" class="cat-chip" data-cat="([a-z-]+)" aria-pressed="(true|false)">[\s\S]*?<b data-count="([a-z-]+)">\d+<\/b><\/button>/g)];
+    check(same(chips.map(m => m[1]), groups.map(g => g.key)),
+      `the toggles are for [${chips.map(m => m[1]).join(', ')}]; the categories on the page are [${groups.map(g => g.key).join(', ')}]`);
+    for (const [, key, pressed, counted] of chips) {
+      check(counted === key, `the "${key}" toggle prints the count of "${counted}"`);
+      check((pressed === 'true') === Boolean(byKey.get(key)?.open), `the "${key}" toggle is ${pressed === 'true' ? 'pressed' : 'not pressed'} and its category is ${byKey.get(key)?.open ? 'open' : 'closed'}`);
+    }
+  }
+
+  // Every number of places the page prints is the registry's. A count is
+  // marked data-count wherever it is printed: the hero, the ranking's lede,
+  // the directory's lede, each category's header and each toggle.
+  const expected = { ...registry.counts, 'on-file': dataset.restaurants.length,
+    'not-on-file': registry.places.filter(p => p.kind === 'candidate').length, 'tied-permits': registry.tiedPermits };
+  const printed = [...markup.matchAll(/data-count="([^"]+)">(\d+)</g)];
+  for (const [, key, n] of printed) {
+    if (!Object.hasOwn(expected, key)) { check(false, `the page prints a count "${key}" the registry has no number for`); continue; }
+    check(Number(n) === expected[key], `the page says ${n} for "${key}"; the registry has ${expected[key]}`);
+  }
+  const hero = markup.match(/<header class="hero">[\s\S]*?<\/header>/)?.[0] ?? '';
+  check(/data-count="on-file">\d+</.test(hero) && /data-count="ranked">\d+</.test(hero), 'the hero no longer prints the registry\'s counts of pizzerias on file and rated');
+  check(/data-count="ranked">\d+</.test(sectionOf('top-ten')), 'the ranking\'s lede no longer prints the registry\'s count of rated, open pizzerias');
+  for (const g of groups) {
+    const times = printed.filter(m => m[1] === g.key).length;
+    check(times >= 2, `the count of "${g.key}" is printed ${times} time(s); its header and its toggle each print it`);
+  }
+
+  // The radar is two cuts of the same list: everything not open yet, and the
+  // closed category's last six months, as of the moment the page was built.
+  // Each place it names is in the directory under the matching category, and
+  // its row links there.
+  const builtAt = new Date(pageData?.builtAt ?? NaN);
+  const wantRadar = {
+    opening: registry.byCategory.opening.map(p => p.anchor),
+    closed: Number.isFinite(builtAt.getTime()) ? recentlyClosed(registry, builtAt).map(p => p.anchor) : null
+  };
+  const radar = sectionOf('radar');
+  const radarLists = Object.fromEntries([...radar.matchAll(/<ul class="cand-list" data-radar="(opening|closed)">([\s\S]*?)<\/ul>/g)]
+    .map(m => [m[1], [...m[2].matchAll(/<li data-place="([^"]+)">([\s\S]*?)<\/li>/g)].map(x => ({ id: x[1], body: x[2] }))]));
+  check(wantRadar.closed != null, 'the inline data carries no build time (builtAt), so the radar\'s six months cannot be checked');
+  for (const kind of ['opening', 'closed']) {
+    const items = radarLists[kind] ?? [];
+    for (const it of items) {
+      const at = where.get(it.id) ?? [];
+      check(at.length === 1 && at[0] === kind,
+        `the radar lists "${it.id}" as ${kind}; in the directory it is ${at.length ? `under "${at.join(', ')}"` : 'not listed'}`);
+      check(it.body.includes(`href="#${it.id}"`), `the radar's row for "${it.id}" does not link to its row in the directory`);
+    }
+    if (wantRadar[kind]) {
+      check(same(items.map(it => it.id).sort(), [...wantRadar[kind]].sort()),
+        `the radar's ${kind} list names ${items.length} place(s); the registry has ${wantRadar[kind].length} (${wantRadar[kind].join(', ') || 'none'})`);
+    }
+  }
+
+  // The map plots the registry's places, each as the row it has: a pin's
+  // category is its row's, so a toggle shows the pins of the rows it opens.
+  if (pageData) {
+    const plotted = registry.places.filter(p => mapPoints(p).length);
+    const places = Array.isArray(pageData.places) ? pageData.places : null;
+    check(places != null && places.length === plotted.length,
+      `the inline map data lists ${places?.length ?? 'no'} place(s); the registry has ${plotted.length} with a point to plot`);
+    for (const p of places ?? []) {
+      const at = where.get(p.id) ?? [];
+      check(at.length === 1 && at[0] === p.cat,
+        `the map data puts "${p.name}" in "${p.cat}"; its row is ${at.length ? `under "${at.join(', ')}"` : 'not in the directory'}`);
     }
   }
 }
@@ -361,6 +487,9 @@ const near = (text, m) => text.slice(Math.max(0, m.index - 40), m.index + 40).re
     for (const sel of selectors.split(',').map(x => x.trim())) {
       check(!/\.dir-rail$/.test(sel) || sel.includes('.has-map'),
         `"${sel}" sets display on the map rail without .has-map; a reader without JavaScript gets an empty pinned box`);
+      // The search field and the toggles are rendered hidden for the same reason.
+      check(!/\.dir-tools$/.test(sel) || sel.includes('.has-tools'),
+        `"${sel}" sets display on the directory's tools without .has-tools; a reader without JavaScript gets a search field and toggles that do nothing`);
     }
   }
   check(/<div class="dir-rail" id="map-rail" hidden>\s*<div class="dir-pin">\s*<div id="map"[^>]*><\/div>\s*<\/div>\s*<p class="note dir-map-note">/.test(html),
@@ -395,4 +524,4 @@ check(JSON.stringify(api.rankings.slice(0, topCount).map(r => r.id)) === JSON.st
 check(api.rankings.slice(0, topCount).every(r => r.status === 'open'), 'a published entry is not open');
 check(api.brackets.length > 0, 'rankings.json has no brackets');
 
-report(`Build verified: ${cardIds.length} cards, ${api.rankings.length} ranked entries, ${html.length} bytes.`);
+report(`Build verified: ${cardIds.length} cards, ${api.rankings.length} ranked entries, ${registry.places.length} places in ${CATEGORIES.filter(k => registry.counts[k]).length} categories, ${html.length} bytes.`);

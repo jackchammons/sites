@@ -11,16 +11,16 @@
  * page prints.
  *
  * Each place is in exactly one category. The rules for an entry are isRated
- * (slice.js) and its status; the rule for a candidate is candidateStanding
- * (census.js). Neither is restated here. A candidate that is an entry on
- * file, or another permit of one, is not a place of its own: the entry is the
- * place, and such candidates are only counted (`tied`).
+ * (slice.js) and its status; the rules for a candidate are candidateStanding
+ * and candidateIsShown (census.js). None is restated here. A candidate that
+ * is an entry on file, or another permit of one, is not a place of its own:
+ * the entry is the place, and such candidates are only counted (`tied`).
  *
  * Pure: no DOM, no Node APIs.
  */
 import { isRated } from './slice.js';
 import { RETRY_DAYS } from './rules.js';
-import { candidateStanding, candidateKey } from './census.js';
+import { candidateStanding, candidateIsShown, candidateKey } from './census.js';
 import { isSeattleAddress, inPugetSound } from './bounds.js';
 
 /* The categories, in the order the page lists them.
@@ -58,11 +58,10 @@ const entryCategory = r =>
  * is listed as set aside rather than dropped. */
 const STATE_CATEGORY = { pending: 'pending', chain: 'chain', closed: 'closed',
   'not-pizza': 'not-pizza', unverifiable: 'unverifiable', rejected: 'set-aside' };
-const TIED = ['listed', 'duplicate'];
 
 /* A token for a URL fragment and an element id: the place's key with anything
  * that cannot go in either folded to a hyphen. */
-const slug = s => String(s).normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase()
+const slug = s => String(s).normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
   .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
 function entryPlace(r) {
@@ -112,7 +111,11 @@ function candidatePlace(c, at, key) {
  *   counts      its length, per category
  *   entries     the entries on file, as the dataset holds them: the set every
  *               scoring path starts from
- *   tied        how many candidates are an entry on file or a branch of one
+ *   tied        how many candidates are an entry on file or a branch of one,
+ *               and so are not places of their own
+ *   tiedPermits how many of those came from a register: the further permits
+ *               of pizzerias on file. The rest are places a research pass
+ *               filed that a later pass listed, which are simply the entry.
  *   queued      how many candidates the queue holds in all
  *
  * A place carries `key` (the entry's id, or the candidate's key), `anchor`
@@ -130,11 +133,15 @@ export function buildRegistry(restaurants, candidates) {
     byCategory[p.category].push(p);
   }
 
-  let tied = 0;
+  let tied = 0, tiedPermits = 0;
   const keys = new Set(entries.map(r => r.id));
   for (const c of queue) {
     const at = candidateStanding(c, queue);
-    if (TIED.includes(at.state)) { tied++; continue; }
+    if (!candidateIsShown(c)) {
+      tied++;
+      if (at.origin !== 'research') tiedPermits++;
+      continue;
+    }
     // A candidate the seed wrote has a key; one that does not gets the key
     // the seed would have given it. Two that collide are told apart by number.
     const base = c.key ?? candidateKey(c.name, c.address);
@@ -178,7 +185,7 @@ export function buildRegistry(restaurants, candidates) {
   return {
     places, byCategory,
     counts: Object.fromEntries(CATEGORIES.map(k => [k, byCategory[k].length])),
-    entries, tied, queued: queue.length
+    entries, tied, tiedPermits, queued: queue.length
   };
 }
 

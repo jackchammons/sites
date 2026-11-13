@@ -11,12 +11,14 @@
 
 /* Text reduced to what a match compares: lower case, accents off their
  * letters, apostrophes and full stops dropped (they sit inside a word), and
- * anything else that is not a letter or a digit read as a space. */
+ * anything else that is not a letter or a digit read as a space. Only the
+ * accents of Latin, Greek and Cyrillic letters are taken off; a mark that is
+ * part of how another script spells a word stays with its letter. */
 export const fold = text => String(text ?? '')
-  .normalize('NFKD').replace(/[̀-ͯ]/g, '')
+  .normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
   .toLowerCase()
   .replace(/['’‘`.]/g, '')
-  .replace(/[^\p{L}\p{N}]+/gu, ' ')
+  .replace(/[^\p{L}\p{N}\p{M}]+/gu, ' ')
   .trim();
 
 /* The words of a query, folded. An empty or all-punctuation query has none. */

@@ -28,11 +28,11 @@ export const CATEGORY = {
   unrated:      { title: 'Unrated', rule: 'Open and on file, with no rating yet.' },
   opening:      { title: 'Not open yet', rule: 'On file ahead of its opening.' },
   closed:       { title: 'Closed', rule: 'Shut, and held out of the ranking.' },
-  pending:      { title: 'Waiting for a census pass', rule: 'In the permit register and not yet checked.' },
-  chain:        { title: 'National chain', rule: 'A brand with shops across the country. Excluded by policy.' },
-  'not-pizza':  { title: 'Not pizza-forward', rule: 'Pizza is on the menu but incidental.' },
-  unverifiable: { title: 'Could not be verified', rule: 'No Seattle pizzeria could be confirmed behind the permit.' },
-  'set-aside':  { title: 'Set aside', rule: 'Set aside by an earlier pass, with no reason on file.' }
+  pending:      { title: 'Waiting for a census pass', rule: 'In the queue, not yet checked.' },
+  chain:        { title: 'National chain', rule: 'Left out by policy.' },
+  'not-pizza':  { title: 'Not pizza-forward', rule: 'Serves pizza, and is not a pizzeria.' },
+  unverifiable: { title: 'Could not be verified', rule: 'A permit with no pizzeria found behind it.' },
+  'set-aside':  { title: 'Set aside', rule: 'No reason on file.' }
 };
 /* The categories whose places are not on file: they come from the candidates
  * queue alone, and are listed under their own heading. */
@@ -215,7 +215,7 @@ const entryRow = (p, env) => {
             ${nameLink(r)}
             ${scored && (r.status ?? 'open') === 'open' ? `<span class="dir-rank${scored.rank <= 10 ? ' top' : ''}">#${scored.rank}</span>` : ''}${
               r.status && r.status !== 'open' ? `<span class="dir-st">${esc(STATUS_LABEL[r.status])}</span>` : ''}</th>
-          <td class="dir-where">${esc(locationLabel(r))}${addr.length ? `
+          <td class="dir-where">${esc(locationLabel(r) ?? '')}${addr.length ? `
             <div class="dir-addr">${addr.slice(0, 3).map(esc).join('<br>')}${addr.length > 3 ? `
             <details class="dir-more"><summary>+ ${addr.length - 3} more</summary>${addr.slice(3).map(esc).join('<br>')}</details>` : ''}</div>` : ''}</td>
           <td class="dir-style">${esc(r.style ?? '')}</td>
@@ -245,6 +245,9 @@ const entryTable = (label, places, env) => `
 const CQ_NONE = '<span class="cq-dim">not on file</span>';
 const day = iso => iso ? esc(shortDate(iso)) : CQ_NONE;
 const dayOf = v => typeof v === 'string' && Number.isFinite(Date.parse(v)) ? v.slice(0, 10) : null;
+/* 'permit' when a register seeded the candidate, 'research' when a research
+ * pass filed it as a place that serves pizza and is not a pizzeria
+ * (candidateOrigin in census.js, carried on its standing). */
 const origin = p => p.at.origin ?? 'permit';
 /* A candidate's name is the register's spelling, or the one a research pass
  * filed it under, and nothing on file says where it lives on the web, so it
@@ -256,44 +259,58 @@ const candidateCell = p => {
   const where = [c.neighborhood, c.address].filter(Boolean).map(esc).join(' · ');
   return `<th scope="row">${esc(tidyPossessive(c.name))}<span class="cq-sub">${where || 'address not on file'}</span></th>`;
 };
-/* A place a research pass filed has no permit, so no inspection to print. */
-const inspectedCell = p => origin(p) === 'research' && !p.dates.inspected
-  ? '<span class="cq-dim">no permit on file</span>' : day(p.dates.inspected);
+/* Where the index knows the place from. A permit comes with the register's
+ * last inspection of it; a place a research pass filed has no permit on file
+ * and an OpenStreetMap lead has none either, so neither has a date to print. */
+const SOURCE_LABEL = { 'kc-health': 'Food permit', osm: 'OpenStreetMap', research: 'Research pass' };
+const fromCell = p => {
+  const sources = p.candidate.sources ?? [];
+  const labels = [...new Set(sources.map(s => SOURCE_LABEL[s]).filter(Boolean))];
+  const permit = sources.includes('kc-health');
+  return `<td class="cq-from">${labels.length ? labels.join(', ') : CQ_NONE}${
+    p.dates.inspected ? ` <span class="cq-when">inspected ${esc(shortDate(p.dates.inspected)).replace(/ /g, '&nbsp;')}</span>`
+    : permit ? ' <span class="cq-when">no inspection on file</span>' : ''}</td>`;
+};
+const knownOnlyFrom = p => origin(p) === 'research' ? 'a research pass'
+  : (p.candidate.sources ?? []).includes('kc-health') ? 'a food permit'
+  : (p.candidate.sources ?? []).includes('osm') ? 'OpenStreetMap' : 'the candidates queue';
 
 /* What each verdict means in a sentence, and how to say "set aside as …" of
  * a candidate that has come back. */
 const VERDICT = {
   chain: {
     rule: "A brand with shops across the country. Excluded by policy: this is an index of Seattle's own pizzerias.",
-    label: 'Candidates excluded as national chains', was: 'a national chain'
+    label: 'Places excluded as national chains', was: 'a national chain'
   },
   'not-pizza': {
     rule: 'Pizza is on the menu but incidental: a grocery counter, a bar, a restaurant that also serves it.',
-    label: 'Candidates set aside as not pizza-forward', was: 'not pizza-forward'
+    label: 'Places set aside as not pizza-forward', was: 'not pizza-forward'
   },
   unverifiable: {
     rule: 'The census pass could not confirm a Seattle pizzeria behind the permit.',
-    label: 'Candidates that could not be verified', was: 'one it could not verify'
+    label: 'Places that could not be verified', was: 'one it could not verify'
   },
   closed: {
     rule: 'The census pass found that it had shut.',
-    label: 'Candidates found to have closed', was: 'closed'
+    label: 'Places not on file that a census pass found closed', was: 'closed'
   },
   'set-aside': {
     rule: 'Set aside by an earlier pass, with no reason on file.',
-    label: 'Candidates set aside with no reason on file', was: 'not belonging'
+    label: 'Places set aside with no reason on file', was: 'not belonging'
   }
 };
-/* Whether a verdict is final. The reopening verdicts are the ones a later
- * inspection undoes (REOPENING_VERDICTS in census.js); a chain stays. A place
- * a research pass filed has no permit for the register to inspect, so it
- * leaves only by being listed. */
+/* Whether a verdict is final, said of the places actually listed. The
+ * reopening verdicts are the ones a later inspection undoes
+ * (REOPENING_VERDICTS in census.js); a chain stays. A place a research pass
+ * filed has no permit for the register to inspect, so nothing the register
+ * does brings it back: it leaves only by being listed as a pizzeria. */
 const finality = (key, places) => {
   if (key === 'set-aside') return '';
   if (!REOPENING_VERDICTS.includes(key)) return ' It does not come back.';
-  return ' Not final: it returns to the queue when the register records an inspection dated after the day it was set aside.'
-    + (places.some(p => origin(p) === 'research')
-      ? ' A place a research pass filed has no permit on file: it stays here until a later pass lists it as a pizzeria.' : '');
+  const research = places.some(p => origin(p) === 'research');
+  const permit = places.some(p => origin(p) !== 'research');
+  return (permit || !research ? ` ${research ? 'For a place found through a food permit this is not final' : 'Not final'}: it returns to the queue when the register records an inspection dated after the day it was set aside.` : '')
+    + (research ? ' A place a research pass filed has no permit on file, so no inspection brings it back: it joins the directory only if a later pass files it as a pizzeria.' : '');
 };
 const ORDINAL = ['', 'next', '2nd', '3rd'];
 const passName = n => n == null ? CQ_NONE : ORDINAL[n] ?? `${n}th`;
@@ -303,7 +320,7 @@ const passName = n => n == null ? CQ_NONE : ORDINAL[n] ?? `${n}th`;
 const pendingRow = p => {
   const was = p.at.previousVerdict;
   return [
-    `${candidateCell(p)}<td>${inspectedCell(p)}</td><td>${passName(p.at.censusPass)}</td>`,
+    `${candidateCell(p)}${fromCell(p)}<td>${passName(p.at.censusPass)}</td>`,
     was ? `Back in the queue. A census pass set it aside${dayOf(was.resolvedDate) ? ` on ${day(dayOf(was.resolvedDate))}` : ''} as ${
       VERDICT[was.verdict]?.was ?? VERDICT['set-aside'].was}, and the register has recorded an inspection since.${
       was.note ? ` What that pass found: ${q(esc(was.note))}` : ''}` : ''];
@@ -311,34 +328,34 @@ const pendingRow = p => {
 /* A candidate with no verdict date was settled on its name alone, when the
  * register was read, and no pass has written a note for it. One the register
  * has already inspected again is still listed under its verdict, because the
- * queue takes it back only when the register is next read. */
+ * queue takes it back only when the register is next read. A closed place
+ * that is not on file says so, since it shares its category with pizzerias
+ * that are. */
 const setAsideRow = p => {
   const c = p.candidate;
   return [
-    `${candidateCell(p)}<td>${inspectedCell(p)}</td><td>${
+    `${candidateCell(p)}${fromCell(p)}<td>${
       p.dates.resolved ? day(p.dates.resolved) : '<span class="cq-dim">by name</span>'}</td>`,
-    [p.category === 'closed' ? `Not on file: known only from ${origin(p) === 'research' ? 'a research pass' : 'a food permit'}.` : '',
+    [p.category === 'closed' ? `Not on file: known only from ${knownOnlyFrom(p)}.` : '',
      p.at.inspectedSince ? '<b class="cq-flag">Due back</b> Inspected since it was set aside: it returns to the queue the next time the register is read.' : '',
      c.note ? `${q(esc(c.note))}${c.resolutionSource ? ` <span class="cq-src">${srcLink(c.resolutionSource)}</span>` : ''}` : '']
       .filter(Boolean).join('<br>')];
 };
 
-/* A table of candidates. `rows` are [mainCells, noteHtml] pairs; a note is
- * its own full-width row under the candidate, the way an entry's reason sits
- * under its row. */
-const candidateTable = (label, head, places, row) => `
+/* A table of candidates. `row` gives [mainCells, noteHtml]; a note is its own
+ * full-width row under the candidate, the way an entry's reason sits under
+ * its row. The columns serve both kinds of candidate: the place, where the
+ * index knows it from, and where it stands. */
+const candidateTable = (label, last, places, row) => `
       <div class="cq-scroll">
         <table class="cq-table" aria-label="${label}">
-          <thead><tr>${head.map(h => `<th scope="col">${h}</th>`).join('')}</tr></thead>
+          <thead><tr><th scope="col">Place</th><th scope="col">Known from</th><th scope="col">${last}</th></tr></thead>
           <tbody>${places.map(p => { const [cells, note] = row(p); return `
           <tr class="cq-row${note ? ' has-note' : ''}" id="${esc(p.anchor)}">${cells}</tr>${note ? `
-          <tr class="cq-note"><td colspan="${head.length}"><div class="cq-note-in">${note}</div></td></tr>` : ''}`; }).join('')}
+          <tr class="cq-note"><td colspan="3"><div class="cq-note-in">${note}</div></td></tr>` : ''}`; }).join('')}
           </tbody>
         </table>
       </div>`;
-/* "Permit name" while every row came from a register; a queue that also
- * holds places a research pass filed has names of both kinds. */
-const nameHead = places => places.every(p => origin(p) === 'permit') ? 'Permit name' : 'Name';
 
 /* ---------- the section ---------- */
 
@@ -386,6 +403,11 @@ export function directorySection(ctx) {
   const closedOther = byCategory.closed.filter(p => p.kind === 'candidate');
   const candidatePlaces = registry.places.filter(p => p.kind === 'candidate');
   const hasQueue = registry.queued > 0;
+  /* Places a research pass filed, and the permits that are only further
+   * registrations of pizzerias on file. A research-filed place that was later
+   * listed is that entry and nothing more, so it is in neither number. */
+  const filed = candidatePlaces.some(p => origin(p) === 'research');
+  const dupes = registry.tiedPermits;
 
   /* Each category's own explanation (why a place is here and what brings it
    * back, with the numbers the worklists run on) and its rows. */
@@ -413,15 +435,15 @@ export function directorySection(ctx) {
         Listed after ${closedEntries.length ? 'the pizzerias on file' : 'that'} ${closedOther.length === 1 ? 'is a place' : 'are places'} known only from the candidates queue that a census pass found closed.
         ${VERDICT.closed.rule}${finality('closed', closedOther)}` : ''}`,
       (closedEntries.length ? entryTable('Closed pizzerias on file', closedEntries, env) : '')
-      + (closedOther.length ? candidateTable(VERDICT.closed.label, [nameHead(closedOther), 'Last inspected', 'Found closed'], closedOther, setAsideRow) : '')],
+      + (closedOther.length ? candidateTable(VERDICT.closed.label, 'Found closed', closedOther, setAsideRow) : '')],
     pending: () => [`
         Found in the permit register and not yet checked. The census task takes up to ${PER_PASS.census} per pass, in
         this order. A candidate that is real, open and pizza-forward joins the directory; the rest are
         set aside under one of the other categories, with the reason.`,
-      candidateTable('Candidates waiting for a census pass', [nameHead(byCategory.pending), 'Last inspected', 'Census pass'], byCategory.pending, pendingRow)],
+      candidateTable('Places waiting for a census pass', 'Census pass', byCategory.pending, pendingRow)],
     ...Object.fromEntries(['chain', 'not-pizza', 'unverifiable', 'set-aside'].map(key => [key, () => [`
         ${VERDICT[key].rule}${finality(key, byCategory[key])}`,
-      candidateTable(VERDICT[key].label, [nameHead(byCategory[key]), 'Last inspected', 'Set aside'], byCategory[key], setAsideRow)]]))
+      candidateTable(VERDICT[key].label, 'Set aside', byCategory[key], setAsideRow)]]))
   };
 
   /* Places a category lists that the map cannot plot. The note is for a
@@ -465,16 +487,18 @@ export function directorySection(ctx) {
         that source answers. The census task checks each one on the open web, up to
         ${PER_PASS.census} per pass. A candidate that is real, open and pizza-forward joins the directory; the
         rest are set aside here with the reason.${candidatesChecked ? `
-        The register was last read on ${esc(shortDate(candidatesChecked))}.` : ''}
+        The register was last read on ${esc(shortDate(candidatesChecked))}.` : ''}${filed ? `
+        The register can only show a permit whose name says pizza, so a restaurant, bar or bakery that
+        serves pizza under another name is filed by a research pass instead, as not pizza-forward.` : ''}
         The whole path, from a food permit to the top ten, is drawn under
         <a href="#lifecycle">how it works</a>.
       </p>
     </div>
     ${NOT_ON_FILE.map(group).join('')}
-    ${registry.tied ? `
+    ${dupes ? `
     <p class="note cq-dupes" data-group="duplicate">
-      <b data-count="tied">${registry.tied}</b> more ${registry.tied === 1 ? 'permit is a further branch or a second registration of a pizzeria' : 'permits are further branches or second registrations of pizzerias'}
-      already on file. ${registry.tied === 1 ? 'It is tied to that entry and is' : 'They are tied to those entries and are'} not listed here.
+      <b data-count="tied-permits">${dupes}</b> more ${dupes === 1 ? 'permit is a further branch or a second registration of a pizzeria' : 'permits are further branches or second registrations of pizzerias'}
+      already on file. ${dupes === 1 ? 'It is tied to that entry and is' : 'They are tied to those entries and are'} not listed here.
     </p>` : ''}` : '';
 
   const shown = CATEGORIES.filter(k => counts[k]);
@@ -533,10 +557,9 @@ export function directorySection(ctx) {
         <div class="dir-pin">
           <div id="map" class="dir-map" role="region" aria-label="Map of Seattle pizzerias"></div>
         </div>
-        <p class="note dir-map-note">The map shows the categories that are open in the list, in
-        their colours: a filled pin is a pizzeria on file, a ring is a place that is not. The
-        larger pins are the top ten. Seattle locations only: branches outside the city are listed,
-        not mapped. Tiles &copy; OpenStreetMap contributors.</p>
+        <p class="note dir-map-note">The map shows the categories that are open. A filled pin is
+        a pizzeria on file, a ring a place that is not, and the larger pins are the top ten.
+        Seattle locations only. Tiles &copy; OpenStreetMap contributors.</p>
       </div>
     </div>
   </div>

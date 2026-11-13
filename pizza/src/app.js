@@ -170,14 +170,15 @@ const dirApi = { shows: () => false, fromPin: null, toolsMoved: null };
    * stuck there is measured where it stands: its sticky offset plus its
    * height is the line the list scrolls under, at any screen height. A table
    * header that sticks adds its own height for a row. */
-  const stacked = window.matchMedia('(max-width: 1099px)');
   const nav = document.querySelector('.site-nav');
   const stuckBottom = () => {
     const base = nav?.offsetHeight ?? 0;
-    const pin = tools.closest('.dir-pin');
-    const box = pin ? (stacked.matches ? pin : null) : tools;
-    if (!box) return base;
-    const top = parseFloat(getComputedStyle(box).top);
+    // The map's wrapper when the toggles are in it, else the toggles' own bar.
+    // Beside the list (the desktop rail) neither sticks over it.
+    const box = tools.closest('.dir-pin') ?? tools;
+    const style = getComputedStyle(box);
+    if (style.position !== 'sticky') return base;
+    const top = parseFloat(style.top);
     return Number.isFinite(top) ? top + box.offsetHeight : Math.max(base, box.getBoundingClientRect().bottom);
   };
   const listTop = row => {
@@ -242,6 +243,9 @@ const dirApi = { shows: () => false, fromPin: null, toolsMoved: null };
       for (const it of state.hits) state.found.set(it.cat, (state.found.get(it.cat) ?? 0) + 1);
     }
     render();
+    // The toggles are one row that scrolls sideways on a phone: back to its
+    // start, where the categories that matched are most likely to be.
+    cats.scrollLeft = 0;
     syncMap(true);
     keepListInView();
   };
