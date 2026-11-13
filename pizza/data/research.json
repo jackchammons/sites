@@ -1,25 +1,19 @@
 {
-  "updated": "2026-11-13T00:00:00Z",
-  "factorRatings": [
+  "updated": "2026-11-13T19:00:00Z",
+  "servesPizza": [
     {
-      "id": "varlamos-pizzeria",
-      "craft": 5.0,
-      "distinctiveness": 5.0,
-      "criticScore": 5.0,
-      "opened": 1994,
-      "priceIndex": 2,
-      "styleGroup": "Neighborhood",
-      "sources": [
-        "https://seattlepizza.substack.com/p/release-4",
-        "https://greeksinwa.omeka.net/items/show/820"
-      ],
-      "note": "Independent Seattle pizza critic Ira Rickman's rankings (The Definitive Seattle Pizza Rankings) place Varlamos in the middle-to-lower tier of the city's pizzerias across several editions, praising the dough as the strongest component while finding the sauce and cheese flavors muted. A Greek-American community archive notes the Laurelhurst shop has served the UW-adjacent neighborhood since 1994 and is known for its oversized 'football-sized' calzones and kid-friendly, TV-filled sports-bar room rather than for destination-caliber pizza."
-    }
-  ],
-  "ratingSkipped": [
+      "name": "Stoneburner",
+      "address": "5214 Ballard Ave NW, Seattle, WA 98107",
+      "neighborhood": "Ballard",
+      "note": "An Italian restaurant and bar on the ground floor of Hotel Ballard whose menu centers on housemade pasta and vegetable dishes, with a rotating seasonal wood-fired pizza (e.g. winter squash, basil, and imported white cheese) alongside it.",
+      "source": "https://www.stoneburnerseattle.com/"
+    },
     {
-      "id": "pizza-twist",
-      "note": "Confirmed the Pinehurst/Northgate-area Pizza Twist is the franchise location at 12319 Roosevelt Way NE, Seattle, WA 98125 (matched via Atly, Spinach, and MapQuest listings against pizzatwist.com, a Chicago-born Indian-fusion pizza chain). Found no published review, roundup entry, or news story specific to this branch -- only directory/aggregator listings for it, plus trade-press pieces (QSR, PMQ, Franchising.com) about the chain's national expansion and a 2021 Capitol Hill Seattle article about a different (Broadway) Seattle location. Skipping rather than rating on aggregator listings or coverage of a different branch."
+      "name": "Petoskey's",
+      "address": "125 N 36th St, Seattle, WA 98103",
+      "neighborhood": "Fremont",
+      "note": "A Fremont neighborhood sports bar with an Upper Midwest-leaning menu of hoagies, cheese curds, and beer that also serves a thin-crust \"Midwest Tavern Style\" pizza, available whole or by the slice.",
+      "source": "https://petoskeysbar.com"
     }
   ]
 }

@@ -2,6 +2,7 @@
   "updated": "2026-11-12T05:30:31.005Z",
   "checked": "2026-11-12T05:30:31.005Z",
   "cutoffMonths": 30,
+  "servesCursor": 4,
   "candidates": [
     {
       "key": "dominos|714",
@@ -1724,6 +1725,34 @@
       "resolutionSource": "https://zeekspizza.com/location/white-center/",
       "resolvedDate": "2026-09-12",
       "matchedId": "zeeks-pizza"
+    },
+    {
+      "key": "stoneburner|5214",
+      "name": "Stoneburner",
+      "address": "5214 Ballard Ave NW, Seattle, WA 98107",
+      "neighborhood": "Ballard",
+      "sources": [
+        "research"
+      ],
+      "status": "rejected",
+      "verdict": "not-pizza",
+      "note": "An Italian restaurant and bar on the ground floor of Hotel Ballard whose menu centers on housemade pasta and vegetable dishes, with a rotating seasonal wood-fired pizza (e.g. winter squash, basil, and imported white cheese) alongside it.",
+      "resolutionSource": "https://www.stoneburnerseattle.com/",
+      "resolvedDate": "2026-11-13"
+    },
+    {
+      "key": "petoskeys|125",
+      "name": "Petoskey's",
+      "address": "125 N 36th St, Seattle, WA 98103",
+      "neighborhood": "Fremont",
+      "sources": [
+        "research"
+      ],
+      "status": "rejected",
+      "verdict": "not-pizza",
+      "note": "A Fremont neighborhood sports bar with an Upper Midwest-leaning menu of hoagies, cheese curds, and beer that also serves a thin-crust \"Midwest Tavern Style\" pizza, available whole or by the slice.",
+      "resolutionSource": "https://petoskeysbar.com",
+      "resolvedDate": "2026-11-13"
     }
   ]
 }
