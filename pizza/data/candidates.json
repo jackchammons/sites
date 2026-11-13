@@ -2,7 +2,7 @@
   "updated": "2026-11-12T05:30:31.005Z",
   "checked": "2026-11-12T05:30:31.005Z",
   "cutoffMonths": 30,
-  "servesCursor": 16,
+  "servesCursor": 20,
   "candidates": [
     {
       "key": "dominos|714",
@@ -1901,6 +1901,20 @@
       "resolvedDate": "2026-11-13",
       "lat": 47.62467,
       "lon": -122.32548
+    },
+    {
+      "key": "lago|2305",
+      "name": "Cafe Lago",
+      "address": "2305 24th Ave E, Seattle, WA 98112",
+      "neighborhood": "Montlake",
+      "sources": [
+        "research"
+      ],
+      "status": "rejected",
+      "verdict": "not-pizza",
+      "note": "A long-running Montlake Italian restaurant known for handmade pasta that also bakes thin-crust, apple-wood-fired pizzas (such as a goat cheese and caramelized onion pie and a classic marinara and mozzarella pie); it was an early Seattle adopter of wood-fired pizza.",
+      "resolutionSource": "https://www.cafelago.com",
+      "resolvedDate": "2026-11-13"
     }
   ]
 }
