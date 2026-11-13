@@ -2,14 +2,14 @@ import { esc, nameLink, shortDate } from '../html.mjs';
 import { mentionMatch } from '../../src/match.js';
 
 export function buzzSection(ctx) {
-  const { dataset, buzz, entriesById } = ctx;
+  const { registry, buzz, entriesById } = ctx;
 /* ---- The Buzz: one timeline, tagged with the pizzerias each story mentions ---- */
 const KIND_LABEL = { opening: 'Opening', closing: 'Closing', ranking: 'List', mention: 'Mention' };
 
 /* One matcher shared with the feed sweep (src/match.js); the agent's explicit
  * mentions[] ids are merged in on top. */
 function storyTags(item) {
-  const ids = new Set([...(item.mentions ?? []), ...mentionMatch(item.title, dataset.restaurants)]);
+  const ids = new Set([...(item.mentions ?? []), ...mentionMatch(item.title, registry.entries)]);
   return [...ids].map(id => entriesById.get(id)).filter(Boolean);
 }
 

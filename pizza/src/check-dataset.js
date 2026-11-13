@@ -6,7 +6,7 @@
  *
  * Pure function of (dataset, registry, nowMs); the CLI wrapper does the I/O.
  */
-import { PUGET_SOUND_ZIP, PUGET_SOUND_BOX } from './bounds.js';
+import { PUGET_SOUND_ZIP, PUGET_SOUND_BOX, inPugetSound } from './bounds.js';
 import { ENTRY_SCHEMA, ENTRY_KEYS, LOCATION_SHAPE, FACTOR_NAMES, FACTOR_SHAPE, MENTION_SHAPE,
   FACT_FIELDS, FACT_SOURCE_KEY } from './schema.js';
 
@@ -165,6 +165,41 @@ export function checkDataset(dataset, registry = {}, nowMs = Date.now()) {
       }
       if (!https(m?.url)) bad(id, `mention "${m?.title ?? '?'}" has no https url`);
       if (!pastDate(m?.date)) bad(id, `mention "${m?.title ?? '?'}" has a bad date`);
+    }
+  }
+  return fails;
+}
+
+/*
+ * Lint for data/candidates.json: only what this repository's own scripts
+ * write into it.
+ *
+ * The geocoder gives a candidate coordinates and, when an address will not
+ * resolve, the day it tried; the apply step keeps the serves sweep's cursor
+ * at the top of the file. Those are checked. A candidate's name, address and
+ * note are not: they are the permit register's text and a research pass's,
+ * the page prints them as quoted data, and nothing a third party wrote may
+ * stop a deploy. Coordinates are held to the box every location's are
+ * (src/bounds.js), and they come as a pair, because the map plots a point or
+ * nothing.
+ *
+ * Pure function of (file, nowMs). Returns the problems found, none for a
+ * file with no candidates in it.
+ */
+export function checkCandidates(file, nowMs = Date.now()) {
+  if (!Array.isArray(file?.candidates)) return ['candidates.json: candidates must be an array'];
+  const fails = [];
+  if (file.servesCursor !== undefined && !(Number.isInteger(file.servesCursor) && file.servesCursor >= 0)) {
+    fails.push(`candidates.json: servesCursor must be a whole number from 0 up, got ${JSON.stringify(file.servesCursor)}`);
+  }
+  for (const c of file.candidates) {
+    const who = `candidate "${String(c?.name ?? c?.key ?? '?').slice(0, 80)}"`;
+    if ((c?.lat != null || c?.lon != null) && !inPugetSound(c.lat, c.lon)) {
+      fails.push(`${who}: lat ${JSON.stringify(c.lat ?? null)}, lon ${JSON.stringify(c.lon ?? null)} is not a point inside Puget Sound`);
+    }
+    if (c?.geoTried != null) {
+      const t = /^\d{4}-\d{2}-\d{2}$/.test(String(c.geoTried)) ? Date.parse(c.geoTried) : NaN;
+      if (!(t <= nowMs + 864e5)) fails.push(`${who}: geoTried must be a past YYYY-MM-DD date, got ${JSON.stringify(c.geoTried)}`);
     }
   }
   return fails;

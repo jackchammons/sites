@@ -12,8 +12,11 @@ import { esc, nameLink, fmtDate } from './html.mjs';
 import { locationLabel } from '../src/locations.js';
 
 export function pageHtml(ctx, sections) {
-  const { dataset, now, week, scoredAll, ranked, spotlight, css, leafletCss } = ctx;
-  const openRated = scoredAll.filter(r => !r.status || r.status === 'open').length;
+  const { dataset, now, week, registry, ranked, spotlight, css, leafletCss } = ctx;
+  /* Every number of pizzerias the page prints is a count from the registry,
+   * the one list the directory's categories are drawn from. */
+  const onFile = registry.entries.length;
+  const openRated = registry.counts.ranked;
   const capWeeks = Math.round(MAX_STALENESS_DECAY / STALENESS_PER_WEEK);
   const REPO = 'https://github.com/jackchammons/sites';
   /* Rendered twice: in the hero beside the lede on wide screens, and under
@@ -32,10 +35,10 @@ export function pageHtml(ctx, sections) {
         </div>`;
   const { factorCards, frictionRows, automation } = sections.method;
   const field = fieldStats(ctx.allScored);
-  const { recordSection, bracketSection, radarSection, buzzSection, directorySection, candidatesSection } = sections;
-  /* The nav lists the sections this build rendered. The record, the radar, the
-   * buzz and the candidates each render nothing when they have nothing to
-   * show, and a link to a section that is not there goes nowhere. */
+  const { recordSection, bracketSection, radarSection, buzzSection, directorySection } = sections;
+  /* The nav lists the sections this build rendered. The record, the radar and
+   * the buzz each render nothing when they have nothing to show, and a link to
+   * a section that is not there goes nowhere. */
   const nav = [
     ['top-ten', 'Top 10', true],
     ['record', 'Record', recordSection],
@@ -43,7 +46,6 @@ export function pageHtml(ctx, sections) {
     ['radar', 'Radar', radarSection],
     ['buzz', 'Buzz', buzzSection],
     ['directory', 'Directory', directorySection],
-    ['candidates', 'Candidates', candidatesSection],
     ['methodology', 'Method', true]
   ].filter(([, , rendered]) => rendered);
   /* Every constant the methodology prints is read from slice.js, in the form
@@ -94,8 +96,8 @@ ${css}</style>
         </p>
         <div class="stamp">
           <span>Updated <b>${fmtDate(now)}</b></span>
-          <span>On file <b>${dataset.restaurants.length} pizzerias</b></span>
-          <span>Rated <b>${openRated}</b></span>
+          <span>On file <b><span data-count="on-file">${onFile}</span> ${onFile === 1 ? 'pizzeria' : 'pizzerias'}</b></span>
+          <span>Rated <b data-count="ranked">${openRated}</b></span>
           <span>Week <b>${week}</b></span>
         </div>
       </div>
@@ -119,7 +121,7 @@ ${css}</style>
     <div class="eyebrow">The ranking</div>
     <h2 class="sec-h">The Top 10</h2>
     <p class="lede" style="margin:14px 0 8px">
-      The ten highest SLICE scores among ${openRated} rated, open pizzerias. Recomputed on
+      The ten highest SLICE scores among <span data-count="ranked">${openRated}</span> rated, open pizzerias. Recomputed on
       every build; the ▲▼ markers show movement since last week. Click a card to see why it ranks
       where it does: every input, read against the rest of the rated field.
     </p>
@@ -136,7 +138,6 @@ ${bracketSection}
 ${radarSection}
 ${buzzSection}
 ${directorySection}
-${candidatesSection}
 
 <section class="section" id="methodology">
   <div class="wrap">
@@ -282,10 +283,9 @@ ${automation}
 </footer>
 
 <script>window.__PIZZA__ = ${JSON.stringify({
-  // Only what the map needs: the ranking is already rendered above.
-  dataset: { restaurants: dataset.restaurants.map(r => ({
-    id: r.id, name: r.name, url: r.url ?? null, status: r.status ?? 'open', locations: r.locations ?? []
-  })) },
+  // Only what the map needs: every place with a point to plot, by the row it
+  // has in the directory. The rows themselves are rendered above.
+  places: sections.mapData,
   builtAt: now.toISOString()
 }).replace(/</g, '\\u003c')};</script>
 <script type="module" src="./app.js"></script>

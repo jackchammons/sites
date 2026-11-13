@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /*
- * Static site build: load data, derive the ranking, render sections, write
- * the output directory and the weekly snapshot. Each step is a pure module
- * under pizza/build/; this file only composes them.
+ * Static site build: load data, derive the registry of places and the
+ * ranking, render sections, write the output directory and the weekly
+ * snapshot. Each step is a pure module under pizza/build/; this file only
+ * composes them.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -17,8 +18,7 @@ import { recordSection } from '../build/sections/record.mjs';
 import { bracketsSection } from '../build/sections/brackets.mjs';
 import { radarSection } from '../build/sections/radar.mjs';
 import { buzzSection } from '../build/sections/buzz.mjs';
-import { directorySection } from '../build/sections/directory.mjs';
-import { candidatesSection } from '../build/sections/candidates.mjs';
+import { directorySection, mapData } from '../build/sections/directory.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // The multi-site build sets OUT_DIR to dist/<slug>/; a standalone run writes
@@ -38,7 +38,7 @@ const html = pageHtml(ctx, {
   radarSection: radarSection(ctx),
   buzzSection: buzzSection(ctx),
   directorySection: directorySection(ctx),
-  candidatesSection: candidatesSection(ctx)
+  mapData: mapData(ctx)
 });
 
 writeDist(dist, ctx, html);

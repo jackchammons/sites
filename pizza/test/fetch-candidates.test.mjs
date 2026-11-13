@@ -7,7 +7,8 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { kingCountyCandidates, overpassCandidates, parseArgs, seedAgeDays, nextSeed, INSPECTION_CUTOFF_MONTHS,
   KING_COUNTY_WHERE, kingCountyUrl } from '../scripts/fetch-candidates.mjs';
-import { mergeCandidates } from '../src/census.js';
+import { candidateKey, mergeCandidates } from '../src/census.js';
+import { checkCandidates } from '../src/check-dataset.js';
 
 const script = fileURLToPath(new URL('../scripts/fetch-candidates.mjs', import.meta.url));
 const srcDir = fileURLToPath(new URL('../src/', import.meta.url));
@@ -86,6 +87,16 @@ test('overpass: named elements become candidates, with an address only when both
   assert.deepEqual(overpassCandidates({ remark: 'runtime error: Query timed out', elements: [] }), []);
 });
 
+test('overpass: an element\'s coordinates are kept only as a point the lint would accept', () => {
+  const at = (lat, lon) => overpassCandidates({ elements: [{ type: 'node', lat, lon, tags: { name: 'Corner Slice' } }] })[0];
+  assert.deepEqual(at(47.61, -122.33), { name: 'Corner Slice', lat: 47.61, lon: -122.33, sources: ['osm'] });
+  // Portland, a pair the wrong way round, strings, half a pair: the lead is kept and the point is not
+  for (const [lat, lon] of [[45.52, -122.68], [-122.33, 47.61], ['47.61', '-122.33'], [47.61, undefined], [null, null]]) {
+    assert.deepEqual(at(lat, lon), { name: 'Corner Slice', sources: ['osm'] }, `${lat}, ${lon}`);
+    assert.deepEqual(checkCandidates({ candidates: mergeCandidates([], [at(lat, lon)], restaurants) }), []);
+  }
+});
+
 /* ---- the option and the two stamps ---- */
 test('--max-age-days is the only option, and a value that is not a number of days is refused', () => {
   assert.deepEqual(parseArgs([]), { maxAgeDays: null });
@@ -159,6 +170,31 @@ test('with the permit register down, nothing is stamped: an unchanged list is no
   assert.ok(!('checked' in nextSeed(stored(), mergeCandidates(stored().candidates, osm, restaurants), NOW_ISO, false).file));
 });
 
+test('a refresh writes back every top-level key it does not own, ahead of the list', () => {
+  // The apply step keeps the serves sweep's cursor in this file.
+  const prior = { ...stored(), checked: '2026-10-01T00:00:00.000Z', servesCursor: 12, somethingLater: { kept: true } };
+  const { candidates, ...head } = prior;
+  const withCursor = { ...head, candidates };   // as the apply step writes it: the list last
+
+  // nothing new in the register: only `checked` moves
+  const quiet = nextSeed(withCursor, mergeCandidates(candidates, sameRows(), restaurants), NOW_ISO, true);
+  assert.deepEqual([quiet.changed, quiet.file.servesCursor, quiet.file.somethingLater], [false, 12, { kept: true }]);
+  assert.deepEqual(Object.keys(quiet.file), ['updated', 'checked', 'cutoffMonths', 'servesCursor', 'somethingLater', 'candidates']);
+  assert.deepEqual({ ...quiet.file, checked: prior.checked }, withCursor);
+
+  // a new permit: the list and both stamps move, the cursor does not
+  const incoming = [...sameRows(), { name: 'Pizza Rasoi', address: '1011 Valley St, Seattle, WA 98109', sources: ['kc-health'], lastInspection: '2026-10-05' }];
+  const busy = nextSeed(withCursor, mergeCandidates(candidates, incoming, restaurants), NOW_ISO, true);
+  assert.deepEqual([busy.changed, busy.file.updated, busy.file.checked, busy.file.servesCursor], [true, NOW_ISO, NOW_ISO, 12]);
+  assert.deepEqual(Object.keys(busy.file), ['updated', 'checked', 'cutoffMonths', 'servesCursor', 'somethingLater', 'candidates']);
+
+  // the four keys the refresh owns are its own to write, whatever the file held under them
+  const stale = nextSeed({ ...withCursor, cutoffMonths: 99 }, mergeCandidates(candidates, sameRows(), restaurants), NOW_ISO, true);
+  assert.equal(stale.file.cutoffMonths, INSPECTION_CUTOFF_MONTHS);
+  // a cursor at its first position is a value like any other
+  assert.equal(nextSeed({ ...withCursor, servesCursor: 0 }, mergeCandidates(candidates, [], restaurants), NOW_ISO, true).file.servesCursor, 0);
+});
+
 test('a first seed, with no file on disk, is written whole', () => {
   const next = nextSeed({ candidates: [] }, mergeCandidates([], sameRows(), restaurants), NOW_ISO, true);
   assert.deepEqual([next.changed, next.write, next.file.updated, next.file.checked], [true, true, NOW_ISO, NOW_ISO]);
@@ -188,7 +224,8 @@ function scratch(candidates) {
   // The script's whole import graph: census.js reads the street key from
   // locations.js and the census worklist size from rules.js, which reads the
   // list of descriptive facts from schema.js.
-  for (const f of ['census.js', 'locations.js', 'rules.js', 'schema.js']) fs.copyFileSync(path.join(srcDir, f), path.join(dir, 'src', f));
+  // The script itself reads the coordinate box from bounds.js.
+  for (const f of ['bounds.js', 'census.js', 'locations.js', 'rules.js', 'schema.js']) fs.copyFileSync(path.join(srcDir, f), path.join(dir, 'src', f));
   fs.writeFileSync(path.join(dir, 'stub.mjs'), STUB);
   fs.writeFileSync(path.join(dir, 'data/restaurants.json'), JSON.stringify({ restaurants }));
   const file = path.join(dir, 'data/candidates.json');
@@ -282,6 +319,36 @@ test('CLI: a candidate the register has inspected since it was set aside goes ba
     const again = s.run([]);
     assert.doesNotMatch(again.stdout, /back to pending/);
     assert.equal(JSON.stringify(JSON.parse(s.read()).candidates), JSON.stringify(after.candidates));
+  } finally { s.done(); }
+});
+
+test('CLI: a refresh leaves what it did not seed: the sweep cursor, a research-filed candidate, a geocoded point', () => {
+  const served = { key: candidateKey('Bar Cotto', '1546 15th Ave'), name: 'Bar Cotto', address: '1546 15th Ave, Seattle, WA 98122',
+    neighborhood: 'Capitol Hill', sources: ['research'], status: 'rejected', verdict: 'not-pizza',
+    note: 'A salumeria and bar; pizza is one section of the menu.', resolutionSource: 'https://barcotto.example/menu',
+    resolvedDate: '2026-08-31', lat: 47.61473, lon: -122.31265 };
+  const { candidates, ...head } = stored();
+  Object.assign(candidates[0], { lat: 47.61478, lon: -122.34561 });
+  const s = scratch({ ...head, checked: daysAgo(40), servesCursor: 8, candidates: [...candidates, served] });
+  try {
+    // the register lists a permit it has not seen before, so the list is rewritten
+    const res = s.run(['--max-age-days=30'], 'ok', [row({}), row({ business_id: 'PR-2', name: '#807 TUTTA BELLA LLC', address: '2746 NE 45TH ST', zip_code: '98105' }),
+      row({ business_id: 'PR-9', name: 'PIZZA RASOI', address: '1011 VALLEY ST', zip_code: '98109' })]);
+    assert.equal(res.status, 0, res.stderr);
+    const after = JSON.parse(s.read());
+    assert.equal(after.servesCursor, 8);
+    assert.deepEqual(Object.keys(after), ['updated', 'checked', 'cutoffMonths', 'servesCursor', 'candidates']);
+    assert.deepEqual(after.candidates.find(c => c.name === 'Bar Cotto'), served);
+    assert.deepEqual(after.candidates.map(c => [c.name, c.status]).sort(),
+      [['Bar Cotto', 'rejected'], ['Belltown Pizza', 'rejected'], ['Pizza Rasoi', 'pending'], ['Tutta Bella LLC', 'promoted']]);
+    const belltown = after.candidates.find(c => c.name === 'Belltown Pizza');
+    assert.deepEqual([belltown.lat, belltown.lon], [47.61478, -122.34561]);
+
+    // and when a refresh finds nothing new, the file differs by `checked` alone
+    const before = JSON.parse(s.read());
+    const again = s.run([]);
+    assert.equal(again.status, 0, again.stderr);
+    assert.deepEqual({ ...JSON.parse(s.read()), checked: before.checked }, before);
   } finally { s.done(); }
 });
 

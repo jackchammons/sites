@@ -8,7 +8,7 @@ const r1 = n => Math.round(n * 10) / 10;
 import { locationLabel } from '../src/locations.js';
 
 export function writeDist(dist, ctx, html) {
-  const { root, dataset, now, week, ranked, allScored, baseline, brackets } = ctx;
+  const { root, now, week, allScored, baseline, brackets } = ctx;
   /* ---- emit ---- */
   // Clearing the target is only safe when it is a previous build or empty: OUT_DIR=. would
   // otherwise delete this site's source.
@@ -24,7 +24,7 @@ export function writeDist(dist, ctx, html) {
   fs.writeFileSync(path.join(dist, 'index.html'), html);
   // Every module app.js can reach at runtime. Missing one is a 404 in the
   // browser; verify.mjs walks the import graph to catch it.
-  for (const f of ['app.js']) {
+  for (const f of ['app.js', 'search.js']) {
     fs.copyFileSync(path.join(root, 'src', f), path.join(dist, f));
   }
   // app.js fetches this one itself, when the map is about to be seen.
@@ -44,7 +44,7 @@ export function writeDist(dist, ctx, html) {
       factors: Object.fromEntries(Object.entries(r.factorScores).map(([k, v]) => [k, r1(v)])),
       penalty: r1(r.penaltyApplied)
     })),
-    directory: dataset.restaurants.map(r => ({
+    directory: ctx.registry.entries.map(r => ({
       id: r.id, name: r.name, url: r.url ?? null, status: r.status ?? 'open',
       neighborhood: locationLabel(r), locations: r.locations ?? []
     })),

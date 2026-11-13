@@ -7,11 +7,12 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { pickTask, buildTask, lastSuccessFromLog, TYPES, DISPATCH_ONLY } from '../scripts/next-task.mjs';
 import { PER_PASS, RETRY_DAYS, ROTATION, LIVENESS_REVISIT_DAYS, CLOSURE_RECONFIRM_DAYS, FACTS_SOUGHT_UNLISTED,
-  factsSought, factsOutstanding } from '../src/rules.js';
+  NEIGHBORHOODS, SERVES_HOODS_PER_PASS, SERVES_SEARCHES_PER_HOOD, SERVES_IN_PASSING,
+  factsSought, factsOutstanding, servesSweep } from '../src/rules.js';
 import { LOCATION_REVISIT_DAYS } from '../src/locations.js';
-import { CAPS, MAX_LEN } from '../src/validate-research.js';
+import { CAPS, MAX_LEN, validateResearch } from '../src/validate-research.js';
 import { applyResearch } from '../scripts/apply-research.mjs';
-import { mergeCandidates } from '../src/census.js';
+import { candidateKey, mergeCandidates } from '../src/census.js';
 
 const script = fileURLToPath(new URL('../scripts/next-task.mjs', import.meta.url));
 const NOW = Date.parse('2026-11-10T12:00:00Z');
@@ -57,7 +58,7 @@ test('rotation: census and facts rotate with the daily types, and the backfills 
   assert.deepEqual(TYPES, ['discovery', 'locations', 'liveness', 'news', 'rating', 'census', 'facts']);
   // the rotation is the one the page prints
   assert.equal(TYPES, ROTATION);
-  assert.deepEqual(DISPATCH_ONLY, ['social', 'coverage', 'sources', 'rerate']);
+  assert.deepEqual(DISPATCH_ONLY, ['social', 'coverage', 'sources', 'rerate', 'serves']);
   // Every backfill has a worklist today, and auto mode still never draws one.
   const none = Object.fromEntries(TYPES.map(t => [t, 0]));
   for (let d = 0; d < 12; d++) {
@@ -267,7 +268,8 @@ test('a pass that resolves nothing can report its whole worklist: every skipped 
 
 /* ---- the numbers every worklist draws with ---- */
 test('rules: every worklist takes the number of entries rules.js states, and no other', () => {
-  assert.deepEqual(PER_PASS, { rating: 6, rerate: 7, locations: 5, liveness: 6, census: 10, facts: 12, coverage: 10, social: 15, sources: 5 });
+  assert.deepEqual(PER_PASS, { rating: 6, rerate: 7, locations: 5, liveness: 6, census: 10, facts: 12, coverage: 10, social: 15, sources: 5,
+    serves: 12 });
   assert.deepEqual(RETRY_DAYS, { rating: 90, facts: 90, coverage: 90, social: 90 });
   assert.deepEqual([LOCATION_REVISIT_DAYS, LIVENESS_REVISIT_DAYS, CLOSURE_RECONFIRM_DAYS], [30, 14, 90]);
 
@@ -688,6 +690,145 @@ test('locations: nothing left to look at is an empty worklist', () => {
   assert.equal(buildTask('locations', rs, { now: NOW }).worklistSize, 0);
 });
 
+/* ---- serves: places that serve pizza and are not pizzerias ---- */
+const hoodsOf = brief => brief.split('\n\n')[1].split('\n').map(l => l.replace(/^- /, ''));
+
+test('rules: one pass of the serves sweep takes the next few neighbourhoods from the cursor, and wraps', () => {
+  assert.deepEqual([SERVES_HOODS_PER_PASS, SERVES_SEARCHES_PER_HOOD, SERVES_IN_PASSING, PER_PASS.serves], [4, 3, 5, 12]);
+  assert.equal(new Set(NEIGHBORHOODS).size, NEIGHBORHOODS.length);
+  assert.deepEqual(servesSweep(0), { start: 0, hoods: NEIGHBORHOODS.slice(0, SERVES_HOODS_PER_PASS), next: SERVES_HOODS_PER_PASS });
+  assert.deepEqual(servesSweep(9).hoods, NEIGHBORHOODS.slice(9, 9 + SERVES_HOODS_PER_PASS));
+  // the last pass of a lap runs off the end of the list and on from its start
+  const n = NEIGHBORHOODS.length;
+  assert.deepEqual(servesSweep(n - 1), { start: n - 1,
+    hoods: [NEIGHBORHOODS[n - 1], ...NEIGHBORHOODS.slice(0, SERVES_HOODS_PER_PASS - 1)], next: SERVES_HOODS_PER_PASS - 1 });
+  // no cursor yet, or one that is not a position in the list, is the top
+  for (const lost of [undefined, null, -1, n, n + 7, 1.5, '4', NaN]) assert.equal(servesSweep(lost).start, 0, String(lost));
+  // following the cursor covers every neighbourhood before any comes round again
+  const seen = [];
+  for (let c = 0, i = 0; i < Math.ceil(n / SERVES_HOODS_PER_PASS); i++, c = servesSweep(c).next) seen.push(...servesSweep(c).hoods);
+  assert.deepEqual(seen.slice(0, n), NEIGHBORHOODS);
+});
+
+test('serves: dispatch-only, with no worklist, so a forced pass always runs and auto never draws it', () => {
+  assert.ok(DISPATCH_ONLY.includes('serves') && !TYPES.includes('serves'));
+  assert.equal(pickTask('serves', null, () => false), 'serves');
+  assert.equal(buildTask('serves', [], { now: NOW }).worklistSize, null);
+  const none = Object.fromEntries(TYPES.map(t => [t, 0]));
+  for (let d = 0; d < 12; d++) assert.notEqual(pickTask('auto', none, () => true, d), 'serves');
+});
+
+test('serves brief: the neighbourhoods at the cursor, and the rules a record is held to', () => {
+  const { brief } = buildTask('serves', [], { now: NOW });
+  assert.match(brief, /^Your task: find places in Seattle that serve pizza and are not\npizzerias/);
+  assert.deepEqual(hoodsOf(brief), NEIGHBORHOODS.slice(0, SERVES_HOODS_PER_PASS));
+  assert.deepEqual(hoodsOf(buildTask('serves', [], { now: NOW, servesCursor: 12 }).brief), NEIGHBORHOODS.slice(12, 12 + SERVES_HOODS_PER_PASS));
+  // what belongs, in the owner's terms
+  assert.match(brief, /An Italian restaurant with a pizza\s+section, a bar with a pizza oven, a bakery that sells slices, a brewery\s+with a pizza kitchen/);
+  // a pizzeria is not for this section: it goes in directory like any discovery
+  assert.match(brief, /A place whose main business is pizza\. That is a pizzeria: if it is not\s+named below, report it as a "directory" entry, like any discovery/);
+  assert.match(brief, /- A national chain, of any kind\./);
+  // the record, its address and its source
+  assert.match(brief, /Report each find as a "servesPizza" record:\n\{"name": /);
+  for (const field of ['"address": "<street address>, Seattle, WA <ZIP>"', '"neighborhood": ', '"note": ', '"source": "<https page that shows pizza on the menu>"']) {
+    assert.ok(brief.includes(field), field);
+  }
+  assert.match(brief, /Every record needs the street address and a source page you opened: the\s+place's own site or menu, or published coverage/);
+  assert.match(brief, /A review\s+aggregator, a delivery app, a directory listing or a social profile is\s+refused as the source/);
+  // the numbers are the ones in rules.js, and an empty result is a good one
+  assert.ok(brief.includes(`At most ${PER_PASS.serves} records.`));
+  assert.ok(brief.includes(`about ${SERVES_SEARCHES_PER_HOOD} searches per neighborhood, ${SERVES_SEARCHES_PER_HOOD * SERVES_HOODS_PER_PASS} in total`));
+  assert.match(brief, /A neighborhood with nothing to report is a\s+correct result, and so is an empty "servesPizza" list/);
+  assert.ok(PER_PASS.serves <= CAPS.servesPizza);
+  // The brief is the agent's whole instruction, and it has no shell.
+  assert.doesNotMatch(brief, /\.mjs|\.js\b|servesCursor|candidates\.json|verdict/);
+});
+
+test('serves brief: names what is already known in its neighbourhoods, on file and in the queue', () => {
+  const rs = [
+    entry('ballard-pie', { name: 'Ballard Pie' }),                                             // neighbourhood on the entry
+    entry('roving-slice', { name: 'Roving Slice', neighborhood: 'Citywide',
+      locations: [{ neighborhood: 'Georgetown', address: '1 A St, Seattle, WA 98108' }, { neighborhood: 'Fremont', address: '2 B St, Seattle, WA 98103' }] }),
+    entry('lake-pie', { name: 'Lake Pie', neighborhood: 'Greenlake' }),                         // one place, two spellings
+    entry('gone-pie', { name: 'Gone Pie', neighborhood: 'Wallingford', status: 'closed' }),     // closed is still on file by name
+    entry('far-pie', { name: 'Far Pie', neighborhood: 'Rainier Beach' })
+  ];
+  const queued = (name, over) => ({ key: candidateKey(name, '9 Z St'), name, address: '9 Z St, Seattle, WA 98107', sources: ['research'],
+    status: 'rejected', verdict: 'not-pizza', neighborhood: 'Ballard', ...over });
+  const candidates = [
+    queued('Stoneburner'),
+    queued('Rainier Tavern', { neighborhood: 'Rainier Beach' }),
+    queued('Joined Since', { status: 'promoted', matchedId: 'ballard-pie' }),
+    // from the permit register: an address and no neighbourhood
+    { key: 'pizzutos italian|5032', name: "Pizzuto'S Italian Cafe", address: '5032 Wilson Ave S, Seattle, WA 98118', sources: ['kc-health'], status: 'rejected', verdict: 'not-pizza' },
+    { key: 'lead|1', name: 'Lead One Pizza', address: '1 A St, D, Seattle, WA 98101', sources: ['kc-health'], status: 'pending' },
+    { key: 'dominos|714', name: "Domino'S Pizza #7063", address: '714 Taylor Ave N, Seattle, WA 98109', sources: ['kc-health'], status: 'chain' },
+    { key: 'zeeks|6', name: 'ZEEKS PIZZA #6', address: '6 C St, Seattle, WA 98109', sources: ['kc-health'], status: 'promoted', matchedId: 'zeeks' },
+    { key: 'dup|7', name: 'Second Permit Pizza', address: '7 D St, Seattle, WA 98109', sources: ['kc-health'], status: 'rejected', verdict: 'duplicate', matchedId: 'zeeks' }
+  ];
+  const { brief } = buildTask('serves', rs, { now: NOW, candidates });
+  assert.deepEqual(hoodsOf(brief), ['Ballard', 'Fremont', 'Wallingford', 'Green Lake']);
+  assert.match(brief, /A place the index already knows, under any spelling\. In these\n  neighborhoods that is:\n  Ballard Pie; Gone Pie; Lake Pie; Roving Slice; Stoneburner\n/);
+  assert.match(brief, /which\n  have no neighborhood on file:\n  Lead One Pizza \(1 A St\); Pizzuto's Italian Cafe \(5032 Wilson Ave S\)\n/);
+  for (const elsewhere of ['Far Pie', 'Rainier Tavern', 'Joined Since', 'Domino', 'ZEEKS', 'Second Permit']) assert.ok(!brief.includes(elsewhere), elsewhere);
+
+  // another pass, other ground: what it lists moves with the cursor
+  const south = buildTask('serves', rs, { now: NOW, candidates, servesCursor: NEIGHBORHOODS.indexOf('Rainier Beach') }).brief;
+  assert.match(south, /neighborhoods that is:\n  Far Pie; Rainier Tavern; Roving Slice\n/);
+  // nothing known there yet, and no permit candidates: the brief says so and prints no empty list
+  const bare = buildTask('serves', [], { now: NOW }).brief;
+  assert.match(bare, /neighborhoods that is:\n  \(nothing yet\)\n\nReport each find/);
+});
+
+test('serves: both ends of the sweep. The apply step moves the cursor the brief was drawn from, found anything or not', () => {
+  const dataset = { city: 'Seattle', dataVersion: '2026.11', restaurants: [] };
+  const candFile = { updated: '2026-11-01T00:00:00.000Z', candidates: [] };
+  const drawn = [];
+  const pass = research => {
+    const { brief } = buildTask('serves', dataset.restaurants, { now: NOW, candidates: candFile.candidates, servesCursor: candFile.servesCursor });
+    drawn.push(hoodsOf(brief));
+    const { accepted, fails } = validateResearch(research, dataset, NOW, candFile);
+    assert.deepEqual(fails, []);
+    applyResearch(accepted, { dataset, candFile }, '2026-11-10', () => {}, { task: 'serves' });
+    return brief;
+  };
+  // the first pass finds nothing at all, and the second still starts where the first stopped
+  pass({ updated: '2026-11-10T00:00:00Z', servesPizza: [] });
+  assert.equal(candFile.servesCursor, SERVES_HOODS_PER_PASS);
+  pass({ servesPizza: [{ name: 'Stoneburner', address: '5214 Ballard Ave NW, Seattle, WA 98107', neighborhood: 'Greenwood',
+    note: 'A hotel restaurant with a wood oven; pizza is one part of a long Mediterranean menu.', source: 'https://stoneburner.example/menu' }] });
+  const third = pass({});
+  assert.deepEqual(drawn, [0, 1, 2].map(i => NEIGHBORHOODS.slice(i * SERVES_HOODS_PER_PASS, (i + 1) * SERVES_HOODS_PER_PASS)));
+  assert.equal(candFile.servesCursor, 3 * SERVES_HOODS_PER_PASS);
+  // what the second pass filed is in the queue, with its neighbourhood, for a later pass over that ground to be told about
+  assert.deepEqual(candFile.candidates.map(c => [c.name, c.neighborhood, c.verdict]), [['Stoneburner', 'Greenwood', 'not-pizza']]);
+  assert.ok(!third.includes('Stoneburner'));
+  const lap = buildTask('serves', [], { now: NOW, candidates: candFile.candidates, servesCursor: SERVES_HOODS_PER_PASS }).brief;
+  assert.match(lap, /neighborhoods that is:\n  Stoneburner\n/);
+
+  // a discovery pass that files one in passing has swept nothing
+  applyResearch({ servesPizza: [] }, { dataset, candFile }, '2026-11-11', () => {}, { task: 'discovery' });
+  assert.equal(candFile.servesCursor, 3 * SERVES_HOODS_PER_PASS);
+  // a full lap ends where it began
+  const laps = { candidates: [] };
+  for (let i = 0; i < NEIGHBORHOODS.length; i++) applyResearch({}, { dataset, candFile: laps }, '2026-11-10', () => {}, { task: 'serves' });
+  assert.equal(laps.servesCursor, (NEIGHBORHOODS.length * SERVES_HOODS_PER_PASS) % NEIGHBORHOODS.length);
+});
+
+test('discovery brief: may file a few places that serve pizza in passing, and is otherwise as it was', () => {
+  const { brief } = buildTask('discovery', [entry('a-pie', { name: 'A Pie' })], { now: NOW });
+  assert.match(brief, /^Your task: find pizzerias inside Seattle city limits that are not yet on file\./);
+  assert.match(brief, /At most 10 entries and 12 web searches\. Fewer\nreal finds beat a padded list; an empty directory array is a valid result\nif the city has nothing new\.\n\nIf a search turns up/);
+  assert.ok(brief.includes(`may report up to ${SERVES_IN_PASSING} such places as "servesPizza" records instead`));
+  assert.match(brief, /serves pizza and is not a pizzeria \(an Italian restaurant with a pizza\nsection, a bar with a pizza oven\), it does not belong in "directory"/);
+  assert.match(brief, /Only the ones you meet; do not\nspend a search looking for them\.$/);
+  assert.ok(SERVES_IN_PASSING <= CAPS.servesPizza);
+  // the neighbourhoods it sweeps are drawn from the list the serves sweep walks, less the ones with an entry
+  const swept = [...brief.matchAll(/^- (.+)$/gm)].map(m => m[1]);
+  assert.equal(swept.length, 5);
+  for (const h of swept) assert.ok(NEIGHBORHOODS.includes(h) && h !== 'Ballard', h);
+});
+
 /* ---- the CLI ---- */
 test('importing the module runs nothing', () => {
   const out = execFileSync(process.execPath, ['--input-type=module', '-e',
@@ -718,4 +859,28 @@ test('census brief: a chain is a national brand, and a Puget Sound chain joins',
   });
   assert.match(brief, /chain = a national brand/);
   assert.match(brief, /local to the Puget Sound region is\s+NOT one/);
+});
+
+test('CLI: the serves brief starts from the cursor candidates.json holds, and from the top when it holds none', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'next-task-'));
+  try {
+    for (const d of ['scripts', 'data']) fs.mkdirSync(path.join(dir, d));
+    fs.copyFileSync(script, path.join(dir, 'scripts/next-task.mjs'));
+    fs.cpSync(fileURLToPath(new URL('../src/', import.meta.url)), path.join(dir, 'src'),
+      { recursive: true, filter: src => !src.includes(`${path.sep}vendor`) });
+    fs.writeFileSync(path.join(dir, 'data/restaurants.json'), JSON.stringify({ restaurants: [] }));
+    const run = file => {
+      if (file) fs.writeFileSync(path.join(dir, 'data/candidates.json'), JSON.stringify(file));
+      return execFileSync(process.execPath, [path.join(dir, 'scripts/next-task.mjs'), 'serves'],
+        { encoding: 'utf8', env: { ...process.env, GITHUB_OUTPUT: '' }, stdio: ['ignore', 'pipe', 'ignore'] });
+    };
+    const first = run(null);   // no candidates file at all
+    assert.match(first, /^task=serves\nskip=false\nbrief<<TASK_BRIEF_EOF\nYour task: find places in Seattle that serve pizza/);
+    assert.ok(first.includes(`\n\n${NEIGHBORHOODS.slice(0, SERVES_HOODS_PER_PASS).map(h => `- ${h}`).join('\n')}\n\n`));
+    assert.equal(run({ candidates: [] }), first);
+    const later = run({ updated: '2026-11-10T00:00:00.000Z', servesCursor: 16, candidates: [] });
+    assert.ok(later.includes(`\n\n${NEIGHBORHOODS.slice(16, 16 + SERVES_HOODS_PER_PASS).map(h => `- ${h}`).join('\n')}\n\n`));
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
 });

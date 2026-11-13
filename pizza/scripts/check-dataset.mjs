@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /*
- * CLI wrapper for src/check-dataset.js — lints data/restaurants.json.
+ * CLI wrapper for src/check-dataset.js — lints data/restaurants.json, and
+ * what the pipeline's own scripts write into data/candidates.json.
  *
  *   node pizza/scripts/check-dataset.mjs               lint, write nothing
  *   node pizza/scripts/check-dataset.mjs --normalize   put every entry into
@@ -15,7 +16,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { checkDataset, MISSING_KEYS } from '../src/check-dataset.js';
+import { checkCandidates, checkDataset, MISSING_KEYS } from '../src/check-dataset.js';
 import { normalizeDataset, serializeDataset } from '../src/schema.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -52,3 +53,24 @@ if (fails.length) {
   process.exit(1);
 }
 console.log(`restaurants.json clean: ${dataset.restaurants.length} entries.`);
+
+/* The candidates queue, when there is one: its coordinates, the geocoder's
+ * stamp and the sweep cursor. It runs after the dataset's own lint, so a
+ * problem there is reported first and alone. The file is written only by
+ * this repository's scripts, so one that does not parse is a bad write or a
+ * bad hand edit, and fails like any other. */
+const candidatesPath = path.join(root, 'data/candidates.json');
+if (fs.existsSync(candidatesPath)) {
+  let file = null, queueFails;
+  try {
+    file = JSON.parse(fs.readFileSync(candidatesPath, 'utf8'));
+    queueFails = checkCandidates(file);
+  } catch (e) { queueFails = [`candidates.json is not valid JSON: ${e.message}`]; }
+  if (queueFails.length) {
+    console.error(`candidates.json FAILED lint (${queueFails.length} problem(s)):`);
+    for (const f of queueFails.slice(0, 30)) console.error('  ✗ ' + f);
+    process.exit(1);
+  }
+  const placed = file.candidates.filter(c => c?.lat != null).length;
+  console.log(`candidates.json clean: ${file.candidates.length} candidates, ${placed} with coordinates.`);
+}

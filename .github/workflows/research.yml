@@ -45,7 +45,7 @@ on:
         description: 'Task type (auto picks the type whose last successful pass is oldest)'
         type: choice
         default: auto
-        options: [auto, discovery, locations, liveness, news, rating, census, social, facts, coverage, sources, rerate]
+        options: [auto, discovery, locations, liveness, news, rating, census, social, facts, coverage, sources, rerate, serves]
 
 concurrency:
   group: research
@@ -142,7 +142,7 @@ jobs:
       # worklists are sized from measured timings (an entry whose website is
       # unknown costs about twice one whose site is on file).
       # A manual dispatch can force a type, including the dispatch-only ones
-      # (social, coverage, sources, rerate), which is how backfills
+      # (social, coverage, sources, rerate, serves), which is how backfills
       # and per-task testing work.
       - name: Pick today's task
         id: task
@@ -234,6 +234,11 @@ jobs:
                                  "duplicateOf":"<id of the entry on file; required when the verdict is duplicate, omit otherwise>",
                                  "note":"<what you found>",
                                  "source":"<https page, or omit>"}],
+             "servesPizza":[{"name":"<the place, by the name it trades under>",
+                             "address":"<street address>, Seattle, WA <ZIP>",
+                             "neighborhood":"<area>",
+                             "note":"<what the place is, and how pizza figures on its menu>",
+                             "source":"<https page that shows pizza on its menu: its own site or menu, or published coverage>"}],
              "directory":[{"name":"<pizzeria>","url":"<https official site or omit>",
                            "neighborhood":"<area>","style":"<style or omit>",
                            "status":"open|opening","note":"<one sentence>",
@@ -282,6 +287,15 @@ jobs:
               the profile itself); a bare instagram.com/p/<id>/ link is refused.
             - Addresses start with a street number and carry a Puget Sound ZIP
               (980xx-985xx).
+            - A servesPizza record is a Seattle restaurant, bar, bakery or cafe
+              that serves pizza and is not a pizzeria. A place whose main
+              business is pizza is a "directory" entry instead, and a national
+              chain is neither. The address is a street address in Seattle with
+              its ZIP, the note says how pizza figures on the menu, and the
+              source is the place's own site or menu or published coverage: a
+              review aggregator, a delivery app, a directory listing or a social
+              profile is refused. A place already on file, or already named in
+              your brief, is refused too.
             - A candidateReview with verdict "duplicate" must carry "duplicateOf",
               the id of the entry on file it is the same business as, taken from
               your worklist's on-file list. No other verdict may carry it.
@@ -429,9 +443,10 @@ jobs:
       # dataset. Applies every accepted section: restaurants.json takes the
       # statuses, locations, directory entries, mentions, links, facts,
       # factor ratings and attempt stamps; news is folded into buzz.json and
-      # candidate reviews into candidates.json. RESEARCH_TASK is the type the
-      # picker chose before the agent ran: a coverage pass's mentions count as
-      # a look at the entry, and nobody else's do.
+      # candidate reviews and servesPizza records into candidates.json.
+      # RESEARCH_TASK is the type the picker chose before the agent ran: a
+      # coverage pass's mentions count as a look at the entry and nobody
+      # else's do, and a serves pass moves the sweep's cursor.
       - name: Apply validated research
         env:
           RESEARCH_TASK: ${{ needs.agent.outputs.task }}

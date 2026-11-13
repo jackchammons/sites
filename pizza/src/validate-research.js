@@ -6,8 +6,8 @@
  *
  * Returns { fails, sections }: an empty fails array means the document passed.
  */
-import { PUGET_SOUND_ZIP, PUGET_SOUND_ZIP_LABEL } from './bounds.js';
-import { normName } from './census.js';
+import { PUGET_SOUND_ZIP, PUGET_SOUND_ZIP_LABEL, seattleAddressForm } from './bounds.js';
+import { candidateKey, isNationalChain, matchEntry, normName } from './census.js';
 import { streetKey } from './locations.js';
 import { PER_PASS } from './rules.js';
 import { FACT_FIELDS } from './schema.js';
@@ -28,14 +28,21 @@ export const SKIPPED = { ratingSkipped: ['rating', 'rerate'], locationsSkipped: 
  * that resolves nothing reports every entry it was given, and the room above
  * that is for an entry the agent looked at beyond its list. */
 const skippedCap = tasks => 2 * Math.max(...tasks.map(t => PER_PASS[t]));
-/* The most records a section may hold. Past it, any section but a
- * `…Skipped` one fails the file. `facts` holds three records for each entry
+/* The sections whose cap costs the records past it and never the file: the
+ * `…Skipped` ones, and `servesPizza`. A place that serves pizza and is not a
+ * pizzeria is filed by a sweep that is asked for a dozen and by discovery in
+ * passing; neither is worth a pass's other findings when it runs long. */
+export const SOFT_CAPPED = [...Object.keys(SKIPPED), 'servesPizza'];
+/* The most records a section may hold. Past it, any section not named in
+ * SOFT_CAPPED fails the file. `facts` holds three records for each entry
  * of its worklist, because a record carries what one page states and an
- * entry's facts are spread over its About page, its menu and its coverage. */
+ * entry's facts are spread over its About page, its menu and its coverage.
+ * `servesPizza` holds twice what one pass of the serves sweep is asked for,
+ * the room a `…Skipped` section has above its worklist. */
 export const CAPS = { news: 20, locations: 12, directory: 10, status: 10,
                       mentions: 40, factorRatings: 12, links: 20,
                       candidateReview: 15, facts: 3 * PER_PASS.facts,
-                      factorSources: 12,
+                      factorSources: 12, servesPizza: 2 * PER_PASS.serves,
                       ...Object.fromEntries(Object.entries(SKIPPED).map(([sec, tasks]) => [sec, skippedCap(tasks)])) };
 export const MAX_AGE_DAYS = 180;
 /* Mentions feed a 24-month coverage window in slice.js; capping them at 180
@@ -130,8 +137,11 @@ export const isOwnPage = (u, entry) => {
  * problem found; `fatal` means the document itself is unusable (not an object,
  * a section over its cap, a retired channel); otherwise `accepted` holds each
  * section with the failing records dropped, so one bad record costs that
- * record, not the run. A `…Skipped` section over its cap is not fatal: the
- * records past the cap are dropped like any other failing record. `unknown` names the top-level keys that are no section
+ * record, not the run. A `…Skipped` section over its cap is not fatal, and
+ * neither is `servesPizza`: the records past the cap are dropped like any
+ * other failing record. `extra.candidates` is the candidates queue, when
+ * there is one: a census verdict has to name a pending candidate in it, and a
+ * servesPizza record may not repeat anything it holds. `unknown` names the top-level keys that are no section
  * at all: a misspelt section ("statuses", "factorRating") is never applied,
  * and the caller has to say so rather than report a clean, empty pass. */
 export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
@@ -157,6 +167,7 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
                      factorRatings: doc.factorRatings ?? [],
                      links: doc.links ?? [],
                      candidateReview: doc.candidateReview ?? [],
+                     servesPizza: doc.servesPizza ?? [],
                      facts: doc.facts ?? [],
                      ratingSkipped: doc.ratingSkipped ?? [],
                      factorSources: doc.factorSources ?? [],
@@ -179,7 +190,7 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
 
   for (const [name, arr] of Object.entries(sections)) {
     if (!Array.isArray(arr)) { fails.push(`${name} must be an array`); continue; }
-    if (arr.length > CAPS[name] && !Object.hasOwn(SKIPPED, name)) fails.push(`${name}: ${arr.length} entries exceeds the ${CAPS[name]} cap`);
+    if (arr.length > CAPS[name] && !SOFT_CAPPED.includes(name)) fails.push(`${name}: ${arr.length} entries exceeds the ${CAPS[name]} cap`);
   }
   if (fails.length) return { fails, sections, fatal: true, accepted: {}, unknown };
 
@@ -334,6 +345,72 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
     if (badIdx.directory?.has(i)) return;
     if (nameKey) { knownNames.set(nameKey, it.name); foundHere.add(nameKey); }
     if (streetAt) knownStreets.set(streetAt, it.name);
+  });
+
+  /* ---- servesPizza: places that serve pizza and are not pizzerias ----
+   * A restaurant, bar, bakery or cafe with pizza on the menu. The permit
+   * seed finds a candidate by a name that says pizza, so it cannot find
+   * these, and a pass that meets one files it here. The apply step puts it in
+   * the candidates queue as not-pizza: known to the index, listed on the page
+   * with the reason, never ranked.
+   *
+   * A record is one place at one Seattle street address, with a note that
+   * says how pizza figures there and a page that shows it: the place's own
+   * site or menu, or published coverage. A review aggregator, a delivery app,
+   * a directory listing or a social profile is refused, under the rule a
+   * facts record's description is held to: their menus and categories are
+   * compiled, and this record is the only evidence the page will have.
+   *
+   * It may not repeat anything the index already knows. A name or a street
+   * address on file is an entry, and the place for news about an entry is
+   * the entry; the name and address sets are the directory section's, so a
+   * place this same file adds to the directory is on file here too. A key or
+   * a street address in the candidates queue, in any state, is a place a
+   * pass has already filed or the register has already turned up. Checked
+   * after `directory` and never by it: a place filed here can still join the
+   * directory later, by that channel, if a pass finds it is a pizzeria. */
+  const queue = extra.candidates ?? [];
+  const queueKeys = new Map(queue.filter(c => c?.key).map(c => [c.key, c.name]));
+  const queueStreets = new Map(queue.filter(c => typeof c?.address === 'string')
+    .map(c => [streetKey(c.address), c.name]));
+  const servedHere = new Map();
+  let servesKept = 0;
+  sections.servesPizza.forEach((it, i) => {
+    const sec = 'servesPizza';
+    if (!checkText(sec, i, it?.name, 'name', MAX_LEN.name, 2)) return;
+    checkText(sec, i, it?.neighborhood, 'neighborhood', MAX_LEN.name, 1);
+    if (checkText(sec, i, it?.note, 'note', MAX_LEN.note, 15) && !/pizz|\bpies?\b|\bslices?\b/i.test(it.note)) {
+      bad(sec, i, 'note must say how pizza figures on the menu');
+    }
+    checkUrl(sec, i, it?.source, 'source');
+    // A source with no host has already failed as a URL, and says so once.
+    if (hostOf(it?.source) && isNonCriticism(it.source)) {
+      bad(sec, i, `source must be the place's own site or menu, or published coverage, not ${hostOf(it.source)}`);
+    }
+    if (isNationalChain(it.name)) bad(sec, i, `"${it.name}" is a national chain, which this section does not take`);
+    if (!checkText(sec, i, it?.address, 'address', MAX_LEN.address, 1)) return;
+    if (!/^\s*\d/.test(it.address)) bad(sec, i, `address does not start with a street number: "${it.address}"`);
+    const address = seattleAddressForm(it.address);
+    if (!address) { bad(sec, i, `address is not a Seattle street address ("<street>, Seattle, WA 981xx"): "${it.address}"`); return; }
+
+    const key = candidateKey(it.name, address);
+    const streetAt = streetKey(address);
+    const entry = matchEntry(it, dataset.restaurants);
+    const nameKey = normName(it.name);
+    if (entry) bad(sec, i, `"${it.name}" is already on file as ${entry.name}`);
+    else if (nameKey && knownNames.has(nameKey)) bad(sec, i, `"${it.name}" is already on file as ${knownNames.get(nameKey)}`);
+    else if (knownStreets.has(streetAt)) bad(sec, i, `"${it.address}" is already on file as ${knownStreets.get(streetAt)}`);
+    else if (queueKeys.has(key)) bad(sec, i, `"${it.name}" is already known: the candidates queue holds it as "${queueKeys.get(key)}"`);
+    else if (queueStreets.has(streetAt)) bad(sec, i, `"${it.address}" is already known: the candidates queue holds that address as "${queueStreets.get(streetAt)}"`);
+    else if (servedHere.has(key) || servedHere.has(streetAt)) {
+      bad(sec, i, `"${it.name}" repeats "${servedHere.get(key) ?? servedHere.get(streetAt)}" from earlier in this file`);
+    }
+    if (badIdx[sec]?.has(i)) return;
+    // The cap counts the records that passed, as a `…Skipped` section's does.
+    if (servesKept >= CAPS[sec]) { bad(sec, i, `past the ${CAPS[sec]} records this section holds; "${it.name}" is not filed`); return; }
+    servesKept++;
+    servedHere.set(key, it.name);
+    servedHere.set(streetAt, it.name);
   });
 
   /* ---- status: liveness confirmations ---- */

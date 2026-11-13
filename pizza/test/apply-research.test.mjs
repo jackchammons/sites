@@ -6,9 +6,9 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { applyResearch } from '../scripts/apply-research.mjs';
-import { mergeCandidates } from '../src/census.js';
-import { checkDataset } from '../src/check-dataset.js';
-import { factsOutstanding } from '../src/rules.js';
+import { candidateKey, candidateStanding, mergeCandidates } from '../src/census.js';
+import { checkCandidates, checkDataset } from '../src/check-dataset.js';
+import { NEIGHBORHOODS, SERVES_HOODS_PER_PASS, factsOutstanding, servesSweep } from '../src/rules.js';
 import { ENTRY_KEYS, normalizeDataset, normalizeEntry, serializeDataset } from '../src/schema.js';
 import { validateResearch } from '../src/validate-research.js';
 import { isRated, isLaunchRating } from '../src/slice.js';
@@ -46,9 +46,9 @@ const sparse = () => ({
 /* The same three in the schema's shape, as the dataset is on disk: every key
  * present, the empty value where the fixture says nothing. */
 const fresh = () => normalizeDataset(sparse());
-const apply = (research, dataset = fresh(), extra = {}) => {
+const apply = (research, dataset = fresh(), extra = {}, task = null) => {
   const lines = [];
-  const done = applyResearch(research, { dataset, ...extra }, TODAY, l => lines.push(l));
+  const done = applyResearch(research, { dataset, ...extra }, TODAY, l => lines.push(l), { task });
   return { dataset, done, lines, get: id => dataset.restaurants.find(r => r.id === id) };
 };
 
@@ -538,6 +538,178 @@ test('candidateReview: a candidate that came back is judged again, and what was 
   assert.deepEqual([again[0].status, again[0].verdict], ['rejected', 'not-pizza']);
 });
 
+/* ---- servesPizza: places that serve pizza and are not pizzerias ---- */
+const cotto = over => ({ name: 'Bar Cotto', address: '1546 15th Ave, Seattle, WA 98122', neighborhood: 'Capitol Hill',
+  note: 'A salumeria and bar from Ethan Stowell; wood-fired pizza is one section of a menu led by cured meats.',
+  source: 'https://barcotto.example/menu', ...over });
+const permit = over => ({ key: 'ghost|1', name: 'Ghost Pizza', address: '1 A St, Seattle, WA 98101', sources: ['kc-health'],
+  lastInspection: '2026-03-01', status: 'pending', ...over });
+
+test('servesPizza: an accepted record joins the queue set aside as not-pizza, in the form a permit candidate has', () => {
+  const candFile = { updated: '2026-11-01T00:00:00.000Z', candidates: [permit()] };
+  const research = { servesPizza: [cotto({ address: '1546 15th Ave Seattle WA 98122' }),
+    cotto({ name: 'Bar Cotto Belltown', address: '2318 2nd Ave, Suite B, Seattle, Washington 98121', neighborhood: ' Belltown ' })] };
+  assert.deepEqual(validateResearch(research, fresh(), NOW, candFile).fails, []);
+  const { done, lines, dataset } = apply(research, fresh(), { candFile });
+  assert.deepEqual([done.candidatesChanged, done.changes], [true, 2]);
+  assert.deepEqual(candFile.candidates.slice(1), [
+    { key: 'bar cotto|1546', name: 'Bar Cotto', address: '1546 15th Ave, Seattle, WA 98122', neighborhood: 'Capitol Hill',
+      sources: ['research'], status: 'rejected', verdict: 'not-pizza', note: cotto().note,
+      resolutionSource: 'https://barcotto.example/menu', resolvedDate: TODAY },
+    { key: 'bar cotto belltown|2318', name: 'Bar Cotto Belltown', address: '2318 2nd Ave, Suite B, Seattle, WA 98121', neighborhood: 'Belltown',
+      sources: ['research'], status: 'rejected', verdict: 'not-pizza', note: cotto().note,
+      resolutionSource: 'https://barcotto.example/menu', resolvedDate: TODAY }
+  ]);
+  assert.equal(candFile.candidates[1].key, candidateKey('Bar Cotto', candFile.candidates[1].address));
+  // no permit is tied to it, so it has no inspection date and nothing to reopen it
+  assert.equal('lastInspection' in candFile.candidates[1], false);
+  assert.deepEqual([candidateStanding(candFile.candidates[1]).origin, candidateStanding(candFile.candidates[1]).reopens], ['research', false]);
+  assert.ok(lines.includes('  - candidate "Bar Cotto" filed: serves pizza, not a pizzeria (Capitol Hill)'));
+  // nothing joined the directory, and the two files still lint
+  assert.equal(dataset.restaurants.length, 3);
+  assert.deepEqual(checkCandidates(candFile, NOW), []);
+  // a seed refresh carries both through as they are
+  const merged = mergeCandidates(candFile.candidates, [{ name: 'Ghost Pizza', address: '1 A St, Seattle, WA 98101',
+    sources: ['kc-health'], lastInspection: '2026-11-09' }], dataset.restaurants);
+  for (const c of candFile.candidates.slice(1)) assert.deepEqual(merged.find(x => x.key === c.key), c);
+});
+
+test('servesPizza: a file that skipped the validator still files nothing twice and nothing it cannot place', () => {
+  const candFile = { candidates: [permit(), { key: 'bar cotto|1546', name: 'Bar Cotto', status: 'rejected', verdict: 'not-pizza', sources: ['research'] }] };
+  const { done, lines } = apply({ servesPizza: [
+    cotto(),                                                        // already in the queue
+    cotto({ name: 'Delancey', address: '9 Z St, Seattle, WA 98107' }),   // an entry on file
+    cotto({ name: 'Corner Bar', address: '12 Main St, Bellevue, WA 98004' }),
+    cotto({ name: 'Slow Oven', address: '77 Pine St, Seattle, WA 98101' }),
+    cotto({ name: 'Slow Oven', address: '77 Pine St, Seattle, WA 98101' })   // twice in one file
+  ] }, fresh(), { candFile });
+  assert.deepEqual(candFile.candidates.map(c => c.name), ['Ghost Pizza', 'Bar Cotto', 'Slow Oven']);
+  assert.equal(done.changes, 1);
+  assert.deepEqual(lines.filter(l => l.startsWith('  ? servesPizza')), [
+    '  ? servesPizza "Bar Cotto": not filed, it is already in the candidates queue',
+    '  ? servesPizza "Delancey": not filed, it is on file as delancey',
+    '  ? servesPizza "Corner Bar": not filed, the address is not a Seattle address',
+    '  ? servesPizza "Slow Oven": not filed, it is already in the candidates queue'
+  ]);
+  // with no candidates file there is nowhere to file one, and nothing is thrown
+  assert.equal(apply({ servesPizza: [cotto()] }).done.changes, 0);
+});
+
+test('a verdict, a late promotion and a new filing all leave a candidate\'s coordinates where they are', () => {
+  const candFile = { candidates: [permit({ lat: 47.60621, lon: -122.33207 }),
+    permit({ key: 'corner bar|5', name: 'Corner Bar Pizza', address: '5 C St, Seattle, WA 98104', lat: 47.6, lon: -122.33, geoTried: undefined }),
+    permit({ key: 'delancey|1415', name: 'DELANCEY', address: '1415 Nw 70th St, Seattle, WA 98117', lat: 47.6793, lon: -122.3756 })] };
+  apply({ candidateReview: [{ name: 'Ghost Pizza', verdict: 'closed', note: 'gone since spring', source: 'https://news.example/ghost' },
+    { name: 'Corner Bar Pizza', verdict: 'not-pizza', note: 'a bar where pizza is incidental' }],
+    servesPizza: [cotto()] }, fresh(), { candFile });
+  assert.deepEqual(candFile.candidates.map(c => [c.name, c.status, c.verdict ?? null, c.lat, c.lon]), [
+    ['Ghost Pizza', 'rejected', 'closed', 47.60621, -122.33207],
+    ['Corner Bar Pizza', 'rejected', 'not-pizza', 47.6, -122.33],
+    ['DELANCEY', 'promoted', null, 47.6793, -122.3756],
+    ['Bar Cotto', 'rejected', 'not-pizza', undefined, undefined]
+  ]);
+});
+
+test('directory: a place the queue holds as not-pizza can still join, and its candidate becomes that entry', () => {
+  // Filed last month as a place that serves pizza; a discovery pass now finds it is a pizzeria.
+  const filed = { candidates: [permit()] };
+  apply({ servesPizza: [cotto()] }, fresh(), { candFile: filed });
+  const candFile = { candidates: filed.candidates.map(c => c.sources[0] === 'research'
+    ? { ...c, resolvedDate: '2026-10-12', lat: 47.61473, lon: -122.31265 } : c) };
+  const research = { directory: [{ name: 'Bar Cotto', neighborhood: 'Capitol Hill', status: 'open',
+    note: 'Now a pizzeria: the menu is Roman-style pies and little else.', source: 'https://news.example/bar-cotto-pizzeria',
+    address: '1546 15th Ave, Seattle, WA 98122' }] };
+
+  // the directory channel does not consult the queue, so the record is accepted as any discovery is
+  const { fails, accepted } = validateResearch(research, fresh(), NOW, candFile);
+  assert.deepEqual(fails, []);
+  assert.equal(accepted.directory.length, 1);
+
+  const { done, dataset, lines } = apply(research, fresh(), { candFile });
+  assert.equal(dataset.restaurants.at(-1).id, 'bar-cotto');
+  assert.equal(done.candidatesChanged, true);
+  assert.deepEqual(candFile.candidates[1], { key: 'bar cotto|1546', name: 'Bar Cotto', address: '1546 15th Ave, Seattle, WA 98122',
+    neighborhood: 'Capitol Hill', sources: ['research'], status: 'promoted', resolvedDate: TODAY, lat: 47.61473, lon: -122.31265,
+    matchedId: 'bar-cotto',
+    previousVerdict: { verdict: 'not-pizza', note: cotto().note, resolvedDate: '2026-10-12', source: 'https://barcotto.example/menu' } });
+  assert.deepEqual([candidateStanding(candFile.candidates[1]).state, candidateStanding(candFile.candidates[1]).matchedId], ['listed', 'bar-cotto']);
+  assert.ok(lines.includes('  ^ candidate "Bar Cotto" (set aside as not-pizza) promoted -> bar-cotto'));
+  // the permit candidate beside it is untouched, and a second pass changes nothing more
+  assert.deepEqual(candFile.candidates[0], permit());
+  const again = JSON.stringify(candFile);
+  apply({}, dataset, { candFile });
+  assert.equal(JSON.stringify(candFile), again);
+});
+
+test('directory: only an entry this file adds promotes a candidate that was set aside, and never a chain or a duplicate', () => {
+  const aside = (verdict, over) => permit({ status: verdict === 'chain' ? 'chain' : 'rejected', verdict, note: 'what was found',
+    resolvedDate: '2026-08-31', ...over });
+  const candFile = { candidates: [
+    aside('closed', { key: 'good luck bread|9', name: 'GOOD LUCK BREAD' }),          // matches an entry on file all along
+    aside('unverifiable', { key: 'new pie|2', name: 'New Pie Pizza' }),              // matches the entry this file adds
+    aside('chain', { key: 'new pie|3', name: 'New Pie' }),
+    aside('duplicate', { key: 'new pie|4', name: 'NEW PIE', matchedId: 'delancey' })
+  ] };
+  apply({ directory: [{ name: 'New Pie', neighborhood: 'Fremont', status: 'open', note: NOTE, source: 'https://news.example/new-pie' }] },
+    fresh(), { candFile });
+  assert.deepEqual(candFile.candidates.map(c => [c.status, c.verdict ?? null, c.matchedId ?? null]), [
+    ['rejected', 'closed', null],
+    ['promoted', null, 'new-pie'],
+    ['chain', 'chain', null],
+    ['rejected', 'duplicate', 'delancey']
+  ]);
+  assert.deepEqual(candFile.candidates[1].previousVerdict, { verdict: 'unverifiable', note: 'what was found', resolvedDate: '2026-08-31' });
+});
+
+/* ---- the serves sweep's cursor ---- */
+test('the serves sweep: a serves pass moves the cursor on, whether or not it filed anything', () => {
+  const candFile = { updated: '2026-11-01T00:00:00.000Z', checked: '2026-11-01T00:00:00.000Z', cutoffMonths: 30, candidates: [permit()] };
+  // nothing found in four neighbourhoods is still four neighbourhoods swept
+  const empty = apply({ servesPizza: [] }, fresh(), { candFile }, 'serves');
+  assert.equal(candFile.servesCursor, SERVES_HOODS_PER_PASS);
+  assert.deepEqual([empty.done.candidatesChanged, empty.done.changes], [true, 0]);
+  // the cursor sits with the stamps, ahead of the list
+  assert.deepEqual(Object.keys(candFile), ['updated', 'checked', 'cutoffMonths', 'servesCursor', 'candidates']);
+  assert.deepEqual(candFile.candidates, [permit()]);
+  assert.ok(empty.lines.includes(`  > serves sweep: the next pass starts at ${NEIGHBORHOODS[SERVES_HOODS_PER_PASS]}`));
+
+  // a pass that files something moves it the same distance, and the key stays where it is
+  const found = apply({ servesPizza: [cotto()] }, fresh(), { candFile }, 'serves');
+  assert.equal(candFile.servesCursor, 2 * SERVES_HOODS_PER_PASS);
+  assert.equal(found.done.changes, 1);
+  assert.deepEqual(Object.keys(candFile), ['updated', 'checked', 'cutoffMonths', 'servesCursor', 'candidates']);
+  assert.deepEqual(checkCandidates(candFile, NOW), []);
+});
+
+test('the serves sweep: no other task moves the cursor, and it wraps at the end of the list', () => {
+  for (const task of [null, 'discovery', 'census', 'coverage']) {
+    const candFile = { candidates: [permit()], servesCursor: 8 };
+    const quiet = apply({ servesPizza: [] }, fresh(), { candFile }, task);
+    assert.deepEqual([candFile.servesCursor, quiet.done.candidatesChanged], [8, false], String(task));
+    // discovery files one in passing: the queue changes and the sweep has still covered nothing
+    const passing = apply({ servesPizza: [cotto()] }, fresh(), { candFile }, task);
+    assert.deepEqual([candFile.servesCursor, passing.done.candidatesChanged, candFile.candidates.length], [8, true, 2], String(task));
+  }
+  // every pass takes the next few, so the whole city is covered before any neighbourhood comes round again
+  const candFile = { candidates: [] };
+  const seen = [];
+  const passes = Math.ceil(NEIGHBORHOODS.length / SERVES_HOODS_PER_PASS);
+  for (let i = 0; i < passes; i++) {
+    seen.push(...servesSweep(candFile.servesCursor).hoods);
+    apply({}, fresh(), { candFile }, 'serves');
+  }
+  assert.deepEqual(new Set(seen), new Set(NEIGHBORHOODS));
+  assert.ok(candFile.servesCursor < NEIGHBORHOODS.length);
+  // a cursor that is not a position in the list starts again from the top
+  for (const lost of [-1, 999, 2.5, 'Ballard', null]) {
+    const file = { candidates: [], servesCursor: lost };
+    apply({}, fresh(), { candFile: file }, 'serves');
+    assert.equal(file.servesCursor, SERVES_HOODS_PER_PASS % NEIGHBORHOODS.length, String(lost));
+  }
+  // with no candidates file there is nowhere to keep one
+  assert.equal(apply({}, fresh(), {}, 'serves').done.candidatesChanged, false);
+});
+
 /* ---- the CLI ---- */
 test('importing the module applies nothing', () => {
   const out = execFileSync(process.execPath, ['--input-type=module', '-e',
@@ -548,7 +720,7 @@ test('importing the module applies nothing', () => {
 
 /* The CLI writes data, so it runs on a copy in a scratch directory and never
  * on the checkout. */
-function scratch(dataset, research) {
+function scratch(dataset, research, candFile = null) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'apply-research-'));
   for (const d of ['scripts', 'data']) fs.mkdirSync(path.join(dir, d));
   fs.copyFileSync(script, path.join(dir, 'scripts/apply-research.mjs'));
@@ -557,10 +729,14 @@ function scratch(dataset, research) {
   const file = path.join(dir, 'data/restaurants.json');
   fs.writeFileSync(file, JSON.stringify(dataset, null, 2) + '\n');
   fs.writeFileSync(path.join(dir, 'data/research.json'), JSON.stringify(research));
+  const queue = path.join(dir, 'data/candidates.json');
+  if (candFile) fs.writeFileSync(queue, JSON.stringify(candFile, null, 2) + '\n');
   return {
     read: () => fs.readFileSync(file, 'utf8'),
     mtime: () => fs.statSync(file).mtimeMs,
-    run: () => execFileSync(process.execPath, [path.join(dir, 'scripts/apply-research.mjs')], { encoding: 'utf8' }),
+    candidates: () => JSON.parse(fs.readFileSync(queue, 'utf8')),
+    run: (task = '') => execFileSync(process.execPath, [path.join(dir, 'scripts/apply-research.mjs')],
+      { encoding: 'utf8', env: { ...process.env, RESEARCH_TASK: task } }),
     done: () => fs.rmSync(dir, { recursive: true, force: true })
   };
 }
@@ -591,5 +767,26 @@ test('CLI: what it writes is the lint\'s shape and the normaliser\'s bytes', () 
     assert.deepEqual([r.opened, r.factsSought], [2021, ['priceIndex', 'style', 'styleGroup', 'signature']]);
     assert.deepEqual(Object.keys(r), ENTRY_KEYS);
     assert.deepEqual(normalizeEntry(r), r);
+  } finally { s.done(); }
+});
+
+test('CLI: a serves pass writes its finds and its cursor to candidates.json, and no entry changes', () => {
+  const s = scratch(fresh(), { updated: '2026-11-10T00:00:00Z', servesPizza: [cotto()] },
+    { updated: '2026-11-01T00:00:00.000Z', checked: '2026-11-01T00:00:00.000Z', cutoffMonths: 30, candidates: [permit()] });
+  try {
+    const out = s.run('serves');
+    assert.match(out, /- candidate "Bar Cotto" filed: serves pizza, not a pizzeria \(Capitol Hill\)/);
+    const after = s.candidates();
+    assert.deepEqual(Object.keys(after), ['updated', 'checked', 'cutoffMonths', 'servesCursor', 'candidates']);
+    assert.equal(after.servesCursor, SERVES_HOODS_PER_PASS);
+    assert.deepEqual(after.candidates.map(c => [c.name, c.status, c.verdict ?? null]),
+      [['Ghost Pizza', 'pending', null], ['Bar Cotto', 'rejected', 'not-pizza']]);
+    assert.deepEqual(checkCandidates(after), []);
+    // a filing is a change to the data, as a census verdict is; the entries themselves are as they were
+    assert.deepEqual(JSON.parse(s.read()).restaurants, fresh().restaurants);
+    // run again by hand, with no task named: the record is in the queue now, and nothing moves the cursor
+    const again = s.run();
+    assert.match(again, /\? servesPizza "Bar Cotto": not filed, it is already in the candidates queue/);
+    assert.deepEqual(s.candidates(), after);
   } finally { s.done(); }
 });
