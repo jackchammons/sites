@@ -8314,6 +8314,55 @@
       "factsNote": null,
       "socialAttempted": null,
       "socialNote": null
+    },
+    {
+      "id": "alibi-room",
+      "name": "Alibi Room",
+      "neighborhood": "Downtown",
+      "neighborhoodIsPlaceholder": null,
+      "blurb": "A low-key pizzeria and lounge tucked into Pike Place Market's Post Alley, built around brick-oven pizza with a crisp, tender crust.",
+      "style": "brick-oven, thin crust",
+      "styleSource": null,
+      "styleGroup": null,
+      "styleGroupSource": null,
+      "signature": null,
+      "signatureSource": null,
+      "opened": null,
+      "openedSource": null,
+      "priceIndex": null,
+      "priceSource": null,
+      "attributes": {},
+      "url": null,
+      "instagram": null,
+      "status": "open",
+      "statusPrev": null,
+      "statusNote": null,
+      "statusSource": "https://www.gotodestinations.com/hidden-gem-pizza-seattle-wa/",
+      "statusDate": null,
+      "statusDetected": "2026-11-13",
+      "statusChecked": "2026-11-13",
+      "locations": [
+        {
+          "neighborhood": "Downtown",
+          "address": "85 Pike St Ste 410, Seattle, WA 98101"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "locationsAttempted": null,
+      "locationsNote": null,
+      "factors": {},
+      "lastVerified": null,
+      "ratingAttempted": null,
+      "ratingNote": null,
+      "mentions": [],
+      "coverageAttempted": null,
+      "coverageNote": null,
+      "factsAttempted": null,
+      "factsSought": [],
+      "factsNote": null,
+      "socialAttempted": null,
+      "socialNote": null
     }
   ]
 }

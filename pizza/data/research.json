@@ -1,23 +1,56 @@
 {
   "updated": "2026-11-13T00:00:00Z",
-  "servesPizza": [
-    {
-      "name": "Messina Modern Italian Kitchen",
-      "address": "23 Mercer St, Seattle, WA 98109",
-      "neighborhood": "Queen Anne",
-      "note": "A modern Italian restaurant in Lower Queen Anne built around pasta and antipasti; its menu also includes a pizza topped with hot honey, pepperoni, and cheese.",
-      "source": "https://theinfatuation.com/seattle/reviews/messina-modern-italian-kitchen"
-    }
-  ],
   "directory": [
     {
-      "name": "The Masonry",
-      "neighborhood": "Queen Anne",
-      "style": "wood-fired pizza",
+      "name": "Alibi Room",
+      "neighborhood": "Downtown",
+      "style": "brick-oven, thin crust",
       "status": "open",
-      "note": "A wood-fired pizza and craft beer bar in Lower Queen Anne that makes a small menu of thin-crust pies.",
-      "source": "https://www.seattlemet.com/restaurants/the-masonry",
-      "address": "20 Roy St, Seattle, WA 98109"
+      "note": "A low-key pizzeria and lounge tucked into Pike Place Market's Post Alley, built around brick-oven pizza with a crisp, tender crust.",
+      "source": "https://www.gotodestinations.com/hidden-gem-pizza-seattle-wa/",
+      "address": "85 Pike St Ste 410, Seattle, WA 98101"
     }
+  ],
+  "servesPizza": [
+    {
+      "name": "Cotto Belltown",
+      "address": "2318 2nd Ave, Seattle, WA 98121",
+      "neighborhood": "Belltown",
+      "note": "An Italian restaurant and bar serving house-made pasta alongside wood-fired pizzas such as the Margherita.",
+      "source": "https://www.cottobelltown.com"
+    },
+    {
+      "name": "Limoncello Belltown",
+      "address": "2326 1st Ave, Seattle, WA 98121",
+      "neighborhood": "Belltown",
+      "note": "An Italian restaurant best known for house-made pasta and a limoncello cocktail that also serves pizza on its dinner menu.",
+      "source": "https://limoncellobelltown.com"
+    },
+    {
+      "name": "Bombo Italian Kitchen",
+      "address": "1600 9th Ave, Seattle, WA 98101",
+      "neighborhood": "Downtown",
+      "note": "An Ethan Stowell Italian restaurant at the Washington State Convention Center whose oven-baked pizzas anchor a menu that also covers pasta, antipasto, and happy hour.",
+      "source": "https://onehousehospitality.com/restaurants/bombo-italian-kitchen-convention-center-seattle"
+    },
+    {
+      "name": "Von's 1000Spirits",
+      "address": "1225 1st Ave, Seattle, WA 98101",
+      "neighborhood": "Downtown",
+      "note": "A cocktail bar near Pike Place Market built around a 1,000-plus bottle spirits collection, whose food menu centers on Seattle sourdough pizzas and pastas.",
+      "source": "https://citylifestyle.com/businesses/vons-1000-spirits-259079"
+    },
+    {
+      "name": "King Street Bar & Oven",
+      "address": "170 S King St, Seattle, WA 98104",
+      "neighborhood": "Pioneer Square",
+      "note": "A sports bar near Lumen Field with a custom stone oven that turns out house-made pizza alongside calzones and sandwiches.",
+      "source": "https://www.kingstreetbar.com"
+    }
+  ],
+  "rejected": [
+    "directory[0]: \"The Masonry\" is already on file",
+    "directory[0]: \"20 Roy St, Seattle, WA 98109\" is already on file as The Masonry",
+    "servesPizza[0]: \"Messina Modern Italian Kitchen\" is already known: the candidates queue holds it as \"Messina Modern Italian Kitchen\""
   ]
 }
