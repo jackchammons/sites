@@ -11,7 +11,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-01-14",
-      "status": "chain"
+      "status": "chain",
+      "lat": 47.6259,
+      "lon": -122.34579
     },
     {
       "key": "dominos|4717",
@@ -21,7 +23,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-04-08",
-      "status": "chain"
+      "status": "chain",
+      "lat": 47.6638,
+      "lon": -122.31452
     },
     {
       "key": "dominos|1800",
@@ -31,7 +35,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-11-03",
-      "status": "chain"
+      "status": "chain",
+      "lat": 47.59966,
+      "lon": -122.30797
     },
     {
       "key": "dominos|11025",
@@ -41,7 +47,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-08-10",
-      "status": "chain"
+      "status": "chain",
+      "lat": 47.70943,
+      "lon": -122.32359
     },
     {
       "key": "dominos|6540",
@@ -51,7 +59,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-10-13",
-      "status": "chain"
+      "status": "chain",
+      "lat": 47.54376,
+      "lon": -122.38663
     },
     {
       "key": "dominos|1427",
@@ -61,7 +71,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-06-10",
-      "status": "chain"
+      "status": "chain",
+      "lat": 47.61369,
+      "lon": -122.32097
     },
     {
       "key": "dominos|4436",
@@ -71,7 +83,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-06-25",
-      "status": "chain"
+      "status": "chain",
+      "lat": 47.56307,
+      "lon": -122.28751
     },
     {
       "key": "dominos|8345",
@@ -81,7 +95,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-11-02",
-      "status": "chain"
+      "status": "chain",
+      "lat": 47.69008,
+      "lon": -122.37703
     },
     {
       "key": "dominos|2320",
@@ -91,7 +107,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-01-02",
-      "status": "chain"
+      "status": "chain",
+      "lat": 47.66163,
+      "lon": -122.33057
     },
     {
       "key": "dominos|2928",
@@ -101,7 +119,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-08-05",
-      "status": "chain"
+      "status": "chain",
+      "lat": 47.6177,
+      "lon": -122.35351
     },
     {
       "key": "dominos|9610",
@@ -111,7 +131,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-08-13",
-      "status": "chain"
+      "status": "chain",
+      "lat": 47.51723,
+      "lon": -122.35606
     },
     {
       "key": "mod|2800",
@@ -121,7 +143,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-03-26",
-      "status": "chain"
+      "status": "chain",
+      "lat": 47.52213,
+      "lon": -122.36893
     },
     {
       "key": "mod super fast|1302",
@@ -135,7 +159,9 @@
       "verdict": "chain",
       "note": "MOD Super Fast Pizza LLC (MOD Pizza) is a national fast-casual chain with 460+ US locations, headquartered in Bellevue, WA; excluded by national-chain policy.",
       "resolutionSource": "https://en.wikipedia.org/wiki/MOD_Pizza",
-      "resolvedDate": "2026-08-31"
+      "resolvedDate": "2026-08-31",
+      "lat": 47.60949,
+      "lon": -122.33267
     },
     {
       "key": "mod super fast ballard|6010",
@@ -149,7 +175,9 @@
       "verdict": "chain",
       "note": "Ballard branch of the national MOD Pizza chain; excluded by national-chain policy.",
       "resolutionSource": "https://en.wikipedia.org/wiki/MOD_Pizza",
-      "resolvedDate": "2026-08-31"
+      "resolvedDate": "2026-08-31",
+      "lat": 47.67269,
+      "lon": -122.37591
     },
     {
       "key": "mod superfast|305",
@@ -163,7 +191,9 @@
       "verdict": "chain",
       "note": "Lower Queen Anne / Seattle Center branch of the national MOD Pizza chain; excluded by national-chain policy.",
       "resolutionSource": "https://en.wikipedia.org/wiki/MOD_Pizza",
-      "resolvedDate": "2026-08-31"
+      "resolvedDate": "2026-08-31",
+      "lat": 47.62146,
+      "lon": -122.35099
     },
     {
       "key": "mod superfast|1414",
@@ -177,7 +207,9 @@
       "verdict": "chain",
       "note": "Lower Queen Anne / Seattle Center branch of the national MOD Pizza chain; excluded by national-chain policy.",
       "resolutionSource": "https://en.wikipedia.org/wiki/MOD_Pizza",
-      "resolvedDate": "2026-08-31"
+      "resolvedDate": "2026-08-31",
+      "lat": 47.6586,
+      "lon": -122.31239
     },
     {
       "key": "papa johns|1500",
@@ -187,7 +219,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-04-21",
-      "status": "chain"
+      "status": "chain",
+      "lat": 47.66888,
+      "lon": -122.37748
     },
     {
       "key": "papa johns|5401",
@@ -197,7 +231,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-09-10",
-      "status": "chain"
+      "status": "chain",
+      "lat": 47.6681,
+      "lon": -122.30091
     },
     {
       "key": "papa johns capitol hill|2116",
@@ -207,7 +243,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-05-13",
-      "status": "chain"
+      "status": "chain",
+      "lat": 47.61828,
+      "lon": -122.30421
     },
     {
       "key": "hut|1517",
@@ -217,7 +255,9 @@
         "kc-health"
       ],
       "lastInspection": "2026-03-25",
-      "status": "chain"
+      "status": "chain",
+      "lat": 47.50985,
+      "lon": -122.35452
     },
     {
       "key": "twist|12319",
@@ -231,7 +271,9 @@
       "verdict": "chain",
       "note": "Seattle franchisee of Chicago's Pizza With-A-Twist, a national franchise with roughly 150 locations across many states; excluded as a chain.",
       "resolutionSource": "https://www.franchising.com/chicagospizzawithatwist/",
-      "resolvedDate": "2026-09-09"
+      "resolvedDate": "2026-09-09",
+      "lat": 47.71839,
+      "lon": -122.31842
     },
     {
       "key": "alberonas davinci pasta|3624",
@@ -319,7 +361,9 @@
       "status": "rejected",
       "verdict": "unverifiable",
       "note": "No trace of a pizzeria called Lodge Pizza found at 501 2nd Ave W or anywhere else in Seattle across multiple searches; likely a stale or misrecorded permit entry.",
-      "resolvedDate": "2026-11-12"
+      "resolvedDate": "2026-11-12",
+      "lat": 47.62345,
+      "lon": -122.35971
     },
     {
       "key": "magnolia and pasta|2120",
@@ -401,7 +445,9 @@
       "status": "rejected",
       "verdict": "unverifiable",
       "note": "No trace of a pizzeria by this name anywhere in Seattle across multiple searches; \"Kc574\" reads like a ghost-kitchen/virtual-brand commissary code and turns up nothing in pizza guides, delivery-app listings or local news coverage.",
-      "resolvedDate": "2026-11-12"
+      "resolvedDate": "2026-11-12",
+      "lat": 47.58033,
+      "lon": -122.31129
     },
     {
       "key": "group|510",
@@ -415,7 +461,9 @@
       "verdict": "chain",
       "note": "The LLC behind Pizza Twist (né Chicago's Pizza With-A-Twist) at 510 Broadway E; the Indian-fusion pizza franchise was founded in Chicago in 2014 and by 2024 had grown to roughly 80 locations across about 19-20 U.S. states plus international units — a national chain, not a regional one.",
       "resolutionSource": "https://capitolhillseattle.com/2021/08/already-home-to-bombay-burger-capitol-hill-adding-a-new-indian-restaurant-with-a-twist-pizza",
-      "resolvedDate": "2026-11-12"
+      "resolvedDate": "2026-11-12",
+      "lat": 47.62349,
+      "lon": -122.32066
     },
     {
       "key": "rasoi|1011",
@@ -429,7 +477,9 @@
       "verdict": "unverifiable",
       "note": "Indian-Neapolitan fusion pizza pop-up/food truck tied to Tapster at 1011 Valley St; sources conflict on where it actually operates (one places it in Redmond instead) and none confirm it is still running as of 2026, only an undated pop-up listing and a single lukewarm review.",
       "resolutionSource": "https://www.zabihah.com/restaurants/7bad84dc-749d-40b2-bc01-c0f887a42a0b/pizza-rasoi-seattle",
-      "resolvedDate": "2026-11-12"
+      "resolvedDate": "2026-11-12",
+      "lat": 47.62558,
+      "lon": -122.33662
     },
     {
       "key": "pizzutos italian|5032",
@@ -443,7 +493,9 @@
       "verdict": "not-pizza",
       "note": "Branded and run as an Italian cafe at 5032 Wilson Ave S; its signature dishes are pastas (pasta Siciliana, prawns Pescara, house potato pasta) and chicken entrees, with pizza just one menu category among several rather than the core of the business.",
       "resolutionSource": "https://www.foodboss.com/seattle-wa/pizzutos-italian-cafe-5032-wilson-ave-s-seattle-delivery",
-      "resolvedDate": "2026-11-12"
+      "resolvedDate": "2026-11-12",
+      "lat": 47.55593,
+      "lon": -122.27011
     },
     {
       "key": "santorini pasta|11001",
@@ -1348,7 +1400,9 @@
       "verdict": "not-pizza",
       "note": "Despite the name, Domani is a Mediterranean/Italian neighborhood restaurant on Queen Anne Ave N where fresh pasta, salads and sandwiches get equal billing with pizza — not a pizza-forward concept.",
       "resolutionSource": "https://www.domaniqueenanne.com/story",
-      "resolvedDate": "2026-08-31"
+      "resolvedDate": "2026-08-31",
+      "lat": 47.6328,
+      "lon": -122.35722
     },
     {
       "key": "g h pasta west seattle|7500",
@@ -1362,7 +1416,9 @@
       "verdict": "not-pizza",
       "note": "West Seattle restaurant from General Harvest Restaurants built around house-extruded pasta as its stated priority, with a smaller selection of 12-inch pizzas as a secondary offering — not a pizza-forward concept.",
       "resolutionSource": "https://www.westsideseattle.com/robinson-papers/2023/11/21/update-gh-pasta-pizza-will-bring-flavor-and-taste-sunrise-heights",
-      "resolvedDate": "2026-08-31"
+      "resolvedDate": "2026-08-31",
+      "lat": 47.53536,
+      "lon": -122.37619
     },
     {
       "key": "in we crust kc507|3207",
@@ -1391,7 +1447,9 @@
       "verdict": "closed",
       "note": "Closed in 2026 after about 10 years on First Hill when the owner's lease at 1028 Madison St ended; the space is being sought for a new tenant.",
       "resolutionSource": "https://www.capitolhillseattle.com/2026/07/rip-to-broadways-guillotine-first-hills-italian-family-pizza/",
-      "resolvedDate": "2026-08-31"
+      "resolvedDate": "2026-08-31",
+      "lat": 47.6091,
+      "lon": -122.32593
     },
     {
       "key": "la vita e bella|2411",
@@ -1405,7 +1463,9 @@
       "verdict": "not-pizza",
       "note": "Full-service Sicilian-Italian restaurant built around pasta and seafood; thin pizza is one menu item among many, not the core of the business.",
       "resolutionSource": "https://www.lavitaebellarestaurant.com/",
-      "resolvedDate": "2026-08-31"
+      "resolvedDate": "2026-08-31",
+      "lat": 47.61492,
+      "lon": -122.34752
     },
     {
       "key": "lil annies churrieria locas|7912",
@@ -1419,7 +1479,9 @@
       "verdict": "unverifiable",
       "note": "Permit address 7912 7th Ave S is Northwest Commissary Kitchens, a shared commissary/incubator kitchen; found no storefront, website, or social presence for a 'Lil Annies Churrieria' or 'Pizza Locas' business at this address. A same-named 'Pizzas Locas' that does have a public presence is a separate, unrelated restaurant in Des Moines, WA.",
       "resolutionSource": "https://www.yelp.com/biz/northwest-commissary-kitchens-seattle",
-      "resolvedDate": "2026-08-31"
+      "resolvedDate": "2026-08-31",
+      "lat": 47.53167,
+      "lon": -122.32508
     },
     {
       "key": "mohi dba hot slice|41",
@@ -1463,7 +1525,8 @@
       "verdict": "unverifiable",
       "note": "Real, long-running (since 1992) pizzeria, but its own site and area listings place it in Burien, WA, not inside Seattle city limits -- the King County permit's 'Seattle, WA 98146' mailing address doesn't reflect the municipal boundary here, so it can't be confirmed to meet the directory's Seattle-location inclusion rule.",
       "resolutionSource": "https://www.pizzagallery.biz/",
-      "resolvedDate": "2026-09-09"
+      "resolvedDate": "2026-09-09",
+      "geoTried": "2026-11-13"
     },
     {
       "key": "razzis downtown|1314",
@@ -1552,7 +1615,9 @@
       "verdict": "unverifiable",
       "note": "No business currently trades under this exact name beyond an inaccessible Facebook page. The permit address (1727 1st Ave S) is now home to a pizza-by-the-slice shop called Slice Box Pizza, but no source ties the two names together as the same entity.",
       "resolutionSource": "https://www.sliceboxpizza.com/",
-      "resolvedDate": "2026-09-12"
+      "resolvedDate": "2026-09-12",
+      "lat": 47.5874,
+      "lon": -122.33446
     },
     {
       "key": "sopranos lake city|11754",
@@ -1581,7 +1646,9 @@
       "verdict": "not-pizza",
       "note": "Sandwich-and-focaccia counter that also sells well-regarded pizza slices, but sandwiches are billed first in its own name and Yelp categorizes it primarily as Sandwiches, so pizza isn't clearly the core of the business.",
       "resolutionSource": "https://www.yelp.com/biz/swing-sandwiches-and-pizza-seattle",
-      "resolvedDate": "2026-09-12"
+      "resolvedDate": "2026-09-12",
+      "lat": 47.63216,
+      "lon": -122.36012
     },
     {
       "key": "tutta bella neapolitan|4918",
