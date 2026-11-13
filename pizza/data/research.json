@@ -1,15 +1,19 @@
 {
-  "updated": "2026-11-13T00:00:00Z",
+  "updated": "2026-11-13T12:00:00Z",
   "servesPizza": [
     {
-      "name": "La Rustica",
-      "address": "4100 Beach Dr SW, Seattle, WA 98116",
-      "neighborhood": "Alki",
-      "note": "A long-running Italian restaurant on Beach Drive near Alki Point, open since 1996, whose menu of old-country recipes includes antipasti and handmade pasta alongside wood-fired pizzas such as an arugula pizza with prosciutto and olives.",
-      "source": "https://www.onlyinyourstate.com/food/washington/dine-at-la-rustica-wa"
+      "name": "Swel",
+      "address": "3417 Evanston Ave N, Seattle, WA 98103",
+      "neighborhood": "Fremont",
+      "note": "A slightly upscale Fremont trattoria serving pastas, small plates and steaks, where the wood-fired pizzas, served with a spicy chili oil, are called out by reviewers as the kitchen's strongest dishes.",
+      "source": "https://www.theinfatuation.com/seattle/reviews/swel"
+    },
+    {
+      "name": "Trailbend Taproom",
+      "address": "1118 NW 50th St, Seattle, WA 98107",
+      "neighborhood": "Ballard",
+      "note": "A Ballard craft-beer taproom with dozens of rotating taps whose kitchen runs a Wood Stone oven for wood-fired pizzas and flatbreads alongside sandwiches and salads.",
+      "source": "https://www.architectmagazine.com/?p=217333"
     }
-  ],
-  "rejected": [
-    "directory[0]: \"Mioposto\" is already on file"
   ]
 }
