@@ -141,7 +141,15 @@ const read = page => page.evaluate(() => {
     wantPins: places.filter(p => showing.has(p.id)).reduce((n, p) => n + p.pts.length, 0),
     wantRings: places.filter(p => showing.has(p.id) && p.cat === 'ranked' && p.rank <= 10).reduce((n, p) => n + p.pts.length, 0),
     pins: paths.filter(p => p.classList.contains('leaflet-interactive')).length,
-    rings: paths.filter(p => !p.classList.contains('leaflet-interactive')).length,
+    // A top-ten pin is the pin itself with a heavier line; nothing is drawn round it.
+    rings: paths.filter(p => p.classList.contains('pin-top')).length,
+    orbits: paths.filter(p => !p.classList.contains('leaflet-interactive')).length,
+    topLine: [...new Set(paths.filter(p => p.classList.contains('pin-top')).map(p => p.getAttribute('stroke-width')))].join(),
+    sizes: [...new Set(paths.filter(p => p.classList.contains('leaflet-interactive')).map(p => p.getAttribute('d').match(/a(\d+),/)?.[1]))].join(),
+    // Where the first top-ten pin sits in the map's box: it moves only if the map does.
+    anchor: (() => { const pin = paths.find(p => p.classList.contains('pin-top')); if (!pin) return null;
+      const b = pin.getBoundingClientRect(), m = document.getElementById('map').getBoundingClientRect();
+      return [Math.round(b.left - m.left), Math.round(b.top - m.top), Math.round(b.width)].join(); })(),
     status: document.getElementById('dir-status').textContent,
     // The page must not scroll sideways, and nothing in the directory may
     // reach past the window (the map's tiles and the sideways-scrolling row of
@@ -194,7 +202,10 @@ for (const colorScheme of ['light', 'dark']) {
     check(s.on.join() === 'ranked' && s.rows === s.groups.ranked.total && s.rows > 0, `by default only the ranked rows are showing ${at}`, JSON.stringify(s.on));
     check(cats.every(k => s.groups[k].pressed === (k === 'ranked')), `by default only the ranked toggle is pressed ${at}`);
     check(s.pins === s.wantPins && s.pins > 0, `by default the map has the ranked pins and no others ${at}`, `${s.pins} pins, ${s.wantPins} wanted`);
-    check(s.rings === s.wantRings && s.rings >= 10, `each of the ten highest ranked has a ring round its pin ${at}`, `${s.rings} rings, ${s.wantRings} wanted`);
+    check(s.rings === s.wantRings && s.rings >= 10 && s.topLine === '3', `each of the ten highest ranked has a heavier outline on its pin ${at}`, `${s.rings} outlined, ${s.wantRings} wanted, line ${s.topLine}`);
+    check(s.orbits === 0, `nothing is drawn round a pin: no second circle ${at}`, String(s.orbits));
+    check(s.sizes !== '' && !s.sizes.includes(','), `every pin is the same size ${at}`, s.sizes);
+    const home = s.anchor;
     check(s.overflow <= 0 && s.wider <= 0, `nothing is wider than the window by default ${at}`, JSON.stringify([s.overflow, s.wider]));
     check(await page.evaluate(() => document.querySelectorAll('#map-rail #dir-tools').length === 1), `the toggles sit with the map ${at}`);
     if (shots) await page.screenshot({ path: path.join(shots, `default-${width}-${colorScheme}.png`) });
@@ -216,12 +227,14 @@ for (const colorScheme of ['light', 'dark']) {
       check(s.groups[cat].open && s.groups[cat].pressed && s.groups[cat].rows === s.groups[cat].total && s.on.join() === ['ranked', cat].sort((a, b) => cats.indexOf(a) - cats.indexOf(b)).join(),
         `the "${cat}" toggle shows its rows ${at}`, JSON.stringify(s.groups[cat]));
       check(s.pins === s.wantPins, `the map follows the "${cat}" toggle on ${at}`, `${s.pins} pins, ${s.wantPins} wanted`);
+      check(s.anchor === home, `turning "${cat}" on does not move or zoom the map ${at}`, `${home} -> ${s.anchor}`);
       const seen = await page.evaluate(k => { const b = document.querySelector(`#cat-${k} > summary`).getBoundingClientRect(); return b.top >= 0 && b.bottom <= innerHeight; }, cat);
       check(seen, `turning "${cat}" on brings its heading on screen ${at}`);
       await page.click(`.cat-chip[data-cat="${cat}"]`);
       await settle(page);
       s = await read(page);
       check(!s.groups[cat].open && !s.groups[cat].pressed && s.groups[cat].rows === 0 && s.pins === s.wantPins, `the "${cat}" toggle hides its rows and pins again ${at}`);
+      check(s.anchor === home, `turning "${cat}" off does not move or zoom the map ${at}`, `${home} -> ${s.anchor}`);
     }
 
     /* Show all, back to the default, and everything collapsed. */
@@ -315,6 +328,10 @@ for (const colorScheme of ['light', 'dark']) {
     await settle(page, 500);
     s = await read(page);
     check(s.on.join() === before && s.status === '' && s.pins === s.wantPins && await page.inputValue('#dir-q') === '', `clearing the search restores what was open before it ${at}`, `${s.on.join()} (was ${before})`);
+    // To within a pixel or two: the view is put back by its centre, and the
+    // pin is drawn on whole pixels.
+    const near = (a, b) => a.split(',').every((v, i) => Math.abs(v - b.split(',')[i]) <= 2);
+    if (s.anchor) check(near(s.anchor, home), `and puts the map back where the search took it from ${at}`, `${home} -> ${s.anchor}`);
     check(Object.values(s.groups).every(g => !g.hidden) && s.groups.ranked.count === String(s.groups.ranked.total), `and every category's heading and count are back ${at}`);
     await page.fill('#dir-q', 'ballard');
     await page.press('#dir-q', 'Escape');

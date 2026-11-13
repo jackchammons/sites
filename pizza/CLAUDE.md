@@ -305,8 +305,15 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   sticky offsets under it use `--tools-h`, which `app.js` measures.
 - **Colours are defined once, in `src/palette.js`.** `styles.css` uses only `--cat-*`,
   `--pin-line` and `--rank-ramp`, which the build writes from it. Ranked pins run from
-  blue at the lowest rank to red at #1 (`rankColor`); every pin is one size and the top
-  ten wear a ring; a place not on file is a hollow pin. The record chart has its own
+  blue at the lowest rank through teal, green, yellow and orange to red at #1
+  (`rankColor`, `RAMP_STOPS`); the first ramp went blue to red through purple and read
+  as a smear. Every pin is one size and the top ten have a heavier outline on the same
+  pin, not a second circle round it; a place not on file is a hollow pin. The other
+  pizzerias on file take the hues the ramp leaves: violet, magenta and a grey.
+- **Toggling a category never moves the map.** It opens on a view that holds every
+  pin of every category and stays where the reader puts it. Only a search moves it, to
+  the matches, and clearing the search puts it back. It used to refit on every toggle
+  and lurched in and out. The record chart has its own
   eight series colours (`--series-N`) and three line styles (`build/chart.mjs`): a
   ninth line reuses the first colour dashed, and no colour is generated.
 - **Location is asked for only on a press, and never stored.** "Show my location"

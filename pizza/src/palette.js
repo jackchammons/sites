@@ -3,30 +3,38 @@
  *
  * A category has one colour, and it is the colour of its pins on the map, of
  * its toggle and of its header in the list. The ranked category is the
- * exception: its pins are coloured by rank, on a ramp from blue for the
- * lowest rank to red for #1, and its swatch is the ramp.
+ * exception: its pins are coloured by rank, on a ramp that runs from blue for
+ * the lowest rank through teal, green, yellow and orange to red for #1, and
+ * its swatch is the ramp.
  *
  * app.js reads this module for the pins. The build reads it too and writes
  * the same values into the page as CSS custom properties (paletteCss below),
  * which is all the stylesheet knows of them. Nothing else names a colour for
  * a category.
  *
- * How the colours were chosen. The ramp runs round the hue circle from blue
- * through purple and magenta to red, and gets darker as it goes, so the order
- * still reads without full colour vision. Every other category keeps clear of
- * those hues: gold, green and grey for the pizzerias on file, and teal,
- * near-black, brown and olive for the places that are not. The two groups
- * are also drawn differently (a filled pin for a place on file, a hollow one
- * for a place that is not), and within each group every pair is told apart
- * with or without red-green colour vision.
+ * How the colours were chosen. The first ramp ran from blue through purple
+ * to red; on the map that read as a smear of purples, and the owner asked
+ * for more colours. This one goes the long way round the hue circle, so each
+ * fifth of the ranking has a hue of its own: cold at the bottom, hot at the
+ * top. A ramp of many hues does not order itself for a reader who cannot
+ * tell red from green, so the rank is never the colour alone: the top ten
+ * wear a heavier outline, and every ranked row prints its number beside the
+ * same dot.
+ *
+ * The ramp takes every hue from blue round to red, so the other pizzerias on
+ * file take what is left: violet for the unrated, magenta for the ones not
+ * open yet, and a grey for the closed. A place that is not on file is drawn
+ * differently (a hollow pin, where a place on file is a filled one), so its
+ * colour only has to be told from the other hollow ones: teal, near-black,
+ * brown and olive.
  *
  * Pure: no DOM, no Node APIs.
  */
 
 /* One colour per category that is not ranked. */
 export const CATEGORY_COLOR = {
-  unrated: '#f5c400',
-  opening: '#57b35c',
+  unrated: '#8a5cd6',
+  opening: '#d6409f',
   closed: '#948e88',
   pending: '#006d6d',
   chain: '#2a2420',
@@ -35,15 +43,22 @@ export const CATEGORY_COLOR = {
   'set-aside': '#7d6f5d'
 };
 
-/* The line round every pin, and the ring round the ten highest ranked. Dark,
- * so a pale fill still has an edge on the map's light tiles. */
+/* The line round every pin, heavier round the ten highest ranked. Dark, so a
+ * pale fill (the ramp's yellow) still has an edge on the map's light tiles. */
 export const PIN_LINE = '#23180f';
 
-/* The ramp's two ends in OKLCH (lightness, chroma, hue in degrees): blue for
- * the lowest rank, red for #1. The hue runs the short way round, upward
- * through purple and magenta, which is why the red end is written past 360. */
-const LOW = { l: 0.63, c: 0.16, h: 256 };
-const HIGH = { l: 0.51, c: 0.21, h: 388 };
+/* The ramp's stops in OKLCH (lightness, chroma, hue in degrees), lowest rank
+ * first: blue, teal, green, yellow, orange, red. The hue only ever falls
+ * from one stop to the next, so the colour moves one way round the circle
+ * and no two ranks far apart share a hue. */
+export const RAMP_STOPS = [
+  { l: 0.58, c: 0.17, h: 258 },   // blue: the lowest rank
+  { l: 0.68, c: 0.12, h: 200 },   // teal
+  { l: 0.72, c: 0.19, h: 145 },   // green
+  { l: 0.87, c: 0.17, h: 98 },    // yellow
+  { l: 0.74, c: 0.17, h: 58 },    // orange
+  { l: 0.56, c: 0.22, h: 28 }     // red: #1
+];
 
 const hex = v => Math.round(Math.min(1, Math.max(0, v)) * 255).toString(16).padStart(2, '0');
 /* OKLCH to an sRGB hex colour (Björn Ottosson's OKLab matrices). */
@@ -71,8 +86,10 @@ export function rankShare(position, count) {
 
 /* The colour of rank `position` in a field of `count` ranked places. */
 export function rankColor(position, count) {
-  const t = rankShare(position, count);
-  const mix = k => LOW[k] + (HIGH[k] - LOW[k]) * t;
+  const at = rankShare(position, count) * (RAMP_STOPS.length - 1);
+  const i = Math.min(RAMP_STOPS.length - 2, Math.floor(at));
+  const a = RAMP_STOPS[i], b = RAMP_STOPS[i + 1], t = at - i;
+  const mix = k => a[k] + (b[k] - a[k]) * t;
   return oklch(mix('l'), mix('c'), mix('h'));
 }
 
@@ -83,5 +100,5 @@ export const rankRamp = (stops = 5) => Array.from({ length: stops }, (_, i) => r
 export const paletteCss = () => `:root{${[
   ...Object.entries(CATEGORY_COLOR).map(([key, color]) => `--cat-${key}:${color}`),
   `--pin-line:${PIN_LINE}`,
-  `--rank-ramp:linear-gradient(90deg,${rankRamp(7).join(',')})`
+  `--rank-ramp:linear-gradient(90deg,${rankRamp(11).join(',')})`
 ].join(';')}}`;
