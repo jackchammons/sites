@@ -2042,7 +2042,9 @@
       "verdict": "not-pizza",
       "note": "A long-running Italian restaurant on Beach Drive near Alki Point, open since 1996, whose menu of old-country recipes includes antipasti and handmade pasta alongside wood-fired pizzas such as an arugula pizza with prosciutto and olives.",
       "resolutionSource": "https://www.onlyinyourstate.com/food/washington/dine-at-la-rustica-wa",
-      "resolvedDate": "2026-11-13"
+      "resolvedDate": "2026-11-13",
+      "lat": 47.56741,
+      "lon": -122.40932
     }
   ]
 }
