@@ -229,11 +229,14 @@ The map is not part of first load. `app.js` reveals the map rail and fetches
 `./leaflet.js` when the map nears the viewport or a directory row asks for its marker; if
 anything in that fails, the rail is removed, the toggles go back above the list and the
 list takes the full width. The map shows the pins of the categories that are on, and of
-the matches during a search, and is fitted to them when that set changes. Every pin is
+the matches during a search. It opens on a view that holds every pin of every category
+and a toggle never moves it; a search takes it to the matches and clearing the search
+puts it back. Every pin is
 one size. Its colour is its category's, from `src/palette.js`, which is also written
 into the page as custom properties for the toggles and headings, so the palette is
-defined once; a ranked pin is coloured by rank on a ramp from blue (lowest) to red (#1),
-by `rankColor()`, and the ten highest have a ring. A place on file is a filled pin and a
+defined once; a ranked pin is coloured by rank on a ramp from blue (lowest) through teal,
+green, yellow and orange to red (#1), by `rankColor()`, and the ten highest have a heavier
+outline. A place on file is a filled pin and a
 place that is not is a hollow one. "Show my location" asks the browser for the reader's
 position only when it is pressed (or at once if the site is already allowed), draws it
 as a diamond, and keeps it nowhere; a position outside the region leaves the map where

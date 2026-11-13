@@ -665,8 +665,8 @@ footer p { max-width: 72ch; }
   background: #fff; box-shadow: inset 0 0 0 3px var(--cat);
 }
 /* The ranked category has no one colour: its pins run from blue at the
-   lowest rank to red at #1, so its swatch is that ramp, with the two ranks
-   it runs between at its ends. */
+   lowest rank through green, yellow and orange to red at #1, so its swatch
+   is that ramp, with the two ranks it runs between at its ends. */
 .cat-ramp { flex: none; display: inline-flex; align-items: center; gap: 4px; }
 .cat-ramp span { width: 34px; height: 9px; border-radius: 5px; background: var(--rank-ramp); box-shadow: 0 0 0 1px var(--pin-line); }
 .cat-ramp i { font: 400 9.5px/1 var(--mono); font-style: normal; color: var(--ink-3); }

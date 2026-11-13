@@ -23,7 +23,7 @@ document.getElementById('board')?.addEventListener('click', e => {
 const mapApi = { focus: null, sync: null };
 /* Filled by the directory wiring below, for the map: which places are
  * showing, and what to do when a pin is clicked. */
-const dirApi = { shows: () => false, fromPin: null, toolsMoved: null };
+const dirApi = { shows: () => false, searching: () => false, fromPin: null, toolsMoved: null };
 
 /* ---- The directory: categories, search, rows ----
  * The list is rendered whole, as one <details> per category, and works
@@ -81,6 +81,7 @@ const dirApi = { shows: () => false, fromPin: null, toolsMoved: null };
     const it = byId.get(id);
     return Boolean(it) && shown(it.cat) && (!state.hits || state.hits.has(it));
   };
+  dirApi.searching = () => Boolean(state.query);
 
   /* The text a search reads for a row, read from the page once, the first
    * time it is needed: the row's own cells (name, neighbourhood, addresses,
@@ -440,6 +441,8 @@ const dirApi = { shows: () => false, fromPin: null, toolsMoved: null };
   };
 
   const PIN_RADIUS = 6;
+  /* The line round a top-ten pin, in pixels; every other pin's is 1. */
+  const TOP_LINE = 3;
   const build = () => {
     const L = window.L;
     const topIds = new Set(
@@ -475,10 +478,11 @@ const dirApi = { shows: () => false, fromPin: null, toolsMoved: null };
      * the directory's state changes. Every pin is the same size. Its colour
      * is its category's, from the palette module the toggles are coloured
      * from; a ranked pin's is its rank's place on the ramp, blue for the
-     * lowest and red for #1. A pizzeria on file is a filled pin with a dark
-     * line round it, so a pale colour still has an edge on the tiles; a place
-     * that is not on file is a hollow one. The ten highest ranked each have a
-     * ring round the pin. */
+     * lowest, through green, yellow and orange, to red for #1. A pizzeria on
+     * file is a filled pin with a dark line round it, so a pale colour still
+     * has an edge on the tiles; a place that is not on file is a hollow one.
+     * The ten highest ranked wear a heavier outline: the same pin with a
+     * thicker line, not a second circle round it. */
     const ranked = Number(DATA.ranked) || 0;
     const pins = [];
     const first = new Map();   // the first (usually primary) pin of each place
@@ -488,13 +492,11 @@ const dirApi = { shows: () => false, fromPin: null, toolsMoved: null };
       for (const [lat, lon, address] of p.pts) {
         const marker = L.circleMarker([lat, lon], p.lead
           ? { radius: PIN_RADIUS, color, weight: 3, fillColor: '#fff', fillOpacity: 0.92 }
-          : { radius: PIN_RADIUS, color: PIN_LINE, weight: 1, fillColor: color, fillOpacity: 1 });
+          : { radius: PIN_RADIUS, color: PIN_LINE, weight: top ? TOP_LINE : 1, fillColor: color, fillOpacity: 1,
+              className: top ? 'pin-top' : '' });
         marker.bindPopup(() => popupFor(p, address), { autoPanPaddingTopLeft: popupInset });
         marker.on('click', () => dirApi.fromPin?.(p.id));
-        const ring = top ? L.circleMarker([lat, lon], {
-          radius: PIN_RADIUS + 5, color: PIN_LINE, weight: 2, fill: false, interactive: false
-        }) : null;
-        const pinned = { id: p.id, top, marker, ring, at: [lat, lon], on: false };
+        const pinned = { id: p.id, top, marker, at: [lat, lon], on: false };
         pins.push(pinned);
         if (!first.has(p.id)) first.set(p.id, pinned);
       }
@@ -507,34 +509,46 @@ const dirApi = { shows: () => false, fromPin: null, toolsMoved: null };
     nothing.hidden = true;
     pin.append(nothing);
 
-    /* Put on the map exactly the pins the directory is showing. When that set
-     * has changed, fit the map to it: the reader asked to see those places. */
-    let fitted = false;
+    /* Put on the map exactly the pins the directory is showing.
+     *
+     * Turning a category on or off never moves the map. It opens on a view
+     * that holds every place of every category, so a category that comes on
+     * is already in the frame, and a reader who has zoomed in on a
+     * neighbourhood keeps it while switching categories on and off there.
+     * (It used to refit on every change, and the map lurched in and out with
+     * each toggle.) A search is different: it asks where something is, so the
+     * map goes to the matches, and goes back to where it was when the search
+     * is cleared. */
+    let before = null;   // the view a search took the map from
     const sync = () => {
       let changed = false;
       const bounds = [];
       for (const p of pins) {
         const want = dirApi.shows(p.id);
         if (want !== p.on) {
-          for (const layer of [p.ring, p.marker]) if (layer) { if (want) layer.addTo(map); else layer.remove(); }
+          if (want) p.marker.addTo(map); else p.marker.remove();
           p.on = want;
           changed = true;
         }
         if (want) bounds.push(p.at);
       }
-      // The top ten are drawn last, so a neighbour never covers one or its ring.
-      if (changed) for (const p of pins) if (p.on && p.top) { p.ring.bringToFront(); p.marker.bringToFront(); }
-      if (bounds.length && (changed || !fitted)) {
-        // The first fit is where the map opens, so it is not animated.
-        map.fitBounds(bounds, { padding: [24, 24], maxZoom: 15, animate: fitted });
-        fitted = true;
+      // The top ten are drawn last, so a neighbour never covers one.
+      if (changed) for (const p of pins) if (p.on && p.top) p.marker.bringToFront();
+      if (dirApi.searching()) {
+        before ??= { center: map.getCenter(), zoom: map.getZoom() };
+        if (changed && bounds.length) map.fitBounds(bounds, { padding: [24, 24], maxZoom: 15 });
+      } else if (before) {
+        map.setView(before.center, before.zoom);
+        before = null;
       }
       nothing.hidden = bounds.length > 0;
       nothing.textContent = bounds.length ? '' : 'Nothing to show on the map. Open a category to see its places.';
     };
 
-    /* Seattle, until the first fit: Leaflet needs a view before it can draw. */
-    map.setView([47.61, -122.33], 11);
+    /* Where the map opens: every place there is a pin for, whatever is
+     * showing. Seattle if there is none, since Leaflet needs a view to draw. */
+    if (pins.length) map.fitBounds(pins.map(p => p.at), { padding: [24, 24], maxZoom: 15, animate: false });
+    else map.setView([47.61, -122.33], 11);
     sync();
 
     /* ---- the reader's own location ----
