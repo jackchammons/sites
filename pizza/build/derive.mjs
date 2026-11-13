@@ -1,7 +1,13 @@
 /* Everything computed from the loaded data before any HTML renders: the
- * scored field, the published split, weekly baselines, style brackets, and
- * the per-card movement evidence. Pure. */
+ * registry of places, the scored field, the published split, weekly
+ * baselines, style brackets, and the per-card movement evidence. Pure.
+ *
+ * The registry (src/registry.js) is built first and is the one list of
+ * places: the entries scored here are its entries, and every section that
+ * lists or counts places reads it from the context instead of the two data
+ * files. */
 import { rank, splitTiers, isoWeek, isoWeekKey, ALGORITHM } from '../src/slice.js';
+import { buildRegistry } from '../src/registry.js';
 import { evidenceFor } from './evidence.mjs';
 
 export function deriveContext(ctx) {
@@ -15,7 +21,8 @@ export function deriveContext(ctx) {
   const previous = [...history.snapshots].reverse().find(s => s.weekKey !== weekKey);
   const baseline = previous ? previous.ranks : {};
 
-  const scoredAll = rank(dataset, { now });
+  const registry = buildRegistry(dataset.restaurants, ctx.candidates);
+  const scoredAll = rank({ ...dataset, restaurants: registry.entries }, { now });
   const { top, bench: restRaw } = splitTiers(scoredAll, 10);
   const ranked = top.map(r => ({ ...r, previousRank: baseline[r.id] ?? null }));
   const restScored = restRaw;   // ranks 11+, shown in the directory with scores
@@ -29,7 +36,7 @@ export function deriveContext(ctx) {
   /* Weekly spotlight: rotates through the top ten by ISO week. */
   const spotlight = ranked[week % ranked.length];
 
-  const entriesById = new Map(dataset.restaurants.map(r => [r.id, r]));
+  const entriesById = new Map(registry.entries.map(r => [r.id, r]));
 
   /* ---- Style brackets ---- */
   const allScored = [...ranked, ...restScored];
@@ -46,7 +53,7 @@ export function deriveContext(ctx) {
     .map(([group, list]) => ({ group, list: list.sort((a, b) => b.score - a.score) }))
     .sort((a, b) => b.list[0].score - a.list[0].score);
 
-  return { ...ctx, now, week, weekKey, previous, baseline,
+  return { ...ctx, now, week, weekKey, previous, baseline, registry,
            scoredAll, ranked, restScored, allScored, evidenceMap, spotlight,
            entriesById, brackets };
 }

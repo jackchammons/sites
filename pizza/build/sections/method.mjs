@@ -152,7 +152,7 @@ export function methodParts(ctx) {
   /* The tasks the rotation never picks, in a sentence. A task whose work has
    * run out for good is left off: it can still be started by hand and comes
    * back with nothing to do, which tells a reader nothing about the index. */
-  const live = outsideRotation().filter(t => !TASKS[t].done?.(dataset));
+  const live = outsideRotation().filter(t => !TASKS[t].done?.({ restaurants: ctx.registry.entries }));
   const named = list => list.map(t => `${esc(t)} (${TASKS[t].summary})`);
   const series = items => items.length < 2 ? items.join('') : `${items.slice(0, -1).join(', ')} and ${items.at(-1)}`;
   const automation = `

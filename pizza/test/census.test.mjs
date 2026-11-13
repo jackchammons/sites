@@ -1,7 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { normName, candidateKey, isNationalChain, isSeattleCity, matchEntry, mergeCandidates, coverageStats, tidyPossessive,
-  branchLeads, INSPECTION_CUTOFF_MONTHS, REOPENING_VERDICTS, inspectedSinceVerdict, candidateStanding } from '../src/census.js';
+  branchLeads, INSPECTION_CUTOFF_MONTHS, REOPENING_VERDICTS, inspectedSinceVerdict, candidateStanding,
+  candidateOrigin, candidateIsShown } from '../src/census.js';
 import { PER_PASS } from '../src/rules.js';
 
 const restaurants = [
@@ -143,7 +144,7 @@ test('inspectedSinceVerdict: reads the inspection already on a stored row', () =
 
 /* ---- where a candidate stands, for the page ---- */
 test('candidateStanding: a state, and the dates and numbers it depends on', () => {
-  const none = { matchedId: null, resolvedDate: null, lastInspection: null, reopens: false, reopensAfter: null,
+  const none = { origin: 'permit', matchedId: null, resolvedDate: null, lastInspection: null, reopens: false, reopensAfter: null,
     inspectedSince: false, previousVerdict: null, queuePosition: null, censusPass: null, perPass: null };
 
   assert.deepEqual(candidateStanding({ status: 'promoted', matchedId: 'zeeks-pizza', lastInspection: '2026-03-01', resolvedDate: '2026-08-31' }),
@@ -170,7 +171,7 @@ test('candidateStanding: a pending candidate knows its place in the queue and wh
     judged('chain'),
     ...Array.from({ length: 12 }, (_, i) => ({ key: `lead|${i}`, name: `Lead ${i}`, status: 'pending', lastInspection: '2026-06-11' }))
   ];
-  assert.deepEqual(candidateStanding(queue[1], queue), { state: 'pending', matchedId: null, resolvedDate: null, lastInspection: '2026-06-11',
+  assert.deepEqual(candidateStanding(queue[1], queue), { state: 'pending', origin: 'permit', matchedId: null, resolvedDate: null, lastInspection: '2026-06-11',
     reopens: false, reopensAfter: null, inspectedSince: false, previousVerdict: null, queuePosition: 1, censusPass: 1, perPass: PER_PASS.census });
   assert.deepEqual([candidateStanding(queue[PER_PASS.census], queue).queuePosition, candidateStanding(queue[PER_PASS.census], queue).censusPass],
     [PER_PASS.census, 1]);
@@ -185,6 +186,98 @@ test('candidateStanding: a pending candidate knows its place in the queue and wh
   assert.deepEqual([standing.state, standing.resolvedDate, standing.reopens, standing.queuePosition], ['pending', null, false, 1]);
   assert.deepEqual(standing.previousVerdict, { verdict: 'closed', note: 'what the census found', resolvedDate: '2026-08-31',
     source: 'https://news.example/ghost' });
+});
+
+/* ---- a place a research pass filed: it serves pizza and is not a pizzeria ---- */
+const served = (over = {}) => ({ key: candidateKey('Bar Cotto', '1546 15th Ave'), name: 'Bar Cotto',
+  address: '1546 15th Ave, Seattle, WA 98122', neighborhood: 'Capitol Hill', sources: ['research'],
+  status: 'rejected', verdict: 'not-pizza', note: 'A salumeria and bar; pizza is one section of the menu.',
+  resolutionSource: 'https://barcotto.example/menu', resolvedDate: '2026-11-13', ...over });
+
+test('candidateOrigin: research when a pass filed it and no registry has, permit otherwise', () => {
+  assert.equal(candidateOrigin(served()), 'research');
+  assert.equal(candidateOrigin(judged('not-pizza')), 'permit');
+  assert.equal(candidateOrigin({ sources: ['osm'] }), 'permit');
+  // a place both have filed is one the seed can see
+  assert.equal(candidateOrigin(served({ sources: ['research', 'kc-health'] })), 'permit');
+  // a row written before sources were kept, and no row at all
+  for (const bare of [{ name: 'Ghost Pizza', status: 'pending' }, {}, null, undefined]) assert.equal(candidateOrigin(bare), 'permit');
+});
+
+test('candidateStanding: a research-filed candidate says where it came from and never reopens', () => {
+  assert.deepEqual(candidateStanding(served()), { state: 'not-pizza', origin: 'research', matchedId: null,
+    resolvedDate: '2026-11-13', lastInspection: null, reopens: false, reopensAfter: null, inspectedSince: false,
+    previousVerdict: null, queuePosition: null, censusPass: null, perPass: null });
+  // the same row from the permit register is not final
+  const permit = candidateStanding(served({ sources: ['kc-health'], lastInspection: '2026-03-01' }));
+  assert.deepEqual([permit.origin, permit.reopens, permit.reopensAfter], ['permit', true, '2026-11-13']);
+  // an inspection date that somehow reached the row is no evidence about it
+  const dated = served({ lastInspection: '2026-12-01' });
+  assert.equal(inspectedSinceVerdict(dated), false);
+  assert.deepEqual([candidateStanding(dated).reopens, candidateStanding(dated).inspectedSince], [false, false]);
+  // once a later pass has filed it in the directory it is that entry
+  const joined = candidateStanding(served({ status: 'promoted', matchedId: 'bar-cotto', verdict: undefined }));
+  assert.deepEqual([joined.state, joined.origin, joined.matchedId], ['listed', 'research', 'bar-cotto']);
+});
+
+test('merge: a research-filed candidate comes through a refresh untouched', () => {
+  const stored = [served(), served({ key: candidateKey('Bar Cotto Belltown', '2318 2nd Ave'), name: 'Bar Cotto Belltown',
+    address: '2318 2nd Ave, Seattle, WA 98121', neighborhood: 'Belltown', lat: 47.61478, lon: -122.34561 }), judged('closed')];
+  const before = JSON.parse(JSON.stringify(stored));
+  // a refresh that lists neither of them, as every refresh does: the seed asks for names that say pizza
+  const merged = mergeCandidates(stored, [inspected('2026-12-01'), { name: 'Belltown Pizza', address: '2422 1st Ave, Seattle, WA 98121',
+    sources: ['kc-health'], lastInspection: '2026-12-01' }], restaurants);
+  for (const c of before.filter(x => x.sources[0] === 'research')) assert.deepEqual(merged.find(x => x.key === c.key), c);
+  assert.equal(merged.length, 4);
+  // the permit candidate beside them is still the seed's to reopen
+  assert.equal(merged.find(c => c.name === 'Ghost Pizza').status, 'pending');
+  // and nothing the merge was given was changed in place
+  assert.deepEqual(stored, before);
+});
+
+test('merge: a registry row that lands on a research-filed key rewrites nothing', () => {
+  // The register lists it under a name that says pizza, inspected after the day it was filed.
+  const row = { name: 'BAR COTTO PIZZA', address: '1546 15TH AVE, Seattle, WA 98122', sources: ['kc-health'], lastInspection: '2026-12-01' };
+  assert.equal(candidateKey(row.name, row.address), served().key);
+  assert.deepEqual(mergeCandidates([served()], [row], restaurants), [served()]);
+  // not even when the place is now an entry: the apply step ties the two, the seed does not
+  assert.deepEqual(mergeCandidates([served()], [row], [...restaurants, { id: 'bar-cotto', name: 'Bar Cotto' }]), [served()]);
+});
+
+test('merge: coordinates stay with a candidate for as long as its address does', () => {
+  const placed = judged('chain', { lat: 47.60621, lon: -122.33207 });
+  // the same address, however the register writes it this time
+  for (const address of ['1 A St, Seattle, WA 98101', '1 A ST, SEATTLE, WA  98101', '1 a st seattle wa 98101']) {
+    const [c] = mergeCandidates([placed], [inspected('2026-11-01', { address })], restaurants);
+    assert.deepEqual([c.lat, c.lon, c.lastInspection], [47.60621, -122.33207, '2026-11-01'], address);
+  }
+  // a row with no address (OpenStreetMap, untagged) leaves the one on file, and its point, in place
+  const [osm] = mergeCandidates([{ ...placed, key: 'ghost|' }], [{ name: 'Ghost Pizza', sources: ['osm'] }], restaurants);
+  assert.deepEqual([osm.address, osm.lat, osm.lon], ['1 A St, Seattle, WA 98101', 47.60621, -122.33207]);
+  // another address under the same key starts again: the point was the old door's
+  const [moved] = mergeCandidates([placed], [inspected('2026-11-01', { address: '1 B Ave, Seattle, WA 98104' })], restaurants);
+  assert.deepEqual([moved.address, 'lat' in moved, 'lon' in moved], ['1 B Ave, Seattle, WA 98104', false, false]);
+});
+
+test('merge: the day a lookup found nothing rests with the address too, and a candidate that comes back keeps its point', () => {
+  const tried = judged('unverifiable', { geoTried: '2026-11-01' });
+  assert.equal(mergeCandidates([tried], [inspected('2026-08-01')], restaurants)[0].geoTried, '2026-11-01');
+  assert.equal('geoTried' in mergeCandidates([tried], [inspected('2026-08-01', { address: '1 B Ave, Seattle, WA 98104' })], restaurants)[0], false);
+  const [back] = mergeCandidates([judged('closed', { lat: 47.60621, lon: -122.33207 })], [inspected('2026-09-01')], restaurants);
+  assert.deepEqual([back.status, back.lat, back.lon], ['pending', 47.60621, -122.33207]);
+});
+
+test('candidateIsShown: every candidate that is not tied to an entry on file', () => {
+  const shown = [{ status: 'pending' }, { status: 'chain' }, judged('chain'), judged('not-pizza'), judged('unverifiable'),
+    judged('closed'), served(), { status: 'rejected' }];
+  const tied = [{ status: 'promoted', matchedId: 'zeeks-pizza' }, judged('duplicate', { matchedId: 'zeeks-pizza' }),
+    served({ status: 'promoted', matchedId: 'bar-cotto' })];
+  for (const c of shown) assert.equal(candidateIsShown(c), true, JSON.stringify(c));
+  for (const c of tied) assert.equal(candidateIsShown(c), false, JSON.stringify(c));
+  // it is the page's own split: listed and duplicate are the two states it counts and does not list
+  for (const c of [...shown, ...tied]) {
+    assert.equal(candidateIsShown(c), !['listed', 'duplicate'].includes(candidateStanding(c).state));
+  }
 });
 
 test('coverageStats counts by status', () => {

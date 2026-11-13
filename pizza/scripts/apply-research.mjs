@@ -5,7 +5,9 @@
  * Run only after verify-research.mjs passes. It applies status changes,
  * verified locations, discovered directory entries, mention records, links,
  * the descriptive facts, proposed factor ratings and the attempt stamps that
- * rest a worklist entry. The dataset holds no crowd figures -- the platforms that
+ * rest a worklist entry. Census verdicts, and the places a pass reports as
+ * serving pizza without being pizzerias, go to data/candidates.json, which
+ * also keeps the serves sweep's place. The dataset holds no crowd figures -- the platforms that
  * publish them block automated reads and no API key path is in use -- so no
  * script writes one. The graded factors are written from a validated
  * factorRatings proposal and from nothing else: once for an unrated entry,
@@ -32,8 +34,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { matchEntry } from '../src/census.js';
+import { seattleAddressForm } from '../src/bounds.js';
+import { REOPENING_VERDICTS, candidateKey, matchEntry } from '../src/census.js';
 import { normUrl, normTitle } from '../src/match.js';
+import { servesSweep } from '../src/rules.js';
 import { FACT_FIELDS, FACT_SOURCE_KEY, missingFacts, normalizeEntry, serializeDataset } from '../src/schema.js';
 import { isRated, isLaunchRating } from '../src/slice.js';
 
@@ -91,6 +95,8 @@ export function applyResearch(research, data, today, log = () => {}, { task = nu
 
   /* directory: discovered pizzerias join the dataset unrated. */
   const slug = s => s.toLowerCase().replace(/['’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  // The entries this file adds, for the candidates queue further down.
+  const joined = [];
   for (const it of research.directory ?? []) {
     const id = slug(it.name);
     // The validator dedups on a normalised name, which is looser than the id in
@@ -117,6 +123,7 @@ export function applyResearch(research, data, today, log = () => {}, { task = nu
     });
     dataset.restaurants.push(entry);
     byId.set(id, entry);
+    joined.push(entry);
     changes++;
     log(`  + ${it.name} (${id}): ${it.status}, ${it.neighborhood}`);
   }
@@ -421,6 +428,38 @@ export function applyResearch(research, data, today, log = () => {}, { task = nu
       log(`  - candidate "${it.name}": ${it.verdict}${
         it.verdict === 'duplicate' && byId.has(it.duplicateOf) ? ` of ${it.duplicateOf}` : ''} (${matches.length} location(s))`);
     }
+
+    /* servesPizza: places that serve pizza and are not pizzerias. The seed
+     * asks the permit register for names that say pizza, so it can never
+     * turn one of these up; a research pass that meets one files it here and
+     * it joins the queue already judged, as not-pizza, with the note and the
+     * page the pass read. It carries no inspection date because no permit is
+     * tied to it, which is also why no seed refresh brings it back
+     * (candidateOrigin in census.js). The address is stored in the form a
+     * permit candidate's has, so the geocoder and the map treat the two
+     * alike.
+     *
+     * The validator has already refused a place that is on file or in the
+     * queue. The checks here are for a file that reached this step without
+     * it: nothing is filed twice, and nothing without a Seattle address. */
+    const inQueue = new Set(candFile.candidates.map(c => c.key).filter(Boolean));
+    for (const it of research.servesPizza ?? []) {
+      const address = seattleAddressForm(it.address);
+      const key = address ? candidateKey(it.name, address) : null;
+      const onFile = matchEntry(it, dataset.restaurants);
+      if (!address || onFile || inQueue.has(key)) {
+        log(`  ? servesPizza "${it.name}": not filed, ${!address ? 'the address is not a Seattle address'
+          : onFile ? `it is on file as ${onFile.id}` : 'it is already in the candidates queue'}`);
+        continue;
+      }
+      candFile.candidates.push({ key, name: it.name.trim(), address, neighborhood: it.neighborhood.trim(),
+        sources: ['research'], status: 'rejected', verdict: 'not-pizza', note: it.note,
+        resolutionSource: it.source, resolvedDate: today });
+      inQueue.add(key);
+      candChanges++;
+      log(`  - candidate "${it.name}" filed: serves pizza, not a pizzeria (${it.neighborhood})`);
+    }
+
     for (const c of candFile.candidates) {
       if (c.status !== 'pending') continue;
       const matched = matchEntry(c, dataset.restaurants);
@@ -432,9 +471,49 @@ export function applyResearch(research, data, today, log = () => {}, { task = nu
         log(`  ^ candidate "${c.name}" promoted -> ${matched.id}`);
       }
     }
+
+    /* A candidate that was set aside and has now joined the directory. A
+     * place filed as serving pizza can turn out to be a pizzeria, or become
+     * one, and the way in is the same as for any other: a pass files it
+     * through `directory`. The candidate then becomes that entry, as a
+     * pending one does above, and what was found before stays on the row.
+     * Only an entry this file added counts. A name that has matched an entry
+     * all along was judged with that entry in view, and a chain or a
+     * duplicate is settled by something a new entry does not change. */
+    for (const c of candFile.candidates) {
+      if (c.status !== 'rejected' || !REOPENING_VERDICTS.includes(c.verdict)) continue;
+      const matched = matchEntry(c, joined);
+      if (!matched) continue;
+      const { verdict, note, resolvedDate, resolutionSource } = c;
+      for (const k of ['verdict', 'note', 'resolutionSource']) delete c[k];
+      c.status = 'promoted';
+      c.matchedId = matched.id;
+      c.previousVerdict = { verdict, ...(note ? { note } : {}), resolvedDate,
+        ...(resolutionSource ? { source: resolutionSource } : {}) };
+      c.resolvedDate = today;
+      candChanges++;
+      log(`  ^ candidate "${c.name}" (set aside as ${verdict}) promoted -> ${matched.id}`);
+    }
+
     if (candChanges) {
       candidatesChanged = true;
       changes += candChanges;
+    }
+
+    /* The serves sweep's place. A serves pass was briefed on the
+     * neighbourhoods at the cursor, so whatever it filed, and if it filed
+     * nothing, the next pass starts after them (servesSweep in rules.js is
+     * read by the brief builder too). Only that task moves it: discovery
+     * files a servesPizza record in passing and has swept nothing. The
+     * cursor is written ahead of the list, where a reader of the file finds
+     * the stamps. It is the sweep's memory, not a change to the data, so it
+     * counts towards no total. */
+    if (task === 'serves') {
+      const { candidates, ...head } = candFile;
+      for (const k of Object.keys(candFile)) delete candFile[k];
+      Object.assign(candFile, head, { servesCursor: servesSweep(head.servesCursor).next }, { candidates });
+      candidatesChanged = true;
+      log(`  > serves sweep: the next pass starts at ${servesSweep(candFile.servesCursor).hoods[0]}`);
     }
   }
 

@@ -113,6 +113,7 @@ export const TASKS = {
       again: `${RETRY_DAYS.coverage} days after an attempt that found nothing new.`
     }
   },
+  serves: { summary: 'places that serve pizza and are not pizzerias', unit: null },
   sources: { summary: 'the published criticism behind a rating on file', unit: 'entries', done: noneLeft },
   rerate: { summary: 'a rating on file, read afresh from published criticism', unit: 'entries', done: noneLeft }
 };

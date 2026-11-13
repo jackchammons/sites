@@ -87,7 +87,10 @@ jobs:
       # the map plots (one Nominatim request per second, cached into the
       # dataset, so an address is looked up until it resolves and never
       # again). Fail-soft: an address that will not geocode is skipped and
-      # the map renders without that marker.
+      # the map renders without that marker. Entries first, then the
+      # candidates the directory lists, which are capped per run and rest a
+      # month after a lookup that finds nothing (CANDIDATE_GEOCODE in
+      # pizza/src/rules.js), so a long queue cannot hold the publish up.
       - name: Geocode new addresses
         run: node pizza/scripts/geocode.mjs || echo "::warning::geocoding skipped"
 
@@ -126,7 +129,7 @@ jobs:
         run: |
           bash scripts/commit-data.sh \
             "chore(data): daily refresh $(date -u +%Y-%m-%d)" \
-            pizza/data/history.json pizza/data/buzz.json pizza/data/restaurants.json
+            pizza/data/history.json pizza/data/buzz.json pizza/data/restaurants.json pizza/data/candidates.json
 
       - uses: actions/configure-pages@v5
 

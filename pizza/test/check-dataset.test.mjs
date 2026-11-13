@@ -1,7 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { checkDataset } from '../src/check-dataset.js';
-import { ENTRY_SCHEMA, normalizeEntry } from '../src/schema.js';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+import { checkCandidates, checkDataset } from '../src/check-dataset.js';
+import { ENTRY_SCHEMA, normalizeEntry, serializeDataset } from '../src/schema.js';
 
 const NOW = Date.parse('2026-08-30T00:00:00Z');
 const registry = { 'sells-out': { label: 'Sells out', frictionCost: 1.5 } };
@@ -190,4 +195,109 @@ test('the page a fact was read from is https, and factsSought names facts', () =
   }
   assert.deepEqual(checkDataset(base({ factsSought: ['opened', 'signature'] }), registry, NOW), []);
   failsWith(base({ factsSought: ['opened', 'founded'] }), 'factsSought names "founded"');
+});
+
+/* ---- the candidates queue: what the pipeline's own scripts write into it ---- */
+const queue = (over = {}, top = {}) => ({ updated: '2026-08-30T00:00:00.000Z', cutoffMonths: 30, ...top, candidates: [
+  { key: 'ghost|1', name: 'Ghost Pizza', address: '1 A St, Seattle, WA 98101', sources: ['kc-health'], status: 'pending', ...over }] });
+const queueFails = (file, snippet) => {
+  const fails = checkCandidates(file, NOW);
+  assert.ok(fails.some(f => f.includes(snippet)), `expected "${snippet}", got: ${JSON.stringify(fails)}`);
+};
+
+test('candidates: a queue with no coordinates, and one with a point inside the box, pass', () => {
+  assert.deepEqual(checkCandidates(queue(), NOW), []);
+  assert.deepEqual(checkCandidates(queue({ lat: 47.60621, lon: -122.33207 }), NOW), []);
+  assert.deepEqual(checkCandidates(queue({ geoTried: '2026-08-29' }, { servesCursor: 0 }), NOW), []);
+  assert.deepEqual(checkCandidates(queue({ lat: null, lon: null }, { servesCursor: 40 }), NOW), []);
+  assert.deepEqual(checkCandidates({ candidates: [] }, NOW), []);
+});
+
+test('candidates: coordinates are held to the box every location is, and come as a pair', () => {
+  queueFails(queue({ lat: 45.52, lon: -122.68 }), 'candidate "Ghost Pizza": lat 45.52, lon -122.68 is not a point inside Puget Sound');
+  queueFails(queue({ lat: 47.66, lon: -117.43 }), 'is not a point inside Puget Sound');
+  queueFails(queue({ lat: -122.33, lon: 47.61 }), 'is not a point inside Puget Sound');
+  queueFails(queue({ lat: 47.61 }), 'lat 47.61, lon null is not a point');
+  queueFails(queue({ lon: -122.33 }), 'lat null, lon -122.33 is not a point');
+  queueFails(queue({ lat: '47.61', lon: '-122.33' }), 'is not a point inside Puget Sound');
+  // the same points the dataset lint accepts and refuses for a location
+  const at = (lat, lon) => [checkCandidates(queue({ lat, lon }), NOW).length === 0,
+    checkDataset(base({ locations: [{ neighborhood: 'X', address: '1 Main St, Seattle, WA 98117', lat, lon }] }), registry, NOW).length === 0];
+  for (const [lat, lon] of [[48.7203, -122.5036], [47.0449, -122.9017], [47.7093, -121.3601], [47.66, -117.43], [45.52, -122.68]]) {
+    const [inQueue, onFile] = at(lat, lon);
+    assert.equal(inQueue, onFile, `${lat}, ${lon}`);
+  }
+});
+
+test('candidates: the geocoder\'s stamp is a past day, and the sweep cursor a whole number', () => {
+  queueFails(queue({ geoTried: '2026-09-15' }), 'geoTried must be a past YYYY-MM-DD date, got "2026-09-15"');
+  queueFails(queue({ geoTried: 'last week' }), 'geoTried must be a past YYYY-MM-DD date');
+  queueFails(queue({ geoTried: '2026-08-29T10:00:00Z' }), 'geoTried must be a past YYYY-MM-DD date');
+  queueFails(queue({ geoTried: 20260829 }), 'geoTried must be a past YYYY-MM-DD date');
+  for (const cursor of [-1, 2.5, '4', null]) queueFails(queue({}, { servesCursor: cursor }), 'servesCursor must be a whole number from 0 up');
+  queueFails({ updated: 'x' }, 'candidates must be an array');
+  queueFails(null, 'candidates must be an array');
+});
+
+test('candidates: text a third party wrote is not the lint\'s business', () => {
+  // A permit name and a research note reach the page as quoted data. Nothing in them can fail a deploy here.
+  const odd = queue({ name: 'UNDEFINED <b>NaN</b> PIZZA #' + 'x'.repeat(400), address: 'no street number, nowhere', note: '<script>', sources: null,
+    status: 'something new', verdict: 42, lastInspection: 'never', resolutionSource: 'not a url', neighborhood: 7, extra: { nested: true } });
+  assert.deepEqual(checkCandidates(odd, NOW), []);
+  assert.deepEqual(checkCandidates({ candidates: [null, 'a string', 7, {}] }, NOW), []);
+  // a message quotes the name, and stays a line
+  const [fail] = checkCandidates(queue({ name: 'P'.repeat(500), lat: 1, lon: 2 }), NOW);
+  assert.ok(fail.length < 200, String(fail.length));
+});
+
+test('candidates: the queue on file passes, so the lint cannot fail the deploy it joins', () => {
+  const file = fileURLToPath(new URL('../data/candidates.json', import.meta.url));
+  if (!fs.existsSync(file)) return;
+  assert.deepEqual(checkCandidates(JSON.parse(fs.readFileSync(file, 'utf8'))), []);
+});
+
+/* ---- the CLI, on a scratch tree ---- */
+function scratch(candidates) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'check-dataset-'));
+  for (const d of ['scripts', 'data']) fs.mkdirSync(path.join(dir, d));
+  fs.copyFileSync(fileURLToPath(new URL('../scripts/check-dataset.mjs', import.meta.url)), path.join(dir, 'scripts/check-dataset.mjs'));
+  fs.cpSync(fileURLToPath(new URL('../src/', import.meta.url)), path.join(dir, 'src'),
+    { recursive: true, filter: src => !src.includes(`${path.sep}vendor`) });
+  fs.writeFileSync(path.join(dir, 'data/restaurants.json'), serializeDataset(base()));
+  fs.writeFileSync(path.join(dir, 'data/attributes.json'), JSON.stringify(registry));
+  const file = path.join(dir, 'data/candidates.json');
+  if (candidates != null) fs.writeFileSync(file, typeof candidates === 'string' ? candidates : JSON.stringify(candidates, null, 2) + '\n');
+  return {
+    run: () => spawnSync(process.execPath, [path.join(dir, 'scripts/check-dataset.mjs')], { encoding: 'utf8' }),
+    text: () => fs.readFileSync(file, 'utf8'),
+    done: () => fs.rmSync(dir, { recursive: true, force: true })
+  };
+}
+
+test('CLI: lints the queue after the dataset, says what it found, and writes nothing', () => {
+  const good = scratch(queue({ lat: 47.60621, lon: -122.33207 }));
+  try {
+    const before = good.text();
+    const res = good.run();
+    assert.equal(res.status, 0, res.stderr);
+    assert.equal(res.stdout, 'restaurants.json clean: 1 entries.\ncandidates.json clean: 1 candidates, 1 with coordinates.\n');
+    assert.equal(good.text(), before);
+  } finally { good.done(); }
+
+  // no queue at all is the state of a new checkout, and passes as before
+  const none = scratch(null);
+  try {
+    const res = none.run();
+    assert.deepEqual([res.status, res.stdout], [0, 'restaurants.json clean: 1 entries.\n']);
+  } finally { none.done(); }
+
+  for (const [bad, why] of [[queue({ lat: 45.52, lon: -122.68 }), /is not a point inside Puget Sound/], ['{ "updated": ', /candidates\.json is not valid JSON/]]) {
+    const s = scratch(bad);
+    try {
+      const res = s.run();
+      assert.equal(res.status, 1);
+      assert.match(res.stderr, /candidates\.json FAILED lint \(1 problem\(s\)\):/);
+      assert.match(res.stderr, why);
+    } finally { s.done(); }
+  }
 });

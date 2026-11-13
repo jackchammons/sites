@@ -14,10 +14,11 @@ import { recordSection } from '../build/sections/record.mjs';
 import { bracketsSection } from '../build/sections/brackets.mjs';
 import { radarSection } from '../build/sections/radar.mjs';
 import { buzzSection } from '../build/sections/buzz.mjs';
-import { directorySection } from '../build/sections/directory.mjs';
-import { candidatesSection } from '../build/sections/candidates.mjs';
+import { directorySection, mapData } from '../build/sections/directory.mjs';
 import { cardHtml, fieldStats } from '../src/render.js';
 import { PER_PASS, RETRY_DAYS, ROTATION } from '../src/rules.js';
+import { paletteCss } from '../src/palette.js';
+import { PUGET_SOUND_BOX } from '../src/bounds.js';
 import { LOCATION_REVISIT_DAYS } from '../src/locations.js';
 import {
   ALGORITHM, isoWeekKey, isoWeek, LONGEVITY_FULL_YEARS, COVERAGE_WINDOW_MONTHS, COVERAGE_FULL_MENTIONS,
@@ -67,15 +68,27 @@ const page = ctx => pageHtml(ctx, {
   radarSection: radarSection(ctx),
   buzzSection: buzzSection(ctx),
   directorySection: directorySection(ctx),
-  candidatesSection: candidatesSection(ctx)
+  mapData: mapData(ctx)
 });
 /* One block of an expanded directory record, as the text a reader sees. */
 const blockOf = (record, label) => record
   .match(new RegExp(`<div class="dd-block"><div class="dd-label">${label}</div>([\\s\\S]*?)</div>\\s*(?:<div class="dd-block">|</div></td>)`))[1]
   .replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 const standingsOf = html => JSON.parse(html.match(/data-standings='([^']*)'/)[1].replace(/&#39;/g, "'"));
-const dirRows = html => [...html.matchAll(/<tr class="dir-row[^"]*" data-id="([^"]+)">([\s\S]*?)<\/tr>/g)]
+const dirRows = html => [...html.matchAll(/<tr class="dir-row[^"]*" id="[^"]+" data-id="([^"]+)">([\s\S]*?)<\/tr>/g)]
   .map(m => ({ id: m[1], rank: m[2].match(/class="dir-rank[^"]*">#(\d+)</)?.[1] ?? null }));
+/* The directory's categories in page order, each with the ids of its rows. */
+const categoriesOf = html => {
+  const starts = [...html.matchAll(/<details class="dg" id="cat-([a-z-]+)" data-cat="\1"( open)?>/g)];
+  const end = html.indexOf('<div class="dir-rail"');
+  return starts.map((m, i) => {
+    const body = html.slice(m.index, starts[i + 1]?.index ?? end);
+    return { key: m[1], open: Boolean(m[2]), body, rows: [...body.matchAll(/<tr class="(?:dir|cq)-row[^"]*" id="([^"]+)"/g)].map(x => x[1]) };
+  });
+};
+const textIn = markup => markup.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+/* The search field and the toggles, as rendered: hidden, ahead of the list. */
+const tools = html => html.match(/<div class="dir-tools" id="dir-tools" hidden>([\s\S]*?)<div class="dir-list" id="dir-list">/)[1];
 
 test('the record chart draws this build\'s standings for the current week, not the stored snapshot', () => {
   const live = context();
@@ -122,6 +135,136 @@ test('the directory lists scored open entries in published rank order, each with
   // Unrated, opening and closed entries follow, in that order, with no rank.
   assert.deepEqual(rows.slice(open.length).map(r => r.id), ['unrated', 'moving', 'gone']);
   assert.deepEqual(rows.slice(open.length).map(r => r.rank), [null, null, null]);
+
+  // Each of those is a category of its own, and the ranking is the one that is open.
+  const cats = categoriesOf(directorySection(ctx));
+  assert.deepEqual(cats.map(c => [c.key, c.rows.length, c.open]),
+    [['ranked', open.length, true], ['unrated', 1, false], ['opening', 1, false], ['closed', 1, false]]);
+  assert.deepEqual(cats[0].rows, open.map(r => `r-${r.id}`));
+  // A rated entry that is not open is held out of the ranked category too.
+  assert.deepEqual(cats[2].rows, ['r-moving']);
+  assert.deepEqual(cats[3].rows, ['r-gone']);
+});
+
+test('the directory works without script: every row is in the page, and what needs the script is hidden', () => {
+  const pending = { key: 'new pie|1', name: 'New Pie', address: '1 Pine St, Seattle, WA 98101',
+    sources: ['kc-health'], lastInspection: '2026-10-01', status: 'pending' };
+  const ctx = context({ candidates: [pending] });
+  const html = directorySection(ctx);
+  // Every place in the registry is a row, in exactly one category.
+  const cats = categoriesOf(html);
+  assert.deepEqual(cats.flatMap(c => c.rows).sort(), ctx.registry.places.map(p => p.anchor).sort());
+  assert.equal(new Set(cats.flatMap(c => c.rows)).size, ctx.registry.places.length);
+  for (const c of cats) assert.deepEqual(c.rows.slice().sort(), ctx.registry.byCategory[c.key].map(p => p.anchor).sort(), c.key);
+  // A category is a <details>, so its heading opens it with nothing running.
+  assert.equal((html.match(/<details class="dg"/g) ?? []).length, cats.length);
+
+  // The search field and the toggles do nothing without app.js: they are
+  // there once, hidden, ahead of the list, with a toggle for each category.
+  assert.equal((html.match(/id="dir-tools"/g) ?? []).length, 1);
+  const bar = tools(html);
+  assert.match(bar, /<input type="search" id="dir-q"[^>]*aria-label="Search the directory[^"]*"/);
+  assert.match(bar, /<span id="dir-status" role="status" aria-live="polite"><\/span>/);
+  // Each carries its category's swatch: a dot, or for the ranking the ramp its pins are coloured on.
+  const chips = [...bar.matchAll(/<button type="button" class="cat-chip" data-cat="([a-z-]+)" aria-pressed="(true|false)">(?:<i class="cat-dot"><\/i>|<span class="cat-ramp" aria-hidden="true"><i>#\d+<\/i><span><\/span><i>#1<\/i><\/span>)([^<]+)<b data-count="\1">(\d+)<\/b><\/button>/g)];
+  assert.deepEqual(chips.map(m => [m[1], m[2], m[3].trim(), Number(m[4])]), [
+    ['ranked', 'true', 'Ranked', ctx.registry.counts.ranked], ['unrated', 'false', 'Unrated', 1],
+    ['opening', 'false', 'Not open yet', 1], ['closed', 'false', 'Closed', 1],
+    ['pending', 'false', 'Waiting for a census pass', 1]]);
+  assert.match(bar, /id="dir-all">Show all<[\s\S]*id="dir-reset">Ranked only<[\s\S]*id="dir-none">Collapse all</);
+  assert.match(bar, /<button type="button" class="dir-act" id="dir-clear" hidden>Clear search<\/button>/);
+});
+
+test('every number of pizzerias the page prints is the registry\'s, and so is what the map plots', () => {
+  const at = (address, lat, lon) => ({ neighborhood: 'Ballard', address, lat, lon });
+  const list = restaurants();
+  list.find(r => r.id === 'p0').locations = [at('1 Pine St, Seattle, WA 98107', 47.66, -122.38), at('2 Main St, Bellevue, WA 98004', 47.61, -122.2)];
+  list.find(r => r.id === 'gone').locations = [at('3 Oak St, Seattle, WA 98103', 47.65, -122.35)];
+  list.find(r => r.id === 'unrated').locations = [at('4 Elm St, Seattle, WA 98103', null, null)];
+  const candidates = [
+    { key: 'chain|5', name: "Domino'S <b>Pizza</b>", address: '5 Fir St, Seattle, WA 98109', sources: ['kc-health'],
+      lastInspection: '2026-01-14', status: 'chain', lat: 47.62, lon: -122.34 },
+    { key: 'pending|6', name: 'New Pie', address: '6 Ash St, Seattle, WA 98101', sources: ['kc-health'], status: 'pending' },
+    { key: 'branch|7', name: 'Place 00', address: '7 Yew St, Seattle, WA 98101', sources: ['kc-health'], status: 'promoted', matchedId: 'p0', lat: 47.6, lon: -122.3 }
+  ];
+  const ctx = context({ dataset: { city: 'Seattle', dataVersion: 'test', restaurants: list, attributeRegistry: {} }, candidates });
+  const html = page(ctx);
+  const { registry } = ctx;
+  const markup = html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, ' ');
+
+  // Wherever a count is printed it is marked, and it is the registry's number.
+  const expected = { ...registry.counts, 'on-file': list.length, 'not-on-file': 2, 'tied-permits': 1 };
+  const counts = [...markup.matchAll(/data-count="([^"]+)">(\d+)</g)];
+  for (const [, key, n] of counts) assert.equal(Number(n), expected[key], key);
+  const times = key => counts.filter(m => m[1] === key).length;
+  assert.equal(times('on-file'), 2, 'the hero and the directory');
+  assert.equal(times('ranked'), 4, 'the hero, the ranking, the category and its toggle');
+  for (const key of ['unrated', 'opening', 'closed', 'pending', 'chain']) assert.equal(times(key), 2, key);
+  assert.match(textIn(markup), /On file 19 pizzerias Rated 16 /);
+  assert.match(textIn(markup), /The ten highest SLICE scores among 16 rated, open pizzerias\./);
+  assert.match(textIn(markup), /One list, sorted into categories: 19 pizzerias on file, maintained by the daily research pass, and 2 more places known only as leads/);
+
+  // The map's data: one record per place with a Seattle point, under the id of
+  // its row and in its row's category. A place with no coordinates, a
+  // suburban branch and a candidate tied to an entry are not in it.
+  const data = JSON.parse(html.match(/<script>window\.__PIZZA__ = ([\s\S]*?);<\/script>/)[1]);
+  assert.deepEqual(data.places, [
+    { id: 'r-p0', cat: 'ranked', rank: 1, name: 'Place 00', pts: [[47.66, -122.38, '1 Pine St, Seattle, WA 98107']], outside: 1 },
+    { id: 'r-gone', cat: 'closed', name: 'Gone Pies', pts: [[47.65, -122.35, '3 Oak St, Seattle, WA 98103']], more: 'Closed' },
+    { id: 'c-chain-5', cat: 'chain', lead: 1, name: "Domino's <b>Pizza</b>", pts: [[47.62, -122.34, '5 Fir St, Seattle, WA 98109']],
+      more: 'National chain · last inspected Jan 14, 2026' }
+  ]);
+  const cats = categoriesOf(html);
+  for (const p of data.places) assert.ok(cats.find(c => c.key === p.cat).rows.includes(p.id), p.id);
+  // What a ranked pin's colour is read against, and the region the reader's own position is held to.
+  assert.equal(data.ranked, registry.counts.ranked);
+  assert.deepEqual(data.box, PUGET_SOUND_BOX);
+  // The colours are the palette module's, written into the page once.
+  assert.equal(html.split(paletteCss()).length, 2);
+  assert.match(tools(html), /<span class="cat-ramp" aria-hidden="true"><i>#16<\/i><span><\/span><i>#1<\/i><\/span>Ranked <b data-count="ranked">16<\/b>/);
+  // A name from the register goes into the page as text, never as markup.
+  assert.doesNotMatch(html, /<b>Pizza<\/b>/);
+  assert.ok(html.includes('\\u003cb>Pizza\\u003c/b>'));
+  // A category says how many of its places the map cannot show.
+  const note = key => textIn(cats.find(c => c.key === key).body.match(/<p class="dg-unmapped">([\s\S]*?)<\/p>/)?.[1] ?? '');
+  assert.equal(note('ranked'), '15 of these 16 are not on the map yet: no Seattle address with coordinates is on file for them.');
+  assert.equal(note('pending'), 'It is not on the map yet: no Seattle address with coordinates is on file for it.');
+  assert.equal(note('chain'), '');
+  assert.equal(note('closed'), '');
+});
+
+test('the radar is two cuts of the registry, and each place it names links to its row in the directory', () => {
+  const candidates = [
+    { key: 'shut permit|8', name: 'Shut Permit Pizza', address: '8 Bay St, Seattle, WA 98101', sources: ['kc-health'], lastInspection: '2026-02-01',
+      status: 'rejected', verdict: 'closed', resolvedDate: '2026-10-20', note: 'The space is for <i>lease</i>.', resolutionSource: 'https://www.paper.example/shut' },
+    { key: 'long gone|9', name: 'Long Gone Pizza', address: '9 Bay St, Seattle, WA 98101', sources: ['kc-health'],
+      status: 'rejected', verdict: 'closed', resolvedDate: '2025-12-01' }
+  ];
+  const ctx = context({ candidates });
+  const html = page(ctx);
+  const radar = html.slice(html.indexOf('<section class="section" id="radar"'), html.indexOf('<section class="section" id="directory"'));
+  const list = kind => [...radar.match(new RegExp(`<ul class="cand-list" data-radar="${kind}">([\\s\\S]*?)</ul>`))[1]
+    .matchAll(/<li data-place="([^"]+)">([\s\S]*?)<\/li>/g)].map(m => ({ id: m[1], html: m[2], text: textIn(m[2]) }));
+
+  // Opening soon is the not-open-yet category, whole.
+  assert.deepEqual(list('opening').map(r => r.id), ctx.registry.byCategory.opening.map(p => p.anchor));
+  // Recently closed is the closed category's last six months, newest first: a
+  // pizzeria on file and a place known only from a permit, in one list. The
+  // one found closed a year ago is in the directory and not here.
+  const closed = list('closed');
+  assert.deepEqual(closed.map(r => r.id), ['c-shut-permit-8', 'r-gone']);
+  const cats = categoriesOf(html);
+  assert.ok(cats.find(c => c.key === 'closed').rows.includes('c-long-gone-9'));
+  for (const r of closed) assert.ok(cats.find(c => c.key === 'closed').rows.includes(r.id), r.id);
+  for (const r of list('opening')) assert.ok(cats.find(c => c.key === 'opening').rows.includes(r.id), r.id);
+  for (const r of [...closed, ...list('opening')]) assert.ok(r.html.includes(`<a class="cand-dir" href="#${r.id}">in the directory</a>`), r.id);
+
+  // The day a pass found a permit-only place closed is a report, never the day it closed.
+  assert.equal(closed[0].text, 'Shut Permit Pizza 8 Bay St, Seattle, WA 98101 · not on file, known only from a food permit · closure reported Oct 20, 2026 · in the directory The space is for &lt;i&gt;lease&lt;/i&gt;. paper.example');
+  assert.doesNotMatch(closed[0].text, /closed (since|on|Oct)/);
+  // A closure whose date the source stated is printed as that date.
+  assert.match(closed[1].text, /^Gone Pies Ballard · Neapolitan · closed Oct 1, 2026 · in the directory/);
+  assert.doesNotMatch(radar, /<i>lease<\/i>/);
 });
 
 test('the map rail is rendered hidden and the page does not load Leaflet itself', () => {
@@ -134,6 +277,9 @@ test('the map rail is rendered hidden and the page does not load Leaflet itself'
   assert.match(rail, /<div class="dir-pin">\s*<div id="map"[^>]*><\/div>\s*<\/div>\s*<p class="note dir-map-note">/);
   assert.doesNotMatch(html, /<script[^>]+leaflet/);
   assert.match(html, /<script type="module" src="\.\/app\.js"><\/script>/);
+  // The toggles are not in the rail: app.js moves them beside the map once
+  // there is one, and they are still there to use if the map is dropped.
+  assert.doesNotMatch(rail, /dir-tools|cat-chip/);
 });
 
 test('the nav links only the sections that rendered', () => {
@@ -144,12 +290,12 @@ test('the nav links only the sections that rendered', () => {
     for (const id of expected) assert.ok(html.includes(`id="${id}"`), `#${id} is linked but not on the page`);
   };
   // No earlier snapshot and no stories: no record, no buzz. The closure and
-  // the opening put the radar on the page, and the entry nobody has rated
-  // puts the candidates there.
-  check(context(), ['top-ten', 'styles', 'radar', 'directory', 'candidates', 'methodology']);
+  // the opening put the radar on the page. What is known and not ranked is
+  // part of the directory, so there is no entry for it.
+  check(context(), ['top-ten', 'styles', 'radar', 'directory', 'methodology']);
 
   // Every open entry rated and no candidates queue: nothing is known of that
-  // is not ranked, so there is no candidates section to link.
+  // is not ranked, and nothing links to a list of it.
   const settled = restaurants().filter(r => r.status === 'open' && r.factors);
   const story = { title: 'A pizza story', url: 'https://news.example/a', source: 'News', published: '2026-11-08T10:00:00Z', kind: 'mention' };
   const earlier = { weekKey: '2026-W45', week: 45, date: '2026-11-03', algorithm: ALGORITHM, ranks: { p0: 1, p1: 2 } };
@@ -160,11 +306,21 @@ test('the nav links only the sections that rendered', () => {
   check(context(quiet), ['top-ten', 'record', 'styles', 'buzz', 'directory', 'methodology']);
   assert.doesNotMatch(page(context(quiet)), /href="#(candidates|unranked|queue)"/);
 
-  // A queue alone is enough to bring the section back.
+  // A queue puts its heading in the directory, where the page's own link to
+  // it lands; the nav gains nothing.
   const pending = { key: 'new pie|1', name: 'New Pie', address: '1 Pine St, Seattle, WA 98101',
     sources: ['kc-health'], lastInspection: '2026-10-01', status: 'pending' };
   check(context({ ...quiet, candidates: [pending] }),
-    ['top-ten', 'record', 'styles', 'buzz', 'directory', 'candidates', 'methodology']);
+    ['top-ten', 'record', 'styles', 'buzz', 'directory', 'methodology']);
+  const withQueue = page(context({ ...quiet, candidates: [pending] }));
+  assert.match(withQueue, /<a href="#candidates">Not on file<\/a>/);
+  assert.match(withQueue, /<div class="dg-head" id="candidates">/);
+  assert.doesNotMatch(withQueue, /<section class="section" id="candidates"/);
+  // Every in-page link on the page lands on something.
+  const ids = new Set([...withQueue.matchAll(/\sid="([^"]+)"/g)].map(m => m[1]));
+  for (const [, target] of withQueue.replace(/<script[\s\S]*?<\/script>/g, '').matchAll(/href="#([^"]*)"/g)) {
+    assert.ok(ids.has(target), `#${target}`);
+  }
 });
 
 test('the methodology sits inside <main>, prints the constants from slice.js, and the footer links back', () => {
@@ -372,7 +528,7 @@ test('the methodology has one row for each task in the rotation and names the re
   const agentSet = restaurants().map(r => r.factors
     ? { ...r, factors: Object.fromEntries(Object.entries(r.factors).map(([k, f]) => [k, { ...f, setBy: 'agent' }])) } : r);
   const done = byHand(methodOf(page(context({ dataset: { city: 'Seattle', dataVersion: 'test', restaurants: agentSet, attributeRegistry: {} } }))));
-  assert.match(done, /^Two more tasks are never picked automatically and run only when started by hand, through the same steps and the same gates\. They catch up in bulk: social \([^)]+\) and coverage \([^)]+\)\.$/);
+  assert.match(done, /^Three more tasks are never picked automatically and run only when started by hand, through the same steps and the same gates\. They catch up in bulk: social \([^)]+\), coverage \([^)]+\) and serves \([^)]+\)\.$/);
   for (const name of ['sources', 'rerate']) assert.ok(!done.includes(`${name} (`), `${name} has nothing left to do and is still named`);
 });
 
@@ -413,13 +569,13 @@ test('the methodology lists both workflows step by step and says what the agent 
   assert.match(text, /A rating the agent has set\. It is set once\./);
 });
 
-test('no clock time appears in the methodology or the candidates section', () => {
+test('no clock time appears in the directory or the methodology', () => {
   const pending = { key: 'new pie|1', name: 'New Pie', address: '1 Pine St, Seattle, WA 98101',
     sources: ['kc-health'], lastInspection: '2026-10-01', status: 'pending' };
   const html = page(context({ candidates: [pending], candidatesChecked: '2026-11-12T05:30:31.005Z' }));
-  const from = html.indexOf('<section class="section" id="candidates"');
+  const from = html.indexOf('<section class="section" id="directory"');
   const text = textOf(html.slice(from, html.indexOf('</main>')));
-  assert.ok(text.includes('How it works') && text.includes('Known, but not ranked'));
+  assert.ok(text.includes('How it works') && text.includes('Every place the index knows of') && text.includes('Not on file'));
   // A scheduled run starts when the runner gets to it, so the page names no hour.
   assert.doesNotMatch(text, /\b\d{1,2}:\d{2}\b|\b\d{1,2}\s?(?:a\.?m\.?|p\.?m\.?)(?![a-z])|\bUTC\b|\bGMT\b|o'clock|\bmidnight\b|\bnoon\b|\bcron\b/i);
   assert.match(text, /The register was last read on Nov 11, 2026\./);

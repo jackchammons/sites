@@ -7,6 +7,38 @@
  * directory only after the census research task verifies it through the same
  * validated `directory` channel every discovery uses.
  *
+ * The queue also holds what the index knows of and will not rank. The seed
+ * can only see a permit whose name says pizza, so a restaurant, bar or bakery
+ * that serves pizza under any other name never reaches it; a research pass
+ * files those through `servesPizza`, and each joins the queue already set
+ * aside as not-pizza (candidateOrigin below tells the two kinds apart).
+ *
+ * What a candidate carries. Only `key`, `name`, `sources` and `status` are on
+ * every one:
+ *
+ *   key             candidateKey(name, address): one per physical place
+ *   name            as the register spells it, or as a research pass filed it
+ *   address         "<street>, Seattle, WA <ZIP>"; an OpenStreetMap lead may
+ *                   have none
+ *   neighborhood    research-filed candidates only
+ *   sources         'kc-health', 'osm', 'research'
+ *   lastInspection  the register's newest inspection, YYYY-MM-DD; permits only
+ *   website         OpenStreetMap leads only, when the element is tagged
+ *   status          'pending' | 'promoted' | 'chain' | 'rejected'
+ *   matchedId       the entry it is (promoted) or duplicates (verdict
+ *                   'duplicate')
+ *   verdict, note, resolutionSource, resolvedDate
+ *                   the finding that set it aside, the page it was read on
+ *                   and the day; resolvedDate is also the day of a promotion
+ *   previousVerdict { verdict, note, resolvedDate, source }: the finding a
+ *                   candidate carried before it returned to pending or
+ *                   joined the directory
+ *   lat, lon        where its address is, filled by the geocoder for every
+ *                   candidate the page lists (candidateIsShown)
+ *   geoTried        the day the geocoder found nothing for the address; the
+ *                   candidate rests CANDIDATE_GEOCODE.retryDays before it is
+ *                   looked up again
+ *
  * Pure functions of data, no I/O: the fetch script and apply step do the
  * reading and writing.
  */
@@ -90,11 +122,37 @@ export function matchEntry(candidate, restaurants) {
  * neither of those is reopened by anything. */
 export const REOPENING_VERDICTS = ['closed', 'unverifiable', 'not-pizza'];
 
+/* Where a candidate came from: 'permit' when a registry seeded it, 'research'
+ * when a research pass filed it as a place that serves pizza and is not a
+ * pizzeria. The difference is what can happen to it next. The seed asks the
+ * register for permit names that say pizza, so it sees a permit candidate
+ * again on every refresh and never sees a research one: Bar Cotto holds two
+ * Seattle permits and neither name matches. A candidate both have filed is a
+ * permit candidate, because the seed can see it. */
+export const candidateOrigin = candidate => {
+  const sources = candidate?.sources ?? [];
+  return sources.includes('research') && !sources.some(s => s !== 'research') ? 'research' : 'permit';
+};
+
+/* The one reading of status and verdict together; candidateStanding below
+ * says what each state means. */
+const candidateState = c => c.status === 'promoted' ? 'listed'
+  : c.status === 'pending' || c.status === 'chain' ? c.status
+  : [...REOPENING_VERDICTS, 'duplicate'].includes(c.verdict) ? c.verdict
+  : 'rejected';
+
+/* Is this a candidate the page lists by name, and so plots? Every one that is
+ * not tied to an entry on file: a promoted candidate is that entry and a
+ * duplicate is a branch of one, and the entry has coordinates of its own. */
+export const candidateIsShown = candidate => !['listed', 'duplicate'].includes(candidateState(candidate ?? {}));
+
 /* Is the inspection on a candidate's row evidence newer than the verdict it
  * carries? A verdict with no date on it cannot be shown to be older, and
- * stays. */
+ * stays. A research-filed candidate has no permit on its row, so nothing the
+ * register does is evidence about it. */
 export function inspectedSinceVerdict(candidate) {
   return candidate?.status === 'rejected' && REOPENING_VERDICTS.includes(candidate.verdict)
+    && candidateOrigin(candidate) === 'permit'
     && Date.parse(candidate.lastInspection) > Date.parse(candidate.resolvedDate);
 }
 
@@ -108,11 +166,23 @@ const reopened = candidate => {
       ...(resolutionSource ? { source: resolutionSource } : {}) } };
 };
 
+/* One address written two ways is still one address: case, punctuation and
+ * spacing do not move a door. */
+const sameAddress = (a, b) => {
+  const fold = v => String(v ?? '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  return fold(a) === fold(b);
+};
+
 /*
  * Merge freshly fetched candidates into the stored queue.
  * - a candidate already in the queue keeps its status and resolution
  *   (a rejected ghost must not resurrect on every refresh), unless the
  *   register has inspected it since a verdict that an inspection reopens;
+ * - it keeps its coordinates too, for as long as its address is the one
+ *   they were looked up for;
+ * - a candidate a research pass filed is left exactly as it is: the seed did
+ *   not write it, and a registry row that lands on its key would replace
+ *   the name and address it was filed under with the register's;
  * - anything matching a dataset entry is recorded as promoted;
  * - national chains are recorded as chain, excluded by policy;
  * - everything else joins as pending.
@@ -123,9 +193,15 @@ export function mergeCandidates(existing, incoming, restaurants) {
   for (const inc of incoming) {
     const key = candidateKey(inc.name, inc.address);
     const prev = byKey.get(key);
+    if (prev && candidateOrigin(prev) === 'research') continue;
     if (prev) {
+      // Coordinates, and the day a lookup found none, belong to the address
+      // they were looked up for. A row that brings another address starts
+      // again; one that brings none leaves the address on file in place.
+      const { lat, lon, geoTried, ...unplaced } = prev;
+      const moved = inc.address != null && !sameAddress(inc.address, prev.address);
       // Refresh the facts, keep the resolution.
-      const kept = { ...prev, ...inc, key, status: prev.status,
+      const kept = { ...(moved ? unplaced : prev), ...inc, key, status: prev.status,
         ...(prev.note ? { note: prev.note } : {}),
         sources: [...new Set([...(prev.sources ?? []), ...(inc.sources ?? [])])] };
       // The newest inspection on the row is this refresh's when it brought
@@ -157,12 +233,20 @@ export function mergeCandidates(existing, incoming, restaurants) {
  *                 'pending'     waiting for a census pass
  *                 'chain'       a national chain, left out by policy
  *                 'duplicate'   another permit or branch of the entry `matchedId`
- *                 'closed', 'unverifiable', 'not-pizza'   the census verdict
+ *                 'closed', 'unverifiable', 'not-pizza'   the verdict
  *                 'rejected'    set aside with no verdict on record
+ *   origin        'permit'      a registry seeded it, and a census pass
+ *                               judged it or will
+ *                 'research'    a research pass filed it as a place that
+ *                               serves pizza and is not a pizzeria; it has no
+ *                               permit on file, so no inspection date
  *   matchedId     the entry it is, or is a branch of; otherwise null
  *   resolvedDate  the day the verdict or the match was recorded, or null
  *   lastInspection  the register's newest inspection on file for it, or null
- *   reopens       true when a later inspection returns it to the queue
+ *   reopens       true when a later inspection returns it to the queue. Never
+ *                 true for a research-filed candidate: the seed cannot see
+ *                 its permit. It leaves that state one way, by a later pass
+ *                 filing the place in the directory as a pizzeria.
  *   reopensAfter  the day such an inspection has to postdate, or null
  *   inspectedSince  true when the inspection on file already does: the next
  *                 seed refresh that still finds the permit returns it
@@ -176,16 +260,16 @@ export function mergeCandidates(existing, incoming, restaurants) {
  */
 export function candidateStanding(candidate, queue = null) {
   const c = candidate ?? {};
-  const state = c.status === 'promoted' ? 'listed'
-    : c.status === 'pending' || c.status === 'chain' ? c.status
-    : [...REOPENING_VERDICTS, 'duplicate'].includes(c.verdict) ? c.verdict
-    : 'rejected';
-  const reopens = c.status === 'rejected' && REOPENING_VERDICTS.includes(c.verdict) && c.resolvedDate != null;
+  const state = candidateState(c);
+  const origin = candidateOrigin(c);
+  const reopens = origin === 'permit'
+    && c.status === 'rejected' && REOPENING_VERDICTS.includes(c.verdict) && c.resolvedDate != null;
   const at = state === 'pending' && queue
     ? queue.filter(q => q.status === 'pending').findIndex(q => q === candidate || (q.key != null && q.key === c.key)) + 1
     : 0;
   return {
     state,
+    origin,
     matchedId: state === 'listed' || state === 'duplicate' ? c.matchedId ?? null : null,
     resolvedDate: state === 'pending' ? null : c.resolvedDate ?? null,
     lastInspection: c.lastInspection ?? null,

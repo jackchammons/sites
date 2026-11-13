@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /*
- * Static site build: load data, derive the ranking, render sections, write
- * the output directory and the weekly snapshot. Each step is a pure module
- * under pizza/build/; this file only composes them.
+ * Static site build: load data, derive the registry of places and the
+ * ranking, render sections, write the output directory and the weekly
+ * snapshot. Each step is a pure module under pizza/build/; this file only
+ * composes them.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -17,8 +18,7 @@ import { recordSection } from '../build/sections/record.mjs';
 import { bracketsSection } from '../build/sections/brackets.mjs';
 import { radarSection } from '../build/sections/radar.mjs';
 import { buzzSection } from '../build/sections/buzz.mjs';
-import { directorySection } from '../build/sections/directory.mjs';
-import { candidatesSection } from '../build/sections/candidates.mjs';
+import { directorySection, mapData } from '../build/sections/directory.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // The multi-site build sets OUT_DIR to dist/<slug>/; a standalone run writes
@@ -28,8 +28,12 @@ const dist = process.env.OUT_DIR
   : path.join(root, '..', 'dist', path.basename(root));
 
 const ctx = deriveContext(loadContext(root));
-ctx.css = fs.readFileSync(path.join(root, 'src/styles.css'), 'utf8');
-ctx.leafletCss = fs.readFileSync(path.join(root, 'src/vendor/leaflet.css'), 'utf8');
+/* The stylesheets go into the page inline. Their comments are for whoever
+ * edits them and are a fifth of their bytes, so the page carries the rules
+ * alone. */
+const rulesOnly = css => css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*\n+/g, '\n');
+ctx.css = rulesOnly(fs.readFileSync(path.join(root, 'src/styles.css'), 'utf8'));
+ctx.leafletCss = rulesOnly(fs.readFileSync(path.join(root, 'src/vendor/leaflet.css'), 'utf8'));
 
 const html = pageHtml(ctx, {
   method: methodParts(ctx),
@@ -38,7 +42,7 @@ const html = pageHtml(ctx, {
   radarSection: radarSection(ctx),
   buzzSection: buzzSection(ctx),
   directorySection: directorySection(ctx),
-  candidatesSection: candidatesSection(ctx)
+  mapData: mapData(ctx)
 });
 
 writeDist(dist, ctx, html);

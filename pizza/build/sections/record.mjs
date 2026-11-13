@@ -21,8 +21,9 @@ const recordSection = chartHtml ? `
     <h2 class="sec-h">Twelve weeks of the top ten</h2>
     <p class="lede" style="margin-top:14px">
       One line per pizzeria, one column per ISO week, position by rank. A line that stops fell
-      out of the ten; one that starts climbed in. The window shows up to twelve weeks and fills
-      as they accumulate.${chartHtml.includes('class="method-change"') ? `
+      out of the ten; one that starts climbed in. Each line has its own colour and carries its
+      name; when there are more pizzerias than colours, a colour comes round again as a dashed
+      or a dotted line. The window shows up to twelve weeks and fills as they accumulate.${chartHtml.includes('class="method-change"') ? `
       A dashed rule marks a week the scoring method changed: movement across it is the
       formula's, not the pizzerias'.` : ''}
     </p>

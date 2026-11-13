@@ -20,6 +20,12 @@
  * verdict, and carries the verdict along as previousVerdict (mergeCandidates
  * in src/census.js).
  *
+ * The seed owns what it seeded and nothing else in the file. A candidate a
+ * research pass filed (a place that serves pizza and is not a pizzeria) is
+ * carried through a refresh untouched, a geocoded candidate keeps its
+ * coordinates while its address stands, and a top-level key this script does
+ * not write, such as the serves sweep's cursor, is written back as it was.
+ *
  *   node pizza/scripts/fetch-candidates.mjs                    refresh at once
  *   node pizza/scripts/fetch-candidates.mjs --max-age-days=30  only if the last
  *                                                              refresh is older
@@ -44,6 +50,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { inPugetSound } from '../src/bounds.js';
 import { mergeCandidates, isSeattleCity, tidyPossessive, INSPECTION_CUTOFF_MONTHS } from '../src/census.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -90,7 +97,13 @@ export function kingCountyCandidates(rows, nowMs = Date.now()) {
   return out;
 }
 
-/* Overpass elements to candidates; an element with no name is no lead. */
+/* Overpass elements to candidates; an element with no name is no lead.
+ *
+ * An element's own coordinates are kept only as two numbers inside the box
+ * the dataset lint holds every coordinate to (src/bounds.js). They are
+ * somebody else's data, and a point the lint would refuse must not be able to
+ * reach the file: the lead is kept and the geocoder places it by its address
+ * instead. */
 export function overpassCandidates(json) {
   const out = [];
   for (const el of json?.elements ?? []) {
@@ -103,7 +116,7 @@ export function overpassCandidates(json) {
     out.push({
       name: t.name,
       ...(addr ? { address: addr } : {}),
-      ...(lat != null ? { lat, lon } : {}),
+      ...(inPugetSound(lat, lon) ? { lat, lon } : {}),
       sources: ['osm'],
       ...(t.website ? { website: t.website } : {})
     });
@@ -138,19 +151,27 @@ export function seedAgeDays(file, nowMs = Date.now()) {
  * out of the merge's sort order without changing any candidate. When nothing
  * changed the stored list is kept byte for byte and only `checked` moves, and
  * that only if the permit register answered. With the register down there is
- * nothing to stamp, so the next run tries again. */
+ * nothing to stamp, so the next run tries again.
+ *
+ * The refresh owns four keys of the file: the two stamps, the cutoff and the
+ * list. Anything else at the top level is another script's (the apply step
+ * keeps the serves sweep's cursor there) and is written back as it was, ahead
+ * of the list, so a refresh never sends a sweep back to its first
+ * neighbourhood. */
 export function nextSeed(prior, merged, nowIso, registerAnswered) {
   const canon = list => JSON.stringify([...list].sort((a, b) => a.key < b.key ? -1 : a.key > b.key ? 1 : 0));
-  const before = prior?.candidates ?? [];
+  const { updated, checked: lastChecked, cutoffMonths, candidates, ...others } = prior ?? {};
+  const before = candidates ?? [];
   const changed = canon(merged) !== canon(before);
-  const checked = registerAnswered ? nowIso : prior?.checked;
+  const checked = registerAnswered ? nowIso : lastChecked;
   return {
     changed,
     write: changed || registerAnswered,
     file: {
-      updated: changed ? nowIso : prior?.updated ?? nowIso,
+      updated: changed ? nowIso : updated ?? nowIso,
       ...(checked ? { checked } : {}),
       cutoffMonths: INSPECTION_CUTOFF_MONTHS,
+      ...others,
       candidates: changed ? merged : before
     }
   };

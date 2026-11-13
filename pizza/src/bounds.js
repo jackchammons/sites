@@ -34,3 +34,20 @@ export const inPugetSound = (lat, lon) =>
 /* The map plots Seattle addresses only (the inclusion rule), so only these
  * are worth geocoding. Same test the page uses to decide what to plot. */
 export const isSeattleAddress = address => /,\s*Seattle,\s*WA/i.test(String(address ?? ''));
+
+/* An address inside the city, in the one form the candidates queue stores:
+ * "<street>, Seattle, WA <ZIP>", which is how the seed writes a permit's and
+ * what isSeattleAddress above looks for. Returns that form, or null when the
+ * address does not name Seattle with a Seattle ZIP (every one is 981xx).
+ *
+ * A research record's address is written by hand, so the city, the state and
+ * the ZIP are read loosely ("Seattle WA 98122", "Seattle, Washington
+ * 98122-1234, USA") and the street line is kept as written, unit and all.
+ * The ZIP is required: a street line that merely says Seattle can be a
+ * suburb's, and the ZIP is what the street key tells two doors apart by. */
+export function seattleAddressForm(address) {
+  const full = String(address ?? '').replace(/\s+/g, ' ').trim();
+  const m = /^(.+?)[,\s]+Seattle\b[,\s]*(?:WA|Washington)\b\.?[,\s]*(981\d{2})(?:-\d{4})?(?:[,\s]+(?:USA|United States))?$/i.exec(full);
+  const street = m?.[1].replace(/[,\s]+$/, '');
+  return street ? `${street}, Seattle, WA ${m[2]}` : null;
+}

@@ -47,7 +47,11 @@ body {
 a { color: var(--tomato-2); }
 h1, h2, h3, h4 { line-height: 1.15; margin: 0; letter-spacing: -0.02em; }
 
-.wrap { width: min(1280px, 94vw); margin: 0 auto; }
+/* The content column. It grows with the window up to 1600px and keeps a
+   gutter of three hundredths of the width each side, so a wide monitor is
+   used; running prose has a measure of its own (.lede, .method-p) and does
+   not stretch with it. */
+.wrap { width: min(1600px, 94vw); margin: 0 auto; }
 .section { padding: 48px 0; border-top: 1px solid var(--line-soft); }
 .eyebrow {
   font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
@@ -179,6 +183,15 @@ h1, h2, h3, h4 { line-height: 1.15; margin: 0; letter-spacing: -0.02em; }
 .card h3 a { color: inherit; text-decoration: none; border-bottom: 1px solid transparent; }
 .card h3 a:hover { color: var(--tomato-2); border-bottom-color: currentColor; }
 .card { scroll-margin-top: 64px; }
+/* A wide screen holds two cards to a row: the ranking reads across, then
+   down. The two cards of a row are one height, each with its "why it ranks"
+   bar along its foot. */
+@media (min-width: 1500px) {
+  .board { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .board .card { display: flex; flex-direction: column; }
+  .board .card .chips { flex: 1 0 auto; align-content: flex-start; padding-bottom: 18px; }
+  .board .card details.math { margin-top: 0; }
+}
 .meta { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); margin-top: 5px; }
 .meta em { color: var(--crust); font-style: normal; }
 
@@ -291,6 +304,9 @@ table.calc tr.sum td, table.calc tr.sum th { border-top: 1px solid var(--line); 
 /* Two cards to a row at most: four across left each formula block narrower
    than the formula in it. */
 .grid2 { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); margin-top: 26px; }
+/* On a wide screen auto-fit would make it three and leave the fourth alone on
+   a row of its own. */
+@media (min-width: 1400px) { .grid2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .mcard { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
 .mcard h4 { font-size: 16px; margin: 0 0 10px; line-height: 1.15; letter-spacing: -0.02em; }
 .mcard p { font-size: 14px; color: var(--ink-2); margin: 0 0 10px; }
@@ -422,6 +438,9 @@ footer p { max-width: 72ch; }
    column has a fixed width to keep the rows aligned; a longer host wraps. */
 .cand-list a { font-family: var(--mono); font-size: 11px; color: var(--ink-3); text-align: right; overflow-wrap: anywhere; }
 .cand-list a:hover { color: var(--tomato-2); }
+/* The link from a radar row to its row in the directory sits in the meta
+   line, in the meta line's own size. */
+.cand-list a.cand-dir { font-size: inherit; text-align: inherit; white-space: nowrap; }
 @media (max-width: 720px) {
   .cand-list li { grid-template-columns: 1fr; gap: 5px; }
   .cand-list a { text-align: left; }
@@ -560,35 +579,11 @@ footer p { max-width: 72ch; }
 .moves li { margin-bottom: 8px; }
 .moves b { color: var(--ink); }
 
-/* ---- Candidates ----
-   Each group is a details element: the summary carries the name, the count
-   and the rule in a sentence, and the rows open under it with or without
-   JavaScript. A row's first cell is its header, with the place under the
-   name; an agent's note is a second, full-width row, so a long one never
-   squeezes the columns on a phone. */
-.cq-group {
-  border: 1px solid var(--line); border-radius: var(--radius);
-  background: var(--panel); margin-top: 12px;
-}
-.cq-group > summary {
-  position: relative; cursor: pointer; list-style: none;
-  padding: 13px 16px 13px 40px; min-height: 48px;
-}
-.cq-group > summary::-webkit-details-marker { display: none; }
-.cq-group > summary::before {
-  content: "▸"; position: absolute; left: 17px; top: 15px; color: var(--tomato-2); font-size: 12px;
-}
-.cq-group[open] > summary::before { content: "▾"; }
-.cq-group[open] > summary { border-bottom: 1px solid var(--line-soft); }
-.cq-group > summary:hover .cq-title { color: var(--tomato-2); }
-.cq-group > summary:focus-visible { outline: 2px solid var(--tomato-2); outline-offset: 2px; border-radius: var(--radius); }
-.cq-title { font-weight: 600; font-size: 15px; }
-.cq-n {
-  font-family: var(--mono); font-size: 11.5px; font-weight: 600; color: var(--ink-2);
-  border: 1px solid var(--line); border-radius: 999px; padding: 1px 9px; margin-left: 6px;
-  vertical-align: 1px;
-}
-.cq-rule { display: block; margin-top: 3px; font-size: 13px; color: var(--ink-3); line-height: 1.5; max-width: 100ch; }
+/* ---- Candidate tables ----
+   The places that are not on file, inside the directory's categories. A
+   row's first cell is its header, with the place under the name; an agent's
+   note is a second, full-width row, so a long one never squeezes the columns
+   on a phone. */
 .cq-scroll { overflow-x: auto; }
 .cq-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
 .cq-table thead th {
@@ -604,6 +599,10 @@ footer p { max-width: 72ch; }
 .cq-row td { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); white-space: nowrap; }
 .cq-row td a { color: var(--ink-2); }
 .cq-sub { display: block; margin-top: 2px; font-family: var(--mono); font-size: 11px; font-weight: 400; color: var(--ink-3); }
+/* Where a place is known from, and for a permit its last inspection. The two
+   may sit on one line or two; the date itself never breaks. */
+.cq-row td.cq-from { white-space: normal; }
+.cq-when { color: var(--ink-3); }
 /* With room to spare the place sits beside the name, one line to a row. */
 @media (min-width: 900px) {
   .cq-sub { display: inline; margin: 0 0 0 12px; }
@@ -622,7 +621,6 @@ footer p { max-width: 72ch; }
 .cq-dupes b { color: var(--ink-2); }
 @media (max-width: 720px) {
   .cq-table thead th, .cq-table td, .cq-table tbody th { padding-left: 12px; padding-right: 10px; }
-  .cq-group > summary { padding-right: 12px; }
 }
 /* On the narrowest phones a date may break across two lines sooner than push
    the table past its box. */
@@ -630,23 +628,156 @@ footer p { max-width: 72ch; }
 
 
 /* ---- Directory ---- */
-/* On a wide screen the table takes the left column and the map rides beside it
-   as a sticky rail, so clicking a row can focus its marker without scrolling.
+/* Every place the index knows of, one <details> per category. On a wide
+   screen the list takes the left column and the map rides beside it as a
+   sticky rail, with the search field and the category toggles above the map,
+   so a row can focus its pin and a toggle can be reached without scrolling.
    Under 1100px the two stack and the map is pinned instead (below). The rail
-   is in the markup hidden; app.js reveals it and sets .has-map once there is
-   a map to show, so without one the table keeps the full width. */
+   and the toggles are in the markup hidden; app.js reveals them and sets
+   .has-tools and .has-map, so without JavaScript the list keeps the full
+   width and opens by its own headers. */
 .dir-layout { display: flex; flex-direction: column; gap: 22px; margin-top: 22px; }
 .dir-rail { min-width: 0; }
 .dir-list { min-width: 0; }
-.dir-layout .dir-scroll, .dir-layout .dir-map { margin-top: 0; }
+.dir-layout .dir-map { margin-top: 0; }
+
+/* A category. Its header carries the colour its pins have, its name, how
+   many it holds and the rule in a line, so a closed one still says what is
+   in it. overflow is clip, not hidden: the corners are rounded and a table
+   header inside still sticks to the window. */
+[data-cat="unrated"] { --cat: var(--cat-unrated); }
+[data-cat="opening"] { --cat: var(--cat-opening); }
+[data-cat="closed"] { --cat: var(--cat-closed); }
+[data-cat="pending"] { --cat: var(--cat-pending); }
+[data-cat="chain"] { --cat: var(--cat-chain); }
+[data-cat="not-pizza"] { --cat: var(--cat-not-pizza); }
+[data-cat="unverifiable"] { --cat: var(--cat-unverifiable); }
+[data-cat="set-aside"] { --cat: var(--cat-set-aside); }
+/* A category's swatch is a small pin: its colour (the palette is written into
+   the page from src/palette.js as --cat-* and --rank-ramp), with the pin's
+   dark line round it. */
+.dg-dot, .cat-dot {
+  flex: none; display: inline-block; width: 11px; height: 11px; border-radius: 50%;
+  background: var(--cat, var(--char)); box-shadow: 0 0 0 1px var(--pin-line);
+}
+/* A place that is not on file is a hollow pin, in the list as on the map. */
+:is([data-cat="pending"], [data-cat="chain"], [data-cat="not-pizza"], [data-cat="unverifiable"], [data-cat="set-aside"]) :is(.dg-dot, .cat-dot) {
+  background: #fff; box-shadow: inset 0 0 0 3px var(--cat);
+}
+/* The ranked category has no one colour: its pins run from blue at the
+   lowest rank to red at #1, so its swatch is that ramp, with the two ranks
+   it runs between at its ends. */
+.cat-ramp { flex: none; display: inline-flex; align-items: center; gap: 4px; }
+.cat-ramp span { width: 34px; height: 9px; border-radius: 5px; background: var(--rank-ramp); box-shadow: 0 0 0 1px var(--pin-line); }
+.cat-ramp i { font: 400 9.5px/1 var(--mono); font-style: normal; color: var(--ink-3); }
+/* The same colour beside a ranked row's number, so a row can be matched to
+   its pin. app.js sets --rank on the number; without it there is no dot. */
+.dir-rank[style]::before {
+  content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px;
+  background: var(--rank); box-shadow: 0 0 0 1px var(--pin-line); vertical-align: 0;
+}
+.dg {
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--panel); margin-top: 12px; overflow: clip;
+}
+.dg:first-child { margin-top: 0; }
+.dg > summary {
+  position: relative; cursor: pointer; list-style: none;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 3px 9px;
+  padding: 12px 16px 12px 40px; min-height: 48px;
+}
+.dg > summary::-webkit-details-marker { display: none; }
+.dg > summary::before {
+  content: "▸"; position: absolute; left: 17px; top: 16px; color: var(--tomato-2); font-size: 12px; line-height: 1.4;
+}
+.dg[open] > summary::before { content: "▾"; }
+.dg[open] > summary { border-bottom: 1px solid var(--line-soft); }
+.dg > summary:hover .dg-title { color: var(--tomato-2); }
+.dg > summary:focus-visible { outline: 2px solid var(--tomato-2); outline-offset: 2px; border-radius: var(--radius); }
+.dg-title { font-weight: 600; font-size: 15px; }
+.dg-n {
+  font-family: var(--mono); font-size: 11.5px; font-weight: 600; color: var(--ink-2);
+  border: 1px solid var(--line); border-radius: 999px; padding: 1px 9px; white-space: nowrap;
+}
+.dg-rule { font-size: 13px; color: var(--ink-3); line-height: 1.5; margin-left: 4px; }
+.dg-about { margin: 12px 16px 12px 40px; font-size: 13px; color: var(--ink-2); line-height: 1.6; max-width: 100ch; }
+.dg-unmapped { display: none; margin: -4px 16px 12px 40px; font-size: 12.5px; color: var(--ink-3); }
+.dir-layout.has-map .dg-unmapped { display: block; }
+.dg-head { margin-top: 30px; }
+.dg-head .buzz-head { margin-top: 0; }
+.dg-head .method-p { margin-bottom: 4px; }
+.dir-empty { margin: 4px 0 0; font-size: 14px; }
+/* During a search the list is the matches: each category keeps its heading
+   and its rows, and its explanation waits until the search is cleared. */
+.dir-list.is-searching :is(.dg-about, .dg-unmapped) { display: none; }
+@media (max-width: 720px) {
+  .dg > summary { padding-right: 12px; }
+  .dg-rule { flex-basis: 100%; margin-left: 0; }
+  .dg-about, .dg-unmapped { margin-left: 12px; margin-right: 12px; }
+}
+
+/* The search field and the toggles. One row of each; the toggles are also
+   the map's legend, so each carries its category's dot and count. They are
+   rendered hidden, and a display value on the bare box would override that,
+   so theirs waits for .has-tools, which app.js sets as it reveals them. */
+.dir-layout.has-tools .dir-tools { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.dir-q {
+  width: 100%; min-height: 40px; padding: 8px 12px; font: 14px/1.3 var(--sans);
+  color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+}
+.dir-q::placeholder { color: var(--ink-3); }
+.dir-q:focus-visible { outline: 2px solid var(--tomato-2); outline-offset: 1px; }
+.dir-found {
+  display: none; align-items: baseline; gap: 10px; margin: 0;
+  font-family: var(--mono); font-size: 11.5px; color: var(--ink-2);
+}
+.dir-tools.is-searching .dir-found { display: flex; }
+.dir-tools.is-searching .dir-acts { display: none; }
+.dir-cats { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.cat-chip {
+  display: inline-flex; align-items: center; gap: 7px; flex: none; min-height: 32px;
+  font: 500 11.5px/1 var(--mono); color: var(--ink-3); white-space: nowrap; cursor: pointer;
+  background: none; border: 1px solid var(--line); border-radius: 999px; padding: 6px 11px 6px 9px;
+}
+.cat-chip b { font-weight: 600; font-variant-numeric: tabular-nums; }
+/* On: the chip is filled and its dot is the pin's. Off: the dot is hollowed
+   out, as its pins are off the map. */
+.cat-chip[aria-pressed="true"] { color: var(--ink); background: var(--panel-2); border-color: var(--char); }
+.cat-chip[aria-pressed="false"] :is(.cat-dot, .cat-ramp span) { opacity: .45; }
+.cat-chip:hover { border-color: var(--tomato); }
+.cat-chip:disabled { opacity: .45; cursor: default; border-color: var(--line); }
+.cat-chip:focus-visible, .dir-act:focus-visible { outline: 2px solid var(--tomato-2); outline-offset: 2px; }
+.dir-acts { display: flex; gap: 4px 14px; flex-basis: 100%; flex-wrap: wrap; padding: 2px 2px 0; }
+.dir-act {
+  appearance: none; background: none; border: 0; padding: 6px 0; cursor: pointer;
+  font: 500 11.5px/1 var(--mono); color: var(--tomato-2); text-decoration: underline;
+  text-underline-offset: 3px; white-space: nowrap;
+}
+.dir-act:hover { color: var(--ink); }
+/* With no map the toggles sit above the list and stay with it: a bar stuck
+   under the nav, and the table header under that. --tools-h is the bar's
+   height, which app.js keeps measured. */
+.dir-layout > .dir-tools {
+  position: sticky; top: 47px; z-index: 2; padding: 10px 0 8px; margin-bottom: -10px; background: var(--bg);
+}
+.dir-layout.has-tools:not(.has-map) .dir-table thead th { top: calc(47px + var(--tools-h, 0px)); }
+.dir-layout.has-tools:not(.has-map) .dir-list :is(a, button, summary, tr, .dg, .dg-head) { scroll-margin-top: calc(var(--tools-h, 0px) + 44px); }
+
 @media (min-width: 1100px) {
   .dir-layout.has-map {
     display: grid; grid-template-columns: minmax(0, 1fr) clamp(320px, 30vw, 460px);
     gap: 22px; align-items: start;
   }
-  /* Below the sticky nav, not under it: the same offset anchors scroll to. */
-  .dir-rail { position: sticky; top: 64px; }
-  .dir-rail .dir-map { height: min(72vh, 640px); }
+  /* Below the sticky nav, not under it: the same offset anchors scroll to.
+     The rail is the toggles, the map and the legend note, and all three have
+     to fit the window, so the map takes what the other two leave. */
+  .dir-layout.has-map .dir-rail {
+    position: sticky; top: 64px; display: flex; flex-direction: column;
+    height: calc(100vh - 64px - 14px); max-height: 1040px;
+  }
+  .dir-pin { position: relative; flex: 1 0 auto; display: flex; flex-direction: column; gap: 12px; }
+  .dir-rail .dir-map { flex: 1 1 0; height: auto; min-height: 220px; }
+  .dir-rail .dir-map-note { flex: none; }
   /* The table shares the row with the map: tighter cells so all six columns
      sit inside the column without resting in a scrolled-off state. */
   .dir-table { font-size: 12.5px; }
@@ -656,7 +787,6 @@ footer p { max-width: 72ch; }
      whole window's height, and the table falls back to the two-line rows the
      narrow layout uses, since six columns no longer fit beside it. */
   .dir-layout.has-map.map-large { grid-template-columns: minmax(340px, 1fr) minmax(0, 1.7fr); }
-  .dir-layout.map-large .dir-rail .dir-map { height: calc(100vh - 150px); min-height: 420px; }
   .dir-layout.map-large .dir-table th:nth-child(3), .dir-layout.map-large .dir-table th:nth-child(4),
   .dir-layout.map-large .dir-table th:nth-child(6),
   .dir-layout.map-large .dir-style, .dir-layout.map-large .dir-attrs,
@@ -669,27 +799,29 @@ footer p { max-width: 72ch; }
   }
   .dir-layout.map-large .dir-row.st-opening .dir-st { color: var(--basil); }
   .dir-layout.map-large .dd { grid-template-columns: 1fr; }
+  .dir-layout.map-large .dg-rule { flex-basis: 100%; margin-left: 0; }
 
-  .dir-pin { position: relative; }
-  .map-grow {
-    position: absolute; top: 10px; right: 10px; z-index: 1000;
-    font: 500 12px/1 var(--mono); color: var(--ink); background: var(--panel);
-    border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; cursor: pointer;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, .18);
-  }
-  .map-grow:hover { border-color: var(--tomato); }
-  .map-grow:focus-visible { outline: 2px solid var(--tomato-2); outline-offset: 2px; }
+}
+/* With room to spare the map takes two fifths of the row, not a rail's
+   width: the table has its six columns either way, and the map is where the
+   extra width shows. */
+@media (min-width: 1500px) {
+  .dir-layout.has-map { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
 }
 /* The button belongs to the side-by-side layout; pinned above the list the
    map already spans the screen. */
 @media (max-width: 1099px) { .map-grow { display: none; } }
 /* Stacked, the map is pinned under the nav for as long as the list is on
-   screen and the rows scroll beneath it, so a row and its marker can be seen
+   screen and the rows scroll beneath it, so a row and its pin can be seen
    together. A sticky box stays put only inside its parent, so the pinned box
    has to be a child of the layout: the rail gives up its own box and its two
    children become the layout's. The map's wrapper goes first and sticks; the
    legend goes after the list and scrolls away with it. When the layout's last
    line passes, the wrapper leaves with it.
+
+   The search field and the toggles are in the wrapper, above the map, so
+   they are pinned with it: the field, then the toggles as one row that
+   scrolls sideways, then the map.
 
    Everything here hangs off .has-map. A display value on the bare rail would
    override its hidden attribute and pin an empty box for a reader without
@@ -699,31 +831,54 @@ footer p { max-width: 72ch; }
    map's round corners or in the strip under it. Its offset is the least the
    nav can measure (a 44px link, its 2px underline, the 1px rule): where larger
    text makes the nav taller it overlaps the wrapper, and at no size is there a
-   slit between them. The map is a third of the small viewport, the one
+   slit between them. The map is three tenths of the small viewport, the one
    measured with the browser's bars showing, so it does not resize as they
-   hide. The table header sticks under the wrapper instead of under the nav. */
+   hide. The table header sticks under the wrapper instead of under the nav:
+   its offset is the toggles' height (--tools-h, which app.js measures) and
+   the map's. */
 @media (max-width: 1099px) {
-  .dir-layout.has-map { --map-h: max(150px, 33vh); }
-  @supports (height: 1svh) { .dir-layout.has-map { --map-h: max(150px, 33svh); } }
+  .dir-layout.has-map { --map-h: max(150px, 30vh); }
+  @supports (height: 1svh) { .dir-layout.has-map { --map-h: max(150px, 30svh); } }
   .dir-layout.has-map .dir-rail { display: contents; }
   .dir-layout.has-map .dir-pin {
     order: -1; position: sticky; top: 47px; z-index: 2;
     padding-bottom: 8px; background: var(--bg);
   }
+  .dir-layout.has-map .dir-tools { padding: 8px 0; }
+  /* The toggles are one row here whether or not there is a map: stacked in
+     rows they would take a third of a phone's screen for as long as they are
+     pinned. */
+  .dir-layout.has-tools .dir-q { min-height: 38px; padding: 6px 12px; }
+  .dir-layout.has-tools .dir-cats {
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    margin: 0 -3vw; padding: 2px 3vw;
+  }
+  .dir-layout.has-tools .dir-cats::-webkit-scrollbar { display: none; }
+  .dir-layout.has-tools .dir-acts { flex: none; flex-basis: auto; flex-wrap: nowrap; padding: 0 0 0 6px; }
   .dir-layout.has-map .dir-map { height: var(--map-h); }
   .dir-layout.has-map .dir-map-note { order: 1; margin-top: 0; }
-  .dir-layout.has-map .dir-table thead th { top: calc(47px + var(--map-h) + 8px); }
+  .dir-layout.has-map .dir-table thead th { top: calc(47px + var(--tools-h, 0px) + var(--map-h) + 8px); }
   /* A popup has to fit beside the zoom buttons, which app.js keeps it clear
      of: the map is the wrap's 94vw, less the buttons' 50px, the 5px Leaflet
      leaves at the far edge and the 44px of margin and 4px of slack around a
      popup's text. */
   .dir-layout.has-map .map-pop { max-width: calc(94vw - 104px); }
   /* A control behind the map counts as on screen, so focus moving up the list
-     by keyboard would stop there unseen. The margin is the map, its wrapper's
-     strip and the header, so the browser scrolls the control clear of them. */
-  .dir-layout.has-map .dir-list :is(a, button, summary) { scroll-margin-top: calc(47px + var(--map-h) + 8px + 44px); }
+     by keyboard would stop there unseen. The margin is the toggles, the map,
+     its wrapper's strip and the header, so the browser scrolls the control
+     clear of them. A row or a category a link lands on gets the same. */
+  .dir-layout.has-map .dir-list :is(a, button, summary, tr, .dg, .dg-head) { scroll-margin-top: calc(47px + var(--tools-h, 0px) + var(--map-h) + 8px + 44px); }
 }
-.dir-scroll { margin-top: 22px; border: 1px solid var(--line); border-radius: var(--radius); }
+/* A screen too short to give the pinned box its room and still show rows (a
+   phone on its side): nothing is pinned, and the map and the toggles scroll
+   with the list they sit above. */
+@media (max-width: 1099px) and (max-height: 540px) {
+  .dir-layout.has-map .dir-pin { position: static; }
+  .dir-layout.has-map .dir-table thead th { top: 47px; }
+  .dir-layout.has-map .dir-list :is(a, button, summary, tr, .dg, .dg-head) { scroll-margin-top: 44px; }
+}
+.dg .dir-scroll, .dg .cq-scroll { border-top: 1px solid var(--line-soft); }
+.dg .dir-scroll + .cq-scroll { border-top-color: var(--line); }
 .dir-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .dir-table thead th {
   text-align: left; font-family: var(--mono); font-size: 10.5px; text-transform: uppercase;
@@ -764,9 +919,22 @@ footer p { max-width: 72ch; }
   .dir-style { min-width: 100px; }
 }
 
+/* Why an entry has no rating, in a line under its row: the row's bottom rule
+   moves to the line, so the two read as one entry. */
+.dir-row.has-why > * { border-bottom: 0; padding-bottom: 3px; }
+.dir-why > td {
+  padding: 0 12px 10px 56px; font-size: 12.5px; color: var(--ink-3); line-height: 1.55;
+  overflow-wrap: anywhere; cursor: pointer;
+}
+.dir-why a { color: var(--ink-2); }
+.dir-why-note { display: block; max-width: 100ch; }
+
 /* The expanded record under a row: everything the dataset stores. */
-.dir-row { cursor: pointer; }
+.dir-row, .cq-row { cursor: pointer; }
 .dir-row:hover td, .dir-row:hover th { background: color-mix(in srgb, var(--panel-2) 55%, transparent); }
+/* The row a pin or a link pointed at. An entry's is the one with its record
+   open; a candidate has no record, so its row is tinted. */
+.cq-row.marked > *, .cq-row.marked + .cq-note > td { background: color-mix(in srgb, var(--crust) 14%, transparent); }
 .dir-toggle {
   appearance: none; background: none; border: 0; margin: -12px 0 -12px -12px;
   padding: 12px 10px 12px 12px; min-width: 44px; min-height: 44px;
@@ -818,6 +986,7 @@ footer p { max-width: 72ch; }
   }
   .dir-row.st-opening .dir-st { color: var(--basil); }
   .dir-row.st-closed .dir-name, .dir-row.st-closed .dir-name a { text-decoration: none; }
+  .dir-why > td { padding: 0 10px 11px; }
   .dd { grid-template-columns: 1fr; }
 }
 
@@ -851,7 +1020,43 @@ a.buzz-tag:hover { border-color: var(--tomato); color: var(--tomato-2); }
 .map-pop { font: 13px/1.5 system-ui, sans-serif; }
 .map-pop b a { color: inherit; }
 .map-pop .addr { font-size: 11.5px; color: #666; margin-top: 2px; }
-
+.map-empty {
+  position: absolute; left: 12px; right: 12px; bottom: 40%; z-index: 500; margin: 0 auto; max-width: 320px;
+  padding: 8px 12px; border-radius: 8px; font: 12.5px/1.45 var(--sans); text-align: center;
+  color: #23180f; background: rgba(255, 253, 250, .92); box-shadow: 0 1px 4px rgba(0, 0, 0, .18);
+  pointer-events: none;
+}
+/* "Show my location": a control of the map's own, with a line under it for
+   what happened. The map is always light, so these are light in both
+   palettes. The map's buttons share one row in its top right corner (Leaflet
+   would stack them), which leaves a popup the rest of the map. */
+#map .leaflet-top.leaflet-right .leaflet-control { clear: none; }
+.map-locate { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; max-width: min(240px, 60vw); }
+.map-locate button, .leaflet-control.map-grow {
+  font: 500 12px/1 var(--mono); color: #23180f; background: #fffdfa;
+  border: 1px solid #c9bba8; border-radius: 8px; padding: 8px 10px; cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .18);
+}
+.map-locate button:hover, .map-grow:hover { border-color: #c8341f; }
+.map-locate button:focus-visible, .map-grow:focus-visible { outline: 2px solid #b93018; outline-offset: 2px; }
+.map-locate-msg {
+  font: 12px/1.4 var(--sans); color: #23180f; background: rgba(255, 253, 250, .94);
+  border-radius: 8px; padding: 6px 9px; box-shadow: 0 1px 4px rgba(0, 0, 0, .18); text-align: left;
+}
+.map-locate-msg:empty { display: none; }
+/* The reader's own position: a diamond, which no pizzeria's pin is, with a
+   ring that pulses outward from it. */
+.map-me { pointer-events: none; }
+.map-me-dot {
+  position: absolute; inset: 3px; transform: rotate(45deg); border-radius: 2px;
+  background: #111; border: 2.5px solid #fff; box-shadow: 0 0 0 1.5px #111, 0 1px 5px rgba(0, 0, 0, .45);
+}
+.map-me::after {
+  content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 2px solid #111;
+  animation: map-me-pulse 2.2s ease-out infinite;
+}
+@keyframes map-me-pulse { from { transform: scale(.45); opacity: .7; } to { transform: scale(1.5); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .map-me::after { animation: none; opacity: .5; transform: none; } }
 
 /* ---- Desktop: the sections use the width ---- */
 @media (min-width: 1200px) {
@@ -878,8 +1083,32 @@ a.buzz-tag:hover { border-color: var(--tomato); color: var(--tomato-2); }
 @media (max-width: 720px) { .bump { min-width: 860px; } }
 .bump .grid line { stroke: var(--line-soft); stroke-width: 1; }
 .bump .rank-lab, .bump .week-lab { fill: var(--ink-3); font-size: 10.5px; }
-.bump .series path { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
-.bump .series circle { stroke: var(--bg); stroke-width: 2; }
+/* Eight series colours, a step for each page surface, checked as a set for
+   separation under colour-vision deficiency (see build/chart.mjs). A series
+   is a hue and a line style, so the ninth pizzeria reuses the first hue
+   dashed, and no colour is ever made up for it. */
+.bump {
+  --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70; --series-4: #c98500;
+  --series-5: #d55181; --series-6: #008300; --series-7: #9085e9; --series-8: #e66767;
+}
+@media (prefers-color-scheme: light) {
+  .bump {
+    --series-1: #2a78d6; --series-2: #eb6834; --series-3: #1baf7a; --series-4: #eda100;
+    --series-5: #e87ba4; --series-6: #008300; --series-7: #6250d6; --series-8: #e34948;
+  }
+}
+.bump .s1 { --c: var(--series-1); } .bump .s2 { --c: var(--series-2); }
+.bump .s3 { --c: var(--series-3); } .bump .s4 { --c: var(--series-4); }
+.bump .s5 { --c: var(--series-5); } .bump .s6 { --c: var(--series-6); }
+.bump .s7 { --c: var(--series-7); } .bump .s8 { --c: var(--series-8); }
+.bump .series .line { fill: none; stroke: var(--c); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+/* A dot wears a ring of the page colour, so two that overlap stay two. */
+.bump .series .mark { fill: var(--c); stroke: var(--bg); stroke-width: 2; }
+/* Second time round the hues: a dashed line, and a ring for a dot. */
+.bump .series.t1 .line { stroke-dasharray: 7 5; }
+.bump .series.t1 .mark { fill: var(--bg); stroke: var(--c); stroke-width: 2; r: 4px; }
+/* Third: a dotted line, and a diamond. */
+.bump .series.t2 .line { stroke-dasharray: 0.1 5; }
 .bump .end-lab { fill: var(--ink-2); font-size: 11px; }
 .bump .out-lab { fill: var(--ink-3); font-size: 10px; paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; }
 .bump .cursor { stroke: var(--ink-3); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0; }
@@ -891,9 +1120,10 @@ a.buzz-tag:hover { border-color: var(--tomato); color: var(--tomato-2); }
 }
 .chart-tip b { color: var(--ink); display: block; margin-bottom: 4px; }
 .chart-tip ol { margin: 0; padding-left: 18px; }
-.chart-table { margin-top: 14px; }
-.chart-table summary { cursor: pointer; font-size: 12.5px; color: var(--ink-3); }
-.chart-table .chart-table-x { overflow-x: auto; }
-.chart-table table { border-collapse: collapse; font-size: 12px; margin-top: 10px; }
-.chart-table th, .chart-table td { padding: 4px 10px; border-bottom: 1px solid var(--line-soft); text-align: left; }
-.chart-table th { font-family: var(--mono); font-size: 10px; text-transform: uppercase; color: var(--ink-3); }
+/* The record as a table is for a reader who cannot see the chart: present
+   to a screen reader, and nowhere on the screen. The class goes on a block
+   around the table, never on the table. */
+.chart-data {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}

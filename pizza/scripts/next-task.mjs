@@ -7,7 +7,7 @@
  * Seven task types rotate (ROTATION in src/rules.js). "auto" picks the one
  * whose last successful pass is oldest among those with work to do, so every
  * kind of upkeep comes round in turn. Passing a type as argv[2] forces it
- * (used by manual dispatches and the backfills).
+ * (used by manual dispatches and the backfills, DISPATCH_ONLY below).
  *
  *   discovery   find Seattle pizzerias not yet on file
  *   locations   verify branches + website against the pizzeria's own site
@@ -36,10 +36,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { branchLeads } from '../src/census.js';
+import { branchLeads, candidateIsShown, tidyPossessive } from '../src/census.js';
 import { locationWorklist } from '../src/locations.js';
 import { PER_PASS, RETRY_DAYS, ROTATION, LIVENESS_REVISIT_DAYS, CLOSURE_RECONFIRM_DAYS,
-  factsOutstanding } from '../src/rules.js';
+  NEIGHBORHOODS, SERVES_IN_PASSING, SERVES_SEARCHES_PER_HOOD, factsOutstanding, servesSweep } from '../src/rules.js';
 import { missingFacts } from '../src/schema.js';
 import { isRated, isLaunchRating } from '../src/slice.js';
 import { hostOf, MAX_LEN } from '../src/validate-research.js';
@@ -50,8 +50,10 @@ export const TYPES = ROTATION;
 /* Dispatch-only tasks: forceable for backfills, never part of the daily
  * rotation (their daily upkeep rides along on the rotating tasks). rerate
  * has no upkeep to ride along: it replaces the launch ratings, and once the
- * last one is gone its worklist is empty for good. */
-export const DISPATCH_ONLY = ['social', 'coverage', 'sources', 'rerate'];
+ * last one is gone its worklist is empty for good. serves sweeps the city
+ * for places that serve pizza and are not pizzerias, a few neighbourhoods a
+ * pass; discovery files the ones it happens to meet. */
+export const DISPATCH_ONLY = ['social', 'coverage', 'sources', 'rerate', 'serves'];
 
 const DAY = 864e5;
 const daysSince = (iso, now) => iso ? (now - Date.parse(iso)) / DAY : Infinity;
@@ -112,20 +114,14 @@ BUILDERS.discovery = ({ restaurants }) => {
   // News-driven searching finds newsworthy places and dries up fast. Each run
   // also sweeps a handful of neighborhoods the file has no entry in, which is
   // where the long tail of never-in-the-news pizzerias lives. Random pick so
-  // back-to-back backfill runs cover different ground.
-  const HOODS = ['Ballard','Fremont','Wallingford','Green Lake','Greenwood','Crown Hill',
-    'Magnolia','Queen Anne','Interbay','Belltown','Downtown','Pioneer Square',
-    'Chinatown-International District','Capitol Hill','First Hill','Central District',
-    'Madison Park','Madrona','Montlake','Eastlake','South Lake Union','University District',
-    'Ravenna','Wedgwood','Maple Leaf','Northgate','Lake City','Beacon Hill','Columbia City',
-    'Hillman City','Rainier Beach','Seward Park','Mount Baker','Georgetown','SoDo',
-    'West Seattle Junction','Admiral','Alki','South Park','Delridge','Roosevelt','Phinney Ridge'];
+  // back-to-back backfill runs cover different ground. The list is the one
+  // the serves sweep walks (NEIGHBORHOODS in rules.js).
   const covered = new Set();
   for (const r of restaurants) {
     if (r.neighborhood) covered.add(r.neighborhood.toLowerCase());
     for (const l of r.locations ?? []) covered.add(l.neighborhood.toLowerCase());
   }
-  const sparse = HOODS.filter(h => !covered.has(h.toLowerCase()));
+  const sparse = NEIGHBORHOODS.filter(h => !covered.has(h.toLowerCase()));
   const focus = sparse.sort(() => Math.random() - 0.5).slice(0, 5);
 
   const brief = `Your task: find pizzerias inside Seattle city limits that are not yet on file.
@@ -151,7 +147,16 @@ opened it), neighborhood, style, status ("open", or "opening" if not yet
 serving), note (one sentence on what it is), source (the page you read),
 and address when published. At most 10 entries and 12 web searches. Fewer
 real finds beat a padded list; an empty directory array is a valid result
-if the city has nothing new.`;
+if the city has nothing new.
+
+If a search turns up a Seattle restaurant, bar, bakery or cafe that
+serves pizza and is not a pizzeria (an Italian restaurant with a pizza
+section, a bar with a pizza oven), it does not belong in "directory". You
+may report up to ${SERVES_IN_PASSING} such places as "servesPizza" records instead: name,
+address ("<street address>, Seattle, WA <ZIP>"), neighborhood, note (how
+pizza figures on its menu) and source (the place's own site or menu, or
+published coverage, showing the pizza). Only the ones you meet; do not
+spend a search looking for them.`;
   return { brief, worklistSize: null };
 };
 
@@ -537,6 +542,102 @@ candidate, 25 in total.`;
   return { brief, worklistSize: worklist.length };
 };
 
+/* Two neighbourhood names for one place: "Green Lake" and "Greenlake", "West
+ * Seattle Junction" and "West Seattle", "Queen Anne" and "Lower Queen Anne".
+ * The names on file are free text, so one inside the other is taken as the
+ * same ground. Too wide a match only adds a name to a list of names not to
+ * report, and the validator refuses a repeat whether the brief listed it or
+ * not. */
+const sameGround = (a, b) => {
+  const fold = v => String(v ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+  const x = fold(a), y = fold(b);
+  return x.length > 2 && y.length > 2 && (x.includes(y) || y.includes(x));
+};
+
+BUILDERS.serves = ({ restaurants, candidates, servesCursor }) => {
+  // Dispatch-only sweep for the places the permit seed cannot see: it asks
+  // the register for names that say pizza, and a restaurant, bar or bakery
+  // that serves pizza under another name holds a permit it never matches.
+  // Each find is filed as "servesPizza" and joins the candidates queue
+  // already set aside as not-pizza, so the page can say the index knows it.
+  // Sweep memory is a cursor, not a stamp per place: there is no list of
+  // places to stamp before they are found. A pass takes the next few
+  // neighbourhoods from the cursor in candidates.json and the apply step
+  // moves it on, found anything or not (servesSweep in rules.js is read by
+  // both), so every dispatch covers new ground and the list wraps.
+  const { hoods } = servesSweep(servesCursor);
+  const inSweep = name => hoods.some(h => sameGround(h, name));
+  // What is already known there, so the pass does not spend its records on
+  // it: entries on file by their neighbourhoods, and the queue. A candidate a
+  // pass filed carries its neighbourhood. One from the permit register has
+  // only an address, so those are listed whole, with the address to know
+  // them by; the ones tied to an entry are that entry, and a chain is not
+  // wanted here in any case.
+  const onFile = restaurants
+    .filter(r => inSweep(r.neighborhood) || (r.locations ?? []).some(l => inSweep(l.neighborhood)))
+    .map(r => r.name);
+  const queued = candidates.filter(c => candidateIsShown(c) && c.neighborhood && inSweep(c.neighborhood)).map(c => c.name);
+  const known = [...new Set([...onFile, ...queued])].sort((a, b) => a.localeCompare(b));
+  // The register's capitals are tidied for reading; nothing answers to these
+  // names by their spelling, as a census verdict does.
+  const unplaced = candidates
+    .filter(c => candidateIsShown(c) && c.status !== 'chain' && !c.neighborhood && c.address)
+    .map(c => `${tidyPossessive(c.name)} (${String(c.address).split(',')[0]})`)
+    .sort((a, b) => a.localeCompare(b));
+  const searches = SERVES_SEARCHES_PER_HOOD * hoods.length;
+  const brief = `Your task: find places in Seattle that serve pizza and are not
+pizzerias, so the index can list them as known and not ranked. This pass
+covers these neighborhoods, and only these:
+
+${hoods.map(h => `- ${h}`).join('\n')}
+
+What belongs here: a restaurant, bar, bakery or cafe where pizza is on
+the menu and is not the business. An Italian restaurant with a pizza
+section, a bar with a pizza oven, a bakery that sells slices, a brewery
+with a pizza kitchen. Search each neighborhood the way a local would
+("<neighborhood> Seattle Italian restaurant pizza", "<neighborhood>
+Seattle bar pizza oven", "<neighborhood> Seattle brewery pizza"), and
+open the place's own menu before you report it. A neighborhood dining
+guide or an "Italian restaurants in <neighborhood>" roundup names
+several candidates in one page: start there, then check each one's
+menu. Most of these neighborhoods have several such places, and the
+point of the pass is to find them all, so use the whole budget before
+you settle for a short list.
+
+What does not:
+- A place whose main business is pizza. That is a pizzeria: if it is not
+  named below, report it as a "directory" entry, like any discovery
+  (name, url, neighborhood, style, status, note, source, address), and
+  never in this section.
+- A national chain, of any kind.
+- A place the index already knows, under any spelling. In these
+  neighborhoods that is:
+  ${known.length ? known.join('; ') : '(nothing yet)'}${unplaced.length ? `
+  and, anywhere in the city, these from the food-permit register, which
+  have no neighborhood on file:
+  ${unplaced.join('; ')}` : ''}
+
+Report each find as a "servesPizza" record:
+{"name": "<the name it trades under>",
+ "address": "<street address>, Seattle, WA <ZIP>",
+ "neighborhood": "<the neighborhood, from the list above>",
+ "note": "<one or two sentences: what the place is, and how pizza
+          figures on its menu>",
+ "source": "<https page that shows pizza on the menu>"}
+
+Every record needs the street address and a source page you opened: the
+place's own site or menu, or published coverage of it (a review, a
+roundup entry, a news story) that shows pizza on the menu. A review
+aggregator, a delivery app, a directory listing or a social profile is
+refused as the source, and so is a place with no street address.
+
+At most ${PER_PASS.serves} records. A neighborhood with nothing to report is a
+correct result, and so is an empty "servesPizza" list: never pad it.
+Budget: about ${SERVES_SEARCHES_PER_HOOD} searches per neighborhood, ${searches} in total, and one
+page fetch per record. Write the file and stop.`;
+  return { brief, worklistSize: null };
+};
+
 BUILDERS.facts = ({ restaurants, now }) => {
   // The descriptive record: the year a place opened, its price tier, its
   // style, its style group and the pie it is known for. Every open entry that
@@ -721,24 +822,27 @@ result on a quiet day.`;
 
 /* The brief and worklist size for one task type, from the dataset alone.
  * `candidates` is the census queue: the census task works its pending
- * candidates, and the locations task reads its resolved ones for branch
- * leads. */
-export function buildTask(type, restaurants, { now = Date.now(), candidates = [] } = {}) {
+ * candidates, the locations task reads its resolved ones for branch leads,
+ * and the serves task lists what it holds so nothing is filed twice.
+ * `servesCursor` is where that task's sweep has got to, as candidates.json
+ * stores it. */
+export function buildTask(type, restaurants, { now = Date.now(), candidates = [], servesCursor = 0 } = {}) {
   const openField = restaurants.filter(r => r.status !== 'closed');
-  return BUILDERS[type]({ restaurants, openField, now, candidates });
+  return BUILDERS[type]({ restaurants, openField, now, candidates, servesCursor });
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === fs.realpathSync(process.argv[1])) {
   const { restaurants } = JSON.parse(fs.readFileSync(path.join(root, 'data/restaurants.json'), 'utf8'));
   const candPath = path.join(root, 'data/candidates.json');
-  const candidates = fs.existsSync(candPath) ? JSON.parse(fs.readFileSync(candPath, 'utf8')).candidates : [];
+  const candFile = fs.existsSync(candPath) ? JSON.parse(fs.readFileSync(candPath, 'utf8')) : {};
+  const candidates = candFile.candidates ?? [];
   const forced = (process.argv[2] || 'auto').toLowerCase();
 
   // Built at most once per type: two of the worklists are shuffled, so the
   // one the picker saw must be the one the brief prints.
   const built = new Map();
   const build = type => {
-    if (!built.has(type)) built.set(type, buildTask(type, restaurants, { candidates }));
+    if (!built.has(type)) built.set(type, buildTask(type, restaurants, { candidates, servesCursor: candFile.servesCursor }));
     return built.get(type);
   };
   const hasWork = type => {

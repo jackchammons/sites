@@ -6,7 +6,7 @@ layout; this file is the list of things that are easy to get wrong. Repo-wide ru
 
 ```bash
 node --test pizza/test/*.test.mjs        # unit tests
-node pizza/scripts/check-dataset.mjs     # lint data/restaurants.json
+node pizza/scripts/check-dataset.mjs     # lint data/restaurants.json, and what the scripts write into data/candidates.json
 node pizza/scripts/check-dataset.mjs --normalize   # after a hand edit: put every entry into the schema's shape
 node pizza/scripts/build.mjs && node pizza/scripts/verify.mjs    # -> dist/pizza/
 ```
@@ -22,10 +22,13 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   reader re-weighting (removed by request); every card explains its inputs instead.
 - `scripts/build.mjs` composes the page from `build/` (`load`, `derive`, `page`,
   `sections/*`, `emit`). The methodology copy is in `build/page.mjs` and
-  `build/sections/method.mjs`; the research tasks' rows are in `build/tasks.mjs`, and
-  the Candidates section in `build/sections/candidates.mjs`.
-- `scripts/verify.mjs` gates the deploy. `src/app.js` is the only script the browser
-  runs: the map and the directory rows.
+  `build/sections/method.mjs`; the research tasks' rows are in `build/tasks.mjs`. The
+  directory is `build/sections/directory.mjs`, and there is no Candidates section.
+- `src/registry.js` is the one list of places the page knows: every entry on file and
+  every candidate that is a place of its own, each in exactly one category.
+- `scripts/verify.mjs` gates the deploy. `src/app.js` is the browser's one entry: the
+  directory's state, the map, and the chart's tooltip. It imports `search.js` and
+  `palette.js`; a module it imports must be in the copy list in `build/emit.mjs`.
 - `scripts/next-task.mjs` picks and briefs the research agent's daily task;
   `src/validate-research.js` + `scripts/verify-research.mjs` validate what it wrote;
   `scripts/apply-research.mjs` applies it; `src/check-dataset.js` lints the result.
@@ -114,6 +117,15 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
 - **One geographic rule.** `src/bounds.js` holds the ZIP pattern and the lat/lon box,
   imported by the validator, the geocoder and the lint, so an address the validator
   accepts cannot fail the lint once geocoded.
+- **Candidates have coordinates too.** `geocode.mjs` fills `lat`/`lon` on every candidate
+  the page lists (`candidateIsShown()`: not promoted, not a duplicate), after the
+  restaurant locations and inside `CANDIDATE_GEOCODE` in `rules.js`: 60 requests or 90
+  seconds a run, whichever comes first, and three failed requests in a row end it. An
+  address that finds nothing is stamped `geoTried` and rests 30 days; a failed request
+  stamps nothing. Coordinates survive a seed refresh while the address is unchanged, and
+  any verdict. `publish.yml` lists `candidates.json` in its data commit for this.
+  `check-dataset.mjs` lints the coordinates, the stamp and the sweep cursor and nothing
+  else in that file: a permit name or a note is third-party text.
 - **`links` is the one channel for web presence.** `{id, website?, instagram?, source}`:
   instagram must be a real profile URL the agent saw linked or named (never guessed);
   `website` fills `url` only when the entry has none. `nameLink()` renders
@@ -153,8 +165,8 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   a dispatch counts). Census has work only when the candidates queue has something
   pending; facts only while an open entry lacks a fact no recent attempt looked for. A
   forced type (the workflow's `task` input) runs as given, including the dispatch-only
-  ones: `social`, `coverage`, `sources`, `rerate`. Only a forced type can come back
-  `skip=true`.
+  ones: `social`, `coverage`, `sources`, `rerate`, `serves`. Only a forced type can come
+  back `skip=true`.
 - **Every worklist needs attempt memory.** A task that redraws the entries it could not
   resolve stalls: locations verified nothing for three passes that way. Rating, facts,
   locations, coverage and social each have a `…Skipped` section the agent fills for
@@ -173,8 +185,8 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
 - **What the agent may write**, all through `verify-research.mjs` → `apply-research.mjs`:
   `news`, `mentions`, `locations` (+homepage), `status`, `directory` (new entries;
   deduplicated by normalised name and by street address), `factorRatings`,
-  `factorSources`, `facts`, `links`, `candidateReview`, and the five `…Skipped`
-  sections. Nothing the agent writes can change `data/attributes.json`: that registry
+  `factorSources`, `facts`, `links`, `candidateReview`, `servesPizza`, and the five
+  `…Skipped` sections. Nothing the agent writes can change `data/attributes.json`: that registry
   is edited by hand, because a friction cost moves a score and carries no source.
 - **Facts fill gaps only, each with its source.** A `facts` record carries what one
   source page states and writes the matching source key (`openedSource`, `priceSource`,
@@ -195,7 +207,8 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   note over the limit is cut to it and kept: refusing it dropped the record, the entry
   was never stamped, and the next pass drew it again (twice in one rating pass). The
   section keeps one record per id, up to twice the largest worklist that task serves
-  (from `rules.js`), and drops the rest one at a time with a warning. An agent that wrote 16 "nothing found" records for a 10-entry
+  (from `rules.js`), and drops the rest one at a time with a warning. `servesPizza` is
+  capped the same way, at twice `PER_PASS.serves`. An agent that wrote 16 "nothing found" records for a 10-entry
   worklist once cost a whole coverage pass, mentions included. Every other section's
   cap is structural and still fails the file.
 - **Ratings fill gaps, and replace launch ratings.** `factorRatings` proposals carry
@@ -219,12 +232,37 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   after the verdict, with the old verdict kept as `previousVerdict` and shown to the
   agent as an earlier finding. `chain` and `duplicate` never return.
   `candidateStanding()` in `src/census.js` is the one statement of where a candidate
-  stands; the page's Candidates section reads it.
+  stands; the page's registry reads it.
 - **A duplicate names what it duplicates.** A `candidateReview` with verdict `duplicate`
   must carry `duplicateOf` (an id on file), stored on the candidate as `matchedId`.
   Without it a branch's address is thrown away, which is how A Pizza Mart sat on file
   with one of its six shops. `matchEntry` sets aside a trailing parenthetical in an
   entry's name.
+- **The seed cannot see a place that serves pizza under another name.** The register has
+  no cuisine field and the seed query matches permit names containing PIZZ or SLICE, so
+  Bar Cotto (two Seattle permits) can never enter the queue from it. Those places are
+  filed by the agent as `servesPizza` (`{name, address, neighborhood, note, source}`) and
+  the apply step makes each a candidate with `sources: ["research"]`, already
+  `rejected`/`not-pizza`, with no `lastInspection`. The validator refuses a name or street
+  address on file ("already on file") and a key or street address anywhere in the queue
+  ("already known"); the source may not be an aggregator, delivery app, directory or
+  social profile.
+- **A research-filed candidate does not churn.** `candidateOrigin()` in `src/census.js`
+  is `research` when `sources` is research alone. A seed refresh never rewrites one, an
+  inspection never reopens one, and `candidateStanding()` reports `origin` and
+  `reopens: false`. It joins the directory one way: a pass files it through `directory`,
+  which does not consult the queue, and the apply step marks the candidate `promoted` with
+  `matchedId` and keeps the old finding as `previousVerdict`. The same happens to a permit
+  candidate set aside as closed, unverifiable or not-pizza when the same file adds an
+  entry of its name.
+- **The serves sweep remembers by cursor.** `serves` is dispatch-only and walks
+  `NEIGHBORHOODS` in `rules.js`, `SERVES_HOODS_PER_PASS` at a time. `servesCursor` sits at
+  the top of `data/candidates.json`: the brief starts from it, the apply step moves it
+  when `RESEARCH_TASK` is `serves` whether or not anything was filed, and
+  `fetch-candidates.mjs` writes back any top-level key it does not own. `servesSweep()` is
+  the one function both ends read. Add a neighbourhood at the end of the list; never
+  reorder it. `discovery` may file up to `SERVES_IN_PASSING` such records and moves no
+  cursor.
 - **The permit register's `city` is free text.** It spells Seattle several ways, and a
   query that compared it with `=` missed a quarter of the city's permits, Jet City Pizza
   among them. The query matches `upper(city) like '%SEATTLE%'` and `isSeattleCity()`
@@ -245,11 +283,43 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   (`done` in `build/tasks.mjs`) is not named.
 - **No clock time anywhere in that copy.** Scheduled runs start hours late, so the page
   says "once a day" and what triggers what, never an hour. A page test holds this.
-- **Candidates lists everything known and not ranked, with the reason and what happens
-  next.** Unrated entries are split by why (waiting for a pass, looked and found
-  nothing with the date it is eligible again, not open yet); permit candidates are
-  grouped by `candidateStanding()`. `verify.mjs` counts the rows against the two data
-  files, so a group that loses a row fails the deploy.
+- **One list of places behind every section.** `src/registry.js` puts every place in
+  exactly one category: ranked, unrated, not open yet, closed, waiting for a census
+  pass, national chain, not pizza-forward, could not be verified. A section that lists
+  or counts places reads `ctx.registry`; it never filters `dataset.restaurants` or reads
+  `candidates` itself. The Radar's two lists are the registry's opening category and
+  its closed one inside six months. A reader once found places called closed in the
+  Radar that the "Closed" list did not have, because the two read different files:
+  closed is now one category, entries first, then places known only from a permit.
+  A printed count carries `data-count`, and `verify.mjs` holds it, the rows of every
+  category and the Radar's rows to the registry.
+- **The directory is the whole list, by category.** Each category is a `<details>`
+  with its rule and what brings a place back; only ranked is open by default. One
+  state drives the list and the map: a category that is on is expanded and its pins
+  are shown. `id="candidates"` survives as the heading over the categories that are
+  not on file, for old links. Without JavaScript the headings still open and every
+  row is in the HTML.
+- **The tools exist once.** `#dir-tools` (the search field and the category toggles) is
+  rendered hidden and moved into `.dir-pin` when there is a map, back above the list
+  when the map is dropped. Set no `display` on `.dir-tools` without `.has-tools`;
+  sticky offsets under it use `--tools-h`, which `app.js` measures.
+- **Colours are defined once, in `src/palette.js`.** `styles.css` uses only `--cat-*`,
+  `--pin-line` and `--rank-ramp`, which the build writes from it. Ranked pins run from
+  blue at the lowest rank to red at #1 (`rankColor`); every pin is one size and the top
+  ten wear a ring; a place not on file is a hollow pin. The record chart has its own
+  eight series colours (`--series-N`) and three line styles (`build/chart.mjs`): a
+  ninth line reuses the first colour dashed, and no colour is generated.
+- **Location is asked for only on a press, and never stored.** "Show my location"
+  calls the browser's prompt when pressed, or at once when the site is already
+  allowed. The position stays in the page.
+- **The record chart is the only view drawn of the record.** The table of the same
+  weeks is in the markup inside `.chart-data`, hidden from the screen, for a reader who
+  cannot see the chart. The class goes on a block round the table: a table ignores a
+  width set on itself and stretched the page 1,000px when it was tried.
+- **Run `node pizza/test/browser-check.mjs` after touching `app.js` or `styles.css`.**
+  It is a dev-box Playwright check, not CI. In it use `checkVisibility()`: a row inside
+  a closed `<details>` still has rectangles in Chromium. The inlined CSS has no
+  comments (the build strips them), so a verify mutation must target rule text.
 - **Every directory record has the same rows.** Each fact, link and status row is
   printed for every entry, with "not on file" where the dataset holds the empty value.
   A new schema key that a reader should see gets a row there.

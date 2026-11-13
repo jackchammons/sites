@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { validateResearch, isNonCriticism, isOwnAccount, isOwnPage, registrableName, CAPS, SKIPPED, MAX_LEN } from '../src/validate-research.js';
+import { validateResearch, isNonCriticism, isOwnAccount, isOwnPage, registrableName, CAPS, SKIPPED, SOFT_CAPPED, MAX_LEN } from '../src/validate-research.js';
+import { candidateKey } from '../src/census.js';
 import { PER_PASS } from '../src/rules.js';
 
 const NOW = Date.parse('2026-08-30T00:00:00Z');
@@ -410,7 +411,9 @@ test('skipped sections: a hundred repeats of one record are one record, not a re
 });
 
 test('every other section\'s cap is still structural: one record over and the file is refused', () => {
-  for (const sec of Object.keys(CAPS).filter(k => !SKIPPED_SECTIONS.includes(k))) {
+  // the sections whose cap costs records and never the file: attempt memory, and the places that serve pizza
+  assert.deepEqual(SOFT_CAPPED, [...SKIPPED_SECTIONS, 'servesPizza']);
+  for (const sec of Object.keys(CAPS).filter(k => !SOFT_CAPPED.includes(k))) {
     const over = validateResearch({ coverageSkipped: [skip(1)], [sec]: Array.from({ length: CAPS[sec] + 1 }, () => ({})) }, field, NOW);
     assert.equal(over.fatal, true, sec);
     assert.deepEqual(over.accepted, {}, sec);
@@ -812,4 +815,174 @@ test('candidateReview: without a candidates queue, name matching is skipped', ()
     { name: 'Anything Pizza', verdict: 'closed', note: 'long enough note here' }
   ] }, dataset, NOW);
   assert.deepEqual(fails, []);
+});
+
+/* ---- servesPizza: places that serve pizza and are not pizzerias ---- */
+const QUEUE = { candidates: [
+  { key: candidateKey('Belltown Pizza', '2422 1st Ave'), name: 'Belltown Pizza', address: '2422 1st Ave, Seattle, WA 98121',
+    sources: ['kc-health'], status: 'pending' },
+  { key: candidateKey("Domino's Pizza #7063", '714 Taylor Ave N'), name: "Domino'S Pizza #7063",
+    address: '714 Taylor Ave N, Seattle, WA 98109', sources: ['kc-health'], status: 'chain' },
+  { key: candidateKey('Tutta Bella LLC', '2746 Ne 45th St'), name: 'Tutta Bella LLC', address: '2746 Ne 45th St, Seattle, WA 98105',
+    sources: ['kc-health'], status: 'promoted', matchedId: 'tutta-bella' },
+  { key: candidateKey('Swing Sandwiches And Pizza', '223 W Galer St'), name: 'Swing Sandwiches And Pizza',
+    address: '223 W Galer St, A, Seattle, WA 98119', sources: ['kc-health'], status: 'rejected', verdict: 'not-pizza' },
+  { key: candidateKey('Cafe Lago', '2305 24th Ave E'), name: 'Cafe Lago', address: '2305 24th Ave E, Seattle, WA 98112',
+    neighborhood: 'Montlake', sources: ['research'], status: 'rejected', verdict: 'not-pizza' },
+  // a row from before keys and addresses were kept
+  { name: 'Ghost Pizza', status: 'rejected' }
+] };
+const serves = over => ({ name: 'Bar Cotto', address: '1546 15th Ave, Seattle, WA 98122', neighborhood: 'Capitol Hill',
+  note: 'A salumeria and bar; wood-fired pizza is one section of a menu led by cured meats.',
+  source: 'https://barcotto.example/menu', ...over });
+const filed = (records, queue = QUEUE) => validateResearch({ servesPizza: records }, dataset, NOW, queue ?? {});
+const servesFails = (it, snippet, queue) => {
+  const { fails, fatal, accepted } = filed([it], queue);
+  assert.equal(fatal, false);
+  assert.ok(fails.some(f => f.startsWith('servesPizza[0]: ') && f.includes(snippet)), `expected "${snippet}", got: ${JSON.stringify(fails)}`);
+  assert.deepEqual(accepted.servesPizza, []);
+};
+
+test('servesPizza: a place at a Seattle street address, with a note and a page that shows the pizza', () => {
+  const { fails, accepted, unknown } = filed([serves()]);
+  assert.deepEqual([fails, unknown], [[], []]);
+  assert.deepEqual(accepted.servesPizza, [serves()]);
+  // the address is read loosely and the source may be coverage as well as the place's own menu
+  for (const over of [{ address: '1546 15th Ave Seattle WA 98122' }, { address: '1546 15th Ave, Ste 2, Seattle, Washington 98122-1234' },
+    { source: 'https://www.seattletimes.com/life/food-drink/bar-cotto-review/' }, { note: 'A bakery that sells slices at lunch.' },
+    { note: 'Brewery taproom with a kitchen turning out pies.' }]) {
+    assert.deepEqual(filed([serves(over)]).fails, [], JSON.stringify(over));
+  }
+  // with no candidates file there is no queue to hold it against
+  assert.deepEqual(filed([serves()], null).fails, []);
+});
+
+test('servesPizza: each field is held to its rule, and a bad record costs only itself', () => {
+  servesFails(serves({ name: undefined }), 'name missing or too short');
+  servesFails(serves({ name: 'Bar C\u043etto' }), 'outside the Latin script');
+  servesFails(serves({ name: 'x'.repeat(81) }), 'name is longer than 80');
+  servesFails(serves({ name: 'Bar <b>Cotto</b>' }), 'name contains < or >');
+  servesFails(serves({ neighborhood: '' }), 'neighborhood missing or too short');
+  servesFails(serves({ neighborhood: 'x'.repeat(81) }), 'neighborhood is longer than 80');
+  servesFails(serves({ note: 'Has pizza.' }), 'note missing or too short');
+  servesFails(serves({ note: 'x'.repeat(601) }), `note is longer than ${MAX_LEN.note}`);
+  servesFails(serves({ note: 'An Italian restaurant on 15th with a long bar.' }), 'note must say how pizza figures on the menu');
+  servesFails(serves({ source: 'http://barcotto.example/menu' }), 'source must be https');
+  servesFails(serves({ source: undefined }), 'source is not a valid URL');
+  // one reason for a source that is no URL at all, not two
+  assert.equal(filed([serves({ source: 'see their menu' })]).fails.length, 1);
+
+  const { fails, accepted } = filed([serves({ note: 'short' }), serves({ name: 'Slow Oven', address: '77 Pine St, Seattle, WA 98101' })]);
+  assert.equal(fails.length, 1);
+  assert.deepEqual(accepted.servesPizza.map(r => r.name), ['Slow Oven']);
+});
+
+test('servesPizza: the address is a street address in Seattle', () => {
+  servesFails(serves({ address: undefined }), 'address missing or too short');
+  servesFails(serves({ address: 'Capitol Hill, Seattle, WA 98122' }), 'address does not start with a street number');
+  servesFails(serves({ address: '1546 15th Ave' }), 'address is not a Seattle street address');
+  servesFails(serves({ address: '1546 15th Ave, Seattle, WA' }), 'address is not a Seattle street address');
+  servesFails(serves({ address: '12 Main St, Bellevue, WA 98004' }), 'address is not a Seattle street address');
+  // a suburb's ZIP under Seattle's name, and Seattle's name with a ZIP from another state
+  servesFails(serves({ address: '12 Main St, Seattle, WA 98004' }), 'address is not a Seattle street address');
+  servesFails(serves({ address: '12 Main St, Seattle, WA 97201' }), 'address is not a Seattle street address');
+  servesFails(serves({ address: '1546 15th <Ave>, Seattle, WA 98122' }), 'address contains < or >');
+  servesFails(serves({ address: `1 ${'x'.repeat(200)} St, Seattle, WA 98122` }), 'address is longer than 200');
+});
+
+test('servesPizza: a review aggregator, a delivery app, a directory or a social profile is never the source', () => {
+  for (const source of ['https://www.yelp.com/biz/bar-cotto-seattle', 'https://www.yelp.ca/biz/bar-cotto-seattle',
+    'https://www.tripadvisor.com/Restaurant_Review-bar-cotto', 'https://www.doordash.com/store/bar-cotto-seattle-123/',
+    'https://www.ubereats.com/store/bar-cotto/abc', 'https://www.restaurantji.com/wa/seattle/bar-cotto-/',
+    'https://www.google.com/maps/place/Bar+Cotto', 'https://www.instagram.com/barcotto/', 'https://www.facebook.com/barcotto/']) {
+    servesFails(serves({ source }), "source must be the place's own site or menu, or published coverage, not ");
+  }
+  // the rule is the one a facts record's description is held to
+  for (const source of ['https://www.yelp.com/biz/x', 'https://barcotto.example/menu', 'https://www.thestranger.com/a-review']) {
+    assert.equal(filed([serves({ source })]).fails.length > 0, isNonCriticism(source), source);
+  }
+});
+
+test('servesPizza: a name or a street address on file is an entry, and is refused as already on file', () => {
+  servesFails(serves({ name: 'Delancey' }), '"Delancey" is already on file as Delancey');
+  servesFails(serves({ name: 'ZEEKS PIZZA LLC' }), 'is already on file as Zeeks Pizza');
+  servesFails(serves({ name: 'The Roma Roma Cafe' }), 'is already on file as Roma Roma');
+  // a closed entry is still on file by its name
+  servesFails(serves({ name: 'Old Slice' }), 'is already on file as Old Slice');
+  // the door of an open entry, however it is written
+  servesFails(serves({ name: 'Essex', address: '1415 N.W. 70th Street, Seattle, WA 98117' }), 'is already on file as Delancey');
+  // an entry filed under a branch answers to its plain name
+  const branch = { restaurants: [...dataset.restaurants, { id: 'a-pizza-mart-first-hill', name: 'A Pizza Mart (First Hill)', status: 'open' }] };
+  const { fails } = validateResearch({ servesPizza: [serves({ name: 'A Pizza Mart' })] }, branch, NOW, QUEUE);
+  assert.match(fails[0], /"A Pizza Mart" is already on file as A Pizza Mart \(First Hill\)/);
+  // a closed entry does not hold its address: the next business into that space is a new place
+  assert.deepEqual(filed([serves({ name: 'Fremont Bakehouse', address: '3601 Fremont Ave N, Seattle, WA 98103' })]).fails, []);
+});
+
+test('servesPizza: a key or a street address in the candidates queue is already known, whatever its state', () => {
+  // by key: the same name at the same street number
+  servesFails(serves({ name: 'Cafe Lago', address: '2305 24th Ave E, Seattle, WA 98112' }),
+    '"Cafe Lago" is already known: the candidates queue holds it as "Cafe Lago"');
+  servesFails(serves({ name: 'BELLTOWN PIZZA LLC', address: '2422 First Ave, Seattle, WA 98121' }),
+    'is already known: the candidates queue holds it as "Belltown Pizza"');
+  // by street address, under any other name, for a candidate in every state the queue has
+  for (const [address, held] of [['2422 1st Avenue, Seattle, WA 98121', 'Belltown Pizza'], ['714 Taylor Ave N, Seattle, WA 98109', "Domino'S Pizza #7063"],
+    ['2746 NE 45th St, Seattle, WA 98105', 'Tutta Bella LLC'], ['223 W Galer St, Seattle, WA 98119', 'Swing Sandwiches And Pizza'],
+    ['2305 24th Ave. E, Seattle, WA 98112', 'Cafe Lago']]) {
+    servesFails(serves({ name: 'Somewhere Else Entirely', address }), `is already known: the candidates queue holds that address as "${held}"`);
+  }
+  // the same name at another door is another place, and so is another business down the street
+  assert.deepEqual(filed([serves({ name: 'Cafe Lago', address: '900 Pine St, Seattle, WA 98101' })]).fails, []);
+  assert.deepEqual(filed([serves({ name: 'Somewhere Else Entirely', address: '2424 1st Ave, Seattle, WA 98121' })]).fails, []);
+});
+
+test('servesPizza: one place is filed once in a file, and a national chain not at all', () => {
+  const { fails, accepted } = filed([serves(), serves({ note: 'The same bar again, with pizza on the menu still.' }),
+    serves({ name: 'Cotto Bar & Salumeria', address: '1546 15th Avenue, Seattle, WA 98122' }),
+    serves({ name: 'Slow Oven', address: '77 Pine St, Seattle, WA 98101' })]);
+  assert.deepEqual(accepted.servesPizza.map(r => r.name), ['Bar Cotto', 'Slow Oven']);
+  assert.deepEqual(fails, ['servesPizza[1]: "Bar Cotto" repeats "Bar Cotto" from earlier in this file',
+    'servesPizza[2]: "Cotto Bar & Salumeria" repeats "Bar Cotto" from earlier in this file']);
+  // a record that failed its own checks does not stand in the way of a good one for the same place
+  assert.deepEqual(filed([serves({ source: 'https://www.yelp.com/biz/bar-cotto-seattle' }), serves()]).accepted.servesPizza, [serves()]);
+  servesFails(serves({ name: 'MOD Pizza', address: '1302 6th Ave, Seattle, WA 98101' }), 'is a national chain');
+});
+
+test('servesPizza: a place this same file adds to the directory is on file, and the directory never asks the queue', () => {
+  // one place in both sections: it is a pizzeria or it is not, and the directory record is the one that stands
+  const both = validateResearch({ directory: [found({ name: 'Bar Cotto', address: '1546 15th Ave, Seattle, WA 98122' })],
+    servesPizza: [serves(), serves({ name: 'Cotto Annex', address: '1546 15th Ave, Seattle, WA 98122' })] }, dataset, NOW, QUEUE);
+  assert.equal(both.accepted.directory.length, 1);
+  assert.deepEqual(both.accepted.servesPizza, []);
+  assert.deepEqual(both.fails, ['servesPizza[0]: "Bar Cotto" is already on file as Bar Cotto',
+    'servesPizza[1]: "1546 15th Ave, Seattle, WA 98122" is already on file as Bar Cotto']);
+  // a place the queue holds as not-pizza, by name and by address, is accepted in the directory like any discovery:
+  // that channel is how it joins if a later pass finds it is a pizzeria
+  const later = validateResearch({ directory: [found({ name: 'Cafe Lago', address: '2305 24th Ave E, Seattle, WA 98112' }),
+    found({ name: 'Swing Sandwiches And Pizza', address: '223 W Galer St, Seattle, WA 98119' })] }, dataset, NOW, QUEUE);
+  assert.deepEqual(later.fails, []);
+  assert.equal(later.accepted.directory.length, 2);
+});
+
+test('servesPizza: records past the cap are dropped one at a time, and nothing else in the file is lost', () => {
+  assert.equal(CAPS.servesPizza, 2 * PER_PASS.serves);
+  const cap = CAPS.servesPizza;
+  const place = n => serves({ name: `Trattoria Number ${n}`, address: `${100 + n} Pine St, Seattle, WA 98101` });
+  const doc = { status: [{ id: 'delancey', status: 'open', note: 'confirmed on its site today', source: 'https://x.com/a' }],
+    servesPizza: Array.from({ length: cap + 3 }, (_, i) => place(i)) };
+  const { fails, fatal, accepted } = validateResearch(doc, dataset, NOW, QUEUE);
+  assert.equal(fatal, false);
+  assert.deepEqual(accepted.servesPizza, doc.servesPizza.slice(0, cap));
+  assert.deepEqual(accepted.status, doc.status);
+  assert.deepEqual(fails, [0, 1, 2].map(n => `servesPizza[${cap + n}]: past the ${cap} records this section holds; "Trattoria Number ${cap + n}" is not filed`));
+  // exactly at the cap nothing is dropped, and a record that failed its own checks does not count towards it
+  assert.deepEqual(filed(doc.servesPizza.slice(0, cap)).fails, []);
+  const padded = filed([serves({ note: 'short' }), serves({ name: 'Delancey' }), ...doc.servesPizza.slice(0, cap)]);
+  assert.deepEqual(padded.accepted.servesPizza, doc.servesPizza.slice(0, cap));
+  assert.equal(padded.fails.length, 2);
+  // a hundred copies of one record are one record, not a refused file
+  const copies = filed(Array.from({ length: 100 }, () => serves()));
+  assert.deepEqual([copies.fatal, copies.accepted.servesPizza.length, copies.fails.length], [false, 1, 99]);
+  // and a section that is not a list is still a file nothing can be read from
+  assert.equal(validateResearch({ servesPizza: { name: 'Bar Cotto' } }, dataset, NOW).fatal, true);
 });
