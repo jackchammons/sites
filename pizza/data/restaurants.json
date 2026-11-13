@@ -8031,13 +8031,13 @@
       "blurb": "Longtime Northeast Seattle neighborhood pizzeria known for oversized calzones alongside build-your-own pizzas and pastas.",
       "style": null,
       "styleSource": null,
-      "styleGroup": null,
+      "styleGroup": "Neighborhood",
       "styleGroupSource": null,
       "signature": null,
       "signatureSource": null,
       "opened": 1994,
       "openedSource": "https://greeksinwa.omeka.net/items/show/820",
-      "priceIndex": null,
+      "priceIndex": 2,
       "priceSource": null,
       "attributes": {},
       "url": null,
@@ -8061,9 +8061,43 @@
       "locationsSource": null,
       "locationsAttempted": "2026-11-12",
       "locationsNote": "Searched for an official site; third-party listings give an address of 3617 NE 45th St, Seattle, WA 98105, and an old scanned menu document names the domain varlamospizza.com, but fetching that domain failed with an expired SSL certificate, so the current official site could not be verified.",
-      "factors": {},
-      "lastVerified": null,
-      "ratingAttempted": null,
+      "factors": {
+        "craft": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://seattlepizza.substack.com/p/release-4",
+          "sources": [
+            "https://seattlepizza.substack.com/p/release-4",
+            "https://greeksinwa.omeka.net/items/show/820"
+          ],
+          "note": "Independent Seattle pizza critic Ira Rickman's rankings (The Definitive Seattle Pizza Rankings) place Varlamos in the middle-to-lower tier of the city's pizzerias across several editions, praising the dough as the strongest component while finding the sauce and cheese flavors muted. A Greek-American community archive notes the Laurelhurst shop has served the UW-adjacent neighborhood since 1994 and is known for its oversized 'football-sized' calzones and kid-friendly, TV-filled sports-bar room rather than for destination-caliber pizza.",
+          "date": "2026-11-13"
+        },
+        "distinctiveness": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://seattlepizza.substack.com/p/release-4",
+          "sources": [
+            "https://seattlepizza.substack.com/p/release-4",
+            "https://greeksinwa.omeka.net/items/show/820"
+          ],
+          "note": "Independent Seattle pizza critic Ira Rickman's rankings (The Definitive Seattle Pizza Rankings) place Varlamos in the middle-to-lower tier of the city's pizzerias across several editions, praising the dough as the strongest component while finding the sauce and cheese flavors muted. A Greek-American community archive notes the Laurelhurst shop has served the UW-adjacent neighborhood since 1994 and is known for its oversized 'football-sized' calzones and kid-friendly, TV-filled sports-bar room rather than for destination-caliber pizza.",
+          "date": "2026-11-13"
+        },
+        "critical": {
+          "value": 5,
+          "setBy": "agent",
+          "source": "https://seattlepizza.substack.com/p/release-4",
+          "sources": [
+            "https://seattlepizza.substack.com/p/release-4",
+            "https://greeksinwa.omeka.net/items/show/820"
+          ],
+          "note": "Independent Seattle pizza critic Ira Rickman's rankings (The Definitive Seattle Pizza Rankings) place Varlamos in the middle-to-lower tier of the city's pizzerias across several editions, praising the dough as the strongest component while finding the sauce and cheese flavors muted. A Greek-American community archive notes the Laurelhurst shop has served the UW-adjacent neighborhood since 1994 and is known for its oversized 'football-sized' calzones and kid-friendly, TV-filled sports-bar room rather than for destination-caliber pizza.",
+          "date": "2026-11-13"
+        }
+      },
+      "lastVerified": "2026-11-13",
+      "ratingAttempted": "2026-11-13",
       "ratingNote": null,
       "mentions": [],
       "coverageAttempted": "2026-11-12",
@@ -8215,8 +8249,8 @@
       "locationsNote": null,
       "factors": {},
       "lastVerified": null,
-      "ratingAttempted": null,
-      "ratingNote": null,
+      "ratingAttempted": "2026-11-13",
+      "ratingNote": "Confirmed the Pinehurst/Northgate-area Pizza Twist is the franchise location at 12319 Roosevelt Way NE, Seattle, WA 98125 (matched via Atly, Spinach, and MapQuest listings against pizzatwist.com, a Chicago-born Indian-fusion pizza chain). Found no published review, roundup entry, or news story specific to this branch -- only directory/aggregator listings for it, plus trade-press pieces (QSR, PMQ, Franchising.com) about the chain's national expansion and a 2021 Capitol Hill Seattle article about a different (Broadway) Seattle location. Skipping rather than rating on aggregator listings or coverage of a different branch.",
       "mentions": [],
       "coverageAttempted": "2026-11-12",
       "coverageNote": "Searched for press on the Northgate/Pinehurst Pizza Twist location. Only found HappyCow, MapQuest, Spinach Guide, and Gayot directory/aggregator listings; no published outlet story identified this branch.",

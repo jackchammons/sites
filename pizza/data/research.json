@@ -1,34 +1,25 @@
 {
-  "updated": "2026-11-12T00:00:00Z",
-  "mentions": [
-    {
-      "id": "g-h-pasta-pizza",
-      "title": "Autumn Restaurant transitioning to G.H. Pasta & Pizza",
-      "url": "https://phinneywood.com/2026/01/autumn-restaurant-transitioning-to-g-h-pasta-pizza/",
-      "source": "Phinneywood",
-      "date": "2026-01-12",
-      "kind": "opening"
-    }
-  ],
+  "updated": "2026-11-13T00:00:00Z",
   "factorRatings": [
     {
-      "id": "g-h-pasta-pizza",
-      "craft": 6.5,
-      "distinctiveness": 5.5,
-      "criticScore": 6.5,
-      "opened": 2026,
+      "id": "varlamos-pizzeria",
+      "craft": 5.0,
+      "distinctiveness": 5.0,
+      "criticScore": 5.0,
+      "opened": 1994,
       "priceIndex": 2,
       "styleGroup": "Neighborhood",
       "sources": [
-        "https://www.westsideseattle.com/node/59543",
-        "https://phinneywood.com/2026/01/autumn-restaurant-transitioning-to-g-h-pasta-pizza/"
+        "https://seattlepizza.substack.com/p/release-4",
+        "https://greeksinwa.omeka.net/items/show/820"
       ],
-      "note": "Westside Seattle's review of this General Harvest-group concept (at its sister Sunrise Heights/West Seattle location, same brand and menu format) called the food 'simple, unpretentious and excellent,' singling out a cracker-crust 'Classic' pizza with twice-cooked pepperoni and house-made mozzarella. Phinneywood's coverage of the Phinney Ridge location opening (replacing Autumn, from chef Brian Clevenger's acclaimed General Harvest group behind Vendemmia, Raccolto and Haymaker) describes an affordable, family-friendly casual format with rotating pizza specials."
+      "note": "Independent Seattle pizza critic Ira Rickman's rankings (The Definitive Seattle Pizza Rankings) place Varlamos in the middle-to-lower tier of the city's pizzerias across several editions, praising the dough as the strongest component while finding the sauce and cheese flavors muted. A Greek-American community archive notes the Laurelhurst shop has served the UW-adjacent neighborhood since 1994 and is known for its oversized 'football-sized' calzones and kid-friendly, TV-filled sports-bar room rather than for destination-caliber pizza."
     }
   ],
-  "rejected": [
-    "mentions[0]: date is older than 730 days",
-    "ratingSkipped[0]: note is longer than 600 characters",
-    "ratingSkipped[1]: note is longer than 600 characters"
+  "ratingSkipped": [
+    {
+      "id": "pizza-twist",
+      "note": "Confirmed the Pinehurst/Northgate-area Pizza Twist is the franchise location at 12319 Roosevelt Way NE, Seattle, WA 98125 (matched via Atly, Spinach, and MapQuest listings against pizzatwist.com, a Chicago-born Indian-fusion pizza chain). Found no published review, roundup entry, or news story specific to this branch -- only directory/aggregator listings for it, plus trade-press pieces (QSR, PMQ, Franchising.com) about the chain's national expansion and a 2021 Capitol Hill Seattle article about a different (Broadway) Seattle location. Skipping rather than rating on aggregator listings or coverage of a different branch."
+    }
   ]
 }
