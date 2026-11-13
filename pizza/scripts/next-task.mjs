@@ -597,7 +597,12 @@ section, a bar with a pizza oven, a bakery that sells slices, a brewery
 with a pizza kitchen. Search each neighborhood the way a local would
 ("<neighborhood> Seattle Italian restaurant pizza", "<neighborhood>
 Seattle bar pizza oven", "<neighborhood> Seattle brewery pizza"), and
-open the place's own menu before you report it.
+open the place's own menu before you report it. A neighborhood dining
+guide or an "Italian restaurants in <neighborhood>" roundup names
+several candidates in one page: start there, then check each one's
+menu. Most of these neighborhoods have several such places, and the
+point of the pass is to find them all, so use the whole budget before
+you settle for a short list.
 
 What does not:
 - A place whose main business is pizza. That is a pizzeria: if it is not

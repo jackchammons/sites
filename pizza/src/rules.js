@@ -11,7 +11,7 @@ import { missingFacts } from './schema.js';
  * number is how many places one pass of the sweep may file. */
 export const PER_PASS = {
   rating: 6, rerate: 7, locations: 5, liveness: 6, census: 10, facts: 12, coverage: 10, social: 15, sources: 5,
-  serves: 12
+  serves: 16
 };
 
 /* How long an entry rests after a task looked at it and could not resolve it,
@@ -47,9 +47,12 @@ export const NEIGHBORHOODS = ['Ballard', 'Fremont', 'Wallingford', 'Green Lake',
 
 /* The serves task: places that serve pizza and are not pizzerias, swept
  * neighbourhood by neighbourhood. One pass takes this many neighbourhoods and
- * may spend this many searches on each. */
+ * may spend this many searches on each. The first dry run had three searches
+ * a neighbourhood and came back with three places from four neighbourhoods
+ * that hold dozens: three searches find the roundups and leave nothing to
+ * open the menus with. */
 export const SERVES_HOODS_PER_PASS = 4;
-export const SERVES_SEARCHES_PER_HOOD = 3;
+export const SERVES_SEARCHES_PER_HOOD = 5;
 /* How many such places a discovery pass may file when it meets them. It is
  * not sent looking for any. */
 export const SERVES_IN_PASSING = 5;

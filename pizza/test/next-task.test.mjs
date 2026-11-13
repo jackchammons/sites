@@ -269,7 +269,7 @@ test('a pass that resolves nothing can report its whole worklist: every skipped 
 /* ---- the numbers every worklist draws with ---- */
 test('rules: every worklist takes the number of entries rules.js states, and no other', () => {
   assert.deepEqual(PER_PASS, { rating: 6, rerate: 7, locations: 5, liveness: 6, census: 10, facts: 12, coverage: 10, social: 15, sources: 5,
-    serves: 12 });
+    serves: 16 });
   assert.deepEqual(RETRY_DAYS, { rating: 90, facts: 90, coverage: 90, social: 90 });
   assert.deepEqual([LOCATION_REVISIT_DAYS, LIVENESS_REVISIT_DAYS, CLOSURE_RECONFIRM_DAYS], [30, 14, 90]);
 
@@ -694,7 +694,7 @@ test('locations: nothing left to look at is an empty worklist', () => {
 const hoodsOf = brief => brief.split('\n\n')[1].split('\n').map(l => l.replace(/^- /, ''));
 
 test('rules: one pass of the serves sweep takes the next few neighbourhoods from the cursor, and wraps', () => {
-  assert.deepEqual([SERVES_HOODS_PER_PASS, SERVES_SEARCHES_PER_HOOD, SERVES_IN_PASSING, PER_PASS.serves], [4, 3, 5, 12]);
+  assert.deepEqual([SERVES_HOODS_PER_PASS, SERVES_SEARCHES_PER_HOOD, SERVES_IN_PASSING, PER_PASS.serves], [4, 5, 5, 16]);
   assert.equal(new Set(NEIGHBORHOODS).size, NEIGHBORHOODS.length);
   assert.deepEqual(servesSweep(0), { start: 0, hoods: NEIGHBORHOODS.slice(0, SERVES_HOODS_PER_PASS), next: SERVES_HOODS_PER_PASS });
   assert.deepEqual(servesSweep(9).hoods, NEIGHBORHOODS.slice(9, 9 + SERVES_HOODS_PER_PASS));
