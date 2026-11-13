@@ -2,7 +2,7 @@
   "updated": "2026-11-12T05:30:31.005Z",
   "checked": "2026-11-12T05:30:31.005Z",
   "cutoffMonths": 30,
-  "servesCursor": 12,
+  "servesCursor": 16,
   "candidates": [
     {
       "key": "dominos|714",
@@ -1853,6 +1853,48 @@
       "resolvedDate": "2026-11-13",
       "lat": 47.59843,
       "lon": -122.33205
+    },
+    {
+      "key": "bar cotto|1546",
+      "name": "Bar Cotto",
+      "address": "1546 15th Ave, Seattle, WA 98122",
+      "neighborhood": "Capitol Hill",
+      "sources": [
+        "research"
+      ],
+      "status": "rejected",
+      "verdict": "not-pizza",
+      "note": "A Parma-style salumeria and cocktail bar from chef Ethan Stowell, built around charcuterie and bruschetta, that also serves 13-inch pizzas ($13-$16) alongside spaghetti and calzones.",
+      "resolutionSource": "https://seattleite.com/2013/02/20/the-radar-ethan-stowell-does-it-again",
+      "resolvedDate": "2026-11-13"
+    },
+    {
+      "key": "cora plates|926",
+      "name": "Cora Pizza & Plates",
+      "address": "926 12th Ave, Seattle, WA 98122",
+      "neighborhood": "Capitol Hill",
+      "sources": [
+        "research"
+      ],
+      "status": "rejected",
+      "verdict": "not-pizza",
+      "note": "An Italian restaurant from chef John Sundstrom with starters, pasta (rigatoni bolognese, spaghettini puttanesca), wood-roasted vegetables and dessert, whose 11-inch wood-fired pizzas include cheese, pepperoni, margherita, cacio e pepe, and mushroom pies.",
+      "resolutionSource": "https://seattleite.com/2023/05/01/restaurant-of-the-week-cora-pizza-plates",
+      "resolvedDate": "2026-11-13"
+    },
+    {
+      "key": "single shot|611",
+      "name": "Single Shot",
+      "address": "611 Summit Ave E, Seattle, WA 98102",
+      "neighborhood": "Capitol Hill",
+      "sources": [
+        "research"
+      ],
+      "status": "rejected",
+      "verdict": "not-pizza",
+      "note": "A Capitol Hill bar and restaurant with a stone oven that turns out a Pizza Margherita ($12) and a Tuscan Kale flatbread alongside bites, cocktails and entrees like striped bass and pork chop.",
+      "resolutionSource": "https://www.thestranger.com/food-and-drink/2014/10/14/20799258/single-shot-is-open-on-capitol-hill-and-it-looks-great",
+      "resolvedDate": "2026-11-13"
     }
   ]
 }

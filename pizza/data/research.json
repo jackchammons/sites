@@ -1,56 +1,26 @@
 {
-  "updated": "2026-11-13T00:00:00Z",
-  "directory": [
-    {
-      "name": "Alibi Room",
-      "neighborhood": "Downtown",
-      "style": "brick-oven, thin crust",
-      "status": "open",
-      "note": "A low-key pizzeria and lounge tucked into Pike Place Market's Post Alley, built around brick-oven pizza with a crisp, tender crust.",
-      "source": "https://www.gotodestinations.com/hidden-gem-pizza-seattle-wa/",
-      "address": "85 Pike St Ste 410, Seattle, WA 98101"
-    }
-  ],
+  "updated": "2026-11-13T19:00:00Z",
   "servesPizza": [
     {
-      "name": "Cotto Belltown",
-      "address": "2318 2nd Ave, Seattle, WA 98121",
-      "neighborhood": "Belltown",
-      "note": "An Italian restaurant and bar serving house-made pasta alongside wood-fired pizzas such as the Margherita.",
-      "source": "https://www.cottobelltown.com"
+      "name": "Bar Cotto",
+      "address": "1546 15th Ave, Seattle, WA 98122",
+      "neighborhood": "Capitol Hill",
+      "note": "A Parma-style salumeria and cocktail bar from chef Ethan Stowell, built around charcuterie and bruschetta, that also serves 13-inch pizzas ($13-$16) alongside spaghetti and calzones.",
+      "source": "https://seattleite.com/2013/02/20/the-radar-ethan-stowell-does-it-again"
     },
     {
-      "name": "Limoncello Belltown",
-      "address": "2326 1st Ave, Seattle, WA 98121",
-      "neighborhood": "Belltown",
-      "note": "An Italian restaurant best known for house-made pasta and a limoncello cocktail that also serves pizza on its dinner menu.",
-      "source": "https://limoncellobelltown.com"
+      "name": "Cora Pizza & Plates",
+      "address": "926 12th Ave, Seattle, WA 98122",
+      "neighborhood": "Capitol Hill",
+      "note": "An Italian restaurant from chef John Sundstrom with starters, pasta (rigatoni bolognese, spaghettini puttanesca), wood-roasted vegetables and dessert, whose 11-inch wood-fired pizzas include cheese, pepperoni, margherita, cacio e pepe, and mushroom pies.",
+      "source": "https://seattleite.com/2023/05/01/restaurant-of-the-week-cora-pizza-plates"
     },
     {
-      "name": "Bombo Italian Kitchen",
-      "address": "1600 9th Ave, Seattle, WA 98101",
-      "neighborhood": "Downtown",
-      "note": "An Ethan Stowell Italian restaurant at the Washington State Convention Center whose oven-baked pizzas anchor a menu that also covers pasta, antipasto, and happy hour.",
-      "source": "https://onehousehospitality.com/restaurants/bombo-italian-kitchen-convention-center-seattle"
-    },
-    {
-      "name": "Von's 1000Spirits",
-      "address": "1225 1st Ave, Seattle, WA 98101",
-      "neighborhood": "Downtown",
-      "note": "A cocktail bar near Pike Place Market built around a 1,000-plus bottle spirits collection, whose food menu centers on Seattle sourdough pizzas and pastas.",
-      "source": "https://citylifestyle.com/businesses/vons-1000-spirits-259079"
-    },
-    {
-      "name": "King Street Bar & Oven",
-      "address": "170 S King St, Seattle, WA 98104",
-      "neighborhood": "Pioneer Square",
-      "note": "A sports bar near Lumen Field with a custom stone oven that turns out house-made pizza alongside calzones and sandwiches.",
-      "source": "https://www.kingstreetbar.com"
+      "name": "Single Shot",
+      "address": "611 Summit Ave E, Seattle, WA 98102",
+      "neighborhood": "Capitol Hill",
+      "note": "A Capitol Hill bar and restaurant with a stone oven that turns out a Pizza Margherita ($12) and a Tuscan Kale flatbread alongside bites, cocktails and entrees like striped bass and pork chop.",
+      "source": "https://www.thestranger.com/food-and-drink/2014/10/14/20799258/single-shot-is-open-on-capitol-hill-and-it-looks-great"
     }
-  ],
-  "rejected": [
-    "directory[0]: \"The Masonry\" is already on file",
-    "directory[0]: \"20 Roy St, Seattle, WA 98109\" is already on file as The Masonry",
-    "servesPizza[0]: \"Messina Modern Italian Kitchen\" is already known: the candidates queue holds it as \"Messina Modern Italian Kitchen\""
   ]
 }
