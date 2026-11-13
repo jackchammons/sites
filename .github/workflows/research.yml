@@ -294,7 +294,9 @@ jobs:
               you could not resolve goes in locationsSkipped, coverageSkipped,
               socialSkipped or factsSkipped, so the next pass moves on.
               factsSkipped may sit beside a facts record for the part you did
-              find. Report each entry once in a ...Skipped section.
+              find. Report each entry once in a ...Skipped section. Keep
+              every note under 500 characters: two or three sentences on
+              what you searched and what you found.
             - A facts record carries only what its one source page states. Facts
               read on another page go in another record for the same id, and no
               fact is reported twice for one entry. A fact already on file is

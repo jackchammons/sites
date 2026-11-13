@@ -191,9 +191,11 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   fail, emits a warning per drop, writes the accepted set back to `research.json`, and
   fails the run only on a structural problem. Unknown top-level keys are ignored with a
   warning. Free text and addresses may not contain `<` or `>`.
-- **A `…Skipped` section never fails a file.** It keeps one record per id, up to twice
-  the largest worklist that task serves (from `rules.js`), and drops the rest one at a
-  time with a warning. An agent that wrote 16 "nothing found" records for a 10-entry
+- **A `…Skipped` section never fails a file, and its note never costs the record.** A
+  note over the limit is cut to it and kept: refusing it dropped the record, the entry
+  was never stamped, and the next pass drew it again (twice in one rating pass). The
+  section keeps one record per id, up to twice the largest worklist that task serves
+  (from `rules.js`), and drops the rest one at a time with a warning. An agent that wrote 16 "nothing found" records for a 10-entry
   worklist once cost a whole coverage pass, mentions included. Every other section's
   cap is structural and still fails the file.
 - **Ratings fill gaps, and replace launch ratings.** `factorRatings` proposals carry

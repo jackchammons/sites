@@ -216,6 +216,18 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
     return true;
   };
 
+  /* The note on a `…Skipped` record says what was searched. The record's job
+   * is the attempt: it is what rests the entry. So a note that runs long is
+   * cut to the limit and kept, where any other over-long text is refused.
+   * Refusing it dropped the record, the entry was never marked as looked at,
+   * and the next pass was handed it again. Every other rule still applies. */
+  const checkSkipNote = (sec, i, it) => {
+    if (typeof it?.note === 'string' && it.note.length > MAX_LEN.note) {
+      it.note = `${it.note.slice(0, MAX_LEN.note - 1).trimEnd()}\u2026`;
+    }
+    return checkText(sec, i, it?.note, 'note', MAX_LEN.note, 10);
+  };
+
   const seen = new Set();
   news.forEach((it, i) => {
     checkText('news', i, it?.title, 'title', MAX_LEN.title, 8);
@@ -425,7 +437,7 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
     if (!r) { bad('ratingSkipped', i, `unknown restaurant id "${it?.id}"`); return; }
     if (agentRated(r)) bad('ratingSkipped', i, `${r.name} is already rated`);
     if (ratingSeen.has(it.id)) bad('ratingSkipped', i, `${r.name} is also proposed in factorRatings`);
-    checkText('ratingSkipped', i, it?.note, 'note', MAX_LEN.note, 10);
+    checkSkipNote('ratingSkipped', i, it);
   });
 
   /* ---- facts: the descriptive record, for any entry that lacks part of it ----
@@ -479,7 +491,7 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
   sections.factsSkipped.forEach((it, i) => {
     const r = byId.get(it?.id);
     if (!r) { bad('factsSkipped', i, `unknown restaurant id "${it?.id}"`); return; }
-    checkText('factsSkipped', i, it?.note, 'note', MAX_LEN.note, 10);
+    checkSkipNote('factsSkipped', i, it);
   });
 
   /* ---- locationsSkipped: the locations task's memory ----
@@ -489,7 +501,7 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
    * nothing while the same few unverifiable entries held the head of the list. */
   sections.locationsSkipped.forEach((it, i) => {
     if (!byId.has(it?.id)) { bad('locationsSkipped', i, `unknown restaurant id "${it?.id}"`); return; }
-    checkText('locationsSkipped', i, it?.note, 'note', MAX_LEN.note, 10);
+    checkSkipNote('locationsSkipped', i, it);
   });
 
   /* ---- coverageSkipped, socialSkipped: the two backfills' memory ----
@@ -500,7 +512,7 @@ export function validateResearch(doc, dataset, nowMs = Date.now(), extra = {}) {
   for (const sec of ['coverageSkipped', 'socialSkipped']) {
     sections[sec].forEach((it, i) => {
       if (!byId.has(it?.id)) { bad(sec, i, `unknown restaurant id "${it?.id}"`); return; }
-      checkText(sec, i, it?.note, 'note', MAX_LEN.note, 10);
+      checkSkipNote(sec, i, it);
     });
   }
 

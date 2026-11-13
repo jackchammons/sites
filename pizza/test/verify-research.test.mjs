@@ -290,7 +290,6 @@ test('locationsSkipped: an id on file and a note that says what was tried', () =
   passes({ locationsSkipped: [{ id: 'zeeks-pizza', note: 'no official site found; only aggregator listings' }] });
   failsWith({ locationsSkipped: [{ id: 'nope', note: 'no official site found' }] }, 'unknown restaurant id');
   failsWith({ locationsSkipped: [{ id: 'zeeks-pizza', note: 'none' }] }, 'note missing or too short');
-  failsWith({ locationsSkipped: [{ id: 'zeeks-pizza', note: 'x'.repeat(601) }] }, 'longer than 600');
 });
 
 /* ---- coverageSkipped, socialSkipped: the two backfills' memory ---- */
@@ -301,7 +300,6 @@ test('coverageSkipped and socialSkipped: an id on file and a note that says what
     passes({ [sec]: [{ id: 'delancey', note: 'searched four outlets by name; nothing new' }] });
     failsWith({ [sec]: [{ id: 'nope', note: 'searched four outlets by name' }] }, 'unknown restaurant id');
     failsWith({ [sec]: [{ id: 'zeeks-pizza', note: 'none' }] }, 'note missing or too short');
-    failsWith({ [sec]: [{ id: 'zeeks-pizza', note: 'x'.repeat(601) }] }, 'longer than 600');
     failsWith({ [sec]: [{ id: 'zeeks-pizza' }] }, 'note missing or too short');
   }
 });
@@ -312,6 +310,33 @@ const SKIPPED_SECTIONS = ['ratingSkipped', 'locationsSkipped', 'factsSkipped', '
 const field = { restaurants: Array.from({ length: 40 }, (_, i) => ({ id: `pie-${String(i).padStart(2, '0')}`, name: `Pie ${i}`, status: 'open' })) };
 const skip = n => ({ id: `pie-${String(n).padStart(2, '0')}`, note: `searched four outlets by name for pie ${n}; nothing found` });
 const mention = id => ({ id, title: 'A perfectly plausible headline', url: `https://x.com/${id}`, source: 'Seattle Met', date: '2026-08-15', kind: 'mention' });
+
+test('skipped sections: a note that runs long is cut to the limit and the attempt is kept', () => {
+  const words = 'searched the pizzeria\'s own site, two outlets and a neighbourhood blog, and found nothing to file. ';
+  for (const sec of SKIPPED_SECTIONS) {
+    const long = words.repeat(12);
+    assert.ok(long.length > MAX_LEN.note);
+    const { fails, accepted, fatal } = validateResearch({ [sec]: [{ id: 'pie-03', note: long }] }, field, NOW);
+    assert.equal(fatal, false, sec);
+    assert.deepEqual(fails, [], sec);
+    assert.equal(accepted[sec].length, 1, sec);
+    const kept = accepted[sec][0].note;
+    assert.equal(kept.length <= MAX_LEN.note, true, `${sec}: ${kept.length}`);
+    assert.ok(kept.endsWith('\u2026') && long.startsWith(kept.slice(0, -1)), sec);
+    // a note already inside the limit is left exactly as written
+    const short = { id: 'pie-04', note: words.trim() };
+    assert.equal(validateResearch({ [sec]: [short] }, field, NOW).accepted[sec][0].note, words.trim(), sec);
+    // length is the only rule that bends: markup, another script and a missing note are still refused
+    // (what is cut off is never stored, so only the part that is kept is checked)
+    for (const [note, why] of [[`<b> ${'x'.repeat(700)}`, 'contains < or >'], [`\u0430 ${'x'.repeat(700)}`, 'outside the Latin script'], [undefined, 'missing or too short']]) {
+      const bad = validateResearch({ [sec]: [{ id: 'pie-05', note }] }, field, NOW);
+      assert.ok(bad.fails.some(f => f.includes(why)), `${sec}: ${why}: ${JSON.stringify(bad.fails)}`);
+      assert.equal(bad.accepted[sec].length, 0, sec);
+    }
+  }
+  // everywhere else an over-long note is still refused
+  failsWith({ candidateReview: [{ name: 'Anything Pizza', verdict: 'closed', note: 'x'.repeat(601) }] }, 'note is longer than 600');
+});
 
 test('skipped sections: each cap is read from rules.js, with room above the worklist it serves', () => {
   assert.deepEqual(Object.keys(SKIPPED).sort(), [...SKIPPED_SECTIONS].sort());
