@@ -2010,7 +2010,9 @@
       "verdict": "not-pizza",
       "note": "An Italian restaurant and cafe on Mount Baker Ridge known for pasta and classic Italian fare; its menu includes a dedicated pizza section with six wood-style pies such as Margherita, Pepperoni, Roma, and Vegetali.",
       "resolutionSource": "https://thatsamoreseattle.com/thats-amore-italian-cafe-main-menu/",
-      "resolvedDate": "2026-11-13"
+      "resolvedDate": "2026-11-13",
+      "lat": 47.58954,
+      "lon": -122.29267
     },
     {
       "key": "hatback bar grille|1201",
@@ -2024,7 +2026,9 @@
       "verdict": "not-pizza",
       "note": "A sports bar and grille near the SoDo stadiums serving burgers, wings, and Pacific Northwest seafood; pizza is one of its game-day menu items alongside those dishes.",
       "resolutionSource": "https://hatback.getbento.com/hatback-bar-and-grille",
-      "resolvedDate": "2026-11-13"
+      "resolvedDate": "2026-11-13",
+      "lat": 47.59201,
+      "lon": -122.33477
     }
   ]
 }
