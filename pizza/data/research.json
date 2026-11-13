@@ -1,12 +1,6 @@
 {
   "updated": "2026-11-13T00:00:00Z",
-  "servesPizza": [
-    {
-      "name": "Watershed Pub & Kitchen",
-      "address": "10104 3rd Ave NE, Seattle, WA 98125",
-      "neighborhood": "Northgate",
-      "note": "A neighborhood pub in the Thornton Place development with 21 rotating beer taps, sandwiches, mac and cheese, and salads; its kitchen also turns out New York-style pizza, which reviewers single out as a highlight.",
-      "source": "https://theinfatuation.com/seattle/reviews/watershed-pub-and-kitchen"
-    }
+  "rejected": [
+    "servesPizza[0]: \"4920 S Genesee St, Seattle, WA 98118\" is already on file as Seward Park Pizza"
   ]
 }
