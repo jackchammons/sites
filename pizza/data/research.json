@@ -1,19 +1,41 @@
 {
-  "updated": "2026-11-13T12:00:00Z",
-  "servesPizza": [
+  "updated": "2026-11-13T00:00:00Z",
+  "status": [
     {
-      "name": "Swel",
-      "address": "3417 Evanston Ave N, Seattle, WA 98103",
-      "neighborhood": "Fremont",
-      "note": "A slightly upscale Fremont trattoria serving pastas, small plates and steaks, where the wood-fired pizzas, served with a spicy chili oil, are called out by reviewers as the kitchen's strongest dishes.",
-      "source": "https://www.theinfatuation.com/seattle/reviews/swel"
+      "id": "delancey",
+      "status": "open",
+      "note": "Official site lists regular Tuesday-Sunday hours at 1415 NW 70th Street with no closure or opening notice.",
+      "source": "https://www.delanceyseattle.com"
     },
     {
-      "name": "Trailbend Taproom",
-      "address": "1118 NW 50th St, Seattle, WA 98107",
-      "neighborhood": "Ballard",
-      "note": "A Ballard craft-beer taproom with dozens of rotating taps whose kitchen runs a Wood Stone oven for wood-fired pizzas and flatbreads alongside sandwiches and salads.",
-      "source": "https://www.architectmagazine.com/?p=217333"
+      "id": "cornelly",
+      "status": "open",
+      "note": "Cornelly continues to operate on Capitol Hill and has added a second Queen Anne location, per recent local coverage.",
+      "source": "https://seattlerefined.com/eat-drink/restaurants-bars/cornelly-seattle-capitol-queen-anne-handmade-pizza-pasta-chicory-caesar-salad-italian-dining-dessert-pnw-eat-drink-foodie"
+    },
+    {
+      "id": "my-friend-dereks",
+      "status": "open",
+      "note": "Official site shows the Tangletown brick-and-mortar operating with posted pizza and lunch hours and no closure notice.",
+      "source": "https://myfrienddereks.com/"
+    },
+    {
+      "id": "stevies-famous",
+      "status": "open",
+      "note": "Official site lists three active, operating locations (Burien, Beacon Hill, and the new Phinney Ridge spot) with ordering links and regular hours.",
+      "source": "https://www.steviesfamous.com/"
+    },
+    {
+      "id": "sinners-pizza",
+      "status": "open",
+      "note": "Official site shows the University Way walk-up pizzeria operating with a posted address, phone number, and nightly hours.",
+      "source": "https://sinners.pizza/"
+    },
+    {
+      "id": "roma-roma",
+      "status": "open",
+      "note": "Official site lists the Capitol Hill pizzeria's regular Wednesday-Sunday hours with no closure notice, consistent with its early-2026 opening coverage.",
+      "source": "https://romaroma.pizza/"
     }
   ]
 }
