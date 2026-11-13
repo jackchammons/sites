@@ -1786,7 +1786,9 @@
       "verdict": "not-pizza",
       "note": "An Italian restaurant and bar serving house-made pasta alongside wood-fired pizzas such as the Margherita.",
       "resolutionSource": "https://www.cottobelltown.com",
-      "resolvedDate": "2026-11-13"
+      "resolvedDate": "2026-11-13",
+      "lat": 47.61457,
+      "lon": -122.34619
     },
     {
       "key": "limoncello belltown|2326",
@@ -1800,7 +1802,9 @@
       "verdict": "not-pizza",
       "note": "An Italian restaurant best known for house-made pasta and a limoncello cocktail that also serves pizza on its dinner menu.",
       "resolutionSource": "https://limoncellobelltown.com",
-      "resolvedDate": "2026-11-13"
+      "resolvedDate": "2026-11-13",
+      "lat": 47.614,
+      "lon": -122.34726
     },
     {
       "key": "bombo italian kitchen|1600",
@@ -1814,7 +1818,9 @@
       "verdict": "not-pizza",
       "note": "An Ethan Stowell Italian restaurant at the Washington State Convention Center whose oven-baked pizzas anchor a menu that also covers pasta, antipasto, and happy hour.",
       "resolutionSource": "https://onehousehospitality.com/restaurants/bombo-italian-kitchen-convention-center-seattle",
-      "resolvedDate": "2026-11-13"
+      "resolvedDate": "2026-11-13",
+      "lat": 47.61363,
+      "lon": -122.332
     },
     {
       "key": "vons 1000spirits|1225",
@@ -1828,7 +1834,9 @@
       "verdict": "not-pizza",
       "note": "A cocktail bar near Pike Place Market built around a 1,000-plus bottle spirits collection, whose food menu centers on Seattle sourdough pizzas and pastas.",
       "resolutionSource": "https://citylifestyle.com/businesses/vons-1000-spirits-259079",
-      "resolvedDate": "2026-11-13"
+      "resolvedDate": "2026-11-13",
+      "lat": 47.60664,
+      "lon": -122.3383
     },
     {
       "key": "king street bar oven|170",
@@ -1842,7 +1850,9 @@
       "verdict": "not-pizza",
       "note": "A sports bar near Lumen Field with a custom stone oven that turns out house-made pizza alongside calzones and sandwiches.",
       "resolutionSource": "https://www.kingstreetbar.com",
-      "resolvedDate": "2026-11-13"
+      "resolvedDate": "2026-11-13",
+      "lat": 47.59843,
+      "lon": -122.33205
     }
   ]
 }

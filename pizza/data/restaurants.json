@@ -8344,7 +8344,9 @@
       "locations": [
         {
           "neighborhood": "Downtown",
-          "address": "85 Pike St Ste 410, Seattle, WA 98101"
+          "address": "85 Pike St Ste 410, Seattle, WA 98101",
+          "lat": 47.60961,
+          "lon": -122.34165
         }
       ],
       "locationsVerified": null,
