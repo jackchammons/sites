@@ -142,10 +142,11 @@ baked in at build time, because it would be wrong by however long ago the deploy
 
 `mortgage/` and `screen/` also have a node-only page test (`test/page.test.mjs`) that
 builds the site, stands in a small DOM and drives the built `app.js`; it runs in CI
-with the unit tests, and is what covers the wiring no module test sees. `screen/` and
-`words/` carry a Playwright check for what needs a layout engine
-(`screen/test/browser-sweep.mjs`, `words/test/browser-check.mjs`). Those run on a dev
-box, not in CI: run them after changing what those pages draw.
+with the unit tests, and is what covers the wiring no module test sees. `screen/`,
+`words/` and `pizza/` carry a Playwright check for what needs a layout engine
+(`screen/test/browser-sweep.mjs`, `words/test/browser-check.mjs`,
+`pizza/test/browser-check.mjs`). Those run on a dev box, not in CI: run them after
+changing what those pages draw.
 
 ## Things that will bite you
 

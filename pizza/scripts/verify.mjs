@@ -13,6 +13,7 @@ import { execFileSync } from 'node:child_process';
 import { isRated } from '../src/slice.js';
 import { tidyPossessive } from '../src/census.js';
 import { buildRegistry, CATEGORIES, mapPoints, recentlyClosed } from '../src/registry.js';
+import { paletteCss, CATEGORY_COLOR } from '../src/palette.js';
 import { esc, hostOf } from '../build/html.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -178,6 +179,19 @@ if (ids.has('record')) {
   } catch (e) {
     check(false, `the record chart's data-standings does not parse: ${e.message}`);
   }
+  // Every line and every dot is coloured: a series gets its hue and its line
+  // style from its classes, and nothing in a series is drawn in the muted ink
+  // a line used to wear once the palette ran out. The record is not drawn as
+  // a table; the table is in the markup, inside the block that hides it.
+  const chart = html.slice(html.indexOf('id="record-chart"'), html.indexOf('id="chart-tip"'));
+  const groups = [...chart.matchAll(/<g class="([^"]*\bseries\b[^"]*)">([\s\S]*?)<\/g>/g)];
+  check(groups.length > 0, 'the record chart draws no series');
+  for (const [, cls, body] of groups) {
+    check(/\bs[1-8]\b/.test(cls) && /\bt[0-2]\b/.test(cls), `a record-chart series has no colour or line style: class="${cls}"`);
+    check(!/var\(--ink-3\)|(?:stroke|fill)="/.test(body), `a record-chart series is drawn with a colour of its own, not its class: class="${cls}"`);
+  }
+  check(!/same record as a table/i.test(html), 'the record chart offers its table as a view again');
+  check(/<div class="chart-data"><table /.test(html), 'the record chart has no table for a reader who cannot see it');
 }
 
 // Any entry with a website must be linked wherever its name appears; checking
@@ -386,7 +400,29 @@ const same = (a, b) => a.length === b.length && a.every((x, i) => x === b[i]);
       check(at.length === 1 && at[0] === p.cat,
         `the map data puts "${p.name}" in "${p.cat}"; its row is ${at.length ? `under "${at.join(', ')}"` : 'not in the directory'}`);
     }
+    // A ranked pin is coloured by its rank among the ranked, so the data has
+    // to say how many there are and give each ranked place a rank of its own.
+    check(pageData.ranked === registry.counts.ranked, `the map data says ${pageData.ranked} places are ranked; the registry has ${registry.counts.ranked}`);
+    const ranks = (places ?? []).filter(p => p.cat === 'ranked').map(p => p.rank);
+    check(ranks.every(r => Number.isInteger(r) && r >= 1 && r <= registry.counts.ranked) && new Set(ranks).size === ranks.length,
+      'a ranked place in the map data has no rank of its own between 1 and the number ranked; its pin has no colour to take');
   }
+}
+
+/* The colours are defined once, in src/palette.js. app.js reads that module
+ * for the pins, and the build writes the same values into the page as custom
+ * properties for the toggles and the category headers; a second definition
+ * anywhere would let the two drift, and a pin would stop matching its toggle. */
+{
+  const sheets = [...html.matchAll(/<style>([\s\S]*?)<\/style>/g)].map(m => m[1]).join('\n');
+  check(sheets.includes(paletteCss()), 'the page\'s stylesheet does not carry the palette that src/palette.js defines');
+  for (const name of [...Object.keys(CATEGORY_COLOR).map(k => `--cat-${k}`), '--pin-line', '--rank-ramp']) {
+    const times = (sheets.match(new RegExp(`${name}\\s*:`, 'g')) ?? []).length;
+    check(times === 1, `${name} is defined ${times} time(s) in the page's stylesheet; the palette is defined once, in src/palette.js`);
+  }
+  const shipped = path.join(dist, 'palette.js');
+  check(fs.existsSync(shipped) && fs.readFileSync(shipped).equals(fs.readFileSync(path.join(root, 'src/palette.js'))),
+    'the emitted palette.js differs from src/palette.js, so the pins are not coloured from the palette the page was built with');
 }
 
 /* The page's visible text, for a test that looks for words the templates must

@@ -10,6 +10,8 @@ import {
 } from '../src/slice.js';
 import { esc, nameLink, fmtDate } from './html.mjs';
 import { locationLabel } from '../src/locations.js';
+import { paletteCss } from '../src/palette.js';
+import { PUGET_SOUND_BOX } from '../src/bounds.js';
 
 export function pageHtml(ctx, sections) {
   const { dataset, now, week, registry, ranked, spotlight, css, leafletCss } = ctx;
@@ -72,6 +74,7 @@ export function pageHtml(ctx, sections) {
 <meta name="theme-color" content="#fbf6ef" media="(prefers-color-scheme: light)">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍕</text></svg>">
 <style>${leafletCss}
+${paletteCss()}
 ${css}</style>
 </head>
 <body>
@@ -96,7 +99,7 @@ ${css}</style>
         </p>
         <div class="stamp">
           <span>Updated <b>${fmtDate(now)}</b></span>
-          <span>On file <b><span data-count="on-file">${onFile}</span> ${onFile === 1 ? 'pizzeria' : 'pizzerias'}</b></span>
+          <span>On file <b data-count="on-file">${onFile}</b> <b>${onFile === 1 ? 'pizzeria' : 'pizzerias'}</b></span>
           <span>Rated <b data-count="ranked">${openRated}</b></span>
           <span>Week <b>${week}</b></span>
         </div>
@@ -273,8 +276,8 @@ ${automation}
 <footer>
   <div class="wrap">
     <p><b>The Seattle Pizza Index.</b> A static site: the ranking is computed at build time from a
-    JSON dataset and served as files; the browser runs only the map and the page's own
-    disclosures. No analytics, no cookies, no tracking.</p>
+    JSON dataset and served as files; the browser runs only the map, the directory's search
+    and the page's own disclosures. No analytics, no cookies, no tracking.</p>
     <p style="margin-top:10px">Rebuilt daily by GitHub Actions from
     <a href="${REPO}" target="_blank" rel="noopener">jackchammons/sites</a>.
     ${ALGORITHM} · dataset v${esc(dataset.dataVersion)} · built ${now.toISOString()} ·
@@ -284,8 +287,12 @@ ${automation}
 
 <script>window.__PIZZA__ = ${JSON.stringify({
   // Only what the map needs: every place with a point to plot, by the row it
-  // has in the directory. The rows themselves are rendered above.
+  // has in the directory (the rows themselves are rendered above), how many
+  // are ranked, which is what a ranked pin's colour is read against, and the
+  // region the map covers, for placing the reader's own position.
   places: sections.mapData,
+  ranked: registry.counts.ranked,
+  box: PUGET_SOUND_BOX,
   builtAt: now.toISOString()
 }).replace(/</g, '\\u003c')};</script>
 <script type="module" src="./app.js"></script>

@@ -361,9 +361,11 @@ const candidateTable = (label, last, places, row) => `
 
 /* What the map needs, built from the registry like the rows are: one record
  * for each place with a Seattle address that has coordinates. `id` is the
- * place's row, `cat` its category and `lead` marks a place that is not on
- * file. Popup text is prepared here so the browser formats no date. */
+ * place's row, `cat` its category, `rank` a ranked place's rank (its pin's
+ * colour is read from it) and `lead` marks a place that is not on file.
+ * Popup text is prepared here so the browser formats no date. */
 export function mapData(ctx) {
+  const rankOf = new Map(ctx.allScored.map(r => [r.id, r.rank]));
   return ctx.registry.places.map(p => {
     const pts = mapPoints(p);
     if (!pts.length) return null;
@@ -374,6 +376,7 @@ export function mapData(ctx) {
       : `${CATEGORY[p.category].title}${p.dates.inspected ? ` · last inspected ${shortDate(p.dates.inspected)}` : ''}`;
     return {
       id: p.anchor, cat: p.category,
+      ...(p.category === 'ranked' ? { rank: rankOf.get(p.key) } : {}),
       ...(entry ? {} : { lead: 1 }),
       name: entry ? entry.name : tidyPossessive(p.name),
       ...(entry?.url ? { url: entry.url } : {}),
@@ -432,8 +435,7 @@ export function directorySection(ctx) {
     closed: () => [`
         A closed pizzeria leaves the ranking whatever it scored. It keeps its record here, and its
         score if it had one.${closedOther.length ? `
-        Listed after ${closedEntries.length ? 'the pizzerias on file' : 'that'} ${closedOther.length === 1 ? 'is a place' : 'are places'} known only from the candidates queue that a census pass found closed.
-        ${VERDICT.closed.rule}${finality('closed', closedOther)}` : ''}`,
+        Listed after ${closedEntries.length ? 'the pizzerias on file' : 'that'} ${closedOther.length === 1 ? 'is a place' : 'are places'} known only from the candidates queue that a census pass found closed.${finality('closed', closedOther)}` : ''}`,
       (closedEntries.length ? entryTable('Closed pizzerias on file', closedEntries, env) : '')
       + (closedOther.length ? candidateTable(VERDICT.closed.label, 'Found closed', closedOther, setAsideRow) : '')],
     pending: () => [`
@@ -458,14 +460,23 @@ export function directorySection(ctx) {
         : `${n} of these ${counts[key]} ${n === 1 ? 'is' : 'are'} not on the map yet`}: no Seattle address with coordinates is on file for ${n === 1 ? 'it' : 'them'}.</p>`;
   };
 
-  /* One category: its header (colour dot, name, count, the rule in a line)
-   * and its rows. A category with nothing in it is not rendered. */
+  /* A category's swatch: a dot in its colour, which the stylesheet takes from
+   * the palette (src/palette.js) by the category's name. The ranked category
+   * has no one colour, since its pins run from blue at the lowest rank to
+   * red at #1: its swatch is that ramp, between the two ranks it runs from
+   * and to. */
+  const swatch = (key, cls) => key === 'ranked'
+    ? `<span class="cat-ramp" aria-hidden="true"><i>#${counts.ranked}</i><span></span><i>#1</i></span>`
+    : `<i class="${cls}"></i>`;
+
+  /* One category: its header (swatch, name, count, the rule in a line) and
+   * its rows. A category with nothing in it is not rendered. */
   const group = key => {
     if (!counts[key]) return '';
     const [about, rows] = body[key]();
     return `
     <details class="dg" id="cat-${key}" data-cat="${key}"${DEFAULT_OPEN.includes(key) ? ' open' : ''}>
-      <summary><span class="dg-dot"></span><span class="dg-title">${CATEGORY[key].title}</span>
+      <summary>${swatch(key, 'dg-dot')}<span class="dg-title">${CATEGORY[key].title}</span>
         <span class="dg-n" data-count="${key}">${counts[key]}</span>
         <span class="dg-rule">${CATEGORY[key].rule}</span></summary>
       <div class="dg-body">
@@ -520,7 +531,7 @@ export function directorySection(ctx) {
         <p class="dir-found"><span id="dir-status" role="status" aria-live="polite"></span>
           <button type="button" class="dir-act" id="dir-clear" hidden>Clear search</button></p>
         <div class="dir-cats" id="dir-cats" role="group" aria-label="Categories shown in the list and on the map">
-          ${shown.map(k => `<button type="button" class="cat-chip" data-cat="${k}" aria-pressed="${DEFAULT_OPEN.includes(k)}"><i class="cat-dot"></i>${CATEGORY[k].title} <b data-count="${k}">${counts[k]}</b></button>`).join('\n          ')}
+          ${shown.map(k => `<button type="button" class="cat-chip" data-cat="${k}" aria-pressed="${DEFAULT_OPEN.includes(k)}">${swatch(k, 'cat-dot')}${CATEGORY[k].title} <b data-count="${k}">${counts[k]}</b></button>`).join('\n          ')}
           <span class="dir-acts">
             <button type="button" class="dir-act" id="dir-all">Show all</button>
             <button type="button" class="dir-act" id="dir-reset">${defaults.length === 1 ? `${CATEGORY[defaults[0]].title} only` : 'Reset'}</button>
@@ -557,9 +568,10 @@ export function directorySection(ctx) {
         <div class="dir-pin">
           <div id="map" class="dir-map" role="region" aria-label="Map of Seattle pizzerias"></div>
         </div>
-        <p class="note dir-map-note">The map shows the categories that are open. A filled pin is
-        a pizzeria on file, a ring a place that is not, and the larger pins are the top ten.
-        Seattle locations only. Tiles &copy; OpenStreetMap contributors.</p>
+        <p class="note dir-map-note">Ranked pins run from blue at the lowest rank to red at #1,
+        and a ring marks the top ten. Every other category has its own colour; a hollow pin is a
+        place that is not on file. Seattle locations only. Tiles &copy; OpenStreetMap
+        contributors.</p>
       </div>
     </div>
   </div>

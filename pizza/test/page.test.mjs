@@ -17,6 +17,8 @@ import { buzzSection } from '../build/sections/buzz.mjs';
 import { directorySection, mapData } from '../build/sections/directory.mjs';
 import { cardHtml, fieldStats } from '../src/render.js';
 import { PER_PASS, RETRY_DAYS, ROTATION } from '../src/rules.js';
+import { paletteCss } from '../src/palette.js';
+import { PUGET_SOUND_BOX } from '../src/bounds.js';
 import { LOCATION_REVISIT_DAYS } from '../src/locations.js';
 import {
   ALGORITHM, isoWeekKey, isoWeek, LONGEVITY_FULL_YEARS, COVERAGE_WINDOW_MONTHS, COVERAGE_FULL_MENTIONS,
@@ -85,6 +87,8 @@ const categoriesOf = html => {
   });
 };
 const textIn = markup => markup.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+/* The search field and the toggles, as rendered: hidden, ahead of the list. */
+const tools = html => html.match(/<div class="dir-tools" id="dir-tools" hidden>([\s\S]*?)<div class="dir-list" id="dir-list">/)[1];
 
 test('the record chart draws this build\'s standings for the current week, not the stored snapshot', () => {
   const live = context();
@@ -158,16 +162,17 @@ test('the directory works without script: every row is in the page, and what nee
   // The search field and the toggles do nothing without app.js: they are
   // there once, hidden, ahead of the list, with a toggle for each category.
   assert.equal((html.match(/id="dir-tools"/g) ?? []).length, 1);
-  const tools = html.match(/<div class="dir-tools" id="dir-tools" hidden>([\s\S]*?)<div class="dir-list" id="dir-list">/)[1];
-  assert.match(tools, /<input type="search" id="dir-q"[^>]*aria-label="Search the directory[^"]*"/);
-  assert.match(tools, /<span id="dir-status" role="status" aria-live="polite"><\/span>/);
-  const chips = [...tools.matchAll(/<button type="button" class="cat-chip" data-cat="([a-z-]+)" aria-pressed="(true|false)"><i class="cat-dot"><\/i>([^<]+)<b data-count="\1">(\d+)<\/b><\/button>/g)];
+  const bar = tools(html);
+  assert.match(bar, /<input type="search" id="dir-q"[^>]*aria-label="Search the directory[^"]*"/);
+  assert.match(bar, /<span id="dir-status" role="status" aria-live="polite"><\/span>/);
+  // Each carries its category's swatch: a dot, or for the ranking the ramp its pins are coloured on.
+  const chips = [...bar.matchAll(/<button type="button" class="cat-chip" data-cat="([a-z-]+)" aria-pressed="(true|false)">(?:<i class="cat-dot"><\/i>|<span class="cat-ramp" aria-hidden="true"><i>#\d+<\/i><span><\/span><i>#1<\/i><\/span>)([^<]+)<b data-count="\1">(\d+)<\/b><\/button>/g)];
   assert.deepEqual(chips.map(m => [m[1], m[2], m[3].trim(), Number(m[4])]), [
     ['ranked', 'true', 'Ranked', ctx.registry.counts.ranked], ['unrated', 'false', 'Unrated', 1],
     ['opening', 'false', 'Not open yet', 1], ['closed', 'false', 'Closed', 1],
     ['pending', 'false', 'Waiting for a census pass', 1]]);
-  assert.match(tools, /id="dir-all">Show all<[\s\S]*id="dir-reset">Ranked only<[\s\S]*id="dir-none">Collapse all</);
-  assert.match(tools, /<button type="button" class="dir-act" id="dir-clear" hidden>Clear search<\/button>/);
+  assert.match(bar, /id="dir-all">Show all<[\s\S]*id="dir-reset">Ranked only<[\s\S]*id="dir-none">Collapse all</);
+  assert.match(bar, /<button type="button" class="dir-act" id="dir-clear" hidden>Clear search<\/button>/);
 });
 
 test('every number of pizzerias the page prints is the registry\'s, and so is what the map plots', () => {
@@ -204,13 +209,19 @@ test('every number of pizzerias the page prints is the registry\'s, and so is wh
   // suburban branch and a candidate tied to an entry are not in it.
   const data = JSON.parse(html.match(/<script>window\.__PIZZA__ = ([\s\S]*?);<\/script>/)[1]);
   assert.deepEqual(data.places, [
-    { id: 'r-p0', cat: 'ranked', name: 'Place 00', pts: [[47.66, -122.38, '1 Pine St, Seattle, WA 98107']], outside: 1 },
+    { id: 'r-p0', cat: 'ranked', rank: 1, name: 'Place 00', pts: [[47.66, -122.38, '1 Pine St, Seattle, WA 98107']], outside: 1 },
     { id: 'r-gone', cat: 'closed', name: 'Gone Pies', pts: [[47.65, -122.35, '3 Oak St, Seattle, WA 98103']], more: 'Closed' },
     { id: 'c-chain-5', cat: 'chain', lead: 1, name: "Domino's <b>Pizza</b>", pts: [[47.62, -122.34, '5 Fir St, Seattle, WA 98109']],
       more: 'National chain · last inspected Jan 14, 2026' }
   ]);
   const cats = categoriesOf(html);
   for (const p of data.places) assert.ok(cats.find(c => c.key === p.cat).rows.includes(p.id), p.id);
+  // What a ranked pin's colour is read against, and the region the reader's own position is held to.
+  assert.equal(data.ranked, registry.counts.ranked);
+  assert.deepEqual(data.box, PUGET_SOUND_BOX);
+  // The colours are the palette module's, written into the page once.
+  assert.equal(html.split(paletteCss()).length, 2);
+  assert.match(tools(html), /<span class="cat-ramp" aria-hidden="true"><i>#16<\/i><span><\/span><i>#1<\/i><\/span>Ranked <b data-count="ranked">16<\/b>/);
   // A name from the register goes into the page as text, never as markup.
   assert.doesNotMatch(html, /<b>Pizza<\/b>/);
   assert.ok(html.includes('\\u003cb>Pizza\\u003c/b>'));

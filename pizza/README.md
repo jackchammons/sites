@@ -1,12 +1,13 @@
 # The Seattle Pizza Index
 
-A static site that tracks Seattle's pizzerias: a ranked top ten, a full directory with a
-map, openings and closings, and the local press. Published at
+A static site that tracks Seattle's pizzerias: a ranked top ten, a directory of every
+place the index knows of with a map, openings and closings, and the local press. Published at
 **https://sites.jackhammons.com/pizza/**, rebuilt daily by GitHub Actions.
 
 Every number on the page is computed at build time from `data/restaurants.json` by the
 scoring module in `src/slice.js`. Each ranked card opens to show every input behind its
-score, read against the rest of the rated field; the browser runs only the map.
+score, read against the rest of the rated field; the browser runs only the map and the
+directory's toggles and search.
 
 ## The score (SLICE v2.3)
 
@@ -79,7 +80,12 @@ pizza/
   data/research.json      the research agent's last validated proposals
   src/slice.js            the scoring module (run by the build and the tests; nothing scores in the browser)
   src/render.js           card rendering and the per-card explanation
-  src/app.js              directory rows, chart tooltip, card toggles; loads the map on demand
+  src/registry.js         the one list of places: every entry and every listed candidate, each in
+                          one category; every section that lists or counts places reads it
+  src/app.js              the directory (categories, search, rows, map on demand), chart tooltip,
+                          card toggles; the one script the browser runs
+  src/search.js           the directory's search rules (folding, matching), with no DOM in them
+  src/palette.js          the directory's colours: one per category and the rank ramp, defined once
   src/locations.js        location labels and the locations worklist
   src/schema.js           every key an entry carries, in order, with its empty value; the normaliser
   src/rules.js            worklist sizes, rest periods, the rotation, the neighbourhoods a sweep
@@ -97,6 +103,7 @@ pizza/
   scripts/next-task.mjs   picks and briefs the research agent's daily task
   scripts/fetch-buzz.mjs, fetch-candidates.mjs, geocode.mjs
   test/                   node --test suites for every pure module
+  test/browser-check.mjs  the directory in Chromium (dev box, Playwright; not run in CI)
 ```
 
 No dependencies, no lockfile. Leaflet is vendored under `src/vendor/`.
@@ -109,6 +116,7 @@ node pizza/scripts/check-dataset.mjs     # lint the dataset, and the candidates 
 node pizza/scripts/check-dataset.mjs --normalize   # put every entry into the schema's shape, then lint
 cd pizza && OUT_DIR=/tmp/out node scripts/build.mjs && OUT_DIR=/tmp/out node scripts/verify.mjs
 node scripts/build-all.mjs --only pizza  # or through the orchestrator -> dist/pizza/
+node pizza/test/browser-check.mjs        # the directory in Chromium; after touching app.js or styles.css
 ```
 
 With `OUT_DIR` unset, build and verify use `../dist/pizza/`, where the orchestrator puts
@@ -131,37 +139,75 @@ entries in `rankings.json` are out of score order. Text quoted from the data fil
 deploy. It also fails when the page's own copy describes a rating as set by hand, dates
 one to the index's launch or calls anything seeded (`editorial`, `founding entr…`,
 `at launch`, `launched in`, `index launched`, `seeded`), with the same exemption for
-quoted data, and when the pinned map's rules below have come apart. The record, radar,
-buzz and candidates sections are optional: each renders nothing when it has nothing to
-show, and the nav is built from the sections that rendered.
+quoted data, and when the pinned map's rules below have come apart. The record, radar
+and buzz sections are optional: each renders nothing when it has nothing to show, and
+the nav is built from the sections that rendered.
 
-The candidates section has checks of its own. It must be on the page, and in the nav,
-exactly when the dataset holds an open or opening entry with no rating or
-`data/candidates.json` holds a candidate. Every group must list as many rows as the data
-has for it, print that number, and name each of its entries; the rows of the first half
-must add up to the unrated entries and the rows of the second half plus the duplicates
-count to the whole queue, both counted from the files. A census note and a permit name
-are quoted data like a headline, so `candidates.json` is among the files the `undefined`
-and wording checks exempt.
+The directory has checks of its own, all against the registry (below) built from the
+two data files. Every category must list as many rows as the registry has for it, print
+that number, and name each place in the place's own row; a category with nothing in it
+must not be there. Every place must be in exactly one category, the one the registry
+gives it, and the same is counted from the files: every entry in `restaurants.json` is
+one row in one category, and the candidate rows plus the candidates tied to an entry are
+the whole queue. Only the ranked category is open by default. The nav has no Candidates
+entry, and `id="candidates"` sits at the head of the categories that are not on file
+exactly when the queue holds something. The search field and the toggles are on the page
+once, rendered hidden, with one toggle per category, pressed where its category is open,
+and no stylesheet rule may show them without `.has-tools`. Every number of places the
+page prints (`data-count`) is the registry's. Each place the radar names is in the
+directory under the matching category and links to its row, and the radar's two lists
+are the registry's. The inline map data lists the registry's places that have a point,
+each under its row's category, with a rank for each ranked one; and the palette in the
+page's stylesheet is the one `src/palette.js` defines, defined once. A census note and a
+permit name are quoted data like a headline, so `candidates.json` is among the files the
+`undefined` and wording checks exempt.
 
 ## What the page explains about itself
 
 Three parts of the page describe the pipeline, and each prints the pipeline's own
 numbers instead of repeating them.
 
-**Candidates** (`build/sections/candidates.mjs`, after the directory) lists what the
-index knows of and does not rank. *On file, not yet ranked* is every open or opening
-entry with no rating, grouped by why: waiting for a rating pass, looked at with no
-published criticism found (the day, the agent's note, and the day it is due again,
-`ratingAttempted` plus `RETRY_DAYS.rating`), or not open yet. *Not on file* is the
-candidates queue grouped by `candidateStanding()` in `src/census.js`: pending, in the
-order the census task takes them and with the pass that reaches each; then national
-chain, not pizza-forward, could not be verified and closed, each with the permit
-address, the last inspection, the day it was set aside and the agent's note. A
-candidate the register has inspected since its verdict is marked as due back. Branches
-and second registrations of entries on file are one line with a count. A group of more
-than six rows is rendered collapsed, as a `details` element, so it opens without
-JavaScript.
+**One list of places.** `src/registry.js` takes the entries and the candidates queue and
+returns every place the index knows of, each in exactly one category: ranked (open and
+rated), unrated, not open yet, closed, waiting for a census pass, national chain, not
+pizza-forward, could not be verified, and set aside (a candidate with no verdict on
+record; none today). An entry's category comes from its status and `isRated()`; a
+candidate's from `candidateStanding()`. Closed is one list: the entries on file that
+have closed, then the candidates a census pass found closed. A candidate that is an
+entry on file, or a further permit of one, is not a place of its own and is only
+counted. Every section that lists or counts places reads the registry from the build
+context and nothing else: the directory, the map's data, the radar (not open yet, and
+the closed category's last six months, so a permit-only closure appears there too,
+dated as "reported", never as "closed on"), the hero's and the ranking's counts, and
+the scoring path, which starts from the registry's entries.
+
+**The directory** (`build/sections/directory.mjs`) lists the registry by category. A
+category is a `details` element with its swatch, name, count and a one-line rule in its
+header, and its own explanation inside: why a place is there and what brings it back,
+with the numbers the worklists run on (`PER_PASS`, `RETRY_DAYS`, the inspection cutoff).
+The ranked category is open and the rest are closed, so without JavaScript the list
+opens by its headings and every row is in the page. An unrated entry says why under its
+row: waiting for a rating pass, or the day a pass looked, the day it is eligible again
+(`ratingAttempted` plus `RETRY_DAYS.rating`) and the agent's note. A candidate's row
+gives the place, where it is known from (a food permit with its last inspection,
+OpenStreetMap, or a research pass) and where it stands, with the note under it; one the
+register has inspected since its verdict is marked as due back, and a place a research
+pass filed is told apart from a permit, since no inspection brings it back. Further
+permits of entries on file are one line with a count. The Candidates section these
+lists used to be is gone; `id="candidates"` is the heading over the categories that are
+not on file.
+
+`app.js` adds one piece of state, the set of categories that are on, and three things
+follow it: a category that is on is expanded, its toggle is pressed and its places are
+on the map. The toggles and the category headings both change that set. The search
+field matches each row's own text (name, neighbourhood, addresses, style, notes,
+status) and what the build marks `.q` in its record or note (style group, signature
+pie, every neighbourhood, a census note), read from the page once and folded by
+`src/search.js`: case, accents and punctuation are ignored and every word has to match.
+While there is a query each category with a match shows only its matching rows, the
+rest are hidden, and clearing it brings back the set from before. A link or an address
+fragment that names a category (`#cat-closed`), a row (`#r-<id>`, `#c-<key>`) or a
+record (`#dd-<id>`) turns its category on and brings it into view.
 
 **The directory's expanded record** has the same blocks and rows for every entry, in
 one order: style, style group, known for, opened and price (each with the page that
@@ -181,20 +227,46 @@ runner gets to it, so the page says "once a day" and "after each research run".
 
 The map is not part of first load. `app.js` reveals the map rail and fetches
 `./leaflet.js` when the map nears the viewport or a directory row asks for its marker; if
-anything in that fails, the rail is removed and the table takes the full width.
+anything in that fails, the rail is removed, the toggles go back above the list and the
+list takes the full width. The map shows the pins of the categories that are on, and of
+the matches during a search, and is fitted to them when that set changes. Every pin is
+one size. Its colour is its category's, from `src/palette.js`, which is also written
+into the page as custom properties for the toggles and headings, so the palette is
+defined once; a ranked pin is coloured by rank on a ramp from blue (lowest) to red (#1),
+by `rankColor()`, and the ten highest have a ring. A place on file is a filled pin and a
+place that is not is a hollow one. "Show my location" asks the browser for the reader's
+position only when it is pressed (or at once if the site is already allowed), draws it
+as a diamond, and keeps it nowhere; a position outside the region leaves the map where
+it was.
 
-At 1100px and wider the map is a sticky rail beside the table. Under 1100px it is pinned
-below the nav for as long as the directory list is on screen, a third of the viewport
-high, and the rows scroll beneath it; it leaves with the last row. The pinned box is
+The search field and the toggles are rendered hidden, ahead of the list, and `app.js`
+moves them into the map's wrapper once there is a map, so they exist once and are in
+reach wherever the map is. At 1100px and wider the map is a sticky rail beside the
+list: the field, the toggles, the map and its note, sized to the window. Under 1100px
+the wrapper is pinned below the nav for as long as the directory list is on screen: the
+field, the toggles as one row that scrolls sideways, and the map at three tenths of the
+viewport's height, with the rows scrolling beneath; it leaves with the last row (and on
+a screen under 540px high nothing is pinned). The pinned box is
 `.dir-pin`, laid out as a child of `.dir-layout` because the rail has no box of its own
 there (`display: contents`); the legend sits outside it, after the list. All of those rules hang off
 `.has-map`, which `app.js` sets, so a reader without JavaScript never gets an empty
 pinned box. A row tap focuses the marker; a marker tap brings its row into the part of
-the screen below the map, which `app.js` finds from the table header's sticky offset. A
+the screen below the map, which `app.js` finds by measuring what is stuck above the
+list. The table header sticks under the pinned box: its offset is the toggles' height
+(`--tools-h`, which `app.js` keeps measured) plus the map's. A
 drag on the map pans it in both layouts; the wheel zooms it only in the desktop rail.
-`verify.mjs` holds the static half of this (the sticky rule, the rail's `display`, the
-header's offset, the markup, what `app.js` observes); the rest needs a layout engine, so
-after changing what the directory draws, look at it in Chromium at a phone width.
+`verify.mjs` holds the static half of this (the sticky rule, the rail's and the tools'
+`display`, the header's offset, the markup, what `app.js` observes); the rest needs a
+layout engine, and `test/browser-check.mjs` drives it in Chromium at 390, 1280 and 1920
+px in both colour schemes: the default, every toggle, show all, reset and collapse, the
+headings, the search, rows and pins, links into the directory, the page without
+JavaScript and without the map, and the reader's location allowed nearby, allowed far
+away and refused. It builds its own copy of the site, so it changes nothing in the
+checkout; run it after changing what the directory draws.
+
+The content column is capped at 1600px, with running prose keeping a measure of its own,
+so a wide monitor goes to the directory's table and map (two fifths of the row from
+1500px), the ranking (two cards to a row from 1500px) and the methodology's blocks.
 
 Every push to a branch other than `main` runs `ci.yml` (tests, lint, build, verify for the
 Node sites). Only `main` deploys.

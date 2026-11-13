@@ -3,6 +3,7 @@
  * explanation. The ranking itself is computed at build time and served as
  * HTML; nothing here re-scores it. */
 import { fold, terms, matches } from './search.js';
+import { CATEGORY_COLOR, PIN_LINE, rankColor } from './palette.js';
 
 const DATA = window.__PIZZA__;
 
@@ -142,18 +143,19 @@ const dirApi = { shows: () => false, fromPin: null, toolsMoved: null };
       if (chip) {
         chip.setAttribute('aria-pressed', String(open));
         chip.disabled = searching && !n;
-        chip.querySelector('b').textContent = searching ? n : total.get(cat);
+        chip.querySelector('b[data-count]').textContent = searching ? n : total.get(cat);
       }
     }
-    // The heading over the places not on file goes when none of them is listed.
+    // A search lists matches and nothing else: the heading over the places
+    // not on file goes when none of them matched, the line that counts the
+    // further permits goes, and so does each category's explanation (the
+    // stylesheet hides those while the list is marked as searching).
     if (head) {
-      let later = false, any = false;
-      for (const el of list.children) {
-        if (el === head) later = true;
-        else if (later && !el.hidden && el !== empty) any = true;
-      }
-      head.hidden = searching && !any;
+      const after = [...list.querySelectorAll('details.dg')].filter(d => head.compareDocumentPosition(d) & Node.DOCUMENT_POSITION_FOLLOWING);
+      head.hidden = searching && after.every(d => d.hidden);
     }
+    for (const el of list.querySelectorAll('.cq-dupes')) el.hidden = searching;
+    list.classList.toggle('is-searching', searching);
     tools.classList.toggle('is-searching', searching);
     clear.hidden = !searching;
     const hits = state.hits?.size ?? 0;
@@ -345,6 +347,14 @@ const dirApi = { shows: () => false, fromPin: null, toolsMoved: null };
   });
   window.addEventListener('hashchange', () => goTo(location.hash));
 
+  /* A ranked row's number gets the colour its pin has on the map, from the
+   * same function, so the two can be matched by eye. */
+  const ranked = Number(DATA?.ranked) || 0;
+  for (const el of list.querySelectorAll('details[data-cat="ranked"] .dir-rank')) {
+    const rank = Number(el.textContent.replace('#', ''));
+    if (rank > 0) el.style.setProperty('--rank', rankColor(rank, ranked));
+  }
+
   /* ---- start ---- */
   tools.hidden = false;
   layout.classList.add('has-tools');
@@ -429,6 +439,7 @@ const dirApi = { shows: () => false, fromPin: null, toolsMoved: null };
     return box;
   };
 
+  const PIN_RADIUS = 6;
   const build = () => {
     const L = window.L;
     const topIds = new Set(
@@ -456,27 +467,34 @@ const dirApi = { shows: () => false, fromPin: null, toolsMoved: null };
     /* Leaflet pans a popup into the map, to within a margin of its edges. The
      * stacked map is narrow enough that a popup brought in from the left ends
      * up under the zoom buttons, so there the left margin is the width the
-     * buttons take. Read each time a popup opens, so it follows the layout. */
-    const popupInset = { get x() { return wideLayout.matches ? 5 : 50; }, y: 5 };
+     * buttons take. Read each time a popup opens, so it follows the layout.
+     * The top margin is the row of buttons in the map's top right corner. */
+    const popupInset = { get x() { return wideLayout.matches ? 5 : 50; }, y: 48 };
 
     /* One marker per point, made once and added to or taken off the map as
-     * the directory's state changes. The colour is the category's, set in the
-     * stylesheet from the class (the same custom properties colour the
-     * toggles), so the options here are only what shows if that is missing.
-     * A place that is not on file is drawn as a ring. */
+     * the directory's state changes. Every pin is the same size. Its colour
+     * is its category's, from the palette module the toggles are coloured
+     * from; a ranked pin's is its rank's place on the ramp, blue for the
+     * lowest and red for #1. A pizzeria on file is a filled pin with a dark
+     * line round it, so a pale colour still has an edge on the tiles; a place
+     * that is not on file is a hollow one. The ten highest ranked each have a
+     * ring round the pin. */
+    const ranked = Number(DATA.ranked) || 0;
     const pins = [];
     const first = new Map();   // the first (usually primary) pin of each place
     for (const p of places) {
       const top = topIds.has(p.id);
+      const color = p.cat === 'ranked' ? rankColor(p.rank, ranked) : CATEGORY_COLOR[p.cat] ?? PIN_LINE;
       for (const [lat, lon, address] of p.pts) {
-        const marker = L.circleMarker([lat, lon], {
-          radius: top ? 8 : 6,
-          className: `pin pin-${p.cat}${p.lead ? ' pin-ring' : ''}${top ? ' pin-top' : ''}`,
-          color: '#fff', weight: 1.5, fillColor: '#8a6a5a', fillOpacity: 0.92
-        });
+        const marker = L.circleMarker([lat, lon], p.lead
+          ? { radius: PIN_RADIUS, color, weight: 3, fillColor: '#fff', fillOpacity: 0.92 }
+          : { radius: PIN_RADIUS, color: PIN_LINE, weight: 1, fillColor: color, fillOpacity: 1 });
         marker.bindPopup(() => popupFor(p, address), { autoPanPaddingTopLeft: popupInset });
         marker.on('click', () => dirApi.fromPin?.(p.id));
-        const pinned = { id: p.id, top, marker, at: [lat, lon], on: false };
+        const ring = top ? L.circleMarker([lat, lon], {
+          radius: PIN_RADIUS + 5, color: PIN_LINE, weight: 2, fill: false, interactive: false
+        }) : null;
+        const pinned = { id: p.id, top, marker, ring, at: [lat, lon], on: false };
         pins.push(pinned);
         if (!first.has(p.id)) first.set(p.id, pinned);
       }
@@ -498,16 +516,17 @@ const dirApi = { shows: () => false, fromPin: null, toolsMoved: null };
       for (const p of pins) {
         const want = dirApi.shows(p.id);
         if (want !== p.on) {
-          if (want) p.marker.addTo(map); else p.marker.remove();
+          for (const layer of [p.ring, p.marker]) if (layer) { if (want) layer.addTo(map); else layer.remove(); }
           p.on = want;
           changed = true;
         }
         if (want) bounds.push(p.at);
       }
-      // The top ten are drawn last, so a neighbour never covers one.
-      if (changed) for (const p of pins) if (p.on && p.top) p.marker.bringToFront();
+      // The top ten are drawn last, so a neighbour never covers one or its ring.
+      if (changed) for (const p of pins) if (p.on && p.top) { p.ring.bringToFront(); p.marker.bringToFront(); }
       if (bounds.length && (changed || !fitted)) {
-        map.fitBounds(bounds, { padding: [24, 24], maxZoom: 15 });
+        // The first fit is where the map opens, so it is not animated.
+        map.fitBounds(bounds, { padding: [24, 24], maxZoom: 15, animate: fitted });
         fitted = true;
       }
       nothing.hidden = bounds.length > 0;
@@ -518,11 +537,99 @@ const dirApi = { shows: () => false, fromPin: null, toolsMoved: null };
     map.setView([47.61, -122.33], 11);
     sync();
 
+    /* ---- the reader's own location ----
+     * A button on the map. Pressing it is what asks: the browser's own prompt
+     * appears then, and never on page load or when the map loads. The one
+     * exception is a reader who has already allowed it for this site, who is
+     * shown where they are without having to ask again.
+     *
+     * The position is used to draw one marker and is kept nowhere: it is not
+     * stored, not put in the address and not sent to anyone. The marker is a
+     * diamond with a pulse, which no pizzeria's pin is, over a faint circle
+     * as wide as the fix is uncertain. Inside the region the map covers it is
+     * brought into view with the pins that are showing. Far away, the map is
+     * left as it is: zooming out to another city would lose Seattle.
+     *
+     * A browser with no geolocation gets no button. Every other way this can
+     * fail ends in a plain line under the button, and the button still works. */
+    if ('geolocation' in navigator) {
+      const box = document.createElement('div');
+      box.className = 'map-locate';
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = 'Show my location';
+      button.title = 'Show where you are on this map. Your location stays in your browser: it is not stored and not sent anywhere.';
+      const said = document.createElement('span');
+      said.className = 'map-locate-msg';
+      said.setAttribute('role', 'status');
+      said.setAttribute('aria-live', 'polite');
+      box.append(button, said);
+      /* What happened, in a line under the button. It is over the map, so
+       * once it has been up long enough to read it goes away; "finding" stays
+       * until there is an answer. */
+      let fade = 0;
+      const say = (text, stay = false) => {
+        clearTimeout(fade);
+        said.textContent = text;
+        if (text && !stay) fade = setTimeout(() => { said.textContent = ''; }, 9000);
+      };
+
+      const region = DATA.box;
+      const inRegion = (lat, lon) => !region
+        || (lat > region.latMin && lat < region.latMax && lon > region.lonMin && lon < region.lonMax);
+      let me = null, around = null;
+      const show = ({ coords }) => {
+        const at = [coords.latitude, coords.longitude];
+        if (!at.every(Number.isFinite)) { say('Your location could not be found.'); return; }
+        if (!inRegion(...at)) {
+          me?.remove(); around?.remove();
+          say('You appear to be outside the Seattle area, so the map has stayed where it was.');
+          return;
+        }
+        const reach = Number.isFinite(coords.accuracy) ? coords.accuracy : 0;
+        if (me) { me.setLatLng(at); around.setLatLng(at); around.setRadius(reach); }
+        else {
+          around = L.circle(at, { radius: reach, color: '#111', weight: 1, opacity: 0.45, fillColor: '#111', fillOpacity: 0.07, interactive: false });
+          me = L.marker(at, {
+            icon: L.divIcon({ className: 'map-me', iconSize: [20, 20],
+              html: '<span class="map-me-dot" role="img" aria-label="Your location"></span>' }),
+            interactive: false, keyboard: false, zIndexOffset: 1000
+          });
+        }
+        around.addTo(map); me.addTo(map);
+        map.fitBounds([...pins.filter(p => p.on).map(p => p.at), at], { padding: [28, 28], maxZoom: 15 });
+        say('You are the diamond on the map. Your location stays in this browser.');
+      };
+      const failed = error => say(
+        error?.code === 1 ? 'Location is blocked for this page. Allow it in your browser to see where you are.'
+        : error?.code === 3 ? 'Finding your location took too long. Try again.'
+        : 'Your location could not be found.');
+      const ask = () => {
+        // The browser refuses outright on a page that is not served securely.
+        if (window.isSecureContext === false) { say('Your browser gives a location only to a secure (https) page.'); return; }
+        say('Finding your location…', true);
+        try {
+          navigator.geolocation.getCurrentPosition(show, failed, { enableHighAccuracy: false, timeout: 15000, maximumAge: 60000 });
+        } catch (e) { failed(e); }
+      };
+      button.addEventListener('click', ask);
+      const Locate = L.Control.extend({
+        options: { position: 'topright' },
+        onAdd() { L.DomEvent.disableClickPropagation(box); return box; }
+      });
+      new Locate().addTo(map);
+      // Already allowed for this site: no prompt would appear, so no click is needed.
+      try {
+        navigator.permissions?.query({ name: 'geolocation' })
+          .then(status => { if (status.state === 'granted') ask(); }, () => {});
+      } catch { /* a browser without the Permissions API waits for the button */ }
+    }
+
     /* Beside the table the map is a third of the row, which is small for
      * finding one corner of the city. The button trades the table's width for
      * the map's: the layout class does the resizing in CSS, and Leaflet is
      * told its box changed. The choice is the reader's, so it is remembered.
-     * It is a control of the map's own, so it sits in the map's corner
+     * It is a control of the map's own, so it sits by the map's corner
      * whatever is above the map. */
     const grow = document.createElement('button');
     grow.type = 'button';

@@ -89,8 +89,10 @@ test('every category on the page is a group that opens without script, and only 
   // closed category still says what it holds.
   assert.equal(groups.get('chain').summary, 'National chain 2 Left out by policy.');
   assert.equal(groups.get('unrated').summary, 'Unrated 4 Open and on file, with no rating yet.');
-  assert.match(groups.get('chain').body, /^<details class="dg" id="cat-chain" data-cat="chain">\s*<summary><span class="dg-dot"><\/span><span class="dg-title">National chain<\/span>/);
-  for (const [key, g] of groups) assert.ok(g.summary.startsWith(CATEGORY[key].title), key);
+  assert.match(groups.get('chain').body, /^<details class="dg" id="cat-chain" data-cat="chain">\s*<summary><i class="dg-dot"><\/i><span class="dg-title">National chain<\/span>/);
+  // The ranked category's swatch is the ramp, between the ranks it runs from and to.
+  assert.match(groups.get('ranked').body, /<summary><span class="cat-ramp" aria-hidden="true"><i>#1<\/i><span><\/span><i>#1<\/i><\/span><span class="dg-title">Ranked<\/span>/);
+  for (const [key, g] of groups) assert.ok(g.summary.replace(/^#\d+ #1 /, '').startsWith(CATEGORY[key].title), key);
   for (const key of CATEGORIES) assert.ok(CATEGORY[key]?.title && CATEGORY[key].rule, `no copy for the "${key}" category`);
 
   // The old section is gone; its id is the head of what is not on file.
@@ -202,7 +204,7 @@ test('closed holds the pizzerias on file and then the places a census pass found
   assert.equal(gone.cells, 'Gone Slice&#39;s 100 Pine St, Seattle, WA 98101 Food permit inspected Dec&nbsp;1,&nbsp;2025 Sep 12, 2026');
   assert.equal(gone.note, 'Not on file: known only from a food permit. Closed in the spring. news.example');
   assert.match(closed.body, /<th scope="col">Place<\/th><th scope="col">Known from<\/th><th scope="col">Found closed<\/th>/);
-  assert.match(closed.about, /Listed after the pizzerias on file is a place known only from the candidates queue that a census pass found closed\. The census pass found that it had shut\. Not final:/);
+  assert.match(closed.about, /Listed after the pizzerias on file is a place known only from the candidates queue that a census pass found closed\. Not final: it returns to the queue/);
 
   // With no such place the category is the entries alone, and says nothing of permits.
   const alone = groupsOf(directorySection(context({ candidates: null }))).get('closed');

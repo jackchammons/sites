@@ -22,10 +22,13 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   reader re-weighting (removed by request); every card explains its inputs instead.
 - `scripts/build.mjs` composes the page from `build/` (`load`, `derive`, `page`,
   `sections/*`, `emit`). The methodology copy is in `build/page.mjs` and
-  `build/sections/method.mjs`; the research tasks' rows are in `build/tasks.mjs`, and
-  the Candidates section in `build/sections/candidates.mjs`.
-- `scripts/verify.mjs` gates the deploy. `src/app.js` is the only script the browser
-  runs: the map and the directory rows.
+  `build/sections/method.mjs`; the research tasks' rows are in `build/tasks.mjs`. The
+  directory is `build/sections/directory.mjs`, and there is no Candidates section.
+- `src/registry.js` is the one list of places the page knows: every entry on file and
+  every candidate that is a place of its own, each in exactly one category.
+- `scripts/verify.mjs` gates the deploy. `src/app.js` is the browser's one entry: the
+  directory's state, the map, and the chart's tooltip. It imports `search.js` and
+  `palette.js`; a module it imports must be in the copy list in `build/emit.mjs`.
 - `scripts/next-task.mjs` picks and briefs the research agent's daily task;
   `src/validate-research.js` + `scripts/verify-research.mjs` validate what it wrote;
   `scripts/apply-research.mjs` applies it; `src/check-dataset.js` lints the result.
@@ -229,7 +232,7 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   after the verdict, with the old verdict kept as `previousVerdict` and shown to the
   agent as an earlier finding. `chain` and `duplicate` never return.
   `candidateStanding()` in `src/census.js` is the one statement of where a candidate
-  stands; the page's Candidates section reads it.
+  stands; the page's registry reads it.
 - **A duplicate names what it duplicates.** A `candidateReview` with verdict `duplicate`
   must carry `duplicateOf` (an id on file), stored on the candidate as `matchedId`.
   Without it a branch's address is thrown away, which is how A Pizza Mart sat on file
@@ -280,11 +283,43 @@ point is to change `data/`: they all write there. The workflows commit `data/*.j
   (`done` in `build/tasks.mjs`) is not named.
 - **No clock time anywhere in that copy.** Scheduled runs start hours late, so the page
   says "once a day" and what triggers what, never an hour. A page test holds this.
-- **Candidates lists everything known and not ranked, with the reason and what happens
-  next.** Unrated entries are split by why (waiting for a pass, looked and found
-  nothing with the date it is eligible again, not open yet); permit candidates are
-  grouped by `candidateStanding()`. `verify.mjs` counts the rows against the two data
-  files, so a group that loses a row fails the deploy.
+- **One list of places behind every section.** `src/registry.js` puts every place in
+  exactly one category: ranked, unrated, not open yet, closed, waiting for a census
+  pass, national chain, not pizza-forward, could not be verified. A section that lists
+  or counts places reads `ctx.registry`; it never filters `dataset.restaurants` or reads
+  `candidates` itself. The Radar's two lists are the registry's opening category and
+  its closed one inside six months. A reader once found places called closed in the
+  Radar that the "Closed" list did not have, because the two read different files:
+  closed is now one category, entries first, then places known only from a permit.
+  A printed count carries `data-count`, and `verify.mjs` holds it, the rows of every
+  category and the Radar's rows to the registry.
+- **The directory is the whole list, by category.** Each category is a `<details>`
+  with its rule and what brings a place back; only ranked is open by default. One
+  state drives the list and the map: a category that is on is expanded and its pins
+  are shown. `id="candidates"` survives as the heading over the categories that are
+  not on file, for old links. Without JavaScript the headings still open and every
+  row is in the HTML.
+- **The tools exist once.** `#dir-tools` (the search field and the category toggles) is
+  rendered hidden and moved into `.dir-pin` when there is a map, back above the list
+  when the map is dropped. Set no `display` on `.dir-tools` without `.has-tools`;
+  sticky offsets under it use `--tools-h`, which `app.js` measures.
+- **Colours are defined once, in `src/palette.js`.** `styles.css` uses only `--cat-*`,
+  `--pin-line` and `--rank-ramp`, which the build writes from it. Ranked pins run from
+  blue at the lowest rank to red at #1 (`rankColor`); every pin is one size and the top
+  ten wear a ring; a place not on file is a hollow pin. The record chart has its own
+  eight series colours (`--series-N`) and three line styles (`build/chart.mjs`): a
+  ninth line reuses the first colour dashed, and no colour is generated.
+- **Location is asked for only on a press, and never stored.** "Show my location"
+  calls the browser's prompt when pressed, or at once when the site is already
+  allowed. The position stays in the page.
+- **The record chart is the only view drawn of the record.** The table of the same
+  weeks is in the markup inside `.chart-data`, hidden from the screen, for a reader who
+  cannot see the chart. The class goes on a block round the table: a table ignores a
+  width set on itself and stretched the page 1,000px when it was tried.
+- **Run `node pizza/test/browser-check.mjs` after touching `app.js` or `styles.css`.**
+  It is a dev-box Playwright check, not CI. In it use `checkVisibility()`: a row inside
+  a closed `<details>` still has rectangles in Chromium. The inlined CSS has no
+  comments (the build strips them), so a verify mutation must target rule text.
 - **Every directory record has the same rows.** Each fact, link and status row is
   printed for every entry, with "not on file" where the dataset holds the empty value.
   A new schema key that a reader should see gets a row there.

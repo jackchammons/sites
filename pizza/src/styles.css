@@ -20,23 +20,6 @@
   --amber: #e2b64a;
   --char: #8a6a5a;
   --radius: 14px;
-  /* One colour per directory category, for its header dot, its toggle and
-     its pins. The same value serves both schemes, because a pin sits on a
-     light map whatever the page's palette is, and the toggle beside it has to
-     match. Two families: the three hues a pizzeria on file can have are told
-     apart with or without full colour vision, and so are the four a place not
-     on file can have; between the families the mark differs (a filled dot or
-     a ring), so a colour is never the only thing that tells two apart. Closed
-     is a neutral on purpose. */
-  --cat-ranked: #d95926;
-  --cat-unrated: #3987e5;
-  --cat-opening: #199e70;
-  --cat-closed: #716b66;
-  --cat-pending: #ac9016;
-  --cat-chain: #a670f3;
-  --cat-not-pizza: #b72494;
-  --cat-unverifiable: #4c701a;
-  --cat-set-aside: #716b66;
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -64,7 +47,11 @@ body {
 a { color: var(--tomato-2); }
 h1, h2, h3, h4 { line-height: 1.15; margin: 0; letter-spacing: -0.02em; }
 
-.wrap { width: min(1280px, 94vw); margin: 0 auto; }
+/* The content column. It grows with the window up to 1600px and keeps a
+   gutter of three hundredths of the width each side, so a wide monitor is
+   used; running prose has a measure of its own (.lede, .method-p) and does
+   not stretch with it. */
+.wrap { width: min(1600px, 94vw); margin: 0 auto; }
 .section { padding: 48px 0; border-top: 1px solid var(--line-soft); }
 .eyebrow {
   font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
@@ -196,6 +183,15 @@ h1, h2, h3, h4 { line-height: 1.15; margin: 0; letter-spacing: -0.02em; }
 .card h3 a { color: inherit; text-decoration: none; border-bottom: 1px solid transparent; }
 .card h3 a:hover { color: var(--tomato-2); border-bottom-color: currentColor; }
 .card { scroll-margin-top: 64px; }
+/* A wide screen holds two cards to a row: the ranking reads across, then
+   down. The two cards of a row are one height, each with its "why it ranks"
+   bar along its foot. */
+@media (min-width: 1500px) {
+  .board { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .board .card { display: flex; flex-direction: column; }
+  .board .card .chips { flex: 1 0 auto; align-content: flex-start; padding-bottom: 18px; }
+  .board .card details.math { margin-top: 0; }
+}
 .meta { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); margin-top: 5px; }
 .meta em { color: var(--crust); font-style: normal; }
 
@@ -308,6 +304,9 @@ table.calc tr.sum td, table.calc tr.sum th { border-top: 1px solid var(--line); 
 /* Two cards to a row at most: four across left each formula block narrower
    than the formula in it. */
 .grid2 { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); margin-top: 26px; }
+/* On a wide screen auto-fit would make it three and leave the fourth alone on
+   a row of its own. */
+@media (min-width: 1400px) { .grid2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .mcard { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
 .mcard h4 { font-size: 16px; margin: 0 0 10px; line-height: 1.15; letter-spacing: -0.02em; }
 .mcard p { font-size: 14px; color: var(--ink-2); margin: 0 0 10px; }
@@ -646,7 +645,6 @@ footer p { max-width: 72ch; }
    many it holds and the rule in a line, so a closed one still says what is
    in it. overflow is clip, not hidden: the corners are rounded and a table
    header inside still sticks to the window. */
-[data-cat="ranked"] { --cat: var(--cat-ranked); }
 [data-cat="unrated"] { --cat: var(--cat-unrated); }
 [data-cat="opening"] { --cat: var(--cat-opening); }
 [data-cat="closed"] { --cat: var(--cat-closed); }
@@ -655,13 +653,28 @@ footer p { max-width: 72ch; }
 [data-cat="not-pizza"] { --cat: var(--cat-not-pizza); }
 [data-cat="unverifiable"] { --cat: var(--cat-unverifiable); }
 [data-cat="set-aside"] { --cat: var(--cat-set-aside); }
+/* A category's swatch is a small pin: its colour (the palette is written into
+   the page from src/palette.js as --cat-* and --rank-ramp), with the pin's
+   dark line round it. */
 .dg-dot, .cat-dot {
   flex: none; display: inline-block; width: 11px; height: 11px; border-radius: 50%;
-  background: var(--cat, var(--char));
+  background: var(--cat, var(--char)); box-shadow: 0 0 0 1px var(--pin-line);
 }
-/* A place that is not on file is a ring, in the list as on the map. */
+/* A place that is not on file is a hollow pin, in the list as on the map. */
 :is([data-cat="pending"], [data-cat="chain"], [data-cat="not-pizza"], [data-cat="unverifiable"], [data-cat="set-aside"]) :is(.dg-dot, .cat-dot) {
-  background: none; box-shadow: inset 0 0 0 3px var(--cat);
+  background: #fff; box-shadow: inset 0 0 0 3px var(--cat);
+}
+/* The ranked category has no one colour: its pins run from blue at the
+   lowest rank to red at #1, so its swatch is that ramp, with the two ranks
+   it runs between at its ends. */
+.cat-ramp { flex: none; display: inline-flex; align-items: center; gap: 4px; }
+.cat-ramp span { width: 34px; height: 9px; border-radius: 5px; background: var(--rank-ramp); box-shadow: 0 0 0 1px var(--pin-line); }
+.cat-ramp i { font: 400 9.5px/1 var(--mono); font-style: normal; color: var(--ink-3); }
+/* The same colour beside a ranked row's number, so a row can be matched to
+   its pin. app.js sets --rank on the number; without it there is no dot. */
+.dir-rank[style]::before {
+  content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px;
+  background: var(--rank); box-shadow: 0 0 0 1px var(--pin-line); vertical-align: 0;
 }
 .dg {
   border: 1px solid var(--line); border-radius: var(--radius);
@@ -694,6 +707,9 @@ footer p { max-width: 72ch; }
 .dg-head .buzz-head { margin-top: 0; }
 .dg-head .method-p { margin-bottom: 4px; }
 .dir-empty { margin: 4px 0 0; font-size: 14px; }
+/* During a search the list is the matches: each category keeps its heading
+   and its rows, and its explanation waits until the search is cleared. */
+.dir-list.is-searching :is(.dg-about, .dg-unmapped) { display: none; }
 @media (max-width: 720px) {
   .dg > summary { padding-right: 12px; }
   .dg-rule { flex-basis: 100%; margin-left: 0; }
@@ -727,7 +743,7 @@ footer p { max-width: 72ch; }
 /* On: the chip is filled and its dot is the pin's. Off: the dot is hollowed
    out, as its pins are off the map. */
 .cat-chip[aria-pressed="true"] { color: var(--ink); background: var(--panel-2); border-color: var(--char); }
-.cat-chip[aria-pressed="false"] .cat-dot { opacity: .45; }
+.cat-chip[aria-pressed="false"] :is(.cat-dot, .cat-ramp span) { opacity: .45; }
 .cat-chip:hover { border-color: var(--tomato); }
 .cat-chip:disabled { opacity: .45; cursor: default; border-color: var(--line); }
 .cat-chip:focus-visible, .dir-act:focus-visible { outline: 2px solid var(--tomato-2); outline-offset: 2px; }
@@ -755,9 +771,13 @@ footer p { max-width: 72ch; }
   /* Below the sticky nav, not under it: the same offset anchors scroll to.
      The rail is the toggles, the map and the legend note, and all three have
      to fit the window, so the map takes what the other two leave. */
-  .dir-rail { position: sticky; top: 64px; }
-  .dir-pin { position: relative; display: flex; flex-direction: column; gap: 12px; }
-  .dir-rail .dir-map { height: clamp(240px, calc(100vh - 64px - var(--tools-h, 190px) - 124px), 640px); }
+  .dir-layout.has-map .dir-rail {
+    position: sticky; top: 64px; display: flex; flex-direction: column;
+    height: calc(100vh - 64px - 14px); max-height: 1040px;
+  }
+  .dir-pin { position: relative; flex: 1 0 auto; display: flex; flex-direction: column; gap: 12px; }
+  .dir-rail .dir-map { flex: 1 1 0; height: auto; min-height: 220px; }
+  .dir-rail .dir-map-note { flex: none; }
   /* The table shares the row with the map: tighter cells so all six columns
      sit inside the column without resting in a scrolled-off state. */
   .dir-table { font-size: 12.5px; }
@@ -767,7 +787,6 @@ footer p { max-width: 72ch; }
      whole window's height, and the table falls back to the two-line rows the
      narrow layout uses, since six columns no longer fit beside it. */
   .dir-layout.has-map.map-large { grid-template-columns: minmax(340px, 1fr) minmax(0, 1.7fr); }
-  .dir-layout.map-large .dir-rail .dir-map { height: max(320px, calc(100vh - 64px - var(--tools-h, 120px) - 104px)); }
   .dir-layout.map-large .dir-table th:nth-child(3), .dir-layout.map-large .dir-table th:nth-child(4),
   .dir-layout.map-large .dir-table th:nth-child(6),
   .dir-layout.map-large .dir-style, .dir-layout.map-large .dir-attrs,
@@ -782,13 +801,12 @@ footer p { max-width: 72ch; }
   .dir-layout.map-large .dd { grid-template-columns: 1fr; }
   .dir-layout.map-large .dg-rule { flex-basis: 100%; margin-left: 0; }
 
-  .leaflet-control.map-grow {
-    font: 500 12px/1 var(--mono); color: var(--ink); background: var(--panel);
-    border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; cursor: pointer;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, .18);
-  }
-  .map-grow:hover { border-color: var(--tomato); }
-  .map-grow:focus-visible { outline: 2px solid var(--tomato-2); outline-offset: 2px; }
+}
+/* With room to spare the map takes two fifths of the row, not a rail's
+   width: the table has its six columns either way, and the map is where the
+   extra width shows. */
+@media (min-width: 1500px) {
+  .dir-layout.has-map { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
 }
 /* The button belongs to the side-by-side layout; pinned above the list the
    map already spans the screen. */
@@ -827,13 +845,16 @@ footer p { max-width: 72ch; }
     padding-bottom: 8px; background: var(--bg);
   }
   .dir-layout.has-map .dir-tools { padding: 8px 0; }
-  .dir-layout.has-map .dir-q { min-height: 38px; padding: 6px 12px; }
-  .dir-layout.has-map .dir-cats {
+  /* The toggles are one row here whether or not there is a map: stacked in
+     rows they would take a third of a phone's screen for as long as they are
+     pinned. */
+  .dir-layout.has-tools .dir-q { min-height: 38px; padding: 6px 12px; }
+  .dir-layout.has-tools .dir-cats {
     flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
     margin: 0 -3vw; padding: 2px 3vw;
   }
-  .dir-layout.has-map .dir-cats::-webkit-scrollbar { display: none; }
-  .dir-layout.has-map .dir-acts { flex: none; flex-basis: auto; flex-wrap: nowrap; padding: 0 0 0 6px; }
+  .dir-layout.has-tools .dir-cats::-webkit-scrollbar { display: none; }
+  .dir-layout.has-tools .dir-acts { flex: none; flex-basis: auto; flex-wrap: nowrap; padding: 0 0 0 6px; }
   .dir-layout.has-map .dir-map { height: var(--map-h); }
   .dir-layout.has-map .dir-map-note { order: 1; margin-top: 0; }
   .dir-layout.has-map .dir-table thead th { top: calc(47px + var(--tools-h, 0px) + var(--map-h) + 8px); }
@@ -999,27 +1020,43 @@ a.buzz-tag:hover { border-color: var(--tomato); color: var(--tomato-2); }
 .map-pop { font: 13px/1.5 system-ui, sans-serif; }
 .map-pop b a { color: inherit; }
 .map-pop .addr { font-size: 11.5px; color: #666; margin-top: 2px; }
-/* A pin takes its category's colour from its class, so it is the colour of
-   that category's toggle by construction. Filled for a pizzeria on file; a
-   ring for a place that is not. */
-.pin { fill: var(--pin, var(--char)); fill-opacity: .92; stroke: #fff; stroke-width: 1.5px; }
-.pin-ranked { --pin: var(--cat-ranked); }
-.pin-unrated { --pin: var(--cat-unrated); }
-.pin-opening { --pin: var(--cat-opening); }
-.pin-closed { --pin: var(--cat-closed); }
-.pin-pending { --pin: var(--cat-pending); }
-.pin-chain { --pin: var(--cat-chain); }
-.pin-not-pizza { --pin: var(--cat-not-pizza); }
-.pin-unverifiable { --pin: var(--cat-unverifiable); }
-.pin-set-aside { --pin: var(--cat-set-aside); }
-.pin.pin-ring { fill: #fff; fill-opacity: .9; stroke: var(--pin, var(--char)); stroke-width: 3px; }
 .map-empty {
-  position: absolute; left: 12px; right: 12px; bottom: 34px; z-index: 500; margin: 0;
+  position: absolute; left: 12px; right: 12px; bottom: 40%; z-index: 500; margin: 0 auto; max-width: 320px;
   padding: 8px 12px; border-radius: 8px; font: 12.5px/1.45 var(--sans); text-align: center;
   color: #23180f; background: rgba(255, 253, 250, .92); box-shadow: 0 1px 4px rgba(0, 0, 0, .18);
   pointer-events: none;
 }
-
+/* "Show my location": a control of the map's own, with a line under it for
+   what happened. The map is always light, so these are light in both
+   palettes. The map's buttons share one row in its top right corner (Leaflet
+   would stack them), which leaves a popup the rest of the map. */
+#map .leaflet-top.leaflet-right .leaflet-control { clear: none; }
+.map-locate { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; max-width: min(240px, 60vw); }
+.map-locate button, .leaflet-control.map-grow {
+  font: 500 12px/1 var(--mono); color: #23180f; background: #fffdfa;
+  border: 1px solid #c9bba8; border-radius: 8px; padding: 8px 10px; cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .18);
+}
+.map-locate button:hover, .map-grow:hover { border-color: #c8341f; }
+.map-locate button:focus-visible, .map-grow:focus-visible { outline: 2px solid #b93018; outline-offset: 2px; }
+.map-locate-msg {
+  font: 12px/1.4 var(--sans); color: #23180f; background: rgba(255, 253, 250, .94);
+  border-radius: 8px; padding: 6px 9px; box-shadow: 0 1px 4px rgba(0, 0, 0, .18); text-align: left;
+}
+.map-locate-msg:empty { display: none; }
+/* The reader's own position: a diamond, which no pizzeria's pin is, with a
+   ring that pulses outward from it. */
+.map-me { pointer-events: none; }
+.map-me-dot {
+  position: absolute; inset: 3px; transform: rotate(45deg); border-radius: 2px;
+  background: #111; border: 2.5px solid #fff; box-shadow: 0 0 0 1.5px #111, 0 1px 5px rgba(0, 0, 0, .45);
+}
+.map-me::after {
+  content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 2px solid #111;
+  animation: map-me-pulse 2.2s ease-out infinite;
+}
+@keyframes map-me-pulse { from { transform: scale(.45); opacity: .7; } to { transform: scale(1.5); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .map-me::after { animation: none; opacity: .5; transform: none; } }
 
 /* ---- Desktop: the sections use the width ---- */
 @media (min-width: 1200px) {

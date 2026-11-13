@@ -24,7 +24,7 @@ export function writeDist(dist, ctx, html) {
   fs.writeFileSync(path.join(dist, 'index.html'), html);
   // Every module app.js can reach at runtime. Missing one is a 404 in the
   // browser; verify.mjs walks the import graph to catch it.
-  for (const f of ['app.js', 'search.js']) {
+  for (const f of ['app.js', 'search.js', 'palette.js']) {
     fs.copyFileSync(path.join(root, 'src', f), path.join(dist, f));
   }
   // app.js fetches this one itself, when the map is about to be seen.
