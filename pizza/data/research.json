@@ -1,6 +1,19 @@
 {
   "updated": "2026-11-13T00:00:00Z",
-  "rejected": [
-    "servesPizza[0]: \"4920 S Genesee St, Seattle, WA 98118\" is already on file as Seward Park Pizza"
+  "servesPizza": [
+    {
+      "name": "That's Amore Italian Cafe",
+      "address": "1425 31st Ave S, Seattle, WA 98144",
+      "neighborhood": "Mount Baker",
+      "note": "An Italian restaurant and cafe on Mount Baker Ridge known for pasta and classic Italian fare; its menu includes a dedicated pizza section with six wood-style pies such as Margherita, Pepperoni, Roma, and Vegetali.",
+      "source": "https://thatsamoreseattle.com/thats-amore-italian-cafe-main-menu/"
+    },
+    {
+      "name": "Hatback Bar & Grille",
+      "address": "1201 1st Ave S, Seattle, WA 98134",
+      "neighborhood": "SoDo",
+      "note": "A sports bar and grille near the SoDo stadiums serving burgers, wings, and Pacific Northwest seafood; pizza is one of its game-day menu items alongside those dishes.",
+      "source": "https://hatback.getbento.com/hatback-bar-and-grille"
+    }
   ]
 }

@@ -2,7 +2,7 @@
   "updated": "2026-11-12T05:30:31.005Z",
   "checked": "2026-11-12T05:30:31.005Z",
   "cutoffMonths": 30,
-  "servesCursor": 32,
+  "servesCursor": 36,
   "candidates": [
     {
       "key": "dominos|714",
@@ -1997,6 +1997,34 @@
       "resolvedDate": "2026-11-13",
       "lat": 47.70192,
       "lon": -122.32553
+    },
+    {
+      "key": "thats amore italian|1425",
+      "name": "That's Amore Italian Cafe",
+      "address": "1425 31st Ave S, Seattle, WA 98144",
+      "neighborhood": "Mount Baker",
+      "sources": [
+        "research"
+      ],
+      "status": "rejected",
+      "verdict": "not-pizza",
+      "note": "An Italian restaurant and cafe on Mount Baker Ridge known for pasta and classic Italian fare; its menu includes a dedicated pizza section with six wood-style pies such as Margherita, Pepperoni, Roma, and Vegetali.",
+      "resolutionSource": "https://thatsamoreseattle.com/thats-amore-italian-cafe-main-menu/",
+      "resolvedDate": "2026-11-13"
+    },
+    {
+      "key": "hatback bar grille|1201",
+      "name": "Hatback Bar & Grille",
+      "address": "1201 1st Ave S, Seattle, WA 98134",
+      "neighborhood": "SoDo",
+      "sources": [
+        "research"
+      ],
+      "status": "rejected",
+      "verdict": "not-pizza",
+      "note": "A sports bar and grille near the SoDo stadiums serving burgers, wings, and Pacific Northwest seafood; pizza is one of its game-day menu items alongside those dishes.",
+      "resolutionSource": "https://hatback.getbento.com/hatback-bar-and-grille",
+      "resolvedDate": "2026-11-13"
     }
   ]
 }
