@@ -2058,7 +2058,9 @@
       "verdict": "not-pizza",
       "note": "A slightly upscale Fremont trattoria serving pastas, small plates and steaks, where the wood-fired pizzas, served with a spicy chili oil, are called out by reviewers as the kitchen's strongest dishes.",
       "resolutionSource": "https://www.theinfatuation.com/seattle/reviews/swel",
-      "resolvedDate": "2026-11-13"
+      "resolvedDate": "2026-11-13",
+      "lat": 47.65047,
+      "lon": -122.35148
     },
     {
       "key": "trailbend taproom|1118",
@@ -2072,7 +2074,9 @@
       "verdict": "not-pizza",
       "note": "A Ballard craft-beer taproom with dozens of rotating taps whose kitchen runs a Wood Stone oven for wood-fired pizzas and flatbreads alongside sandwiches and salads.",
       "resolutionSource": "https://www.architectmagazine.com/?p=217333",
-      "resolvedDate": "2026-11-13"
+      "resolvedDate": "2026-11-13",
+      "lat": 47.66525,
+      "lon": -122.37162
     }
   ]
 }
