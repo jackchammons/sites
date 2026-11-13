@@ -1914,7 +1914,9 @@
       "verdict": "not-pizza",
       "note": "A long-running Montlake Italian restaurant known for handmade pasta that also bakes thin-crust, apple-wood-fired pizzas (such as a goat cheese and caramelized onion pie and a classic marinara and mozzarella pie); it was an early Seattle adopter of wood-fired pizza.",
       "resolutionSource": "https://www.cafelago.com",
-      "resolvedDate": "2026-11-13"
+      "resolvedDate": "2026-11-13",
+      "lat": 47.6397,
+      "lon": -122.30235
     }
   ]
 }
