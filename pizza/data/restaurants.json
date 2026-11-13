@@ -8263,6 +8263,55 @@
       "factsNote": "Own site gave styleGroup (reported, 'Custom Fusion Pizza Kitchen'). No price list is shown, no opened year is stated, and the page names only rotating seasonal specials rather than a signature pizza, so those stay unconfirmed.",
       "socialAttempted": null,
       "socialNote": null
+    },
+    {
+      "id": "the-masonry",
+      "name": "The Masonry",
+      "neighborhood": "Queen Anne",
+      "neighborhoodIsPlaceholder": null,
+      "blurb": "A wood-fired pizza and craft beer bar in Lower Queen Anne that makes a small menu of thin-crust pies.",
+      "style": "wood-fired pizza",
+      "styleSource": null,
+      "styleGroup": null,
+      "styleGroupSource": null,
+      "signature": null,
+      "signatureSource": null,
+      "opened": null,
+      "openedSource": null,
+      "priceIndex": null,
+      "priceSource": null,
+      "attributes": {},
+      "url": null,
+      "instagram": null,
+      "status": "open",
+      "statusPrev": null,
+      "statusNote": null,
+      "statusSource": "https://www.seattlemet.com/restaurants/the-masonry",
+      "statusDate": null,
+      "statusDetected": "2026-11-13",
+      "statusChecked": "2026-11-13",
+      "locations": [
+        {
+          "neighborhood": "Queen Anne",
+          "address": "20 Roy St, Seattle, WA 98109"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "locationsAttempted": null,
+      "locationsNote": null,
+      "factors": {},
+      "lastVerified": null,
+      "ratingAttempted": null,
+      "ratingNote": null,
+      "mentions": [],
+      "coverageAttempted": null,
+      "coverageNote": null,
+      "factsAttempted": null,
+      "factsSought": [],
+      "factsNote": null,
+      "socialAttempted": null,
+      "socialNote": null
     }
   ]
 }

@@ -1,19 +1,23 @@
 {
-  "updated": "2026-11-13T19:00:00Z",
+  "updated": "2026-11-13T00:00:00Z",
   "servesPizza": [
     {
-      "name": "Stoneburner",
-      "address": "5214 Ballard Ave NW, Seattle, WA 98107",
-      "neighborhood": "Ballard",
-      "note": "An Italian restaurant and bar on the ground floor of Hotel Ballard whose menu centers on housemade pasta and vegetable dishes, with a rotating seasonal wood-fired pizza (e.g. winter squash, basil, and imported white cheese) alongside it.",
-      "source": "https://www.stoneburnerseattle.com/"
-    },
+      "name": "Messina Modern Italian Kitchen",
+      "address": "23 Mercer St, Seattle, WA 98109",
+      "neighborhood": "Queen Anne",
+      "note": "A modern Italian restaurant in Lower Queen Anne built around pasta and antipasti; its menu also includes a pizza topped with hot honey, pepperoni, and cheese.",
+      "source": "https://theinfatuation.com/seattle/reviews/messina-modern-italian-kitchen"
+    }
+  ],
+  "directory": [
     {
-      "name": "Petoskey's",
-      "address": "125 N 36th St, Seattle, WA 98103",
-      "neighborhood": "Fremont",
-      "note": "A Fremont neighborhood sports bar with an Upper Midwest-leaning menu of hoagies, cheese curds, and beer that also serves a thin-crust \"Midwest Tavern Style\" pizza, available whole or by the slice.",
-      "source": "https://petoskeysbar.com"
+      "name": "The Masonry",
+      "neighborhood": "Queen Anne",
+      "style": "wood-fired pizza",
+      "status": "open",
+      "note": "A wood-fired pizza and craft beer bar in Lower Queen Anne that makes a small menu of thin-crust pies.",
+      "source": "https://www.seattlemet.com/restaurants/the-masonry",
+      "address": "20 Roy St, Seattle, WA 98109"
     }
   ]
 }

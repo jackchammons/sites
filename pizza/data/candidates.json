@@ -2,7 +2,7 @@
   "updated": "2026-11-12T05:30:31.005Z",
   "checked": "2026-11-12T05:30:31.005Z",
   "cutoffMonths": 30,
-  "servesCursor": 4,
+  "servesCursor": 8,
   "candidates": [
     {
       "key": "dominos|714",
@@ -1757,6 +1757,20 @@
       "resolvedDate": "2026-11-13",
       "lat": 47.65247,
       "lon": -122.3566
+    },
+    {
+      "key": "messina modern italian kitchen|23",
+      "name": "Messina Modern Italian Kitchen",
+      "address": "23 Mercer St, Seattle, WA 98109",
+      "neighborhood": "Queen Anne",
+      "sources": [
+        "research"
+      ],
+      "status": "rejected",
+      "verdict": "not-pizza",
+      "note": "A modern Italian restaurant in Lower Queen Anne built around pasta and antipasti; its menu also includes a pizza topped with hot honey, pepperoni, and cheese.",
+      "resolutionSource": "https://theinfatuation.com/seattle/reviews/messina-modern-italian-kitchen",
+      "resolvedDate": "2026-11-13"
     }
   ]
 }
