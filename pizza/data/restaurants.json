@@ -8293,7 +8293,9 @@
       "locations": [
         {
           "neighborhood": "Queen Anne",
-          "address": "20 Roy St, Seattle, WA 98109"
+          "address": "20 Roy St, Seattle, WA 98109",
+          "lat": 47.62555,
+          "lon": -122.35572
         }
       ],
       "locationsVerified": null,

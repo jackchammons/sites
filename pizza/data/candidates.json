@@ -1770,7 +1770,9 @@
       "verdict": "not-pizza",
       "note": "A modern Italian restaurant in Lower Queen Anne built around pasta and antipasti; its menu also includes a pizza topped with hot honey, pepperoni, and cheese.",
       "resolutionSource": "https://theinfatuation.com/seattle/reviews/messina-modern-italian-kitchen",
-      "resolvedDate": "2026-11-13"
+      "resolvedDate": "2026-11-13",
+      "lat": 47.62444,
+      "lon": -122.35563
     }
   ]
 }

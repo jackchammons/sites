@@ -6542,8 +6542,8 @@
         "sopranos-antico": 52,
         "pizza-ritual": 53,
         "pazzos-on-eastlake": 54,
-        "g-h-pasta-pizza": 55,
-        "managers-pizza": 56,
+        "managers-pizza": 55,
+        "g-h-pasta-pizza": 56,
         "coltiva-pizzeria-e-barra": 57,
         "hot-mamas-pizza": 58,
         "varlamos-pizzeria": 59,
@@ -6568,7 +6568,7 @@
       },
       "scores": {
         "a-k-pizza": 88.9,
-        "delancey": 87.6,
+        "delancey": 87.5,
         "dinos-tomato-pie": 85.1,
         "post-alley-pizza": 83.1,
         "proletariat-pizza": 82.4,
@@ -6621,8 +6621,8 @@
         "sopranos-antico": 64.9,
         "pizza-ritual": 64,
         "pazzos-on-eastlake": 64,
-        "g-h-pasta-pizza": 63.7,
         "managers-pizza": 63.7,
+        "g-h-pasta-pizza": 63.6,
         "coltiva-pizzeria-e-barra": 63.6,
         "hot-mamas-pizza": 63.5,
         "varlamos-pizzeria": 62.4,
@@ -7078,20 +7078,20 @@
           "value": 6,
           "penalty": 0
         },
-        "g-h-pasta-pizza": {
-          "reputation": 1.7,
-          "critical": 6.6,
-          "craft": 6.5,
-          "distinctiveness": 5.5,
-          "value": 6.9,
-          "penalty": 0
-        },
         "managers-pizza": {
           "reputation": 2.5,
           "critical": 6,
           "craft": 6,
           "distinctiveness": 6.5,
           "value": 7.2,
+          "penalty": 0
+        },
+        "g-h-pasta-pizza": {
+          "reputation": 1.7,
+          "critical": 6.6,
+          "craft": 6.5,
+          "distinctiveness": 5.5,
+          "value": 6.9,
           "penalty": 0
         },
         "coltiva-pizzeria-e-barra": {
