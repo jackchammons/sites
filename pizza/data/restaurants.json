@@ -8149,7 +8149,9 @@
       "locations": [
         {
           "neighborhood": "West Seattle",
-          "address": "7500 35th Ave SW, Seattle, WA 98126"
+          "address": "7500 35th Ave SW, Seattle, WA 98126",
+          "lat": 47.53536,
+          "lon": -122.37619
         }
       ],
       "locationsVerified": "2026-11-15",
@@ -8349,7 +8351,9 @@
       "locations": [
         {
           "neighborhood": "Pike Place Market",
-          "address": "85 Pike St #410, Seattle, WA 98101"
+          "address": "85 Pike St #410, Seattle, WA 98101",
+          "lat": 47.60876,
+          "lon": -122.34056
         }
       ],
       "locationsVerified": "2026-11-15",
