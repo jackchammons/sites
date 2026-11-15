@@ -485,8 +485,8 @@
       ],
       "locationsVerified": "2026-08-22",
       "locationsSource": "https://www.seriouspieseattle.com/",
-      "locationsAttempted": null,
-      "locationsNote": null,
+      "locationsAttempted": "2026-11-15",
+      "locationsNote": "seriouspieseattle.com's homepage names three branches (Downtown Seattle, Ballard, Totem Lake) but gives no street addresses; the /locations and /visit sub-pages both returned 404 this pass, so current addresses could not be reconfirmed from the official site.",
       "factors": {
         "craft": {
           "value": 7.5,
@@ -8138,7 +8138,7 @@
       "priceSource": "https://www.westsideseattle.com/node/59507",
       "attributes": {},
       "url": "https://ghpastapizza.com",
-      "instagram": null,
+      "instagram": "https://www.instagram.com/ghpastapizza/",
       "status": "open",
       "statusPrev": null,
       "statusNote": null,
@@ -8148,16 +8148,14 @@
       "statusChecked": "2026-11-12",
       "locations": [
         {
-          "neighborhood": "Phinney Ridge",
-          "address": "6726 Greenwood Ave N, Seattle, WA 98103",
-          "lat": 47.67851,
-          "lon": -122.35511
+          "neighborhood": "West Seattle",
+          "address": "7500 35th Ave SW, Seattle, WA 98126"
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
-      "locationsAttempted": null,
-      "locationsNote": null,
+      "locationsVerified": "2026-11-15",
+      "locationsSource": "https://ghpastapizza.com/locations",
+      "locationsAttempted": "2026-11-15",
+      "locationsNote": "ghpastapizza.com/locations names Phinney Ridge and Suncadia branches alongside West Seattle, but states no street address for either. Searches found a Phinney Ridge address (6726 Greenwood Ave N) only on third-party directories (Atly, WhatNow), not the pizzeria's own site, so it's unconfirmed. Suncadia is outside the Puget Sound region and excluded regardless.",
       "factors": {
         "craft": {
           "value": 6.5,
@@ -8234,7 +8232,7 @@
       "priceSource": null,
       "attributes": {},
       "url": "https://pizzatwist.com",
-      "instagram": null,
+      "instagram": "https://www.instagram.com/pizzatwist_usa",
       "status": "open",
       "statusPrev": null,
       "statusNote": null,
@@ -8252,8 +8250,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "locationsAttempted": null,
-      "locationsNote": null,
+      "locationsAttempted": "2026-11-15",
+      "locationsNote": "pizzatwist.com and its /locations store-locator page list only the states Pizza Twist operates in (Washington among them) with no street addresses; the locator is a dynamic app not captured by a static fetch. Searches for WA branch addresses (Redmond, Seattle U-District, Puyallup, Kent, Bothell) returned only third-party listings (Frankiapp, Uber Eats, BBB), not acceptable sources, so no address could be confirmed on the official site.",
       "factors": {},
       "lastVerified": null,
       "ratingAttempted": "2026-11-13",
@@ -8285,11 +8283,11 @@
       "signatureSource": null,
       "opened": null,
       "openedSource": null,
-      "priceIndex": null,
-      "priceSource": null,
+      "priceIndex": 4,
+      "priceSource": "https://themasonryseattle.com/queen-anne",
       "attributes": {},
-      "url": null,
-      "instagram": null,
+      "url": "https://themasonryseattle.com",
+      "instagram": "https://www.instagram.com/themasonrypizza/",
       "status": "open",
       "statusPrev": null,
       "statusNote": null,
@@ -8307,8 +8305,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "locationsAttempted": null,
-      "locationsNote": null,
+      "locationsAttempted": "2026-11-15",
+      "locationsNote": "themasonryseattle.com (shared with sister concept Fast Fashion) and its /the-masonry, /queen-anne, and /contact pages all name the Queen Anne branch at 20 Roy St., Seattle, WA, but none state a ZIP code, so the address could not be confirmed in the required format.",
       "factors": {},
       "lastVerified": null,
       "ratingAttempted": null,
@@ -8339,7 +8337,7 @@
       "priceIndex": null,
       "priceSource": null,
       "attributes": {},
-      "url": null,
+      "url": "https://thealibiroom.com",
       "instagram": null,
       "status": "open",
       "statusPrev": null,
@@ -8350,14 +8348,12 @@
       "statusChecked": "2026-11-13",
       "locations": [
         {
-          "neighborhood": "Downtown",
-          "address": "85 Pike St Ste 410, Seattle, WA 98101",
-          "lat": 47.60961,
-          "lon": -122.34165
+          "neighborhood": "Pike Place Market",
+          "address": "85 Pike St #410, Seattle, WA 98101"
         }
       ],
-      "locationsVerified": null,
-      "locationsSource": null,
+      "locationsVerified": "2026-11-15",
+      "locationsSource": "https://thealibiroom.com",
       "locationsAttempted": null,
       "locationsNote": null,
       "factors": {},
