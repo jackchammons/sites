@@ -8402,7 +8402,9 @@
       "locations": [
         {
           "neighborhood": "West Seattle",
-          "address": "4521 California Ave SW, Seattle, WA 98116"
+          "address": "4521 California Ave SW, Seattle, WA 98116",
+          "lat": 47.56228,
+          "lon": -122.38703
         }
       ],
       "locationsVerified": null,
