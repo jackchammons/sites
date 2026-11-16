@@ -8372,6 +8372,55 @@
       "factsNote": null,
       "socialAttempted": null,
       "socialNote": null
+    },
+    {
+      "id": "supreme",
+      "name": "Supreme",
+      "neighborhood": "West Seattle",
+      "neighborhoodIsPlaceholder": null,
+      "blurb": "Mark Fuller's no-frills pizza bar in the West Seattle Junction, serving whole pies and slices with beer and liquor, in the former Pellegrini's Italian Market space.",
+      "style": "New York-style, Detroit-style",
+      "styleSource": null,
+      "styleGroup": null,
+      "styleGroupSource": null,
+      "signature": null,
+      "signatureSource": null,
+      "opened": null,
+      "openedSource": null,
+      "priceIndex": null,
+      "priceSource": null,
+      "attributes": {},
+      "url": "https://www.supreme.bar/",
+      "instagram": null,
+      "status": "open",
+      "statusPrev": null,
+      "statusNote": null,
+      "statusSource": "https://westseattleblog.com/2017/11/west-seattle-restaurants-opening-night-for-supreme",
+      "statusDate": null,
+      "statusDetected": "2026-11-16",
+      "statusChecked": "2026-11-16",
+      "locations": [
+        {
+          "neighborhood": "West Seattle",
+          "address": "4521 California Ave SW, Seattle, WA 98116"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "locationsAttempted": null,
+      "locationsNote": null,
+      "factors": {},
+      "lastVerified": null,
+      "ratingAttempted": null,
+      "ratingNote": null,
+      "mentions": [],
+      "coverageAttempted": null,
+      "coverageNote": null,
+      "factsAttempted": null,
+      "factsSought": [],
+      "factsNote": null,
+      "socialAttempted": null,
+      "socialNote": null
     }
   ]
 }

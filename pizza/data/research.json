@@ -1,83 +1,15 @@
 {
-  "updated": "2026-11-15T18:00:00.000Z",
-  "locations": [
+  "updated": "2026-11-16T12:00:00.000Z",
+  "directory": [
     {
-      "id": "g-h-pasta-pizza",
-      "homepage": "https://ghpastapizza.com",
-      "source": "https://ghpastapizza.com/locations",
-      "sites": [
-        {
-          "neighborhood": "West Seattle",
-          "address": "7500 35th Ave SW, Seattle, WA 98126"
-        }
-      ]
-    },
-    {
-      "id": "alibi-room",
-      "homepage": "https://thealibiroom.com",
-      "source": "https://thealibiroom.com",
-      "sites": [
-        {
-          "neighborhood": "Pike Place Market",
-          "address": "85 Pike St #410, Seattle, WA 98101"
-        }
-      ]
-    }
-  ],
-  "locationsSkipped": [
-    {
-      "id": "g-h-pasta-pizza",
-      "note": "ghpastapizza.com/locations names Phinney Ridge and Suncadia branches alongside West Seattle, but states no street address for either. Searches found a Phinney Ridge address (6726 Greenwood Ave N) only on third-party directories (Atly, WhatNow), not the pizzeria's own site, so it's unconfirmed. Suncadia is outside the Puget Sound region and excluded regardless."
-    },
-    {
-      "id": "pizza-twist",
-      "note": "pizzatwist.com and its /locations store-locator page list only the states Pizza Twist operates in (Washington among them) with no street addresses; the locator is a dynamic app not captured by a static fetch. Searches for WA branch addresses (Redmond, Seattle U-District, Puyallup, Kent, Bothell) returned only third-party listings (Frankiapp, Uber Eats, BBB), not acceptable sources, so no address could be confirmed on the official site."
-    },
-    {
-      "id": "the-masonry",
-      "note": "themasonryseattle.com (shared with sister concept Fast Fashion) and its /the-masonry, /queen-anne, and /contact pages all name the Queen Anne branch at 20 Roy St., Seattle, WA, but none state a ZIP code, so the address could not be confirmed in the required format."
-    },
-    {
-      "id": "serious-pie",
-      "note": "seriouspieseattle.com's homepage names three branches (Downtown Seattle, Ballard, Totem Lake) but gives no street addresses; the /locations and /visit sub-pages both returned 404 this pass, so current addresses could not be reconfirmed from the official site."
-    }
-  ],
-  "links": [
-    {
-      "id": "g-h-pasta-pizza",
-      "website": "https://ghpastapizza.com",
-      "instagram": "https://www.instagram.com/ghpastapizza/",
-      "source": "https://ghpastapizza.com"
-    },
-    {
-      "id": "pizza-twist",
-      "website": "https://pizzatwist.com",
-      "instagram": "https://www.instagram.com/pizzatwist_usa",
-      "source": "https://pizzatwist.com"
-    },
-    {
-      "id": "alibi-room",
-      "website": "https://thealibiroom.com",
-      "source": "https://thealibiroom.com"
-    },
-    {
-      "id": "the-masonry",
-      "website": "https://themasonryseattle.com",
-      "instagram": "https://www.instagram.com/themasonrypizza/",
-      "source": "https://themasonryseattle.com/queen-anne"
-    },
-    {
-      "id": "serious-pie",
-      "website": "https://www.seriouspieseattle.com/",
-      "instagram": "https://www.instagram.com/seriouspieseattle/",
-      "source": "https://www.seriouspieseattle.com/"
-    }
-  ],
-  "facts": [
-    {
-      "id": "the-masonry",
-      "priceIndex": 4,
-      "source": "https://themasonryseattle.com/queen-anne"
+      "name": "Supreme",
+      "url": "https://www.supreme.bar/",
+      "neighborhood": "West Seattle",
+      "style": "New York-style, Detroit-style",
+      "status": "open",
+      "note": "Mark Fuller's no-frills pizza bar in the West Seattle Junction, serving whole pies and slices with beer and liquor, in the former Pellegrini's Italian Market space.",
+      "source": "https://westseattleblog.com/2017/11/west-seattle-restaurants-opening-night-for-supreme",
+      "address": "4521 California Ave SW, Seattle, WA 98116"
     }
   ]
 }
