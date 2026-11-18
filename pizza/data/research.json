@@ -1,52 +1,46 @@
 {
-  "updated": "2026-11-17T00:00:00Z",
-  "facts": [
+  "updated": "2026-11-18T00:00:00Z",
+  "factorRatings": [
     {
-      "id": "alibi-room",
-      "opened": 1994,
-      "styleGroup": "Wood-fired",
-      "source": "https://thealibiroom.com/about"
-    },
-    {
-      "id": "alibi-room",
-      "signature": "Truffle Tre Fungi Pie",
-      "source": "https://thealibiroom.com"
-    },
-    {
-      "id": "supreme",
-      "styleGroup": "Pizza bar",
-      "source": "https://www.thestranger.com/food-and-drink/2018/03/14/25904471/mark-fullers-new-west-seattle-venture-is-supreme-a-hip-pizza-bar-serving-new-york-style-slices"
-    },
-    {
-      "id": "supreme",
+      "id": "the-masonry",
+      "craft": 8.0,
+      "distinctiveness": 6.5,
+      "criticScore": 7.5,
       "priceIndex": 3,
-      "source": "https://www.supreme.bar/"
+      "styleGroup": "Neapolitan",
+      "sources": [
+        "https://www.thestranger.com/food-and-drink/pie-versus-pie-17778541/",
+        "https://theinfatuation.com/seattle/reviews/the-masonry",
+        "https://themasonryseattle.com/queen-anne"
+      ],
+      "note": "The Stranger called the wood-fired pies 'up there with the best in the city,' praising a thin, chewy crust with blackened char and a standout taleggio-mushroom pie; The Infatuation likewise singled out a well-executed Margherita and called the meatballs the best in the city, framing the Queen Anne room as a small but reliable destination for last-minute group dinners."
     },
     {
       "id": "supreme",
-      "signature": "The Ono: fried chicken, scallions, kimchi, and American cheese",
-      "source": "https://www.theinfatuation.com/seattle/reviews/supreme"
+      "craft": 6.5,
+      "distinctiveness": 6.5,
+      "criticScore": 6.5,
+      "opened": 2017,
+      "priceIndex": 3,
+      "styleGroup": "Pizza bar",
+      "sources": [
+        "https://www.thestranger.com/food-and-drink/2018/03/14/25904471/mark-fullers-new-west-seattle-venture-is-supreme-a-hip-pizza-bar-serving-new-york-style-slices",
+        "https://westseattleblog.com/2017/11/west-seattle-restaurants-opening-night-for-supreme",
+        "https://www.supreme.bar/"
+      ],
+      "note": "Seattle Met described it as a 'no-frills throwback pizza bar where the pie is for real,' and The Stranger profiled it as a Brooklyn-imported, New York-style slice bar helmed by veteran baker John Montenegro under restaurateur Mark Fuller, set in the old Pellegrini's Italian Market space with pinball machines and a dive-bar vibe; West Seattle Blog covered its November 2017 opening."
     },
-    {
-      "id": "the-masonry",
-      "opened": 2013,
-      "source": "https://newschoolbeer.com/nsb/2017/12/masonry-fremont-seattles-new-best-destination-beer-pizza.html"
-    },
-    {
-      "id": "the-masonry",
-      "styleGroup": "Neapolitan",
-      "signature": "Mushroom: taleggio cheese and fresh thyme",
-      "source": "https://www.thestranger.com/food-and-drink/pie-versus-pie-17778541/"
-    }
-  ],
-  "factsSkipped": [
     {
       "id": "alibi-room",
-      "note": "Checked thealibiroom.com/menus and web search for a whole-pie price; the menu page only exposed an appetizer ($14.25 cheese bread) before truncating, and no review stated a pizza price (one aggregator showed only a vague '$$' symbol), so priceIndex stays unconfirmed."
-    },
-    {
-      "id": "supreme",
-      "note": "Seattle Met and West Seattle Blog both reported a November 12, 2017 opening in search snippets, but both pages returned HTTP 403 on direct fetch so I could not read the stated date myself; Seattle Mag's Dec 18, 2017 piece calls Supreme only 'new' without giving a date, which isn't enough to confirm an opening year."
+      "craft": 6.0,
+      "distinctiveness": 6.0,
+      "criticScore": 6.0,
+      "styleGroup": "Pizza bar",
+      "sources": [
+        "https://theticket.seattletimes.com/top-picks/open-late-in-pike-place-market-alibi-room/",
+        "https://thealibiroom.com"
+      ],
+      "note": "The Seattle Times called the pizza at this hidden Post Alley bar 'pretty decent,' framing the appeal mainly around its grungy, old-Seattle brick-and-lumber room (a former screenwriters' hangout with scripts still on the shelves) and happy-hour drinks rather than the food itself."
     }
   ]
 }
