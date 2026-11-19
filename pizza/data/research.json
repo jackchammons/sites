@@ -1,46 +1,46 @@
 {
-  "updated": "2026-11-18T00:00:00Z",
-  "factorRatings": [
+  "updated": "2026-11-19T00:00:00Z",
+  "status": [
     {
-      "id": "the-masonry",
-      "craft": 8.0,
-      "distinctiveness": 6.5,
-      "criticScore": 7.5,
-      "priceIndex": 3,
-      "styleGroup": "Neapolitan",
-      "sources": [
-        "https://www.thestranger.com/food-and-drink/pie-versus-pie-17778541/",
-        "https://theinfatuation.com/seattle/reviews/the-masonry",
-        "https://themasonryseattle.com/queen-anne"
-      ],
-      "note": "The Stranger called the wood-fired pies 'up there with the best in the city,' praising a thin, chewy crust with blackened char and a standout taleggio-mushroom pie; The Infatuation likewise singled out a well-executed Margherita and called the meatballs the best in the city, framing the Queen Anne room as a small but reliable destination for last-minute group dinners."
+      "id": "breezy-town-pizza",
+      "status": "closed",
+      "note": "No evidence of reopening found; The Infatuation's review page and an Airbnb listing both still mark the Beacon Hill Chicago-style spot as permanently closed.",
+      "source": "https://theinfatuation.com/seattle/reviews/breezy-town-pizza"
     },
     {
-      "id": "supreme",
-      "craft": 6.5,
-      "distinctiveness": 6.5,
-      "criticScore": 6.5,
-      "opened": 2017,
-      "priceIndex": 3,
-      "styleGroup": "Pizza bar",
-      "sources": [
-        "https://www.thestranger.com/food-and-drink/2018/03/14/25904471/mark-fullers-new-west-seattle-venture-is-supreme-a-hip-pizza-bar-serving-new-york-style-slices",
-        "https://westseattleblog.com/2017/11/west-seattle-restaurants-opening-night-for-supreme",
-        "https://www.supreme.bar/"
-      ],
-      "note": "Seattle Met described it as a 'no-frills throwback pizza bar where the pie is for real,' and The Stranger profiled it as a Brooklyn-imported, New York-style slice bar helmed by veteran baker John Montenegro under restaurateur Mark Fuller, set in the old Pellegrini's Italian Market space with pinball machines and a dive-bar vibe; West Seattle Blog covered its November 2017 opening."
+      "id": "pizza-by-ruffin",
+      "status": "open",
+      "note": "Official site is live with no closure notice, and a February 2026 Seattle Met feature covers it as the city's only Black-owned pizzeria currently operating in South Lake Union.",
+      "source": "https://pizzabyruffin.com"
     },
     {
-      "id": "alibi-room",
-      "craft": 6.0,
-      "distinctiveness": 6.0,
-      "criticScore": 6.0,
-      "styleGroup": "Pizza bar",
-      "sources": [
-        "https://theticket.seattletimes.com/top-picks/open-late-in-pike-place-market-alibi-room/",
-        "https://thealibiroom.com"
-      ],
-      "note": "The Seattle Times called the pizza at this hidden Post Alley bar 'pretty decent,' framing the appeal mainly around its grungy, old-Seattle brick-and-lumber room (a former screenwriters' hangout with scripts still on the shelves) and happy-hour drinks rather than the food itself."
+      "id": "cornuto-pizzeria",
+      "status": "open",
+      "note": "Official site is live listing current hours (Wed-Sun, 4-9:30pm) with no closure notice.",
+      "source": "https://www.cornutopizzeria.com/"
+    },
+    {
+      "id": "pizzeria-la-rocca",
+      "status": "open",
+      "note": "Official site is live listing current hours and offering takeout, delivery, and reservations, with no closure notice.",
+      "source": "https://www.pizzalarocca.com/"
+    },
+    {
+      "id": "mioposto",
+      "status": "open",
+      "note": "Official site is live promoting its five Seattle and Mercer Island locations and a current limited-time pizza, with no closure notice.",
+      "source": "https://www.miopostopizza.com/"
+    },
+    {
+      "id": "veraci-pizza",
+      "status": "open",
+      "note": "Official site is live with a 2026 footer, current hours, and active ordering links for both the Ballard and Wedgwood locations.",
+      "source": "https://www.veracipizza.com/"
     }
+  ],
+  "rejected": [
+    "factorRatings[0]: The Masonry is already rated; ratings are never overwritten",
+    "factorRatings[1]: Supreme is already rated; ratings are never overwritten",
+    "factorRatings[2]: Alibi Room is already rated; ratings are never overwritten"
   ]
 }

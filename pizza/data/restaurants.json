@@ -1225,7 +1225,7 @@
       "statusSource": "https://www.clockoutlounge.com/",
       "statusDate": null,
       "statusDetected": "2026-11-05",
-      "statusChecked": "2026-11-05",
+      "statusChecked": "2026-11-19",
       "locations": [],
       "locationsVerified": null,
       "locationsSource": null,
@@ -3076,7 +3076,7 @@
       "statusSource": "https://www.discoverslu.com/location/pizza-by-ruffin/",
       "statusDate": null,
       "statusDetected": "2026-08-26",
-      "statusChecked": "2026-08-26",
+      "statusChecked": "2026-11-19",
       "locations": [
         {
           "neighborhood": "South Lake Union",
@@ -3179,7 +3179,7 @@
       "statusSource": "https://www.cornutopizzeria.com/",
       "statusDate": null,
       "statusDetected": "2026-08-26",
-      "statusChecked": "2026-08-26",
+      "statusChecked": "2026-11-19",
       "locations": [
         {
           "neighborhood": "Phinney Ridge",
@@ -3327,7 +3327,7 @@
       "statusSource": "https://www.pizzalarocca.com/",
       "statusDate": null,
       "statusDetected": "2026-08-26",
-      "statusChecked": "2026-08-26",
+      "statusChecked": "2026-11-19",
       "locations": [
         {
           "neighborhood": "Greenwood",
@@ -3476,7 +3476,7 @@
       "statusSource": "https://www.miopostopizza.com/",
       "statusDate": null,
       "statusDetected": "2026-08-26",
-      "statusChecked": "2026-08-26",
+      "statusChecked": "2026-11-19",
       "locations": [
         {
           "neighborhood": "Mount Baker",
@@ -3550,7 +3550,7 @@
       "statusSource": "https://www.veracipizza.com/",
       "statusDate": null,
       "statusDetected": "2026-08-26",
-      "statusChecked": "2026-08-26",
+      "statusChecked": "2026-11-19",
       "locations": [
         {
           "neighborhood": "Ballard",
