@@ -1,0 +1,263 @@
+/* Blu-ray Shelf — a drawn shelf of spines above the list it stands for.
+   The page takes the viewer's light or dark scheme. The shelf itself is a
+   piece of furniture and stays the same dark wood in both. */
+:root {
+  --bg: #f3f0e9;
+  --ink: #1d1b18;
+  --ink-2: #57524a;
+  --ink-3: #6f695e;
+  --rule: #dad3c5;
+  --panel: #fbf9f5;
+  --accent: #1f5fd0;
+  --accent-ink: #ffffff;
+  --tint: #dfe8f8;
+  --uhd: #17171a;
+  --uhd-ink: #ffffff;
+  --display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --body: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --narrow: "Avenir Next Condensed", "Roboto Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #131210; --ink: #ece8df; --ink-2: #b3ac9f; --ink-3: #8f887b; --rule: #34312b;
+    --panel: #1c1a17; --accent: #8db4ff; --accent-ink: #0d1626; --tint: #1c2740;
+    --uhd: #ece8df; --uhd-ink: #131210;
+    color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.5;
+}
+.wrap {
+  max-width: 940px;
+  margin: 0 auto;
+  padding-block: 3rem 3rem;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.vh {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.eyebrow {
+  font: 600 .72rem/1 var(--mono);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: .9rem;
+}
+h1 {
+  font: 600 clamp(2.2rem, 7vw, 3.4rem)/1.05 var(--display);
+  letter-spacing: -.02em;
+  margin: 0 0 1rem;
+  text-wrap: balance;
+}
+.lede { color: var(--ink-2); max-width: 62ch; margin: 0; text-wrap: pretty; }
+
+/* ---- the shelf ---- */
+.shelf {
+  --u: 44px;        /* the width of one standard case */
+  --tall: 310px;    /* the height of the tallest spine */
+  --pad: 20px;      /* between the row and each end of the shelf */
+  margin: 2.2rem 0 2.6rem;
+  border-radius: 8px;
+  overflow: hidden;
+  background: linear-gradient(#3b2415, #26160c 70%, #1c1009);
+  box-shadow: inset 0 14px 28px rgba(0, 0, 0, .55), 0 1px 0 rgba(0, 0, 0, .2);
+}
+/* Wider than the page on a phone, where the row scrolls sideways inside the
+   shelf. The auto margins centre it when it fits and give way when it does
+   not, which justify-content: center would not: it would cut off the left. */
+.spines {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  list-style: none;
+  margin: 0;
+  padding: 30px var(--pad) 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #7a5a40 transparent;
+}
+.spines > li { flex: none; }
+.spines > li:first-child { margin-left: auto; }
+.spines > li:last-child { margin-right: auto; }
+/* Where the shelf can measure itself, a case is as wide as lets the whole row
+   fit: the shelf's width, less its padding and the gaps, shared among --units
+   case-widths (the build counts both). It stops at 36px, under which the
+   lettering is too cramped, and from there the row scrolls instead. */
+@supports (width: 1cqw) {
+  .shelf {
+    container-type: inline-size;
+    --u: clamp(36px, calc((100cqw - 2 * var(--pad) - (var(--n) - 1) * 2px) / var(--units)), 46px);
+  }
+}
+.plank {
+  height: 18px;
+  background: linear-gradient(#8a5a36, #6a4226 30%, #4d2f1a);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), 0 -6px 10px rgba(0, 0, 0, .35);
+  position: relative;
+}
+
+.spine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: calc(var(--w, 1) * var(--u));
+  height: calc(var(--h, .9) * var(--tall));
+  overflow: hidden;
+  border-radius: 3px 3px 0 0;
+  background: var(--s-bg);
+  color: var(--s-ink);
+  text-decoration: none;
+  /* A lit left edge and a shaded right one, so two dark cases side by side
+     still read as two. */
+  box-shadow: inset 2px 0 0 rgba(255, 255, 255, .16), inset -4px 0 6px rgba(0, 0, 0, .32);
+  transition: transform .16s ease, opacity .2s ease, filter .2s ease;
+}
+.spine:hover, .spine:focus-visible { transform: translateY(-12px); }
+.spine:focus-visible { outline: 2px solid #ffffff; outline-offset: -4px; }
+.spine.off { opacity: .22; filter: grayscale(1); }
+.spine .cap {
+  flex: none;
+  width: 100%;
+  height: 17px;
+  background: var(--s-cap);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .25), inset 0 -1px 0 rgba(0, 0, 0, .35);
+}
+.spine .t {
+  flex: 1 1 auto;
+  min-height: 0;
+  writing-mode: vertical-rl;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-block: 12px 6px;
+  /* As large as the spine's width suits, but no larger than fits its height:
+     the room left under the cap and above the mark, shared among --len
+     characters of about --k em each. --k is a generous guess per face, since
+     the font that answers differs by system; the ellipsis is what is left
+     for a title too long even at the floor. */
+  font-size: clamp(8.5px,
+    calc((var(--h, .9) * var(--tall) - 82px) / var(--len, 12) / var(--k, .86)),
+    calc(11.5px + var(--w, 1) * 3px));
+  line-height: 1.12;
+}
+.spine.two .t { white-space: normal; text-wrap: balance; }
+.face-serif .t { --k: .8; font-family: var(--display); font-weight: 600; text-transform: uppercase; letter-spacing: .07em; }
+.face-sans .t { --k: .86; font-family: var(--narrow); font-weight: 700; text-transform: uppercase; letter-spacing: .12em; }
+.face-script .t { --k: .58; font-family: var(--display); font-style: italic; font-weight: 600; letter-spacing: .02em; }
+.spine .m {
+  flex: none;
+  padding: 4px 0 9px;
+  font: 700 9.5px/1.35 var(--mono);
+  letter-spacing: .02em;
+  text-align: center;
+  opacity: .82;
+}
+
+/* ---- the list ---- */
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .8rem 1.5rem;
+}
+h2 { font: 600 1.5rem/1.2 var(--display); margin: 0; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem 1.2rem; }
+.controls[hidden] { display: none; }
+.chips { display: flex; flex-wrap: wrap; gap: .4rem; border: 0; margin: 0; padding: 0; min-width: 0; }
+.chip { position: relative; cursor: pointer; }
+.chip input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.chip span {
+  display: block;
+  padding: .32rem .8rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--ink-2);
+  font-size: .86rem;
+  white-space: nowrap;
+}
+.chip b { font: 600 .78rem var(--mono); margin-left: .25em; opacity: .75; }
+.chip input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.chip input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.order { font-size: .86rem; color: var(--ink-2); white-space: nowrap; }
+.order select {
+  font: inherit;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: .3rem .4rem;
+  margin-left: .3rem;
+  max-width: 100%;
+}
+.tally { margin: .7rem 0 .5rem; min-height: 1.2em; font: .76rem/1.2 var(--mono); color: var(--ink-3); }
+
+.list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.disc {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr) auto;
+  gap: 0 16px;
+  align-items: center;
+  padding: 14px 10px 14px 0;
+  border-bottom: 1px solid var(--rule);
+  scroll-margin-top: 14px;
+}
+.disc[hidden] { display: none; }
+.disc:target { background: var(--tint); }
+.swatch {
+  align-self: stretch;
+  border-radius: 2px;
+  background: var(--s-bg);
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, .45);
+}
+.what { min-width: 0; }
+h3 { font: 600 1.22rem/1.25 var(--display); margin: 0; overflow-wrap: anywhere; }
+.what p { margin: 0; overflow-wrap: anywhere; }
+.by { color: var(--ink-2); font-size: .95rem; margin-top: .1rem; }
+.ed { color: var(--ink-3); font-size: .82rem; margin-top: .15rem; }
+.fmt {
+  font: 700 .7rem/1 var(--mono);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: .45em .65em;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.fmt-4k { background: var(--uhd); color: var(--uhd-ink); }
+.fmt-bd { background: var(--accent); color: var(--accent-ink); }
+
+footer {
+  margin-top: 2.6rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-3);
+  font-size: .82rem;
+}
+footer p { margin: 0 0 .4rem; }
+
+@media (max-width: 560px) {
+  .wrap { padding-block: 2rem 2.4rem; }
+  .shelf { --tall: 270px; --pad: 14px; margin-block: 1.6rem 2rem; }
+  .disc { gap: 0 12px; }
+  h3 { font-size: 1.1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spine { transition: none; }
+}

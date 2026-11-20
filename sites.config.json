@@ -145,6 +145,33 @@
         "reading time",
         "text"
       ]
+    },
+    {
+      "slug": "bluray",
+      "name": "Blu-ray Shelf",
+      "emoji": "📀",
+      "tagline": "The Blu-rays and 4K discs on the shelf right now: every title with its year, director, format and edition, drawn as the row of spines it is.",
+      "dir": "bluray",
+      "build": [
+        "node",
+        "scripts/build.mjs"
+      ],
+      "verify": [
+        "node",
+        "scripts/verify.mjs"
+      ],
+      "cadence": "Updated by hand",
+      "accent": "#2f6fdd",
+      "keywords": [
+        "blu-ray",
+        "4k",
+        "uhd",
+        "movies",
+        "films",
+        "criterion",
+        "collection",
+        "physical media"
+      ]
     }
   ]
 }

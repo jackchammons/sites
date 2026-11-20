@@ -14,6 +14,7 @@ page indexes them with a client-side search (`/` to focus, Enter to open the fir
 | Life | [`/life/`](https://sites.jackhammons.com/life/) | [`life/`](life/) | Live in your browser |
 | Screen & Seat | [`/screen/`](https://sites.jackhammons.com/screen/) | [`screen/`](screen/) | Live in your browser |
 | Word Counter | [`/words/`](https://sites.jackhammons.com/words/) | [`words/`](words/) | Live in your browser |
+| Blu-ray Shelf | [`/bluray/`](https://sites.jackhammons.com/bluray/) | [`bluray/`](bluray/) | Updated by hand |
 
 Every site is plain Node with no dependencies and no lockfile. Each directory has its
 own README.
