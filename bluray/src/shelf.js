@@ -21,9 +21,10 @@ export const SHOWS = [
 ];
 
 /* The orders on offer. `shelf` is the order of the data, which is the order
-   the cases stand in, left to right. */
+   the cases really stand in. The page opens in it and, by the owner's choice,
+   does not say what it is: the menu just calls it the default. */
 export const SORTS = [
-  { id: 'shelf', label: 'As shelved' },
+  { id: 'shelf', label: 'Default' },
   { id: 'title', label: 'Title, A to Z' },
   { id: 'oldest', label: 'Year, oldest first' },
   { id: 'newest', label: 'Year, newest first' },
@@ -59,6 +60,20 @@ export function arrange(discs, { show = 'all', sort = 'shelf' } = {}) {
   const chip = SHOWS.find(s => s.id === show) ?? SHOWS[0];
   const kept = discs.filter(chip.test);
   return ORDER[sort] ? kept.sort(ORDER[sort]) : kept;
+}
+
+/* The same things in a jumbled order: where the drawn shelf starts from when
+   the page opens, before it sorts itself out. Never the order it was given
+   when there are two or more to jumble, so there is always something to see.
+   `random` is Math.random unless a test supplies its own. */
+export function scramble(list, random = Math.random) {
+  const out = [...list];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  if (out.length > 1 && out.every((v, i) => v === list[i])) [out[0], out[1]] = [out[1], out[0]];
+  return out;
 }
 
 /* The figures the page quotes: how many entries each chip shows, and the

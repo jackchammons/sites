@@ -65,6 +65,7 @@ h1 {
   text-wrap: balance;
 }
 .lede { color: var(--ink-2); max-width: 62ch; margin: 0; text-wrap: pretty; }
+.updated { margin: .9rem 0 0; font: .76rem/1.2 var(--mono); color: var(--ink-3); }
 
 /* ---- the shelf ---- */
 .shelf {
@@ -92,6 +93,16 @@ h1 {
   scrollbar-color: #7a5a40 transparent;
 }
 .spines > li { flex: none; }
+/* The page opens with the cases sorting themselves out, which app.js starts.
+   Until it has them in hand they are held out of sight, so nobody sees them
+   standing in order and then jump apart. Only where a script is going to run
+   (the inline script in the head sets .js) and the viewer has not asked for
+   less motion. The hold lets go by itself after three seconds, so if app.js
+   never arrives the shelf is simply there. */
+@keyframes hold { from, to { opacity: 0; } }
+@media (prefers-reduced-motion: no-preference) {
+  .js .shelf:not(.ready) .spines > li { animation: hold 3s; }
+}
 .spines > li:first-child { margin-left: auto; }
 .spines > li:last-child { margin-right: auto; }
 /* Where the shelf can measure itself, a case is as wide as lets the whole row

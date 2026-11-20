@@ -48,10 +48,14 @@ const leak = [...text.matchAll(/\bundefined\b|\bNaN\b|\[object Object\]/g)].find
 check(!leak, leak && `page shows "${leak[0]}" near: ${text.slice(Math.max(0, leak.index - 40), leak.index + 40).replace(/\s+/g, ' ')}`);
 check(!/=\s*(["'])(?:undefined|null|NaN)\1/.test(html), 'an attribute is literally undefined/null/NaN');
 check(!/--[\w-]+:\s*(?:undefined|null|NaN)\b/.test(html), 'a spine style carries undefined/null/NaN');
-/* The only date on the page is the day the shelf was catalogued, from the
-   data. A build time would change the page on every deploy and mean nothing. */
+/* The only date on the page is the day the collection last changed, from the
+   data. A build time would move every day the deploy runs and mean nothing. */
 check(!/\d{4}-\d\d-\d\dT\d\d:\d\d/.test(html), 'a build timestamp is baked into the page');
-check(html.includes(`<time datetime="${data.updated}">`), 'the catalogued date is not the one in the data');
+check(html.includes(`Last updated <time datetime="${data.updated}">`), 'the page does not say when it was last updated, from the data');
+const shownDate = /<time datetime="[^"]*">([^<]*)<\/time>/.exec(html);
+check(shownDate && !Number.isNaN(Date.parse(`${shownDate[1]} UTC`))
+  && new Date(`${shownDate[1]} UTC`).toISOString().slice(0, 10) === data.updated,
+  `the date shown ("${shownDate?.[1]}") is not the date in the data (${data.updated})`);
 check(/href="\.\/styles\.css"/.test(html), 'stylesheet not linked relatively');
 check(/<script type="module" src="\.\/app\.js">/.test(html), 'app.js not linked relatively as a module');
 check(/href="\.\.\/"/.test(html), 'no link back to the index of sites');
