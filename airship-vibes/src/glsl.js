@@ -1,7 +1,7 @@
 /*
  * Every shader, as GLSL ES 3.00 source.
  *
- * A scene is drawn small (about 380 x 216) into a framebuffer, in ordinary
+ * A scene is drawn small (about 480 x 270) into a framebuffer, in ordinary
  * continuous colour; COMPOSITE then adds what needs the whole picture (cloud,
  * glow, outlines), snaps each pixel to the scene's palette with an ordered
  * dither, and PRESENT scales the result up by a whole number of device pixels.
@@ -1152,6 +1152,7 @@ uniform vec4 uCloudLight;   // how fast cloud shades itself, how fast it turns o
 uniform vec4 uLook;         // glow strength, outline strength, dither sharpness, vignette
 uniform vec4 uFade;         // dissolve 0..1 (1 = all new), caption alpha 0..1, caption x, caption y
 uniform vec4 uCaptionSize;  // width, height in pixels, ink palette index, shadow palette index
+uniform float uCaptionScale; // art pixels per caption pixel, a whole number
 ${RAY}
 float linearDepth(float z) {
   float n = uProj.x, f = uProj.y;
@@ -1278,26 +1279,26 @@ void main() {
     outc = texelFetch(uPalette, ivec2(dither < tt ? i2 : i1, 0), 0).rgb;
   }
 
-  // ---- caption, in the scene's own pixels ----
-  if (uFade.y > 0.0) {
-    ivec2 cp = pix - ivec2(uFade.zw);
-    cp.y = int(uCaptionSize.y) - 1 - cp.y;
-    if (cp.x >= -1 && cp.y >= -1 && cp.x <= int(uCaptionSize.x) && cp.y <= int(uCaptionSize.y)) {
-      float ink = (cp.x >= 0 && cp.y >= 0 && cp.x < int(uCaptionSize.x) && cp.y < int(uCaptionSize.y))
-        ? texelFetch(uCaption, cp, 0).r : 0.0;
-      ivec2 sp = cp + ivec2(-1, -1);
-      float sh = (sp.x >= 0 && sp.y >= 0 && sp.x < int(uCaptionSize.x) && sp.y < int(uCaptionSize.y))
-        ? texelFetch(uCaption, sp, 0).r : 0.0;
-      float show = step(bayer4(pix + ivec2(2, 1)), uFade.y);
-      if (sh > 0.5 && show > 0.5) outc = texelFetch(uPalette, ivec2(int(uCaptionSize.w), 0), 0).rgb;
-      if (ink > 0.5 && show > 0.5) outc = texelFetch(uPalette, ivec2(int(uCaptionSize.z), 0), 0).rgb;
-    }
-  }
-
-  // ---- dissolve from the frame held at the last cut ----
+  // ---- dissolve from the other picture: the shot before, or the last scene ----
   if (uFade.x < 1.0) {
     float th = (float(hashU(pix) >> 8) * (1.0 / 16777216.0)) * 0.5 + dither * 0.5;
     if (th >= uFade.x) outc = texelFetch(uPrev, pix, 0).rgb;
+  }
+
+  // ---- caption, in the scene's own pixels, over everything ----
+  if (uFade.y > 0.0) {
+    int k = int(uCaptionScale);
+    ivec2 size = ivec2(uCaptionSize.xy);
+    ivec2 at = pix - ivec2(uFade.zw);
+    at.y = size.y * k - 1 - at.y;
+    // floor, not truncate: one cell to the left of the text must not fold onto its first column
+    ivec2 cp = ivec2(floor(vec2(at) / float(k)));
+    ivec2 sp = ivec2(floor(vec2(at - ivec2(k, k)) / float(k)));
+    float ink = (cp.x >= 0 && cp.y >= 0 && cp.x < size.x && cp.y < size.y) ? texelFetch(uCaption, cp, 0).r : 0.0;
+    float sh = (sp.x >= 0 && sp.y >= 0 && sp.x < size.x && sp.y < size.y) ? texelFetch(uCaption, sp, 0).r : 0.0;
+    float show = step(bayer4(pix + ivec2(2, 1)), uFade.y);
+    if (sh > 0.5 && show > 0.5) outc = texelFetch(uPalette, ivec2(int(uCaptionSize.w), 0), 0).rgb;
+    if (ink > 0.5 && show > 0.5) outc = texelFetch(uPalette, ivec2(int(uCaptionSize.z), 0), 0).rgb;
   }
   frag = vec4(outc, 1.0);
 }

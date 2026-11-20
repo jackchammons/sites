@@ -177,7 +177,7 @@
       "slug": "airship-vibes",
       "name": "Airship Vibes",
       "emoji": "🎈",
-      "tagline": "A live-aboard airship adrift in pixel art: each visit opens on one of four living 3D scenes, a lush valley, a city at night, a sunset vista or a sea of clouds, drawn live in your browser.",
+      "tagline": "A live-aboard airship adrift in pixel art: each visit opens on one of four living 3D scenes, a lush valley, a city at night, a sunset vista or a sea of clouds, drawn live in your browser to a slow lo-fi beat.",
       "dir": "airship-vibes",
       "build": [
         "node",
@@ -199,7 +199,11 @@
         "animation",
         "ambient",
         "screensaver",
-        "art"
+        "art",
+        "lofi",
+        "lo-fi",
+        "music",
+        "beats"
       ]
     }
   ]

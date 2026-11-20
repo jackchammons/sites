@@ -617,10 +617,9 @@ export function buildShip(inp) {
   }
 
   /* ---- small things ---- */
-  // landing lidars, looking down from the keel
+  // landing lidars, looking down from the keel: sensors, so they carry no light
   for (const lx of [-46, -19, 33, 46]) {
     m.ellipsoid([lx, 0, -r(lx) + 0.1], [0.45, 0.45, 0.7], C.structure, { rings: 4, segs: 8, u0: 0.5, u1: 1 });
-    lamps.push({ pos: [lx, 0, -r(lx) - 0.7], colour: [1.0, 0.25, 0.5], pattern: LAMP.BEACON, size: 0.4 });
   }
   // top lookout: a dome at the head of the spiral stair
   {
@@ -635,7 +634,8 @@ export function buildShip(inp) {
   lamps.push({ pos: [-a - 0.25, 0, 0], colour: [1.0, 0.97, 0.9], pattern: LAMP.STEADY, size: 0.9 });
   lamps.push({ pos: [a + 0.25, 0, 0], colour: [1.0, 0.97, 0.9], pattern: LAMP.FLASH, size: 0.8 });
   lamps.push({ pos: [-12, 0, b * Math.sqrt(1 - (12 / a) ** 2) + 0.3], colour: [1.0, 0.2, 0.15], pattern: LAMP.BEACON, size: 1.0 });
-  lamps.push({ pos: [-34, 0, -r(-34) - 0.3], colour: [1.0, 0.97, 0.9], pattern: LAMP.FLASH, size: 1.0 });
+  // the lower anti-collision beacon, under the upper one and well clear of the lidars
+  lamps.push({ pos: [-12, 0, -r(-12) - 0.3], colour: [1.0, 0.2, 0.15], pattern: LAMP.BEACON, size: 1.0 });
 
   /* ---- one propeller, about the origin, turning on the x axis ---- */
   const prop = new MeshBuilder();

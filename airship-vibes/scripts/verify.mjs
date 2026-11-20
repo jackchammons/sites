@@ -9,7 +9,7 @@
  * every import resolves to a file that was emitted and a name it exports, the
  * markup has what the script looks up, and the built copies of the pure
  * modules (the ones that decide what is drawn) actually produce an airship,
- * four scenes and a camera.
+ * four scenes, a camera and a song for each.
  *
  * GLSL cannot be compiled here; test/browser-check.mjs does that on a dev box.
  * The checks every site shares (relative asset paths, referenced files exist)
@@ -34,8 +34,8 @@ const report = () => {
   process.exit(1);
 };
 
-const MODULES = ['app.js', 'director.js', 'flock.js', 'font.js', 'glsl.js', 'layout.js', 'mesh.js', 'noise.js',
-  'palette.js', 'params.js', 'renderer.js', 'rng.js', 'scenes.js', 'ship.js', 'terrain.js', 'vec.js'];
+const MODULES = ['app.js', 'audio.js', 'director.js', 'flock.js', 'font.js', 'gesture.js', 'glsl.js', 'layout.js', 'mesh.js',
+  'music.js', 'noise.js', 'palette.js', 'params.js', 'renderer.js', 'rng.js', 'scenes.js', 'ship.js', 'terrain.js', 'vec.js'];
 for (const f of ['index.html', '.nojekyll', ...MODULES]) check(fs.existsSync(path.join(dist, f)), `missing dist/${f}`);
 report();
 const emitted = fs.readdirSync(dist).filter(f => f.endsWith('.js')).sort();
@@ -48,6 +48,10 @@ check(/<title>[^<]+<\/title>/.test(html), 'missing <title>');
 check(/<meta name="description" content="[^"]{40,}"/.test(html), 'missing meta description');
 check(/<canvas id="view" role="img" aria-label="[^"]+"><\/canvas>/.test(html), 'the canvas must be #view with role="img" and a label');
 check(/<p id="note" hidden><\/p>/.test(html), 'missing the hidden #note the page falls back to');
+check(/<button id="sound" type="button" aria-pressed="(true|false)" aria-label="[^"]+">/.test(html), 'the sound switch must be a labelled toggle button');
+check(/<div id="tip" role="status" hidden>/.test(html), 'the hint must start hidden and announce itself when shown');
+check(/<button id="tip-close" type="button" aria-label="[^"]+">/.test(html), 'the hint must have a labelled way to dismiss it');
+check(/touch-action:none/.test(html), 'the canvas must take swipes itself (touch-action: none)');
 check(/<noscript>[^<]{20,}<\/noscript>/.test(html), 'missing the noscript line');
 check(/<script type="module" src="\.\/app\.js"><\/script>/.test(html), 'app.js must be loaded as a module by relative path');
 // Visible text only: one of these words in it is a template that interpolated nothing.
@@ -108,7 +112,7 @@ check(ship.glass.count > 0 && ship.prop.count > 0 && ship.propMounts.length === 
   'the airship is missing its panes, propellers or lamps');
 
 const { SCENES } = await load('scenes.js');
-const { frameAt, roomLights } = await load('director.js');
+const { frameAt, roomLights, playheadAt, move } = await load('director.js');
 const { buildLut, extremes } = await load('palette.js');
 const { renderText, hasGlyph } = await load('font.js');
 const { axis, buildGrid } = await load('terrain.js');
@@ -130,6 +134,10 @@ for (const s of SCENES) {
       check(nums.every(Number.isFinite), `${s.id}: frame at ${t}s is not finite`);
     }
   }
+  // stepping to the next shot starts a dissolve with the old shot still behind it
+  const stepped = frameAt(s, 12345, 20.5, 16 / 9, move(s, playheadAt(s, 12345, 20), 20, 1));
+  check(stepped.shot !== 0 && stepped.outgoing && stepped.outgoing.shot === 0 && stepped.fade > 0 && stepped.fade < 1,
+    `${s.id}: stepping to the next shot does not dissolve from the last`);
   check(roomLights(s, 1).length === ROOMS.length, `${s.id}: lights for ${roomLights(s, 1).length} rooms, ship has ${ROOMS.length}`);
   if (s.birds) check(birdsAt(s.birds.flocks, 1, 10).every(Number.isFinite), `${s.id}: a bird is nowhere`);
   const grid = buildGrid(axis(s.grid.x), axis(s.grid.y));
@@ -144,7 +152,18 @@ for (const s of SCENES) {
 const noise = buildCloudNoise(8, 7);
 check(noise.length === 8 * 8 * 8 * 4 && new Set(noise).size > 20, 'the cloud volume is flat');
 const art = artSize(1170, 2532);
-check(art.scale >= 1 && art.width * art.height <= 90000, `a phone would draw ${art.width}x${art.height}`);
+check(art.scale === 4 && art.width * art.height <= 200000, `a phone would draw ${art.width}x${art.height} at ${art.scale} device pixels each`);
+
+const { SONGS, eventsBetween } = await load('music.js');
+const { classify } = await load('gesture.js');
+for (const s of SCENES) {
+  const song = SONGS[s.id];
+  check(!!song, `${s.id} has no song`);
+  if (song) check(eventsBetween(song, 1, 0, 30).length > 100, `${s.id}: the song is nearly empty`);
+}
+check(classify({ x: 0, y: 0, t: 0 }, { x: 2, y: 1, t: 90 }) === 'tap' && classify({ x: 200, y: 0, t: 0 }, { x: 80, y: 6, t: 200 }) === 'left',
+  'gesture.js does not tell a tap from a swipe');
+check(/pointerup/.test(app) && /AudioContext/.test(app) && /localStorage/.test(app), 'app.js must handle pointers, start sound from a gesture and remember choices');
 report();
 
 console.log(`Build verified: ${ship.body.count / 3} triangles of airship, ${SCENES.length} scenes, ${SCENES.reduce((n, s) => n + s.shots.length, 0)} shots.`);

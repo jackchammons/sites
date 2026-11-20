@@ -1,35 +1,65 @@
 /*
- * The page: a canvas, a clock and a few keys.
+ * The page: a canvas, a clock, and what the viewer does to them.
  *
  * On load it picks one scene at random, builds the airship from the parameter
- * file and starts drawing. A click, a tap or the space bar moves to the next
- * scene. Everything that decides what is drawn lives in the modules this
+ * file and starts drawing. Left alone it plays each shot of the scene in turn.
+ *
+ *   tap, click, swipe left, Space, right arrow    the next shot
+ *   swipe right, left arrow                       the shot before
+ *   double tap, double click, Enter               the next scene
+ *   1 to 4                                        that scene
+ *   M, or the speaker in the corner               sound on and off
+ *
+ * Music cannot start by itself: a browser only lets a page make sound once it
+ * has been touched. So the first tap, click or key starts it, and the
+ * speaker button turns it off again; that choice is remembered.
+ *
+ * Everything that decides what is drawn or played lives in the modules this
  * imports; this file only connects them to the browser.
  *
  * Query parameters, for looking at one thing: ?scene=valley, ?seed=7,
- * ?shot=2, ?t=40 (hold that second), ?raw=1 (before the palette), ?px=4
- * (device pixels per art pixel).
+ * ?shot=2, ?t=40 (hold that second, and hide the controls), ?raw=1 (before
+ * the palette), ?px=4 (device pixels per art pixel).
  */
 import { PARAMS } from './params.js';
 import { buildShip } from './ship.js';
 import { Renderer } from './renderer.js';
 import { SCENES, sceneById } from './scenes.js';
-import { frameAt, roomLights } from './director.js';
+import { frameAt, roomLights, playheadAt, holdShot, advance, move, DISSOLVE } from './director.js';
 import { artSize, TARGET_PIXELS } from './layout.js';
+import { classify, isDouble } from './gesture.js';
+import { Player } from './audio.js';
 
 const canvas = document.getElementById('view');
 const note = document.getElementById('note');
+const soundButton = document.getElementById('sound');
+const tip = document.getElementById('tip');
+const tipText = document.getElementById('tip-text');
+const tipClose = document.getElementById('tip-close');
 const query = new URLSearchParams(location.search);
 const num = name => (query.has(name) && query.get(name) !== '' && Number.isFinite(Number(query.get(name))) ? Number(query.get(name)) : null);
 
 const FPS = 30;
+const TIP_AFTER = 45000;             // ms on one scene before the hint about the others
+const TIP_FOR = 20000;               // ms the hint stays if nobody dismisses it
 let budget = TARGET_PIXELS;          // art pixels to draw; lowered if frames run late
 const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const heldTime = num('t');
+const forcedShot = num('shot');
+const held = heldTime !== null;      // a still for looking at: no controls, no hint
+if (held) document.body.classList.add('held');
+
+// What the viewer has chosen before. Storage can be refused; the page works without it.
+const memory = {
+  get(key) { try { return localStorage.getItem('airship-vibes.' + key); } catch { return null; } },
+  set(key, value) { try { localStorage.setItem('airship-vibes.' + key, value); } catch { /* private mode */ } },
+};
 
 function fail(message) {
   note.textContent = message;
   note.hidden = false;
   canvas.hidden = true;
+  soundButton.hidden = true;
 }
 
 let renderer = null;
@@ -39,11 +69,14 @@ let sceneIndex = (() => {
   return named ? SCENES.indexOf(named) : seed % SCENES.length;
 })();
 let epoch = performance.now();      // when the current scene began
-const heldTime = num('t');
-const forcedShot = num('shot');
-
 const scene = () => SCENES[sceneIndex];
 const sceneTime = () => (heldTime ?? (still ? 5 : (performance.now() - epoch) / 1000));
+let head = playheadAt(scene(), seed, 0);
+let leaving = null;                 // the scene just left, kept running while the new one dissolves in
+
+const describe = () => canvas.setAttribute('aria-label',
+  `${document.title}: ${scene().title.toLowerCase()}. Tap or press the right arrow for the next shot, `
+  + 'swipe right or press the left arrow for the one before, double-tap or press Enter for another scene.');
 
 function layout() {
   const dpr = Math.min(window.devicePixelRatio || 1, 3);
@@ -51,13 +84,26 @@ function layout() {
   if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
   const art = artSize(w, h, budget, num('px') ?? 0);
   renderer.resize(art.width, art.height, art.scale);
+  // the caption is doubled where an art pixel is under two CSS pixels, or it is too small to read
+  renderer.captionScale = art.scale / dpr < 2 ? 2 : 1;
 }
 
 function draw(t, options = {}) {
   layout();
-  const frame = frameAt(scene(), seed, t, renderer.width / renderer.height, forcedShot);
-  renderer.render(frame, { still: heldTime !== null || still, ...options });
-  return frame;
+  if (forcedShot !== null) head = holdShot(scene(), seed, forcedShot, t);
+  else head = advance(scene(), head, t);
+  const aspect = renderer.width / renderer.height;
+  const frame = frameAt(scene(), seed, t, aspect, head);
+  if (leaving && t < DISSOLVE) {
+    // the old scene carries on from where it was, on its own clock
+    const was = SCENES[leaving.sceneIndex], then = (performance.now() - leaving.epoch) / 1000;
+    leaving.head = advance(was, leaving.head, then);
+    options = { ...options, leaving: { frame: frameAt(was, leaving.seed, then, aspect, { ...leaving.head, from: null }), fade: t / DISSOLVE } };
+  } else {
+    leaving = null;
+  }
+  renderer.render(frame, { still: held || still, ...options });
+  return { ...frame, busy: !!frame.outgoing || !!leaving };
 }
 
 function start() {
@@ -73,18 +119,83 @@ function start() {
     fail('The scene could not be drawn on this device.');
     return false;
   }
-  canvas.setAttribute('aria-label', `${document.title}: ${scene().title.toLowerCase()}. Click, tap or press Space for another scene.`);
+  describe();
   return true;
 }
 
-function nextScene(step = 1) {
+/* ---- sound --------------------------------------------------------------- */
+
+let player = null;
+let soundOn = memory.get('sound') !== 'off';
+const showSound = () => {
+  soundButton.setAttribute('aria-pressed', String(soundOn));
+  soundButton.setAttribute('aria-label', soundOn ? 'Sound is on. Turn it off' : 'Sound is off. Turn it on');
+};
+
+// Called from inside a tap, click or key, which is the only place a browser allows sound to begin.
+function wake() {
+  if (!soundOn || held) return;
+  if (!player) {
+    const Context = window.AudioContext || window.webkitAudioContext;
+    if (!Context) return;
+    try {
+      // On a phone this is music, to be heard like any other player's, not an alert to be silenced with the ringer.
+      if (navigator.audioSession) navigator.audioSession.type = 'playback';
+      player = new Player(new Context());
+      player.play(scene().id, seed);
+      setInterval(() => { if (player && soundOn && player.ctx.state === 'running') player.pump(); }, 90);
+    } catch (e) { console.error(e); player = null; return; }
+  }
+  if (player.ctx.state !== 'running' && !document.hidden) player.ctx.resume();
+}
+
+function setSound(on) {
+  soundOn = on;
+  memory.set('sound', on ? 'on' : 'off');
+  showSound();
+  if (on) wake();
+  else if (player) player.ctx.suspend();
+}
+
+/* ---- the hint ------------------------------------------------------------- */
+
+let tipTimer = 0, tipGone = 0;
+const hideTip = () => { tip.hidden = true; clearTimeout(tipGone); };
+// Once someone has changed scene, or waved the hint away, they do not need telling again.
+function learned() {
+  clearTimeout(tipTimer);
+  hideTip();
+  memory.set('scenes', 'known');
+}
+function armTip() {
+  if (held || memory.get('scenes') === 'known') return;
+  tipTimer = setTimeout(() => {
+    tipText.textContent = matchMedia('(pointer: coarse)').matches ? 'Double-tap for another scene' : 'Double-click for another scene';
+    tip.hidden = false;
+    tipGone = setTimeout(hideTip, TIP_FOR);
+  }, TIP_AFTER);
+}
+
+/* ---- moving about ---------------------------------------------------------- */
+
+function stepShot(step) {
+  if (!renderer || forcedShot !== null) return;
+  head = move(scene(), head, sceneTime(), step);
+  if (still || held) draw(sceneTime());
+}
+
+function stepScene(step, to = null) {
   if (!renderer) return;
-  sceneIndex = (sceneIndex + step + SCENES.length) % SCENES.length;
+  leaving = held || still ? null : { sceneIndex, seed, epoch, head };
+  sceneIndex = to ?? (sceneIndex + step + SCENES.length) % SCENES.length;
   seed = (seed + 0x9e3779b9) >>> 0;
   epoch = performance.now();
+  head = playheadAt(scene(), seed, 0);
   renderer.setScene(scene(), roomLights(scene(), seed), 0);
-  canvas.setAttribute('aria-label', `${document.title}: ${scene().title.toLowerCase()}. Click, tap or press Space for another scene.`);
-  if (still || heldTime !== null) draw(sceneTime());
+  describe();
+  learned();
+  if (player) player.play(scene().id, seed);
+  if (still || held) draw(sceneTime());
 }
 
 /* A device that cannot draw thirty frames a second is given fewer, larger
@@ -95,28 +206,72 @@ function tick(now) {
   requestAnimationFrame(tick);
   if (!renderer || now - last < 1000 / FPS - 2) return;
   const gap = now - last;
-  if (last && gap < 500) late = gap > 55 ? late + 1 : Math.max(0, late - 1);
-  if (late > 40 && budget > 30000) { budget = Math.round(budget * 0.7); late = 0; }
   last = now;
-  try { draw(sceneTime()); } catch (e) { console.error(e); renderer = null; fail('The scene could not be drawn on this device.'); }
+  try {
+    const frame = draw(sceneTime());
+    // a dissolve draws two pictures at once and is allowed to be slow
+    if (gap < 500 && !frame.busy) late = gap > 55 ? late + 1 : Math.max(0, late - 1);
+    if (late > 40 && budget > 30000) { budget = Math.round(budget * 0.7); late = 0; }
+  } catch (e) { console.error(e); renderer = null; fail('The scene could not be drawn on this device.'); }
 }
 
 if (start()) {
-  if (heldTime !== null || still) {
+  if (held || still) {
     draw(sceneTime());
     addEventListener('resize', () => renderer && draw(sceneTime()));
   } else {
     requestAnimationFrame(tick);
   }
-  canvas.addEventListener('click', () => nextScene(1));
-  addEventListener('keydown', e => {
-    if (e.metaKey || e.ctrlKey || e.altKey) return;
-    if (e.key === ' ' || e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); nextScene(1); }
-    else if (e.key === 'ArrowLeft') { e.preventDefault(); nextScene(-1); }
-    else if (/^[1-9]$/.test(e.key) && Number(e.key) <= SCENES.length) { sceneIndex = Number(e.key) - 1; nextScene(0); }
+  showSound();
+  armTip();
+
+  // taps and swipes on the picture
+  // A double tap's first tap has already moved on a shot by the time the second lands. The
+  // playhead from before it is kept, so the scene is left on the shot the viewer was looking at.
+  let down = null, lastTap = null, beforeTap = null;
+  canvas.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    down = { x: e.clientX, y: e.clientY, t: e.timeStamp, id: e.pointerId };
   });
+  canvas.addEventListener('pointercancel', () => { down = null; });
+  canvas.addEventListener('pointerup', e => {
+    if (!down || e.pointerId !== down.id) return;
+    const up = { x: e.clientX, y: e.clientY, t: e.timeStamp };
+    const what = classify(down, up);
+    down = null;
+    if (!what) return;
+    wake();
+    if (what === 'right') { stepShot(-1); lastTap = null; }
+    else if (what === 'left') { stepShot(1); lastTap = null; }
+    else if (isDouble(lastTap, up)) { if (beforeTap) head = beforeTap; stepScene(1); lastTap = null; }
+    else { beforeTap = head; stepShot(1); lastTap = up; }
+  });
+
+  addEventListener('keydown', e => {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.target === soundButton || e.target === tipClose) return;
+    const k = e.key;
+    if (k === ' ' || k === 'ArrowRight') stepShot(1);
+    else if (k === 'ArrowLeft') stepShot(-1);
+    else if (k === 'Enter' || k === 'ArrowDown' || k === 'n') stepScene(1);
+    else if (k === 'ArrowUp' || k === 'p') stepScene(-1);
+    else if (/^[1-9]$/.test(k) && Number(k) <= SCENES.length) stepScene(0, Number(k) - 1);
+    else if (k === 'm') { setSound(!soundOn); return; }
+    else return;
+    e.preventDefault();
+    wake();
+  });
+
+  soundButton.addEventListener('click', () => setSound(!soundOn));
+  tipClose.addEventListener('click', learned);
+  // sound stops with the picture: a hidden tab is silent
+  document.addEventListener('visibilitychange', () => {
+    if (!player) return;
+    if (document.hidden) player.ctx.suspend();
+    else if (soundOn) player.ctx.resume();
+  });
+
   canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); renderer = null; });
-  canvas.addEventListener('webglcontextrestored', () => { if (start() && (heldTime !== null || still)) draw(sceneTime()); });
+  canvas.addEventListener('webglcontextrestored', () => { if (start() && (held || still)) draw(sceneTime()); });
 }
 
 /* For the browser check and for taking stills: draw an exact second and say
@@ -124,6 +279,9 @@ if (start()) {
 window.__vibes = {
   ready: !!renderer,
   scenes: SCENES.map(s => s.id),
+  // where the page is now, as the viewer has left it
+  state: () => ({ scene: scene().id, shot: head.order[head.at], fading: !!head.from && sceneTime() - head.since < 3,
+    sound: soundOn, playing: !!player && player.ctx.state === 'running', tip: !tip.hidden }),
   frame(t, options = {}) {
     if (options.scene !== undefined) {
       const next = sceneById(options.scene);
@@ -131,10 +289,12 @@ window.__vibes = {
     }
     if (options.seed !== undefined && options.seed !== seed) { seed = options.seed >>> 0; renderer.setScene(scene(), roomLights(scene(), seed), 0); }
     layout();
-    const frame = frameAt(scene(), seed, t, renderer.width / renderer.height, options.shot ?? forcedShot);
+    const shot = options.shot ?? forcedShot;
+    const at = shot === null || shot === undefined ? playheadAt(scene(), seed, t) : holdShot(scene(), seed, shot, t);
+    const frame = frameAt(scene(), seed, t, renderer.width / renderer.height, at);
     renderer.render(frame, { still: !options.live, raw: options.raw, caption: options.caption });
     const gl = renderer.gl;
-    const info = { scene: scene().id, shot: frame.shot, width: renderer.width, height: renderer.height, scale: renderer.scale, error: gl.getError() };
+    const info = { scene: scene().id, shot: frame.shot, fade: frame.fade, width: renderer.width, height: renderer.height, scale: renderer.scale, error: gl.getError() };
     if (options.probe) {
       // Read the picture back, one sample per art pixel: how many colours it
       // uses, and how many of its pixels are not in the scene's palette.

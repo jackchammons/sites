@@ -121,6 +121,23 @@ test('navigation lights: red to port, green to starboard, white at the tail', ()
   assert.ok(ship.lamps.some(l => l.pos[0] < -75 && l.colour.every(c => c > 0.85)), 'a white light at the tail');
 });
 
+test('the lidars under the keel are sensors: nothing lights them', () => {
+  // GA-01 places the four landing lidars; a lamp anywhere near one would read as the lidar shining.
+  for (const x of [-46, -19, 33, 46]) {
+    const pod = [x, 0, -g.r(x)];
+    for (const l of ship.lamps) {
+      const far = Math.hypot(l.pos[0] - pod[0], l.pos[1] - pod[1], l.pos[2] - pod[2]);
+      assert.ok(far > 5, `a lamp ${far.toFixed(1)} m from the lidar at x = ${x}`);
+    }
+  }
+  // the lights that are there are an aircraft's: red and green at the sides, white at the ends and fin tips, a red beacon above and below
+  for (const l of ship.lamps) {
+    const [r, gr, b] = l.colour;
+    const white = r > 0.9 && gr > 0.9 && b > 0.8, red = r > 0.9 && gr < 0.3 && b < 0.3, green = gr > 0.9 && r < 0.3, warm = r > 0.9 && gr > 0.7 && b < 0.6;
+    assert.ok(white || red || green || warm, `a lamp of colour ${l.colour}`);
+  }
+});
+
 test('what the hull shader is told matches the parameters', () => {
   assert.deepEqual(ship.hull.bay, [P.inputs.bay_x[0], P.inputs.bay_x[2], P.inputs.bay_w / 2]);
   assert.deepEqual(ship.hull.solar, [...P.inputs.solar_x, P.inputs.solar_deg]);
