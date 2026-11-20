@@ -137,9 +137,9 @@ test('the camera is never inside the airship, under the ground or among the roof
           for (const day of [0, 5000, 80000]) {
             const f = frameAt(s, 3, day + t, aspect, i);
             assert.ok(f.camera.eye.every(Number.isFinite) && f.camera.target.every(Number.isFinite));
-            // back into the ship's own frame
+            // back into the frame of the ship as it is drawn, heave and all
             const c = Math.cos(-f.ship.yaw), sn = Math.sin(-f.ship.yaw);
-            const dx = f.camera.eye[0], dy = f.camera.eye[1], dz = f.camera.eye[2] - f.altitude;
+            const dx = f.camera.eye[0] - f.ship.pos[0], dy = f.camera.eye[1] - f.ship.pos[1], dz = f.camera.eye[2] - f.ship.pos[2];
             const local = [c * dx - sn * dy, sn * dx + c * dy, dz];
             const where = `${s.id}/${s.shots[i].name} at ${t}s, aspect ${aspect.toFixed(2)}`;
             assert.ok(!inside(local), `${where}: inside the envelope`);
@@ -154,6 +154,25 @@ test('the camera is never inside the airship, under the ground or among the roof
           }
         }
       }
+    }
+  }
+});
+
+test('close shots ride the hull\'s heave; wide shots let the hull ride', () => {
+  for (const s of SCENES) {
+    for (let i = 0; i < s.shots.length; i++) {
+      const shot = s.shots[i];
+      const range = Math.hypot(...shot.from.pos.map((v, k) => v - shot.from.look[k]));
+      // across a whole shot, how far does the aim point wander from the ship it is aimed at?
+      let drift = 0;
+      for (let t = 0; t < shot.dur; t += 0.5) {
+        const f = frameAt(s, 3, 4000 + t, 16 / 9, i);
+        const aim = f.camera.target[2] - f.ship.pos[2];
+        const first = frameAt(s, 3, 4000, 16 / 9, i);
+        drift = Math.max(drift, Math.abs(aim - (first.camera.target[2] - first.ship.pos[2])));
+      }
+      if (range < 70) assert.ok(drift < 0.6, `${s.id}/${shot.name}: a close shot loses the gondola by ${drift.toFixed(1)} m`);
+      if (range > 260) assert.ok(drift < s.flight.heave * 3, `${s.id}/${shot.name}`);
     }
   }
 });

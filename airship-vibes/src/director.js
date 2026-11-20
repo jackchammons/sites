@@ -9,8 +9,8 @@
  *
  * Shots are written in the airship's own frame (x forward, y to port, z up,
  * origin at the middle of the hull) and each runs from one camera position to
- * another, slowly. The frame they are placed in follows the flight path but
- * not the hull's bobbing, so the ship is seen to ride against it.
+ * another, slowly. The frame they are placed in follows the flight path. It
+ * follows the hull's heave only for close shots: see `follow` below.
  */
 import { Rng } from './rng.js';
 import { lerp, lerp3, smoothstep, radians } from './vec.js';
@@ -80,8 +80,13 @@ export function frameAt(scene, seed, t, aspect = 16 / 9, forcedShot = null) {
   // a little hand-held sway, never enough to read as shake
   const sway = [Math.sin(t * 0.21 + run.slot) * 0.6, Math.sin(t * 0.17 + 1.3 + run.slot) * 0.6, Math.sin(t * 0.13 + 2.1) * 0.4];
   const c = Math.cos(ship.yaw), s = Math.sin(ship.yaw);
+  /* The hull heaves a few metres. From far off the camera lets it, and the
+     ship is seen to ride. Close in, a few metres is the whole frame, so the
+     camera rides with it and it is the land behind that moves. */
+  const range = Math.hypot(pos[0] - look[0], pos[1] - look[1], pos[2] - look[2]);
+  const follow = 1 - smoothstep(70, 260, range);
   // out of the ship's frame, into the local frame whose origin rides under the ship
-  const place = p => [c * p[0] - s * p[1], s * p[0] + c * p[1], ship.z + p[2]];
+  const place = p => [c * p[0] - s * p[1], s * p[0] + c * p[1], ship.z + p[2] + follow * ship.heave];
   const eye = place([pos[0] + sway[0], pos[1] + sway[1], pos[2] + sway[2]]);
   return {
     t, seed, start,
