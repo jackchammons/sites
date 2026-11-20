@@ -14,7 +14,7 @@ goes back; `1` to `4` pick one. The scene's name is drawn in the corner for a fe
 
 | Scene | id | What it is |
 |---|---|---|
-| The Valley | `valley` | Morning, a river valley under snow peaks, cumulus overhead, the ship's shadow on the meadows |
+| The Valley | `valley` | Morning in a river valley: hedged meadows, forest on the slopes, snow peaks, cumulus overhead |
 | City Lights | `city` | Night over an endless street grid: lit windows, traffic, a river, the moon |
 | Last Light | `sunset` | The sun going down over a drowned coast, its road on the sea, birds in the distance |
 | Above the Clouds | `clouds` | A floor of cloud below and towers of it standing off the route |

@@ -122,6 +122,30 @@ float cel(float x, float n) {
   return (i + smoothstep(0.35, 0.65, f - i)) / n;
 }
 
+// Nearest and second-nearest feature distance, and a number for the nearest cell.
+vec3 cells(vec2 x) {
+  vec2 fl = floor(x);
+  ivec2 i = ivec2(fl);
+  vec2 f = x - fl;
+  float f1 = 9.0, f2 = 9.0, id = 0.0;
+  for (int dy = -1; dy <= 1; dy++) {
+    for (int dx = -1; dx <= 1; dx++) {
+      ivec2 c = i + ivec2(dx, dy);
+      vec2 r = vec2(float(dx), float(dy)) + hash22(c) - f;
+      float dd = dot(r, r);
+      if (dd < f1) { f2 = f1; f1 = dd; id = hash2(c + ivec2(7, 3)); } else if (dd < f2) { f2 = dd; }
+    }
+  }
+  return vec3(sqrt(f1), sqrt(f2), id);
+}
+
+/* A size rounded up to a power of two. Grids of random points (sparkle on
+   water, far-off lights, windows too small to see singly) are sized from how
+   much ground a pixel covers, and that changes smoothly as the camera moves;
+   sizing the grid from it directly would reshuffle every point every frame.
+   Rounded, a grid holds still until the distance has doubled. */
+float grain(float size) { return exp2(ceil(log2(max(size, 1.0)))); }
+
 float bayer4(ivec2 p) {
   const int M[16] = int[16](0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5);
   return (float(M[(p.y & 3) * 4 + (p.x & 3)]) + 0.5) / 16.0;
@@ -153,6 +177,12 @@ vec3 applyFog(vec3 col, vec3 rd, float dist) {
 }
 
 float pathY(float x) { return uPath.x * sin(x * uPath.y) + uPath.z * sin(x * uPath.w + 1.3); }
+
+/* Time that moves in steps, hz a second. Water, glitter and twinkling lights
+   are animated on it, the way a sprite is: the surface holds for a few frames
+   and then changes, where a smooth clock would flip a tenth of the picture's
+   pixels on every frame and read as static. */
+float tick(float hz) { return floor(uTime * hz) / hz; }
 `;
 
 /* Cloud as a density field, read from a tiling 3D texture. CLOUDS picks the
@@ -261,7 +291,7 @@ void main() {
     float h = hash3(cell);
     if (h > 0.988) {
       float mag = fract(h * 71.3);
-      float tw = 0.7 + 0.3 * sin(uTime * (1.0 + mag * 3.0) + h * 400.0);
+      float tw = 0.7 + 0.3 * sin(tick(4.0) * (1.0 + mag * 3.0) + h * 400.0);
       vec3 tint = mix(vec3(0.75, 0.85, 1.0), vec3(1.0, 0.9, 0.75), fract(h * 13.7));
       col += tint * uStars.y * (0.2 + mag * mag) * mix(1.0, tw, uStars.z) * smoothstep(0.02, 0.3, rd.z);
     }
@@ -434,12 +464,12 @@ void main() {
     // observation rooms at the bow and stern: a glazed band in the skin itself
     if (abs(o.x) > uObs.x && o.z > uObs.y && o.z < uObs.z) {
       float lit = roomLight(o.x > 0.0 ? 21 : 22);
-      float bars = line(abs(fract(ang * rr / 1.3) - 0.5) * 1.3, 0.05, px);
-      float edge = max(line(min(o.z - uObs.y, uObs.z - o.z), 0.07, px), line(abs(o.x) - uObs.x, 0.07, px));
+      float bars = line(abs(fract(ang * rr / 1.6) - 0.5) * 1.6, 0.11, px);
+      float edge = max(line(min(o.z - uObs.y, uObs.z - o.z), 0.12, px), line(abs(o.x) - uObs.x, 0.12, px));
       float frame = max(bars, edge);
       alb = mix(vec3(0.012, 0.045, 0.06), vec3(0.02, 0.03, 0.04), frame);
-      emit = (skyBase(reflect(-view, n)) * (0.1 + 0.16 * uGlass.x) + uRoomTint * lit * 0.9) * (1.0 - frame);
-      glowOut = lit * 0.55;
+      emit = (skyBase(reflect(-view, n)) * (0.1 + 0.16 * uGlass.x) + uRoomTint * lit * 0.4) * (1.0 - frame);
+      glowOut = lit * 0.3;
       gloss = 0.3;
     }
     // a faint keel line where the corridor runs
@@ -705,23 +735,22 @@ void main() {
     float glow = 0.0;
     vec3 lampCol = mix(vec3(1.0, 0.52, 0.16), vec3(1.0, 0.78, 0.5), smoothstep(0.55, 0.8, dz));
     float far = smoothstep(4.0, 9.0, foot);            // 1 where streets can no longer be told apart
-    float fineHash = hash2(ivec2(floor(w / max(foot * 1.4, 2.0))));
+    float fineHash = hash2(ivec2(gl_FragCoord.xy) + ivec2(0, int(floor(uTime * 3.0)) * 131));
 
     if (rv < 0.0 && !bridge) {
-      // ---- the river: black water carrying streaks of the banks' light ----
-      vec2 vdir = normalize(-view.xy);
-      vec2 side = vec2(-vdir.y, vdir.x);
-      float streak = noise(vec2(dot(w, side) * 0.07, dot(w, vdir) * 0.006 + uTime * 0.03));
-      float ripple = noise(vec2(dot(w, side) * 0.03, dot(w, vdir) * 0.09 - uTime * 0.6));
-      float nearBank = exp(rv / 48.0);
-      float lit = smoothstep(0.66, 0.8, streak) * smoothstep(0.35, 0.65, ripple) * nearBank;
-      vec3 tint = mix(lampCol, vec3(0.5, 0.85, 1.0), step(0.9, streak));
-      base = vec3(0.004, 0.008, 0.026) + skyBase(vec3(vdir * 0.9, 0.3)) * 0.2;
-      emit = tint * lit * 0.6;
-      // the moon's road
+      // ---- the river: black water, the banks' light lying on it near the edges ----
+      // Everything here is fixed to the water, not to the view, so it holds
+      // still as the camera moves: a wash of lamp colour by each bank, a few
+      // points that come and go, and the moon's road.
+      float nearBank = exp(rv / 55.0);
+      vec3 pts = cells(w / vec2(9.0, 26.0) + 5.0);
+      float on = step(pts.x, 0.16) * step(0.55, fract(pts.z * 7.0 + tick(2.0) * (0.3 + pts.z)));
+      base = vec3(0.004, 0.008, 0.026);
+      emit = lampCol * (nearBank * 0.1 + on * (0.25 + nearBank) * 0.5 * (1.0 - far));
+      emit += mix(lampCol, vec3(0.5, 0.85, 1.0), 0.5) * on * step(0.9, pts.z) * 0.3 * (1.0 - far);
       vec3 hv = normalize(uSunDir + view);
-      float sp = pow(max(dot(normalize(vec3((ripple - 0.5) * 0.12, (streak - 0.5) * 0.12, 1.0)), hv), 0.0), 240.0);
-      emit += uSunCol * sp * 2.2 * step(0.62, fineHash);
+      float sp = pow(max(dot(vec3(0.0, 0.0, 1.0), hv), 0.0), 90.0);
+      emit += uSunCol * sp * 1.6 * step(0.7, fineHash);
       // a lit promenade along each bank
       float prom = smoothstep(-9.0, -3.0, rv) * step(0.5, fract(w.x / 22.0));
       emit += lampCol * prom * 0.5 * (1.0 - far);
@@ -772,10 +801,10 @@ void main() {
 
     // far off, the grid dissolves into a carpet of points
     if (far > 0.0 && (rv >= 0.0 || bridge)) {
-      float cs = max(foot * 1.5, 26.0);
+      float cs = 26.0 * grain(foot * 1.5 / 26.0);
       ivec2 pc = ivec2(floor(w / cs));
       float r = hash2(pc);
-      float tw = 0.7 + 0.3 * sin(uTime * (0.6 + r * 2.0) + r * 60.0);
+      float tw = 0.7 + 0.3 * sin(tick(3.0) * (0.6 + r * 2.0) + r * 60.0);
       float on = step(1.0 - (0.012 + 0.2 * dz * dz), r);
       vec3 pcCol = mix(lampCol, mix(vec3(1.0, 0.95, 0.85), vec3(0.6, 0.85, 1.0), step(0.992, r)), step(0.97, r));
       vec3 carpet = pcCol * on * tw * (0.45 + 0.6 * dz) + lampCol * 0.02 * (0.3 + dz);
@@ -785,7 +814,9 @@ void main() {
 
     vec3 c = base * (uAmbSky * 4.0 + uSunCol * 1.5) + emit;
     c = mix(c, fogColour(-view), fogAmount(-view, dist));
-    frag = vec4(toSrgb(c), glow);
+    // Street light is many small points that shift a little every frame; given
+    // a full halo each, the halos flicker far more than the points do.
+    frag = vec4(toSrgb(c), glow * 0.3);
     return;
   }
 #endif
@@ -804,14 +835,25 @@ void main() {
 #if TERRAIN == 0
   float n1 = fbm(w / 170.0, 3);
   float n2 = fbm(w / 37.0 + 5.0, 2);
-  float fine = hash2(ivec2(floor(w / max(foot, 1.0))));
+  float fine = hash2(ivec2(floor(w / grain(foot))) + ivec2(0, int(floor(uTime * 4.0)) * 13));
   // meadow, alpine turf above the trees
   alb = mix(uTc[0], uTc[1], smoothstep(0.46, 0.54, n1 + (n2 - 0.5) * 0.4));
+  // on the valley floor the meadows are parcelled out, with hedges between
+  float floorness = 1.0 - smoothstep(600.0, 1500.0, abs(w.y - pathY(w.x)) + (n1 - 0.5) * 500.0);
+  float hedge = 0.0;
+  if (floorness > 0.0) {
+    vec2 fw = w + (vec2(noise(w / 170.0 + 3.0), noise(w / 170.0 + 31.0)) - 0.5) * 150.0;
+    vec3 fld = cells(fw / 115.0 + 7.0);
+    vec3 crop = fld.z < 0.2 ? uTc[11] : fld.z < 0.55 ? uTc[0] : uTc[1];
+    alb = mix(alb, crop, floorness * step(0.3, fld.z + n1 * 0.3));
+    hedge = floorness * (1.0 - smoothstep(0.02, 0.04 + foot * 0.006, fld.y - fld.x))
+      * step(0.47, noise(w / 75.0 + 13.0)) * step(foot, 9.0);
+  }
   float alpine = smoothstep(1350.0, 1750.0, h0 + (n1 - 0.5) * 420.0);
   alb = mix(alb, uTc[2], alpine);
   // forest: on the slopes below the tree line, and in stands on the floor
-  float stand = smoothstep(0.5, 0.6, fbm(w / 520.0 + 23.0, 3) + slope * 1.8);
-  float forest = stand * (1.0 - alpine) * smoothstep(0.62, 0.45, slope);
+  float stand = smoothstep(0.5, 0.6, fbm(w / 520.0 + 23.0, 3) + slope * 1.8 - floorness * 0.06);
+  float forest = max(stand, hedge) * (1.0 - alpine) * smoothstep(0.62, 0.45, slope);
   if (forest > 0.01) {
     vec3 tr = worley(w / 13.0);
     float crown = 1.0 - smoothstep(0.0, 0.62, tr.x);
@@ -835,7 +877,7 @@ void main() {
   alb = mix(alb, uTc[8], bar * step(0.0, rv.x) * (1.0 - snow));
   if (h0 < uLand.x + 0.4) {
     float depth = clamp((uLand.x - h0) / 5.0, 0.0, 1.0);
-    vec2 flow = vec2(uTime * 2.4, 0.0);
+    vec2 flow = vec2(tick(8.0) * 2.4, 0.0);
     n = vec3(0.0, 0.0, 1.0);
     vec3 refl = skyBase(reflect(-view, n));
     float fres = 0.06 + 0.94 * pow(1.0 - max(dot(n, view), 0.0), 4.0);
@@ -859,7 +901,9 @@ void main() {
 #if TERRAIN == 1
   float n1 = fbm(w / 210.0, 3);
   float n2 = fbm(w / 41.0 + 5.0, 2);
-  float fine = hash2(ivec2(floor(w / max(foot, 1.0))));
+  // Glitter is pinned to the screen and changes four times a second. Pinned to
+  // the water it would reshuffle on every frame as the ship moves over it.
+  float fine = hash2(ivec2(gl_FragCoord.xy) + ivec2(0, int(floor(uTime * 4.0)) * 131));
   alb = mix(uTc[0], uTc[1], smoothstep(0.3, 0.7, n1));
   float wood = smoothstep(0.46, 0.6, fbm(w / 640.0 + 23.0, 3) + slope) * smoothstep(900.0, 500.0, h0);
   alb = mix(alb, mix(uTc[4], uTc[3], n2), wood);
@@ -869,10 +913,17 @@ void main() {
   if (h0 < uLand.x) {
     // the sea: long swells, the sun's road across it
     float depth = clamp((uLand.x - h0) / 60.0, 0.0, 1.0);
-    vec2 t = vec2(uTime * 3.0, uTime * 1.3);
-    float sw = noise((w + t) / 55.0) + 0.6 * noise((w * ROT - t * 1.6) / 21.0) + 0.3 * noise((w + t.yx * 2.0) / 8.0);
-    float sx = noise((w + t + vec2(6.0, 0.0)) / 55.0) + 0.6 * noise((w * ROT - t * 1.6 + vec2(6.0, 0.0)) / 21.0);
-    float sy = noise((w + t + vec2(0.0, 6.0)) / 55.0) + 0.6 * noise((w * ROT - t * 1.6 + vec2(0.0, 6.0)) / 21.0);
+    vec2 t = vec2(3.0, 1.3) * tick(6.0);
+    // Each size of wave is dropped once it is finer than a few pixels: drawn
+    // smaller than that it is not a wave, only a different random number for
+    // every pixel on every frame.
+    float w1 = smoothstep(2.5, 5.0, 55.0 / foot), w2 = 0.6 * smoothstep(2.5, 5.0, 21.0 / foot), w3 = 0.3 * smoothstep(2.5, 5.0, 8.0 / foot);
+    float sw = w1 * noise((w + t) / 55.0) + w2 * noise((w * ROT - t * 1.6) / 21.0) + w3 * noise((w + t.yx * 2.0) / 8.0);
+    float sx = w1 * noise((w + t + vec2(6.0, 0.0)) / 55.0) + w2 * noise((w * ROT - t * 1.6 + vec2(6.0, 0.0)) / 21.0);
+    float sy = w1 * noise((w + t + vec2(0.0, 6.0)) / 55.0) + w2 * noise((w * ROT - t * 1.6 + vec2(0.0, 6.0)) / 21.0);
+    sw += (1.0 - w1) * 0.5 + (0.6 - w2) * 0.5 + (0.3 - w3) * 0.5;
+    sx += (1.0 - w1) * 0.5 + (0.6 - w2) * 0.5 + (0.3 - w3) * 0.5;
+    sy += (1.0 - w1) * 0.5 + (0.6 - w2) * 0.5 + (0.3 - w3) * 0.5;
     float damp = 1.0 / (1.0 + foot * 0.06);
     n = normalize(vec3((sw - sx) * 0.55 * damp, (sw - sy) * 0.55 * damp, 1.0));
     vec3 rdir = reflect(-view, n);
@@ -1002,7 +1053,8 @@ void main() {
     }
   } else {
     // windows: a grid that coarsens with distance so a lit window is never less than a pixel
-    float cw = max(3.2, px * 1.3), ch = max(3.6, px * 1.3);
+    float coarse = grain(px * 1.8 / 3.2);
+    float cw = 3.2 * coarse, ch = 3.6 * coarse;
     vec2 g = vec2(vUV.x / cw, vUV.y / ch);
     ivec2 wi = ivec2(floor(g));
     vec2 f = g - floor(g);
@@ -1012,8 +1064,8 @@ void main() {
     float storey = hash2(ivec2(wi.y, key));
     // offices keep whole floors lit; flats light one window at a time
     bool office = fract(seed * 11.7) < 0.3 + 0.5 * dz;
-    float frac = office ? (storey > 0.86 ? 0.55 : 0.04) : 0.17;
-    frac *= 0.25 + 0.9 * dz * dz;
+    float frac = office ? (storey > 0.86 ? 0.55 : 0.05) : 0.24;
+    frac *= 0.4 + 0.8 * dz * dz;
     // now and then a light goes on or off
     float flip = step(0.985, fract(r * 13.0 + floor(uTime / 7.0 + r * 9.0) * 0.137));
     float on = abs(step(r, frac) - flip * step(0.5, fract(r * 91.0)));
@@ -1022,7 +1074,7 @@ void main() {
     vec3 wc = office ? mix(cool, warm, step(0.45, fract(seed * 23.0))) : mix(warm, cool, step(0.9, fract(r * 17.0)));
     float bright = (0.4 + 0.45 * fract(r * 29.0)) * min(1.0, 3.4 / cw + 0.3);
     emit = wc * on * pane * bright;
-    glow = on * pane * 0.45 * bright;
+    glow = on * pane * 0.2 * bright;
     // a lit crown on some towers, and now and then a sign
     float fromTop = vB.y - vUV.y;
     if (vB.y > 95.0 && fract(seed * 31.0) > 0.45 && fromTop < max(3.0, px * 1.2) && (vB.w > 0.5 || vB.y * 0.64 < vUV.y)) {
@@ -1035,7 +1087,7 @@ void main() {
   }
 
   float ndl = max(dot(n, uSunDir), 0.0);
-  vec3 c = wall * (uAmbSky * 2.4 + uSunCol * ndl * 3.5) + emit;
+  vec3 c = wall * (uAmbSky * 1.9 + uSunCol * ndl * 3.5) + emit;
   c = mix(c, fogColour(-view), fogAmount(-view, dist));
   frag = vec4(toSrgb(c), glow);
 }
@@ -1096,7 +1148,7 @@ uniform vec3 uCloudLit;
 uniform vec3 uCloudDark;
 uniform vec3 uCloudDeep;
 uniform vec4 uCloudMarch;   // step growth per step, reach in metres, light step in metres
-uniform vec4 uCloudLight;   // how fast cloud shades itself, how fast it turns opaque (per metre)
+uniform vec4 uCloudLight;   // how fast cloud shades itself, how fast it turns opaque (per metre), how far the sun burns through
 uniform vec4 uLook;         // glow strength, outline strength, dither sharpness, vignette
 uniform vec4 uFade;         // dissolve 0..1 (1 = all new), caption alpha 0..1, caption x, caption y
 uniform vec4 uCaptionSize;  // width, height in pixels, ink palette index, shadow palette index
@@ -1170,6 +1222,7 @@ void main() {
       float T = 1.0;
       vec3 acc = vec3(0.0);
       bool inside = false;
+      float burn = 1.0 - uCloudLight.z * smoothstep(0.9965, 0.9993, dot(rd, uSunDir));
       for (int i = 0; i < CLOUD_STEPS; i++) {
         if (t >= t1) break;
         float seg = max(min(t * uCloudMarch.x, (t1 - t0) / 9.0), 14.0);
@@ -1197,7 +1250,7 @@ void main() {
           float silver = pow(max(dot(rd, uSunDir), 0.0), 5.0) * light;
           c += uSunCol * silver * 0.3;
           c = toSrgb(mix(c, fogColour(rd), cel(fogAmount(rd, ts), 9.0)));
-          float a = 1.0 - exp(-d * seg * uCloudLight.y);
+          float a = (1.0 - exp(-d * seg * uCloudLight.y)) * burn;
           acc += T * a * c;
           T *= 1.0 - a;
           if (T < 0.04) { T = 0.0; break; }

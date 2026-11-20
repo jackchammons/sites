@@ -270,7 +270,9 @@ export function buildShip(inp) {
     const xb = gx + inp.balcony_len;
     for (const s of [1, -1]) {
       m.quad([gx, s * hw2, z2], [gx, s * bw, z2], [gx, s * bw, z3], [gx, s * hw2, z3], C.shell, { ...bay, normal: [-1, 0, 0] });
-      m.quad([gx, s * hw2, z2], [xb, s * hw2, z2], [xb, s * hw2, z3], [gx, s * hw2, z3], shade(C.shell, 0.9), { ...bay, normal: [0, -s, 0] });
+      m.quad([gx, s * (hw2 - 0.03), z2], [xb, s * (hw2 - 0.03), z2], [xb, s * (hw2 - 0.03), z3], [gx, s * (hw2 - 0.03), z3], shade(C.shell, 0.9), { ...bay, normal: [0, -s, 0] });
+      // the same wall from outside is shell like the rest, not lit by the bay's lamps
+      m.quad([gx, s * hw2, z2], [xb, s * hw2, z2], [xb, s * hw2, zTop], [gx, s * hw2, zTop], C.shell, { normal: [0, s, 0] });
     }
     m.quad([gx, -hw2, z2 + 0.02], [xb, -hw2, z2 + 0.02], [xb, hw2, z2 + 0.02], [gx, hw2, z2 + 0.02], '#9a8468', { ...bay, normal: [0, 0, 1] });
     {

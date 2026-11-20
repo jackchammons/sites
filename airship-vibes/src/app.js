@@ -15,7 +15,7 @@ import { buildShip } from './ship.js';
 import { Renderer } from './renderer.js';
 import { SCENES, sceneById } from './scenes.js';
 import { frameAt, roomLights } from './director.js';
-import { artSize } from './layout.js';
+import { artSize, TARGET_PIXELS } from './layout.js';
 
 const canvas = document.getElementById('view');
 const note = document.getElementById('note');
@@ -23,6 +23,7 @@ const query = new URLSearchParams(location.search);
 const num = name => (query.has(name) && query.get(name) !== '' && Number.isFinite(Number(query.get(name))) ? Number(query.get(name)) : null);
 
 const FPS = 30;
+let budget = TARGET_PIXELS;          // art pixels to draw; lowered if frames run late
 const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function fail(message) {
@@ -48,7 +49,7 @@ function layout() {
   const dpr = Math.min(window.devicePixelRatio || 1, 3);
   const w = Math.max(1, Math.round(canvas.clientWidth * dpr)), h = Math.max(1, Math.round(canvas.clientHeight * dpr));
   if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
-  const art = artSize(w, h, undefined, num('px') ?? 0);
+  const art = artSize(w, h, budget, num('px') ?? 0);
   renderer.resize(art.width, art.height, art.scale);
 }
 
@@ -86,10 +87,16 @@ function nextScene(step = 1) {
   if (still || heldTime !== null) draw(sceneTime());
 }
 
-let last = 0;
+/* A device that cannot draw thirty frames a second is given fewer, larger
+   pixels until it can: the picture gets chunkier, which it can afford, and
+   stays smooth, which it cannot do without. */
+let last = 0, late = 0;
 function tick(now) {
   requestAnimationFrame(tick);
   if (!renderer || now - last < 1000 / FPS - 2) return;
+  const gap = now - last;
+  if (last && gap < 500) late = gap > 55 ? late + 1 : Math.max(0, late - 1);
+  if (late > 40 && budget > 30000) { budget = Math.round(budget * 0.7); late = 0; }
   last = now;
   try { draw(sceneTime()); } catch (e) { console.error(e); renderer = null; fail('The scene could not be drawn on this device.'); }
 }
@@ -125,7 +132,7 @@ window.__vibes = {
     if (options.seed !== undefined && options.seed !== seed) { seed = options.seed >>> 0; renderer.setScene(scene(), roomLights(scene(), seed), 0); }
     layout();
     const frame = frameAt(scene(), seed, t, renderer.width / renderer.height, options.shot ?? forcedShot);
-    renderer.render(frame, { still: true, raw: options.raw, caption: options.caption });
+    renderer.render(frame, { still: !options.live, raw: options.raw, caption: options.caption });
     const gl = renderer.gl;
     const info = { scene: scene().id, shot: frame.shot, width: renderer.width, height: renderer.height, scale: renderer.scale, error: gl.getError() };
     if (options.probe) {

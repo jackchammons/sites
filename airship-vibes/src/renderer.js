@@ -385,7 +385,7 @@ export class Renderer {
       uCloudLit: cloud ? lin(cloud.lit) : [1, 1, 1], uCloudDark: cloud ? lin(cloud.dark) : [0.5, 0.5, 0.5],
       uCloudDeep: cloud ? lin(cloud.deep) : [0.3, 0.3, 0.3],
       uCloudMarch: cloud ? [cloud.grow, cloud.reach, cloud.lightStep, 0] : [1, 1, 1, 0],
-      uCloudLight: cloud ? [cloud.shade, cloud.opacity, 0, 0] : [1, 1, 0, 0],
+      uCloudLight: cloud ? [cloud.shade, cloud.opacity, cloud.burn ?? 0, 0] : [1, 1, 0, 0],
       uCloudSh: [cloud ? cloud.shadow : 0, 0, 0, 0],
       // ground
       uGrid: [snap - frame.origin[0], snap, -frame.origin[1], 0],

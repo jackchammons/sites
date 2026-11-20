@@ -27,17 +27,36 @@ function valueNoise(x, y, z, cells, seed) {
     lerp(lerp(at(0, 0, 1), at(1, 0, 1), u), lerp(at(0, 1, 1), at(1, 1, 1), u), v), w);
 }
 
-// Distance to the nearest of one jittered point per cell, wrapping; 0..~1.
-function cellNoise(x, y, z, cells, seed) {
+/* One jittered point per cell of a lattice that wraps, laid out once: the
+   volume asks for the nearest point 27 cells at a time, a third of a million
+   times, and hashing the same few hundred cells again for each is most of the
+   cost of building it. */
+function pointLattice(cells, seed) {
+  const pts = new Float32Array(cells * cells * cells * 3);
+  let o = 0;
+  for (let z = 0; z < cells; z++) {
+    for (let y = 0; y < cells; y++) {
+      for (let x = 0; x < cells; x++) {
+        const h = hash3(x, y, z, seed);
+        pts[o++] = unit(h); pts[o++] = unit(hash32(h + 1)); pts[o++] = unit(hash32(h + 2));
+      }
+    }
+  }
+  return pts;
+}
+
+// Distance to the nearest of those points, wrapping; 0..~1.
+function cellNoise(x, y, z, cells, pts) {
   const xi = Math.floor(x), yi = Math.floor(y), zi = Math.floor(z);
   let best = 9;
   for (let dz = -1; dz <= 1; dz++) {
+    const cz = zi + dz, wz = wrap(cz, cells);
     for (let dy = -1; dy <= 1; dy++) {
+      const cy = yi + dy, wy = wrap(cy, cells);
       for (let dx = -1; dx <= 1; dx++) {
-        const cx = xi + dx, cy = yi + dy, cz = zi + dz;
-        const h = hash3(wrap(cx, cells), wrap(cy, cells), wrap(cz, cells), seed);
-        const px = cx + unit(h), py = cy + unit(hash32(h + 1)), pz = cz + unit(hash32(h + 2));
-        const d = (px - x) ** 2 + (py - y) ** 2 + (pz - z) ** 2;
+        const cx = xi + dx, o = ((wz * cells + wy) * cells + wrap(cx, cells)) * 3;
+        const ex = cx + pts[o] - x, ey = cy + pts[o + 1] - y, ez = cz + pts[o + 2] - z;
+        const d = ex * ex + ey * ey + ez * ez;
         if (d < best) best = d;
       }
     }
@@ -47,6 +66,8 @@ function cellNoise(x, y, z, cells, seed) {
 
 export function buildCloudNoise(size = 32, seed = 7) {
   const out = new Uint8Array(size * size * size * 4);
+  const L = (cells, salt) => pointLattice(cells, seed + salt);
+  const b4 = L(4, 31), b8 = L(8, 41), b16 = L(16, 53), f6 = L(6, 61), f12 = L(12, 71);
   let o = 0;
   for (let k = 0; k < size; k++) {
     for (let j = 0; j < size; j++) {
@@ -55,13 +76,13 @@ export function buildCloudNoise(size = 32, seed = 7) {
         const smooth = 0.55 * valueNoise(x * 4, y * 4, z * 4, 4, seed)
           + 0.3 * valueNoise(x * 8, y * 8, z * 8, 8, seed + 11)
           + 0.15 * valueNoise(x * 16, y * 16, z * 16, 16, seed + 23);
-        const billow = 0.6 * (1 - cellNoise(x * 4, y * 4, z * 4, 4, seed + 31))
-          + 0.28 * (1 - cellNoise(x * 8, y * 8, z * 8, 8, seed + 41))
-          + 0.12 * (1 - cellNoise(x * 16, y * 16, z * 16, 16, seed + 53));
+        const billow = 0.6 * (1 - cellNoise(x * 4, y * 4, z * 4, 4, b4))
+          + 0.28 * (1 - cellNoise(x * 8, y * 8, z * 8, 8, b8))
+          + 0.12 * (1 - cellNoise(x * 16, y * 16, z * 16, 16, b16));
         // Carve the smooth field with the billows: lobed, cauliflower edges.
         const base = Math.min(1, Math.max(0, (smooth - (1 - billow) * 0.55) / 0.45 * 0.5 + billow * 0.5));
-        const fine = 0.6 * (1 - cellNoise(x * 6, y * 6, z * 6, 6, seed + 61))
-          + 0.4 * (1 - cellNoise(x * 12, y * 12, z * 12, 12, seed + 71));
+        const fine = 0.6 * (1 - cellNoise(x * 6, y * 6, z * 6, 6, f6))
+          + 0.4 * (1 - cellNoise(x * 12, y * 12, z * 12, 12, f12));
         out[o++] = Math.round(base * 255);
         out[o++] = Math.round(Math.min(1, fine) * 255);
         out[o++] = Math.round(smooth * 255);
