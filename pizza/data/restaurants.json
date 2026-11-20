@@ -802,6 +802,13 @@
           "source": "whatnow.com",
           "date": "2026-10-16",
           "kind": "closing"
+        },
+        {
+          "url": "https://www.seattletimes.com/life/food-drink/as-a-beloved-seattle-pizzeria-closes-2-pros-take-the-keys-and-the-dough/",
+          "title": "As a beloved Seattle pizzeria closes, 2 pros take the keys (and the dough)",
+          "source": "The Seattle Times",
+          "date": "2026-10-29",
+          "kind": "closing"
         }
       ],
       "coverageAttempted": null,

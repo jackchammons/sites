@@ -1,46 +1,39 @@
 {
-  "updated": "2026-11-19T00:00:00Z",
-  "status": [
+  "updated": "2026-11-20T18:00:00Z",
+  "news": [
     {
-      "id": "breezy-town-pizza",
-      "status": "closed",
-      "note": "No evidence of reopening found; The Infatuation's review page and an Airbnb listing both still mark the Beacon Hill Chicago-style spot as permanently closed.",
-      "source": "https://theinfatuation.com/seattle/reviews/breezy-town-pizza"
-    },
-    {
-      "id": "pizza-by-ruffin",
-      "status": "open",
-      "note": "Official site is live with no closure notice, and a February 2026 Seattle Met feature covers it as the city's only Black-owned pizzeria currently operating in South Lake Union.",
-      "source": "https://pizzabyruffin.com"
-    },
-    {
-      "id": "cornuto-pizzeria",
-      "status": "open",
-      "note": "Official site is live listing current hours (Wed-Sun, 4-9:30pm) with no closure notice.",
-      "source": "https://www.cornutopizzeria.com/"
-    },
-    {
-      "id": "pizzeria-la-rocca",
-      "status": "open",
-      "note": "Official site is live listing current hours and offering takeout, delivery, and reservations, with no closure notice.",
-      "source": "https://www.pizzalarocca.com/"
-    },
-    {
-      "id": "mioposto",
-      "status": "open",
-      "note": "Official site is live promoting its five Seattle and Mercer Island locations and a current limited-time pizza, with no closure notice.",
-      "source": "https://www.miopostopizza.com/"
-    },
-    {
-      "id": "veraci-pizza",
-      "status": "open",
-      "note": "Official site is live with a 2026 footer, current hours, and active ordering links for both the Ballard and Wedgwood locations.",
-      "source": "https://www.veracipizza.com/"
+      "title": "After Nearly 17 Years, a Madison Street Pizzeria Bids Farewell",
+      "url": "https://whatnow.com/seattle/restaurants/after-nearly-17-years-a-madison-street-pizzeria-bids-farewell/",
+      "source": "WhatNow Seattle",
+      "published": "2026-10-16",
+      "kind": "closing",
+      "mentions": ["independent-pizzeria"]
     }
   ],
-  "rejected": [
-    "factorRatings[0]: The Masonry is already rated; ratings are never overwritten",
-    "factorRatings[1]: Supreme is already rated; ratings are never overwritten",
-    "factorRatings[2]: Alibi Room is already rated; ratings are never overwritten"
+  "mentions": [
+    {
+      "id": "independent-pizzeria",
+      "title": "Beloved Seattle pizzeria to close after more than 16 years",
+      "url": "https://www.kiro7.com/news/local/beloved-seattle-pizzeria-close-after-more-than-16-years/PP5A3GUJN5GFJDHSQFB3YYPG7M/",
+      "source": "KIRO 7 News Seattle",
+      "date": "2026-10-16",
+      "kind": "closing"
+    },
+    {
+      "id": "independent-pizzeria",
+      "title": "As a beloved Seattle pizzeria closes, 2 pros take the keys (and the dough)",
+      "url": "https://www.seattletimes.com/life/food-drink/as-a-beloved-seattle-pizzeria-closes-2-pros-take-the-keys-and-the-dough/",
+      "source": "The Seattle Times",
+      "date": "2026-10-29",
+      "kind": "closing"
+    },
+    {
+      "id": "tutta-bella",
+      "title": "Tutta Bella closes 2 Seattle locations, including original restaurant",
+      "url": "https://www.fox13seattle.com/news/tutta-bella-closes-2-seattle-locations",
+      "source": "FOX 13 Seattle",
+      "date": "2026-09-23",
+      "kind": "closing"
+    }
   ]
 }
