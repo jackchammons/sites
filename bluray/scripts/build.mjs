@@ -4,8 +4,11 @@
  *
  * The whole collection is rendered here: the drawn shelf of spines and the
  * list under it, both in shelf order, with every count taken from the data.
- * The page is complete without JavaScript; src/app.js only adds the filter
- * chips and the order menu, and reads the entries it needs from inline JSON.
+ * The page is complete without JavaScript; src/app.js adds the filter chips,
+ * the order menu and the movement of the cases on the shelf, and reads the
+ * entries it needs from inline JSON. The one inline script marks the page as
+ * scripted before it is first painted, which the stylesheet needs to know to
+ * keep the cases out of sight until app.js brings them in.
  * src/shelf.js holds the rules for both halves and is copied into dist
  * unchanged, so the verifier can run the deployed copy.
  */
@@ -95,7 +98,7 @@ const span = sum.total
 const lede = `The shelf holds ${plural(sum.total, 'title')}${span}: `
   + `${sum.shows['4k']} in 4K Ultra HD and ${sum.shows.bluray} on Blu-ray`
   + (sum.shows.criterion ? `, ${sum.shows.criterion} of them from the Criterion Collection` : '')
-  + '. They are listed in the order they stand, left to right. Pick a spine to find it in the list.';
+  + '. Pick a spine to find it in the list.';
 
 // Only what arrange() reads goes to the browser.
 const inline = JSON.stringify(discs.map(({ id, title, year, yearEnd, format, label }) =>
@@ -111,6 +114,7 @@ const html = `<!doctype html>
 <meta name="theme-color" content="#131210" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#f3f0e9" media="(prefers-color-scheme: light)">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📀</text></svg>">
+<script>document.documentElement.classList.add('js')</script>
 <link rel="stylesheet" href="./styles.css">
 <script id="discs" type="application/json">${inline}</script>
 <script type="module" src="./app.js"></script>
@@ -121,9 +125,10 @@ const html = `<!doctype html>
     <div class="eyebrow">${esc(data.eyebrow)}</div>
     <h1>${esc(data.heading)}</h1>
     <p class="lede">${lede}</p>
+    <p class="updated">Last updated <time datetime="${esc(data.updated)}">${MONTHS[day[2] - 1]} ${Number(day[3])}, ${day[1]}</time></p>
   </header>
 
-  <nav class="shelf" aria-label="The shelf, left to right" style="--n:${discs.length};--units:${units}">
+  <nav class="shelf" id="shelf" aria-label="The shelf" style="--n:${discs.length};--units:${units}">
     <ol class="spines" id="spines">${spinesHtml}
     </ol>
     <div class="plank"></div>
@@ -145,8 +150,6 @@ const html = `<!doctype html>
   </main>
 
   <footer>
-    <p>Catalogued from the shelf on <time datetime="${esc(data.updated)}">${Number(day[3])} ${MONTHS[day[2] - 1]} ${day[1]}</time>.
-      Editions are listed as their spines read.</p>
     <p><a href="../">all sites</a></p>
   </footer>
 </div>

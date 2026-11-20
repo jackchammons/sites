@@ -3,7 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { FORMATS, SHOWS, SORTS, CRITERION, sortKey, arrange, summarize, years, edition, problems }
+import { FORMATS, SHOWS, SORTS, CRITERION, sortKey, arrange, scramble, summarize, years, edition, problems }
   from '../src/shelf.js';
 
 const data = JSON.parse(fs.readFileSync(new URL('../data/data.json', import.meta.url), 'utf8'));
@@ -74,6 +74,37 @@ test('an unknown chip or order falls back to everything, as shelved', () => {
   assert.deepEqual(ids(arrange(shelf, { show: 'laserdisc', sort: 'weight' })), ids(shelf));
   assert.deepEqual(ids(arrange(shelf, { show: undefined, sort: undefined })), ids(shelf));
   assert.deepEqual(arrange([], { show: '4k', sort: 'title' }), []);
+});
+
+test('the page opens in the order of the data, whatever the menu calls it', () => {
+  assert.equal(SORTS[0].id, 'shelf');
+  assert.deepEqual(ids(arrange(shelf, { sort: SORTS[0].id })), ids(shelf));
+});
+
+test('scramble returns the same things in another order and leaves its input alone', () => {
+  const list = ['a', 'b', 'c', 'd', 'e', 'f'];
+  // A fixed sequence stands in for Math.random, so the jumble is the same every run.
+  const fixed = () => { let n = 0; const seq = [0.1, 0.9, 0.4, 0.7, 0.2]; return () => seq[n++ % seq.length]; };
+  const out = scramble(list, fixed());
+  assert.deepEqual(list, ['a', 'b', 'c', 'd', 'e', 'f']);
+  assert.deepEqual([...out].sort(), list);
+  assert.notDeepEqual(out, list);
+  assert.deepEqual(out, scramble(list, fixed()));
+});
+
+test('scramble never hands back the order it was given, when there is another', () => {
+  // random() this close to 1 swaps every item with itself: the jumble that changes nothing.
+  const lazy = () => 0.999999;
+  assert.deepEqual(scramble(['a', 'b', 'c'], lazy), ['b', 'a', 'c']);
+  assert.deepEqual(scramble(['a', 'b'], lazy), ['b', 'a']);
+  assert.deepEqual(scramble(['a'], lazy), ['a']);
+  assert.deepEqual(scramble([], lazy), []);
+  for (let i = 0; i < 200; i++) {
+    const out = scramble(data.discs);
+    assert.equal(out.length, data.discs.length);
+    assert.equal(new Set(out).size, data.discs.length);
+    assert.notDeepEqual(ids(out), ids(data.discs));
+  }
 });
 
 test('every format has exactly one chip, so the format chips add up to the whole', () => {

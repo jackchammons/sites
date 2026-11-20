@@ -95,7 +95,7 @@
       "title": "Some Like It Hot",
       "year": 1959,
       "director": "Billy Wilder",
-      "format": "Blu-ray",
+      "format": "4K UHD",
       "label": "Criterion Collection",
       "number": 950,
       "look": { "bg": "#e6e4e0", "ink": "#cc2a24", "cap": "#9aa0a6", "width": 1.1, "height": 0.9, "face": "sans" }
@@ -105,7 +105,7 @@
       "title": "Raging Bull",
       "year": 1980,
       "director": "Martin Scorsese",
-      "format": "Blu-ray",
+      "format": "4K UHD",
       "label": "Criterion Collection",
       "number": 1134,
       "look": { "bg": "#55565a", "ink": "#e2e2e2", "cap": "#9aa0a6", "width": 1.1, "height": 0.9, "face": "sans" }
@@ -115,7 +115,7 @@
       "title": "Barry Lyndon",
       "year": 1975,
       "director": "Stanley Kubrick",
-      "format": "Blu-ray",
+      "format": "4K UHD",
       "label": "Criterion Collection",
       "number": 897,
       "look": { "bg": "#d8d4c9", "ink": "#2e2b27", "width": 1.7, "height": 0.96, "face": "serif" }
@@ -125,7 +125,7 @@
       "title": "Citizen Kane",
       "year": 1941,
       "director": "Orson Welles",
-      "format": "Blu-ray",
+      "format": "4K UHD",
       "label": "Criterion Collection",
       "number": 1104,
       "look": { "bg": "#17171a", "ink": "#ececec", "width": 1.5, "height": 0.97, "face": "sans" }
@@ -135,7 +135,7 @@
       "title": "The Princess Bride",
       "year": 1987,
       "director": "Rob Reiner",
-      "format": "Blu-ray",
+      "format": "4K UHD",
       "label": "Criterion Collection",
       "number": 948,
       "look": { "bg": "#5d4d7c", "ink": "#e3b33e", "width": 1.35, "height": 0.98, "face": "serif" }
