@@ -134,6 +134,7 @@ by the `CLAUDE.md` beside it. The pizza site has a long `pizza/CLAUDE.md` of its
 | `screen` | `screen/` | Node, no deps | TV and projector sizing, computed in the browser. |
 | `words` | `words/` | Node, no deps | A word counter, computed in the browser as the viewer types. |
 | `bluray` | `bluray/` | Node, no deps | A Blu-ray and 4K collection, rendered at build time from a hand-kept list as a drawn shelf of spines and a catalogue. |
+| `airship-vibes` | `airship-vibes/` | Node, no deps | A live-aboard airship in four pixel-art 3D scenes, drawn live with hand-written WebGL 2 from the airship's own parameter file. |
 
 The browser-computed sites share one pattern: the logic lives in modules with no DOM
 in them (`mortgage.js` and `inputs.js`, `screen.js`, `count.js`, `life.js`, `time.js`),
@@ -142,14 +143,18 @@ copy. One implementation of each; never fork it. No figure that depends on the d
 baked in at build time, because it would be wrong by however long ago the deploy ran.
 `bluray/` is rendered at build time instead, and keeps to the same rule: `shelf.js` is
 imported by the build, by `app.js`, by the unit tests and by `verify.mjs`.
+`airship-vibes/` is drawn by the GPU: its models, scenes and camera are DOM-free modules
+under the same rule, but its shaders are GLSL that nothing in CI can compile.
 
 `mortgage/` and `screen/` also have a node-only page test (`test/page.test.mjs`) that
 builds the site, stands in a small DOM and drives the built `app.js`; it runs in CI
 with the unit tests, and is what covers the wiring no module test sees. `screen/`,
-`words/`, `pizza/` and `bluray/` carry a Playwright check for what needs a layout engine
-(`screen/test/browser-sweep.mjs`, `words/test/browser-check.mjs`,
-`pizza/test/browser-check.mjs`, `bluray/test/browser-check.mjs`). Those run on a dev
-box, not in CI: run them after changing what those pages draw.
+`words/`, `pizza/`, `bluray/` and `airship-vibes/` carry a Playwright check for what needs
+a browser (`screen/test/browser-sweep.mjs`, `words/test/browser-check.mjs`,
+`pizza/test/browser-check.mjs`, `bluray/test/browser-check.mjs`,
+`airship-vibes/test/browser-check.mjs`). Those run on a dev box, not in CI: run them
+after changing what those pages draw. For `airship-vibes/` it is the only thing that
+compiles the shaders, so a GLSL error passes CI and deploys a page that cannot draw.
 
 ## Things that will bite you
 

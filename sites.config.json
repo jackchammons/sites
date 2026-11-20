@@ -172,6 +172,35 @@
         "collection",
         "physical media"
       ]
+    },
+    {
+      "slug": "airship-vibes",
+      "name": "Airship Vibes",
+      "emoji": "🎈",
+      "tagline": "A live-aboard airship adrift in pixel art: each visit opens on one of four living 3D scenes, a lush valley, a city at night, a sunset vista or a sea of clouds, drawn live in your browser.",
+      "dir": "airship-vibes",
+      "build": [
+        "node",
+        "scripts/build.mjs"
+      ],
+      "verify": [
+        "node",
+        "scripts/verify.mjs"
+      ],
+      "cadence": "Live in your browser",
+      "accent": "#e8833a",
+      "keywords": [
+        "airship",
+        "zeppelin",
+        "blimp",
+        "pixel art",
+        "webgl",
+        "3d",
+        "animation",
+        "ambient",
+        "screensaver",
+        "art"
+      ]
     }
   ]
 }

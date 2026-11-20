@@ -1,0 +1,173 @@
+{
+ "units": "metres, tonnes, kilowatts, degrees",
+ "axes": "origin on the hull axis at mid-length; x forward, y to port, z up",
+ "hull": "r(x) = b * sqrt(1 - (x / a)^2), an ellipsoid of revolution; outer mould line",
+ "inputs": {
+  "L": 150.0,
+  "D": 44.0,
+  "n_cells": 15,
+  "skin_gap": 0.8,
+  "ring_depth": 1.2,
+  "d1_h": 2.4,
+  "d2_h": 2.6,
+  "svc_h": 2.3,
+  "ring_c_clear": 2.25,
+  "bay_x": [
+   -15.0,
+   -5.0,
+   5.0
+  ],
+  "garage_len": 6.0,
+  "entry_len": 3.0,
+  "cabin_len": 10.0,
+  "bridge_len": 1.1,
+  "d1_nose": 3.4,
+  "d1_rake": 1.5,
+  "d1_w": 7.0,
+  "d2_w": 9.0,
+  "balcony_len": 1.6,
+  "d2_straight": 26.6,
+  "d2_tip": 30.0,
+  "vault_x": [
+   25.5,
+   29.6
+  ],
+  "vault_hw": 4.3,
+  "bay_w": 11.0,
+  "tender_span": 7.5,
+  "svc_x": [
+   5.0,
+   25.0
+  ],
+  "walk_h": 2.1,
+  "walk_w": 1.2,
+  "walk_lift": 0.8,
+  "walk_f_start": 21.0,
+  "walk_a_start": 9.0,
+  "tower_u": [
+   17.1,
+   16.1
+  ],
+  "land1_u": [
+   11.0,
+   10.0
+  ],
+  "obs_u": 10.0,
+  "obs_zf": -9.0,
+  "obs_zt": -6.4,
+  "moor_u": 6.5,
+  "moor_zf": -6.2,
+  "moor_zt": -2.8,
+  "fill": 0.82,
+  "hot_dt": 85.0,
+  "purity": 0.98,
+  "vent_area": 2.0,
+  "cell_pack": 0.97,
+  "batt_x": [
+   -56.0,
+   -48.0
+  ],
+  "tank_x": [
+   -44.0,
+   54.0
+  ],
+  "gutter_x": [
+   -56.0,
+   56.0
+  ],
+  "gutter_deg": 20.0,
+  "prop_x": [
+   -55.0,
+   -35.0,
+   35.0,
+   55.0
+  ],
+  "prop_z": -4.0,
+  "prop_r": 1.6,
+  "prop_out": 2.2,
+  "thr_x": [
+   -65.0,
+   65.0
+  ],
+  "thr_z": 2.5,
+  "shaft_w": 1.6,
+  "solar_x": [
+   -56.0,
+   56.0
+  ],
+  "fin_root": [
+   -50.0,
+   -70.5
+  ],
+  "fin_tip": [
+   -61.5,
+   -71.6
+  ],
+  "fin_out": 1.45,
+  "solar_deg": 48.6,
+  "lounge_len": 2.0,
+  "end_floor_x": 55.0,
+  "gen_kw": 150.0,
+  "gen_x": [
+   31.0,
+   37.0
+  ],
+  "fuel_t": 1.5,
+  "ice_zones": 16,
+  "ice_wm2": 300.0,
+  "date": "2026-11-19"
+ },
+ "derived": {
+  "a": 75.0,
+  "b": 22.0,
+  "volume": 152053.08443374597,
+  "surface": 16846.765432813714,
+  "rings": [
+   -65.0,
+   -55.0,
+   -45.0,
+   -35.0,
+   -25.0,
+   -15.0,
+   -5.0,
+   5.0,
+   15.0,
+   25.0,
+   35.0,
+   45.0,
+   55.0,
+   65.0
+  ],
+  "ring_b": 15.0,
+  "ring_c": 25.0,
+  "z1": -25.391798914805392,
+  "z2": -22.991798914805393,
+  "z3": -20.391798914805392,
+  "zs": -18.09179891480539,
+  "bx": -15.0,
+  "dx": -5.0,
+  "gx": 5.0,
+  "ex": 11.0,
+  "xo": 14.0,
+  "xr1": 24.0,
+  "f1": 25.1,
+  "nose": 28.5,
+  "shaft_x": 15.0,
+  "base_z": -13.183695648861924,
+  "walk_aft": -19.34179891480539,
+  "walk_over": -19.491798914805393,
+  "protrude": 3.3917989148053937,
+  "fin_tip_r": 23.45,
+  "solar_area": 3750.0862539113896,
+  "cell_x": [
+   -73.8,
+   73.8
+  ],
+  "catch_area": 4154.451288944691,
+  "lift_t_helium_and_hot_air": [
+   107.7631179988185,
+   6.378379804174245
+  ],
+  "bladder_space_m3": 126989.05823276611
+ }
+}
