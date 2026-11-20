@@ -1,0 +1,166 @@
+{
+  "title": "Blu-ray Shelf",
+  "eyebrow": "Blu-ray Shelf",
+  "tagline": "The Blu-rays and 4K discs on the shelf right now: every title with its year, director, format and edition, drawn as the row of spines it is.",
+  "heading": "What's on the shelf",
+  "updated": "2026-11-20",
+  "discs": [
+    {
+      "id": "fellowship-of-the-ring",
+      "title": "The Lord of the Rings: The Fellowship of the Ring",
+      "spine": "Fellowship of the Ring",
+      "year": 2001,
+      "director": "Peter Jackson",
+      "format": "Blu-ray",
+      "label": "Warner Bros.",
+      "notes": ["Extended Edition"],
+      "look": { "bg": "#15161c", "ink": "#c9a35c", "cap": "#2a62c9", "width": 1, "height": 0.93, "face": "serif" }
+    },
+    {
+      "id": "two-towers",
+      "title": "The Lord of the Rings: The Two Towers",
+      "spine": "The Two Towers",
+      "year": 2002,
+      "director": "Peter Jackson",
+      "format": "Blu-ray",
+      "label": "Warner Bros.",
+      "notes": ["Extended Edition"],
+      "look": { "bg": "#15161c", "ink": "#c9a35c", "cap": "#2a62c9", "width": 1, "height": 0.93, "face": "serif" }
+    },
+    {
+      "id": "return-of-the-king",
+      "title": "The Lord of the Rings: The Return of the King",
+      "spine": "The Return of the King",
+      "year": 2003,
+      "director": "Peter Jackson",
+      "format": "Blu-ray",
+      "label": "Warner Bros.",
+      "notes": ["Extended Edition"],
+      "look": { "bg": "#15161c", "ink": "#c9a35c", "cap": "#2a62c9", "width": 1, "height": 0.93, "face": "serif" }
+    },
+    {
+      "id": "lord-of-the-rings-trilogy",
+      "title": "The Lord of the Rings: The Motion Picture Trilogy",
+      "spine": "The Lord of the Rings Trilogy",
+      "year": 2001,
+      "yearEnd": 2003,
+      "director": "Peter Jackson",
+      "format": "4K UHD",
+      "label": "Warner Bros.",
+      "notes": ["Trilogy box set"],
+      "look": { "bg": "#0c0c0e", "ink": "#b3956a", "width": 2.2, "height": 1, "face": "serif" }
+    },
+    {
+      "id": "deer-hunter",
+      "title": "The Deer Hunter",
+      "year": 1978,
+      "director": "Michael Cimino",
+      "format": "4K UHD",
+      "label": "Shout Select",
+      "number": 105,
+      "catalog": "SF 20276",
+      "notes": ["4K UHD + Blu-ray", "2-disc set"],
+      "look": { "bg": "#b5232c", "ink": "#ffffff", "cap": "#111113", "width": 1, "height": 0.9, "face": "serif" }
+    },
+    {
+      "id": "raiders-of-the-lost-ark",
+      "title": "Raiders of the Lost Ark",
+      "year": 1981,
+      "director": "Steven Spielberg",
+      "format": "4K UHD",
+      "label": "Paramount",
+      "look": { "bg": "#7a2a1c", "ink": "#f4b33d", "width": 1.05, "height": 0.91, "face": "sans" }
+    },
+    {
+      "id": "alien",
+      "title": "Alien",
+      "year": 1979,
+      "director": "Ridley Scott",
+      "format": "4K UHD",
+      "label": "20th Century Fox",
+      "look": { "bg": "#a9b0a9", "ink": "#0f4f22", "cap": "#111113", "width": 1, "height": 0.9, "face": "sans" }
+    },
+    {
+      "id": "its-a-wonderful-life",
+      "title": "It's a Wonderful Life",
+      "year": 1946,
+      "director": "Frank Capra",
+      "format": "4K UHD",
+      "label": "Paramount",
+      "notes": ["4K UHD + Blu-ray", "2-disc set"],
+      "look": { "bg": "#b5d6e6", "ink": "#a8212a", "cap": "#111113", "width": 1, "height": 0.9, "face": "script" }
+    },
+    {
+      "id": "some-like-it-hot",
+      "title": "Some Like It Hot",
+      "year": 1959,
+      "director": "Billy Wilder",
+      "format": "Blu-ray",
+      "label": "Criterion Collection",
+      "number": 950,
+      "look": { "bg": "#e6e4e0", "ink": "#cc2a24", "cap": "#9aa0a6", "width": 1.1, "height": 0.9, "face": "sans" }
+    },
+    {
+      "id": "raging-bull",
+      "title": "Raging Bull",
+      "year": 1980,
+      "director": "Martin Scorsese",
+      "format": "Blu-ray",
+      "label": "Criterion Collection",
+      "number": 1134,
+      "look": { "bg": "#55565a", "ink": "#e2e2e2", "cap": "#9aa0a6", "width": 1.1, "height": 0.9, "face": "sans" }
+    },
+    {
+      "id": "barry-lyndon",
+      "title": "Barry Lyndon",
+      "year": 1975,
+      "director": "Stanley Kubrick",
+      "format": "Blu-ray",
+      "label": "Criterion Collection",
+      "number": 897,
+      "look": { "bg": "#d8d4c9", "ink": "#2e2b27", "width": 1.7, "height": 0.96, "face": "serif" }
+    },
+    {
+      "id": "citizen-kane",
+      "title": "Citizen Kane",
+      "year": 1941,
+      "director": "Orson Welles",
+      "format": "Blu-ray",
+      "label": "Criterion Collection",
+      "number": 1104,
+      "look": { "bg": "#17171a", "ink": "#ececec", "width": 1.5, "height": 0.97, "face": "sans" }
+    },
+    {
+      "id": "princess-bride",
+      "title": "The Princess Bride",
+      "year": 1987,
+      "director": "Rob Reiner",
+      "format": "Blu-ray",
+      "label": "Criterion Collection",
+      "number": 948,
+      "look": { "bg": "#5d4d7c", "ink": "#e3b33e", "width": 1.35, "height": 0.98, "face": "serif" }
+    },
+    {
+      "id": "fifth-element",
+      "title": "The Fifth Element",
+      "year": 1997,
+      "director": "Luc Besson",
+      "format": "4K UHD",
+      "label": "StudioCanal",
+      "catalog": "OPTU4349",
+      "notes": ["4K UHD + Blu-ray", "UK release"],
+      "look": { "bg": "#0f0f11", "ink": "#f3f3f3", "cap": "#26262b", "width": 0.9, "height": 0.9, "face": "serif" }
+    },
+    {
+      "id": "apollo-11",
+      "title": "Apollo 11",
+      "year": 2019,
+      "director": "Todd Douglas Miller",
+      "format": "4K UHD",
+      "label": "Dogwoof",
+      "catalog": "DOG416A",
+      "notes": ["4K UHD + Blu-ray", "UK release"],
+      "look": { "bg": "#1b1c1f", "ink": "#c7cbd1", "cap": "#26262b", "width": 1, "height": 0.9, "face": "sans" }
+    }
+  ]
+}

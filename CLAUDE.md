@@ -133,20 +133,23 @@ by the `CLAUDE.md` beside it. The pizza site has a long `pizza/CLAUDE.md` of its
 | `life` | `life/` | Node, no deps | Conway's Game of Life on a full-viewport canvas. |
 | `screen` | `screen/` | Node, no deps | TV and projector sizing, computed in the browser. |
 | `words` | `words/` | Node, no deps | A word counter, computed in the browser as the viewer types. |
+| `bluray` | `bluray/` | Node, no deps | A Blu-ray and 4K collection, rendered at build time from a hand-kept list as a drawn shelf of spines and a catalogue. |
 
 The browser-computed sites share one pattern: the logic lives in modules with no DOM
 in them (`mortgage.js` and `inputs.js`, `screen.js`, `count.js`, `life.js`, `time.js`),
 imported by the page's `app.js`, by the unit tests, and by `verify.mjs` from the *built*
 copy. One implementation of each; never fork it. No figure that depends on the date is
 baked in at build time, because it would be wrong by however long ago the deploy ran.
+`bluray/` is rendered at build time instead, and keeps to the same rule: `shelf.js` is
+imported by the build, by `app.js`, by the unit tests and by `verify.mjs`.
 
 `mortgage/` and `screen/` also have a node-only page test (`test/page.test.mjs`) that
 builds the site, stands in a small DOM and drives the built `app.js`; it runs in CI
 with the unit tests, and is what covers the wiring no module test sees. `screen/`,
-`words/` and `pizza/` carry a Playwright check for what needs a layout engine
+`words/`, `pizza/` and `bluray/` carry a Playwright check for what needs a layout engine
 (`screen/test/browser-sweep.mjs`, `words/test/browser-check.mjs`,
-`pizza/test/browser-check.mjs`). Those run on a dev box, not in CI: run them after
-changing what those pages draw.
+`pizza/test/browser-check.mjs`, `bluray/test/browser-check.mjs`). Those run on a dev
+box, not in CI: run them after changing what those pages draw.
 
 ## Things that will bite you
 
