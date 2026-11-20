@@ -5,7 +5,7 @@
  *   1. the scene, small, into a colour and a depth texture: sky, ground,
  *      airship, lamps, birds, then the window panes blended on top;
  *   2. composite: cloud marched between the eye and that depth, glow, outline,
- *      the palette, the caption and the dissolve between shots;
+ *      the palette, the dissolve between shots and the caption;
  *   3. present: the small picture scaled up by a whole number of device pixels.
  *
  * The colour texture's alpha is not transparency: it is how strongly a pixel
@@ -82,9 +82,9 @@ export class Renderer {
     this.programs = new Map();
     this.width = 0; this.height = 0; this.scale = 1;
     this.scene = null;
-    this.slot = null;
     this.cutAt = -1e9;
     this.captionAt = 0;
+    this.captionScale = 1;
     this.raw = false;
 
     gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
@@ -202,7 +202,6 @@ export class Renderer {
     this.fboPrev = fbo(this.tex.prev, null);
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     this.cutAt = -1e9;            // nothing held to dissolve from at this size
-    this.slot = null;
   }
 
   /* Everything that belongs to one scene: its programs, palette table, caption
@@ -322,16 +321,38 @@ export class Renderer {
     this.cutAt = now;
   }
 
+  /* Draw second frame.t. While one shot is dissolving into the next, both are
+     drawn, each still moving, and the composite dithers between them. A change
+     of scene is different: it dissolves from the old scene's last picture,
+     held still, because the old scene's programs and palette are gone. */
   render(frame, o = {}) {
+    const gl = this.gl;
+    const live = !o.still;
+    if (live && frame.outgoing) {
+      this.view(frame, frame.outgoing.camera, { ...o, into: 'prev', fade: 1, caption: false });
+      this.view(frame, frame.camera, { ...o, into: 'final', fade: frame.fade });
+    } else {
+      this.view(frame, frame.camera, { ...o, into: 'final', fade: live ? Math.min(1, (frame.t - this.cutAt) / DISSOLVE) : 1 });
+    }
+
+    /* ---- 3: present ---- */
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+    gl.activeTexture(gl.TEXTURE0 + UNIT.final);
+    gl.bindTexture(gl.TEXTURE_2D, this.tex.final);
+    this.use(this.passes(this.scene).present, { uFinal: UNIT.final, uScale: [this.scale, this.width, this.height, 0] });
+    gl.bindVertexArray(this.emptyVao);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    gl.bindVertexArray(null);
+  }
+
+  /* Passes 1 and 2 for one camera: the scene, then the composite into the
+     picture (`final`) or into the one being dissolved from (`prev`). */
+  view(frame, cam, o) {
     const gl = this.gl, s = this.scene, W = this.width, H = this.height;
     const t = frame.t;
     const P = this.passes(s);
 
-    // a new shot: dissolve from the last picture
-    if (this.slot !== null && frame.slot !== this.slot && !o.still) this.holdForDissolve(t);
-    this.slot = frame.slot;
-
-    const cam = frame.camera;
     const proj = V.perspective(cam.fov, W / H, NEAR, FAR);
     const view = V.lookAt(cam.eye, cam.target);
     const viewProj = V.multiply(proj, view);
@@ -352,7 +373,7 @@ export class Renderer {
     const hull = this.ship.hull;
     const rad = Math.PI / 180;
     const snap = Math.floor(frame.origin[0] / this.grid.snap) * this.grid.snap;
-    const fade = o.still ? 1 : Math.min(1, (t - this.cutAt) / DISSOLVE);
+    const fade = o.fade;
     const capAge = t - this.captionAt;
     const capAlpha = o.caption === false ? 0 : Math.max(0, Math.min(1, capAge / 1.2, (9 - capAge) / 1.5));
 
@@ -405,10 +426,8 @@ export class Renderer {
       uScene: UNIT.scene, uDepth: UNIT.depth, uPrev: UNIT.prev, uCaption: UNIT.caption, uLut: UNIT.lut, uPalette: UNIT.palette,
       uProj: [NEAR, FAR, LUT_SIZE, (o.raw ?? this.raw) ? 1 : 0],
       uLook: [s.look.glow, s.look.outline, s.look.dither, s.look.vignette],
-      uFade: [fade, capAlpha, 6, 6],
-      uCaptionSize: [...this.captionSize, this.ink.light, this.ink.dark],
-      // present
-      uFinal: UNIT.final, uScale: [this.scale, W, H, 0],
+      uFade: [fade, capAlpha, 6 * this.captionScale, 6 * this.captionScale],
+      uCaptionSize: [...this.captionSize, this.ink.light, this.ink.dark], uCaptionScale: this.captionScale,
     };
 
     const bind = (unit, target, tex) => { gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(target, tex); };
@@ -416,7 +435,10 @@ export class Renderer {
     bind(UNIT.lut, gl.TEXTURE_3D, this.tex.lut);
     bind(UNIT.palette, gl.TEXTURE_2D, this.tex.palette);
     bind(UNIT.caption, gl.TEXTURE_2D, this.tex.caption);
-    bind(UNIT.prev, gl.TEXTURE_2D, this.tex.prev);
+    // A texture may not be read while it is being drawn into: when this view is
+    // the one being dissolved from, the composite's "previous picture" sampler
+    // (which it will not use, its fade being 1) is pointed somewhere harmless.
+    bind(UNIT.prev, gl.TEXTURE_2D, o.into === 'prev' ? this.tex.final : this.tex.prev);
     // the scene's own targets must not be bound for reading while it is drawn
     bind(UNIT.scene, gl.TEXTURE_2D, null);
     bind(UNIT.depth, gl.TEXTURE_2D, null);
@@ -491,20 +513,14 @@ export class Renderer {
     gl.disable(gl.BLEND);
 
     /* ---- 2: composite ---- */
-    gl.bindFramebuffer(gl.FRAMEBUFFER, this.fboFinal);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, o.into === 'prev' ? this.fboPrev : this.fboFinal);
     gl.disable(gl.DEPTH_TEST);
     bind(UNIT.scene, gl.TEXTURE_2D, this.tex.scene);
     bind(UNIT.depth, gl.TEXTURE_2D, this.tex.depth);
     this.use(P.composite, U);
     gl.bindVertexArray(this.emptyVao);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
-
-    /* ---- 3: present ---- */
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-    bind(UNIT.final, gl.TEXTURE_2D, this.tex.final);
-    this.use(P.present, U);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
-    gl.bindVertexArray(null);
+    bind(UNIT.scene, gl.TEXTURE_2D, null);
+    bind(UNIT.depth, gl.TEXTURE_2D, null);
   }
 }

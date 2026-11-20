@@ -70,8 +70,7 @@ test('no identifier is a word GLSL ES reserves', () => {
 });
 
 test('every uniform a shader declares is one the renderer sets, and the other way round', () => {
-  const frame = renderer.slice(renderer.indexOf('const U = {'), renderer.indexOf('const bind ='));
-  const set = new Set([...frame.matchAll(/\b(u[A-Z]\w*)\s*:/g)].map(m => m[1]));
+  const set = new Set([...renderer.matchAll(/\b(u[A-Z]\w*)\s*:/g)].map(m => m[1]));
   assert.ok(set.size > 50, 'found the frame\'s uniforms in renderer.js');
   const used = new Set();
   for (const p of programs()) {

@@ -134,7 +134,7 @@ by the `CLAUDE.md` beside it. The pizza site has a long `pizza/CLAUDE.md` of its
 | `screen` | `screen/` | Node, no deps | TV and projector sizing, computed in the browser. |
 | `words` | `words/` | Node, no deps | A word counter, computed in the browser as the viewer types. |
 | `bluray` | `bluray/` | Node, no deps | A Blu-ray and 4K collection, rendered at build time from a hand-kept list as a drawn shelf of spines and a catalogue. |
-| `airship-vibes` | `airship-vibes/` | Node, no deps | A live-aboard airship in four pixel-art 3D scenes, drawn live with hand-written WebGL 2 from the airship's own parameter file. |
+| `airship-vibes` | `airship-vibes/` | Node, no deps | A live-aboard airship in four pixel-art 3D scenes with generated lo-fi music, drawn live with hand-written WebGL 2 from the airship's own parameter file. |
 
 The browser-computed sites share one pattern: the logic lives in modules with no DOM
 in them (`mortgage.js` and `inputs.js`, `screen.js`, `count.js`, `life.js`, `time.js`),

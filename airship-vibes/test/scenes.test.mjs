@@ -8,7 +8,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { SCENES, sceneById } from '../src/scenes.js';
-import { frameAt, shotOrder, shotAt, shipAt, verticalFov, roomLights, pathY, DISSOLVE } from '../src/director.js';
+import { frameAt, shotOrder, playheadAt, holdShot, advance, move, shipAt, verticalFov, roomLights, pathY, DISSOLVE } from '../src/director.js';
 import { hasGlyph } from '../src/font.js';
 import { axis } from '../src/terrain.js';
 import { derive, ROOMS } from '../src/ship.js';
@@ -17,6 +17,8 @@ import * as G from '../src/glsl.js';
 const P = JSON.parse(fs.readFileSync(new URL('../data/parameters.json', import.meta.url), 'utf8'));
 const g = derive(P.inputs);
 const HEX = /^#[0-9a-f]{6}$/;
+// a playhead that has been on one shot since `since`, with nothing behind it
+const on = (scene, seed, shot, since) => ({ order: shotOrder(scene, seed), at: shotOrder(scene, seed).indexOf(shot), since, from: null });
 const ASPECTS = [16 / 9, 4 / 3, 21 / 9, 9 / 19.5, 3 / 4];
 
 test('there are four scenes: a valley, a city at night, a sunset and the clouds', () => {
@@ -88,7 +90,7 @@ test('shots: enough of them, long enough to settle, angles a lens could have', (
     assert.ok(s.shots.length >= 5, `${s.id} has ${s.shots.length} shots`);
     assert.equal(new Set(s.shots.map(x => x.name)).size, s.shots.length);
     for (const shot of s.shots) {
-      assert.ok(shot.dur >= DISSOLVE * 6, `${s.id}/${shot.name} is over before it has dissolved in`);
+      assert.ok(shot.dur >= DISSOLVE * 6 && shot.dur >= 40, `${s.id}/${shot.name} is over before it has settled`);
       for (const end of [shot.from, shot.to, ...(shot.tall ? [shot.tall.from, shot.tall.to] : [])]) {
         assert.equal(end.pos.length, 3);
         assert.equal(end.look.length, 3);
@@ -107,16 +109,71 @@ test('a visit opens on the establishing shot and then plays every shot once a la
       assert.deepEqual(shotOrder(s, seed), order);
     }
     const total = s.shots.reduce((n, x) => n + x.dur, 0);
-    assert.equal(shotAt(s, 7, 0).index, 0);
-    assert.equal(shotAt(s, 7, total + 0.5).index, 0, 'the list comes round again');
-    assert.equal(shotAt(s, 7, total + 0.5).slot, s.shots.length);
-    let last = -1;
-    for (let t = 0; t < total * 2; t += 0.5) {
-      const run = shotAt(s, 7, t);
-      assert.ok(run.slot === last || run.slot === last + 1, 'slots count up one cut at a time');
-      assert.ok(run.age >= 0 && run.age < run.dur);
-      last = run.slot;
+    const order = shotOrder(s, 7);
+    assert.deepEqual(playheadAt(s, 7, 0), { order, at: 0, since: 0, from: null }, 'a visit begins on the first shot with nothing before it');
+    const again = playheadAt(s, 7, total + 0.5);
+    assert.equal(again.at, 0, 'the list comes round again');
+    assert.equal(again.since, total);
+    assert.equal(again.from.at, order.length - 1, 'and dissolves in from the last shot of the lap before');
+    // stepping the playhead a frame at a time arrives where asking for the second directly does
+    let head = playheadAt(s, 7, 0), played = [0];
+    for (let t = 0; t < total * 2; t += 1 / 3) {
+      head = advance(s, head, t);
+      const direct = playheadAt(s, 7, t);
+      assert.equal(head.at, direct.at, `at ${t}s`);
+      assert.ok(Math.abs(head.since - direct.since) < 1e-9);
+      assert.ok(t - head.since >= 0 && t - head.since < s.shots[order[head.at]].dur);
+      if (head.at !== played[played.length - 1]) played.push(head.at);
     }
+    assert.deepEqual(played.slice(0, order.length), order.map((_, k) => k), 'every shot, once, in order');
+  }
+});
+
+test('the viewer can step through the shots, forward and back, from anywhere', () => {
+  const s = SCENES[0], n = s.shots.length;
+  const start = playheadAt(s, 7, 0);
+  const next = move(s, start, 12.5, 1);
+  assert.deepEqual([next.at, next.since, next.from], [1, 12.5, { at: 0, since: 0 }]);
+  assert.equal(move(s, start, 3, -1).at, n - 1, 'back from the first shot is the last');
+  assert.equal(move(s, { ...start, at: n - 1 }, 3, 1).at, 0, 'forward from the last is the first');
+  // a shot the viewer stepped to runs its own full length from that moment
+  const dur = s.shots[next.order[1]].dur;
+  assert.equal(advance(s, next, 12.5 + dur - 0.01).at, 1);
+  assert.equal(advance(s, next, 12.5 + dur).at, 2);
+  assert.deepEqual(move(s, start, 5, 1), move(s, start, 5, 1), 'and moving changes nothing but its result');
+  assert.deepEqual(start, playheadAt(s, 7, 0));
+  // held on one shot, for stills: that shot, repeating
+  const heldAt = holdShot(s, 7, 3, 1000);
+  assert.equal(heldAt.order[heldAt.at], 3);
+  assert.ok(1000 - heldAt.since >= 0 && 1000 - heldAt.since < s.shots[3].dur);
+  assert.equal(heldAt.from, null);
+});
+
+test('one shot dissolves into the next with both still running', () => {
+  for (const s of SCENES) {
+    const order = shotOrder(s, 7), cut = s.shots[order[0]].dur;
+    const before = frameAt(s, 7, cut - 0.5, 16 / 9);
+    assert.equal(before.fade, 1);
+    assert.equal(before.outgoing, null, 'nothing is behind a shot that has finished arriving');
+    let lastFade = -1, lastEye = null, lastOut = null;
+    for (let dt = 0; dt < DISSOLVE; dt += 0.25) {
+      const f = frameAt(s, 7, cut + dt, 16 / 9);
+      assert.equal(f.shot, order[1]);
+      assert.ok(f.fade > lastFade && f.fade < 1, 'the new shot comes in steadily');
+      assert.equal(f.outgoing.shot, order[0], 'over the one it is replacing');
+      // both cameras are still travelling: neither picture is a held frame
+      if (lastEye) {
+        assert.ok(Math.hypot(...f.camera.eye.map((v, k) => v - lastEye[k])) > 1e-3, `${s.id}: the incoming camera has stopped`);
+        assert.ok(Math.hypot(...f.outgoing.camera.eye.map((v, k) => v - lastOut[k])) > 1e-3, `${s.id}: the outgoing camera has stopped`);
+      }
+      lastFade = f.fade; lastEye = f.camera.eye; lastOut = f.outgoing.camera.eye;
+    }
+    const after = frameAt(s, 7, cut + DISSOLVE, 16 / 9);
+    assert.equal(after.fade, 1);
+    assert.equal(after.outgoing, null);
+    // the outgoing picture carries straight on from the shot as it was a moment before
+    const justBefore = frameAt(s, 7, cut - 0.001, 16 / 9), justAfter = frameAt(s, 7, cut + 0.001, 16 / 9);
+    assert.ok(Math.hypot(...justAfter.outgoing.camera.eye.map((v, k) => v - justBefore.camera.eye[k])) < 0.05, `${s.id}: the outgoing shot jumps at the cut`);
   }
 });
 
@@ -133,9 +190,10 @@ test('the camera is never inside the airship, under the ground or among the roof
   for (const s of SCENES) {
     for (let i = 0; i < s.shots.length; i++) {
       for (const aspect of ASPECTS) {
-        for (let t = 0; t < s.shots[i].dur; t += 1.5) {
+        // a shot is on screen for its length and then for the dissolve out of it
+        for (let t = 0; t <= s.shots[i].dur + DISSOLVE; t += 3) {
           for (const day of [0, 5000, 80000]) {
-            const f = frameAt(s, 3, day + t, aspect, i);
+            const f = frameAt(s, 3, day + t, aspect, on(s, 3, i, day));
             assert.ok(f.camera.eye.every(Number.isFinite) && f.camera.target.every(Number.isFinite));
             // back into the frame of the ship as it is drawn, heave and all
             const c = Math.cos(-f.ship.yaw), sn = Math.sin(-f.ship.yaw);
@@ -166,9 +224,9 @@ test('close shots ride the hull\'s heave; wide shots let the hull ride', () => {
       // across a whole shot, how far does the aim point wander from the ship it is aimed at?
       let drift = 0;
       for (let t = 0; t < shot.dur; t += 0.5) {
-        const f = frameAt(s, 3, 4000 + t, 16 / 9, i);
+        const f = frameAt(s, 3, 4000 + t, 16 / 9, on(s, 3, i, 4000));
         const aim = f.camera.target[2] - f.ship.pos[2];
-        const first = frameAt(s, 3, 4000, 16 / 9, i);
+        const first = frameAt(s, 3, 4000, 16 / 9, on(s, 3, i, 4000));
         drift = Math.max(drift, Math.abs(aim - (first.camera.target[2] - first.ship.pos[2])));
       }
       if (range < 70) assert.ok(drift < 0.6, `${s.id}/${shot.name}: a close shot loses the gondola by ${drift.toFixed(1)} m`);
