@@ -119,8 +119,9 @@ implementation of each; never fork one.
    shots and the caption are done here too, in the same pixels.
 3. **Twice, during a dissolve.** For the three seconds one shot takes to dissolve into the
    next, steps 1 and 2 are done for both cameras, so both shots keep moving and neither is
-   a held frame. (A change of scene does dissolve from a held frame: the old scene's
-   programs and palette are gone.)
+   a held frame. A change of scene is the same: the renderer keeps a "stage" per scene
+   (its palette table, caption, grid and lamps), so the scene being left goes on being
+   drawn, on its own clock and in its own palette, under the one arriving.
 4. **Present.** The small picture is scaled up by a whole number of device pixels.
 
 ### Rules that keep it working

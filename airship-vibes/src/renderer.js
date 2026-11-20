@@ -21,7 +21,6 @@ import { axis, buildGrid, snapStep } from './terrain.js';
 import { buildLut, paletteBytes, extremes, toLinear } from './palette.js';
 import { buildCloudNoise } from './noise.js';
 import { renderText } from './font.js';
-import { DISSOLVE } from './director.js';
 import { birdsAt, BIRD_FLOATS } from './flock.js';
 import * as V from './vec.js';
 
@@ -82,7 +81,10 @@ export class Renderer {
     this.programs = new Map();
     this.width = 0; this.height = 0; this.scale = 1;
     this.scene = null;
-    this.cutAt = -1e9;
+    this.stage = null;            // the scene on show, and what was built for it
+    this.leaving = null;          // the scene before it, while it is dissolved out of
+    this.stages = new Map();
+    this.grids = new Map();
     this.captionAt = 0;
     this.captionScale = 1;
     this.raw = false;
@@ -120,12 +122,6 @@ export class Renderer {
     // textures the composite pass reads
     this.tex = {};
     this.tex.noise = this.texture3d(buildCloudNoise(32, 7), 32, gl.LINEAR, gl.REPEAT);
-    this.tex.lut = null;
-    this.tex.palette = null;
-    this.tex.caption = null;
-    this.captionSize = [1, 1];
-    this.grid = null;
-    this.gridKey = '';
   }
 
   meshVao(mesh) {
@@ -201,44 +197,41 @@ export class Renderer {
     this.fboFinal = fbo(this.tex.final, null);
     this.fboPrev = fbo(this.tex.prev, null);
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    this.cutAt = -1e9;            // nothing held to dissolve from at this size
   }
 
-  /* Everything that belongs to one scene: its programs, palette table, caption
-     and ground grid. lights is the per-room brightness for this visit. */
+  /* Make a scene the one on show. What belongs to a scene (its palette table,
+     caption, ground grid and lamps) is its "stage", built once and kept, so
+     the scene being left can go on being drawn, still moving, while the new
+     one dissolves in over it. lights is the per-room brightness for this visit. */
   setScene(scene, lights, now = 0) {
     const gl = this.gl;
-    const changing = this.scene && this.scene !== scene;
-    this.scene = scene;
-    this.lights = lights;
-
-    if (this.tex.lut) gl.deleteTexture(this.tex.lut);
-    if (this.tex.palette) gl.deleteTexture(this.tex.palette);
-    if (this.tex.caption) gl.deleteTexture(this.tex.caption);
-    this.tex.lut = this.texture3d(buildLut(scene.palette, LUT_SIZE), LUT_SIZE, gl.NEAREST, gl.CLAMP_TO_EDGE);
-    this.tex.palette = this.texture2d(gl.RGBA8, scene.palette.length, 1, gl.RGBA, gl.UNSIGNED_BYTE, paletteBytes(scene.palette));
-    const cap = renderText(scene.title);
-    this.tex.caption = this.texture2d(gl.R8, cap.width, cap.height, gl.RED, gl.UNSIGNED_BYTE, cap.data);
-    this.captionSize = [cap.width, cap.height];
-    this.ink = extremes(scene.palette);
-    this.captionAt = now;
-
-    // ground grid
-    const key = JSON.stringify(scene.grid);
-    if (key !== this.gridKey) {
-      const g = buildGrid(axis(scene.grid.x), axis(scene.grid.y));
-      if (this.grid) { gl.deleteVertexArray(this.grid.vao); }
-      const vao = gl.createVertexArray();
-      gl.bindVertexArray(vao);
-      gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-      gl.bufferData(gl.ARRAY_BUFFER, g.vertices, gl.STATIC_DRAW);
-      gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 8, 0);
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
-      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, g.indices, gl.STATIC_DRAW);
-      gl.bindVertexArray(null);
-      this.grid = { vao, count: g.indices.length, snap: snapStep(scene.grid.x) };
-      this.gridKey = key;
+    // a copy: the stage itself is about to be given this visit's lights
+    if (this.stage) this.leaving = { ...this.stage };
+    let st = this.stages.get(scene.id);
+    if (!st) {
+      const cap = renderText(scene.title);
+      st = {
+        scene,
+        lut: this.texture3d(buildLut(scene.palette, LUT_SIZE), LUT_SIZE, gl.NEAREST, gl.CLAMP_TO_EDGE),
+        palette: this.texture2d(gl.RGBA8, scene.palette.length, 1, gl.RGBA, gl.UNSIGNED_BYTE, paletteBytes(scene.palette)),
+        caption: this.texture2d(gl.R8, cap.width, cap.height, gl.RED, gl.UNSIGNED_BYTE, cap.data),
+        captionSize: [cap.width, cap.height],
+        ink: extremes(scene.palette),
+        grid: this.gridFor(scene),
+      };
+      this.stages.set(scene.id, st);
     }
+    st.lights = lights;
+    // lamps: brightness can depend on a room's light being on
+    const lamps = this.ship.lamps;
+    st.lamps = new Float32Array(lamps.length * 9);
+    lamps.forEach((l, i) => {
+      const on = l.room === undefined ? 1 : lights[l.room];
+      st.lamps.set([...l.pos, l.colour[0] * on, l.colour[1] * on, l.colour[2] * on, l.size, l.pattern, i * 0.13], i * 9);
+    });
+    this.stage = st;
+    this.scene = scene;
+    this.captionAt = now;
 
     // buildings: one box, drawn once per lot and tier for every block within reach
     if (scene.city && !this.cityVao) {
@@ -270,20 +263,27 @@ export class Renderer {
       this.cityCount = inst.length / 3;
     }
 
-    // lamps: brightness can depend on a room's light being on
-    const lamps = this.ship.lamps;
-    const data = new Float32Array(lamps.length * 9);
-    lamps.forEach((l, i) => {
-      const on = l.room === undefined ? 1 : lights[l.room];
-      data.set([...l.pos, l.colour[0] * on, l.colour[1] * on, l.colour[2] * on, l.size, l.pattern, i * 0.13], i * 9);
-    });
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.lampBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, data, gl.DYNAMIC_DRAW);
-    this.lampCount = lamps.length;
-
     // compile what this scene needs now, so a bad shader fails here and not mid-frame
     this.passes(scene);
-    if (changing) this.holdForDissolve(now);
+  }
+
+  // The ground grid for a scene; scenes with the same bands share one.
+  gridFor(scene) {
+    const gl = this.gl;
+    const key = JSON.stringify(scene.grid);
+    if (!this.grids.has(key)) {
+      const g = buildGrid(axis(scene.grid.x), axis(scene.grid.y));
+      const vao = gl.createVertexArray();
+      gl.bindVertexArray(vao);
+      gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+      gl.bufferData(gl.ARRAY_BUFFER, g.vertices, gl.STATIC_DRAW);
+      gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 8, 0);
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, g.indices, gl.STATIC_DRAW);
+      gl.bindVertexArray(null);
+      this.grids.set(key, { vao, count: g.indices.length, snap: snapStep(scene.grid.x) });
+    }
+    return this.grids.get(key);
   }
 
   passes(scene) {
@@ -310,29 +310,22 @@ export class Renderer {
     };
   }
 
-  // Keep the picture as it is now, to dissolve from.
-  holdForDissolve(now) {
-    const gl = this.gl;
-    if (!this.fboFinal) return;
-    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fboFinal);
-    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fboPrev);
-    gl.blitFramebuffer(0, 0, this.width, this.height, 0, 0, this.width, this.height, gl.COLOR_BUFFER_BIT, gl.NEAREST);
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    this.cutAt = now;
-  }
-
-  /* Draw second frame.t. While one shot is dissolving into the next, both are
-     drawn, each still moving, and the composite dithers between them. A change
-     of scene is different: it dissolves from the old scene's last picture,
-     held still, because the old scene's programs and palette are gone. */
+  /* Draw second frame.t. Through a dissolve, two pictures are drawn and the
+     composite dithers from one to the other, and both are live: for a change
+     of shot, the same scene from the camera being left; for a change of scene
+     (o.leaving: the old scene's own frame, and how far the change has gone),
+     the scene being left, on its own stage. Nothing is ever a held frame. */
   render(frame, o = {}) {
     const gl = this.gl;
     const live = !o.still;
-    if (live && frame.outgoing) {
-      this.view(frame, frame.outgoing.camera, { ...o, into: 'prev', fade: 1, caption: false });
-      this.view(frame, frame.camera, { ...o, into: 'final', fade: frame.fade });
+    if (live && o.leaving && this.leaving && o.leaving.fade < 1) {
+      this.view(this.leaving, o.leaving.frame, o.leaving.frame.camera, { ...o, into: 'prev', fade: 1, caption: false });
+      this.view(this.stage, frame, frame.camera, { ...o, into: 'final', fade: o.leaving.fade });
+    } else if (live && frame.outgoing) {
+      this.view(this.stage, frame, frame.outgoing.camera, { ...o, into: 'prev', fade: 1, caption: false });
+      this.view(this.stage, frame, frame.camera, { ...o, into: 'final', fade: frame.fade });
     } else {
-      this.view(frame, frame.camera, { ...o, into: 'final', fade: live ? Math.min(1, (frame.t - this.cutAt) / DISSOLVE) : 1 });
+      this.view(this.stage, frame, frame.camera, { ...o, into: 'final', fade: 1 });
     }
 
     /* ---- 3: present ---- */
@@ -346,10 +339,10 @@ export class Renderer {
     gl.bindVertexArray(null);
   }
 
-  /* Passes 1 and 2 for one camera: the scene, then the composite into the
-     picture (`final`) or into the one being dissolved from (`prev`). */
-  view(frame, cam, o) {
-    const gl = this.gl, s = this.scene, W = this.width, H = this.height;
+  /* Passes 1 and 2 for one camera on one stage: the scene, then the composite
+     into the picture (`final`) or into the one being dissolved from (`prev`). */
+  view(st, frame, cam, o) {
+    const gl = this.gl, s = st.scene, W = this.width, H = this.height;
     const t = frame.t;
     const P = this.passes(s);
 
@@ -372,7 +365,7 @@ export class Renderer {
     const cloud = s.cloud;
     const hull = this.ship.hull;
     const rad = Math.PI / 180;
-    const snap = Math.floor(frame.origin[0] / this.grid.snap) * this.grid.snap;
+    const snap = Math.floor(frame.origin[0] / st.grid.snap) * st.grid.snap;
     const fade = o.fade;
     const capAge = t - this.captionAt;
     const capAlpha = o.caption === false ? 0 : Math.max(0, Math.min(1, capAge / 1.2, (9 - capAge) / 1.5));
@@ -418,7 +411,7 @@ export class Renderer {
       uHull: [hull.a, hull.b, hull.ring, pixelAngle], uBay: [...hull.bay, 0], uDeck2: hull.deck2,
       uSolar: [hull.solar[0], hull.solar[1], Math.cos(hull.solar[2] * rad), 0],
       uGutter: [hull.gutter[0], hull.gutter[1], Math.sin(hull.gutter[2] * rad), 0],
-      uObs: [...hull.obs, 0], uRoom: this.lights, uRoomTint: lin(s.ship.roomTint),
+      uObs: [...hull.obs, 0], uRoom: st.lights, uRoomTint: lin(s.ship.roomTint),
       uGlass: [s.ship.glass, 0, s.ship.bounceStrength, s.ship.windowGlow ?? 1], uBounce: lin(s.ship.bounce),
       uPoint: [1 / pixelAngle, 1.5, 5, s.ship.lamps],
       uBird: [1 / pixelAngle, 3.2, 0, 0], uBirdCol: s.birds ? lin(s.birds.colour) : [0, 0, 0],
@@ -427,14 +420,14 @@ export class Renderer {
       uProj: [NEAR, FAR, LUT_SIZE, (o.raw ?? this.raw) ? 1 : 0],
       uLook: [s.look.glow, s.look.outline, s.look.dither, s.look.vignette],
       uFade: [fade, capAlpha, 6 * this.captionScale, 6 * this.captionScale],
-      uCaptionSize: [...this.captionSize, this.ink.light, this.ink.dark], uCaptionScale: this.captionScale,
+      uCaptionSize: [...st.captionSize, st.ink.light, st.ink.dark], uCaptionScale: this.captionScale,
     };
 
     const bind = (unit, target, tex) => { gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(target, tex); };
     bind(UNIT.noise, gl.TEXTURE_3D, this.tex.noise);
-    bind(UNIT.lut, gl.TEXTURE_3D, this.tex.lut);
-    bind(UNIT.palette, gl.TEXTURE_2D, this.tex.palette);
-    bind(UNIT.caption, gl.TEXTURE_2D, this.tex.caption);
+    bind(UNIT.lut, gl.TEXTURE_3D, st.lut);
+    bind(UNIT.palette, gl.TEXTURE_2D, st.palette);
+    bind(UNIT.caption, gl.TEXTURE_2D, st.caption);
     // A texture may not be read while it is being drawn into: when this view is
     // the one being dissolved from, the composite's "previous picture" sampler
     // (which it will not use, its fade being 1) is pointed somewhere harmless.
@@ -462,8 +455,8 @@ export class Renderer {
     gl.enable(gl.DEPTH_TEST);
     gl.depthFunc(gl.LEQUAL);
     this.use(P.terrain, U);
-    gl.bindVertexArray(this.grid.vao);
-    gl.drawElements(gl.TRIANGLES, this.grid.count, gl.UNSIGNED_INT, 0);
+    gl.bindVertexArray(st.grid.vao);
+    gl.drawElements(gl.TRIANGLES, st.grid.count, gl.UNSIGNED_INT, 0);
 
     if (P.city) {
       this.use(P.city, U);
@@ -484,8 +477,10 @@ export class Renderer {
     if (setPart) setPart(V.identity());
 
     this.use(P.point, U);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.lampBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, st.lamps, gl.DYNAMIC_DRAW);
     gl.bindVertexArray(this.lampVao);
-    gl.drawArrays(gl.POINTS, 0, this.lampCount);
+    gl.drawArrays(gl.POINTS, 0, st.lamps.length / 9);
 
     if (s.birds) {
       // flocks are placed in the frame that follows the flight path; turn them to the local one

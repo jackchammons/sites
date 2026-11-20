@@ -25,7 +25,7 @@ import { PARAMS } from './params.js';
 import { buildShip } from './ship.js';
 import { Renderer } from './renderer.js';
 import { SCENES, sceneById } from './scenes.js';
-import { frameAt, roomLights, playheadAt, holdShot, advance, move } from './director.js';
+import { frameAt, roomLights, playheadAt, holdShot, advance, move, DISSOLVE } from './director.js';
 import { artSize, TARGET_PIXELS } from './layout.js';
 import { classify, isDouble } from './gesture.js';
 import { Player } from './audio.js';
@@ -72,6 +72,7 @@ let epoch = performance.now();      // when the current scene began
 const scene = () => SCENES[sceneIndex];
 const sceneTime = () => (heldTime ?? (still ? 5 : (performance.now() - epoch) / 1000));
 let head = playheadAt(scene(), seed, 0);
+let leaving = null;                 // the scene just left, kept running while the new one dissolves in
 
 const describe = () => canvas.setAttribute('aria-label',
   `${document.title}: ${scene().title.toLowerCase()}. Tap or press the right arrow for the next shot, `
@@ -91,9 +92,18 @@ function draw(t, options = {}) {
   layout();
   if (forcedShot !== null) head = holdShot(scene(), seed, forcedShot, t);
   else head = advance(scene(), head, t);
-  const frame = frameAt(scene(), seed, t, renderer.width / renderer.height, head);
+  const aspect = renderer.width / renderer.height;
+  const frame = frameAt(scene(), seed, t, aspect, head);
+  if (leaving && t < DISSOLVE) {
+    // the old scene carries on from where it was, on its own clock
+    const was = SCENES[leaving.sceneIndex], then = (performance.now() - leaving.epoch) / 1000;
+    leaving.head = advance(was, leaving.head, then);
+    options = { ...options, leaving: { frame: frameAt(was, leaving.seed, then, aspect, { ...leaving.head, from: null }), fade: t / DISSOLVE } };
+  } else {
+    leaving = null;
+  }
   renderer.render(frame, { still: held || still, ...options });
-  return frame;
+  return { ...frame, busy: !!frame.outgoing || !!leaving };
 }
 
 function start() {
@@ -176,6 +186,7 @@ function stepShot(step) {
 
 function stepScene(step, to = null) {
   if (!renderer) return;
+  leaving = held || still ? null : { sceneIndex, seed, epoch, head };
   sceneIndex = to ?? (sceneIndex + step + SCENES.length) % SCENES.length;
   seed = (seed + 0x9e3779b9) >>> 0;
   epoch = performance.now();
@@ -198,8 +209,8 @@ function tick(now) {
   last = now;
   try {
     const frame = draw(sceneTime());
-    // a dissolve draws two shots at once and is allowed to be slow
-    if (gap < 500 && !frame.outgoing) late = gap > 55 ? late + 1 : Math.max(0, late - 1);
+    // a dissolve draws two pictures at once and is allowed to be slow
+    if (gap < 500 && !frame.busy) late = gap > 55 ? late + 1 : Math.max(0, late - 1);
     if (late > 40 && budget > 30000) { budget = Math.round(budget * 0.7); late = 0; }
   } catch (e) { console.error(e); renderer = null; fail('The scene could not be drawn on this device.'); }
 }
@@ -215,7 +226,9 @@ if (start()) {
   armTip();
 
   // taps and swipes on the picture
-  let down = null, lastTap = null;
+  // A double tap's first tap has already moved on a shot by the time the second lands. The
+  // playhead from before it is kept, so the scene is left on the shot the viewer was looking at.
+  let down = null, lastTap = null, beforeTap = null;
   canvas.addEventListener('pointerdown', e => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     down = { x: e.clientX, y: e.clientY, t: e.timeStamp, id: e.pointerId };
@@ -230,8 +243,8 @@ if (start()) {
     wake();
     if (what === 'right') { stepShot(-1); lastTap = null; }
     else if (what === 'left') { stepShot(1); lastTap = null; }
-    else if (isDouble(lastTap, up)) { stepScene(1); lastTap = null; }
-    else { stepShot(1); lastTap = up; }
+    else if (isDouble(lastTap, up)) { if (beforeTap) head = beforeTap; stepScene(1); lastTap = null; }
+    else { beforeTap = head; stepShot(1); lastTap = up; }
   });
 
   addEventListener('keydown', e => {

@@ -157,6 +157,9 @@ const pause = (page, ms = 250) => page.waitForTimeout(ms);
   });
   await pause(page, 400);
   check((await state(page)).scene !== 'clouds', 'a double tap moves to the next scene', JSON.stringify(await state(page)));
+  // for three seconds now two scenes are being drawn, each with its own programs and palette
+  await pause(page, 900);
+  check(await page.evaluate(() => document.getElementById('view').getContext('webgl2').getError()) === 0, 'a dissolve between two live scenes raises no WebGL error');
   await page.keyboard.press(String(scenes.indexOf('clouds') + 1)); await pause(page, 600);
   check((await state(page)).scene === 'clouds' && (await state(page)).shot === 0, 'a number key returns to the clouds, on the first shot');
   // a new visit to a scene shuffles its shots afresh, so find out again which one comes second
