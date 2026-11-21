@@ -565,7 +565,9 @@
       "locations": [
         {
           "neighborhood": "Capitol Hill",
-          "address": "1524 East Olive Way, Seattle, WA 98122"
+          "address": "1524 East Olive Way, Seattle, WA 98122",
+          "lat": 47.61839,
+          "lon": -122.32593
         }
       ],
       "locationsVerified": "2026-11-21",
@@ -1297,7 +1299,9 @@
       "locations": [
         {
           "neighborhood": "Queen Anne",
-          "address": "317 West Galer, Seattle, WA 98119"
+          "address": "317 West Galer, Seattle, WA 98119",
+          "lat": 47.6322,
+          "lon": -122.36133
         },
         {
           "neighborhood": "Capitol Hill",
