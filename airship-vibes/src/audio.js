@@ -9,14 +9,24 @@
  * from a burst of decaying noise, which between them are most of what makes a
  * recording sound old.
  *
- * buildGraph() and trigger() work on any BaseAudioContext, so the same code
- * plays live and renders to a buffer in a test (renderOffline). This module
- * creates no context of its own and touches nothing else in the browser.
+ * When the scene changes the band plays on (music.js): the new song comes in
+ * on the next bar line. What this module adds is the gesture that covers the
+ * join. From the moment the change is asked for, the low-pass closes, as if
+ * a door were being pushed to on the old song; on the bar line it opens again
+ * on the new one, and the record's hiss and the wind drift to the new scene's
+ * levels over the same few seconds.
+ *
+ * buildGraph(), trigger() and the rest work on any BaseAudioContext, so the
+ * same code plays live and renders to a buffer in a test (renderOffline).
+ * This module creates no context of its own and touches nothing else in the
+ * browser.
  */
-import { SONGS, eventsBetween, stepSeconds, frequency } from './music.js';
+import { SONGS, Sequence, stepSeconds, frequency } from './music.js';
 import { Rng } from './rng.js';
 
 const AHEAD = 0.4;             // seconds of notes kept scheduled ahead of the clock
+const TAPE_OPEN = 8500;        // the low-pass over the whole mix, in hertz, as it normally stands
+const TAPE_SHUT = 650;         // and where it is headed while one song gives way to another
 
 function noiseBuffer(ctx, seconds, fill) {
   const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * seconds), ctx.sampleRate);
@@ -31,7 +41,7 @@ export function buildGraph(ctx) {
 
   // out <- tape low-pass <- compressor <- master
   const out = gain(0, ctx.destination);
-  const tape = filter('lowpass', 8500, 0.5, out);
+  const tape = filter('lowpass', TAPE_OPEN, 0.5, out);
   const comp = ctx.createDynamicsCompressor();
   comp.threshold.value = -18; comp.knee.value = 14; comp.ratio.value = 3; comp.attack.value = 0.012; comp.release.value = 0.28;
   comp.connect(tape);
@@ -101,17 +111,44 @@ export function buildGraph(ctx) {
   const gustDepth = gain(0, windLevel.gain);
   gust.connect(gustDepth);
 
-  return { ctx, out, master, room, drums, duck, chords, bass, lead, echo, wowDepth, white, texture, windLevel, gustDepth,
+  return { ctx, out, tape, master, room, drums, duck, chords, bass, lead, echo, wowDepth, white, texture, windLevel, gustDepth,
     sources: [tremolo, wow, crackle, wind, gust], started: false };
 }
 
-/* Set the levels that belong to a song, and start the things that run all the time. */
-export function dress(g, song, when) {
+/* Set the levels that belong to a song, over about `ease` seconds, and start
+   the things that run all the time. */
+export function dress(g, song, when, ease = 0.4) {
   if (!g.started) { for (const s of g.sources) s.start(when); g.started = true; }
-  g.echo.delayTime.setValueAtTime(stepSeconds(song) * 3, when);
-  g.texture.gain.setTargetAtTime(song.crackle * 1.3, when, 0.4);
-  g.windLevel.gain.setTargetAtTime(song.wind * 0.07, when, 0.4);
-  g.gustDepth.gain.setTargetAtTime(song.wind * 0.04, when, 0.4);
+  g.texture.gain.setTargetAtTime(song.crackle * 1.3, when, ease);
+  g.windLevel.gain.setTargetAtTime(song.wind * 0.07, when, ease);
+  g.gustDepth.gain.setTargetAtTime(song.wind * 0.04, when, ease);
+}
+
+/* A bar line: `e` is the marker at the head of a bar (music.js), `was` the
+   one before it, or null at the very start. When the bar belongs to a new
+   song the room is dressed for it and the low-pass opens again; when the
+   tempo has moved, the echo follows it, three sixteenths behind as before. */
+export function conduct(g, e, when, was) {
+  if (!was || was.id !== e.id) {
+    dress(g, SONGS[e.id], when, was ? 1.2 : 0.4);
+    if (was) g.tape.frequency.setTargetAtTime(TAPE_OPEN, when, 0.45);
+  }
+  if (!was) g.echo.delayTime.setValueAtTime(stepSeconds(e.bpm) * 3, when);
+  else if (was.bpm !== e.bpm) g.echo.delayTime.setTargetAtTime(stepSeconds(e.bpm) * 3, when, 0.2);
+}
+
+/* Another song has been asked for and will come in at `turn`: from `now`
+   until then the low-pass closes over the one that is playing. */
+export function close(g, now, turn) {
+  const f = g.tape.frequency;
+  f.cancelScheduledValues(now);
+  f.setTargetAtTime(TAPE_SHUT, now, Math.max(0.1, (turn - now) / 2.5));
+}
+// The change was called off before its bar line came.
+export function reopen(g, now) {
+  const f = g.tape.frequency;
+  f.cancelScheduledValues(now);
+  f.setTargetAtTime(TAPE_OPEN, now, 0.3);
 }
 
 /* One note, starting at `when` on the context's clock. */
@@ -226,65 +263,82 @@ export function trigger(g, e, when) {
   }
 }
 
-/* Plays a scene's song on a live context, a fraction of a second ahead of its
-   clock. pump() must be called a few times a second while it plays. */
+/* Plays the performance on a live context, a fraction of a second ahead of
+   its clock. pump() must be called a few times a second while it plays. */
 export class Player {
   constructor(ctx) {
     this.ctx = ctx;
     this.g = buildGraph(ctx);
-    this.song = null;
-    this.seed = 1;
-    this.origin = 0;          // the context time at which the song began
-    this.done = 0;            // song time up to which notes have been scheduled
+    this.seq = null;
+    this.origin = 0;          // the context time at which the performance began
     this.level = 0.9;
-    this.pending = null;
+    this.marker = null;       // the last bar line passed
+    this.playing = null;      // the song being heard
   }
 
-  // Start a scene's song, or change to it: the old one fades, the new one rises.
+  // Start with a scene's song; or, once playing, turn to it at the next bar line.
   play(id, seed) {
-    const song = SONGS[id];
-    if (!song || (song === this.song && seed === this.seed)) return;
+    if (!SONGS[id]) return;
     const now = this.ctx.currentTime;
-    const first = this.song === null;
-    this.g.out.gain.cancelScheduledValues(now);
-    this.g.out.gain.setTargetAtTime(0, now, first ? 0.001 : 0.22);
-    this.pending = { song, seed, at: now + (first ? 0.05 : 0.8) };
+    if (!this.seq) {
+      this.seq = new Sequence(id, seed);
+      this.origin = now + 0.12;
+      this.g.out.gain.setTargetAtTime(this.level, now, 0.5);
+      this.pump();
+      return;
+    }
+    this.seq.change(id, seed);
+    if (this.seq.next) close(this.g, now, this.origin + this.seq.end);
+    else reopen(this.g, now);
   }
 
   setLevel(level) {
     this.level = level;
-    if (this.song && !this.pending) this.g.out.gain.setTargetAtTime(level, this.ctx.currentTime, 0.15);
+    if (this.seq) this.g.out.gain.setTargetAtTime(level, this.ctx.currentTime, 0.06);
   }
 
   pump() {
+    if (!this.seq) return;
     const now = this.ctx.currentTime;
-    if (this.pending && now >= this.pending.at) {
-      this.song = this.pending.song; this.seed = this.pending.seed; this.pending = null;
-      this.origin = now + 0.12; this.done = 0;
-      dress(this.g, this.song, now);
-      this.g.out.gain.cancelScheduledValues(now);
-      this.g.out.gain.setTargetAtTime(this.level, now, 0.9);
+    for (const e of this.seq.take(now + AHEAD - this.origin)) {
+      const when = this.origin + e.time;
+      if (e.kind === 'bar') {
+        conduct(this.g, e, Math.max(when, now), this.marker);
+        this.marker = e;
+        this.playing = e.id;
+      } else if (when > now - 0.05) {
+        // after a long sleep the notes that were missed are let go, not played all at once
+        trigger(this.g, e, when);
+      }
     }
-    if (!this.song || this.pending) return;
-    // after a long sleep, do not try to play everything that was missed
-    if (now - this.origin - this.done > 1) this.done = now - this.origin;
-    const until = now + AHEAD - this.origin;
-    for (const e of eventsBetween(this.song, this.seed, this.done, until)) trigger(this.g, e, this.origin + e.time);
-    this.done = Math.max(this.done, until);
   }
 }
 
-/* The first `seconds` of a song rendered to a buffer, for tests and for
-   listening to one stem at a time. only: a kind of note, or 'texture'. */
-export async function renderOffline(Offline, id, seed, seconds, only = null, sampleRate = 44100) {
+/* The first `seconds` of a performance rendered to a buffer, for tests and
+   for listening to one stem at a time. only: a kind of note, or 'texture'.
+   turns: [{ at, id, seed }], scene changes asked for `at` seconds in, which
+   take effect as they would live. */
+export async function renderOffline(Offline, id, seed, seconds, only = null, sampleRate = 44100, turns = []) {
   const ctx = new Offline(2, Math.floor(seconds * sampleRate), sampleRate);
   const g = buildGraph(ctx);
-  const song = SONGS[id];
+  const seq = new Sequence(id, seed);
+  const asked = [...turns].sort((a, b) => a.at - b.at);
   g.out.gain.value = 0.9;
-  dress(g, song, 0);
-  if (only && only !== 'texture') { g.texture.gain.cancelScheduledValues(0); g.texture.gain.value = 0; g.windLevel.gain.cancelScheduledValues(0); g.windLevel.gain.value = 0; g.gustDepth.gain.cancelScheduledValues(0); g.gustDepth.gain.value = 0; }
-  for (const e of eventsBetween(song, seed, 0, seconds)) {
-    if (!only || e.kind === only) trigger(g, e, e.time);
+  let marker = null;
+  // forward in the strides the live player takes, so that a turn falls on the bar line it would live
+  for (let t = 0; t < seconds; t += 0.1) {
+    while (asked.length && asked[0].at <= t) {
+      const turn = asked.shift();
+      seq.change(turn.id, turn.seed);
+      if (seq.next) close(g, t, seq.end); else reopen(g, t);
+    }
+    for (const e of seq.take(Math.min(seconds, t + AHEAD))) {
+      if (e.kind === 'bar') { conduct(g, e, e.time, marker); marker = e; }
+      else if (!only || e.kind === only) trigger(g, e, e.time);
+    }
+  }
+  if (only && only !== 'texture') {
+    for (const p of [g.texture.gain, g.windLevel.gain, g.gustDepth.gain]) { p.cancelScheduledValues(0); p.value = 0; }
   }
   return ctx.startRendering();
 }

@@ -7,17 +7,27 @@
  * recorded: this module says which notes fall where, and audio.js makes the
  * sound of each.
  *
- * A bar is a pure function of the song, the visit's seed and the bar's number,
- * so the scheduler can ask for any stretch of time in any order and a test
- * can ask for bar 300. Pitches are MIDI note numbers (60 is middle C); times
- * are seconds from the start of the song.
+ * It is one performance, not four. A Sequence counts bars from the first
+ * touch and goes on counting when the scene changes: the new scene's song
+ * takes over on the next bar line, in a key next door to the old one, and
+ * the tempo eases to its own over a few bars. The beat never stops, so the
+ * ear hears a band changing tune and not one record being swapped for
+ * another.
+ *
+ * A bar is a pure function of the song, the visit's seed, the bar's number
+ * and the tempo, so a test can ask for bar 300. Pitches are MIDI note numbers
+ * (60 is middle C); times are seconds.
  */
 import { Rng } from './rng.js';
 
 const chord = (notes, bass) => ({ notes, bass });
 
 /* Chords are voiced without their roots, between G3 and A4: the bass has the
-   root, and that register is one every speaker can play, a phone's included. */
+   root, and that register is one every speaker can play, a phone's included.
+
+   The keys are neighbours: C, C, F and G, the order the scenes come round in,
+   each a fourth or a fifth (or one whole step) from the next, so most of the
+   notes of one song are also in the one it gives way to. */
 export const SONGS = {
   // bright and open: IV - iii - ii - I in C
   valley: {
@@ -31,41 +41,44 @@ export const SONGS = {
     chords: [chord([57, 60, 64, 65], 38), chord([59, 64, 65, 69], 43), chord([59, 62, 64, 67], 36), chord([61, 65, 67, 70], 45)],
     scale: [69, 72, 74, 77, 79, 81],
   },
-  // warm and slow: IV - iii - ii - I in E flat
+  // warm and slow: IV - iii - ii - I in F
   sunset: {
     bpm: 66, swing: 0.19, lead: 0.45, crackle: 0.4, wind: 0.4,
-    chords: [chord([60, 63, 67, 70], 44), chord([58, 62, 65, 67], 43), chord([56, 60, 63, 67], 41), chord([55, 58, 62, 65], 39)],
-    scale: [70, 72, 75, 77, 79, 82],
+    chords: [chord([57, 60, 62, 65], 46), chord([55, 60, 62, 64], 45), chord([58, 62, 65, 69], 43), chord([57, 60, 64, 67], 41)],
+    scale: [72, 74, 77, 79, 81, 84],
   },
-  // airy: IV - iii - ii - I in D
+  // airy: IV - iii - ii - I in G
   clouds: {
     bpm: 84, swing: 0.15, lead: 0.55, crackle: 0.25, wind: 0.7,
-    chords: [chord([59, 62, 66, 69], 43), chord([57, 61, 64, 66], 42), chord([55, 59, 62, 66], 40), chord([61, 64, 66, 69], 38)],
-    scale: [74, 76, 78, 81, 83, 86],
+    chords: [chord([59, 62, 64, 67], 48), chord([57, 62, 64, 66], 47), chord([55, 59, 60, 64], 45), chord([57, 59, 62, 66], 43)],
+    scale: [74, 76, 79, 81, 83, 86],
   },
 };
 
 export const STEPS = 16;                                  // sixteenths to the bar
-export const stepSeconds = song => 60 / song.bpm / 4;
-export const barSeconds = song => stepSeconds(song) * STEPS;
+export const stepSeconds = bpm => 60 / bpm / 4;
+export const barSeconds = bpm => stepSeconds(bpm) * STEPS;
+export const TEMPO_STEP = 4;                              // the most the tempo moves from one bar to the next, beats a minute
 
 const KICKS = [[0, 7, 10], [0, 6, 10], [0, 10], [0, 3, 10]];
 
-/* The notes of one bar, times relative to the start of the song.
+/* The notes of bar number `bar`, times in seconds from the start of the bar,
+   played at `bpm`. `since` is the bar the song came in on: its chords count
+   from there, so a song always enters on its first chord.
    Each: { time, kind, midi, vel, dur }; kind is kick, snare, hat, chord, bass or lead. */
-export function barEvents(song, seed, bar) {
+export function barEvents(song, seed, bar, bpm = song.bpm, since = 0) {
   const rng = new Rng(seed).fork('bar' + bar);
-  const step = stepSeconds(song), t0 = bar * barSeconds(song);
+  const step = stepSeconds(bpm);
   // off-sixteenths are late: that is the swing
-  const at = s => t0 + (s + (s % 2 ? song.swing : 0)) * step;
+  const at = s => (s + (s % 2 ? song.swing : 0)) * step;
   const loose = () => rng.range(0, 0.008);
   const out = [];
   const add = (time, kind, vel, dur, midi = 0) => out.push({ time, kind, midi, vel, dur });
 
-  const intro = bar < 2;                                  // the piano alone
+  const intro = bar < 2;                                  // the piano alone, at the very beginning
   const phrase = bar % 16;
   const rest = bar >= 16 && phrase >= 14;                 // two bars' breath at the end of every sixteen
-  const c = song.chords[bar % song.chords.length];
+  const c = song.chords[(((bar - since) % song.chords.length) + song.chords.length) % song.chords.length];
 
   // piano: the chord rolled from the bottom up, sometimes touched again later in the bar
   c.notes.forEach((m, i) => add(at(0) + i * 0.022 + loose(), 'chord', rng.range(0.55, 0.7), step * 13, m));
@@ -109,16 +122,63 @@ export function barEvents(song, seed, bar) {
   return out.sort((a, b) => a.time - b.time);
 }
 
-/* Every note whose time falls in [from, to). Asking for a stretch in pieces
-   gives exactly what asking for it whole gives, which is what lets the
-   scheduler work a fraction of a second ahead. */
-export function eventsBetween(song, seed, from, to) {
-  const bar = barSeconds(song);
-  const out = [];
-  for (let b = Math.max(0, Math.floor(from / bar)); b * bar < to; b++) {
-    for (const e of barEvents(song, seed, b)) if (e.time >= from && e.time < to) out.push(e);
+/* A performance: the bars in order from the first, each handed out once,
+   whichever songs they turn out to belong to.
+
+   take(time) returns every note before `time` that has not been taken yet,
+   times in seconds from the start of the performance. Asking in small pieces
+   gives exactly what asking for the whole gives, which is what lets the
+   player work a fraction of a second ahead of the clock. At the head of each
+   bar comes a marker, kind 'bar', saying which song the bar belongs to and
+   at what tempo: the player sets its echo and its room by those.
+
+   change() asks for another song. It takes over at the end of the bar being
+   read, and from there the tempo moves toward the new song's own by at most
+   TEMPO_STEP a bar. */
+export class Sequence {
+  constructor(id, seed) {
+    this.id = id;
+    this.seed = seed;
+    this.bpm = SONGS[id].bpm;
+    this.bar = 0;               // the number of the bar being read
+    this.start = 0;             // when it begins
+    this.since = 0;             // the bar this song came in on
+    this.next = null;           // the song asked for, until its bar line comes
+    this.read();
   }
-  return out;
+
+  // when the bar being read ends, which is also when a song that has been asked for comes in
+  get end() { return this.start + barSeconds(this.bpm); }
+
+  read() {
+    const notes = barEvents(SONGS[this.id], this.seed, this.bar, this.bpm, this.since);
+    this.events = [{ time: this.start, kind: 'bar', id: this.id, bpm: this.bpm, bar: this.bar, midi: 0, vel: 0, dur: 0 }];
+    for (const e of notes) this.events.push({ ...e, time: e.time + this.start });
+    this.at = 0;
+  }
+
+  change(id, seed) {
+    if (!SONGS[id]) return;
+    this.next = id === this.id && seed === this.seed ? null : { id, seed };
+  }
+
+  take(time) {
+    const out = [];
+    for (;;) {
+      while (this.at < this.events.length && this.events[this.at].time < time) out.push(this.events[this.at++]);
+      if (this.end >= time) return out;
+      // the bar line
+      this.start = this.end;
+      this.bar += 1;
+      if (this.next) {
+        this.id = this.next.id; this.seed = this.next.seed; this.next = null;
+        this.since = this.bar;
+      }
+      const own = SONGS[this.id].bpm;
+      this.bpm += Math.max(-TEMPO_STEP, Math.min(TEMPO_STEP, own - this.bpm));
+      this.read();
+    }
+  }
 }
 
 export const frequency = midi => 440 * 2 ** ((midi - 69) / 12);
