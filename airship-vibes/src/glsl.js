@@ -1299,6 +1299,8 @@ uniform vec3 uCloudDeep;
 uniform vec4 uCloudMarch;   // step growth per step, reach in metres, light step in metres, least steps through the layer
 uniform vec4 uCloudLight;   // how fast cloud shades itself, how fast it turns opaque (per metre), how far the sun burns through
 ${DEPTH}${RAY}
+// How long a stride is at distance t along the ray: it grows with distance, within limits.
+#define STRIDE(t) max(min((t) * uCloudMarch.x, most), 14.0)
 void main() {
   // this pixel stands for a square of four in the scene
   ivec2 hp = ivec2(gl_FragCoord.xy), last = ivec2(uRes.xy) - 1;
@@ -1337,26 +1339,39 @@ void main() {
     // screen near as far. Where a step first lands inside cloud, the edge
     // is found by halving back toward the last clear sample: that pins the
     // surface down, so cloud has a firm outline and not a ragged fringe.
+    // It is halved seven times. Four left the surface a sixteenth of a step
+    // out, by an amount that ran in a sawtooth across the picture, and the
+    // cloud tops came out ruled with fine contour lines.
     float t = max(t0, 12.0);
     bool inside = false;
     float burn = 1.0 - uCloudLight.z * smoothstep(0.9965, 0.9993, dot(rd, uSunDir));
+    float most = (t1 - t0) / uCloudMarch.w;              // the longest a stride may be: a layer is crossed in at least that many
     for (int i = 0; i < CLOUD_STEPS; i++) {
       if (t >= t1) break;
-      float seg = max(min(t * uCloudMarch.x, (t1 - t0) / uCloudMarch.w), 14.0);
-      seg = min(seg, t1 - t);
+      float seg = min(STRIDE(t), t1 - t);
       float ts = t + seg;
       vec3 p = uCam + rd * ts;
-      float d = cloudDensity(p, seg);
+      /* What the cloud is asked for is the stride at the place being asked
+         about, not the length of the step that happened to arrive there. The
+         two are nearly the same, but the step's length jumps from one step
+         to the next, and anything worked out from it shows on the cloud as
+         a shell at every step's distance. */
+      float pace = STRIDE(ts);
+      float d = cloudDensity(p, pace);
       if (d > 0.0) {
+        float len = seg;
         if (!inside) {
           float a0 = t, a1 = ts;
-          for (int k = 0; k < 4; k++) {
+          for (int k = 0; k < 7; k++) {
             float mid = 0.5 * (a0 + a1);
-            if (cloudDensity(uCam + rd * mid, seg) > 0.0) a1 = mid; else a0 = mid;
+            if (cloudDensity(uCam + rd * mid, STRIDE(mid)) > 0.0) a1 = mid; else a0 = mid;
           }
           ts = a1;
           p = uCam + rd * ts;
-          d = max(cloudDensity(p + rd * seg * 0.25, seg), d * 0.5);
+          pace = STRIDE(ts);
+          // how solid it is just under the surface: a quarter of a stride in, or a little way in where it is thinner than that
+          d = max(cloudDensity(p + rd * pace * 0.25, pace), cloudDensity(p + rd * pace * 0.08, pace));
+          len = pace;
           inside = true;
         }
         float toSun = cloudDensity(p + uSunDir * uCloudMarch.z, 0.0) + 0.6 * cloudDensity(p + uSunDir * uCloudMarch.z * 2.8, 0.0);
@@ -1367,7 +1382,7 @@ void main() {
         float silver = pow(max(dot(rd, uSunDir), 0.0), 5.0) * light;
         c += uSunCol * silver * 0.3;
         c = toSrgb(mix(c, fogColour(rd), fogAmount(rd, ts)));
-        float a = (1.0 - exp(-d * seg * uCloudLight.y)) * burn;
+        float a = (1.0 - exp(-d * len * uCloudLight.y)) * burn;
         acc += T * a * c;
         T *= 1.0 - a;
         if (T < 0.04) { T = 0.0; break; }
