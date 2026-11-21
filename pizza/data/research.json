@@ -1,39 +1,87 @@
 {
-  "updated": "2026-11-20T18:00:00Z",
-  "news": [
+  "updated": "2026-11-21T18:00:00Z",
+  "locations": [
     {
-      "title": "After Nearly 17 Years, a Madison Street Pizzeria Bids Farewell",
-      "url": "https://whatnow.com/seattle/restaurants/after-nearly-17-years-a-madison-street-pizzeria-bids-farewell/",
-      "source": "WhatNow Seattle",
-      "published": "2026-10-16",
-      "kind": "closing",
-      "mentions": ["independent-pizzeria"]
-    }
-  ],
-  "mentions": [
-    {
-      "id": "independent-pizzeria",
-      "title": "Beloved Seattle pizzeria to close after more than 16 years",
-      "url": "https://www.kiro7.com/news/local/beloved-seattle-pizzeria-close-after-more-than-16-years/PP5A3GUJN5GFJDHSQFB3YYPG7M/",
-      "source": "KIRO 7 News Seattle",
-      "date": "2026-10-16",
-      "kind": "closing"
-    },
-    {
-      "id": "independent-pizzeria",
-      "title": "As a beloved Seattle pizzeria closes, 2 pros take the keys (and the dough)",
-      "url": "https://www.seattletimes.com/life/food-drink/as-a-beloved-seattle-pizzeria-closes-2-pros-take-the-keys-and-the-dough/",
-      "source": "The Seattle Times",
-      "date": "2026-10-29",
-      "kind": "closing"
+      "id": "dinos-tomato-pie",
+      "homepage": "https://www.dinostomatopie.com",
+      "source": "https://www.dinostomatopie.com",
+      "sites": [
+        {
+          "neighborhood": "Capitol Hill",
+          "address": "1524 East Olive Way, Seattle, WA 98122"
+        }
+      ]
     },
     {
       "id": "tutta-bella",
-      "title": "Tutta Bella closes 2 Seattle locations, including original restaurant",
-      "url": "https://www.fox13seattle.com/news/tutta-bella-closes-2-seattle-locations",
-      "source": "FOX 13 Seattle",
-      "date": "2026-09-23",
-      "kind": "closing"
+      "homepage": "https://tuttabella.com",
+      "source": "https://tuttabella.com",
+      "sites": [
+        {
+          "neighborhood": "Wallingford",
+          "address": "4411 Stone Way North, Seattle, WA 98103"
+        },
+        {
+          "neighborhood": "Bellevue",
+          "address": "15600 NE 8th St, Suite J1, Bellevue, WA 98008"
+        },
+        {
+          "neighborhood": "Issaquah",
+          "address": "715 Northwest Gilman Boulevard, Issaquah, WA 98027"
+        }
+      ]
+    },
+    {
+      "id": "via-tribunali",
+      "homepage": "https://www.viatribunali.com/",
+      "source": "https://www.viatribunali.com/",
+      "sites": [
+        {
+          "neighborhood": "Queen Anne",
+          "address": "317 West Galer, Seattle, WA 98119"
+        },
+        {
+          "neighborhood": "Capitol Hill",
+          "address": "913 E Pike St, Seattle, WA 98122"
+        }
+      ]
     }
+  ],
+  "links": [
+    {
+      "id": "supreme",
+      "instagram": "https://www.instagram.com/supremebarseattle/",
+      "source": "https://www.supreme.bar/"
+    },
+    {
+      "id": "lupo",
+      "instagram": "https://www.instagram.com/lupofremont/",
+      "source": "https://www.lupofremont.com/"
+    },
+    {
+      "id": "tutta-bella",
+      "instagram": "https://www.instagram.com/tuttabella/",
+      "source": "https://tuttabella.com"
+    }
+  ],
+  "facts": [
+    {
+      "id": "supreme",
+      "priceIndex": 3,
+      "source": "https://www.supreme.bar/"
+    }
+  ],
+  "locationsSkipped": [
+    {
+      "id": "supreme",
+      "note": "Checked the official site https://www.supreme.bar/ (homepage and a re-fetch for footer/map-link text). The only address cue is a storefront photo showing the house number '4521' plus a Google Maps share link (share.google/...); no street name or ZIP appears as page text. Declined to backfill from aggregator listings, which also disagree with each other on ZIP (98116 vs 98112)."
+    },
+    {
+      "id": "lupo",
+      "note": "Checked https://www.lupofremont.com/ homepage and footer, plus guessed sub-pages /contact and /visit (both 404). No street address or ZIP appears anywhere on the official site; only a Tock reservation link ('lupo-seattle') and an Instagram handle ('lupofremont') hint at a Seattle/Fremont location."
+    }
+  ],
+  "rejected": [
+    "links[3]: instagram must be a profile URL like https://www.instagram.com/<handle>, got \"https://www.instagram.com/viatrib/?hl=en\""
   ]
 }

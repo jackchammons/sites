@@ -565,12 +565,10 @@
       "locations": [
         {
           "neighborhood": "Capitol Hill",
-          "address": "1524 E Olive Way, Seattle, WA 98122",
-          "lat": 47.61839,
-          "lon": -122.32593
+          "address": "1524 East Olive Way, Seattle, WA 98122"
         }
       ],
-      "locationsVerified": "2026-08-22",
+      "locationsVerified": "2026-11-21",
       "locationsSource": "https://www.dinostomatopie.com",
       "locationsAttempted": null,
       "locationsNote": null,
@@ -642,7 +640,7 @@
         "limited-hours": true
       },
       "url": "https://www.lupofremont.com/",
-      "instagram": "https://www.instagram.com/lupofremont",
+      "instagram": "https://www.instagram.com/lupofremont/",
       "status": "open",
       "statusPrev": null,
       "statusNote": null,
@@ -660,8 +658,8 @@
       ],
       "locationsVerified": "2026-08-22",
       "locationsSource": "https://www.lupofremont.com/about",
-      "locationsAttempted": null,
-      "locationsNote": null,
+      "locationsAttempted": "2026-11-21",
+      "locationsNote": "Checked https://www.lupofremont.com/ homepage and footer, plus guessed sub-pages /contact and /visit (both 404). No street address or ZIP appears anywhere on the official site; only a Tock reservation link ('lupo-seattle') and an Instagram handle ('lupofremont') hint at a Seattle/Fremont location.",
       "factors": {
         "craft": {
           "value": 8,
@@ -847,18 +845,6 @@
       "statusChecked": "2026-10-01",
       "locations": [
         {
-          "neighborhood": "Denny Triangle",
-          "address": "1100 Virginia Street, Seattle, WA 98101",
-          "lat": 47.61786,
-          "lon": -122.33399
-        },
-        {
-          "neighborhood": "Columbia City",
-          "address": "4918 Rainier Avenue South, Seattle, WA 98118",
-          "lat": 47.55721,
-          "lon": -122.28452
-        },
-        {
           "neighborhood": "Wallingford",
           "address": "4411 Stone Way North, Seattle, WA 98103",
           "lat": 47.66046,
@@ -866,7 +852,7 @@
         },
         {
           "neighborhood": "Bellevue",
-          "address": "15600 NE 8th St., Suite J1, Bellevue, WA 98008",
+          "address": "15600 NE 8th St, Suite J1, Bellevue, WA 98008",
           "lat": 47.61988,
           "lon": -122.12871
         },
@@ -877,8 +863,8 @@
           "lon": -122.04784
         }
       ],
-      "locationsVerified": "2026-08-22",
-      "locationsSource": "https://www.tuttabella.com/overview",
+      "locationsVerified": "2026-11-21",
+      "locationsSource": "https://tuttabella.com",
       "locationsAttempted": null,
       "locationsNote": null,
       "factors": {
@@ -1310,19 +1296,17 @@
       "statusChecked": "2026-10-16",
       "locations": [
         {
+          "neighborhood": "Queen Anne",
+          "address": "317 West Galer, Seattle, WA 98119"
+        },
+        {
           "neighborhood": "Capitol Hill",
           "address": "913 E Pike St, Seattle, WA 98122",
           "lat": 47.61395,
           "lon": -122.31999
-        },
-        {
-          "neighborhood": "Queen Anne",
-          "address": "317 West Galer St, Seattle, WA 98119",
-          "lat": 47.6322,
-          "lon": -122.36133
         }
       ],
-      "locationsVerified": "2026-08-22",
+      "locationsVerified": "2026-11-21",
       "locationsSource": "https://www.viatribunali.com/",
       "locationsAttempted": null,
       "locationsNote": null,
@@ -8471,7 +8455,7 @@
       "priceSource": "https://www.supreme.bar/",
       "attributes": {},
       "url": "https://www.supreme.bar/",
-      "instagram": null,
+      "instagram": "https://www.instagram.com/supremebarseattle/",
       "status": "open",
       "statusPrev": null,
       "statusNote": null,
@@ -8489,8 +8473,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "locationsAttempted": null,
-      "locationsNote": null,
+      "locationsAttempted": "2026-11-21",
+      "locationsNote": "Checked the official site https://www.supreme.bar/ (homepage and a re-fetch for footer/map-link text). The only address cue is a storefront photo showing the house number '4521' plus a Google Maps share link (share.google/...); no street name or ZIP appears as page text. Declined to backfill from aggregator listings, which also disagree with each other on ZIP (98116 vs 98112).",
       "factors": {
         "craft": {
           "value": 6.5,
