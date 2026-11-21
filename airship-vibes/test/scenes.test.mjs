@@ -2,8 +2,8 @@
  *
  * A scene is data, and most ways of getting it wrong only show up as a
  * picture: a camera inside the hull or under the ground, a caption the face
- * cannot spell, a palette too long for the lookup table. These hold the data
- * to the rules the renderer relies on. */
+ * cannot spell, ground the renderer has been told cannot be there. These hold
+ * the data to the rules the renderer relies on. */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -33,13 +33,23 @@ test('every caption can be set in the bitmap face', () => {
   for (const s of SCENES) for (const ch of s.title) assert.ok(hasGlyph(ch), `${s.id}: no glyph for "${ch}"`);
 });
 
-test('palettes are hex, free of repeats and short enough to index with a byte', () => {
+test('each scene says how low and how high its ground lies, and the look it wants', () => {
   for (const s of SCENES) {
-    assert.ok(s.palette.length >= 16 && s.palette.length <= 64, `${s.id}: ${s.palette.length} colours`);
-    for (const c of s.palette) assert.match(c, HEX, `${s.id}: ${c}`);
-    assert.equal(new Set(s.palette).size, s.palette.length, `${s.id} repeats a colour`);
-    for (const c of s.anchors) assert.ok(s.palette.includes(c), `${s.id}: the palette has lost its anchor ${c}`);
+    // The renderer leaves out ground the camera cannot see, and judges that from this range.
+    const [low, high] = s.land.range;
+    assert.ok(low < high, `${s.id}: ground from ${low} to ${high}`);
+    assert.ok(low <= s.land.seaLevel && high >= s.land.seaLevel, `${s.id}: water lies at ${s.land.seaLevel}, which is outside ${low}..${high}`);
+    assert.ok(s.flight.altitude > low + 100, `${s.id}: the ship flies above the lowest ground`);
+    assert.deepEqual(Object.keys(s.look).sort(), ['glow', 'outline', 'vignette']);
+    for (const [k, v] of Object.entries(s.look)) assert.ok(v >= 0 && v <= 1, `${s.id}: look.${k}`);
+    assert.equal(s.palette, undefined, `${s.id}: scenes no longer carry a palette`);
   }
+  // what the shaders make of the ground cannot outgrow the range: these are the tallest each can reach
+  assert.ok(sceneById('valley').land.range[1] >= 520 + 2 * 2700 + 2 * 1000 + 300, 'valley: rise * (520 + 2700e) + 1000e, e < 2, and the small relief');
+  assert.ok(sceneById('sunset').land.range[1] >= 5000, 'sunset: the coast is capped at 5000 m');
+  assert.match(G.TERRAIN_LIB, /return min\(h, mix\(150\.0, 5000\.0,/);
+  const c = sceneById('clouds').land;
+  assert.ok(c.range[0] <= c.seaLevel - 210 && c.range[1] >= c.seaLevel + 210 + 260, 'clouds: the floor swells 210 m either way and puffs 260 m up');
 });
 
 test('every colour a scene names is hex, and its numbers are sane', () => {
@@ -61,6 +71,8 @@ test('every colour a scene names is hex, and its numbers are sane', () => {
       assert.ok([1, 2].includes(s.cloud.kind), `${s.id}: cloud kind`);
       assert.ok(Number.isInteger(s.cloud.steps) && s.cloud.steps >= 16 && s.cloud.steps <= 64, `${s.id}: cloud steps`);
       assert.ok(s.cloud.ceiling > s.cloud.floor);
+      // a thin layer is stepped through finely, but not so finely that the steps run out before the far side
+      assert.ok(s.cloud.through >= 8 && s.cloud.through <= s.cloud.steps / 2, `${s.id}: ${s.cloud.through} steps through the layer of ${s.cloud.steps}`);
       // A cloudscape is marched from the lens outward: its steps must carry it
       // through the near few miles, where the cloud has shape. (A layer is only
       // marched where the ray is inside it, which starts wherever that is.)

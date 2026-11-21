@@ -1,13 +1,20 @@
 /*
- * The cloud volume: a small 3D texture of tiling noise.
+ * Noise, built once and read by the shaders as textures.
  *
- * Marching a ray through cloud samples a density field dozens of times per
- * pixel. Computing noise that often is too slow on a phone, so the field is
- * built once here and read as a texture. Every channel repeats exactly across
- * the cube's faces, so the shader can tile it for as far as the sky goes.
+ * Land, cloud and water are all sums of noise, and a phone cannot afford to
+ * work that noise out from nothing at every pixel: hashing the four corners
+ * of a lattice cell is a few dozen integer operations, and a pixel of
+ * mountain wants it a dozen times over. So the random numbers are laid out
+ * here, and a shader reads the four corners of a cell in one fetch.
+ *
+ * The cloud volume is a small 3D texture of tiling noise, for the same
+ * reason: marching a ray through cloud samples a density field dozens of
+ * times per pixel. Every channel repeats exactly across the cube's faces, so
+ * the shader can tile it for as far as the sky goes.
  *
  *   red    billowing base shape: smooth noise carved by inverted cell noise
  *   green  finer cell noise, used to erode edges and to place clouds
+ *   blue   the smooth noise alone
  */
 import { hash32 } from './rng.js';
 
@@ -64,7 +71,9 @@ function cellNoise(x, y, z, cells, pts) {
   return Math.min(1, Math.sqrt(best));
 }
 
-export function buildCloudNoise(size = 32, seed = 7) {
+export const CLOUD_SIZE = 32;      // texels along a side of the cloud volume; the shaders are told the same number
+
+export function buildCloudNoise(size = CLOUD_SIZE, seed = 7) {
   const out = new Uint8Array(size * size * size * 4);
   const L = (cells, salt) => pointLattice(cells, seed + salt);
   const b4 = L(4, 31), b8 = L(8, 41), b16 = L(16, 53), f6 = L(6, 61), f12 = L(12, 71);
@@ -89,6 +98,39 @@ export function buildCloudNoise(size = 32, seed = 7) {
         out[o++] = 255;
       }
     }
+  }
+  return out;
+}
+
+export const LATTICE = 256;        // cells along a side of the two lattices below; the shaders wrap at the same number
+
+/* A lattice of random values for smooth noise. Each texel holds the values
+   at the four corners of its cell (this corner, the one to the right, the
+   one above, the one diagonally across), so that one fetch is enough to
+   interpolate anywhere inside the cell. The lattice wraps. */
+export function buildValueLattice(size = LATTICE, seed = 11) {
+  const v = new Uint8Array(size * size);
+  for (let j = 0; j < size; j++) {
+    for (let i = 0; i < size; i++) v[j * size + i] = hash32(Math.imul(i, 0x9e3779b1) ^ hash32(j + seed)) >>> 24;
+  }
+  const at = (i, j) => v[(j % size) * size + (i % size)];
+  const out = new Uint8Array(size * size * 4);
+  let o = 0;
+  for (let j = 0; j < size; j++) {
+    for (let i = 0; i < size; i++) {
+      out[o++] = at(i, j); out[o++] = at(i + 1, j); out[o++] = at(i, j + 1); out[o++] = at(i + 1, j + 1);
+    }
+  }
+  return out;
+}
+
+/* Four unrelated random bytes per cell, for scattering points: where in its
+   cell a tree or a lamp stands, and a number to tell it from its neighbours. */
+export function buildRandomLattice(size = LATTICE, seed = 29) {
+  const out = new Uint8Array(size * size * 4);
+  for (let k = 0; k < size * size; k++) {
+    const h = hash32(k + Math.imul(seed, 0x85ebca77));
+    out[k * 4] = h & 255; out[k * 4 + 1] = (h >>> 8) & 255; out[k * 4 + 2] = (h >>> 16) & 255; out[k * 4 + 3] = h >>> 24;
   }
   return out;
 }

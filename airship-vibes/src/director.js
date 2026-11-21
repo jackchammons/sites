@@ -27,7 +27,7 @@ export const pathY = (path, x) => path.amp1 * Math.sin(x * path.freq1) + path.am
 const pathSlope = (path, x) => path.amp1 * path.freq1 * Math.cos(x * path.freq1)
   + path.amp2 * path.freq2 * Math.cos(x * path.freq2 + 1.3);
 
-export const DISSOLVE = 3;         // seconds one shot takes to dither into the next
+export const DISSOLVE = 3;         // seconds one shot takes to dissolve into the next
 
 /* The order shots run in for a visit: the scene's first shot opens (it is the
    establishing one), then the rest shuffled, the whole list repeating. */

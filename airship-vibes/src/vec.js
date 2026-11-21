@@ -120,3 +120,29 @@ export function invert(m) {
     (a31 * b01 - a30 * b03 - a32 * b00) * d, (a20 * b03 - a21 * b01 + a22 * b00) * d,
   ];
 }
+
+/* The six planes of a view-projection matrix's frustum, each [a, b, c, d]
+   with a*x + b*y + c*z + d >= 0 on the inside: left, right, bottom, top,
+   near, far. */
+export function frustumPlanes(m) {
+  const row = i => [m[i], m[4 + i], m[8 + i], m[12 + i]];
+  const x = row(0), y = row(1), z = row(2), w = row(3);
+  const plane = (a, sign) => {
+    const p = [w[0] + sign * a[0], w[1] + sign * a[1], w[2] + sign * a[2], w[3] + sign * a[3]];
+    const l = Math.hypot(p[0], p[1], p[2]) || 1;
+    return [p[0] / l, p[1] / l, p[2] / l, p[3] / l];
+  };
+  return [plane(x, 1), plane(x, -1), plane(y, 1), plane(y, -1), plane(z, 1), plane(z, -1)];
+}
+
+/* True when the box from (x0, y0, z0) to (x1, y1, z1) lies wholly outside one
+   of the planes, and so cannot be seen. A box that is outside the frustum
+   but crosses a corner of it is kept: the test errs toward drawing. */
+export function boxOutside(planes, x0, y0, z0, x1, y1, z1) {
+  for (let i = 0; i < planes.length; i++) {
+    const p = planes[i];
+    // the corner of the box furthest along the plane's normal
+    if (p[0] * (p[0] > 0 ? x1 : x0) + p[1] * (p[1] > 0 ? y1 : y0) + p[2] * (p[2] > 0 ? z1 : z0) + p[3] < 0) return true;
+  }
+  return false;
+}
