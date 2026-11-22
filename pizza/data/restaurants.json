@@ -8530,6 +8530,55 @@
       "factsNote": "Seattle Met and West Seattle Blog both reported a November 12, 2017 opening in search snippets, but both pages returned HTTP 403 on direct fetch so I could not read the stated date myself; Seattle Mag's Dec 18, 2017 piece calls Supreme only 'new' without giving a date, which isn't enough to confirm an opening year.",
       "socialAttempted": null,
       "socialNote": null
+    },
+    {
+      "id": "little-gem",
+      "name": "Little Gem",
+      "neighborhood": "Madison Park",
+      "neighborhoodIsPlaceholder": null,
+      "blurb": "New pizza, wine, and low-alcohol-cocktail spot from Rob Roy owner Anu Apte, taking over the former Independent Pizzeria space and using that shop's dough recipes, targeting an early-2027 opening.",
+      "style": null,
+      "styleSource": null,
+      "styleGroup": null,
+      "styleGroupSource": null,
+      "signature": null,
+      "signatureSource": null,
+      "opened": null,
+      "openedSource": null,
+      "priceIndex": null,
+      "priceSource": null,
+      "attributes": {},
+      "url": null,
+      "instagram": null,
+      "status": "opening",
+      "statusPrev": null,
+      "statusNote": null,
+      "statusSource": "https://whatnow.com/?p=455517",
+      "statusDate": null,
+      "statusDetected": "2026-11-22",
+      "statusChecked": "2026-11-22",
+      "locations": [
+        {
+          "neighborhood": "Madison Park",
+          "address": "4235 E. Madison Street, Seattle, WA 98112"
+        }
+      ],
+      "locationsVerified": null,
+      "locationsSource": null,
+      "locationsAttempted": null,
+      "locationsNote": null,
+      "factors": {},
+      "lastVerified": null,
+      "ratingAttempted": null,
+      "ratingNote": null,
+      "mentions": [],
+      "coverageAttempted": null,
+      "coverageNote": null,
+      "factsAttempted": null,
+      "factsSought": [],
+      "factsNote": null,
+      "socialAttempted": null,
+      "socialNote": null
     }
   ]
 }
