@@ -1,7 +1,15 @@
 {
-  "updated": "2026-11-20T06:11:09.152Z",
+  "updated": "2026-11-22T20:01:53.647Z",
   "sources": 3,
   "items": [
+    {
+      "title": "Best Seattle Pizza by Neighborhood",
+      "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNNmQwdDBXNWNoc1d3OHNOdVZyX3FjdktfUlRfeDlqSDRFQnBIdnoweFBtemtHRE9GY1RKcWhvRzNoSWtBOGRwNnB0aHJHd0lDeWR5ZlBvMTB4RklBLWt6NkpfTjFFX2s5NTducVZQYXRrZ0FpSmROTE9rOGxrVktwd0xjajBiN3JMM0JPUHdPUGNTUkJBWGM5cWVtQzB3dnRoV1RF?oc=5",
+      "source": "Seattle Met",
+      "published": "2026-11-20T16:15:00.000Z",
+      "kind": "ranking",
+      "mentions": []
+    },
     {
       "title": "West Seattle Pizzeria Mioposto Admiral hit by break-In, reopens after cleanup with call for community support",
       "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxNOW0xQkNNd3lGWXRPQzVsajY4YXZRaVJUVDJ2eWFSUFF4aGltN1FCdUxWUE9leVV3UWVhU0prWkcyN1YwdE1kVmRLSWNaSjJDSXpmTnVTZTlyRlJlak5xM2JiLWhQbHozTjhPcTRzQUNWeVZTWHpOQk80MGtLTU0yVDhLQUdEbmNoSUU1V3Y5Z3F5Zm03eWkyWnZHQl8yMXRqRGF3SmxFMHZZOFNoTkxOeXdkMzdwU1dKRFJiS3EycGRjZ25ncFRIZg?oc=5",
@@ -52,14 +60,6 @@
       "source": "Seattle Met",
       "published": "2026-10-29T21:49:20.000Z",
       "kind": "mention",
-      "mentions": []
-    },
-    {
-      "title": "Best Seattle Pizza by Neighborhood",
-      "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNNmQwdDBXNWNoc1d3OHNOdVZyX3FjdktfUlRfeDlqSDRFQnBIdnoweFBtemtHRE9GY1RKcWhvRzNoSWtBOGRwNnB0aHJHd0lDeWR5ZlBvMTB4RklBLWt6NkpfTjFFX2s5NTducVZQYXRrZ0FpSmROTE9rOGxrVktwd0xjajBiN3JMM0JPUHdPUGNTUkJBWGM5cWVtQzB3dnRoV1RF?oc=5",
-      "source": "Seattle Met",
-      "published": "2026-10-29T18:33:18.000Z",
-      "kind": "ranking",
       "mentions": []
     },
     {

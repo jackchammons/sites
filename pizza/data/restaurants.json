@@ -8560,7 +8560,9 @@
       "locations": [
         {
           "neighborhood": "Madison Park",
-          "address": "4235 E. Madison Street, Seattle, WA 98112"
+          "address": "4235 E. Madison Street, Seattle, WA 98112",
+          "lat": 47.63592,
+          "lon": -122.27751
         }
       ],
       "locationsVerified": null,
