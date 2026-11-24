@@ -809,6 +809,13 @@
           "source": "The Seattle Times",
           "date": "2026-10-29",
           "kind": "closing"
+        },
+        {
+          "url": "https://whatnow.com/?p=455517",
+          "title": "Little Gem Plans Early 2027 Opening in Madison Park",
+          "source": "WhatNow Seattle",
+          "date": "2026-11-12",
+          "kind": "mention"
         }
       ],
       "coverageAttempted": null,
@@ -8573,7 +8580,15 @@
       "lastVerified": null,
       "ratingAttempted": null,
       "ratingNote": null,
-      "mentions": [],
+      "mentions": [
+        {
+          "url": "https://whatnow.com/?p=455517",
+          "title": "Little Gem Plans Early 2027 Opening in Madison Park",
+          "source": "WhatNow Seattle",
+          "date": "2026-11-12",
+          "kind": "opening"
+        }
+      ],
       "coverageAttempted": null,
       "coverageNote": null,
       "factsAttempted": null,

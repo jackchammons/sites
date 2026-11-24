@@ -1,42 +1,31 @@
 {
-  "updated": "2026-11-24T00:00:00Z",
-  "status": [
+  "updated": "2026-11-24T18:00:00Z",
+  "news": [
+    {
+      "title": "Little Gem Plans Early 2027 Opening in Madison Park",
+      "url": "https://whatnow.com/?p=455517",
+      "source": "WhatNow Seattle",
+      "published": "2026-11-12T22:19:00-05:00",
+      "kind": "opening",
+      "mentions": ["little-gem", "independent-pizzeria"]
+    }
+  ],
+  "mentions": [
+    {
+      "id": "little-gem",
+      "title": "Little Gem Plans Early 2027 Opening in Madison Park",
+      "url": "https://whatnow.com/?p=455517",
+      "source": "WhatNow Seattle",
+      "date": "2026-11-12",
+      "kind": "opening"
+    },
     {
       "id": "independent-pizzeria",
-      "status": "closed",
-      "note": "The Independent Pizzeria's own site now reads \"The Indie has retired\" and states October 16, 2026 was its last day of business after 16+ years, confirmed by KIRO 7's report that owner Tom Siegel retired.",
-      "source": "https://theindependentpizzeria.com",
-      "date": "2026-10-16"
-    },
-    {
-      "id": "south-town-pie",
-      "status": "open",
-      "note": "South Town Pie's official site is active with current online ordering links, daily pizza specials, and listed hours for its South Park location.",
-      "source": "https://www.southtownpie.com/"
-    },
-    {
-      "id": "pizzeria-22",
-      "status": "open",
-      "note": "Pizzeria 22's official site is active with reservation and ordering links, recent 2026-dated images, and current hours for its Admiral District location.",
-      "source": "https://www.pizzeria22.com/"
-    },
-    {
-      "id": "johnny-mos-pizzeria",
-      "status": "open",
-      "note": "Johnny Mo's Pizzeria's official site is active with current promotions, an October 2026-dated lunch special image, and listed hours for its Eastlake and Edmonds locations.",
-      "source": "https://www.johnnymos.com/"
-    },
-    {
-      "id": "pazzos-on-eastlake",
-      "status": "open",
-      "note": "Pazzo's on Eastlake's official site is active with an online ordering link, phone number, address, and posted daily hours, with no closure notice.",
-      "source": "https://www.pazzosoneastlake.com/"
-    },
-    {
-      "id": "sopranos-antico",
-      "status": "open",
-      "note": "Soprano's Antico's official site is active with a \"NOW OPEN FOR LUNCH\" banner, a January 2026-dated header image, and current hours for its West Seattle location.",
-      "source": "https://www.anticosopranos.com/"
+      "title": "Little Gem Plans Early 2027 Opening in Madison Park",
+      "url": "https://whatnow.com/?p=455517",
+      "source": "WhatNow Seattle",
+      "date": "2026-11-12",
+      "kind": "mention"
     }
   ]
 }
