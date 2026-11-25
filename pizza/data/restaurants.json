@@ -1565,8 +1565,8 @@
       ],
       "locationsVerified": "2026-08-22",
       "locationsSource": "https://proletariatpizza.com",
-      "locationsAttempted": null,
-      "locationsNote": null,
+      "locationsAttempted": "2026-11-25",
+      "locationsNote": "Tried fetching proletariatpizza.com at root, /menu, and www variant; all three returned HTTP 403 Forbidden, so the site's own location info could not be read. Search results show a White Center address (9622 16th Ave SW) via directory/review sites only, which aren't an acceptable source, and some of those listings flag the business as possibly closed - could not confirm independently.",
       "factors": {
         "craft": {
           "value": 7.5,
@@ -1654,8 +1654,8 @@
           "lon": -122.16329
         }
       ],
-      "locationsVerified": "2026-08-22",
-      "locationsSource": "https://ballardpizzacompany.com/restaurants",
+      "locationsVerified": "2026-11-25",
+      "locationsSource": "https://ballardpizzacompany.com",
       "locationsAttempted": null,
       "locationsNote": null,
       "factors": {
@@ -1915,13 +1915,13 @@
       "statusChecked": "2026-11-05",
       "locations": [
         {
-          "neighborhood": "West Seattle",
+          "neighborhood": "Admiral, West Seattle",
           "address": "4718 California Ave SW, Seattle, WA 98116",
           "lat": 47.56051,
           "lon": -122.38659
         }
       ],
-      "locationsVerified": "2026-08-22",
+      "locationsVerified": "2026-11-25",
       "locationsSource": "https://www.talaricospizza.com/",
       "locationsAttempted": null,
       "locationsNote": null,
@@ -2008,7 +2008,7 @@
           "lon": -122.32318
         }
       ],
-      "locationsVerified": "2026-08-22",
+      "locationsVerified": "2026-11-25",
       "locationsSource": "https://www.hot-mamaspizza.com/location.html",
       "locationsAttempted": null,
       "locationsNote": null,
@@ -8574,8 +8574,8 @@
       ],
       "locationsVerified": null,
       "locationsSource": null,
-      "locationsAttempted": null,
-      "locationsNote": null,
+      "locationsAttempted": "2026-11-25",
+      "locationsNote": "Searched for an official Little Gem website/social page; none exists yet. Only coverage found is a Nov 2026 WhatNow article describing Rob Roy owner Anu Apte's plan to open a pizza/wine spot called Little Gem in the former Independent Pizzeria space in Madison Park, targeting early 2027 - not yet open, no confirmed address.",
       "factors": {},
       "lastVerified": null,
       "ratingAttempted": null,

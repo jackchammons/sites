@@ -1,31 +1,72 @@
 {
-  "updated": "2026-11-24T18:00:00Z",
-  "news": [
+  "updated": "2026-11-25T12:00:00Z",
+  "locations": [
     {
-      "title": "Little Gem Plans Early 2027 Opening in Madison Park",
-      "url": "https://whatnow.com/?p=455517",
-      "source": "WhatNow Seattle",
-      "published": "2026-11-12T22:19:00-05:00",
-      "kind": "opening",
-      "mentions": ["little-gem", "independent-pizzeria"]
-    }
-  ],
-  "mentions": [
-    {
-      "id": "little-gem",
-      "title": "Little Gem Plans Early 2027 Opening in Madison Park",
-      "url": "https://whatnow.com/?p=455517",
-      "source": "WhatNow Seattle",
-      "date": "2026-11-12",
-      "kind": "opening"
+      "id": "ballard-pizza-co",
+      "homepage": "https://ballardpizzacompany.com",
+      "source": "https://ballardpizzacompany.com",
+      "sites": [
+        {
+          "neighborhood": "Ballard",
+          "address": "5205 Ballard Ave NW, Seattle, WA 98107"
+        },
+        {
+          "neighborhood": "Woodinville",
+          "address": "17401 133rd Ave NE, Woodinville, WA 98072"
+        }
+      ]
     },
     {
-      "id": "independent-pizzeria",
-      "title": "Little Gem Plans Early 2027 Opening in Madison Park",
-      "url": "https://whatnow.com/?p=455517",
-      "source": "WhatNow Seattle",
-      "date": "2026-11-12",
-      "kind": "mention"
+      "id": "hot-mamas-pizza",
+      "homepage": "https://www.hot-mamaspizza.com",
+      "source": "https://www.hot-mamaspizza.com/location.html",
+      "sites": [
+        {
+          "neighborhood": "Capitol Hill",
+          "address": "700 E Pine St, Seattle, WA 98122"
+        }
+      ]
+    },
+    {
+      "id": "talaricos",
+      "homepage": "https://www.talaricospizza.com/",
+      "source": "https://www.talaricospizza.com/",
+      "sites": [
+        {
+          "neighborhood": "Admiral, West Seattle",
+          "address": "4718 California Ave SW, Seattle, WA 98116"
+        }
+      ]
+    }
+  ],
+  "locationsSkipped": [
+    {
+      "id": "little-gem",
+      "note": "Searched for an official Little Gem website/social page; none exists yet. Only coverage found is a Nov 2026 WhatNow article describing Rob Roy owner Anu Apte's plan to open a pizza/wine spot called Little Gem in the former Independent Pizzeria space in Madison Park, targeting early 2027 - not yet open, no confirmed address."
+    },
+    {
+      "id": "proletariat-pizza",
+      "note": "Tried fetching proletariatpizza.com at root, /menu, and www variant; all three returned HTTP 403 Forbidden, so the site's own location info could not be read. Search results show a White Center address (9622 16th Ave SW) via directory/review sites only, which aren't an acceptable source, and some of those listings flag the business as possibly closed - could not confirm independently."
+    }
+  ],
+  "links": [
+    {
+      "id": "ballard-pizza-co",
+      "website": "https://ballardpizzacompany.com",
+      "instagram": "https://www.instagram.com/ballardpizzaco/",
+      "source": "https://ballardpizzacompany.com"
+    }
+  ],
+  "facts": [
+    {
+      "id": "ballard-pizza-co",
+      "priceIndex": 3,
+      "source": "https://ballardpizzacompany.com/restaurants/ballard-ballard-ave-seattle"
+    },
+    {
+      "id": "hot-mamas-pizza",
+      "opened": 1995,
+      "source": "https://www.hot-mamaspizza.com"
     }
   ]
 }
