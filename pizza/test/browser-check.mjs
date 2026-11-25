@@ -59,9 +59,9 @@ for (const dir of ['build', 'data', 'scripts', 'src']) fs.cpSync(path.join(root,
     n++;
   }
   queue.candidates.push(
-    { key: 'cafe lago|2305', name: 'Café Lago', address: '2305 24th Ave E, Seattle, WA 98112', neighborhood: 'Montlake',
+    { key: 'cafe zzyzx|9911', name: 'Café Zzyzx', address: '9911 Test Ave E, Seattle, WA 98112', neighborhood: 'Montlake',
       sources: ['research'], status: 'rejected', verdict: 'not-pizza', resolvedDate: '2026-11-10',
-      note: 'An Italian restaurant; wood-fired pizzas are one section of the menu.',
+      note: 'An invented place for this check; zzyzxian flatbread pizzas are one section of the menu.',
       resolutionSource: 'https://www.cafelago.example/menu', lat: 47.6395, lon: -122.3015 },
     { key: 'test pending|77', name: 'Zzyzx Test Slice Shop', address: '77 Yesler Way, Seattle, WA 98104',
       sources: ['kc-health'], lastInspection: '2026-10-30', status: 'pending', lat: 47.6017, lon: -122.3345 });
@@ -301,11 +301,11 @@ for (const colorScheme of ['light', 'dark']) {
     check(s.pins === s.wantPins && s.pins >= 1 && s.pins < 5, `the map shows only the match ${at}`, `${s.pins} pins`);
     if (shots) { await toDirectory(page); await page.screenshot({ path: path.join(shots, `search-${width}-${colorScheme}.png`) }); }
 
-    s = await search('cafe lago');
-    check(s.rows === 1 && s.on.join() === 'not-pizza' && s.pins === 1, `a search without the accent finds "Café Lago", in a category that was closed ${at}`, `${s.rows} rows in ${s.on.join()}`);
+    s = await search('cafe zzyzx');
+    check(s.rows === 1 && s.on.join() === 'not-pizza' && s.pins === 1, `a search without the accent finds "Café Zzyzx", in a category that was closed ${at}`, `${s.rows} rows in ${s.on.join()}`);
     s = await search('CAFÉ');
     check(s.rows >= 1 && s.groups['not-pizza'].rows >= 1, `case and accents in the query are ignored too ${at}`, String(s.rows));
-    s = await search('wood-fired pizzas');
+    s = await search('zzyzxian flatbread');
     check(s.groups['not-pizza'].rows === 1, `a candidate is found by its note ${at}`, JSON.stringify(s.on));
 
     s = await search('ballard neapolitan');

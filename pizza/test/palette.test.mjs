@@ -9,7 +9,7 @@ import { CATEGORIES } from '../src/registry.js';
 const rgb = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
 const HEX = /^#[0-9a-f]{6}$/;
 
-test('the ramp runs from blue at the lowest rank to red at #1', () => {
+test('the ramp ends in a cold colour at the lowest rank and in red at #1', () => {
   const low = rankColor(74, 74), high = rankColor(1, 74);
   assert.match(low, HEX);
   assert.match(high, HEX);
@@ -33,7 +33,7 @@ const hue = c => {
   return (h * 60 + 360) % 360;
 };
 
-test('the ramp passes through teal, green, yellow and orange on its way from blue to red', () => {
+test('the ramp runs hot to cold: red, orange, yellow, green, blue, purple', () => {
   const n = 74;
   const field = Array.from({ length: n }, (_, i) => rankColor(i + 1, n));   // #1 first
   for (const c of field) assert.match(c, HEX);
@@ -47,15 +47,14 @@ test('the ramp passes through teal, green, yellow and orange on its way from blu
   for (let i = 1; i < n; i++) {
     assert.ok(hues[i] >= hues[i - 1] - 1, `the ramp doubles back between #${i} and #${i + 1}: ${field[i - 1]} (${hues[i - 1].toFixed(0)}) to ${field[i]} (${hues[i].toFixed(0)})`);
   }
-  assert.ok(hues[0] < 10 && hues[n - 1] > 205 && hues[n - 1] < 230, `ends: ${hues[0].toFixed(0)} and ${hues[n - 1].toFixed(0)}`);
+  assert.ok(hues[0] < 10 && hues[n - 1] > 260 && hues[n - 1] < 290, `ends: ${hues[0].toFixed(0)} and ${hues[n - 1].toFixed(0)}`);
   // Each of the hues the owner asked for is somewhere on it.
-  const bands = { red: [0, 15], orange: [20, 40], yellow: [45, 62], green: [95, 150], teal: [160, 190], blue: [200, 230] };
+  const bands = { red: [0, 15], orange: [20, 40], yellow: [45, 62], green: [95, 150], 'light blue': [185, 215], blue: [225, 250], purple: [260, 290] };
   for (const [name, [from, to]] of Object.entries(bands)) {
     assert.ok(hues.some(h => h >= from - (name === 'red' ? 5 : 0) && h <= to), `no ${name} on the ramp`);
   }
-  // And it never goes through purple or magenta, which the unrated and the
-  // not-open-yet pins wear.
-  assert.ok(hues.every(h => h < 235), 'the ramp reaches purple');
+  // It ends at purple: past that, magenta would run back into red.
+  assert.ok(hues.every(h => h < 295), 'the ramp runs on past purple into magenta');
   // The stops themselves fall in hue from the lowest rank to #1.
   for (let i = 1; i < RAMP_STOPS.length; i++) assert.ok(RAMP_STOPS[i].h < RAMP_STOPS[i - 1].h);
 });
@@ -84,7 +83,7 @@ test('every other category has a colour of its own, and a pizzeria on file is cl
   const grey = c => Math.max(...rgb(c)) - Math.min(...rgb(c)) < 24;
   for (const key of ['unrated', 'opening', 'closed']) {
     const c = CATEGORY_COLOR[key];
-    assert.ok(grey(c) || (hue(c) > 250 && hue(c) < 335), `${key} (${c}, hue ${hue(c).toFixed(0)}) sits on the ramp`);
+    assert.ok(grey(c) || Math.max(...rgb(c)) < 120, `${key} (${c}) has a hue the ramp uses: it must be white, a grey or a dark neutral`);
   }
   // No two of them are near each other either.
   const far = (a, b) => Math.hypot(...rgb(a).map((v, i) => v - rgb(b)[i]));

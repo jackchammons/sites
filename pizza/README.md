@@ -234,7 +234,7 @@ and a toggle never moves it; a search takes it to the matches and clearing the s
 puts it back. Every pin is
 one size. Its colour is its category's, from `src/palette.js`, which is also written
 into the page as custom properties for the toggles and headings, so the palette is
-defined once; a ranked pin is coloured by rank on a ramp from blue (lowest) through teal,
+defined once; a ranked pin is coloured by rank on a ramp from purple (lowest) through blue,
 green, yellow and orange to red (#1), by `rankColor()`, and the ten highest have a heavier
 outline. A place on file is a filled pin and a
 place that is not is a hollow one. "Show my location" asks the browser for the reader's
