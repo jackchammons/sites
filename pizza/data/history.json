@@ -7758,8 +7758,8 @@
         "sopranos-antico": 52,
         "belltown-pizza": 53,
         "pazzos-on-eastlake": 54,
-        "pegasus-pizza": 55,
-        "capitale-pizzeria": 56,
+        "capitale-pizzeria": 55,
+        "pegasus-pizza": 56,
         "pizza-ritual": 57,
         "g-h-pasta-pizza": 58,
         "managers-pizza": 59,
@@ -7840,8 +7840,8 @@
         "sopranos-antico": 65.9,
         "belltown-pizza": 65.5,
         "pazzos-on-eastlake": 65.1,
-        "pegasus-pizza": 65.1,
         "capitale-pizzeria": 65,
+        "pegasus-pizza": 65,
         "pizza-ritual": 63.8,
         "g-h-pasta-pizza": 63.5,
         "managers-pizza": 63.5,
@@ -8300,20 +8300,20 @@
           "value": 6,
           "penalty": 0
         },
-        "pegasus-pizza": {
-          "reputation": 10,
-          "critical": 5.6,
-          "craft": 6,
-          "distinctiveness": 4,
-          "value": 6.1,
-          "penalty": 0
-        },
         "capitale-pizzeria": {
           "reputation": 4,
           "critical": 6,
           "craft": 6.5,
           "distinctiveness": 7.5,
           "value": 6.3,
+          "penalty": 0
+        },
+        "pegasus-pizza": {
+          "reputation": 10,
+          "critical": 5.6,
+          "craft": 6,
+          "distinctiveness": 4,
+          "value": 6.1,
           "penalty": 0
         },
         "pizza-ritual": {
