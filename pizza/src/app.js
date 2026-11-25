@@ -477,7 +477,7 @@ const dirApi = { shows: () => false, searching: () => false, fromPin: null, tool
     /* One marker per point, made once and added to or taken off the map as
      * the directory's state changes. Every pin is the same size. Its colour
      * is its category's, from the palette module the toggles are coloured
-     * from; a ranked pin's is its rank's place on the ramp, blue for the
+     * from; a ranked pin's is its rank's place on the ramp, purple for the
      * lowest, through green, yellow and orange, to red for #1. A pizzeria on
      * file is a filled pin with a dark line round it, so a pale colour still
      * has an edge on the tiles; a place that is not on file is a hollow one.

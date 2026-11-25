@@ -462,7 +462,7 @@ export function directorySection(ctx) {
 
   /* A category's swatch: a dot in its colour, which the stylesheet takes from
    * the palette (src/palette.js) by the category's name. The ranked category
-   * has no one colour, since its pins run from blue at the lowest rank
+   * has no one colour, since its pins run from purple at the lowest rank
    * through green, yellow and orange to red at #1: its swatch is that ramp,
    * between the two ranks it runs from and to. */
   const swatch = (key, cls) => key === 'ranked'
@@ -568,8 +568,8 @@ export function directorySection(ctx) {
         <div class="dir-pin">
           <div id="map" class="dir-map" role="region" aria-label="Map of Seattle pizzerias"></div>
         </div>
-        <p class="note dir-map-note">Ranked pins run from blue at the lowest rank, through
-        green, yellow and orange, to red at #1, and the top ten have a heavier outline. Every
+        <p class="note dir-map-note">Ranked pins run hot to cold: red at #1, through
+        orange, yellow, green and blue, to purple at the lowest rank, and the top ten have a heavier outline. Every
         other category has its own colour; a hollow pin is a place that is not on file. Seattle
         locations only. Tiles &copy; OpenStreetMap contributors.</p>
       </div>

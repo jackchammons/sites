@@ -3,8 +3,8 @@
  *
  * A category has one colour, and it is the colour of its pins on the map, of
  * its toggle and of its header in the list. The ranked category is the
- * exception: its pins are coloured by rank, on a ramp that runs from blue for
- * the lowest rank through teal, green, yellow and orange to red for #1, and
+ * exception: its pins are coloured by rank, on a ramp that runs from purple for
+ * the lowest rank through blue, green, yellow and orange to red for #1, and
  * its swatch is the ramp.
  *
  * app.js reads this module for the pins. The build reads it too and writes
@@ -21,9 +21,11 @@
  * wear a heavier outline, and every ranked row prints its number beside the
  * same dot.
  *
- * The ramp takes every hue from blue round to red, so the other pizzerias on
- * file take what is left: violet for the unrated, magenta for the ones not
- * open yet, and a grey for the closed. A place that is not on file is drawn
+ * The owner then gave the scheme to use: the one a flight tracker colours
+ * aircraft by altitude with, bright and saturated, hot for the best and cold
+ * for the last, down through blue to purple. The ramp now takes every hue
+ * there is, so the other pizzerias on file take no hue at all: white for the
+ * unrated, a dark brown for the ones not open yet, and a grey for the closed. A place that is not on file is drawn
  * differently (a hollow pin, where a place on file is a filled one), so its
  * colour only has to be told from the other hollow ones: teal, near-black,
  * brown and olive.
@@ -33,8 +35,8 @@
 
 /* One colour per category that is not ranked. */
 export const CATEGORY_COLOR = {
-  unrated: '#8a5cd6',
-  opening: '#d6409f',
+  unrated: '#ffffff',
+  opening: '#6b4a2f',
   closed: '#948e88',
   pending: '#006d6d',
   chain: '#2a2420',
@@ -48,16 +50,17 @@ export const CATEGORY_COLOR = {
 export const PIN_LINE = '#23180f';
 
 /* The ramp's stops in OKLCH (lightness, chroma, hue in degrees), lowest rank
- * first: blue, teal, green, yellow, orange, red. The hue only ever falls
+ * first: purple, blue, light blue, green, yellow, orange, red. The hue only ever falls
  * from one stop to the next, so the colour moves one way round the circle
  * and no two ranks far apart share a hue. */
 export const RAMP_STOPS = [
-  { l: 0.58, c: 0.17, h: 258 },   // blue: the lowest rank
-  { l: 0.68, c: 0.12, h: 200 },   // teal
-  { l: 0.72, c: 0.19, h: 145 },   // green
-  { l: 0.87, c: 0.17, h: 98 },    // yellow
-  { l: 0.74, c: 0.17, h: 58 },    // orange
-  { l: 0.56, c: 0.22, h: 28 }     // red: #1
+  { l: 0.56, c: 0.26, h: 302 },   // purple: the lowest rank
+  { l: 0.52, c: 0.25, h: 268 },   // blue
+  { l: 0.74, c: 0.14, h: 235 },   // light blue
+  { l: 0.78, c: 0.22, h: 145 },   // green
+  { l: 0.89, c: 0.18, h: 100 },   // yellow
+  { l: 0.76, c: 0.17, h: 60 },    // orange
+  { l: 0.60, c: 0.23, h: 28 }     // red: #1
 ];
 
 const hex = v => Math.round(Math.min(1, Math.max(0, v)) * 255).toString(16).padStart(2, '0');
