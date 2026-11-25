@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-24T00:25:26.699Z",
+  "updated": "2026-11-25T23:47:49.730Z",
   "sources": 3,
   "items": [
     {
@@ -38,9 +38,9 @@
     },
     {
       "title": "Ethan Stowell Shares Details on Forthcoming Pizzeria, Roman-Style Trattoria",
-      "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxNczh1N1FSdm0yVHdtX2xEUVNKZnFLRGtyRHlieksyZkZUSjhNU3VTamdidzJFcTI2NFNKRWlIeVNYbzMxU0oyZHZ4eFNzalJabkk3c0xHSDFFd2RYZGQxOU9WcEJ2M0ctQXluQjhDemdkLXVCUTAxdjJHWURkb3c2RzdsQ3NIOXVmUTJKSHRScEs2bG1VaVdrdXdR?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxQemNkWEdVMGZVREZPUjZ6WXZpR0puV2Y0V1hBU0k1ODBENEdWaHZZLTh4VFBQd1d2WFNhUU5EM0t6Z3BFcTNad3RZZVlfYkd4MTNGdUltNTlWZENrOU5MYmFUV0o2RGFuY3IwSlg3VjN1R1NLX18tTEYzYWk1TlN4M21HOFBWdzFtVHJxVGlCVURTakc3MFh0ckF0aHhDWXVndFF6M3hlWXBNTTVV?oc=5",
       "source": "Seattle Met",
-      "published": "2026-11-15T21:49:47.000Z",
+      "published": "2026-11-15T21:49:48.000Z",
       "kind": "mention",
       "mentions": []
     },
@@ -55,6 +55,16 @@
         "independent-pizzeria"
       ],
       "via": "research"
+    },
+    {
+      "title": "Just Like That, Windy City Pie Is a Pizzeria",
+      "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOZ05Sd2Q4NVNKQUVCOFhUR005TzFRUGcyYm9hcTV5TVBvNnZIelJ1MkpYSkdvNG1rSVB3MmJDVE9QWFIxbDdoSmNyZ1ZXUUJCb2kyUzM0aGVUeExZeWNfdklqR3J4NnRNZzR6Rl9JU2ZydUJ4YkxjOGJnanNVOTAwMzZOdU9ELXk1NjRWT29VY19SLXpvaDFUb2NDam1yd1JPQW1XbFpKQlIwQQ?oc=5",
+      "source": "Seattle Met",
+      "published": "2026-11-06T13:19:16.000Z",
+      "kind": "mention",
+      "mentions": [
+        "windy-city-pie"
+      ]
     },
     {
       "title": "A.K. Pizza is hard to get—and even harder to beat - Review - Seattle",
