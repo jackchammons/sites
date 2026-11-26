@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-25T23:47:49.730Z",
+  "updated": "2026-11-26T22:00:00.955Z",
   "sources": 3,
   "items": [
     {
@@ -89,6 +89,14 @@
       "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQMUhqNXh5MEFhOXJ5aTI3MU00NnMyT0RMRHFIOWNkZWthd2lzTmpab2tkanhicEJlem1qZFJKbU8xZC1sb2N3cEd6LURDVkdrTFcydWRUelVYS2Y2dzdFWElHU2JJZW15em1iSXVFMG84Wmt5ZXZTbmF2RkhRUlQtY0QyblRQQ0RGMU9aZUhuYlNIVFFpbkQ5a3ZZVQ?oc=5",
       "source": "Seattle Met",
       "published": "2026-10-30T08:05:28.000Z",
+      "kind": "mention",
+      "mentions": []
+    },
+    {
+      "title": "Thick, Roman-Style Pizza and Cocktails Arrive Downtown Today",
+      "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNLXVwSTBibzc5UkRIUTlpcEc4bmZUOFROdk45cV95RGhPdmRPUkhOazh6SzlEdUhuRFpEa2p0ZmpROFM5M2FZSkNoRXN6ZlZiSVd2QmZ0MkZORWhwVjlfNmJ4d2ZIT0dSa0hxZ1EzUWNOdmxaemdPQWNzRTU4Z0JKeERkU09PNThUdndIZ2d3czJHMWRUNFJqeUt5Vk9VM2FhR1FBVF8zN2Y3Wl9qb2FEMnhRWG1oVmJCeGNTeTZzMA?oc=5",
+      "source": "Seattle Met",
+      "published": "2026-10-30T07:08:48.000Z",
       "kind": "mention",
       "mentions": []
     },
