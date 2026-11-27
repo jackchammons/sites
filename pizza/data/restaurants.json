@@ -3403,7 +3403,7 @@
       "statusSource": "https://seattlevegan.com/pizza-pi-restaurant/",
       "statusDate": null,
       "statusDetected": "2026-08-26",
-      "statusChecked": "2026-08-27",
+      "statusChecked": "2026-11-27",
       "locations": [
         {
           "neighborhood": "Roosevelt",
@@ -4182,7 +4182,7 @@
       "statusSource": "https://www.romanopizzaandpasta.com/",
       "statusDate": null,
       "statusDetected": "2026-08-26",
-      "statusChecked": "2026-08-26",
+      "statusChecked": "2026-11-27",
       "locations": [
         {
           "neighborhood": "West Seattle",
@@ -4238,7 +4238,7 @@
       "statusSource": "https://www.worldpizzaseattle.com/",
       "statusDate": null,
       "statusDetected": "2026-08-26",
-      "statusChecked": "2026-08-26",
+      "statusChecked": "2026-11-27",
       "locations": [
         {
           "neighborhood": "Chinatown-International District",
@@ -4304,13 +4304,13 @@
       "attributes": {},
       "url": "https://www.sacroboscopizza.com/",
       "instagram": "https://www.instagram.com/sacroboscopizza/",
-      "status": "open",
-      "statusPrev": null,
-      "statusNote": null,
-      "statusSource": "https://www.theinfatuation.com/seattle/reviews/sacro-bosco",
+      "status": "closed",
+      "statusPrev": "open",
+      "statusNote": "Seattle Met reported in its May 15, 2026 Friday Feed column that Sacro Bosco Pizza had announced its final week of service, while sibling bakery Temple Pastries continues operating.",
+      "statusSource": "https://www.seattlemet.com/eat-and-drink/2026/05/sacro-bosco-stacked-bush-garden-news",
       "statusDate": null,
-      "statusDetected": "2026-08-26",
-      "statusChecked": "2026-08-26",
+      "statusDetected": "2026-11-27",
+      "statusChecked": "2026-11-27",
       "locations": [
         {
           "neighborhood": "Central District",
@@ -4481,7 +4481,7 @@
       "statusSource": "https://www.theinfatuation.com/seattle/reviews/dantini-pizza",
       "statusDate": null,
       "statusDetected": "2026-08-26",
-      "statusChecked": "2026-08-26",
+      "statusChecked": "2026-11-27",
       "locations": [
         {
           "neighborhood": "Interbay",
@@ -4553,7 +4553,7 @@
       "statusSource": "https://www.apizzamartfirsthill.com/",
       "statusDate": null,
       "statusDetected": "2026-08-26",
-      "statusChecked": "2026-08-26",
+      "statusChecked": "2026-11-27",
       "locations": [
         {
           "neighborhood": "First Hill",

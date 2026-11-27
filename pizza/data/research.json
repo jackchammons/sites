@@ -1,6 +1,41 @@
 {
-  "updated": "2026-11-26T00:00:00Z",
-  "rejected": [
-    "servesPizza[0]: \"Watershed Pub & Kitchen\" is already known: the candidates queue holds it as \"Watershed Pub & Kitchen\""
+  "updated": "2026-11-27T00:00:00Z",
+  "status": [
+    {
+      "id": "romano-pizza-pasta",
+      "status": "open",
+      "note": "Official site is live with current hours and active coupons/promotions, and a July 2026 delivery review on Slice shows it operating at 5605 Delridge Way SW; no closure coverage found.",
+      "source": "https://www.romanopizzaandpasta.com/"
+    },
+    {
+      "id": "world-pizza",
+      "status": "open",
+      "note": "Official site is live with posted hours (closed Sun-Mon) and no closure notice; no news coverage of a closure was found.",
+      "source": "https://www.worldpizzaseattle.com/"
+    },
+    {
+      "id": "sacro-bosco-pizza-wine",
+      "status": "closed",
+      "note": "Seattle Met reported in its May 15, 2026 Friday Feed column that Sacro Bosco Pizza had announced its final week of service, while sibling bakery Temple Pastries continues operating.",
+      "source": "https://www.seattlemet.com/eat-and-drink/2026/05/sacro-bosco-stacked-bush-garden-news"
+    },
+    {
+      "id": "dantini-pizza",
+      "status": "open",
+      "note": "Official site is live listing current hours and a brief (dated-day) closure notice for specific days only, not a permanent closure; no closure news coverage found.",
+      "source": "https://www.dantinipizza.com/"
+    },
+    {
+      "id": "a-pizza-mart-first-hill",
+      "status": "open",
+      "note": "Official site for the 800 Seneca St location shows \"Shop is open now\" with current hours and ordering link; no closure coverage found.",
+      "source": "https://www.apizzamartfirsthill.com/"
+    },
+    {
+      "id": "pi-vegan-pizzeria",
+      "status": "open",
+      "note": "Official site is live promoting a current menu item with address and phone listed; HappyCow reviews as recent as March 2026 describe it as operating and no closure coverage was found.",
+      "source": "https://www.pizzapivegan.com/"
+    }
   ]
 }
